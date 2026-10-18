@@ -1,0 +1,63 @@
+# Orchestrateur CD Azure — sur push main (ou manuel) : test → images → [approbation] → infra → déploiement.
+name: cd-azure
+
+on:
+  push:
+    branches: [main]
+    paths: ["backend/**", "frontend/**", "infra/terraform/azure/**", "infra/k8s/**"]
+  workflow_dispatch:
+
+concurrency:
+  group: cd-azure
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build-test:
+    uses: ./.github/workflows/reusable-build-test.yml
+
+  images:
+    needs: build-test
+    uses: ./.github/workflows/reusable-docker.yml
+    with: { cloud: azure, acr_name: vinacontratprodacr }
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+  # Porte d'approbation : environnement protégé « prod-azure ».
+  gate:
+    needs: images
+    runs-on: ubuntu-latest
+    environment: prod-azure
+    steps:
+      - run: echo "Déploiement Azure approuvé pour le commit ${{ github.sha }}"
+
+  infra:
+    needs: gate
+    uses: ./.github/workflows/reusable-terraform.yml
+    with:
+      cloud: azure
+      working-directory: infra/terraform/azure
+      action: apply
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+  deploy:
+    needs: [images, infra]
+    uses: ./.github/workflows/reusable-deploy-k8s.yml
+    with:
+      cloud: azure
+      cluster: vina-contrat-prod-aks
+      resource_group: vina-contrat-prod-rg
+      registry: ${{ needs.images.outputs.registry }}
+      values_file: infra/k8s/values-azure.yaml
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}

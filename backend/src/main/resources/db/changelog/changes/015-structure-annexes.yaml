@@ -1,0 +1,66 @@
+databaseChangeLog:
+  - changeSet:
+      id: 015-1-clause-normative-et-section-dc
+      author: levis
+      changes:
+        - addColumn:
+            tableName: clause
+            columns:
+              - column: { name: normative, type: BOOLEAN, defaultValueBoolean: false }
+        - addColumn:
+            tableName: document_clause
+            columns:
+              - column: { name: section, type: VARCHAR(120) }
+
+  - changeSet:
+      id: 015-2-document-annexe
+      author: levis
+      changes:
+        - createTable:
+            tableName: document_annexe
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: document_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: numero, type: VARCHAR(40) }
+              - column: { name: titre, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: reference_clause, type: VARCHAR(40) }
+              - column: { name: contenu, type: VARCHAR(8000) }
+              - column: { name: ordre, type: INT, defaultValueNumeric: 0 }
+        - addForeignKeyConstraint:
+            baseTableName: document_annexe
+            baseColumnNames: document_id
+            referencedTableName: document
+            referencedColumnNames: id
+            constraintName: fk_document_annexe_document
+
+  - changeSet:
+      id: 015-3-bordereau
+      author: levis
+      changes:
+        - createTable:
+            tableName: bordereau
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: document_id, type: BIGINT, constraints: { nullable: false, unique: true } }
+              - column: { name: titre, type: VARCHAR(255) }
+        - addForeignKeyConstraint:
+            baseTableName: bordereau
+            baseColumnNames: document_id
+            referencedTableName: document
+            referencedColumnNames: id
+            constraintName: fk_bordereau_document
+        - createTable:
+            tableName: ligne_prix
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: bordereau_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: description, type: VARCHAR(500), constraints: { nullable: false } }
+              - column: { name: quantite, type: "NUMERIC(19,2)" }
+              - column: { name: taux, type: "NUMERIC(19,2)" }
+              - column: { name: ordre, type: INT, defaultValueNumeric: 0 }
+        - addForeignKeyConstraint:
+            baseTableName: ligne_prix
+            baseColumnNames: bordereau_id
+            referencedTableName: bordereau
+            referencedColumnNames: id
+            constraintName: fk_ligne_prix_bordereau

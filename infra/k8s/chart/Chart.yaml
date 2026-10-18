@@ -1,0 +1,6 @@
+apiVersion: v2
+name: contrat
+description: contractuelle_contrat — backend Spring Boot + frontend React (déploiement multi-zone HA)
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

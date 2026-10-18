@@ -1,0 +1,148 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-1-app_user
+      author: levis
+      changes:
+        - createTable:
+            tableName: app_user
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: email, type: VARCHAR(255), constraints: { nullable: false, unique: true } }
+              - column: { name: mot_de_passe_hash, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: nom, type: VARCHAR(255) }
+              - column: { name: direction, type: VARCHAR(255) }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: true, constraints: { nullable: false } }
+
+  - changeSet:
+      id: 001-2-user_roles
+      author: levis
+      changes:
+        - createTable:
+            tableName: user_roles
+            columns:
+              - column: { name: user_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: role_code, type: VARCHAR(50) }
+        - addForeignKeyConstraint:
+            baseTableName: user_roles
+            baseColumnNames: user_id
+            referencedTableName: app_user
+            referencedColumnNames: id
+            constraintName: fk_user_roles_user
+
+  - changeSet:
+      id: 001-3-clause
+      author: levis
+      changes:
+        - createTable:
+            tableName: clause
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: code, type: VARCHAR(255), constraints: { nullable: false, unique: true } }
+              - column: { name: titre, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: categorie, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: corps, type: VARCHAR(8000), constraints: { nullable: false } }
+              - column: { name: version, type: INT, defaultValueNumeric: 1 }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: true }
+              - column: { name: maj_le, type: TIMESTAMP }
+
+  - changeSet:
+      id: 001-4-clause_condition
+      author: levis
+      changes:
+        - createTable:
+            tableName: clause_condition
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: clause_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: attribut, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: valeur, type: VARCHAR(255), constraints: { nullable: false } }
+        - addForeignKeyConstraint:
+            baseTableName: clause_condition
+            baseColumnNames: clause_id
+            referencedTableName: clause
+            referencedColumnNames: id
+            constraintName: fk_clause_condition_clause
+
+  - changeSet:
+      id: 001-5-document
+      author: levis
+      changes:
+        - createTable:
+            tableName: document
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: titre, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: type, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: mode_sollicitation, type: VARCHAR(50) }
+              - column: { name: valeur_estimee, type: "NUMERIC(19,2)" }
+              - column: { name: contexte, type: VARCHAR(2000) }
+              - column: { name: statut, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: cree_par, type: VARCHAR(255) }
+              - column: { name: cree_le, type: TIMESTAMP }
+
+  - changeSet:
+      id: 001-6-document_clause
+      author: levis
+      changes:
+        - createTable:
+            tableName: document_clause
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: document_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: clause_id, type: BIGINT }
+              - column: { name: code, type: VARCHAR(255) }
+              - column: { name: titre, type: VARCHAR(255) }
+              - column: { name: texte_effectif, type: VARCHAR(8000) }
+              - column: { name: ordre, type: INT }
+        - addForeignKeyConstraint:
+            baseTableName: document_clause
+            baseColumnNames: document_id
+            referencedTableName: document
+            referencedColumnNames: id
+            constraintName: fk_document_clause_document
+
+  - changeSet:
+      id: 001-7-commentaire
+      author: levis
+      changes:
+        - createTable:
+            tableName: commentaire
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: document_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: clause_id, type: BIGINT }
+              - column: { name: auteur, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: corps, type: VARCHAR(4000), constraints: { nullable: false } }
+              - column: { name: resolu, type: BOOLEAN, defaultValueBoolean: false }
+              - column: { name: cree_le, type: TIMESTAMP }
+
+  - changeSet:
+      id: 001-8-approval_step
+      author: levis
+      changes:
+        - createTable:
+            tableName: approval_step
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: document_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: niveau, type: INT, constraints: { nullable: false } }
+              - column: { name: role_requis, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: statut, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: approbateur, type: VARCHAR(255) }
+              - column: { name: note, type: VARCHAR(2000) }
+              - column: { name: decide_le, type: TIMESTAMP }
+
+  - changeSet:
+      id: 001-9-audit_log
+      author: levis
+      changes:
+        - createTable:
+            tableName: audit_log
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: utilisateur, type: VARCHAR(255) }
+              - column: { name: action, type: VARCHAR(100) }
+              - column: { name: entite, type: VARCHAR(100) }
+              - column: { name: entite_id, type: BIGINT }
+              - column: { name: details, type: VARCHAR(2000) }
+              - column: { name: horodatage, type: TIMESTAMP }

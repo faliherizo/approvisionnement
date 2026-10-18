@@ -1,0 +1,90 @@
+# Réutilisable : construit et pousse les images backend + frontend vers le registre du cloud cible.
+# Le tag est le SHA du commit (traçabilité et immutabilité). Scan de vulnérabilités avant push.
+name: reusable-docker
+
+on:
+  workflow_call:
+    inputs:
+      cloud:    { type: string, required: true }   # aws | azure
+      region:   { type: string, default: "ca-central-1" }
+      acr_name: { type: string, default: "" }       # requis si cloud=azure
+    secrets:
+      AWS_DEPLOY_ROLE_ARN:   { required: false }
+      AZURE_CLIENT_ID:       { required: false }
+      AZURE_TENANT_ID:       { required: false }
+      AZURE_SUBSCRIPTION_ID: { required: false }
+    outputs:
+      registry:
+        description: URL du registre où les images ont été poussées.
+        value: ${{ jobs.build.outputs.registry }}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      registry: ${{ steps.reg.outputs.registry }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # --- Authentification et connexion au registre ---
+      - name: AWS OIDC + ECR
+        if: inputs.cloud == 'aws'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ inputs.region }}
+      - name: Connexion ECR
+        if: inputs.cloud == 'aws'
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Azure OIDC
+        if: inputs.cloud == 'azure'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Connexion ACR
+        if: inputs.cloud == 'azure'
+        run: az acr login --name ${{ inputs.acr_name }}
+
+      - name: Déterminer le registre
+        id: reg
+        run: |
+          if [ "${{ inputs.cloud }}" = "aws" ]; then
+            echo "registry=${{ steps.ecr.outputs.registry }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "registry=${{ inputs.acr_name }}.azurecr.io" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build & push backend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ steps.reg.outputs.registry }}/vina-contrat/backend:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build & push frontend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ steps.reg.outputs.registry }}/vina-contrat/frontend:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Scan de vulnérabilités des images (Trivy)
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: ${{ steps.reg.outputs.registry }}/vina-contrat/backend:${{ github.sha }}
+          severity: CRITICAL,HIGH
+          exit-code: "0"   # rapport seulement au début ; passer à "1" pour bloquer

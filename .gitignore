@@ -1,0 +1,51 @@
+# ===== Dépendances =====
+node_modules/
+**/node_modules/
+
+# ===== Builds =====
+backend/target/
+**/target/
+frontend/dist/
+frontend/dist-ssr/
+*.local
+
+# ===== Tests / rapports =====
+e2e/test-results/
+e2e/playwright-report/
+e2e/.playwright/
+e2e/blob-report/
+**/coverage/
+**/jacoco.exec
+
+# ===== Logs & temporaire =====
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+
+# ===== IDE =====
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# ===== Secrets / configuration locale =====
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+application-local.yml
+application-local.properties
+
+# ===== Index GitNexus (volumineux) =====
+.gitnexus/lbug
+.gitnexus/parse-cache/
+.gitnexus/parsedfile-cache/
+
+# ===== Exports générés =====
+gitnexus-export.zip
+*.pdf.tmp

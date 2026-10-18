@@ -1,0 +1,31 @@
+# Template de stage : build & push des images vers ACR (tag = SHA du commit).
+parameters:
+  - name: serviceConnection
+    type: string
+  - name: acr
+    type: string
+  - name: dependsOn
+    type: object
+    default: []
+
+stages:
+  - stage: Images
+    displayName: Build & push images (ACR)
+    dependsOn: ${{ parameters.dependsOn }}
+    jobs:
+      - job: docker
+        pool: { vmImage: ubuntu-latest }
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: ${{ parameters.serviceConnection }}
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                set -euo pipefail
+                TAG=$(Build.SourceVersion)
+                az acr login --name ${{ parameters.acr }}
+                for svc in backend frontend; do
+                  docker build -t ${{ parameters.acr }}.azurecr.io/vina-contrat/$svc:$TAG ./$svc
+                  docker push ${{ parameters.acr }}.azurecr.io/vina-contrat/$svc:$TAG
+                done

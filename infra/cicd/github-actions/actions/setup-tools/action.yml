@@ -1,0 +1,33 @@
+# Action composite : installe les outils d'infrastructure (Terraform, Helm, kubectl) en versions
+# figées. Réutilisée par les workflows de déploiement pour éviter la duplication.
+# Durcissement recommandé (voir tutoriel) : épingler chaque action à un SHA de commit plutôt qu'un tag.
+name: setup-tools
+description: Installe Terraform, Helm et kubectl (versions épinglées).
+
+inputs:
+  terraform-version:
+    description: Version de Terraform.
+    default: "1.9.5"
+  helm-version:
+    description: Version de Helm.
+    default: "v3.15.4"
+  kubectl-version:
+    description: Version de kubectl.
+    default: "v1.30.4"
+
+runs:
+  using: composite
+  steps:
+    - name: Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ inputs.terraform-version }}
+        terraform_wrapper: false
+    - name: Helm
+      uses: azure/setup-helm@v4
+      with:
+        version: ${{ inputs.helm-version }}
+    - name: kubectl
+      uses: azure/setup-kubectl@v4
+      with:
+        version: ${{ inputs.kubectl-version }}

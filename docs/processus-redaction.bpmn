@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_Levis_2026_50_92"
+                  targetNamespace="http://ville.levis.qc.ca/bpmn/redaction-contractuelle">
+  <bpmn:process id="Process_RedactionContractuelle" name="Rédaction contractuelle - Ville de Lévis" isExecutable="false">
+
+    <bpmn:startEvent id="Start_Besoin" name="Besoin exprimé">
+      <bpmn:outgoing>Flow_01</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <bpmn:userTask id="Task_DefinirBesoin" name="Définir le besoin (type, valeur estimée, contexte)">
+      <bpmn:incoming>Flow_01</bpmn:incoming>
+      <bpmn:outgoing>Flow_02</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:userTask id="Task_Parametrer" name="Paramétrer le document (type, mode, valeur, contexte)">
+      <bpmn:incoming>Flow_02</bpmn:incoming>
+      <bpmn:outgoing>Flow_03</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:serviceTask id="Task_AdapterClauses" name="Adapter les clauses selon les critères (règles LCOP/LCM/LCV)">
+      <bpmn:incoming>Flow_03</bpmn:incoming>
+      <bpmn:incoming>Flow_loopBack</bpmn:incoming>
+      <bpmn:outgoing>Flow_04</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:userTask id="Task_SelectionnerClauses" name="Sélectionner / ajuster les clauses">
+      <bpmn:incoming>Flow_04</bpmn:incoming>
+      <bpmn:incoming>Flow_corrections</bpmn:incoming>
+      <bpmn:incoming>Flow_refus</bpmn:incoming>
+      <bpmn:outgoing>Flow_05</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:serviceTask id="Task_Assembler" name="Assembler le devis">
+      <bpmn:incoming>Flow_05</bpmn:incoming>
+      <bpmn:outgoing>Flow_06</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:parallelGateway id="Gw_RevisionSplit" name="Révision multi-intervenants">
+      <bpmn:incoming>Flow_06</bpmn:incoming>
+      <bpmn:outgoing>Flow_revJur</bpmn:outgoing>
+      <bpmn:outgoing>Flow_revDir</bpmn:outgoing>
+      <bpmn:outgoing>Flow_revAppro</bpmn:outgoing>
+    </bpmn:parallelGateway>
+
+    <bpmn:userTask id="Task_ValiderJuridique" name="Valider juridiquement + commenter">
+      <bpmn:incoming>Flow_revJur</bpmn:incoming>
+      <bpmn:outgoing>Flow_jurDone</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ReviserDirection" name="Réviser + commenter (Direction)">
+      <bpmn:incoming>Flow_revDir</bpmn:incoming>
+      <bpmn:outgoing>Flow_dirDone</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ReviserAppro" name="Réviser + commenter (Approvisionnement)">
+      <bpmn:incoming>Flow_revAppro</bpmn:incoming>
+      <bpmn:outgoing>Flow_approDone</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:parallelGateway id="Gw_RevisionJoin">
+      <bpmn:incoming>Flow_jurDone</bpmn:incoming>
+      <bpmn:incoming>Flow_dirDone</bpmn:incoming>
+      <bpmn:incoming>Flow_approDone</bpmn:incoming>
+      <bpmn:outgoing>Flow_07</bpmn:outgoing>
+    </bpmn:parallelGateway>
+
+    <bpmn:exclusiveGateway id="Gw_Corrections" name="Corrections requises ?">
+      <bpmn:incoming>Flow_07</bpmn:incoming>
+      <bpmn:outgoing>Flow_corrections</bpmn:outgoing>
+      <bpmn:outgoing>Flow_08</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:userTask id="Task_Approbation" name="Approbation hiérarchisée (niveaux 1..n)">
+      <bpmn:incoming>Flow_08</bpmn:incoming>
+      <bpmn:incoming>Flow_reApprob</bpmn:incoming>
+      <bpmn:outgoing>Flow_09</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:exclusiveGateway id="Gw_Approuve" name="Approuvé ?">
+      <bpmn:incoming>Flow_09</bpmn:incoming>
+      <bpmn:outgoing>Flow_refus</bpmn:outgoing>
+      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:intermediateThrowEvent id="Event_Publication" name="Publication / mise en concurrence">
+      <bpmn:incoming>Flow_10</bpmn:incoming>
+      <bpmn:outgoing>Flow_11</bpmn:outgoing>
+    </bpmn:intermediateThrowEvent>
+
+    <bpmn:exclusiveGateway id="Gw_Addenda" name="Addenda nécessaire ?">
+      <bpmn:incoming>Flow_11</bpmn:incoming>
+      <bpmn:outgoing>Flow_addOui</bpmn:outgoing>
+      <bpmn:outgoing>Flow_addNon</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:userTask id="Task_RedigerAddenda" name="Rédiger addenda interactif">
+      <bpmn:incoming>Flow_addOui</bpmn:incoming>
+      <bpmn:outgoing>Flow_add1</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:serviceTask id="Task_ReintegrerAddenda" name="Réintégrer l'addenda au document">
+      <bpmn:incoming>Flow_add1</bpmn:incoming>
+      <bpmn:outgoing>Flow_reApprob</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_GenererFinal" name="Générer les documents finaux (PDF/DOCX) avec addendas">
+      <bpmn:incoming>Flow_addNon</bpmn:incoming>
+      <bpmn:outgoing>Flow_12</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:endEvent id="End_Emis" name="Document contractuel émis">
+      <bpmn:incoming>Flow_12</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Flux de séquence -->
+    <bpmn:sequenceFlow id="Flow_01" sourceRef="Start_Besoin" targetRef="Task_DefinirBesoin"/>
+    <bpmn:sequenceFlow id="Flow_02" sourceRef="Task_DefinirBesoin" targetRef="Task_Parametrer"/>
+    <bpmn:sequenceFlow id="Flow_03" sourceRef="Task_Parametrer" targetRef="Task_AdapterClauses"/>
+    <bpmn:sequenceFlow id="Flow_04" sourceRef="Task_AdapterClauses" targetRef="Task_SelectionnerClauses"/>
+    <bpmn:sequenceFlow id="Flow_loopBack" sourceRef="Task_SelectionnerClauses" targetRef="Task_AdapterClauses" name="réévaluer"/>
+    <bpmn:sequenceFlow id="Flow_05" sourceRef="Task_SelectionnerClauses" targetRef="Task_Assembler"/>
+    <bpmn:sequenceFlow id="Flow_06" sourceRef="Task_Assembler" targetRef="Gw_RevisionSplit"/>
+    <bpmn:sequenceFlow id="Flow_revJur" sourceRef="Gw_RevisionSplit" targetRef="Task_ValiderJuridique"/>
+    <bpmn:sequenceFlow id="Flow_revDir" sourceRef="Gw_RevisionSplit" targetRef="Task_ReviserDirection"/>
+    <bpmn:sequenceFlow id="Flow_revAppro" sourceRef="Gw_RevisionSplit" targetRef="Task_ReviserAppro"/>
+    <bpmn:sequenceFlow id="Flow_jurDone" sourceRef="Task_ValiderJuridique" targetRef="Gw_RevisionJoin"/>
+    <bpmn:sequenceFlow id="Flow_dirDone" sourceRef="Task_ReviserDirection" targetRef="Gw_RevisionJoin"/>
+    <bpmn:sequenceFlow id="Flow_approDone" sourceRef="Task_ReviserAppro" targetRef="Gw_RevisionJoin"/>
+    <bpmn:sequenceFlow id="Flow_07" sourceRef="Gw_RevisionJoin" targetRef="Gw_Corrections"/>
+    <bpmn:sequenceFlow id="Flow_corrections" sourceRef="Gw_Corrections" targetRef="Task_SelectionnerClauses" name="Oui"/>
+    <bpmn:sequenceFlow id="Flow_08" sourceRef="Gw_Corrections" targetRef="Task_Approbation" name="Non"/>
+    <bpmn:sequenceFlow id="Flow_09" sourceRef="Task_Approbation" targetRef="Gw_Approuve"/>
+    <bpmn:sequenceFlow id="Flow_refus" sourceRef="Gw_Approuve" targetRef="Task_SelectionnerClauses" name="Refusé"/>
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="Gw_Approuve" targetRef="Event_Publication" name="Approuvé"/>
+    <bpmn:sequenceFlow id="Flow_11" sourceRef="Event_Publication" targetRef="Gw_Addenda"/>
+    <bpmn:sequenceFlow id="Flow_addOui" sourceRef="Gw_Addenda" targetRef="Task_RedigerAddenda" name="Oui"/>
+    <bpmn:sequenceFlow id="Flow_addNon" sourceRef="Gw_Addenda" targetRef="Task_GenererFinal" name="Non"/>
+    <bpmn:sequenceFlow id="Flow_add1" sourceRef="Task_RedigerAddenda" targetRef="Task_ReintegrerAddenda"/>
+    <bpmn:sequenceFlow id="Flow_reApprob" sourceRef="Task_ReintegrerAddenda" targetRef="Task_Approbation"/>
+    <bpmn:sequenceFlow id="Flow_12" sourceRef="Task_GenererFinal" targetRef="End_Emis"/>
+
+  </bpmn:process>
+</bpmn:definitions>

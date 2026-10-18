@@ -1,0 +1,47 @@
+server {
+    listen 80;
+    server_name _;
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # SPA : toutes les routes non-fichier renvoient index.html
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Assistant IA (Ollama) : génération LLM potentiellement longue (CPU) — délai étendu
+    # pour éviter un 504 pendant la rédaction. Préfixe plus spécifique que /api/.
+    location /api/ia/ {
+        proxy_pass ${BACKEND_URL};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 5s;
+        proxy_read_timeout 300s;
+        proxy_send_timeout 300s;
+    }
+
+    # Proxy vers le backend Spring Boot. BACKEND_URL est substitué au démarrage
+    # (envsubst du template) : http://backend:8080 en Docker Compose,
+    # l'URL du Container App backend sur Azure.
+    location /api/ {
+        proxy_pass ${BACKEND_URL};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # SSO OIDC (Entra ID) et documentation OpenAPI / Swagger, servis par le backend
+    location /oauth2/       { proxy_pass ${BACKEND_URL}; }
+    location /login/oauth2/ { proxy_pass ${BACKEND_URL}; }
+    location /swagger-ui/   { proxy_pass ${BACKEND_URL}; }
+    location /v3/           { proxy_pass ${BACKEND_URL}; }
+
+    # Cache des assets statiques
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+}

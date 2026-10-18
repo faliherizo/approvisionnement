@@ -1,0 +1,9 @@
+{
+  "appelOffres": {
+    "titre": "Réfection rue Guillaume-Couture",
+    "type": "APPEL_OFFRES_PUBLIC",
+    "mode": "APPEL_OFFRES_PUBLIC",
+    "valeur": "1500000",
+    "contexte": "travaux de voirie"
+  }
+}

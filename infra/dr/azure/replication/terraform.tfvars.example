@@ -1,0 +1,5 @@
+# Copier en terraform.tfvars et ajuster.
+project          = "vina-contrat"
+environment      = "prod"
+primary_location = "canadacentral" # production
+dr_location      = "canadaeast"     # reprise — données au Canada

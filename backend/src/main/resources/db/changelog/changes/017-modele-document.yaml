@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 017-1-modele-document
+      author: levis
+      changes:
+        - createTable:
+            tableName: modele_document
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT }
+              - column: { name: police, type: VARCHAR(20), defaultValue: HELVETICA }
+              - column: { name: couleur_titre, type: VARCHAR(9) }
+              - column: { name: couleur_accent, type: VARCHAR(9) }
+              - column: { name: marque, type: VARCHAR(160) }
+              - column: { name: pied_de_page, type: VARCHAR(240) }
+              - column: { name: afficher_couverture, type: BOOLEAN, defaultValueBoolean: true }
+              - column: { name: logo_image, type: CLOB }
+        - addUniqueConstraint:
+            tableName: modele_document
+            columnNames: tenant_id
+            constraintName: uq_modele_document_tenant

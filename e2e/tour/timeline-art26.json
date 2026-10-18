@@ -1,0 +1,78 @@
+[
+  {
+    "t": 851,
+    "key": "art26_intro"
+  },
+  {
+    "t": 9475,
+    "key": "red_creer"
+  },
+  {
+    "t": 22391,
+    "key": "red_assembler"
+  },
+  {
+    "t": 34223,
+    "key": "red_bordereau"
+  },
+  {
+    "t": 50564,
+    "key": "red_apercu"
+  },
+  {
+    "t": 68757,
+    "key": "red_approbation"
+  },
+  {
+    "t": 83393,
+    "key": "art26_version"
+  },
+  {
+    "t": 93920,
+    "key": "art26_export"
+  },
+  {
+    "t": 121764,
+    "key": "red_dossier"
+  },
+  {
+    "t": 137135,
+    "key": "red_sap"
+  },
+  {
+    "t": 147387,
+    "key": "red_rapports"
+  },
+  {
+    "t": 157052,
+    "key": "red_ia"
+  },
+  {
+    "t": 168246,
+    "key": "red_recherche"
+  },
+  {
+    "t": 181917,
+    "key": "art26_multilingue"
+  },
+  {
+    "t": 206511,
+    "key": "adm_users"
+  },
+  {
+    "t": 215268,
+    "key": "adm_workflows"
+  },
+  {
+    "t": 224295,
+    "key": "adm_audit"
+  },
+  {
+    "t": 246168,
+    "key": "sa_theme"
+  },
+  {
+    "t": 257932,
+    "key": "sa_tarif"
+  }
+]

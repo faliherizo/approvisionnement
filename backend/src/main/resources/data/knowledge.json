@@ -1,0 +1,57 @@
+[
+  {
+    "titre": "Cadre légal — Loi sur les contrats des organismes publics (LCOP, C-65.1)",
+    "source": "legisquebec.gouv.qc.ca/fr/document/lc/c-65.1",
+    "contenu": "La LCOP (RLRQ, c. C-65.1) encadre l'adjudication et la gestion des contrats d'approvisionnement, de services et de travaux de construction des organismes publics québécois. Elle vise la transparence, le traitement intègre et équitable des concurrents, l'accessibilité des PME et une reddition de comptes rigoureuse. La rédaction d'un document d'appel d'offres doit respecter ces principes et le cadre normatif du Secrétariat du Conseil du trésor (SCT). Les municipalités relèvent en outre de la Loi sur les cités et villes (LCV) et du Code municipal (CM)."
+  },
+  {
+    "titre": "Seuils d'appel d'offres public (2026-2027)",
+    "source": "quebec.ca — gestion des contrats publics / adjudica.ca",
+    "contenu": "Depuis le 1er janvier 2026, le seuil d'appel d'offres public le plus répandu au Québec est de 139 000 $ (en vigueur jusqu'au 31 décembre 2027). Une dépense égale ou supérieure au seuil oblige l'organisme à procéder par appel d'offres public publié dans le Système électronique d'appel d'offres (SEAO). Sous le seuil, l'organisme peut recourir à l'appel d'offres sur invitation ou au gré à gré, en documentant son choix."
+  },
+  {
+    "titre": "Modes de sollicitation : AOP, AOI, gré à gré",
+    "source": "quebec.ca — modes de sollicitation",
+    "contenu": "Appel d'offres public (AOP) : procédure formelle ouverte, avis publié au SEAO, toute entreprise admissible peut soumissionner. Appel d'offres sur invitation (AOI) : concurrence restreinte sous le seuil ; au moins trois entreprises devraient être invitées, dont au moins une PME (250 employés ou moins). Gré à gré : contrat conclu directement sous le seuil, après considération des autres modes. Le mode retenu doit être justifié et cohérent avec la valeur estimée du contrat."
+  },
+  {
+    "titre": "CCAG — Cahier des clauses administratives générales (document normatif)",
+    "source": "ville.montreal.qc.ca — CCAG",
+    "contenu": "Le CCAG est un document normatif fixe, obligatoire, intégré par renvoi dans les documents d'appel d'offres ; il n'est pas modifié directement. Toute adaptation se fait par le Cahier des clauses administratives particulières (CCAP), qui précise les articles du CCAG auxquels on déroge. Les clauses issues du CCAG sont dites « normatives » : dans le logiciel, elles restent verrouillées au niveau du document et ne sont pas récrites localement."
+  },
+  {
+    "titre": "Autorité des marchés publics (AMP)",
+    "source": "tresor.gouv.qc.ca — marchés publics",
+    "contenu": "L'Autorité des marchés publics (AMP) surveille les marchés publics québécois, traite les plaintes des entreprises concernant les documents d'appel d'offres et délivre les autorisations de contracter exigées pour certains contrats. Un document d'appel d'offres doit indiquer les modalités de plainte et, le cas échéant, l'exigence d'autorisation de l'AMP pour le soumissionnaire."
+  },
+  {
+    "titre": "Structure type d'un contrat de services",
+    "source": "Référentiel SCT — gabarit Contrat de services",
+    "contenu": "Un contrat de services s'ouvre par un préambule (ENTRE : l'organisme public ; ET : le prestataire de services), suivi d'articles numérotés : 0.00 Interprétation et définitions, Objet du contrat, Durée et échéancier, Obligations du prestataire, Obligations de l'organisme, Prix et modalités de paiement, Garanties et assurances, Propriété intellectuelle et confidentialité, Résiliation et défaut, Règlement des différends, puis les annexes (devis, bordereau, attestations). Chaque clause doit être précise, sans ambiguïté et rattachée à une obligation vérifiable."
+  },
+  {
+    "titre": "Bordereau de prix et signature du soumissionnaire",
+    "source": "Référentiel SCT — gabarit Bordereau de prix",
+    "contenu": "Le bordereau de prix est la grille tarifaire que le soumissionnaire remplit : description des postes, heures estimées, ressources, taux horaire, nombre d'années et total. Il se termine par un grand total de la soumission et un bloc de signature du soumissionnaire (nom, fonction en lettres moulées, date). Les prix sont réputés fermes pour la durée du contrat, sauf indexation prévue au devis."
+  },
+  {
+    "titre": "Régie de l'appel d'offres : admissibilité, conformité, adjudication",
+    "source": "Référentiel SCT — gabarit Régie",
+    "contenu": "La régie de l'appel d'offres fixe les règles de présentation des soumissions, les conditions d'admissibilité du soumissionnaire (statut juridique, autorisations, attestations) et les critères de conformité de la soumission (documents exigés, signature, prix complet). Une soumission non conforme à une exigence essentielle est rejetée. L'adjudication se fait au plus bas soumissionnaire conforme, ou selon une grille qualité-prix lorsque des critères d'évaluation sont prévus."
+  },
+  {
+    "titre": "Devis technique et critères de conformité",
+    "source": "Référentiel SCT — gabarit Devis technique",
+    "contenu": "Le devis technique décrit les besoins : contexte, livrables attendus, niveaux de service, échéances et exigences techniques. Il comporte généralement un tableau de critères de conformité (Oui/Non) que le soumissionnaire atteste respecter. Les exigences doivent être fonctionnelles et non discriminatoires, afin de ne pas restreindre indûment la concurrence."
+  },
+  {
+    "titre": "Attestations et documents exigés du soumissionnaire",
+    "source": "quebec.ca — contrats publics",
+    "contenu": "Selon le contrat, le soumissionnaire doit fournir : attestation de Revenu Québec, attestation de conformité à la CNESST, déclaration relative à la Charte de la langue française (francisation), déclaration concernant le lobbyisme et les liens d'affaires, et, le cas échéant, l'autorisation de contracter de l'AMP. Le formulaire de soumission regroupe ces attestations avec l'engagement et la signature du soumissionnaire."
+  },
+  {
+    "titre": "Bonnes pratiques de rédaction contractuelle",
+    "source": "Guide de rédaction — VINA",
+    "contenu": "Rédiger au présent de l'indicatif à valeur obligatoire (« le prestataire fournit… »), une obligation par phrase, définir les termes clés à l'article Interprétation et les réutiliser sans synonymes. Numéroter hiérarchiquement (0.00, 1.00, 1.01). Éviter les renvois vagues ; référencer les annexes par leur numéro. Distinguer obligations de moyens et de résultat, prévoir les mécanismes de défaut, de pénalité et de résiliation, et aligner le vocabulaire sur le CCAG et la LCOP."
+  }
+]

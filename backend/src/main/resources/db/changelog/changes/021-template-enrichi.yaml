@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 021-1-template-enrichi
+      author: levis
+      changes:
+        - addColumn:
+            tableName: document_template
+            columns:
+              - column: { name: titre_par_defaut, type: VARCHAR(255) }
+              - column: { name: contexte, type: VARCHAR(8000) }
+              - column: { name: gabarit_code, type: VARCHAR(80) }
+        - createTable:
+            tableName: document_template_annexe
+            columns:
+              - column: { name: template_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: annexe_titre, type: VARCHAR(255) }
+        - addForeignKeyConstraint:
+            baseTableName: document_template_annexe
+            baseColumnNames: template_id
+            constraintName: fk_template_annexe_template
+            referencedTableName: document_template
+            referencedColumnNames: id
+  - changeSet:
+      id: 021-2-document-gabarit-code
+      author: levis
+      changes:
+        - addColumn:
+            tableName: document
+            columns:
+              - column: { name: gabarit_code, type: VARCHAR(80) }

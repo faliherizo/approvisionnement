@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011-1-clause-dependance
+      author: levis
+      changes:
+        - createTable:
+            tableName: clause_dependance
+            columns:
+              - column: { name: clause_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: code_requis, type: VARCHAR(255) }
+        - addForeignKeyConstraint:
+            baseTableName: clause_dependance
+            baseColumnNames: clause_id
+            referencedTableName: clause
+            referencedColumnNames: id
+            constraintName: fk_clause_dependance_clause
+
+  - changeSet:
+      id: 011-2-clause-exclusion
+      author: levis
+      changes:
+        - createTable:
+            tableName: clause_exclusion
+            columns:
+              - column: { name: clause_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: code_exclu, type: VARCHAR(255) }
+        - addForeignKeyConstraint:
+            baseTableName: clause_exclusion
+            baseColumnNames: clause_id
+            referencedTableName: clause
+            referencedColumnNames: id
+            constraintName: fk_clause_exclusion_clause

@@ -1,0 +1,14 @@
+# Copier en terraform.tfvars au moment du sinistre (le runbook renseigne les valeurs dynamiques).
+project     = "vina-contrat"
+environment = "prod"
+dr_location = "canadaeast"
+
+# Serveur PostgreSQL de PRODUCTION (source de la restauration géo) :
+source_postgres_server_id = "/subscriptions/<SUB>/resourceGroups/vina-contrat-prod-rg/providers/Microsoft.DBforPostgreSQL/flexibleServers/vina-contrat-prod-pg"
+
+# Sorties du stack replication :
+dr_acr_name           = "vinacontratproddracr"
+dr_acr_resource_group = "vina-contrat-prod-dr-rg"
+
+# Secret copié depuis le Key Vault de production (ne pas committer) :
+# db_password = "..."

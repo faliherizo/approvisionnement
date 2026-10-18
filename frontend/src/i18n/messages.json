@@ -1,0 +1,5172 @@
+{
+  "nav.documents": {
+    "fr": "Documents",
+    "en": "Documents",
+    "mg": "Antontan-taratasy"
+  },
+  "nav.library": {
+    "fr": "Bibliothèque",
+    "en": "Clause library",
+    "mg": "Tahiry fehezan-teny"
+  },
+  "nav.search": {
+    "fr": "Recherche",
+    "en": "Search",
+    "mg": "Fikarohana"
+  },
+  "nav.dashboard": {
+    "fr": "Tableau de bord",
+    "en": "Dashboard",
+    "mg": "Tabilao"
+  },
+  "nav.assistant": {
+    "fr": "Assistant IA",
+    "en": "AI assistant",
+    "mg": "Mpanampy IA"
+  },
+  "nav.users": {
+    "fr": "Utilisateurs",
+    "en": "Users",
+    "mg": "Mpampiasa"
+  },
+  "nav.profile": {
+    "fr": "Profil",
+    "en": "Profile",
+    "mg": "Mombamomba"
+  },
+  "nav.superadmin": {
+    "fr": "Espace superadmin",
+    "en": "Superadmin area",
+    "mg": "Faritra superadmin"
+  },
+  "action.logout": {
+    "fr": "Déconnexion",
+    "en": "Sign out",
+    "mg": "Hivoaka"
+  },
+  "brand.subtitle": {
+    "fr": "Rédaction contractuelle · Approvisionnement",
+    "en": "Contract drafting · Supply",
+    "mg": "Fanoratana fifanarahana · Fanangonana"
+  },
+  "login.email": {
+    "fr": "Courriel",
+    "en": "Email",
+    "mg": "Mailaka"
+  },
+  "login.password": {
+    "fr": "Mot de passe",
+    "en": "Password",
+    "mg": "Teny miafina"
+  },
+  "login.submit": {
+    "fr": "Se connecter",
+    "en": "Sign in",
+    "mg": "Hiditra"
+  },
+  "login.mfaSubmit": {
+    "fr": "Valider le second facteur",
+    "en": "Verify second factor",
+    "mg": "Hamarino ny dingana faharoa"
+  },
+  "login.sso": {
+    "fr": "Se connecter avec Microsoft",
+    "en": "Sign in with Microsoft",
+    "mg": "Hiditra amin’ny Microsoft"
+  },
+  "login.or": {
+    "fr": "ou",
+    "en": "or",
+    "mg": "na"
+  },
+  "login.loading": {
+    "fr": "Connexion…",
+    "en": "Signing in…",
+    "mg": "Miditra…"
+  },
+  "login.totp": {
+    "fr": "Code d'authentification (TOTP)",
+    "en": "Authentication code (TOTP)",
+    "mg": "Kaody fanamarinana (TOTP)"
+  },
+  "footer.poweredBy": {
+    "fr": "Propulsé par",
+    "en": "Powered by",
+    "mg": "Novokarin’i"
+  },
+  "footer.tagline": {
+    "fr": "Solution de rédaction contractuelle",
+    "en": "Contract drafting solution",
+    "mg": "Vahaolana fanoratana fifanarahana"
+  },
+  "lang.label": {
+    "fr": "Langue",
+    "en": "Language",
+    "mg": "Fiteny"
+  },
+  "aiassistant.contexte": {
+    "fr": "Contexte",
+    "en": "Context",
+    "mg": "Tontolo"
+  },
+  "aiassistant.description": {
+    "fr": "Modèle hébergé localement — aucune donnée ne quitte l'infrastructure (Loi 25).",
+    "en": "Locally hosted model — no data leaves the infrastructure (Law 25).",
+    "mg": "Maodely mitoetra an-toerana — tsy misy angona mivoaka ny fotodrafitrasa (Lalàna 25)."
+  },
+  "aiassistant.generation": {
+    "fr": "Génération…",
+    "en": "Generating…",
+    "mg": "Mamorona…"
+  },
+  "aiassistant.insererFormulaire": {
+    "fr": "Insérer dans le formulaire",
+    "en": "Insert into the form",
+    "mg": "Ampidiro ao amin'ny fonon-taratasy"
+  },
+  "aiassistant.instruction": {
+    "fr": "Instruction",
+    "en": "Instruction",
+    "mg": "Toromarika"
+  },
+  "aiassistant.instructionPlaceholder": {
+    "fr": "Ex. Rédige une clause de garantie d'exécution",
+    "en": "E.g. Draft a performance guarantee clause",
+    "mg": "Oh. Manorata fepetra antoka fanatanterahana"
+  },
+  "aiassistant.proposerTexte": {
+    "fr": "Proposer un texte",
+    "en": "Suggest a text",
+    "mg": "Manolotra lahatsoratra"
+  },
+  "aiassistant.serviceIndisponible": {
+    "fr": "Service IA indisponible",
+    "en": "AI service unavailable",
+    "mg": "Tsy misy ny serivisy IA"
+  },
+  "aiassistant.titre": {
+    "fr": "Assistant IA (Ollama)",
+    "en": "AI assistant (Ollama)",
+    "mg": "Mpanampy IA (Ollama)"
+  },
+  "apidocs.accesReserve": {
+    "fr": "Accès réservé aux administrateurs.",
+    "en": "Administrator access only.",
+    "mg": "Fidirana ho an'ny mpitantana ihany."
+  },
+  "apidocs.description": {
+    "fr": "Swagger UI interactif · spécification :",
+    "en": "Interactive Swagger UI · specification:",
+    "mg": "Swagger UI mifamaly · famaritana:"
+  },
+  "apidocs.titre": {
+    "fr": "API — Documentation & tests (OpenAPI 3.0)",
+    "en": "API — Documentation & tests (OpenAPI 3.0)",
+    "mg": "API — Fanoratana & fitsapana (OpenAPI 3.0)"
+  },
+  "assistant.acqAutre": {
+    "fr": "Autre",
+    "en": "Other",
+    "mg": "Hafa"
+  },
+  "assistant.acqBiens": {
+    "fr": "Biens",
+    "en": "Goods",
+    "mg": "Entana"
+  },
+  "assistant.acqServices": {
+    "fr": "Services",
+    "en": "Services",
+    "mg": "Serivisy"
+  },
+  "assistant.acqServicesPro": {
+    "fr": "Services professionnels",
+    "en": "Professional services",
+    "mg": "Serivisy matihanina"
+  },
+  "assistant.acqTechno": {
+    "fr": "Technologies de l’information",
+    "en": "Information technology",
+    "mg": "Teknolojian'ny fampahalalana"
+  },
+  "assistant.acqTravaux": {
+    "fr": "Travaux de construction",
+    "en": "Construction works",
+    "mg": "Asa fanorenana"
+  },
+  "assistant.analyser": {
+    "fr": "Analyser le besoin",
+    "en": "Analyse the need",
+    "mg": "Diniho ny ilaina"
+  },
+  "assistant.aucunDossier": {
+    "fr": "— Aucun dossier —",
+    "en": "— No file —",
+    "mg": "— Tsy misy dosie —"
+  },
+  "assistant.aucunModele": {
+    "fr": "Aucun modèle pertinent.",
+    "en": "No relevant template.",
+    "mg": "Tsy misy modely mifanaraka."
+  },
+  "assistant.clausesEligibles": {
+    "fr": "Clauses éligibles ({n})",
+    "en": "Eligible clauses ({n})",
+    "mg": "Fepetra mahafeno fepetra ({n})"
+  },
+  "assistant.contexte": {
+    "fr": "Contexte du projet",
+    "en": "Project context",
+    "mg": "Sehatry ny tetikasa"
+  },
+  "assistant.correspExacte": {
+    "fr": "correspondance exacte",
+    "en": "exact match",
+    "mg": "mifanaraka tanteraka"
+  },
+  "assistant.genererDoc": {
+    "fr": "Générer le document",
+    "en": "Generate the document",
+    "mg": "Mamorona ny antontan-taratasy"
+  },
+  "assistant.intro": {
+    "fr": "Décrivez le besoin : l’assistant recommande le mode de sollicitation, les modèles pertinents et les clauses éligibles, puis génère le document.",
+    "en": "Describe the need: the assistant recommends the solicitation mode, the relevant templates and the eligible clauses, then generates the document.",
+    "mg": "Lazao ny ilaina: ny mpanampy dia manoro ny fomba fangatahana, ny modely mifanaraka sy ny fepetra mahafeno fepetra, avy eo mamorona ny antontan-taratasy."
+  },
+  "assistant.modeSuggere": {
+    "fr": "Mode de sollicitation suggéré :",
+    "en": "Suggested solicitation mode:",
+    "mg": "Fomba fangatahana atolotra:"
+  },
+  "assistant.modeleOpt": {
+    "fr": "Modèle (optionnel — sinon clauses éligibles)",
+    "en": "Template (optional — otherwise eligible clauses)",
+    "mg": "Modely (safidy — raha tsy izany fepetra mahafeno fepetra)"
+  },
+  "assistant.modelesReco": {
+    "fr": "Modèles recommandés ({n})",
+    "en": "Recommended templates ({n})",
+    "mg": "Modely atolotra ({n})"
+  },
+  "assistant.nonDetermine": {
+    "fr": "non déterminé",
+    "en": "undetermined",
+    "mg": "tsy voafaritra"
+  },
+  "assistant.rattacherDossier": {
+    "fr": "Rattacher à un dossier (optionnel)",
+    "en": "Attach to a file (optional)",
+    "mg": "Ampifandraiso amin'ny dosie (safidy)"
+  },
+  "assistant.recoEmpty": {
+    "fr": "Lancez une analyse pour obtenir des recommandations.",
+    "en": "Run an analysis to get recommendations.",
+    "mg": "Atombohy ny famakafakana mba hahazoana tolo-kevitra."
+  },
+  "assistant.recoTitle": {
+    "fr": "Recommandations",
+    "en": "Recommendations",
+    "mg": "Tolo-kevitra"
+  },
+  "assistant.selManuelle": {
+    "fr": "— Sélection manuelle des clauses éligibles —",
+    "en": "— Manual selection of eligible clauses —",
+    "mg": "— Fifidianana an-tanana ny fepetra mahafeno fepetra —"
+  },
+  "assistant.title": {
+    "fr": "Assistant guidé de génération",
+    "en": "Guided generation assistant",
+    "mg": "Mpanampy mitari-dàlana amin'ny famoronana"
+  },
+  "assistant.titreDoc": {
+    "fr": "Titre du document",
+    "en": "Document title",
+    "mg": "Lohatenin'ny antontan-taratasy"
+  },
+  "assistant.tplMeta": {
+    "fr": "({code}, {n} clause(s))",
+    "en": "({code}, {n} clause(s))",
+    "mg": "({code}, fepetra {n})"
+  },
+  "assistant.typeAcq": {
+    "fr": "Type d’acquisition",
+    "en": "Acquisition type",
+    "mg": "Karazana fividianana"
+  },
+  "assistant.typeDoc": {
+    "fr": "Type de document",
+    "en": "Document type",
+    "mg": "Karazana antontan-taratasy"
+  },
+  "assistant.valeurEstimee": {
+    "fr": "Valeur estimée ($)",
+    "en": "Estimated value ($)",
+    "mg": "Sanda tombanana ($)"
+  },
+  "audit.accesReserve": {
+    "fr": "Accès réservé aux administrateurs.",
+    "en": "Access restricted to administrators.",
+    "mg": "Fidirana natokana ho an'ny mpitantana."
+  },
+  "audit.action": {
+    "fr": "Action",
+    "en": "Action",
+    "mg": "Hetsika"
+  },
+  "audit.actionPlaceholder": {
+    "fr": "ex. CREER, SUPPRIMER",
+    "en": "e.g. CREATE, DELETE",
+    "mg": "oh. CREER, SUPPRIMER"
+  },
+  "audit.aucunEvenement": {
+    "fr": "Aucun événement.",
+    "en": "No event.",
+    "mg": "Tsy misy hetsika."
+  },
+  "audit.caption": {
+    "fr": "Événements du journal d'audit",
+    "en": "Audit log events",
+    "mg": "Hetsika ao amin'ny diarin'ny fanaraha-maso"
+  },
+  "audit.description": {
+    "fr": "Traçabilité des actions (connexions, créations, modifications, approbations, exports, suppressions). Consultable et exportable en CSV (formats ouverts — art. 18).",
+    "en": "Traceability of actions (logins, creations, modifications, approvals, exports, deletions). Viewable and exportable as CSV (open formats — art. 18).",
+    "mg": "Fahafahana manaraka ny hetsika (fidirana, famoronana, fanovana, fankatoavana, fanondranana, famafana). Azo jerena sy azo alaina amin'ny CSV (endrika misokatra — and. 18)."
+  },
+  "audit.details": {
+    "fr": "Détails",
+    "en": "Details",
+    "mg": "Antsipiriany"
+  },
+  "audit.entite": {
+    "fr": "Entité",
+    "en": "Entity",
+    "mg": "Sampana"
+  },
+  "audit.entitePlaceholder": {
+    "fr": "ex. Document, Dossier",
+    "en": "e.g. Document, File",
+    "mg": "oh. Antontan-taratasy, Rakitra"
+  },
+  "audit.exporter": {
+    "fr": "Exporter en CSV",
+    "en": "Export as CSV",
+    "mg": "Alaina amin'ny CSV"
+  },
+  "audit.filtrer": {
+    "fr": "Filtrer",
+    "en": "Filter",
+    "mg": "Sivana"
+  },
+  "audit.horodatage": {
+    "fr": "Horodatage",
+    "en": "Timestamp",
+    "mg": "Fotoana"
+  },
+  "audit.ref": {
+    "fr": "Réf.",
+    "en": "Ref.",
+    "mg": "Réf."
+  },
+  "audit.titre": {
+    "fr": "Journal d'audit",
+    "en": "Audit log",
+    "mg": "Diarin'ny fanaraha-maso"
+  },
+  "audit.utilisateur": {
+    "fr": "Utilisateur",
+    "en": "User",
+    "mg": "Mpampiasa"
+  },
+  "chatia.ajouter": {
+    "fr": "Ajouter à la base de connaissances",
+    "en": "Add to the knowledge base",
+    "mg": "Ampio amin’ny fototra fahalalana"
+  },
+  "chatia.ajoutezDocuments": {
+    "fr": "Ajoutez documents, extraits de lois, ou données du web pour spécialiser l'assistant.",
+    "en": "Add documents, legal excerpts, or web data to specialize the assistant.",
+    "mg": "Ampio antontan-taratasy, sombin-dalàna, na angona avy amin’ny web mba hampahaizana manokana ny mpanampy."
+  },
+  "chatia.assistantRedige": {
+    "fr": "L'assistant rédige…",
+    "en": "The assistant is writing…",
+    "mg": "Manoratra ny mpanampy…"
+  },
+  "chatia.aucuneConnaissance": {
+    "fr": "Aucune connaissance ajoutée.",
+    "en": "No knowledge added.",
+    "mg": "Tsy misy fahalalana nampiana."
+  },
+  "chatia.baseConnaissances": {
+    "fr": "Base de connaissances ({n})",
+    "en": "Knowledge base ({n})",
+    "mg": "Fototra fahalalana ({n})"
+  },
+  "chatia.bonjour": {
+    "fr": "Bonjour, je suis VINA, l’assistant IA de VINA IT Solutions inc., spécialisé en rédaction contractuelle municipale québécoise (LCOP, LCM, LCV). Posez votre question.",
+    "en": "Hello, I am VINA, the AI assistant of VINA IT Solutions inc., specialized in Quebec municipal contract drafting (LCOP, LCM, LCV). Ask your question.",
+    "mg": "Salama, izaho no VINA, mpanampy IA an’i VINA IT Solutions inc., manam-pahaizana manokana amin’ny fanoratana fifanarahana monisipaly Kebekoà (LCOP, LCM, LCV). Apetraho ny fanontanianao."
+  },
+  "chatia.envoyer": {
+    "fr": "Envoyer",
+    "en": "Send",
+    "mg": "Alefaso"
+  },
+  "chatia.labelContenu": {
+    "fr": "Contenu (texte du document / données)",
+    "en": "Content (document text / data)",
+    "mg": "Votoaty (lahatsoratry ny antontan-taratasy / angona)"
+  },
+  "chatia.labelSource": {
+    "fr": "Source (URL, référence légale…)",
+    "en": "Source (URL, legal reference…)",
+    "mg": "Loharano (URL, fanovozan-kevitra ara-dalàna…)"
+  },
+  "chatia.labelTitre": {
+    "fr": "Titre",
+    "en": "Title",
+    "mg": "Lohateny"
+  },
+  "chatia.placeholderQuestion": {
+    "fr": "Votre question juridique / de rédaction…",
+    "en": "Your legal / drafting question…",
+    "mg": "Ny fanontanianao ara-dalàna / fanoratana…"
+  },
+  "chatia.propulseA": {
+    "fr": "Propulsé par",
+    "en": "Powered by",
+    "mg": "Novokarin’i"
+  },
+  "chatia.propulseB": {
+    "fr": "· augmenté par votre base de connaissances (RAG), 100 % local (Loi 25).",
+    "en": "· enhanced by your knowledge base (RAG), 100% local (Law 25).",
+    "mg": "· nampiana amin’ny fototra fahalalanao (RAG), 100 % an-toerana (Lalàna 25)."
+  },
+  "chatia.serviceIndisponible": {
+    "fr": "Service IA indisponible (Ollama non démarré).",
+    "en": "AI service unavailable (Ollama not started).",
+    "mg": "Tsy misy ny serivisy IA (tsy nalefa ny Ollama)."
+  },
+  "chatia.sources": {
+    "fr": "Sources : {sources}",
+    "en": "Sources: {sources}",
+    "mg": "Loharano : {sources}"
+  },
+  "chatia.titre": {
+    "fr": "Assistant IA VINA — rédaction contractuelle",
+    "en": "VINA AI assistant — contract drafting",
+    "mg": "Mpanampy IA VINA — fanoratana fifanarahana"
+  },
+  "clauses.addCondition": {
+    "fr": "Ajouter une condition",
+    "en": "Add a condition",
+    "mg": "Hanampy fepetra"
+  },
+  "clauses.aiContext": {
+    "fr": "Rédaction d'une clause administrative pour la Ville de Lévis",
+    "en": "Drafting an administrative clause for the City of Lévis",
+    "mg": "Fanoratana fehezanteny ara-pitantanana ho an'ny Tanànan'i Lévis"
+  },
+  "clauses.amountPlaceholder": {
+    "fr": "Montant ($)",
+    "en": "Amount ($)",
+    "mg": "Vola ($)"
+  },
+  "clauses.attrContexte": {
+    "fr": "Contexte contient",
+    "en": "Context contains",
+    "mg": "Ny tontolo misy"
+  },
+  "clauses.attrMode": {
+    "fr": "Mode de sollicitation",
+    "en": "Solicitation method",
+    "mg": "Fomba fangatahana"
+  },
+  "clauses.attrTypeContrat": {
+    "fr": "Type de contrat",
+    "en": "Contract type",
+    "mg": "Karazana fifanarahana"
+  },
+  "clauses.attrValeurMax": {
+    "fr": "Valeur estimée ≤",
+    "en": "Estimated value ≤",
+    "mg": "Sanda tombanana ≤"
+  },
+  "clauses.attrValeurMin": {
+    "fr": "Valeur estimée ≥",
+    "en": "Estimated value ≥",
+    "mg": "Sanda tombanana ≥"
+  },
+  "clauses.cancel": {
+    "fr": "Annuler",
+    "en": "Cancel",
+    "mg": "Foano"
+  },
+  "clauses.category": {
+    "fr": "Catégorie",
+    "en": "Category",
+    "mg": "Sokajy"
+  },
+  "clauses.code": {
+    "fr": "Code",
+    "en": "Code",
+    "mg": "Kaody"
+  },
+  "clauses.conditionsLegend": {
+    "fr": "Conditions d'éligibilité (moteur de règles)",
+    "en": "Eligibility conditions (rules engine)",
+    "mg": "Fepetra fahazoana alalana (maotera fitsipika)"
+  },
+  "clauses.contextKeyword": {
+    "fr": "Mot-clé du contexte",
+    "en": "Context keyword",
+    "mg": "Teny fototra momba ny tontolo"
+  },
+  "clauses.corps": {
+    "fr": "Corps de la clause",
+    "en": "Clause body",
+    "mg": "Votoatin'ny fehezanteny"
+  },
+  "clauses.corpsRequis": {
+    "fr": "Le corps de la clause est requis.",
+    "en": "The clause body is required.",
+    "mg": "Ilaina ny votoatin'ny fehezanteny."
+  },
+  "clauses.delete": {
+    "fr": "Supprimer",
+    "en": "Delete",
+    "mg": "Fafao"
+  },
+  "clauses.deleteConfirm": {
+    "fr": "Confirmer la suppression de {code} — {titre} ?",
+    "en": "Confirm deletion of {code} — {titre}?",
+    "mg": "Hamafiso ny famafana an'i {code} — {titre} ?"
+  },
+  "clauses.deleteTitle": {
+    "fr": "Supprimer la clause",
+    "en": "Delete clause",
+    "mg": "Fafao ny fehezanteny"
+  },
+  "clauses.dependencies": {
+    "fr": "Dépendances (codes requis, séparés par des virgules)",
+    "en": "Dependencies (required codes, comma-separated)",
+    "mg": "Fiankinana (kaody ilaina, sarahina faingo)"
+  },
+  "clauses.dependenciesPlaceholder": {
+    "fr": "ex. GEN-001, AOP-010",
+    "en": "e.g. GEN-001, AOP-010",
+    "mg": "oh. GEN-001, AOP-010"
+  },
+  "clauses.edit": {
+    "fr": "Éditer",
+    "en": "Edit",
+    "mg": "Ovay"
+  },
+  "clauses.editTitle": {
+    "fr": "Modifier {code}",
+    "en": "Edit {code}",
+    "mg": "Ovay {code}"
+  },
+  "clauses.eligibility": {
+    "fr": "Éligibilité :",
+    "en": "Eligibility:",
+    "mg": "Fahazoana alalana :"
+  },
+  "clauses.empty": {
+    "fr": "Aucune clause.",
+    "en": "No clause.",
+    "mg": "Tsy misy fehezanteny."
+  },
+  "clauses.excludes": {
+    "fr": "Exclut :",
+    "en": "Excludes:",
+    "mg": "Manilika :"
+  },
+  "clauses.exclusions": {
+    "fr": "Exclusions (codes exclus, séparés par des virgules)",
+    "en": "Exclusions (excluded codes, comma-separated)",
+    "mg": "Fanilihana (kaody nesorina, sarahina faingo)"
+  },
+  "clauses.exclusionsPlaceholder": {
+    "fr": "ex. OPT-B",
+    "en": "e.g. OPT-B",
+    "mg": "oh. OPT-B"
+  },
+  "clauses.libraryTitle": {
+    "fr": "Bibliothèque de clauses ({n})",
+    "en": "Clause library ({n})",
+    "mg": "Tahirin'ny fehezanteny ({n})"
+  },
+  "clauses.newClause": {
+    "fr": "Nouvelle clause",
+    "en": "New clause",
+    "mg": "Fehezanteny vaovao"
+  },
+  "clauses.next": {
+    "fr": "Suivant →",
+    "en": "Next →",
+    "mg": "Manaraka →"
+  },
+  "clauses.noCondition": {
+    "fr": "Aucune condition : la clause est éligible à tous les contrats.",
+    "en": "No condition: the clause is eligible for all contracts.",
+    "mg": "Tsy misy fepetra : mahazo alalana amin'ny fifanarahana rehetra ny fehezanteny."
+  },
+  "clauses.normativeLabel": {
+    "fr": "Clause normative",
+    "en": "Normative clause",
+    "mg": "Fehezanteny manan-kery"
+  },
+  "clauses.numero": {
+    "fr": "Numéro (ex. 10.06.01)",
+    "en": "Number (e.g. 10.06.01)",
+    "mg": "Laharana (oh. 10.06.01)"
+  },
+  "clauses.pageOf": {
+    "fr": "Page {page} / {pages}",
+    "en": "Page {page} / {pages}",
+    "mg": "Pejy {page} / {pages}"
+  },
+  "clauses.prev": {
+    "fr": "← Précédent",
+    "en": "← Previous",
+    "mg": "← Teo aloha"
+  },
+  "clauses.removeCondition": {
+    "fr": "Retirer la condition",
+    "en": "Remove the condition",
+    "mg": "Esory ny fepetra"
+  },
+  "clauses.requires": {
+    "fr": "Requiert :",
+    "en": "Requires:",
+    "mg": "Mitaky :"
+  },
+  "clauses.save": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Tehirizo"
+  },
+  "clauses.saveRefused": {
+    "fr": "Enregistrement refusé (rôle requis ou code déjà utilisé).",
+    "en": "Save refused (required role or code already in use).",
+    "mg": "Lavina ny fitehirizana (mila anjara asa na efa ampiasaina ny kaody)."
+  },
+  "clauses.searchPlaceholder": {
+    "fr": "Recherche (code, titre, texte)…",
+    "en": "Search (code, title, text)…",
+    "mg": "Hikaroka (kaody, lohateny, lahatsoratra)…"
+  },
+  "clauses.section": {
+    "fr": "Section (ex. Attestations)",
+    "en": "Section (e.g. Certifications)",
+    "mg": "Fizarana (oh. Fanamarinana)"
+  },
+  "clauses.tagNormative": {
+    "fr": "normative",
+    "en": "normative",
+    "mg": "manan-kery"
+  },
+  "clauses.titre": {
+    "fr": "Titre",
+    "en": "Title",
+    "mg": "Lohateny"
+  },
+  "dashboard.chooseTemplate": {
+    "fr": "— Choisir un template —",
+    "en": "— Choose a template —",
+    "mg": "— Misafidiana modely —"
+  },
+  "dashboard.colMode": {
+    "fr": "Mode",
+    "en": "Mode",
+    "mg": "Fomba"
+  },
+  "dashboard.colStatus": {
+    "fr": "Statut",
+    "en": "Status",
+    "mg": "Sata"
+  },
+  "dashboard.colTitle": {
+    "fr": "Titre",
+    "en": "Title",
+    "mg": "Lohateny"
+  },
+  "dashboard.colType": {
+    "fr": "Type",
+    "en": "Type",
+    "mg": "Karazana"
+  },
+  "dashboard.contractDocuments": {
+    "fr": "Documents contractuels",
+    "en": "Contract documents",
+    "mg": "Antontan-taratasy fifanarahana"
+  },
+  "dashboard.contractType": {
+    "fr": "Type de contrat",
+    "en": "Contract type",
+    "mg": "Karazana fifanarahana"
+  },
+  "dashboard.contractor": {
+    "fr": "Prestataire / cocontractant (préambule)",
+    "en": "Contractor / co-contracting party (preamble)",
+    "mg": "Mpanome tolotra / mpiara-manao sonia (savaranonando)"
+  },
+  "dashboard.createDocument": {
+    "fr": "Créer le document",
+    "en": "Create the document",
+    "mg": "Mamorona ny antontan-taratasy"
+  },
+  "dashboard.createFromTemplate": {
+    "fr": "Créer depuis un template",
+    "en": "Create from a template",
+    "mg": "Mamorona avy amin'ny modely"
+  },
+  "dashboard.docTitle": {
+    "fr": "Titre du document",
+    "en": "Document title",
+    "mg": "Lohatenin'ny antontan-taratasy"
+  },
+  "dashboard.emptyDocuments": {
+    "fr": "Aucun document. Créez-en un →",
+    "en": "No document. Create one →",
+    "mg": "Tsy misy antontan-taratasy. Mamorona iray →"
+  },
+  "dashboard.estimatedValue": {
+    "fr": "Valeur estimée ($)",
+    "en": "Estimated value ($)",
+    "mg": "Sanda tombanana ($)"
+  },
+  "dashboard.instantiateTemplate": {
+    "fr": "Instancier le template",
+    "en": "Instantiate the template",
+    "mg": "Ampiharina ny modely"
+  },
+  "dashboard.newDocument": {
+    "fr": "Nouveau document",
+    "en": "New document",
+    "mg": "Antontan-taratasy vaovao"
+  },
+  "dashboard.projectContext": {
+    "fr": "Contexte du projet",
+    "en": "Project context",
+    "mg": "Tontolon'ny tetikasa"
+  },
+  "dashboard.publicBody": {
+    "fr": "Organisme public (préambule)",
+    "en": "Public body (preamble)",
+    "mg": "Andrim-panjakana (savaranonando)"
+  },
+  "dashboard.solicitationMode": {
+    "fr": "Mode de sollicitation",
+    "en": "Solicitation mode",
+    "mg": "Fomba fangatahana"
+  },
+  "dashboard.template": {
+    "fr": "Template",
+    "en": "Template",
+    "mg": "Modely"
+  },
+  "dashboard.tenderNumber": {
+    "fr": "N° d'appel d'offres (optionnel)",
+    "en": "Tender number (optional)",
+    "mg": "Laharana fiantsoana tolotra (tsy voatery)"
+  },
+  "dashboard.title": {
+    "fr": "Titre",
+    "en": "Title",
+    "mg": "Lohateny"
+  },
+  "documenteditor.actions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Hetsika"
+  },
+  "documenteditor.addendaCree": {
+    "fr": "Addenda créé",
+    "en": "Addendum created",
+    "mg": "Noforonina ny fanampiny"
+  },
+  "documenteditor.addendaReintegre": {
+    "fr": "Addenda émis et réintégré",
+    "en": "Addendum issued and reintegrated",
+    "mg": "Navoaka sy nampidirina indray ny fanampiny"
+  },
+  "documenteditor.addendas": {
+    "fr": "Addendas",
+    "en": "Addenda",
+    "mg": "Fanampiny"
+  },
+  "documenteditor.ajouter": {
+    "fr": "Ajouter",
+    "en": "Add",
+    "mg": "Hanampy"
+  },
+  "documenteditor.ajouterAnnexe": {
+    "fr": "Ajouter une annexe",
+    "en": "Add an appendix",
+    "mg": "Hanampy tovana"
+  },
+  "documenteditor.ajouterChangement": {
+    "fr": "Ajouter un changement",
+    "en": "Add a change",
+    "mg": "Hanampy fanovana"
+  },
+  "documenteditor.ajouterLeChangement": {
+    "fr": "Ajouter le changement",
+    "en": "Add the change",
+    "mg": "Hanampy ny fanovana"
+  },
+  "documenteditor.ajouterLigne": {
+    "fr": "Ajouter une ligne",
+    "en": "Add a row",
+    "mg": "Hanampy andalana"
+  },
+  "documenteditor.ajouterSection": {
+    "fr": "Ajouter la section",
+    "en": "Add the section",
+    "mg": "Hanampy ny fizarana"
+  },
+  "documenteditor.ajouterSectionLibre": {
+    "fr": "Ajouter une section libre",
+    "en": "Add a free section",
+    "mg": "Hanampy fizarana malalaka"
+  },
+  "documenteditor.ajouterSignataire": {
+    "fr": "Ajouter un signataire",
+    "en": "Add a signatory",
+    "mg": "Hanampy mpanao sonia"
+  },
+  "documenteditor.annexeAjoutee": {
+    "fr": "Annexe ajoutée",
+    "en": "Appendix added",
+    "mg": "Nampiana tovana"
+  },
+  "documenteditor.annexeSupprimee": {
+    "fr": "Annexe supprimée",
+    "en": "Appendix deleted",
+    "mg": "Voafafa ny tovana"
+  },
+  "documenteditor.annexes": {
+    "fr": "Annexes",
+    "en": "Appendices",
+    "mg": "Tovana"
+  },
+  "documenteditor.annuler": {
+    "fr": "Annuler",
+    "en": "Cancel",
+    "mg": "Foano"
+  },
+  "documenteditor.apercuAide": {
+    "fr": "Vérifiez le document avant de le diffuser. Le branding (logo, couleurs) est appliqué automatiquement. Utilisez « Télécharger le PDF » pour le document complet.",
+    "en": "Check the document before distributing it. Branding (logo, colours) is applied automatically. Use \"Download PDF\" for the full document.",
+    "mg": "Hamarino ny antontan-taratasy alohan'ny hizarana azy. Ampiharina ho azy ny mari-pankasitrahana (logo, loko). Ampiasao ny « Alaivo ny PDF » ho an'ny antontan-taratasy feno."
+  },
+  "documenteditor.apercuAlt": {
+    "fr": "Aperçu de la première page du contrat généré",
+    "en": "Preview of the first page of the generated contract",
+    "mg": "Topi-mason'ny pejy voalohan'ny fifanarahana voavokatra"
+  },
+  "documenteditor.apercuContratTitre": {
+    "fr": "Aperçu du contrat (PDF)",
+    "en": "Contract preview (PDF)",
+    "mg": "Topi-mason'ny fifanarahana (PDF)"
+  },
+  "documenteditor.apercuPdf": {
+    "fr": "Aperçu PDF",
+    "en": "PDF preview",
+    "mg": "Topi-maso PDF"
+  },
+  "documenteditor.apposerSignature": {
+    "fr": "Apposer la signature",
+    "en": "Apply the signature",
+    "mg": "Apetaho ny sonia"
+  },
+  "documenteditor.approbationDemarree": {
+    "fr": "Circuit d’approbation démarré",
+    "en": "Approval workflow started",
+    "mg": "Nanomboka ny lalan'ny fankatoavana"
+  },
+  "documenteditor.approuver": {
+    "fr": "Approuver",
+    "en": "Approve",
+    "mg": "Ankatoavy"
+  },
+  "documenteditor.assemblerDevis": {
+    "fr": "Assembler le devis",
+    "en": "Assemble the quote",
+    "mg": "Handrindra ny tombana"
+  },
+  "documenteditor.aucunAddenda": {
+    "fr": "Aucun addenda.",
+    "en": "No addendum.",
+    "mg": "Tsy misy fanampiny."
+  },
+  "documenteditor.aucunCommentaire": {
+    "fr": "Aucun commentaire.",
+    "en": "No comment.",
+    "mg": "Tsy misy fanamarihana."
+  },
+  "documenteditor.aucunSignataire": {
+    "fr": "Aucun signataire.",
+    "en": "No signatory.",
+    "mg": "Tsy misy mpanao sonia."
+  },
+  "documenteditor.aucuneAnnexe": {
+    "fr": "Aucune annexe.",
+    "en": "No appendix.",
+    "mg": "Tsy misy tovana."
+  },
+  "documenteditor.aucuneClause": {
+    "fr": "Aucune clause active.",
+    "en": "No active clause.",
+    "mg": "Tsy misy fehezanteny mavitrika."
+  },
+  "documenteditor.aucuneEtape": {
+    "fr": "Aucune étape. Démarrez l'approbation.",
+    "en": "No step. Start the approval.",
+    "mg": "Tsy misy dingana. Atombohy ny fankatoavana."
+  },
+  "documenteditor.aucuneLigne": {
+    "fr": "Aucune ligne. Ajoutez une ligne de prix.",
+    "en": "No row. Add a price row.",
+    "mg": "Tsy misy andalana. Hanampia andalam-bidy."
+  },
+  "documenteditor.aucuneObligation": {
+    "fr": "Aucune obligation.",
+    "en": "No obligation.",
+    "mg": "Tsy misy adidy."
+  },
+  "documenteditor.aucunePublication": {
+    "fr": "Aucune publication.",
+    "en": "No publication.",
+    "mg": "Tsy misy famoahana."
+  },
+  "documenteditor.aucuneVersion": {
+    "fr": "Aucune version capturée.",
+    "en": "No version captured.",
+    "mg": "Tsy misy dikan-teny voatahiry."
+  },
+  "documenteditor.badgeAuto": {
+    "fr": "auto",
+    "en": "auto",
+    "mg": "auto"
+  },
+  "documenteditor.badgeEligible": {
+    "fr": "éligible",
+    "en": "eligible",
+    "mg": "mahafeno fepetra"
+  },
+  "documenteditor.bordereauEnregistre": {
+    "fr": "Bordereau enregistré",
+    "en": "Price schedule saved",
+    "mg": "Voatahiry ny lisitry ny vidiny"
+  },
+  "documenteditor.bordereauPrix": {
+    "fr": "Bordereau de prix",
+    "en": "Price schedule",
+    "mg": "Lisitry ny vidiny"
+  },
+  "documenteditor.capturerVersion": {
+    "fr": "Capturer une version",
+    "en": "Capture a version",
+    "mg": "Tahiry dikan-teny"
+  },
+  "documenteditor.changementAide": {
+    "fr": "Le changement est rattaché à la clause du devis. « Émettre (réintégrer) » applique les changements au document et intègre l'addenda au document final.",
+    "en": "The change is attached to the quote clause. \"Issue (reintegrate)\" applies the changes to the document and integrates the addendum into the final document.",
+    "mg": "Mifamatotra amin'ny fehezantenin'ny tombana ny fanovana. Ny « Avoaka (ampidiro indray) » dia mampihatra ny fanovana amin'ny antontan-taratasy ary mampiditra ny fanampiny ao amin'ny antontan-taratasy farany."
+  },
+  "documenteditor.changementAjoute": {
+    "fr": "Changement de clause ajouté",
+    "en": "Clause change added",
+    "mg": "Nampiana fanovana fehezanteny"
+  },
+  "documenteditor.changementsCount": {
+    "fr": "{n} changement(s)",
+    "en": "{n} change(s)",
+    "mg": "fanovana {n}"
+  },
+  "documenteditor.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Mampiditra…"
+  },
+  "documenteditor.choisirClause": {
+    "fr": "— Choisir une clause —",
+    "en": "— Choose a clause —",
+    "mg": "— Misafidiana fehezanteny —"
+  },
+  "documenteditor.cible": {
+    "fr": "Cible",
+    "en": "Target",
+    "mg": "Kendrena"
+  },
+  "documenteditor.circuitApprobation": {
+    "fr": "Circuit d'approbation",
+    "en": "Approval workflow",
+    "mg": "Lalan'ny fankatoavana"
+  },
+  "documenteditor.clauseAModifier": {
+    "fr": "Clause du devis à modifier",
+    "en": "Quote clause to modify",
+    "mg": "Fehezantenin'ny tombana hovaina"
+  },
+  "documenteditor.clauseNormativeVerrou": {
+    "fr": "Clause normative verrouillée",
+    "en": "Locked mandatory clause",
+    "mg": "Fehezanteny manan-kery voahidy"
+  },
+  "documenteditor.clauseReference": {
+    "fr": "Clause de référence (n°)",
+    "en": "Reference clause (no.)",
+    "mg": "Fehezanteny fanovozan-kevitra (lah.)"
+  },
+  "documenteditor.clausesCatalogue": {
+    "fr": "Clauses du catalogue (moteur de règles)",
+    "en": "Catalogue clauses (rules engine)",
+    "mg": "Fehezanteny ao amin'ny katalaogy (milinan'ny fitsipika)"
+  },
+  "documenteditor.clausesCatalogueAide": {
+    "fr": "Toutes les clauses actives sont listées. Les clauses STANDARD éligibles (badge « auto ») sont intégrées automatiquement ; cochez toute autre clause à inclure, même hors des règles d'éligibilité.",
+    "en": "All active clauses are listed. Eligible STANDARD clauses (\"auto\" badge) are included automatically; check any other clause to include, even outside the eligibility rules.",
+    "mg": "Voatanisa ny fehezanteny mavitrika rehetra. Ny fehezanteny STANDARD mahafeno fepetra (marika « auto ») dia tafiditra ho azy; asio marika ny fehezanteny hafa tianao hampidirina, na dia ivelan'ny fitsipika fahazoana aza."
+  },
+  "documenteditor.commentaireAjoute": {
+    "fr": "Commentaire ajouté",
+    "en": "Comment added",
+    "mg": "Nampiana fanamarihana"
+  },
+  "documenteditor.commentaireResolu": {
+    "fr": "Commentaire résolu",
+    "en": "Comment resolved",
+    "mg": "Voavaha ny fanamarihana"
+  },
+  "documenteditor.commentaireRouvert": {
+    "fr": "Commentaire rouvert",
+    "en": "Comment reopened",
+    "mg": "Nosokafana indray ny fanamarihana"
+  },
+  "documenteditor.commentaires": {
+    "fr": "Commentaires",
+    "en": "Comments",
+    "mg": "Fanamarihana"
+  },
+  "documenteditor.commenter": {
+    "fr": "Commenter",
+    "en": "Comment",
+    "mg": "Manamarika"
+  },
+  "documenteditor.commenterPlaceholder": {
+    "fr": "Commenter le devis…",
+    "en": "Comment on the quote…",
+    "mg": "Manaova fanamarihana momba ny tombana…"
+  },
+  "documenteditor.comparer": {
+    "fr": "Comparer",
+    "en": "Compare",
+    "mg": "Ampitahao"
+  },
+  "documenteditor.completer": {
+    "fr": "Compléter",
+    "en": "Complete",
+    "mg": "Fenoy"
+  },
+  "documenteditor.contenu": {
+    "fr": "Contenu",
+    "en": "Content",
+    "mg": "Votoatiny"
+  },
+  "documenteditor.contenuPlaceholder": {
+    "fr": "Rédigez le contenu de cette section…",
+    "en": "Write the content of this section…",
+    "mg": "Soraty ny votoatin'ity fizarana ity…"
+  },
+  "documenteditor.copierLien": {
+    "fr": "Copier le lien",
+    "en": "Copy the link",
+    "mg": "Adikao ny rohy"
+  },
+  "documenteditor.courriel": {
+    "fr": "Courriel",
+    "en": "Email",
+    "mg": "Mailaka"
+  },
+  "documenteditor.dateEcheance": {
+    "fr": "Date d'échéance",
+    "en": "Due date",
+    "mg": "Daty faran'ny fe-potoana"
+  },
+  "documenteditor.demarrerApprobation": {
+    "fr": "Démarrer l'approbation",
+    "en": "Start approval",
+    "mg": "Hanomboka ny fankatoavana"
+  },
+  "documenteditor.demarrerSignature": {
+    "fr": "Démarrer la signature",
+    "en": "Start signing",
+    "mg": "Hanomboka ny sonia"
+  },
+  "documenteditor.depose": {
+    "fr": "Déposé",
+    "en": "Deposited",
+    "mg": "Napetraka"
+  },
+  "documenteditor.devisAssemble": {
+    "fr": "Devis assemblé",
+    "en": "Quote assembled",
+    "mg": "Voarindra ny tombana"
+  },
+  "documenteditor.devisAssembleTitre": {
+    "fr": "Devis assemblé ({n} clauses)",
+    "en": "Assembled quote ({n} clauses)",
+    "mg": "Tombana voarindra (fehezanteny {n})"
+  },
+  "documenteditor.echec": {
+    "fr": "Échec",
+    "en": "Failed",
+    "mg": "Tsy nahomby"
+  },
+  "documenteditor.echecEnregistrement": {
+    "fr": "Échec de l’enregistrement.",
+    "en": "Save failed.",
+    "mg": "Tsy nahomby ny fitehirizana."
+  },
+  "documenteditor.echecExport": {
+    "fr": "Échec de l’export.",
+    "en": "Export failed.",
+    "mg": "Tsy nahomby ny fanondranana."
+  },
+  "documenteditor.emettre": {
+    "fr": "Émettre (réintégrer)",
+    "en": "Issue (reintegrate)",
+    "mg": "Avoaka (ampidiro indray)"
+  },
+  "documenteditor.enregistre": {
+    "fr": "Enregistré",
+    "en": "Saved",
+    "mg": "Voatahiry"
+  },
+  "documenteditor.enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Tehirizo"
+  },
+  "documenteditor.enregistrerRepertoire": {
+    "fr": "Enregistrer ce répertoire",
+    "en": "Save this directory",
+    "mg": "Tehirizo ity lahatahiry ity"
+  },
+  "documenteditor.enregistrerRepertoireTitle": {
+    "fr": "Enregistrer ce répertoire dans votre espace pour le réutiliser",
+    "en": "Save this directory to your space to reuse it",
+    "mg": "Tehirizo ao amin'ny toeranao ity lahatahiry ity mba hampiasaina indray"
+  },
+  "documenteditor.etapeApprouvee": {
+    "fr": "Étape approuvée",
+    "en": "Step approved",
+    "mg": "Nankatoavina ny dingana"
+  },
+  "documenteditor.etapeRefusee": {
+    "fr": "Étape refusée",
+    "en": "Step rejected",
+    "mg": "Nolavina ny dingana"
+  },
+  "documenteditor.exportDocx": {
+    "fr": "Export DOCX",
+    "en": "DOCX export",
+    "mg": "Fanondranana DOCX"
+  },
+  "documenteditor.exportGenere": {
+    "fr": "Export {format} généré",
+    "en": "{format} export generated",
+    "mg": "Vita ny fanondranana {format}"
+  },
+  "documenteditor.exportPdf": {
+    "fr": "Export PDF",
+    "en": "PDF export",
+    "mg": "Fanondranana PDF"
+  },
+  "documenteditor.fermer": {
+    "fr": "Fermer",
+    "en": "Close",
+    "mg": "Hidio"
+  },
+  "documenteditor.format": {
+    "fr": "Format",
+    "en": "Format",
+    "mg": "Endrika"
+  },
+  "documenteditor.gabarit": {
+    "fr": "Gabarit",
+    "en": "Template",
+    "mg": "Endrika"
+  },
+  "documenteditor.gabaritAriaLabel": {
+    "fr": "Gabarit du document à générer",
+    "en": "Template of the document to generate",
+    "mg": "Endriky ny antontan-taratasy hamokarina"
+  },
+  "documenteditor.gabaritAuto": {
+    "fr": "Automatique (selon le type)",
+    "en": "Automatic (based on type)",
+    "mg": "Ho azy (arakaraka ny karazana)"
+  },
+  "documenteditor.generer": {
+    "fr": "Générer",
+    "en": "Generate",
+    "mg": "Hamokatra"
+  },
+  "documenteditor.historiquePublications": {
+    "fr": "Historique des publications",
+    "en": "Publication history",
+    "mg": "Tantaran'ny famoahana"
+  },
+  "documenteditor.iaCopie": {
+    "fr": "La proposition IA est copiée dans le presse-papier ; collez-la dans une clause de la bibliothèque.",
+    "en": "The AI suggestion is copied to the clipboard; paste it into a clause from the library.",
+    "mg": "Voadika ao amin'ny takelaka fandikana ny tolo-kevitry ny IA; apetaho ao amin'ny fehezanteny iray ao amin'ny tranomboky izy io."
+  },
+  "documenteditor.lienCopie": {
+    "fr": "Lien de signature copié",
+    "en": "Signature link copied",
+    "mg": "Voadika ny rohin'ny sonia"
+  },
+  "documenteditor.marquerResolu": {
+    "fr": "Marquer résolu",
+    "en": "Mark resolved",
+    "mg": "Mariho ho voavaha"
+  },
+  "documenteditor.modifieLocalement": {
+    "fr": "modifié localement",
+    "en": "locally modified",
+    "mg": "novaina an-toerana"
+  },
+  "documenteditor.modifierClauseAddenda": {
+    "fr": "Modifier une clause par addenda",
+    "en": "Modify a clause by addendum",
+    "mg": "Ovay amin'ny fanampiny ny fehezanteny"
+  },
+  "documenteditor.niveau": {
+    "fr": "N{n}",
+    "en": "L{n}",
+    "mg": "A{n}"
+  },
+  "documenteditor.nom": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Anarana"
+  },
+  "documenteditor.nomCompletSignataire": {
+    "fr": "Nom complet du signataire",
+    "en": "Signatory's full name",
+    "mg": "Anarana feon'ny mpanao sonia"
+  },
+  "documenteditor.nonAssemble": {
+    "fr": "Non assemblé.",
+    "en": "Not assembled.",
+    "mg": "Tsy voarindra."
+  },
+  "documenteditor.noteVersion": {
+    "fr": "Note de version",
+    "en": "Version note",
+    "mg": "Naotan'ny dikan-teny"
+  },
+  "documenteditor.nouveauTexteClause": {
+    "fr": "Nouveau texte de la clause",
+    "en": "New clause text",
+    "mg": "Lahatsoratra vaovaon'ny fehezanteny"
+  },
+  "documenteditor.nouvelAddenda": {
+    "fr": "Nouvel addenda",
+    "en": "New addendum",
+    "mg": "Fanampiny vaovao"
+  },
+  "documenteditor.nouvelleAnnexe": {
+    "fr": "Nouvelle annexe",
+    "en": "New appendix",
+    "mg": "Tovana vaovao"
+  },
+  "documenteditor.nouvelleObligation": {
+    "fr": "Nouvelle obligation / échéance",
+    "en": "New obligation / deadline",
+    "mg": "Adidy / fe-potoana vaovao"
+  },
+  "documenteditor.nouvelleSectionLibre": {
+    "fr": "Nouvelle section libre",
+    "en": "New free section",
+    "mg": "Fizarana malalaka vaovao"
+  },
+  "documenteditor.numeroAnnexe": {
+    "fr": "Numéro (ex. A, 1, I)",
+    "en": "Number (e.g. A, 1, I)",
+    "mg": "Laharana (oh. A, 1, I)"
+  },
+  "documenteditor.numeroPrefix": {
+    "fr": "n°{n}",
+    "en": "no. {n}",
+    "mg": "lah. {n}"
+  },
+  "documenteditor.objetAddenda": {
+    "fr": "Objet de l'addenda",
+    "en": "Addendum subject",
+    "mg": "Foto-kevitry ny fanampiny"
+  },
+  "documenteditor.obligationAjoutee": {
+    "fr": "Obligation ajoutée",
+    "en": "Obligation added",
+    "mg": "Nampiana adidy"
+  },
+  "documenteditor.obligationCompletee": {
+    "fr": "Obligation complétée",
+    "en": "Obligation completed",
+    "mg": "Vita ny adidy"
+  },
+  "documenteditor.obligationsEcheances": {
+    "fr": "Obligations & échéances",
+    "en": "Obligations & deadlines",
+    "mg": "Adidy & fe-potoana"
+  },
+  "documenteditor.publicationAide": {
+    "fr": "Dépose le document rendu vers SharePoint, OneDrive, Outlook, Teams ou SAP. Le répertoire de destination (ex. « Contrats/2027 ») s’applique à SharePoint, OneDrive et Teams ; laissé vide, le dossier configuré par défaut est utilisé. Saisissez librement un dossier ou choisissez parmi vos répertoires enregistrés ; « Enregistrer ce répertoire » l’ajoute à votre espace (gérable depuis votre profil).",
+    "en": "Deposits the rendered document to SharePoint, OneDrive, Outlook, Teams or SAP. The destination directory (e.g. \"Contracts/2027\") applies to SharePoint, OneDrive and Teams; left empty, the default configured folder is used. Freely enter a folder or choose from your saved directories; \"Save this directory\" adds it to your space (manageable from your profile).",
+    "mg": "Mametraka ny antontan-taratasy voavokatra any amin'ny SharePoint, OneDrive, Outlook, Teams na SAP. Ny lahatahiry haleha (oh. « Contrats/2027 ») dia mihatra amin'ny SharePoint, OneDrive sy Teams; raha avela foana, dia ny lahatahiry napetraka ho isika no ampiasaina. Soraty malalaka ny lahatahiry na fidio amin'ny lahatahiry voatahirinao; ny « Tehirizo ity lahatahiry ity » dia manampy azy ao amin'ny toeranao (azo tantanina avy amin'ny mombamombanao)."
+  },
+  "documenteditor.publicationEnCours": {
+    "fr": "Publication en cours…",
+    "en": "Publishing…",
+    "mg": "Eo am-pamoahana…"
+  },
+  "documenteditor.publicationTitre": {
+    "fr": "Publication (Microsoft 365 / SAP)",
+    "en": "Publication (Microsoft 365 / SAP)",
+    "mg": "Famoahana (Microsoft 365 / SAP)"
+  },
+  "documenteditor.publicationVerrouillee1": {
+    "fr": "La publication vers Microsoft 365 ou SAP devient disponible une fois le document",
+    "en": "Publishing to Microsoft 365 or SAP becomes available once the document is",
+    "mg": "Ny famoahana mankany amin'ny Microsoft 365 na SAP dia lasa azo atao rehefa"
+  },
+  "documenteditor.publicationVerrouillee2": {
+    "fr": "(circuit d’approbation complété). Statut actuel :",
+    "en": "(approval workflow completed). Current status:",
+    "mg": "(vita ny lalan'ny fankatoavana). Sata ankehitriny:"
+  },
+  "documenteditor.publieVers": {
+    "fr": "Publié vers {cible}",
+    "en": "Published to {cible}",
+    "mg": "Navoaka mankany amin'ny {cible}"
+  },
+  "documenteditor.publier": {
+    "fr": "Publier",
+    "en": "Publish",
+    "mg": "Havoaka"
+  },
+  "documenteditor.redactionAide": {
+    "fr": "Le texte est propre à ce document ; la clause du catalogue partagé n'est pas modifiée.",
+    "en": "The text is specific to this document; the shared catalogue clause is not modified.",
+    "mg": "Manokana ho an'ity antontan-taratasy ity ny lahatsoratra; tsy ovaina ny fehezanteny ao amin'ny katalaogy iombonana."
+  },
+  "documenteditor.rediger": {
+    "fr": "Rédiger",
+    "en": "Draft",
+    "mg": "Hanoratra"
+  },
+  "documenteditor.redigerSection": {
+    "fr": "Rédiger la section",
+    "en": "Draft the section",
+    "mg": "Hanoratra ny fizarana"
+  },
+  "documenteditor.refPrefix": {
+    "fr": "réf. {ref}",
+    "en": "ref. {ref}",
+    "mg": "and. {ref}"
+  },
+  "documenteditor.refuser": {
+    "fr": "Refuser",
+    "en": "Reject",
+    "mg": "Lavo"
+  },
+  "documenteditor.regroupement": {
+    "fr": "Regroupement (section)",
+    "en": "Grouping (section)",
+    "mg": "Fanambarana (fizarana)"
+  },
+  "documenteditor.regroupementPlaceholder": {
+    "fr": "ex. Clauses particulières",
+    "en": "e.g. Special clauses",
+    "mg": "oh. Fehezanteny manokana"
+  },
+  "documenteditor.repertoireDestination": {
+    "fr": "Répertoire de destination",
+    "en": "Destination directory",
+    "mg": "Lahatahiry haleha"
+  },
+  "documenteditor.repertoireEchec": {
+    "fr": "Enregistrement du répertoire impossible",
+    "en": "Unable to save directory",
+    "mg": "Tsy azo tahirizina ny lahatahiry"
+  },
+  "documenteditor.repertoireEnregistre": {
+    "fr": "Répertoire enregistré dans votre espace",
+    "en": "Directory saved to your space",
+    "mg": "Voatahiry ao amin'ny toeranao ny lahatahiry"
+  },
+  "documenteditor.repertoirePlaceholder": {
+    "fr": "ex. Contrats/2027",
+    "en": "e.g. Contracts/2027",
+    "mg": "oh. Contrats/2027"
+  },
+  "documenteditor.resolu": {
+    "fr": "résolu",
+    "en": "resolved",
+    "mg": "voavaha"
+  },
+  "documenteditor.retirer": {
+    "fr": "Retirer",
+    "en": "Remove",
+    "mg": "Esory"
+  },
+  "documenteditor.retirerLigne": {
+    "fr": "Retirer la ligne",
+    "en": "Remove the row",
+    "mg": "Esory ny andalana"
+  },
+  "documenteditor.roleSignataire": {
+    "fr": "Rôle (ex. Ville de Lévis / Cocontractant)",
+    "en": "Role (e.g. City of Lévis / Contracting party)",
+    "mg": "Anjara asa (oh. Tanànan'i Lévis / Mpiara-manao fifanarahana)"
+  },
+  "documenteditor.rouvrir": {
+    "fr": "Rouvrir",
+    "en": "Reopen",
+    "mg": "Sokafy indray"
+  },
+  "documenteditor.sectionAjoutee": {
+    "fr": "Section ajoutée",
+    "en": "Section added",
+    "mg": "Nampiana fizarana"
+  },
+  "documenteditor.sectionLibre": {
+    "fr": "section libre",
+    "en": "free section",
+    "mg": "fizarana malalaka"
+  },
+  "documenteditor.sectionMiseAJour": {
+    "fr": "Section mise à jour",
+    "en": "Section updated",
+    "mg": "Nohavaozina ny fizarana"
+  },
+  "documenteditor.sectionRetiree": {
+    "fr": "Section retirée",
+    "en": "Section removed",
+    "mg": "Nesorina ny fizarana"
+  },
+  "documenteditor.signataireAjoute": {
+    "fr": "Signataire ajouté",
+    "en": "Signatory added",
+    "mg": "Nampiana mpanao sonia"
+  },
+  "documenteditor.signatureApposee": {
+    "fr": "Signature apposée",
+    "en": "Signature applied",
+    "mg": "Voapetaka ny sonia"
+  },
+  "documenteditor.signatureDe": {
+    "fr": "Signature de {nom}",
+    "en": "Signature of {nom}",
+    "mg": "Soniàn'i {nom}"
+  },
+  "documenteditor.signatureDemarree": {
+    "fr": "Processus de signature démarré",
+    "en": "Signature process started",
+    "mg": "Nanomboka ny fizotry ny sonia"
+  },
+  "documenteditor.signatureElectronique": {
+    "fr": "Signature électronique",
+    "en": "Electronic signature",
+    "mg": "Sonia elektronika"
+  },
+  "documenteditor.signatureManuscrite": {
+    "fr": "Signature manuscrite ou image",
+    "en": "Handwritten signature or image",
+    "mg": "Sonia an-tanana na sary"
+  },
+  "documenteditor.signatureTitre": {
+    "fr": "Signature — {nom}",
+    "en": "Signature — {nom}",
+    "mg": "Sonia — {nom}"
+  },
+  "documenteditor.signer": {
+    "fr": "Signer",
+    "en": "Sign",
+    "mg": "Hanao sonia"
+  },
+  "documenteditor.supprimer": {
+    "fr": "Supprimer",
+    "en": "Delete",
+    "mg": "Fafao"
+  },
+  "documenteditor.tagNormative": {
+    "fr": "normative",
+    "en": "mandatory",
+    "mg": "manan-kery"
+  },
+  "documenteditor.telechargerPdf": {
+    "fr": "Télécharger le PDF",
+    "en": "Download PDF",
+    "mg": "Alaivo ny PDF"
+  },
+  "documenteditor.televersement": {
+    "fr": "Téléversement vers {cible} en cours…",
+    "en": "Uploading to {cible}…",
+    "mg": "Eo am-pandefasana mankany amin'ny {cible}…"
+  },
+  "documenteditor.texteAddendaPlaceholder": {
+    "fr": "Texte modifié apporté par l'addenda…",
+    "en": "Modified text introduced by the addendum…",
+    "mg": "Lahatsoratra novaina nentin'ny fanampiny…"
+  },
+  "documenteditor.thDate": {
+    "fr": "Date",
+    "en": "Date",
+    "mg": "Daty"
+  },
+  "documenteditor.thDescription": {
+    "fr": "Description",
+    "en": "Description",
+    "mg": "Famaritana"
+  },
+  "documenteditor.thEmplacement": {
+    "fr": "Emplacement",
+    "en": "Location",
+    "mg": "Toerana"
+  },
+  "documenteditor.thEtat": {
+    "fr": "État",
+    "en": "Status",
+    "mg": "Toetra"
+  },
+  "documenteditor.thQuantite": {
+    "fr": "Quantité",
+    "en": "Quantity",
+    "mg": "Habetsahana"
+  },
+  "documenteditor.thTaux": {
+    "fr": "Taux",
+    "en": "Rate",
+    "mg": "Tahan'ny vidiny"
+  },
+  "documenteditor.thTotal": {
+    "fr": "Total",
+    "en": "Total",
+    "mg": "Totalin'ny"
+  },
+  "documenteditor.titre": {
+    "fr": "Titre",
+    "en": "Title",
+    "mg": "Lohateny"
+  },
+  "documenteditor.titreBordereau": {
+    "fr": "Titre du bordereau",
+    "en": "Price schedule title",
+    "mg": "Lohatenin'ny lisitry ny vidiny"
+  },
+  "documenteditor.titreSection": {
+    "fr": "Titre de la section",
+    "en": "Section title",
+    "mg": "Lohatenin'ny fizarana"
+  },
+  "documenteditor.titreSectionPlaceholder": {
+    "fr": "ex. Objet du contrat",
+    "en": "e.g. Purpose of the contract",
+    "mg": "oh. Tanjon'ny fifanarahana"
+  },
+  "documenteditor.total": {
+    "fr": "TOTAL",
+    "en": "TOTAL",
+    "mg": "TOTALINY"
+  },
+  "documenteditor.type": {
+    "fr": "Type",
+    "en": "Type",
+    "mg": "Karazana"
+  },
+  "documenteditor.valide": {
+    "fr": "validé",
+    "en": "validated",
+    "mg": "voamarina"
+  },
+  "documenteditor.versionA": {
+    "fr": "version A",
+    "en": "version A",
+    "mg": "dikan-teny A"
+  },
+  "documenteditor.versionB": {
+    "fr": "version B",
+    "en": "version B",
+    "mg": "dikan-teny B"
+  },
+  "documenteditor.versionCapturee": {
+    "fr": "Version capturée",
+    "en": "Version captured",
+    "mg": "Voatahiry ny dikan-teny"
+  },
+  "documenteditor.versionsRedlining": {
+    "fr": "Versions & redlining",
+    "en": "Versions & redlining",
+    "mg": "Dikan-teny & fanamarihana fanovana"
+  },
+  "donneesia.accesReserve": {
+    "fr": "Accès réservé aux administrateurs.",
+    "en": "Restricted to administrators.",
+    "mg": "Voafetra ho an'ny mpitantana."
+  },
+  "donneesia.active": {
+    "fr": "Activé",
+    "en": "Enabled",
+    "mg": "Mavitrika"
+  },
+  "donneesia.activerIa": {
+    "fr": "Activer l'assistant IA",
+    "en": "Enable AI assistant",
+    "mg": "Hampandeha ny mpanampy IA"
+  },
+  "donneesia.aideCsv": {
+    "fr": "Première ligne = en-tête. Catégories : STANDARD, OPTIONNELLE, PERSONNALISEE.",
+    "en": "First line = header. Categories: STANDARD, OPTIONNELLE, PERSONNALISEE.",
+    "mg": "Andalana voalohany = lohateny. Sokajy: STANDARD, OPTIONNELLE, PERSONNALISEE."
+  },
+  "donneesia.analyserEssai": {
+    "fr": "Analyser (essai)",
+    "en": "Analyse (trial)",
+    "mg": "Diniho (an-dandy)"
+  },
+  "donneesia.aucuneSuggestion": {
+    "fr": "Aucune suggestion tracée.",
+    "en": "No suggestion logged.",
+    "mg": "Tsy misy soso-kevitra voarakitra."
+  },
+  "donneesia.desactive": {
+    "fr": "Désactivé",
+    "en": "Disabled",
+    "mg": "Natsahatra"
+  },
+  "donneesia.desactiverIa": {
+    "fr": "Désactiver l'assistant IA",
+    "en": "Disable AI assistant",
+    "mg": "Hanatsahatra ny mpanampy IA"
+  },
+  "donneesia.essai": {
+    "fr": "Essai",
+    "en": "Trial",
+    "mg": "An-dandy"
+  },
+  "donneesia.etat": {
+    "fr": "État :",
+    "en": "Status:",
+    "mg": "Sata :"
+  },
+  "donneesia.exporterZip": {
+    "fr": "Exporter toutes les données (ZIP)",
+    "en": "Export all data (ZIP)",
+    "mg": "Avoaka ny angona rehetra (ZIP)"
+  },
+  "donneesia.iaIntro": {
+    "fr": "L'IA est locale (Ollama) — aucune donnée transmise à l'externe (Loi 25). Les suggestions sont tracées et l'assistant peut être désactivé (art. 21).",
+    "en": "The AI is local (Ollama) — no data sent externally (Law 25). Suggestions are logged and the assistant can be disabled (art. 21).",
+    "mg": "An-toerana ny IA (Ollama) — tsy misy angona alefa any ivelany (Lalàna 25). Voarakitra ny soso-kevitra ary azo atsahatra ny mpanampy (and. 21)."
+  },
+  "donneesia.iaTitre": {
+    "fr": "Encadrement de l'assistant IA",
+    "en": "AI assistant governance",
+    "mg": "Fanaraha-maso ny mpanampy IA"
+  },
+  "donneesia.import": {
+    "fr": "Import",
+    "en": "Import",
+    "mg": "Fampidirana"
+  },
+  "donneesia.importEssaiNote": {
+    "fr": "La migration d'essai valide sans rien enregistrer (art. 22).",
+    "en": "The trial migration validates without saving anything (art. 22).",
+    "mg": "Ny fifindrà an-dandy dia manamarina nefa tsy mitahiry na inona na inona (and. 22)."
+  },
+  "donneesia.importIntro": {
+    "fr": "Importez des clauses au format CSV",
+    "en": "Import clauses in CSV format",
+    "mg": "Ampidiro ireo fehezan-teny amin'ny endrika CSV"
+  },
+  "donneesia.importTitre": {
+    "fr": "Import / migration de contenus",
+    "en": "Content import / migration",
+    "mg": "Fampidirana / fifindrà votoaty"
+  },
+  "donneesia.importer": {
+    "fr": "Importer",
+    "en": "Import",
+    "mg": "Ampidiro"
+  },
+  "donneesia.importerModele": {
+    "fr": "Importer le modèle",
+    "en": "Import template",
+    "mg": "Ampidiro ny modely"
+  },
+  "donneesia.labelCsv": {
+    "fr": "Contenu CSV",
+    "en": "CSV content",
+    "mg": "Votoaty CSV"
+  },
+  "donneesia.labelFichierWord": {
+    "fr": "Fichier Word",
+    "en": "Word file",
+    "mg": "Rakitra Word"
+  },
+  "donneesia.labelNomModele": {
+    "fr": "Nom du modèle",
+    "en": "Template name",
+    "mg": "Anaran'ny modely"
+  },
+  "donneesia.ligneErreur": {
+    "fr": "Ligne {ligne} : {message}",
+    "en": "Line {ligne}: {message}",
+    "mg": "Andalana {ligne} : {message}"
+  },
+  "donneesia.migrationEssai": {
+    "fr": "Migration d'essai",
+    "en": "Trial migration",
+    "mg": "Fifindrà an-dandy"
+  },
+  "donneesia.placeholderNomModele": {
+    "fr": "ex. Devis type — services professionnels",
+    "en": "e.g. Standard quote — professional services",
+    "mg": "oh. Tombana modely — serivisy matihanina"
+  },
+  "donneesia.rapportCsv": {
+    "fr": "{lues} ligne(s) lue(s), {valides} valide(s), {importes} importée(s).",
+    "en": "{lues} line(s) read, {valides} valid, {importes} imported.",
+    "mg": "{lues} andalana novakiana, {valides} manankery, {importes} nampidirina."
+  },
+  "donneesia.rapportWord": {
+    "fr": "{sections} section(s) détectée(s), {clauses} clause(s) créée(s)",
+    "en": "{sections} section(s) detected, {clauses} clause(s) created",
+    "mg": "{sections} fizarana hita, {clauses} fehezan-teny noforonina"
+  },
+  "donneesia.rapportWordModele": {
+    "fr": " dans le modèle « {nom} »",
+    "en": " in template \"{nom}\"",
+    "mg": " ao amin'ny modely « {nom} »"
+  },
+  "donneesia.reversibiliteIntro": {
+    "fr": "Exportez toutes les données du locataire en formats ouverts (JSON, archive ZIP) — propriété exclusive de la Ville (art. 20).",
+    "en": "Export all tenant data in open formats (JSON, ZIP archive) — exclusive property of the City (art. 20).",
+    "mg": "Avoahy ny angona rehetran'ny mpanofa amin'ny endrika misokatra (JSON, arisiva ZIP) — fananan'ny Tanàna manokana (and. 20)."
+  },
+  "donneesia.reversibiliteTitre": {
+    "fr": "Réversibilité",
+    "en": "Reversibility",
+    "mg": "Fahafahana miverina"
+  },
+  "donneesia.suggestionsCaption": {
+    "fr": "Journal des suggestions de l'assistant IA",
+    "en": "AI assistant suggestions log",
+    "mg": "Diarin'ny soso-kevitry ny mpanampy IA"
+  },
+  "donneesia.suggestionsRecentes": {
+    "fr": "Suggestions récentes",
+    "en": "Recent suggestions",
+    "mg": "Soso-kevitra vao haingana"
+  },
+  "donneesia.thDate": {
+    "fr": "Date",
+    "en": "Date",
+    "mg": "Daty"
+  },
+  "donneesia.thModele": {
+    "fr": "Modèle",
+    "en": "Model",
+    "mg": "Modely"
+  },
+  "donneesia.thType": {
+    "fr": "Type",
+    "en": "Type",
+    "mg": "Karazana"
+  },
+  "donneesia.thUtilisateur": {
+    "fr": "Utilisateur",
+    "en": "User",
+    "mg": "Mpampiasa"
+  },
+  "donneesia.toastChoisirFichier": {
+    "fr": "Choisissez un fichier Word (.docx).",
+    "en": "Choose a Word file (.docx).",
+    "mg": "Mifidiana rakitra Word (.docx)."
+  },
+  "donneesia.toastEssaiTermine": {
+    "fr": "Migration d'essai terminée",
+    "en": "Trial migration completed",
+    "mg": "Vita ny fifindrà an-dandy"
+  },
+  "donneesia.toastIaActive": {
+    "fr": "Assistant IA activé",
+    "en": "AI assistant enabled",
+    "mg": "Nalefa ny mpanampy IA"
+  },
+  "donneesia.toastIaDesactive": {
+    "fr": "Assistant IA désactivé",
+    "en": "AI assistant disabled",
+    "mg": "Natsahatra ny mpanampy IA"
+  },
+  "donneesia.toastImportRefuse": {
+    "fr": "Import refusé.",
+    "en": "Import refused.",
+    "mg": "Lavina ny fampidirana."
+  },
+  "donneesia.toastImportTermine": {
+    "fr": "Import terminé ({n} clause(s))",
+    "en": "Import completed ({n} clause(s))",
+    "mg": "Vita ny fampidirana ({n} fehezan-teny)"
+  },
+  "donneesia.toastWordAnalyse": {
+    "fr": "Analyse du modèle Word terminée",
+    "en": "Word template analysis completed",
+    "mg": "Vita ny fandinihana ny modely Word"
+  },
+  "donneesia.toastWordImporte": {
+    "fr": "Modèle importé ({n} clause(s))",
+    "en": "Template imported ({n} clause(s))",
+    "mg": "Nampidirina ny modely ({n} fehezan-teny)"
+  },
+  "donneesia.toastWordRefuse": {
+    "fr": "Import Word refusé.",
+    "en": "Word import refused.",
+    "mg": "Lavina ny fampidirana Word."
+  },
+  "donneesia.wordIntro": {
+    "fr": "Importez un modèle Word existant : chaque section (titre + corps) devient une clause, regroupées dans un nouveau modèle (exig. 3 et 16 de l'addenda).",
+    "en": "Import an existing Word template: each section (title + body) becomes a clause, grouped into a new template (req. 3 and 16 of the addendum).",
+    "mg": "Ampidiro modely Word efa misy: ny fizarana tsirairay (lohateny + vatana) dia lasa fehezan-teny, atambatra ao amin'ny modely vaovao (fepetra 3 sy 16 amin'ny tovana)."
+  },
+  "donneesia.wordTitre": {
+    "fr": "Import d'un modèle Word (.docx)",
+    "en": "Word template import (.docx)",
+    "mg": "Fampidirana modely Word (.docx)"
+  },
+  "dossiers.acquisitionTypeLabel": {
+    "fr": "Type d’acquisition",
+    "en": "Acquisition type",
+    "mg": "Karazana fividianana"
+  },
+  "dossiers.approvedCount": {
+    "fr": "approuvé(s)",
+    "en": "approved",
+    "mg": "nankatoavina"
+  },
+  "dossiers.attachButton": {
+    "fr": "Rattacher au dossier",
+    "en": "Attach to file",
+    "mg": "Ampifandraiso amin'ny rakitra"
+  },
+  "dossiers.attachExisting": {
+    "fr": "Rattacher un document existant",
+    "en": "Attach an existing document",
+    "mg": "Ampifandraiso antontan-taratasy misy"
+  },
+  "dossiers.attachedCaption": {
+    "fr": "Documents rattachés au dossier",
+    "en": "Documents attached to the file",
+    "mg": "Antontan-taratasy mifandray amin'ny rakitra"
+  },
+  "dossiers.attachedDocs": {
+    "fr": "Documents rattachés",
+    "en": "Attached documents",
+    "mg": "Antontan-taratasy mifandray"
+  },
+  "dossiers.cancel": {
+    "fr": "Annuler",
+    "en": "Cancel",
+    "mg": "Foano"
+  },
+  "dossiers.chooseDoc": {
+    "fr": "— Choisir un document —",
+    "en": "— Choose a document —",
+    "mg": "— Misafidiana antontan-taratasy —"
+  },
+  "dossiers.createDossier": {
+    "fr": "Créer le dossier",
+    "en": "Create file",
+    "mg": "Mamorona ny rakitra"
+  },
+  "dossiers.deleteButton": {
+    "fr": "Supprimer le dossier",
+    "en": "Delete file",
+    "mg": "Fafao ny rakitra"
+  },
+  "dossiers.deleteConfirm": {
+    "fr": "Confirmer la suppression du dossier « {titre} » ? Les documents rattachés seront détachés (non supprimés).",
+    "en": "Confirm deletion of file « {titre} »? Attached documents will be detached (not deleted).",
+    "mg": "Hamafiso ny famafana ny rakitra « {titre} » ? Hoesorina (fa tsy hofafana) ny antontan-taratasy mifandray."
+  },
+  "dossiers.deleteTitle": {
+    "fr": "Supprimer le dossier",
+    "en": "Delete file",
+    "mg": "Fafao ny rakitra"
+  },
+  "dossiers.detach": {
+    "fr": "Détacher",
+    "en": "Detach",
+    "mg": "Esory"
+  },
+  "dossiers.detachAria": {
+    "fr": "Détacher le document {titre}",
+    "en": "Detach document {titre}",
+    "mg": "Esory ny antontan-taratasy {titre}"
+  },
+  "dossiers.detailTitle": {
+    "fr": "Dossier : {titre}",
+    "en": "File: {titre}",
+    "mg": "Rakitra : {titre}"
+  },
+  "dossiers.docCount": {
+    "fr": "document(s)",
+    "en": "document(s)",
+    "mg": "antontan-taratasy"
+  },
+  "dossiers.edit": {
+    "fr": "Modifier",
+    "en": "Edit",
+    "mg": "Ovay"
+  },
+  "dossiers.editFormTitle": {
+    "fr": "Modifier le dossier",
+    "en": "Edit file",
+    "mg": "Ovay ny rakitra"
+  },
+  "dossiers.empty": {
+    "fr": "Aucun dossier. Créez-en un →",
+    "en": "No file. Create one →",
+    "mg": "Tsy misy rakitra. Mamorona iray →"
+  },
+  "dossiers.newFormTitle": {
+    "fr": "Nouveau dossier",
+    "en": "New file",
+    "mg": "Rakitra vaovao"
+  },
+  "dossiers.noAttachedDoc": {
+    "fr": "Aucun document rattaché.",
+    "en": "No attached document.",
+    "mg": "Tsy misy antontan-taratasy mifandray."
+  },
+  "dossiers.objectLabel": {
+    "fr": "Objet du dossier",
+    "en": "File subject",
+    "mg": "Lohahevitry ny rakitra"
+  },
+  "dossiers.reportAria": {
+    "fr": "Rapport de suivi du dossier",
+    "en": "File tracking report",
+    "mg": "Tatitra fanaraha-maso ny rakitra"
+  },
+  "dossiers.responsibleLabel": {
+    "fr": "Responsable du dossier",
+    "en": "File manager",
+    "mg": "Tompon'andraikitry ny rakitra"
+  },
+  "dossiers.saveChanges": {
+    "fr": "Enregistrer les modifications",
+    "en": "Save changes",
+    "mg": "Tehirizo ny fanovana"
+  },
+  "dossiers.signedCount": {
+    "fr": "signé(s)",
+    "en": "signed",
+    "mg": "vita sonia"
+  },
+  "dossiers.solicitationModeLabel": {
+    "fr": "Mode de sollicitation",
+    "en": "Solicitation method",
+    "mg": "Fomba fangatahana"
+  },
+  "dossiers.statusLabel": {
+    "fr": "Statut du dossier",
+    "en": "File status",
+    "mg": "Satan'ny rakitra"
+  },
+  "dossiers.tableCaption": {
+    "fr": "Liste des dossiers d’approvisionnement",
+    "en": "List of procurement files",
+    "mg": "Lisitry ny rakitra fividianana"
+  },
+  "dossiers.tenderNumberLabel": {
+    "fr": "N° d’appel d’offres",
+    "en": "Tender number",
+    "mg": "Laharana antso"
+  },
+  "dossiers.thAction": {
+    "fr": "Action",
+    "en": "Action",
+    "mg": "Hetsika"
+  },
+  "dossiers.thStatus": {
+    "fr": "Statut",
+    "en": "Status",
+    "mg": "Sata"
+  },
+  "dossiers.thTenderNumber": {
+    "fr": "N° AO",
+    "en": "Tender no.",
+    "mg": "Lah. antso"
+  },
+  "dossiers.thTitle": {
+    "fr": "Titre",
+    "en": "Title",
+    "mg": "Lohateny"
+  },
+  "dossiers.thType": {
+    "fr": "Type",
+    "en": "Type",
+    "mg": "Karazana"
+  },
+  "dossiers.title": {
+    "fr": "Dossiers d’approvisionnement",
+    "en": "Procurement files",
+    "mg": "Rakitra fividianana"
+  },
+  "dossiers.transmitSap": {
+    "fr": "Transmettre la référence à SAP",
+    "en": "Send the reference to SAP",
+    "mg": "Alefaso any amin'ny SAP ny reference"
+  },
+  "dossiers.typeAutre": {
+    "fr": "Autre",
+    "en": "Other",
+    "mg": "Hafa"
+  },
+  "dossiers.typeBiens": {
+    "fr": "Biens",
+    "en": "Goods",
+    "mg": "Fananana"
+  },
+  "dossiers.typeServices": {
+    "fr": "Services",
+    "en": "Services",
+    "mg": "Serivisy"
+  },
+  "dossiers.typeServicesPro": {
+    "fr": "Services professionnels",
+    "en": "Professional services",
+    "mg": "Serivisy matihanina"
+  },
+  "dossiers.typeTechnologies": {
+    "fr": "Technologies de l’information",
+    "en": "Information technology",
+    "mg": "Teknolojian'ny fampahalalana"
+  },
+  "dossiers.typeTravaux": {
+    "fr": "Travaux de construction",
+    "en": "Construction works",
+    "mg": "Asa fanorenana"
+  },
+  "gabaritmanager.afficherCouverture": {
+    "fr": "Afficher la page de couverture",
+    "en": "Show the cover page",
+    "mg": "Aseho ny pejy fonony"
+  },
+  "gabaritmanager.annuler": {
+    "fr": "Annuler",
+    "en": "Cancel",
+    "mg": "Aoka izay"
+  },
+  "gabaritmanager.apercuCouverture": {
+    "fr": "Aperçu de la couverture",
+    "en": "Cover preview",
+    "mg": "Topi-maso ny fonony"
+  },
+  "gabaritmanager.aucun": {
+    "fr": "Aucun gabarit.",
+    "en": "No template.",
+    "mg": "Tsy misy endrika."
+  },
+  "gabaritmanager.cloneRefuse": {
+    "fr": "Clonage refusé (rôle requis).",
+    "en": "Cloning denied (role required).",
+    "mg": "Nolavina ny fandikana (mila anjara asa)."
+  },
+  "gabaritmanager.confirmerSuppression": {
+    "fr": "Supprimer définitivement le gabarit",
+    "en": "Permanently delete the template",
+    "mg": "Hamafa tanteraka ny endrika"
+  },
+  "gabaritmanager.corpsBordereau": {
+    "fr": "Bordereau (grille de prix + signature)",
+    "en": "Schedule (price grid + signature)",
+    "mg": "Bordereau (takelaka vidiny + sonia)"
+  },
+  "gabaritmanager.corpsBordereauCourt": {
+    "fr": "Bordereau",
+    "en": "Schedule",
+    "mg": "Bordereau"
+  },
+  "gabaritmanager.corpsContrat": {
+    "fr": "Contrat / document numéroté",
+    "en": "Contract / numbered document",
+    "mg": "Fifanarahana / antontan-taratasy misy laharana"
+  },
+  "gabaritmanager.corpsContratCourt": {
+    "fr": "Contrat",
+    "en": "Contract",
+    "mg": "Fifanarahana"
+  },
+  "gabaritmanager.couleurAccent": {
+    "fr": "Couleur d'accent (tableaux)",
+    "en": "Accent color (tables)",
+    "mg": "Loko fanamafisana (tabilao)"
+  },
+  "gabaritmanager.couleurTitres": {
+    "fr": "Couleur des titres",
+    "en": "Title color",
+    "mg": "Lokon'ny lohateny"
+  },
+  "gabaritmanager.creer": {
+    "fr": "Créer le gabarit",
+    "en": "Create the template",
+    "mg": "Mamorona endrika"
+  },
+  "gabaritmanager.descEntreprise": {
+    "fr": "Catalogue de votre entreprise (globaux hérités + vos gabarits) : couverture, corps, marges et design de chaque type de document généré.",
+    "en": "Your company's catalog (inherited global + your templates): cover, body, margins and design of each generated document type.",
+    "mg": "Katalaogin'ny orinasanao (an-drehetra nolovaina + ny endrikao): fonony, votoatiny, sisiny ary endrika ho an'ny karazana antontan-taratasy tsirairay noforonina."
+  },
+  "gabaritmanager.descGlobal": {
+    "fr": "Catalogue global (référentiel SCT) : couverture, corps, marges et design de chaque type de document généré.",
+    "en": "Global catalog (SCT reference): cover, body, margins and design of each generated document type.",
+    "mg": "Katalaogy manerana (SCT): fonony, votoatiny, sisiny ary endrika ho an'ny karazana antontan-taratasy tsirairay noforonina."
+  },
+  "gabaritmanager.enrRefuse": {
+    "fr": "Enregistrement refusé (rôle requis).",
+    "en": "Save denied (role required).",
+    "mg": "Nolavina ny fitehirizana (mila anjara asa)."
+  },
+  "gabaritmanager.enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Tehirizo"
+  },
+  "gabaritmanager.labelCode": {
+    "fr": "Code",
+    "en": "Code",
+    "mg": "Kaody"
+  },
+  "gabaritmanager.labelCorps": {
+    "fr": "Corps du document",
+    "en": "Document body",
+    "mg": "Votoatin'ny antontan-taratasy"
+  },
+  "gabaritmanager.labelLogo": {
+    "fr": "Logo (PNG/JPEG, max 500 Ko)",
+    "en": "Logo (PNG/JPEG, max 500 KB)",
+    "mg": "Logo (PNG/JPEG, 500 Ko farany)"
+  },
+  "gabaritmanager.labelNom": {
+    "fr": "Nom (affiché)",
+    "en": "Name (displayed)",
+    "mg": "Anarana (aseho)"
+  },
+  "gabaritmanager.labelOrdre": {
+    "fr": "Ordre d'affichage",
+    "en": "Display order",
+    "mg": "Filaharana amin'ny fampisehoana"
+  },
+  "gabaritmanager.labelPied": {
+    "fr": "Libellé du pied de page",
+    "en": "Footer label",
+    "mg": "Lohateny amin'ny faran'ny pejy"
+  },
+  "gabaritmanager.labelPolice": {
+    "fr": "Police",
+    "en": "Font",
+    "mg": "Endri-tsoratra"
+  },
+  "gabaritmanager.labelPrincipal": {
+    "fr": "Libellé principal",
+    "en": "Main label",
+    "mg": "Lohateny fototra"
+  },
+  "gabaritmanager.labelSousTitre": {
+    "fr": "Sous-titre",
+    "en": "Subtitle",
+    "mg": "Lohateny faharoa"
+  },
+  "gabaritmanager.labelSurLabel": {
+    "fr": "Sur-libellé (couverture)",
+    "en": "Over-label (cover)",
+    "mg": "Lohateny ambony (fonony)"
+  },
+  "gabaritmanager.legendMarges": {
+    "fr": "Marges de page (points)",
+    "en": "Page margins (points)",
+    "mg": "Sisin'ny pejy (points)"
+  },
+  "gabaritmanager.libelleFallback": {
+    "fr": "LIBELLÉ",
+    "en": "LABEL",
+    "mg": "LOHATENY"
+  },
+  "gabaritmanager.logoVolumineux": {
+    "fr": "Logo trop volumineux (max 500 Ko).",
+    "en": "Logo too large (max 500 KB).",
+    "mg": "Lehibe loatra ny logo (500 Ko farany)."
+  },
+  "gabaritmanager.margeBas": {
+    "fr": "Bas",
+    "en": "Bottom",
+    "mg": "Ambany"
+  },
+  "gabaritmanager.margeDroite": {
+    "fr": "Droite",
+    "en": "Right",
+    "mg": "Havanana"
+  },
+  "gabaritmanager.margeGauche": {
+    "fr": "Gauche",
+    "en": "Left",
+    "mg": "Havia"
+  },
+  "gabaritmanager.margeHaut": {
+    "fr": "Haut",
+    "en": "Top",
+    "mg": "Ambony"
+  },
+  "gabaritmanager.modalSupprTitre": {
+    "fr": "Supprimer le gabarit",
+    "en": "Delete the template",
+    "mg": "Hamafa ny endrika"
+  },
+  "gabaritmanager.modalTitreModifier": {
+    "fr": "Modifier le gabarit",
+    "en": "Edit the template",
+    "mg": "Hanova ny endrika"
+  },
+  "gabaritmanager.modalTitreNouveau": {
+    "fr": "Nouveau gabarit",
+    "en": "New template",
+    "mg": "Endrika vaovao"
+  },
+  "gabaritmanager.modifier": {
+    "fr": "Modifier",
+    "en": "Edit",
+    "mg": "Hanova"
+  },
+  "gabaritmanager.non": {
+    "fr": "Non",
+    "en": "No",
+    "mg": "Tsia"
+  },
+  "gabaritmanager.nouveau": {
+    "fr": "Nouveau gabarit",
+    "en": "New template",
+    "mg": "Endrika vaovao"
+  },
+  "gabaritmanager.oui": {
+    "fr": "Oui",
+    "en": "Yes",
+    "mg": "Eny"
+  },
+  "gabaritmanager.personnaliser": {
+    "fr": "Personnaliser",
+    "en": "Customize",
+    "mg": "Hanova manokana"
+  },
+  "gabaritmanager.phCode": {
+    "fr": "ex. CONTRAT_SERVICES",
+    "en": "e.g. CONTRAT_SERVICES",
+    "mg": "oh. CONTRAT_SERVICES"
+  },
+  "gabaritmanager.phContrat": {
+    "fr": "CONTRAT",
+    "en": "CONTRACT",
+    "mg": "FIFANARAHANA"
+  },
+  "gabaritmanager.phNom": {
+    "fr": "ex. Contrat de services",
+    "en": "e.g. Services contract",
+    "mg": "oh. Fifanarahana serivisy"
+  },
+  "gabaritmanager.phSousTitre": {
+    "fr": "Services de nature technique",
+    "en": "Services of a technical nature",
+    "mg": "Serivisy manana toetra ara-teknika"
+  },
+  "gabaritmanager.phSurLabel": {
+    "fr": "APPEL D'OFFRES - SERVICES",
+    "en": "CALL FOR TENDERS - SERVICES",
+    "mg": "ANTSO HANDRASO - SERIVISY"
+  },
+  "gabaritmanager.policeCourier": {
+    "fr": "Courier (chasse fixe)",
+    "en": "Courier (monospace)",
+    "mg": "Courier (elanelana mitovy)"
+  },
+  "gabaritmanager.policeHelvetica": {
+    "fr": "Helvetica (sans serif)",
+    "en": "Helvetica (sans serif)",
+    "mg": "Helvetica (tsy misy serif)"
+  },
+  "gabaritmanager.policeTimes": {
+    "fr": "Times New Roman (serif)",
+    "en": "Times New Roman (serif)",
+    "mg": "Times New Roman (serif)"
+  },
+  "gabaritmanager.porteeEntreprise": {
+    "fr": "Entreprise",
+    "en": "Company",
+    "mg": "Orinasa"
+  },
+  "gabaritmanager.porteeGlobal": {
+    "fr": "Global",
+    "en": "Global",
+    "mg": "Manerana"
+  },
+  "gabaritmanager.supprRefusee": {
+    "fr": "Suppression refusée.",
+    "en": "Deletion denied.",
+    "mg": "Nolavina ny famafana."
+  },
+  "gabaritmanager.supprimer": {
+    "fr": "Supprimer",
+    "en": "Delete",
+    "mg": "Hamafa"
+  },
+  "gabaritmanager.surchargeDesign": {
+    "fr": "Surcharger le design du branding (police, couleurs, logo)",
+    "en": "Override the branding design (font, colors, logo)",
+    "mg": "Solointsika ny endriky ny marika (endri-tsoratra, loko, logo)"
+  },
+  "gabaritmanager.thActif": {
+    "fr": "Actif",
+    "en": "Active",
+    "mg": "Mavitrika"
+  },
+  "gabaritmanager.thActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Hetsika"
+  },
+  "gabaritmanager.thCode": {
+    "fr": "Code",
+    "en": "Code",
+    "mg": "Kaody"
+  },
+  "gabaritmanager.thCorps": {
+    "fr": "Corps",
+    "en": "Body",
+    "mg": "Votoatiny"
+  },
+  "gabaritmanager.thNom": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Anarana"
+  },
+  "gabaritmanager.thPortee": {
+    "fr": "Portée",
+    "en": "Scope",
+    "mg": "Elanelana"
+  },
+  "gabaritmanager.titre": {
+    "fr": "Gabarits de documents",
+    "en": "Document layout templates",
+    "mg": "Endrika antontan-taratasy"
+  },
+  "gabaritmanager.toastClone": {
+    "fr": "Gabarit « {nom} » cloné pour personnalisation",
+    "en": "Template « {nom} » cloned for customization",
+    "mg": "Endrika « {nom} » voadika mba hanovana"
+  },
+  "gabaritmanager.toastCree": {
+    "fr": "Gabarit créé",
+    "en": "Template created",
+    "mg": "Noforonina ny endrika"
+  },
+  "gabaritmanager.toastModifie": {
+    "fr": "Gabarit modifié",
+    "en": "Template updated",
+    "mg": "Novaina ny endrika"
+  },
+  "gabaritmanager.toastSupprime": {
+    "fr": "Gabarit supprimé",
+    "en": "Template deleted",
+    "mg": "Voafafa ny endrika"
+  },
+  "gabarits.accesReserve": {
+    "fr": "Accès réservé aux administrateurs.",
+    "en": "Administrator access only.",
+    "mg": "Fidirana ho an'ny mpitantana ihany."
+  },
+  "gabarits.description": {
+    "fr": "Configurez les types de documents générés (appel d'offres, contrat, régie, bordereau…) : libellés de couverture, corps, marges et design. Les gabarits globaux sont hérités ; clonez-les pour les adapter.",
+    "en": "Configure the generated document types (call for tenders, contract, cost-plus, schedule…): cover labels, body, margins and design. Global templates are inherited; clone them to adapt them.",
+    "mg": "Amboary ny karazana antontan-taratasy noforonina (antso handraso, fifanarahana, régie, bordereau…): lohatenin'ny fonony, votoatiny, sisiny ary endrika. Nolovaina ny endrika manerana; adikao mba hanovana azy."
+  },
+  "gabarits.titre": {
+    "fr": "Gabarits de documents",
+    "en": "Document layout templates",
+    "mg": "Endrika antontan-taratasy"
+  },
+  "integrationm365manager.activerReels": {
+    "fr": "Activer les dépôts réels via Microsoft 365",
+    "en": "Enable real deposits via Microsoft 365",
+    "mg": "Alefaso ny fametrahana marina amin’ny Microsoft 365"
+  },
+  "integrationm365manager.chargementImpossible": {
+    "fr": "Chargement impossible.",
+    "en": "Unable to load.",
+    "mg": "Tsy mety ny fampidirana."
+  },
+  "integrationm365manager.conserveM": {
+    "fr": "(conservé)",
+    "en": "(kept)",
+    "mg": "(notehirizina)"
+  },
+  "integrationm365manager.dejaDefiniConserver": {
+    "fr": "(déjà défini — laisser vide pour conserver)",
+    "en": "(already set — leave empty to keep)",
+    "mg": "(efa voafaritra — avelao foana raha hotehirizina)"
+  },
+  "integrationm365manager.enregistree": {
+    "fr": "Configuration Microsoft 365 enregistrée.",
+    "en": "Microsoft 365 configuration saved.",
+    "mg": "Voatahiry ny fanamboarana Microsoft 365."
+  },
+  "integrationm365manager.enregistrementRefuse": {
+    "fr": "Enregistrement refusé (rôle administrateur requis).",
+    "en": "Save refused (administrator role required).",
+    "mg": "Lavina ny fitehirizana (ilaina ny anjara mpitantana)."
+  },
+  "integrationm365manager.enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Tehirizo"
+  },
+  "integrationm365manager.expediteurOutlook": {
+    "fr": "Expéditeur Outlook (courriel)",
+    "en": "Outlook sender (email)",
+    "mg": "Mpandefa Outlook (mailaka)"
+  },
+  "integrationm365manager.idApplication": {
+    "fr": "ID d’application (client)",
+    "en": "Application ID (client)",
+    "mg": "ID rindranasa (client)"
+  },
+  "integrationm365manager.idCanalTeams": {
+    "fr": "ID de canal Teams",
+    "en": "Teams channel ID",
+    "mg": "ID lakana Teams"
+  },
+  "integrationm365manager.idDriveOnedrive": {
+    "fr": "ID de drive OneDrive",
+    "en": "OneDrive drive ID",
+    "mg": "ID drive OneDrive"
+  },
+  "integrationm365manager.idEquipeTeams": {
+    "fr": "ID d’équipe Teams",
+    "en": "Teams team ID",
+    "mg": "ID ekipa Teams"
+  },
+  "integrationm365manager.idLocataire": {
+    "fr": "ID de locataire (Directory / tenant)",
+    "en": "Tenant ID (Directory / tenant)",
+    "mg": "ID mpanofa (Directory / tenant)"
+  },
+  "integrationm365manager.idSiteSharepoint": {
+    "fr": "ID de site SharePoint",
+    "en": "SharePoint site ID",
+    "mg": "ID tranokala SharePoint"
+  },
+  "integrationm365manager.introA": {
+    "fr": "Saisissez les identifiants de",
+    "en": "Enter the credentials of",
+    "mg": "Ampidiro ny mari-pamantarana an’ny"
+  },
+  "integrationm365manager.introB": {
+    "fr": "environnement Microsoft 365 pour déposer les documents dans votre SharePoint, OneDrive ou Teams. Tant que « Activer » n’est pas coché (ou que la configuration est incomplète), les dépôts restent",
+    "en": "Microsoft 365 environment to deposit documents into your SharePoint, OneDrive or Teams. As long as “Enable” is not checked (or the configuration is incomplete), deposits remain",
+    "mg": "tontolo Microsoft 365 mba hametrahana ny antontan-taratasy ao amin’ny SharePoint, OneDrive na Teams anao. Raha mbola tsy voamarika ny « Alefaso » (na tsy feno ny fanamboarana), dia mijanona ho"
+  },
+  "integrationm365manager.introC": {
+    "fr": ". Le secret client est stocké chiffré et n’est jamais réaffiché.",
+    "en": ". The client secret is stored encrypted and is never displayed again.",
+    "mg": ". Voatahiry misy fanafenana ny tsiambaratelo mpanjifa ary tsy aseho intsony mihitsy."
+  },
+  "integrationm365manager.placeholderContrats": {
+    "fr": "ex. Contrats",
+    "en": "e.g. Contracts",
+    "mg": "oh. Fifanarahana"
+  },
+  "integrationm365manager.repertoireRacine": {
+    "fr": "Répertoire racine par défaut",
+    "en": "Default root folder",
+    "mg": "Lahatahiry fototra tsotra"
+  },
+  "integrationm365manager.secretClient": {
+    "fr": "Secret client",
+    "en": "Client secret",
+    "mg": "Tsiambaratelo mpanjifa"
+  },
+  "integrationm365manager.simules": {
+    "fr": "simulés",
+    "en": "simulated",
+    "mg": "an-tsary"
+  },
+  "integrationm365manager.testImpossible": {
+    "fr": "Test impossible.",
+    "en": "Test failed.",
+    "mg": "Tsy mety ny fitsapana."
+  },
+  "integrationm365manager.testerConnexion": {
+    "fr": "Tester la connexion",
+    "en": "Test connection",
+    "mg": "Andramo ny fifandraisana"
+  },
+  "integrationm365manager.titre": {
+    "fr": "Intégration Microsoft 365 (SharePoint, OneDrive, Teams, Outlook)",
+    "en": "Microsoft 365 integration (SharePoint, OneDrive, Teams, Outlook)",
+    "mg": "Fampidirana Microsoft 365 (SharePoint, OneDrive, Teams, Outlook)"
+  },
+  "integrationm365manager.votre": {
+    "fr": "votre",
+    "en": "your",
+    "mg": "anao"
+  },
+  "integrationsapmanager.activerReelle": {
+    "fr": "Activer la transmission réelle vers SAP",
+    "en": "Enable real transmission to SAP",
+    "mg": "Alefaso ny fandefasana marina mankany SAP"
+  },
+  "integrationsapmanager.authentification": {
+    "fr": "Authentification",
+    "en": "Authentication",
+    "mg": "Fanamarinana"
+  },
+  "integrationsapmanager.chargementImpossible": {
+    "fr": "Chargement impossible.",
+    "en": "Unable to load.",
+    "mg": "Tsy mety ny fampidirana."
+  },
+  "integrationsapmanager.cheminService": {
+    "fr": "Chemin du service",
+    "en": "Service path",
+    "mg": "Lalana ny serivisy"
+  },
+  "integrationsapmanager.cleApi": {
+    "fr": "Clé API",
+    "en": "API key",
+    "mg": "Fanalahidy API"
+  },
+  "integrationsapmanager.conserveF": {
+    "fr": "(conservée)",
+    "en": "(kept)",
+    "mg": "(notehirizina)"
+  },
+  "integrationsapmanager.conserveM": {
+    "fr": "(conservé)",
+    "en": "(kept)",
+    "mg": "(notehirizina)"
+  },
+  "integrationsapmanager.dejaDefiniConserver": {
+    "fr": "(déjà défini — laisser vide pour conserver)",
+    "en": "(already set — leave empty to keep)",
+    "mg": "(efa voafaritra — avelao foana raha hotehirizina)"
+  },
+  "integrationsapmanager.dejaDefinieConserver": {
+    "fr": "(déjà définie — laisser vide pour conserver)",
+    "en": "(already set — leave empty to keep)",
+    "mg": "(efa voafaritra — avelao foana raha hotehirizina)"
+  },
+  "integrationsapmanager.enregistree": {
+    "fr": "Configuration SAP enregistrée.",
+    "en": "SAP configuration saved.",
+    "mg": "Voatahiry ny fanamboarana SAP."
+  },
+  "integrationsapmanager.enregistrementRefuse": {
+    "fr": "Enregistrement refusé (rôle administrateur requis).",
+    "en": "Save refused (administrator role required).",
+    "mg": "Lavina ny fitehirizana (ilaina ny anjara mpitantana)."
+  },
+  "integrationsapmanager.enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Tehirizo"
+  },
+  "integrationsapmanager.introA": {
+    "fr": "Saisissez les accès du",
+    "en": "Enter the access details of the",
+    "mg": "Ampidiro ny fidirana amin’ny"
+  },
+  "integrationsapmanager.introB": {
+    "fr": "de",
+    "en": "of",
+    "mg": "an’ny"
+  },
+  "integrationsapmanager.introC": {
+    "fr": "SAP pour y transmettre la référence financière des dossiers d’approvisionnement. Tant que « Activer » n’est pas coché (ou la configuration incomplète), la transmission reste",
+    "en": "SAP to transmit the financial reference of the procurement files. As long as “Enable” is not checked (or the configuration is incomplete), transmission remains",
+    "mg": "SAP anao mba handefasana ny fanovozan-kevitra ara-bola ny antontan-taratasin’ny fividianana. Raha mbola tsy voamarika ny « Alefaso » (na tsy feno ny fanamboarana), dia mijanona ho"
+  },
+  "integrationsapmanager.introD": {
+    "fr": ". Les secrets sont stockés chiffrés et ne sont jamais réaffichés.",
+    "en": ". Secrets are stored encrypted and are never displayed again.",
+    "mg": ". Voatahiry misy fanafenana ny tsiambaratelo ary tsy aseho intsony mihitsy."
+  },
+  "integrationsapmanager.motDePasse": {
+    "fr": "Mot de passe",
+    "en": "Password",
+    "mg": "Teny miafina"
+  },
+  "integrationsapmanager.optionApikey": {
+    "fr": "Clé API (en-tête APIKey — bac à sable SAP)",
+    "en": "API key (APIKey header — SAP sandbox)",
+    "mg": "Fanalahidy API (lohateny APIKey — kianja fanandramana SAP)"
+  },
+  "integrationsapmanager.optionBasic": {
+    "fr": "Basic (utilisateur / mot de passe)",
+    "en": "Basic (username / password)",
+    "mg": "Basic (mpampiasa / teny miafina)"
+  },
+  "integrationsapmanager.serviceOData": {
+    "fr": "service OData",
+    "en": "OData service",
+    "mg": "serivisy OData"
+  },
+  "integrationsapmanager.simulee": {
+    "fr": "simulée",
+    "en": "simulated",
+    "mg": "an-tsary"
+  },
+  "integrationsapmanager.testImpossible": {
+    "fr": "Test impossible.",
+    "en": "Test failed.",
+    "mg": "Tsy mety ny fitsapana."
+  },
+  "integrationsapmanager.testerConnexion": {
+    "fr": "Tester la connexion",
+    "en": "Test connection",
+    "mg": "Andramo ny fifandraisana"
+  },
+  "integrationsapmanager.titre": {
+    "fr": "Intégration SAP (référence financière des dossiers)",
+    "en": "SAP integration (financial reference of files)",
+    "mg": "Fampidirana SAP (fanovozan-kevitra ara-bola ny antontan-taratasy)"
+  },
+  "integrationsapmanager.urlBase": {
+    "fr": "URL de base du service OData",
+    "en": "OData service base URL",
+    "mg": "URL fototra ny serivisy OData"
+  },
+  "integrationsapmanager.utilisateurSap": {
+    "fr": "Utilisateur SAP",
+    "en": "SAP user",
+    "mg": "Mpampiasa SAP"
+  },
+  "integrationsapmanager.votre": {
+    "fr": "votre",
+    "en": "your",
+    "mg": "anao"
+  },
+  "login.backHome": {
+    "fr": "← Retour à l’accueil",
+    "en": "← Back to home",
+    "mg": "← Miverina any amin'ny fandraisana"
+  },
+  "login.hint": {
+    "fr": "Démo : redacteur@ (sans MFA) · totp@ (TOTP) · question@ (question) · admin@levis.qc.ca — mot de passe ",
+    "en": "Demo: redacteur@ (no MFA) · totp@ (TOTP) · question@ (question) · admin@levis.qc.ca — password ",
+    "mg": "Demo: redacteur@ (tsy misy MFA) · totp@ (TOTP) · question@ (fanontaniana) · admin@levis.qc.ca — teny miafina "
+  },
+  "login.loginFailed": {
+    "fr": "Échec de la connexion",
+    "en": "Sign-in failed",
+    "mg": "Tsy nahomby ny fidirana"
+  },
+  "login.securityQuestion": {
+    "fr": "Question de sécurité {n}",
+    "en": "Security question {n}",
+    "mg": "Fanontaniana fiarovana {n}"
+  },
+  "modal.annuler": {
+    "fr": "Annuler",
+    "en": "Cancel",
+    "mg": "Aoka"
+  },
+  "modal.confirmer": {
+    "fr": "Confirmer",
+    "en": "Confirm",
+    "mg": "Hamarino"
+  },
+  "modal.fermer": {
+    "fr": "Fermer",
+    "en": "Close",
+    "mg": "Akatona"
+  },
+  "modal.valider": {
+    "fr": "Valider",
+    "en": "Confirm",
+    "mg": "Hamarino"
+  },
+  "modeledocumentmanager.accentColor": {
+    "fr": "Couleur d'accent (tableaux)",
+    "en": "Accent color (tables)",
+    "mg": "Loko fanamafisana (tabilao)"
+  },
+  "modeledocumentmanager.brand": {
+    "fr": "Marque / organisation (couverture)",
+    "en": "Brand / organization (cover)",
+    "mg": "Marika / fikambanana (fonony)"
+  },
+  "modeledocumentmanager.brandPlaceholder": {
+    "fr": "ex. Ville de Lévis",
+    "en": "e.g. City of Lévis",
+    "mg": "oh. Tanànan'i Lévis"
+  },
+  "modeledocumentmanager.description": {
+    "fr": "Définit la mise en forme des contrats générés (PDF / Word) : police, couleurs, logo, page de couverture et pied de page.",
+    "en": "Defines the formatting of generated contracts (PDF / Word): font, colors, logo, cover page and footer.",
+    "mg": "Mamaritra ny endriky ny fifanarahana vokarina (PDF / Word): endri-tsoratra, loko, logo, pejy fonony ary tongotr'ny pejy."
+  },
+  "modeledocumentmanager.font": {
+    "fr": "Police",
+    "en": "Font",
+    "mg": "Endri-tsoratra"
+  },
+  "modeledocumentmanager.font_COURIER": {
+    "fr": "Courier (chasse fixe)",
+    "en": "Courier (monospace)",
+    "mg": "Courier (chasse fixe)"
+  },
+  "modeledocumentmanager.font_HELVETICA": {
+    "fr": "Helvetica (sans serif)",
+    "en": "Helvetica (sans serif)",
+    "mg": "Helvetica (sans serif)"
+  },
+  "modeledocumentmanager.font_TIMES": {
+    "fr": "Times New Roman (serif)",
+    "en": "Times New Roman (serif)",
+    "mg": "Times New Roman (serif)"
+  },
+  "modeledocumentmanager.footer": {
+    "fr": "Pied de page (mention)",
+    "en": "Footer (note)",
+    "mg": "Tongotr'ny pejy (fanamarihana)"
+  },
+  "modeledocumentmanager.footerPlaceholder": {
+    "fr": "ex. Document confidentiel",
+    "en": "e.g. Confidential document",
+    "mg": "oh. Antontan-taratasy tsiambaratelo"
+  },
+  "modeledocumentmanager.globalTemplate": {
+    "fr": "— Gabarit global (défaut plateforme) —",
+    "en": "— Global template (platform default) —",
+    "mg": "— Modely ankapobe (default sehatra) —"
+  },
+  "modeledocumentmanager.logo": {
+    "fr": "Logo (PNG/JPEG, max 500 Ko)",
+    "en": "Logo (PNG/JPEG, max 500 KB)",
+    "mg": "Logo (PNG/JPEG, 500 Ko farafahabetsany)"
+  },
+  "modeledocumentmanager.logoAlt": {
+    "fr": "Logo du modèle",
+    "en": "Template logo",
+    "mg": "Logon'ny modely"
+  },
+  "modeledocumentmanager.logoShortAlt": {
+    "fr": "Logo",
+    "en": "Logo",
+    "mg": "Logo"
+  },
+  "modeledocumentmanager.logoTooLarge": {
+    "fr": "Logo trop volumineux (max 500 Ko).",
+    "en": "Logo too large (max 500 KB).",
+    "mg": "Lehibe loatra ny logo (500 Ko farafahabetsany)."
+  },
+  "modeledocumentmanager.previewLabel": {
+    "fr": "CONTRAT — aperçu",
+    "en": "CONTRACT — preview",
+    "mg": "FIFANARAHANA — topimaso"
+  },
+  "modeledocumentmanager.removeLogo": {
+    "fr": "Retirer le logo",
+    "en": "Remove the logo",
+    "mg": "Esory ny logo"
+  },
+  "modeledocumentmanager.saveDenied": {
+    "fr": "Enregistrement refusé (rôle requis).",
+    "en": "Save denied (required role).",
+    "mg": "Lavina ny fitehirizana (ilaina andraikitra)."
+  },
+  "modeledocumentmanager.saveModel": {
+    "fr": "Enregistrer le modèle",
+    "en": "Save the template",
+    "mg": "Tehirizo ny modely"
+  },
+  "modeledocumentmanager.saved": {
+    "fr": "Modèle de document enregistré. Il s'applique aux prochains PDF/DOCX générés.",
+    "en": "Document template saved. It applies to the next generated PDF/DOCX files.",
+    "mg": "Voatahiry ny modelin'ny antontan-taratasy. Mihatra amin'ireo PDF/DOCX hovokarina manaraka izy io."
+  },
+  "modeledocumentmanager.scopeCompany": {
+    "fr": "de votre entreprise",
+    "en": "of your organization",
+    "mg": "an'ny orinasanao"
+  },
+  "modeledocumentmanager.scopeTenant": {
+    "fr": "par tenant",
+    "en": "by tenant",
+    "mg": "isaky ny tenant"
+  },
+  "modeledocumentmanager.showCover": {
+    "fr": "Afficher la page de couverture",
+    "en": "Show the cover page",
+    "mg": "Asehoy ny pejy fonony"
+  },
+  "modeledocumentmanager.tenant": {
+    "fr": "Tenant",
+    "en": "Tenant",
+    "mg": "Tenant"
+  },
+  "modeledocumentmanager.title": {
+    "fr": "Modèle de document",
+    "en": "Document template",
+    "mg": "Modelin'ny antontan-taratasy"
+  },
+  "modeledocumentmanager.titleColor": {
+    "fr": "Couleur des titres",
+    "en": "Title color",
+    "mg": "Lokon'ny lohateny"
+  },
+  "parametres.accesReserve": {
+    "fr": "Accès réservé aux administrateurs.",
+    "en": "Restricted to administrators.",
+    "mg": "Voafetra ho an'ny mpitantana."
+  },
+  "parametres.titre": {
+    "fr": "Paramètres du tenant — valeurs des sélecteurs",
+    "en": "Tenant settings — selector values",
+    "mg": "Kirakira ny mpanofa — sandan'ny mpisafidy"
+  },
+  "profil.aucun": {
+    "fr": "Aucun",
+    "en": "None",
+    "mg": "Tsy misy"
+  },
+  "profil.changerMdp": {
+    "fr": "Changer le mot de passe (laisser vide pour conserver)",
+    "en": "Change password (leave blank to keep)",
+    "mg": "Ovay ny teny miafina (avelao foana raha tehirizina)"
+  },
+  "profil.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Miandry…"
+  },
+  "profil.configurerMfa": {
+    "fr": "Configurer le MFA (TOTP / question secrète) :",
+    "en": "Configure MFA (TOTP / security question):",
+    "mg": "Amboary ny MFA (TOTP / fanontaniana miafina):"
+  },
+  "profil.courriel": {
+    "fr": "Courriel :",
+    "en": "Email:",
+    "mg": "Mailaka:"
+  },
+  "profil.direction": {
+    "fr": "Direction",
+    "en": "Department",
+    "mg": "Sampandraharaha"
+  },
+  "profil.enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Tehirizo"
+  },
+  "profil.erreur": {
+    "fr": "Erreur",
+    "en": "Error",
+    "mg": "Hadisoana"
+  },
+  "profil.mdpActuel": {
+    "fr": "Mot de passe actuel",
+    "en": "Current password",
+    "mg": "Teny miafina ankehitriny"
+  },
+  "profil.modifierInfos": {
+    "fr": "Modifier mes informations",
+    "en": "Edit my information",
+    "mg": "Ovay ny mombamomba ahy"
+  },
+  "profil.nom": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Anarana"
+  },
+  "profil.nouveauMdp": {
+    "fr": "Nouveau mot de passe",
+    "en": "New password",
+    "mg": "Teny miafina vaovao"
+  },
+  "profil.profilMisAJour": {
+    "fr": "Profil mis à jour.",
+    "en": "Profile updated.",
+    "mg": "Voavaozina ny mombamomba."
+  },
+  "profil.roles": {
+    "fr": "Rôles :",
+    "en": "Roles:",
+    "mg": "Andraikitra:"
+  },
+  "profil.secondFacteur": {
+    "fr": "Second facteur :",
+    "en": "Second factor:",
+    "mg": "Anton-javatra faharoa:"
+  },
+  "profil.securite": {
+    "fr": "Sécurité →",
+    "en": "Security →",
+    "mg": "Fiarovana →"
+  },
+  "profil.titre": {
+    "fr": "Mon profil",
+    "en": "My profile",
+    "mg": "Ny mombamomba ahy"
+  },
+  "rapports.accesReserve": {
+    "fr": "Accès réservé au pilotage (approvisionnement, direction, administration).",
+    "en": "Access restricted to management (procurement, direction, administration).",
+    "mg": "Fidirana natokana ho an'ny fitantanana (fividianana, tari-dalana, fitantanana)."
+  },
+  "rapports.actions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Hetsika"
+  },
+  "rapports.activiteParUtilisateur": {
+    "fr": "Activité par utilisateur",
+    "en": "Activity by user",
+    "mg": "Hetsika araka ny mpampiasa"
+  },
+  "rapports.aucunDocument": {
+    "fr": "Aucun document.",
+    "en": "No document.",
+    "mg": "Tsy misy antontan-taratasy."
+  },
+  "rapports.aucuneActivite": {
+    "fr": "Aucune activité enregistrée.",
+    "en": "No activity recorded.",
+    "mg": "Tsy misy hetsika voarakitra."
+  },
+  "rapports.captionActivite": {
+    "fr": "Nombre d'actions journalisées par utilisateur",
+    "en": "Number of logged actions per user",
+    "mg": "Isan'ny hetsika voarakitra isaky ny mpampiasa"
+  },
+  "rapports.captionStatut": {
+    "fr": "Répartition des documents par statut",
+    "en": "Distribution of documents by status",
+    "mg": "Fizarana ny antontan-taratasy araka ny sata"
+  },
+  "rapports.captionType": {
+    "fr": "Répartition des documents par type",
+    "en": "Distribution of documents by type",
+    "mg": "Fizarana ny antontan-taratasy araka ny karazana"
+  },
+  "rapports.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Miandry…"
+  },
+  "rapports.description": {
+    "fr": "Vue consolidée du portefeuille documentaire et des éléments d'action.",
+    "en": "Consolidated view of the document portfolio and action items.",
+    "mg": "Fijery mitambatra ny antontan-taratasy sy ny asa atao."
+  },
+  "rapports.docsParStatut": {
+    "fr": "Documents par statut",
+    "en": "Documents by status",
+    "mg": "Antontan-taratasy araka ny sata"
+  },
+  "rapports.docsParType": {
+    "fr": "Documents par type",
+    "en": "Documents by type",
+    "mg": "Antontan-taratasy araka ny karazana"
+  },
+  "rapports.documents": {
+    "fr": "document(s)",
+    "en": "document(s)",
+    "mg": "antontan-taratasy"
+  },
+  "rapports.dossiersActifs": {
+    "fr": "dossier(s) actif(s)",
+    "en": "active file(s)",
+    "mg": "rakitra mavitrika"
+  },
+  "rapports.enAttenteApprobation": {
+    "fr": "en attente d'approbation",
+    "en": "awaiting approval",
+    "mg": "miandry fankatoavana"
+  },
+  "rapports.indicateursCles": {
+    "fr": "Indicateurs clés",
+    "en": "Key indicators",
+    "mg": "Fanondro fototra"
+  },
+  "rapports.nombre": {
+    "fr": "Nombre",
+    "en": "Count",
+    "mg": "Isa"
+  },
+  "rapports.obligationsAVenir": {
+    "fr": "obligation(s) à venir",
+    "en": "upcoming obligation(s)",
+    "mg": "adidy ho avy"
+  },
+  "rapports.statut": {
+    "fr": "Statut",
+    "en": "Status",
+    "mg": "Sata"
+  },
+  "rapports.titre": {
+    "fr": "Rapports de suivi",
+    "en": "Monitoring reports",
+    "mg": "Tatitra fanarahana"
+  },
+  "rapports.type": {
+    "fr": "Type",
+    "en": "Type",
+    "mg": "Karazana"
+  },
+  "rapports.utilisateur": {
+    "fr": "Utilisateur",
+    "en": "User",
+    "mg": "Mpampiasa"
+  },
+  "referencemanager.actif": {
+    "fr": "Actif",
+    "en": "Active",
+    "mg": "Mavitrika"
+  },
+  "referencemanager.actions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Hetsika"
+  },
+  "referencemanager.ajouter": {
+    "fr": "Ajouter",
+    "en": "Add",
+    "mg": "Hampiditra"
+  },
+  "referencemanager.aucuneValeur": {
+    "fr": "Aucune valeur.",
+    "en": "No value.",
+    "mg": "Tsy misy sanda."
+  },
+  "referencemanager.categorie": {
+    "fr": "Catégorie",
+    "en": "Category",
+    "mg": "Sokajy"
+  },
+  "referencemanager.categorieClause": {
+    "fr": "Catégories de clause",
+    "en": "Clause categories",
+    "mg": "Sokajin'ny fepetra"
+  },
+  "referencemanager.code": {
+    "fr": "Code",
+    "en": "Code",
+    "mg": "Kaody"
+  },
+  "referencemanager.codePlaceholder": {
+    "fr": "CODE",
+    "en": "CODE",
+    "mg": "KAODY"
+  },
+  "referencemanager.erreur": {
+    "fr": "Erreur",
+    "en": "Error",
+    "mg": "Hadisoana"
+  },
+  "referencemanager.libelle": {
+    "fr": "Libellé",
+    "en": "Label",
+    "mg": "Anarana"
+  },
+  "referencemanager.modeSollicitation": {
+    "fr": "Modes de sollicitation",
+    "en": "Solicitation modes",
+    "mg": "Fomba fangatahana"
+  },
+  "referencemanager.non": {
+    "fr": "non",
+    "en": "no",
+    "mg": "tsia"
+  },
+  "referencemanager.ordre": {
+    "fr": "Ordre",
+    "en": "Order",
+    "mg": "Filaharana"
+  },
+  "referencemanager.oui": {
+    "fr": "oui",
+    "en": "yes",
+    "mg": "eny"
+  },
+  "referencemanager.supprimer": {
+    "fr": "Suppr.",
+    "en": "Delete",
+    "mg": "Fafao"
+  },
+  "referencemanager.typeContrat": {
+    "fr": "Types de contrat",
+    "en": "Contract types",
+    "mg": "Karazana fifanarahana"
+  },
+  "referencemanager.typeObligation": {
+    "fr": "Types d'obligation",
+    "en": "Obligation types",
+    "mg": "Karazana adidy"
+  },
+  "referencemanager.valeursGlobales": {
+    "fr": "Valeurs GLOBALES appliquées à tous les tenants.",
+    "en": "GLOBAL values applied to all tenants.",
+    "mg": "Sanda MANERANTANY ampiharina amin'ny mpampiasa rehetra."
+  },
+  "referencemanager.valeursTenant": {
+    "fr": "Valeurs propres à votre tenant (s'ajoutent aux valeurs globales).",
+    "en": "Values specific to your tenant (added to the global values).",
+    "mg": "Sanda manokana ho an'ny mpampiasanao (ampiana amin'ny sanda manerantany)."
+  },
+  "repertoiredepotmanager.ajoutImpossible": {
+    "fr": "Ajout impossible.",
+    "en": "Unable to add.",
+    "mg": "Tsy afaka mampiditra."
+  },
+  "repertoiredepotmanager.ajouter": {
+    "fr": "Ajouter",
+    "en": "Add",
+    "mg": "Hampiditra"
+  },
+  "repertoiredepotmanager.aucunRepertoire": {
+    "fr": "Aucun répertoire enregistré pour l'instant.",
+    "en": "No directory saved yet.",
+    "mg": "Tsy misy lahatahiry voatahiry aloha."
+  },
+  "repertoiredepotmanager.description": {
+    "fr": "Enregistrez vos dossiers de destination réutilisables (ex. « Contrats/2027 »). Ils vous seront proposés lors de la publication d'un document vers SharePoint, OneDrive ou Teams.",
+    "en": "Save your reusable destination folders (e.g. \"Contracts/2027\"). They will be suggested when publishing a document to SharePoint, OneDrive or Teams.",
+    "mg": "Tehirizo ny lahatahiry alehanao azo averina ampiasaina (oh. « Contrats/2027 »). Hatolotra anao izy ireo rehefa mamoaka antontan-taratasy mankany amin'ny SharePoint, OneDrive na Teams."
+  },
+  "repertoiredepotmanager.exemplePlaceholder": {
+    "fr": "ex. Contrats/2027",
+    "en": "e.g. Contracts/2027",
+    "mg": "oh. Contrats/2027"
+  },
+  "repertoiredepotmanager.nouveauRepertoire": {
+    "fr": "Nouveau répertoire",
+    "en": "New directory",
+    "mg": "Lahatahiry vaovao"
+  },
+  "repertoiredepotmanager.repertoireAjoute": {
+    "fr": "Répertoire ajouté.",
+    "en": "Directory added.",
+    "mg": "Voampiditra ny lahatahiry."
+  },
+  "repertoiredepotmanager.retirer": {
+    "fr": "Retirer",
+    "en": "Remove",
+    "mg": "Esory"
+  },
+  "repertoiredepotmanager.suppressionImpossible": {
+    "fr": "Suppression impossible.",
+    "en": "Unable to delete.",
+    "mg": "Tsy afaka mamafa."
+  },
+  "repertoiredepotmanager.titre": {
+    "fr": "Mes répertoires de dépôt",
+    "en": "My deposit directories",
+    "mg": "Ny lahatahiry fametrahako"
+  },
+  "richtext.btnFormat": {
+    "fr": "⌫ Format",
+    "en": "⌫ Format",
+    "mg": "⌫ Endrika"
+  },
+  "richtext.btnListeNumerotee": {
+    "fr": "1. Liste",
+    "en": "1. List",
+    "mg": "1. Lisitra"
+  },
+  "richtext.btnListePuces": {
+    "fr": "• Liste",
+    "en": "• List",
+    "mg": "• Lisitra"
+  },
+  "richtext.effacerFormat": {
+    "fr": "Effacer la mise en forme",
+    "en": "Clear formatting",
+    "mg": "Fafao ny fandaminana"
+  },
+  "richtext.gras": {
+    "fr": "Gras",
+    "en": "Bold",
+    "mg": "Matevina"
+  },
+  "richtext.italique": {
+    "fr": "Italique",
+    "en": "Italic",
+    "mg": "Mitsingilahila"
+  },
+  "richtext.listeNumerotee": {
+    "fr": "Liste numérotée",
+    "en": "Numbered list",
+    "mg": "Lisitra voaisa"
+  },
+  "richtext.listePuces": {
+    "fr": "Liste à puces",
+    "en": "Bulleted list",
+    "mg": "Lisitra misy teboka"
+  },
+  "richtext.miseEnForme": {
+    "fr": "Mise en forme",
+    "en": "Formatting",
+    "mg": "Fandaminana"
+  },
+  "richtext.souligne": {
+    "fr": "Souligné",
+    "en": "Underline",
+    "mg": "Voatsipika ambany"
+  },
+  "search.aucunDocument": {
+    "fr": "Aucun document.",
+    "en": "No document.",
+    "mg": "Tsy misy antontan-taratasy."
+  },
+  "search.aucunModele": {
+    "fr": "Aucun modèle.",
+    "en": "No template.",
+    "mg": "Tsy misy modely."
+  },
+  "search.aucuneClause": {
+    "fr": "Aucune clause.",
+    "en": "No clause.",
+    "mg": "Tsy misy fehezan-teny."
+  },
+  "search.categorieFacette": {
+    "fr": "Catégorie de clause (facette)",
+    "en": "Clause category (facet)",
+    "mg": "Sokajin'ny fehezan-teny (facet)"
+  },
+  "search.clauses": {
+    "fr": "Clauses ({n})",
+    "en": "Clauses ({n})",
+    "mg": "Fehezan-teny ({n})"
+  },
+  "search.confirmerSuppression": {
+    "fr": "Confirmer la suppression de « {libelle} » ?",
+    "en": "Confirm deletion of \"{libelle}\"?",
+    "mg": "Hamafisina ve ny famafana ny « {libelle} » ?"
+  },
+  "search.consulter": {
+    "fr": "Consulter",
+    "en": "View",
+    "mg": "Hijery"
+  },
+  "search.documents": {
+    "fr": "Documents ({n})",
+    "en": "Documents ({n})",
+    "mg": "Antontan-taratasy ({n})"
+  },
+  "search.editer": {
+    "fr": "Éditer",
+    "en": "Edit",
+    "mg": "Hanova"
+  },
+  "search.editerBibliotheque": {
+    "fr": "Éditer dans la bibliothèque",
+    "en": "Edit in library",
+    "mg": "Hanova ao amin'ny tahiry"
+  },
+  "search.facettesAria": {
+    "fr": "Facettes par catégorie de clause",
+    "en": "Facets by clause category",
+    "mg": "Facet araka ny sokajin'ny fehezan-teny"
+  },
+  "search.fermer": {
+    "fr": "Fermer",
+    "en": "Close",
+    "mg": "Hidio"
+  },
+  "search.modeles": {
+    "fr": "Modèles ({n})",
+    "en": "Templates ({n})",
+    "mg": "Modely ({n})"
+  },
+  "search.modelesCaption": {
+    "fr": "Modèles de documents correspondants",
+    "en": "Matching document templates",
+    "mg": "Modely antontan-taratasy mifanaraka"
+  },
+  "search.ouvrir": {
+    "fr": "Ouvrir",
+    "en": "Open",
+    "mg": "Hanokatra"
+  },
+  "search.rechercher": {
+    "fr": "Rechercher",
+    "en": "Search",
+    "mg": "Karohy"
+  },
+  "search.resultats": {
+    "fr": "{n} résultat(s) pour « {terme} »",
+    "en": "{n} result(s) for \"{terme}\"",
+    "mg": "{n} valiny ho an'ny « {terme} »"
+  },
+  "search.supprimer": {
+    "fr": "Supprimer",
+    "en": "Delete",
+    "mg": "Hamafa"
+  },
+  "search.supprimerClause": {
+    "fr": "Supprimer la clause",
+    "en": "Delete clause",
+    "mg": "Hamafa ny fehezan-teny"
+  },
+  "search.supprimerDocument": {
+    "fr": "Supprimer le document",
+    "en": "Delete document",
+    "mg": "Hamafa ny antontan-taratasy"
+  },
+  "search.terme": {
+    "fr": "Terme",
+    "en": "Term",
+    "mg": "Teny"
+  },
+  "search.termePlaceholder": {
+    "fr": "ex. garantie, bail, voirie…",
+    "en": "e.g. warranty, lease, roads…",
+    "mg": "oh. antoka, fanofana, lalana…"
+  },
+  "search.thActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Hetsika"
+  },
+  "search.thCategorieAcquisition": {
+    "fr": "Catégorie d'acquisition",
+    "en": "Acquisition category",
+    "mg": "Sokajy fividianana"
+  },
+  "search.thCode": {
+    "fr": "Code",
+    "en": "Code",
+    "mg": "Kaody"
+  },
+  "search.thNom": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Anarana"
+  },
+  "search.thStatut": {
+    "fr": "Statut",
+    "en": "Status",
+    "mg": "Sata"
+  },
+  "search.thTitre": {
+    "fr": "Titre",
+    "en": "Title",
+    "mg": "Lohateny"
+  },
+  "search.thType": {
+    "fr": "Type",
+    "en": "Type",
+    "mg": "Karazana"
+  },
+  "search.titre": {
+    "fr": "Recherche enrichie",
+    "en": "Advanced search",
+    "mg": "Fikarohana feno"
+  },
+  "search.tousTypes": {
+    "fr": "Tous les types",
+    "en": "All types",
+    "mg": "Karazana rehetra"
+  },
+  "search.toutesCategories": {
+    "fr": "Toutes les catégories",
+    "en": "All categories",
+    "mg": "Sokajy rehetra"
+  },
+  "search.typeFacette": {
+    "fr": "Type de document (facette)",
+    "en": "Document type (facet)",
+    "mg": "Karazana antontan-taratasy (facet)"
+  },
+  "securite.activer": {
+    "fr": "Activer",
+    "en": "Enable",
+    "mg": "Avelao handeha"
+  },
+  "securite.activerQuestion": {
+    "fr": "Activer la question secrète",
+    "en": "Enable security question",
+    "mg": "Avelao handeha ny fanontaniana miafina"
+  },
+  "securite.aucun": {
+    "fr": "Aucun",
+    "en": "None",
+    "mg": "Tsy misy"
+  },
+  "securite.authTotp": {
+    "fr": "Authentification TOTP",
+    "en": "TOTP authentication",
+    "mg": "Fanamarinana TOTP"
+  },
+  "securite.codeConfirmation": {
+    "fr": "Code de confirmation",
+    "en": "Confirmation code",
+    "mg": "Kaody fanamafisana"
+  },
+  "securite.codeInvalide": {
+    "fr": "Code invalide",
+    "en": "Invalid code",
+    "mg": "Kaody tsy mety"
+  },
+  "securite.compatibleAuth": {
+    "fr": "Compatible Google / Microsoft Authenticator.",
+    "en": "Compatible with Google / Microsoft Authenticator.",
+    "mg": "Mifanaraka amin'ny Google / Microsoft Authenticator."
+  },
+  "securite.configurerTotp": {
+    "fr": "Configurer le TOTP",
+    "en": "Configure TOTP",
+    "mg": "Amboary ny TOTP"
+  },
+  "securite.desactiverMfa": {
+    "fr": "Désactiver le MFA",
+    "en": "Disable MFA",
+    "mg": "Asio sakana ny MFA"
+  },
+  "securite.msgMfaDesactive": {
+    "fr": "MFA désactivé.",
+    "en": "MFA disabled.",
+    "mg": "MFA nasiana sakana."
+  },
+  "securite.msgQuestionActive": {
+    "fr": "Question secrète activée.",
+    "en": "Security question enabled.",
+    "mg": "Fanontaniana miafina navela handeha."
+  },
+  "securite.msgTotpActive": {
+    "fr": "MFA TOTP activé.",
+    "en": "TOTP MFA enabled.",
+    "mg": "MFA TOTP navela handeha."
+  },
+  "securite.q1defaut": {
+    "fr": "Ville de naissance ?",
+    "en": "City of birth?",
+    "mg": "Tanàna nahaterahana?"
+  },
+  "securite.question": {
+    "fr": "Question",
+    "en": "Question",
+    "mg": "Fanontaniana"
+  },
+  "securite.questionSecreteDynamique": {
+    "fr": "Question secrète dynamique",
+    "en": "Dynamic security question",
+    "mg": "Fanontaniana miafina mavitrika"
+  },
+  "securite.reponse": {
+    "fr": "Réponse",
+    "en": "Answer",
+    "mg": "Valiny"
+  },
+  "securite.secondFacteurActuel": {
+    "fr": "Second facteur actuel :",
+    "en": "Current second factor:",
+    "mg": "Anton-javatra faharoa ankehitriny:"
+  },
+  "securite.secret": {
+    "fr": "Secret :",
+    "en": "Secret:",
+    "mg": "Tsiambaratelo:"
+  },
+  "securite.titre": {
+    "fr": "Sécurité du compte",
+    "en": "Account security",
+    "mg": "Fiarovana ny kaonty"
+  },
+  "securite.uri": {
+    "fr": "URI :",
+    "en": "URI:",
+    "mg": "URI:"
+  },
+  "signaturepad.effacer": {
+    "fr": "Effacer",
+    "en": "Clear",
+    "mg": "Fafao"
+  },
+  "signaturepad.invite": {
+    "fr": "Signez avec la souris/le doigt ou téléversez une image.",
+    "en": "Sign with the mouse/finger or upload an image.",
+    "mg": "Manaova sonia amin’ny totozy/rantsantanana na ampidiro sary."
+  },
+  "signaturepad.prete": {
+    "fr": "Signature prête.",
+    "en": "Signature ready.",
+    "mg": "Vonona ny sonia."
+  },
+  "signaturepad.televerser": {
+    "fr": "Téléverser une image",
+    "en": "Upload an image",
+    "mg": "Ampidiro sary"
+  },
+  "signaturepublique.apposerSignature": {
+    "fr": "Apposer ma signature",
+    "en": "Add my signature",
+    "mg": "Ampidiro ny soniako"
+  },
+  "signaturepublique.enregistrement": {
+    "fr": "Enregistrement…",
+    "en": "Saving…",
+    "mg": "Mitahiry…"
+  },
+  "signaturepublique.erreurEnregistrement": {
+    "fr": "La signature n'a pas pu être enregistrée.",
+    "en": "The signature could not be saved.",
+    "mg": "Tsy voatahiry ny sonia."
+  },
+  "signaturepublique.fermerPage": {
+    "fr": "Vous pouvez fermer cette page.",
+    "en": "You may close this page.",
+    "mg": "Azonao akatona ity pejy ity."
+  },
+  "signaturepublique.invitation": {
+    "fr": "Vous êtes invité(e) à signer.",
+    "en": "You are invited to sign.",
+    "mg": "Asaina hanao sonia ianao."
+  },
+  "signaturepublique.invitationRole": {
+    "fr": "Vous êtes invité(e) à signer en tant que « {role} ».",
+    "en": "You are invited to sign as \"{role}\".",
+    "mg": "Asaina hanao sonia amin'ny maha « {role} » anao."
+  },
+  "signaturepublique.lienInvalide": {
+    "fr": "Lien de signature invalide ou expiré.",
+    "en": "Invalid or expired signature link.",
+    "mg": "Rohy sonia tsy mety na lany daty."
+  },
+  "signaturepublique.merci": {
+    "fr": "Merci {nom}. Votre signature a bien été enregistrée.",
+    "en": "Thank you {nom}. Your signature has been saved.",
+    "mg": "Misaotra {nom}. Voatahiry tsara ny soniànao."
+  },
+  "signaturepublique.nomComplet": {
+    "fr": "Nom complet",
+    "en": "Full name",
+    "mg": "Anarana feno"
+  },
+  "signaturepublique.signatureManuscrite": {
+    "fr": "Signature manuscrite ou image",
+    "en": "Handwritten signature or image",
+    "mg": "Sonia an-tanana na sary"
+  },
+  "signaturepublique.titre": {
+    "fr": "Signature électronique",
+    "en": "Electronic signature",
+    "mg": "Sonia elektronika"
+  },
+  "signaturepublique.veuillezApposer": {
+    "fr": "Veuillez apposer votre signature.",
+    "en": "Please add your signature.",
+    "mg": "Ampidiro azafady ny soniànao."
+  },
+  "simulateurdepots.aucunDepot": {
+    "fr": "Aucun dépôt pour l’instant. Publiez un document pour le voir apparaître ici.",
+    "en": "No deposits yet. Publish a document to see it appear here.",
+    "mg": "Tsy misy fametrahana aloha. Havoahy antontan-taratasy iray mba hisehoany eto."
+  },
+  "simulateurdepots.chargementImpossible": {
+    "fr": "Chargement impossible (droit de publication requis).",
+    "en": "Unable to load (publish permission required).",
+    "mg": "Tsy mety ny fampidirana (ilaina ny zo famoahana)."
+  },
+  "simulateurdepots.depotsAria": {
+    "fr": "Dépôts {env}",
+    "en": "{env} deposits",
+    "mg": "Fametrahana {env}"
+  },
+  "simulateurdepots.introA": {
+    "fr": "Tant qu’un environnement réel n’est pas branché (Paramètres → Intégration Microsoft 365), les publications sont",
+    "en": "As long as a real environment is not connected (Settings → Microsoft 365 integration), publications are",
+    "mg": "Raha mbola tsy tafapetraka ny tontolo marina (Fandrindrana → Fampidirana Microsoft 365), dia"
+  },
+  "simulateurdepots.introB": {
+    "fr": "mais les fichiers sont",
+    "en": "but the files are",
+    "mg": "ny famoahana saingy ny rakitra dia"
+  },
+  "simulateurdepots.introC": {
+    "fr": "et consultables ci-dessous, classés par environnement.",
+    "en": "and viewable below, grouped by environment.",
+    "mg": "ary azo jerena eto ambany, voasokajy araka ny tontolo."
+  },
+  "simulateurdepots.kilooctets": {
+    "fr": "{n} Ko",
+    "en": "{n} KB",
+    "mg": "{n} Ko"
+  },
+  "simulateurdepots.octets": {
+    "fr": "{n} o",
+    "en": "{n} B",
+    "mg": "{n} o"
+  },
+  "simulateurdepots.ouvrir": {
+    "fr": "Ouvrir",
+    "en": "Open",
+    "mg": "Sokafy"
+  },
+  "simulateurdepots.racine": {
+    "fr": "(racine)",
+    "en": "(root)",
+    "mg": "(fototra)"
+  },
+  "simulateurdepots.rafraichir": {
+    "fr": "Rafraîchir",
+    "en": "Refresh",
+    "mg": "Havaozy"
+  },
+  "simulateurdepots.reellementEcrits": {
+    "fr": "réellement écrits",
+    "en": "actually written",
+    "mg": "voasoratra marina"
+  },
+  "simulateurdepots.simulees": {
+    "fr": "simulées",
+    "en": "simulated",
+    "mg": "an-tsary"
+  },
+  "simulateurdepots.thActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Hetsika"
+  },
+  "simulateurdepots.thDepose": {
+    "fr": "Déposé le",
+    "en": "Deposited on",
+    "mg": "Napetraka ny"
+  },
+  "simulateurdepots.thDossier": {
+    "fr": "Dossier",
+    "en": "Folder",
+    "mg": "Lahatahiry"
+  },
+  "simulateurdepots.thFichier": {
+    "fr": "Fichier",
+    "en": "File",
+    "mg": "Rakitra"
+  },
+  "simulateurdepots.thTaille": {
+    "fr": "Taille",
+    "en": "Size",
+    "mg": "Habe"
+  },
+  "simulateurdepots.titre": {
+    "fr": "Dépôts simulés — fichiers réellement déposés",
+    "en": "Simulated deposits — files actually deposited",
+    "mg": "Fametrahana an-tsary — rakitra napetraka marina"
+  },
+  "stats.aucuneDonnee": {
+    "fr": "Aucune donnée.",
+    "en": "No data.",
+    "mg": "Tsy misy angona."
+  },
+  "stats.aucuneEcheance": {
+    "fr": "Aucune échéance à venir.",
+    "en": "No upcoming deadline.",
+    "mg": "Tsy misy fe-potoana ho avy."
+  },
+  "stats.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Miandry…"
+  },
+  "stats.clausesActives": {
+    "fr": "Clauses actives",
+    "en": "Active clauses",
+    "mg": "Fepetra mavitrika"
+  },
+  "stats.description": {
+    "fr": "Indicateurs clés, répartition des documents et échéances à venir.",
+    "en": "Key indicators, document distribution and upcoming deadlines.",
+    "mg": "Fanondro fototra, fizarana antontan-taratasy sy fe-potoana ho avy."
+  },
+  "stats.docsParMode": {
+    "fr": "Documents par mode de sollicitation",
+    "en": "Documents by solicitation mode",
+    "mg": "Antontan-taratasy araka ny fomba fangatahana"
+  },
+  "stats.docsParStatut": {
+    "fr": "Documents par statut",
+    "en": "Documents by status",
+    "mg": "Antontan-taratasy araka ny sata"
+  },
+  "stats.docsParType": {
+    "fr": "Documents par type",
+    "en": "Documents by type",
+    "mg": "Antontan-taratasy araka ny karazana"
+  },
+  "stats.documents": {
+    "fr": "Documents",
+    "en": "Documents",
+    "mg": "Antontan-taratasy"
+  },
+  "stats.echeance": {
+    "fr": "Échéance",
+    "en": "Deadline",
+    "mg": "Fe-potoana"
+  },
+  "stats.echeances60j": {
+    "fr": "Échéances (60 j)",
+    "en": "Deadlines (60 d)",
+    "mg": "Fe-potoana (60 andro)"
+  },
+  "stats.obligationsEcheances": {
+    "fr": "Obligations & échéances à venir (60 jours)",
+    "en": "Upcoming obligations & deadlines (60 days)",
+    "mg": "Adidy & fe-potoana ho avy (60 andro)"
+  },
+  "stats.statut": {
+    "fr": "Statut",
+    "en": "Status",
+    "mg": "Sata"
+  },
+  "stats.thTitre": {
+    "fr": "Titre",
+    "en": "Title",
+    "mg": "Lohateny"
+  },
+  "stats.titre": {
+    "fr": "Tableau de bord",
+    "en": "Dashboard",
+    "mg": "Tabilaon-jotra"
+  },
+  "stats.type": {
+    "fr": "Type",
+    "en": "Type",
+    "mg": "Karazana"
+  },
+  "superadmin.accesReserve": {
+    "fr": "Accès réservé au superadmin.",
+    "en": "Superadmin access only.",
+    "mg": "Fidirana ho an'ny superadmin ihany."
+  },
+  "superadmin.activer": {
+    "fr": "Activer",
+    "en": "Activate",
+    "mg": "Hampandeha"
+  },
+  "superadmin.adminCree": {
+    "fr": "Administrateur du tenant créé.",
+    "en": "Tenant administrator created.",
+    "mg": "Noforonina ny mpitantana ny organisation."
+  },
+  "superadmin.altLogo": {
+    "fr": "Logo",
+    "en": "Logo",
+    "mg": "Logo"
+  },
+  "superadmin.altLogoTenant": {
+    "fr": "Logo du tenant",
+    "en": "Tenant logo",
+    "mg": "Logon'ny organisation"
+  },
+  "superadmin.annuler": {
+    "fr": "Annuler",
+    "en": "Cancel",
+    "mg": "Aoka izay"
+  },
+  "superadmin.apercu": {
+    "fr": "aperçu",
+    "en": "preview",
+    "mg": "topi-maso"
+  },
+  "superadmin.choisir": {
+    "fr": "— Choisir —",
+    "en": "— Choose —",
+    "mg": "— Safidio —"
+  },
+  "superadmin.choisirTenant": {
+    "fr": "Choisissez un tenant.",
+    "en": "Choose a tenant.",
+    "mg": "Misafidiana organisation."
+  },
+  "superadmin.choisirTenantOption": {
+    "fr": "— Choisir un tenant —",
+    "en": "— Choose a tenant —",
+    "mg": "— Safidio organisation —"
+  },
+  "superadmin.couleurAccent": {
+    "fr": "Couleur d'accent",
+    "en": "Accent color",
+    "mg": "Loko fanamafisana"
+  },
+  "superadmin.couleurPrimaire": {
+    "fr": "Couleur primaire",
+    "en": "Primary color",
+    "mg": "Loko voalohany"
+  },
+  "superadmin.couleurTexte": {
+    "fr": "Couleur du texte",
+    "en": "Text color",
+    "mg": "Lokon'ny lahatsoratra"
+  },
+  "superadmin.creerAdmin": {
+    "fr": "Créer l'admin",
+    "en": "Create the admin",
+    "mg": "Mamorona mpitantana"
+  },
+  "superadmin.creerAdminTitre": {
+    "fr": "Créer l'administrateur d'un tenant",
+    "en": "Create a tenant's administrator",
+    "mg": "Mamorona mpitantana ho an'ny organisation"
+  },
+  "superadmin.creerTenant": {
+    "fr": "Créer le tenant",
+    "en": "Create the tenant",
+    "mg": "Mamorona organisation"
+  },
+  "superadmin.desactiver": {
+    "fr": "Désactiver",
+    "en": "Deactivate",
+    "mg": "Hampiato"
+  },
+  "superadmin.editer": {
+    "fr": "Éditer",
+    "en": "Edit",
+    "mg": "Hanova"
+  },
+  "superadmin.editerTenant": {
+    "fr": "Éditer le tenant : {titre}",
+    "en": "Edit the tenant: {titre}",
+    "mg": "Hanova ny organisation: {titre}"
+  },
+  "superadmin.enregistrerModifs": {
+    "fr": "Enregistrer les modifications",
+    "en": "Save changes",
+    "mg": "Tehirizo ny fanovana"
+  },
+  "superadmin.enregistrerTheme": {
+    "fr": "Enregistrer le thème",
+    "en": "Save the theme",
+    "mg": "Tehirizo ny lokony"
+  },
+  "superadmin.erreur": {
+    "fr": "Erreur",
+    "en": "Error",
+    "mg": "Hadisoana"
+  },
+  "superadmin.erreurCourriel": {
+    "fr": "Erreur (courriel déjà utilisé ?)",
+    "en": "Error (email already used?)",
+    "mg": "Hadisoana (efa ampiasaina ny mailaka?)"
+  },
+  "superadmin.fondPage": {
+    "fr": "Fond de page",
+    "en": "Page background",
+    "mg": "Fototry ny pejy"
+  },
+  "superadmin.labelCourriel": {
+    "fr": "Courriel",
+    "en": "Email",
+    "mg": "Mailaka"
+  },
+  "superadmin.labelMotDePasse": {
+    "fr": "Mot de passe",
+    "en": "Password",
+    "mg": "Teny miafina"
+  },
+  "superadmin.labelNom": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Anarana"
+  },
+  "superadmin.labelSlug": {
+    "fr": "Slug (sous-domaine)",
+    "en": "Slug (subdomain)",
+    "mg": "Slug (zana-tokantrano)"
+  },
+  "superadmin.labelSousTitre": {
+    "fr": "Sous-titre",
+    "en": "Subtitle",
+    "mg": "Lohateny faharoa"
+  },
+  "superadmin.labelTenant": {
+    "fr": "Tenant",
+    "en": "Tenant",
+    "mg": "Organisation"
+  },
+  "superadmin.labelTitreConnexion": {
+    "fr": "Titre de connexion",
+    "en": "Login title",
+    "mg": "Lohatenin'ny fidirana"
+  },
+  "superadmin.logoImage": {
+    "fr": "Logo image (documents PDF/DOCX — PNG/JPEG, max 500 Ko)",
+    "en": "Logo image (PDF/DOCX documents — PNG/JPEG, max 500 KB)",
+    "mg": "Sary logo (antontan-taratasy PDF/DOCX — PNG/JPEG, 500 Ko farany)"
+  },
+  "superadmin.logoTexte": {
+    "fr": "Logo / texte de marque",
+    "en": "Logo / brand text",
+    "mg": "Logo / lahatsoratry ny marika"
+  },
+  "superadmin.logoVolumineux": {
+    "fr": "Logo trop volumineux (max 500 Ko).",
+    "en": "Logo too large (max 500 KB).",
+    "mg": "Lehibe loatra ny logo (500 Ko farany)."
+  },
+  "superadmin.majRefusee": {
+    "fr": "Mise à jour refusée.",
+    "en": "Update denied.",
+    "mg": "Nolavina ny fanavaozana."
+  },
+  "superadmin.non": {
+    "fr": "non",
+    "en": "no",
+    "mg": "tsia"
+  },
+  "superadmin.nouveauTenant": {
+    "fr": "Nouveau tenant",
+    "en": "New tenant",
+    "mg": "Organisation vaovao"
+  },
+  "superadmin.oui": {
+    "fr": "oui",
+    "en": "yes",
+    "mg": "eny"
+  },
+  "superadmin.retirerLogo": {
+    "fr": "Retirer le logo",
+    "en": "Remove the logo",
+    "mg": "Esory ny logo"
+  },
+  "superadmin.tenantActif": {
+    "fr": "Tenant actif",
+    "en": "Active tenant",
+    "mg": "Organisation mavitrika"
+  },
+  "superadmin.tenantCree": {
+    "fr": "Tenant créé.",
+    "en": "Tenant created.",
+    "mg": "Noforonina ny organisation."
+  },
+  "superadmin.tenantMaj": {
+    "fr": "Tenant mis à jour.",
+    "en": "Tenant updated.",
+    "mg": "Nohavaozina ny organisation."
+  },
+  "superadmin.thActif": {
+    "fr": "Actif",
+    "en": "Active",
+    "mg": "Mavitrika"
+  },
+  "superadmin.thActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Hetsika"
+  },
+  "superadmin.thSlug": {
+    "fr": "Slug",
+    "en": "Slug",
+    "mg": "Slug"
+  },
+  "superadmin.thSousTitre": {
+    "fr": "Sous-titre",
+    "en": "Subtitle",
+    "mg": "Lohateny faharoa"
+  },
+  "superadmin.thTitreLogin": {
+    "fr": "Titre (login)",
+    "en": "Title (login)",
+    "mg": "Lohateny (fidirana)"
+  },
+  "superadmin.themeDescription": {
+    "fr": "Personnalisez les couleurs et le logo/texte de chaque espace tenant. Par défaut :",
+    "en": "Customize the colors and logo/text of each tenant space. Default:",
+    "mg": "Amboary ny loko sy ny logo/lahatsoratra amin'ny faritra organisation tsirairay. Toy izao raha tsy misy fanovana:"
+  },
+  "superadmin.themeEnregistre": {
+    "fr": "Thème enregistré. Il s’applique à la prochaine connexion des utilisateurs du tenant.",
+    "en": "Theme saved. It applies at the tenant users' next sign-in.",
+    "mg": "Voatahiry ny lokony. Mihatra amin'ny fidirana manaraka an'ny mpampiasa ao amin'ny organisation."
+  },
+  "superadmin.themeTitre": {
+    "fr": "Thème & design par tenant",
+    "en": "Theme & design per tenant",
+    "mg": "Lokony & endrika isaky ny organisation"
+  },
+  "superadmin.titre": {
+    "fr": "Espace superadmin — Tenants",
+    "en": "Superadmin area — Tenants",
+    "mg": "Faritra superadmin — Organisation"
+  },
+  "superadmin.valeursSelecteurs": {
+    "fr": "Valeurs des sélecteurs (global)",
+    "en": "Selector values (global)",
+    "mg": "Sanda ny mpisafidy (manerana)"
+  },
+  "tariftenantmanager.active": {
+    "fr": "Tarif actif",
+    "en": "Active pricing",
+    "mg": "Sarany miasa"
+  },
+  "tariftenantmanager.annualFee": {
+    "fr": "Forfait annuel (avant taxes)",
+    "en": "Annual fee (before taxes)",
+    "mg": "Sarany isan-taona (alohan'ny hetra)"
+  },
+  "tariftenantmanager.chooseTenant": {
+    "fr": "— Choisir un tenant —",
+    "en": "— Choose a tenant —",
+    "mg": "— Misafidiana tenant —"
+  },
+  "tariftenantmanager.chooseTenantError": {
+    "fr": "Choisissez un tenant.",
+    "en": "Choose a tenant.",
+    "mg": "Misafidiana tenant."
+  },
+  "tariftenantmanager.colAmount": {
+    "fr": "Montant (avant taxes)",
+    "en": "Amount (before taxes)",
+    "mg": "Vola (alohan'ny hetra)"
+  },
+  "tariftenantmanager.colItem": {
+    "fr": "Poste",
+    "en": "Item",
+    "mg": "Andiany"
+  },
+  "tariftenantmanager.colWithTax": {
+    "fr": "Avec TPS + TVQ",
+    "en": "With GST + QST",
+    "mg": "Miaraka amin'ny TPS + TVQ"
+  },
+  "tariftenantmanager.currency": {
+    "fr": "Devise",
+    "en": "Currency",
+    "mg": "Vola"
+  },
+  "tariftenantmanager.description": {
+    "fr": "Forfait annuel « tout inclus » (licences, services, hébergement, support) et indexation des années de renouvellement, propres à chaque organisation. Sert de base à la facturation et aux soumissions.",
+    "en": "\"All-inclusive\" annual fee (licenses, services, hosting, support) and indexation of renewal years, specific to each organization. Serves as the basis for billing and bids.",
+    "mg": "Sarany isan-taona « tafiditra daholo » (fahazoan-dalana, serivisy, fampiantranoana, fanohanana) sy fanitsiana ny taona fanavaozana, manokana ho an'ny fikambanana tsirairay. Fototra ho an'ny fakàna sy ny tolotra."
+  },
+  "tariftenantmanager.firmPeriod": {
+    "fr": "Période ferme (3 ans)",
+    "en": "Firm period (3 years)",
+    "mg": "Vanim-potoana raikitra (3 taona)"
+  },
+  "tariftenantmanager.indexation": {
+    "fr": "Indexation annuelle des renouvellements (%)",
+    "en": "Annual indexation of renewals (%)",
+    "mg": "Fanitsiana isan-taona amin'ny fanavaozana (%)"
+  },
+  "tariftenantmanager.notes": {
+    "fr": "Notes",
+    "en": "Notes",
+    "mg": "Fanamarihana"
+  },
+  "tariftenantmanager.optionalYears": {
+    "fr": "7 années optionnelles (indexées)",
+    "en": "7 optional years (indexed)",
+    "mg": "Taona 7 azo safidiana (voaisa)"
+  },
+  "tariftenantmanager.projectionAria": {
+    "fr": "Projection budgétaire du tarif",
+    "en": "Budget projection of the pricing",
+    "mg": "Vinavina teti-bola momba ny sarany"
+  },
+  "tariftenantmanager.saveDenied": {
+    "fr": "Enregistrement refusé (rôle superadmin requis).",
+    "en": "Save denied (superadmin role required).",
+    "mg": "Lavina ny fitehirizana (ilaina andraikitra superadmin)."
+  },
+  "tariftenantmanager.savePricing": {
+    "fr": "Enregistrer le tarif",
+    "en": "Save the pricing",
+    "mg": "Tehirizo ny sarany"
+  },
+  "tariftenantmanager.saved": {
+    "fr": "Tarif enregistré pour ce tenant.",
+    "en": "Pricing saved for this tenant.",
+    "mg": "Voatahiry ny sarany ho an'ity tenant ity."
+  },
+  "tariftenantmanager.tenant": {
+    "fr": "Tenant",
+    "en": "Tenant",
+    "mg": "Tenant"
+  },
+  "tariftenantmanager.title": {
+    "fr": "Tarification par tenant",
+    "en": "Pricing by tenant",
+    "mg": "Sarany isaky ny tenant"
+  },
+  "tariftenantmanager.total10": {
+    "fr": "Total sur 10 ans",
+    "en": "Total over 10 years",
+    "mg": "Totaly mandritra ny 10 taona"
+  },
+  "tariftenantmanager.usersIncluded": {
+    "fr": "Utilisateurs inclus (vide = illimité)",
+    "en": "Included users (empty = unlimited)",
+    "mg": "Mpampiasa tafiditra (banga = tsy voafetra)"
+  },
+  "templatemanager.annuler": {
+    "fr": "Annuler",
+    "en": "Cancel",
+    "mg": "Hanafoana"
+  },
+  "templatemanager.aucun": {
+    "fr": "Aucun template.",
+    "en": "No template.",
+    "mg": "Tsy misy modely."
+  },
+  "templatemanager.cat.AUTRE": {
+    "fr": "Autre",
+    "en": "Other",
+    "mg": "Hafa"
+  },
+  "templatemanager.cat.BIENS": {
+    "fr": "Biens",
+    "en": "Goods",
+    "mg": "Fananana"
+  },
+  "templatemanager.cat.SERVICES": {
+    "fr": "Services",
+    "en": "Services",
+    "mg": "Serivisy"
+  },
+  "templatemanager.cat.SERVICES_PROFESSIONNELS": {
+    "fr": "Services professionnels",
+    "en": "Professional services",
+    "mg": "Serivisy matihanina"
+  },
+  "templatemanager.cat.TECHNOLOGIES": {
+    "fr": "Technologies de l'information",
+    "en": "Information technology",
+    "mg": "Teknolojian'ny fampahalalana"
+  },
+  "templatemanager.cat.TRAVAUX_CONSTRUCTION": {
+    "fr": "Travaux de construction",
+    "en": "Construction works",
+    "mg": "Asa fanorenana"
+  },
+  "templatemanager.confirmerSuppression": {
+    "fr": "Supprimer définitivement le template « {nom} » ?",
+    "en": "Permanently delete the template \"{nom}\"?",
+    "mg": "Hofafana tanteraka ve ny modely « {nom} » ?"
+  },
+  "templatemanager.creer": {
+    "fr": "Créer le template",
+    "en": "Create template",
+    "mg": "Mamorona modely"
+  },
+  "templatemanager.description": {
+    "fr": "Modèles réutilisables : type, mode, gabarit (design), titre et contexte par défaut, clauses pré-sélectionnées et annexes. Utilisés dans « Créer depuis un template ».",
+    "en": "Reusable templates: type, mode, layout (design), default title and context, pre-selected clauses and appendices. Used in \"Create from a template\".",
+    "mg": "Modely azo averina ampiasaina: karazana, fomba, endrika (design), lohateny sy tontolo default, fehezan-teny voafantina mialoha ary tovana. Ampiasaina ao amin'ny « Mamorona avy amin'ny modely »."
+  },
+  "templatemanager.enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Tehirizo"
+  },
+  "templatemanager.labelAnnexes": {
+    "fr": "Annexes par défaut (un titre par ligne)",
+    "en": "Default appendices (one title per line)",
+    "mg": "Tovana default (lohateny iray isaky ny andalana)"
+  },
+  "templatemanager.labelCategorie": {
+    "fr": "Catégorie d'acquisition (classement)",
+    "en": "Acquisition category (classification)",
+    "mg": "Sokajy fividianana (fanasokajiana)"
+  },
+  "templatemanager.labelClauseCodes": {
+    "fr": "Codes de clauses (séparés par des virgules)",
+    "en": "Clause codes (comma-separated)",
+    "mg": "Kaodin'ny fehezan-teny (sarahina faingo)"
+  },
+  "templatemanager.labelCode": {
+    "fr": "Code",
+    "en": "Code",
+    "mg": "Kaody"
+  },
+  "templatemanager.labelContexte": {
+    "fr": "Contexte / contenu par défaut",
+    "en": "Default context / content",
+    "mg": "Tontolo / votoaty default"
+  },
+  "templatemanager.labelDescription": {
+    "fr": "Description",
+    "en": "Description",
+    "mg": "Famaritana"
+  },
+  "templatemanager.labelGabarit": {
+    "fr": "Gabarit (design : police, couverture, format)",
+    "en": "Layout (design: font, cover, format)",
+    "mg": "Endrika (design: endri-tsoratra, fonony, endrika)"
+  },
+  "templatemanager.labelMode": {
+    "fr": "Mode de sollicitation",
+    "en": "Solicitation mode",
+    "mg": "Fomba fangatahana"
+  },
+  "templatemanager.labelNom": {
+    "fr": "Nom (affiché)",
+    "en": "Name (displayed)",
+    "mg": "Anarana (aseho)"
+  },
+  "templatemanager.labelTitreDefaut": {
+    "fr": "Titre par défaut",
+    "en": "Default title",
+    "mg": "Lohateny default"
+  },
+  "templatemanager.labelType": {
+    "fr": "Type de contrat",
+    "en": "Contract type",
+    "mg": "Karazana fifanarahana"
+  },
+  "templatemanager.modalModifier": {
+    "fr": "Modifier le template",
+    "en": "Edit template",
+    "mg": "Hanova ny modely"
+  },
+  "templatemanager.modalNouveau": {
+    "fr": "Nouveau template",
+    "en": "New template",
+    "mg": "Modely vaovao"
+  },
+  "templatemanager.modalSupprimer": {
+    "fr": "Supprimer le template",
+    "en": "Delete template",
+    "mg": "Hamafa ny modely"
+  },
+  "templatemanager.modifier": {
+    "fr": "Modifier",
+    "en": "Edit",
+    "mg": "Hanova"
+  },
+  "templatemanager.nouveau": {
+    "fr": "Nouveau template",
+    "en": "New template",
+    "mg": "Modely vaovao"
+  },
+  "templatemanager.optionAucun": {
+    "fr": "— Aucun —",
+    "en": "— None —",
+    "mg": "— Tsy misy —"
+  },
+  "templatemanager.optionChoisir": {
+    "fr": "— Choisir —",
+    "en": "— Choose —",
+    "mg": "— Fidio —"
+  },
+  "templatemanager.optionDeduitType": {
+    "fr": "— Déduit du type —",
+    "en": "— Inferred from type —",
+    "mg": "— Avy amin'ny karazana —"
+  },
+  "templatemanager.optionNonClasse": {
+    "fr": "— Non classé —",
+    "en": "— Unclassified —",
+    "mg": "— Tsy voasokajy —"
+  },
+  "templatemanager.placeholderAnnexes": {
+    "fr": "Attestation Revenu Québec\nAttestation CNESST",
+    "en": "Revenu Québec attestation\nCNESST attestation",
+    "mg": "Fanamarinana Revenu Québec\nFanamarinana CNESST"
+  },
+  "templatemanager.placeholderClauseCodes": {
+    "fr": "ex. GEN-001, AOP-010",
+    "en": "e.g. GEN-001, AOP-010",
+    "mg": "oh. GEN-001, AOP-010"
+  },
+  "templatemanager.placeholderCode": {
+    "fr": "ex. AOP_SERVICES",
+    "en": "e.g. AOP_SERVICES",
+    "mg": "oh. AOP_SERVICES"
+  },
+  "templatemanager.placeholderContexte": {
+    "fr": "Contexte pré-rempli du document…",
+    "en": "Pre-filled document context…",
+    "mg": "Tontolon'ny antontan-taratasy feno mialoha…"
+  },
+  "templatemanager.placeholderDescription": {
+    "fr": "À quoi sert ce template",
+    "en": "What this template is for",
+    "mg": "Ho an'inona ity modely ity"
+  },
+  "templatemanager.placeholderNom": {
+    "fr": "ex. Appel d'offres — services",
+    "en": "e.g. Call for tenders — services",
+    "mg": "oh. Antso tolo-bidy — serivisy"
+  },
+  "templatemanager.placeholderTitreDefaut": {
+    "fr": "Pré-rempli à la création",
+    "en": "Pre-filled on creation",
+    "mg": "Feno mialoha rehefa mamorona"
+  },
+  "templatemanager.supprimer": {
+    "fr": "Supprimer",
+    "en": "Delete",
+    "mg": "Hamafa"
+  },
+  "templatemanager.thActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Hetsika"
+  },
+  "templatemanager.thClauses": {
+    "fr": "Clauses",
+    "en": "Clauses",
+    "mg": "Fehezan-teny"
+  },
+  "templatemanager.thCode": {
+    "fr": "Code",
+    "en": "Code",
+    "mg": "Kaody"
+  },
+  "templatemanager.thGabarit": {
+    "fr": "Gabarit",
+    "en": "Layout",
+    "mg": "Endrika"
+  },
+  "templatemanager.thNom": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Anarana"
+  },
+  "templatemanager.thType": {
+    "fr": "Type",
+    "en": "Type",
+    "mg": "Karazana"
+  },
+  "templatemanager.titre": {
+    "fr": "Templates de documents",
+    "en": "Document templates",
+    "mg": "Modely antontan-taratasy"
+  },
+  "templatemanager.toastCree": {
+    "fr": "Template créé",
+    "en": "Template created",
+    "mg": "Noforonina ny modely"
+  },
+  "templatemanager.toastEnregistrementRefuse": {
+    "fr": "Enregistrement refusé (rôle requis).",
+    "en": "Save refused (role required).",
+    "mg": "Lavina ny fitehirizana (mila anjara asa)."
+  },
+  "templatemanager.toastModifie": {
+    "fr": "Template modifié",
+    "en": "Template updated",
+    "mg": "Novaina ny modely"
+  },
+  "templatemanager.toastSuppressionRefusee": {
+    "fr": "Suppression refusée.",
+    "en": "Deletion refused.",
+    "mg": "Lavina ny famafana."
+  },
+  "templatemanager.toastSupprime": {
+    "fr": "Template supprimé",
+    "en": "Template deleted",
+    "mg": "Voafafa ny modely"
+  },
+  "templates.accesReserve": {
+    "fr": "Accès réservé aux rédacteurs et administrateurs.",
+    "en": "Writer and administrator access only.",
+    "mg": "Fidirana ho an'ny mpanoratra sy mpitantana ihany."
+  },
+  "templates.description": {
+    "fr": "Créez et gérez des modèles réutilisables (type, gabarit/design, titre et contexte par défaut, clauses et annexes). Ils alimentent « Créer depuis un template ».",
+    "en": "Create and manage reusable models (type, layout/design, default title and context, clauses and annexes). They feed « Create from a template ».",
+    "mg": "Mamorona sy mitantana modely azo averimberina (karazana, endrika/design, lohateny sy tontolo lohalika, fepetra ary tovana). Manome sakafo ny « Mamorona avy amin'ny modely » izy ireo."
+  },
+  "templates.titre": {
+    "fr": "Templates de documents",
+    "en": "Document templates",
+    "mg": "Modely antontan-taratasy"
+  },
+  "users.adminOnly": {
+    "fr": "Accès réservé aux administrateurs.",
+    "en": "Access restricted to administrators.",
+    "mg": "Natokana ho an'ny mpitantana ny fidirana."
+  },
+  "users.cancel": {
+    "fr": "Annuler",
+    "en": "Cancel",
+    "mg": "Hanafoana"
+  },
+  "users.colActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Hetsika"
+  },
+  "users.colActive": {
+    "fr": "Actif",
+    "en": "Active",
+    "mg": "Miasa"
+  },
+  "users.colEmail": {
+    "fr": "Courriel",
+    "en": "Email",
+    "mg": "Mailaka"
+  },
+  "users.colName": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Anarana"
+  },
+  "users.colRoles": {
+    "fr": "Rôles",
+    "en": "Roles",
+    "mg": "Andraikitra"
+  },
+  "users.createUser": {
+    "fr": "Créer un utilisateur",
+    "en": "Create a user",
+    "mg": "Mamorona mpampiasa"
+  },
+  "users.delete": {
+    "fr": "Supprimer",
+    "en": "Delete",
+    "mg": "Hamafa"
+  },
+  "users.deleteConfirm": {
+    "fr": "Confirmer la suppression de {email} ?",
+    "en": "Confirm deletion of {email}?",
+    "mg": "Hamafa an'i {email} tokoa ?"
+  },
+  "users.deleteUserTitle": {
+    "fr": "Supprimer l'utilisateur",
+    "en": "Delete the user",
+    "mg": "Hamafa ny mpampiasa"
+  },
+  "users.direction": {
+    "fr": "Direction",
+    "en": "Department",
+    "mg": "Departemanta"
+  },
+  "users.edit": {
+    "fr": "Éditer",
+    "en": "Edit",
+    "mg": "Hanova"
+  },
+  "users.editUser": {
+    "fr": "Modifier un utilisateur",
+    "en": "Edit a user",
+    "mg": "Hanova mpampiasa"
+  },
+  "users.empty": {
+    "fr": "Aucun utilisateur.",
+    "en": "No user.",
+    "mg": "Tsy misy mpampiasa."
+  },
+  "users.errorSave": {
+    "fr": "Erreur (courriel déjà utilisé ?)",
+    "en": "Error (email already in use?)",
+    "mg": "Hadisoana (efa ampiasaina ny mailaka?)"
+  },
+  "users.newPassword": {
+    "fr": "Nouveau mot de passe (optionnel)",
+    "en": "New password (optional)",
+    "mg": "Teny miafina vaovao (tsy voatery)"
+  },
+  "users.newUser": {
+    "fr": "Nouvel utilisateur",
+    "en": "New user",
+    "mg": "Mpampiasa vaovao"
+  },
+  "users.next": {
+    "fr": "Suivant →",
+    "en": "Next →",
+    "mg": "Manaraka →"
+  },
+  "users.no": {
+    "fr": "non",
+    "en": "no",
+    "mg": "tsia"
+  },
+  "users.pageOf": {
+    "fr": "Page {current} / {total}",
+    "en": "Page {current} / {total}",
+    "mg": "Pejy {current} / {total}"
+  },
+  "users.password": {
+    "fr": "Mot de passe",
+    "en": "Password",
+    "mg": "Teny miafina"
+  },
+  "users.previous": {
+    "fr": "← Précédent",
+    "en": "← Previous",
+    "mg": "← Aloha"
+  },
+  "users.rolesRbac": {
+    "fr": "Rôles (RBAC)",
+    "en": "Roles (RBAC)",
+    "mg": "Andraikitra (RBAC)"
+  },
+  "users.save": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Tehirizo"
+  },
+  "users.searchPlaceholder": {
+    "fr": "Recherche (courriel, nom)…",
+    "en": "Search (email, name)…",
+    "mg": "Fikarohana (mailaka, anarana)…"
+  },
+  "users.title": {
+    "fr": "Utilisateurs ({n})",
+    "en": "Users ({n})",
+    "mg": "Mpampiasa ({n})"
+  },
+  "users.yes": {
+    "fr": "oui",
+    "en": "yes",
+    "mg": "eny"
+  },
+  "vitrine.atout1Text": {
+    "fr": "Assistant IA exécuté localement : vos données ne quittent pas votre environnement et ne servent pas à entraîner un modèle tiers.",
+    "en": "AI assistant run locally: your data never leaves your environment and is not used to train a third-party model.",
+    "mg": "Mpanampy IA mandeha an-toerana: tsy miala amin'ny tontolonao ny angon-drakitrao ary tsy ampiasaina hampiofana modely an'olon-kafa."
+  },
+  "vitrine.atout1Title": {
+    "fr": "Conforme à la Loi 25",
+    "en": "Compliant with Law 25",
+    "mg": "Mifanaraka amin'ny Lalàna 25"
+  },
+  "vitrine.atout2Text": {
+    "fr": "Interface vérifiée selon le SGQRI 008 3.0 et la WCAG 2.2, entièrement en français.",
+    "en": "Interface verified against SGQRI 008 3.0 and WCAG 2.2, entirely in French.",
+    "mg": "Endrika voamarina araka ny SGQRI 008 3.0 sy WCAG 2.2, amin'ny teny frantsay manontolo."
+  },
+  "vitrine.atout2Title": {
+    "fr": "Accessibilité AA",
+    "en": "AA accessibility",
+    "mg": "Fahafahana idirana AA"
+  },
+  "vitrine.atout3Text": {
+    "fr": "Infrastructure certifiée ISO 27001 et SOC 2 Type II, régions canadiennes, haute disponibilité.",
+    "en": "ISO 27001 and SOC 2 Type II certified infrastructure, Canadian regions, high availability.",
+    "mg": "Fotodrafitrasa voamarina ISO 27001 sy SOC 2 Type II, faritra Kanadiana, fahazoana avo lenta."
+  },
+  "vitrine.atout3Title": {
+    "fr": "Hébergement Azure",
+    "en": "Azure hosting",
+    "mg": "Fampiantranoana Azure"
+  },
+  "vitrine.atout4Text": {
+    "fr": "Solution opérationnelle, déployée et éprouvée — rien à imaginer, tout se démontre.",
+    "en": "An operational, deployed and proven solution — nothing to imagine, everything can be demonstrated.",
+    "mg": "Vahaolana miasa, napetraka ary voaporofo — tsy misy noeritreretina, azo asehoana ny zava-drehetra."
+  },
+  "vitrine.atout4Title": {
+    "fr": "Déjà en service",
+    "en": "Already in service",
+    "mg": "Efa miasa"
+  },
+  "vitrine.atoutsTitle": {
+    "fr": "Pourquoi VINA",
+    "en": "Why VINA",
+    "mg": "Nahoana no VINA"
+  },
+  "vitrine.brandSub": {
+    "fr": "Rédaction et gestion des documents d’approvisionnement",
+    "en": "Drafting and management of procurement documents",
+    "mg": "Fanoratana sy fitantanana ny antontan-taratasy fividianana"
+  },
+  "vitrine.demoParaA": {
+    "fr": "Cette vidéo (plus de 5 minutes) présente un parcours réel de la solution, du bout en bout, à vitesse normale, ",
+    "en": "This video (over 5 minutes) shows a real end-to-end walkthrough of the solution, at normal speed, ",
+    "mg": "Ity horonantsary (mihoatra ny 5 minitra) ity dia mampiseho dia tena izy amin'ny vahaolana, hatramin'ny farany, amin'ny hafainganam-pandeha ara-dalàna, "
+  },
+  "vitrine.demoParaB": {
+    "fr": " : superadministrateur, rédacteur, juriste, administrateur, puis le site public. Aucun texte n’est incrusté à l’image : on voit clairement chaque fonctionnalité en action et son résultat, du fichier PDF affiché à l’écran jusqu’aux publications Microsoft 365. Elle est issue de nos tests automatisés.",
+    "en": ": super administrator, drafter, legal counsel, administrator, then the public site. No text is embedded in the image: each feature is clearly seen in action and its result, from the PDF file shown on screen to the Microsoft 365 publications. It comes from our automated tests.",
+    "mg": ": mpitantana ambony, mpanoratra, mpahay lalàna, mpitantana, avy eo ny tranokala ho an'ny daholobe. Tsy misy soratra apetaka amin'ny sary: hita mazava ny fiasa tsirairay ary ny vokany, hatramin'ny rakitra PDF aseho amin'ny efijery ka hatramin'ny famoahana Microsoft 365. Avy amin'ny fitsapana mandeha ho azy izy io."
+  },
+  "vitrine.demoParaMid": {
+    "fr": " et ",
+    "en": " and ",
+    "mg": " ary "
+  },
+  "vitrine.demoParaStrong1": {
+    "fr": "avec narration audio",
+    "en": "with audio narration",
+    "mg": "miaraka amin'ny fanazavana feo"
+  },
+  "vitrine.demoParaStrong2": {
+    "fr": "organisée par profil d’utilisateur",
+    "en": "organised by user profile",
+    "mg": "voalamina araka ny mombamomba ny mpampiasa"
+  },
+  "vitrine.demoTitle": {
+    "fr": "Démonstration des fonctionnalités",
+    "en": "Feature demonstration",
+    "mg": "Fampisehoana ny fiasa"
+  },
+  "vitrine.feat1Text": {
+    "fr": "Créez des modèles classés par type d’acquisition et une bibliothèque de clauses partagée, avec gestion des droits.",
+    "en": "Create templates classified by acquisition type and a shared clause library, with rights management.",
+    "mg": "Mamorona modely voasokajy araka ny karazana fividianana sy tranomboky fepetra iombonana, miaraka amin'ny fitantanana zo."
+  },
+  "vitrine.feat1Title": {
+    "fr": "Modèles et clauses réutilisables",
+    "en": "Reusable templates and clauses",
+    "mg": "Modely sy fepetra azo averina ampiasaina"
+  },
+  "vitrine.feat2Text": {
+    "fr": "Un moteur de règles et un assistant guidé assemblent le bon document et l’exportent en Word et en PDF.",
+    "en": "A rules engine and a guided assistant assemble the right document and export it to Word and PDF.",
+    "mg": "Milina fitsipika sy mpanampy mitari-dàlana no manangona ny antontan-taratasy tsara ary manondrana azy amin'ny Word sy PDF."
+  },
+  "vitrine.feat2Title": {
+    "fr": "Génération automatisée",
+    "en": "Automated generation",
+    "mg": "Famoronana mandeha ho azy"
+  },
+  "vitrine.feat3Text": {
+    "fr": "Regroupez documents, versions et validations d’un même processus, avec des rapports de suivi par dossier.",
+    "en": "Group documents, versions and validations of a single process, with tracking reports per file.",
+    "mg": "Atambaro ny antontan-taratasy, dikan-teny sy fanamarinana amin'ny fizotra iray, miaraka amin'ny tatitra fanaraha-maso isaky ny dosie."
+  },
+  "vitrine.feat3Title": {
+    "fr": "Dossiers d’approvisionnement",
+    "en": "Procurement files",
+    "mg": "Dosie fividianana"
+  },
+  "vitrine.feat4Text": {
+    "fr": "Commentaires en fil avec résolution, historique des versions et circuits d’approbation configurables.",
+    "en": "Threaded comments with resolution, version history and configurable approval workflows.",
+    "mg": "Fanehoan-kevitra an-tariby miaraka amin'ny famahana, tantaran'ny dikan-teny ary dingam-pankatoavana azo asiana."
+  },
+  "vitrine.feat4Title": {
+    "fr": "Collaboration et validation",
+    "en": "Collaboration and validation",
+    "mg": "Fiaraha-miasa sy fanamarinana"
+  },
+  "vitrine.feat5Text": {
+    "fr": "Retrouvez un contenu par titre, mots-clés, catégorie, type ou texte, avec des facettes.",
+    "en": "Find content by title, keywords, category, type or text, with facets.",
+    "mg": "Tadiavo ny votoaty amin'ny lohateny, teny fototra, sokajy, karazana na soratra, miaraka amin'ny facette."
+  },
+  "vitrine.feat5Title": {
+    "fr": "Recherche enrichie",
+    "en": "Enhanced search",
+    "mg": "Fikarohana natsara"
+  },
+  "vitrine.feat6Text": {
+    "fr": "Dépôt SharePoint/OneDrive, envoi Outlook, notification Teams et référence financière vers SAP.",
+    "en": "SharePoint/OneDrive upload, Outlook sending, Teams notification and financial reference to SAP.",
+    "mg": "Fametrahana SharePoint/OneDrive, fandefasana Outlook, fampandrenesana Teams ary fanovozan-kevitra ara-bola mankany SAP."
+  },
+  "vitrine.feat6Title": {
+    "fr": "Intégrations Microsoft 365 et SAP",
+    "en": "Microsoft 365 and SAP integrations",
+    "mg": "Fampidirana Microsoft 365 sy SAP"
+  },
+  "vitrine.feat7Text": {
+    "fr": "Journal consultable et exportable, et export complet des données en formats ouverts.",
+    "en": "Viewable and exportable log, and full export of data in open formats.",
+    "mg": "Diary azo jerena sy azo aondrana, ary fanondranana feno ny angon-drakitra amin'ny endrika misokatra."
+  },
+  "vitrine.feat7Title": {
+    "fr": "Journal d’audit et réversibilité",
+    "en": "Audit log and reversibility",
+    "mg": "Diarim-panamarinana sy fahafahana miverina"
+  },
+  "vitrine.feat8Text": {
+    "fr": "Une IA qui reste sur votre infrastructure (Loi 25), traçable et désactivable à votre gré.",
+    "en": "An AI that stays on your infrastructure (Law 25), traceable and deactivable at will.",
+    "mg": "IA mijanona ao amin'ny fotodrafitrasanao (Lalàna 25), azo arahina ary azo atsahatra araka ny sitraponao."
+  },
+  "vitrine.feat8Title": {
+    "fr": "Assistant IA local et encadré",
+    "en": "Local and controlled AI assistant",
+    "mg": "Mpanampy IA an-toerana sy voafehy"
+  },
+  "vitrine.featuresTitle": {
+    "fr": "Fonctionnalités",
+    "en": "Features",
+    "mg": "Fiasa"
+  },
+  "vitrine.finalAccess": {
+    "fr": "Accéder à la démonstration",
+    "en": "Access the demonstration",
+    "mg": "Midira amin'ny fampisehoana"
+  },
+  "vitrine.finalContact": {
+    "fr": "Nous écrire",
+    "en": "Write to us",
+    "mg": "Manorata aminay"
+  },
+  "vitrine.finalText": {
+    "fr": "Accédez à l’environnement de démonstration ou écrivez-nous pour une présentation.",
+    "en": "Access the demonstration environment or write to us for a presentation.",
+    "mg": "Midira ao amin'ny tontolo fampisehoana na manorata aminay ho an'ny fampisehoana."
+  },
+  "vitrine.finalTitle": {
+    "fr": "Prêt à l’essayer ?",
+    "en": "Ready to try it?",
+    "mg": "Vonona ny handrama azy?"
+  },
+  "vitrine.footerTagline": {
+    "fr": "Solution de rédaction et de gestion des documents d’approvisionnement",
+    "en": "Procurement document drafting and management solution",
+    "mg": "Vahaolana fanoratana sy fitantanana ny antontan-taratasy fividianana"
+  },
+  "vitrine.heroAccrocheA": {
+    "fr": "Une solution infonuagique clé en main pour les municipalités et organismes publics du Québec — ",
+    "en": "A turnkey cloud solution for Québec municipalities and public bodies — ",
+    "mg": "Vahaolana rahona vonona ho an'ny kaominina sy sampam-panjakana any Québec — "
+  },
+  "vitrine.heroAccrocheB": {
+    "fr": ". Modèles, clauses, génération automatisée, dossiers, validation et réversibilité, dans une interface en français, accessible et hébergée sur Microsoft Azure.",
+    "en": ". Templates, clauses, automated generation, files, validation and reversibility, in a French interface, accessible and hosted on Microsoft Azure.",
+    "mg": ". Modely, fepetra, famoronana mandeha ho azy, dosie, fanamarinana ary fahafahana miverina, amin'ny endrika frantsay, azo idirana ary raketina ao amin'ny Microsoft Azure."
+  },
+  "vitrine.heroAccrocheStrong": {
+    "fr": "déjà déployée et démontrable en ligne",
+    "en": "already deployed and demonstrable online",
+    "mg": "efa napetraka sy azo asehoana an-tserasera"
+  },
+  "vitrine.heroSeeVideo": {
+    "fr": "Voir la vidéo",
+    "en": "Watch the video",
+    "mg": "Jereo ny horonantsary"
+  },
+  "vitrine.heroTitle": {
+    "fr": "La rédaction des documents d’approvisionnement, simplifiée",
+    "en": "Procurement document drafting, simplified",
+    "mg": "Ny fanoratana antontan-taratasy fividianana, natao mora"
+  },
+  "vitrine.heroTryDemo": {
+    "fr": "Essayer la démonstration",
+    "en": "Try the demonstration",
+    "mg": "Andramo ny fampisehoana"
+  },
+  "vitrine.navAccess": {
+    "fr": "Accéder à l’application",
+    "en": "Open the application",
+    "mg": "Midira ao amin'ny rindranasa"
+  },
+  "vitrine.navAtouts": {
+    "fr": "Atouts",
+    "en": "Strengths",
+    "mg": "Tombony"
+  },
+  "vitrine.navDemo": {
+    "fr": "Démonstration",
+    "en": "Demonstration",
+    "mg": "Fampisehoana"
+  },
+  "vitrine.navFeatures": {
+    "fr": "Fonctionnalités",
+    "en": "Features",
+    "mg": "Fiasa"
+  },
+  "vitrine.navLabel": {
+    "fr": "Navigation du site vitrine",
+    "en": "Home site navigation",
+    "mg": "Fitetezana ny tranokala fandraisana"
+  },
+  "vitrine.refs": {
+    "fr": "Ils nous font confiance : Ville de Lévis (pilote), INSPQ, Revenu Québec, transport scolaire, et des clients en ligne comme instituteliewiesel.com, sherlock-home.com et peopleinfinance.fr.",
+    "en": "They trust us: Ville de Lévis (pilot), INSPQ, Revenu Québec, school transport, and online clients such as instituteliewiesel.com, sherlock-home.com and peopleinfinance.fr.",
+    "mg": "Matoky anay izy ireo: Ville de Lévis (pilota), INSPQ, Revenu Québec, fitaterana an-tsekoly, ary mpanjifa an-tserasera toa ny instituteliewiesel.com, sherlock-home.com sy peopleinfinance.fr."
+  },
+  "vitrine.skipLink": {
+    "fr": "Aller au contenu principal",
+    "en": "Skip to main content",
+    "mg": "Mandehana any amin'ny votoaty fototra"
+  },
+  "vitrine.videoCaption": {
+    "fr": "Parcours filmé (plus de 5 minutes) avec narration audio, sans texte incrusté, organisé par profil d’utilisateur. Superadministrateur : création d’un tenant (sous-domaine), thème et logo, modèle de document par organisation. Rédacteur : création et assemblage d’un document, aperçu du PDF affiché à l’écran, bordereau de prix, annexe, validation par circuit d’approbation, puis publication (une fois le document validé) vers SharePoint, OneDrive et Teams (Microsoft 365) avec choix du répertoire, visualisation des fichiers déposés, dossier d’approvisionnement et référence SAP, assistant guidé, bibliothèque de clauses, recherche, rapports de suivi, assistant IA. Juriste : gestion des clauses juridiques, recherche, assistant IA. Administrateur : utilisateurs, circuits d’approbation, journal d’audit, migration d’essai et import d’un modèle Word, rapports consolidés. Enfin le site public. Ce résumé constitue l’alternative textuelle de la vidéo.",
+    "en": "Filmed walkthrough (over 5 minutes) with audio narration, no embedded text, organised by user profile. Super administrator: creating a tenant (subdomain), theme and logo, document template per organisation. Drafter: creating and assembling a document, PDF preview shown on screen, price schedule, appendix, validation through an approval workflow, then publication (once the document is validated) to SharePoint, OneDrive and Teams (Microsoft 365) with folder selection, viewing the uploaded files, procurement file and SAP reference, guided assistant, clause library, search, tracking reports, AI assistant. Legal counsel: managing legal clauses, search, AI assistant. Administrator: users, approval workflows, audit log, trial migration and Word template import, consolidated reports. Finally the public site. This summary is the text alternative for the video.",
+    "mg": "Dia voahorona (mihoatra ny 5 minitra) miaraka amin'ny fanazavana feo, tsy misy soratra apetaka, voalamina araka ny mombamomba ny mpampiasa. Mpitantana ambony: famoronana tenant (sous-domaine), lohahevitra sy logo, modelin'antontan-taratasy isaky ny fikambanana. Mpanoratra: famoronana sy fanangonana antontan-taratasy, topi-maso PDF aseho amin'ny efijery, lisitry ny vidiny, tovana, fanamarinana amin'ny dingam-pankatoavana, avy eo famoahana (rehefa voamarina ny antontan-taratasy) mankany SharePoint, OneDrive sy Teams (Microsoft 365) miaraka amin'ny safidy lahatahiry, fijerena ny rakitra napetraka, dosie fividianana sy fanovozan-kevitra SAP, mpanampy mitari-dàlana, tranomboky fepetra, fikarohana, tatitra fanaraha-maso, mpanampy IA. Mpahay lalàna: fitantanana ny fepetra ara-dalàna, fikarohana, mpanampy IA. Mpitantana: mpampiasa, dingam-pankatoavana, diarim-panamarinana, fifindrà-monina fanandramana sy fampidirana modely Word, tatitra mitambatra. Farany ny tranokala ho an'ny daholobe. Ity famintinana ity no safidy an-tsoratra ho an'ny horonantsary."
+  },
+  "vitrine.videoFallback": {
+    "fr": "Votre navigateur ne peut pas lire la vidéo.",
+    "en": "Your browser cannot play the video.",
+    "mg": "Tsy afaka mamaky ny horonantsary ny navigateur-nao."
+  },
+  "vitrine.videoFallbackLink": {
+    "fr": "Accédez plutôt à la démonstration en ligne",
+    "en": "Access the online demonstration instead",
+    "mg": "Midira amin'ny fampisehoana an-tserasera fa tsara kokoa"
+  },
+  "workflows.accesReserve": {
+    "fr": "Accès réservé aux administrateurs.",
+    "en": "Access reserved for administrators.",
+    "mg": "Fidirana natokana ho an'ny mpitantana."
+  },
+  "workflows.annuler": {
+    "fr": "Annuler",
+    "en": "Cancel",
+    "mg": "Aoka izay"
+  },
+  "workflows.aucunCircuit": {
+    "fr": "Aucun circuit configuré.",
+    "en": "No workflow configured.",
+    "mg": "Tsy misy dingam-pankatoavana voaamboatra."
+  },
+  "workflows.caption": {
+    "fr": "Circuits d’approbation configurés",
+    "en": "Configured approval workflows",
+    "mg": "Dingam-pankatoavana voaamboatra"
+  },
+  "workflows.circuitCree": {
+    "fr": "Circuit créé",
+    "en": "Workflow created",
+    "mg": "Dingam-pankatoavana noforonina"
+  },
+  "workflows.circuitModifie": {
+    "fr": "Circuit modifié",
+    "en": "Workflow updated",
+    "mg": "Dingam-pankatoavana novaina"
+  },
+  "workflows.circuitSupprime": {
+    "fr": "Circuit supprimé",
+    "en": "Workflow deleted",
+    "mg": "Dingam-pankatoavana nofafana"
+  },
+  "workflows.colAction": {
+    "fr": "Action",
+    "en": "Action",
+    "mg": "Hetsika"
+  },
+  "workflows.colEtapes": {
+    "fr": "Étapes",
+    "en": "Steps",
+    "mg": "Dingana"
+  },
+  "workflows.colType": {
+    "fr": "Type",
+    "en": "Type",
+    "mg": "Karazana"
+  },
+  "workflows.creationRefusee": {
+    "fr": "Création refusée.",
+    "en": "Creation refused.",
+    "mg": "Nolavina ny famoronana."
+  },
+  "workflows.creerCircuit": {
+    "fr": "Créer le circuit",
+    "en": "Create the workflow",
+    "mg": "Mamorona ny dingam-pankatoavana"
+  },
+  "workflows.deleteAria": {
+    "fr": "Supprimer le circuit {nom}",
+    "en": "Delete the {nom} workflow",
+    "mg": "Fafao ny dingam-pankatoavana {nom}"
+  },
+  "workflows.editAria": {
+    "fr": "Éditer le circuit {nom}",
+    "en": "Edit the {nom} workflow",
+    "mg": "Ovay ny dingam-pankatoavana {nom}"
+  },
+  "workflows.editer": {
+    "fr": "Éditer",
+    "en": "Edit",
+    "mg": "Ovay"
+  },
+  "workflows.enregistrer": {
+    "fr": "Enregistrer les modifications",
+    "en": "Save changes",
+    "mg": "Tehirizo ny fanovana"
+  },
+  "workflows.errEtape": {
+    "fr": "Ajoutez au moins une étape.",
+    "en": "Add at least one step.",
+    "mg": "Ampio dingana iray farafahakeliny."
+  },
+  "workflows.intro": {
+    "fr": "Configurez l’ordre des rôles validateurs par type de document. À défaut, le circuit standard s’applique (Approvisionnement → Juridique → Direction).",
+    "en": "Configure the order of validating roles by document type. Otherwise, the standard workflow applies (Procurement → Legal → Management).",
+    "mg": "Amboary ny filaharan'ny andraikitra manamarina isaky ny karazana antontan-taratasy. Raha tsy izany, ampiharina ny dingana mahazatra (Fividianana → Ara-dalàna → Fitantanana)."
+  },
+  "workflows.legendEtapes": {
+    "fr": "Étapes (rôles, dans l’ordre de sélection)",
+    "en": "Steps (roles, in selection order)",
+    "mg": "Dingana (andraikitra, araka ny filaharan'ny safidy)"
+  },
+  "workflows.modifRefusee": {
+    "fr": "Modification refusée.",
+    "en": "Update refused.",
+    "mg": "Nolavina ny fanovana."
+  },
+  "workflows.modifierCircuit": {
+    "fr": "Modifier le circuit",
+    "en": "Edit the workflow",
+    "mg": "Ovay ny dingam-pankatoavana"
+  },
+  "workflows.niveau": {
+    "fr": "(niveau {n})",
+    "en": "(level {n})",
+    "mg": "(ambaratonga {n})"
+  },
+  "workflows.nom": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Anarana"
+  },
+  "workflows.nouveauCircuit": {
+    "fr": "Nouveau circuit",
+    "en": "New workflow",
+    "mg": "Dingam-pankatoavana vaovao"
+  },
+  "workflows.suppressionRefusee": {
+    "fr": "Suppression refusée.",
+    "en": "Deletion refused.",
+    "mg": "Nolavina ny famafana."
+  },
+  "workflows.supprimer": {
+    "fr": "Supprimer",
+    "en": "Delete",
+    "mg": "Fafao"
+  },
+  "workflows.title": {
+    "fr": "Circuits d’approbation",
+    "en": "Approval workflows",
+    "mg": "Dingam-pankatoavana"
+  },
+  "workflows.typeDoc": {
+    "fr": "Type de document",
+    "en": "Document type",
+    "mg": "Karazana antontan-taratasy"
+  },
+  "login.oidcDefaut": {
+    "fr": "Connexion gouvernementale",
+    "en": "Government sign-in",
+    "mg": "Fidirana governemanta"
+  },
+  "integrationoidcmanager.titre": {
+    "fr": "Authentification OpenID Connect",
+    "en": "OpenID Connect authentication",
+    "mg": "Fanamarinana OpenID Connect"
+  },
+  "integrationoidcmanager.introA": {
+    "fr": "Branchez votre",
+    "en": "Connect your",
+    "mg": "Ampifandraiso ny"
+  },
+  "integrationoidcmanager.annuaire": {
+    "fr": "annuaire gouvernemental",
+    "en": "government directory",
+    "mg": "rakitra governemanta"
+  },
+  "integrationoidcmanager.introB": {
+    "fr": "(Microsoft Entra ID ou tout fournisseur OpenID Connect) pour que vos utilisateurs se connectent avec leur compte. La connexion locale reste disponible tant que l’OIDC n’est pas activé.",
+    "en": "(Microsoft Entra ID or any OpenID Connect provider) so your users sign in with their account. Local sign-in stays available until OIDC is enabled.",
+    "mg": "(Microsoft Entra ID na mpamatsy OpenID Connect hafa) mba hidiran’ny mpampiasa amin’ny kaontiny. Mbola misy ny fidirana an-toerana raha tsy mbola alefa ny OIDC."
+  },
+  "integrationoidcmanager.chargementImpossible": {
+    "fr": "Chargement impossible.",
+    "en": "Unable to load.",
+    "mg": "Tsy mety ny fampidirana."
+  },
+  "integrationoidcmanager.enregistree": {
+    "fr": "Configuration OIDC enregistrée.",
+    "en": "OIDC configuration saved.",
+    "mg": "Voatahiry ny fanamboarana OIDC."
+  },
+  "integrationoidcmanager.enregistrementRefuse": {
+    "fr": "Enregistrement refusé (rôle administrateur requis).",
+    "en": "Save refused (administrator role required).",
+    "mg": "Lavina ny fitehirizana (ilaina ny anjara mpitantana)."
+  },
+  "integrationoidcmanager.testImpossible": {
+    "fr": "Test impossible.",
+    "en": "Test failed.",
+    "mg": "Tsy mety ny fitsapana."
+  },
+  "integrationoidcmanager.activerConnexion": {
+    "fr": "Activer la connexion OIDC pour ce tenant",
+    "en": "Enable OIDC sign-in for this tenant",
+    "mg": "Alefaso ny fidirana OIDC ho an’ity mpampiasa ity"
+  },
+  "integrationoidcmanager.emetteur": {
+    "fr": "Émetteur (issuer / URL de découverte)",
+    "en": "Issuer (discovery URL)",
+    "mg": "Mpamoaka (issuer / URL fikarohana)"
+  },
+  "integrationoidcmanager.idClient": {
+    "fr": "Identifiant client (client_id)",
+    "en": "Client ID (client_id)",
+    "mg": "Client ID (client_id)"
+  },
+  "integrationoidcmanager.secretClient": {
+    "fr": "Secret client",
+    "en": "Client secret",
+    "mg": "Tsiambaratelo client"
+  },
+  "integrationoidcmanager.dejaDefiniConserver": {
+    "fr": "(déjà défini — laisser vide pour conserver)",
+    "en": "(already set — leave empty to keep)",
+    "mg": "(efa voafaritra — avelao foana raha hotehirizina)"
+  },
+  "integrationoidcmanager.conserveM": {
+    "fr": "(conservé)",
+    "en": "(kept)",
+    "mg": "(notehirizina)"
+  },
+  "integrationoidcmanager.scopes": {
+    "fr": "Portées (scopes)",
+    "en": "Scopes",
+    "mg": "Scopes"
+  },
+  "integrationoidcmanager.claimCourriel": {
+    "fr": "Claim du courriel",
+    "en": "Email claim",
+    "mg": "Claim mailaka"
+  },
+  "integrationoidcmanager.boutonLibelle": {
+    "fr": "Libellé du bouton de connexion",
+    "en": "Sign-in button label",
+    "mg": "Anaran’ny bokotra fidirana"
+  },
+  "integrationoidcmanager.autoProvision": {
+    "fr": "Créer automatiquement les comptes inconnus au premier accès",
+    "en": "Auto-provision unknown accounts on first access",
+    "mg": "Mamorona kaonty tsy fantatra ho azy amin’ny fidirana voalohany"
+  },
+  "integrationoidcmanager.roleParDefaut": {
+    "fr": "Rôle par défaut des comptes créés",
+    "en": "Default role for created accounts",
+    "mg": "Anjara mahazatra ho an’ny kaonty noforonina"
+  },
+  "integrationoidcmanager.enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Tehirizo"
+  },
+  "integrationoidcmanager.testerDecouverte": {
+    "fr": "Tester la découverte",
+    "en": "Test discovery",
+    "mg": "Tsapao ny fikarohana"
+  },
+  "login.samlDefaut": {
+    "fr": "Connexion SAML",
+    "en": "SAML sign-in",
+    "mg": "Fidirana SAML"
+  },
+  "integrationsamlmanager.titre": {
+    "fr": "Authentification SAML 2.0",
+    "en": "SAML 2.0 authentication",
+    "mg": "Fanamarinana SAML 2.0"
+  },
+  "integrationsamlmanager.introA": {
+    "fr": "Branchez votre",
+    "en": "Connect your",
+    "mg": "Ampifandraiso ny"
+  },
+  "integrationsamlmanager.fournisseur": {
+    "fr": "fournisseur d’identité SAML",
+    "en": "SAML identity provider",
+    "mg": "mpamatsy famantarana SAML"
+  },
+  "integrationsamlmanager.introB": {
+    "fr": "(ADFS, Azure AD, Shibboleth ou tout IdP SAML) pour que vos utilisateurs se connectent avec leur compte. La connexion locale reste disponible tant que le SAML n’est pas activé.",
+    "en": "(ADFS, Azure AD, Shibboleth or any SAML IdP) so your users sign in with their account. Local sign-in stays available until SAML is enabled.",
+    "mg": "(ADFS, Azure AD, Shibboleth na IdP SAML hafa) mba hidiran’ny mpampiasa amin’ny kaontiny. Mbola misy ny fidirana an-toerana raha tsy mbola alefa ny SAML."
+  },
+  "integrationsamlmanager.chargementImpossible": {
+    "fr": "Chargement impossible.",
+    "en": "Unable to load.",
+    "mg": "Tsy mety ny fampidirana."
+  },
+  "integrationsamlmanager.enregistree": {
+    "fr": "Configuration SAML enregistrée.",
+    "en": "SAML configuration saved.",
+    "mg": "Voatahiry ny fanamboarana SAML."
+  },
+  "integrationsamlmanager.enregistrementRefuse": {
+    "fr": "Enregistrement refusé (rôle administrateur requis).",
+    "en": "Save refused (administrator role required).",
+    "mg": "Lavina ny fitehirizana (ilaina ny anjara mpitantana)."
+  },
+  "integrationsamlmanager.testImpossible": {
+    "fr": "Test impossible.",
+    "en": "Test failed.",
+    "mg": "Tsy mety ny fitsapana."
+  },
+  "integrationsamlmanager.activerConnexion": {
+    "fr": "Activer la connexion SAML pour ce tenant",
+    "en": "Enable SAML sign-in for this tenant",
+    "mg": "Alefaso ny fidirana SAML ho an’ity mpampiasa ity"
+  },
+  "integrationsamlmanager.idpEntityId": {
+    "fr": "EntityID de l’IdP",
+    "en": "IdP EntityID",
+    "mg": "EntityID an’ny IdP"
+  },
+  "integrationsamlmanager.idpSsoUrl": {
+    "fr": "URL de connexion (Single Sign-On) de l’IdP",
+    "en": "IdP Single Sign-On URL",
+    "mg": "URL fidirana (Single Sign-On) an’ny IdP"
+  },
+  "integrationsamlmanager.idpCertificat": {
+    "fr": "Certificat X.509 de signature de l’IdP (PEM)",
+    "en": "IdP signing X.509 certificate (PEM)",
+    "mg": "Marimpankatoavana X.509 sonia an’ny IdP (PEM)"
+  },
+  "integrationsamlmanager.certificatDefini": {
+    "fr": "(déjà défini — laisser vide pour conserver)",
+    "en": "(already set — leave empty to keep)",
+    "mg": "(efa voafaritra — avelao foana raha hotehirizina)"
+  },
+  "integrationsamlmanager.spEntityId": {
+    "fr": "EntityID du fournisseur de service (SP)",
+    "en": "Service Provider (SP) EntityID",
+    "mg": "EntityID an’ny mpamatsy serivisy (SP)"
+  },
+  "integrationsamlmanager.claimCourriel": {
+    "fr": "Attribut du courriel (sinon NameID)",
+    "en": "Email attribute (else NameID)",
+    "mg": "Attribute mailaka (raha tsy izany NameID)"
+  },
+  "integrationsamlmanager.boutonLibelle": {
+    "fr": "Libellé du bouton de connexion",
+    "en": "Sign-in button label",
+    "mg": "Anaran’ny bokotra fidirana"
+  },
+  "integrationsamlmanager.autoProvision": {
+    "fr": "Créer automatiquement les comptes inconnus au premier accès",
+    "en": "Auto-provision unknown accounts on first access",
+    "mg": "Mamorona kaonty tsy fantatra ho azy amin’ny fidirana voalohany"
+  },
+  "integrationsamlmanager.roleParDefaut": {
+    "fr": "Rôle par défaut des comptes créés",
+    "en": "Default role for created accounts",
+    "mg": "Anjara mahazatra ho an’ny kaonty noforonina"
+  },
+  "integrationsamlmanager.enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Tehirizo"
+  },
+  "integrationsamlmanager.tester": {
+    "fr": "Tester la configuration",
+    "en": "Test configuration",
+    "mg": "Tsapao ny fanamboarana"
+  }
+}

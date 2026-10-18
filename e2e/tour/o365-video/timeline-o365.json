@@ -1,0 +1,58 @@
+[
+  {
+    "t": 13992,
+    "key": "o365_intro"
+  },
+  {
+    "t": 21723,
+    "key": "o365_creer"
+  },
+  {
+    "t": 44561,
+    "key": "o365_publier"
+  },
+  {
+    "t": 52393,
+    "key": "o365_pubSharepoint"
+  },
+  {
+    "t": 64239,
+    "key": "o365_pubOnedrive"
+  },
+  {
+    "t": 75476,
+    "key": "o365_pubTeams"
+  },
+  {
+    "t": 87528,
+    "key": "o365_pubOutlook"
+  },
+  {
+    "t": 101814,
+    "key": "o365_pont"
+  },
+  {
+    "t": 127181,
+    "key": "o365_sharepoint"
+  },
+  {
+    "t": 146888,
+    "key": "o365_fichierSp"
+  },
+  {
+    "t": 173384,
+    "key": "o365_onedrive"
+  },
+  {
+    "t": 222793,
+    "key": "o365_teams"
+  },
+  {
+    "t": 245534,
+    "key": "o365_fichierTeams"
+  },
+  {
+    "t": 261677,
+    "key": "o365_outlook"
+  }
+]

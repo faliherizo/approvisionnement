@@ -1,0 +1,20 @@
+# Copier en terraform.tfvars et adapter. Ne jamais committer terraform.tfvars (secrets/état).
+project     = "vina-contrat"
+environment = "prod"
+region      = "ca-central-1"
+azs         = ["ca-central-1a", "ca-central-1b", "ca-central-1d"]
+
+image_tag     = "latest"
+backend_cpu   = 1024
+backend_memory = 2048
+frontend_cpu  = 512
+frontend_memory = 1024
+desired_count = 3
+max_count     = 9
+
+postgres_version           = "16"
+postgres_instance_class    = "db.m6g.large"
+postgres_allocated_storage = 100
+
+availability_canary_url = "https://contrat.vinaitsolution.com/actuator/health"
+alarm_email             = "faliherizo@vinaitsolution.com"

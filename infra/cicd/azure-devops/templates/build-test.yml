@@ -1,0 +1,37 @@
+# Template de stage : compilation + tests (backend Maven/JaCoCo, frontend npm).
+parameters:
+  - name: javaVersion
+    default: "21"
+  - name: nodeVersion
+    default: "20"
+
+stages:
+  - stage: Test
+    displayName: Build & tests
+    jobs:
+      - job: backend
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: JavaToolInstaller@0
+            inputs:
+              versionSpec: ${{ parameters.javaVersion }}
+              jdkArchitectureOption: x64
+              jdkSourceOption: PreInstalled
+          - script: mvn -B -f backend/pom.xml verify
+            displayName: Tests + couverture (JaCoCo)
+          - task: PublishCodeCoverageResults@2
+            condition: always()
+            inputs:
+              summaryFileLocation: backend/target/site/jacoco/jacoco.xml
+      - job: frontend
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: ${{ parameters.nodeVersion }}
+          - script: |
+              npm --prefix frontend ci
+              npm --prefix frontend run build
+            displayName: Build & tests frontend

@@ -1,0 +1,16 @@
+{
+  "redacteur": { "email": "redacteur@levis.qc.ca", "motDePasse": "Passw0rd!" },
+  "admin": { "email": "admin@levis.qc.ca", "motDePasse": "Passw0rd!" },
+  "juriste": { "email": "juriste@levis.qc.ca", "motDePasse": "Passw0rd!" },
+  "question": {
+    "email": "question@levis.qc.ca",
+    "motDePasse": "Passw0rd!",
+    "reponseSecrete": "Montreal"
+  },
+  "totp": {
+    "email": "totp@levis.qc.ca",
+    "motDePasse": "Passw0rd!",
+    "totpSecret": "JBSWY3DPEHPK3PXP"
+  },
+  "superadmin": { "email": "superadmin@plateforme.ca", "motDePasse": "SuperPassw0rd!" }
+}

@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 019-1-gabarit
+      author: levis
+      changes:
+        - createTable:
+            tableName: gabarit
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT }
+              - column: { name: code, type: VARCHAR(80), constraints: { nullable: false } }
+              - column: { name: nom, type: VARCHAR(160) }
+              - column: { name: sur_label, type: VARCHAR(240) }
+              - column: { name: label, type: VARCHAR(240) }
+              - column: { name: sous_titre, type: VARCHAR(240) }
+              - column: { name: pied_label, type: VARCHAR(240) }
+              - column: { name: corps, type: VARCHAR(20), defaultValue: CONTRAT }
+              - column: { name: police, type: VARCHAR(20) }
+              - column: { name: couleur_titre, type: VARCHAR(9) }
+              - column: { name: couleur_accent, type: VARCHAR(9) }
+              - column: { name: logo_image, type: CLOB }
+              - column: { name: afficher_couverture, type: BOOLEAN }
+              - column: { name: marge_gauche, type: INT }
+              - column: { name: marge_droite, type: INT }
+              - column: { name: marge_haut, type: INT }
+              - column: { name: marge_bas, type: INT }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: true }
+              - column: { name: ordre, type: INT }
+        - addUniqueConstraint:
+            tableName: gabarit
+            columnNames: tenant_id, code
+            constraintName: uq_gabarit_tenant_code

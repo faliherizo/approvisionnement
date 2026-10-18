@@ -1,0 +1,130 @@
+[
+  {
+    "t": 1474,
+    "key": "sa_intro"
+  },
+  {
+    "t": 10529,
+    "key": "sa_liste"
+  },
+  {
+    "t": 25051,
+    "key": "sa_creer_tenant"
+  },
+  {
+    "t": 42238,
+    "key": "sa_admin"
+  },
+  {
+    "t": 65751,
+    "key": "sa_theme"
+  },
+  {
+    "t": 90548,
+    "key": "sa_modele"
+  },
+  {
+    "t": 105759,
+    "key": "sa_tarif"
+  },
+  {
+    "t": 139832,
+    "key": "red_intro"
+  },
+  {
+    "t": 144485,
+    "key": "red_creer"
+  },
+  {
+    "t": 162162,
+    "key": "red_assembler"
+  },
+  {
+    "t": 175252,
+    "key": "red_apercu"
+  },
+  {
+    "t": 201192,
+    "key": "red_bordereau"
+  },
+  {
+    "t": 216680,
+    "key": "red_annexe"
+  },
+  {
+    "t": 228181,
+    "key": "red_approbation"
+  },
+  {
+    "t": 248072,
+    "key": "red_dossier"
+  },
+  {
+    "t": 267980,
+    "key": "red_sap"
+  },
+  {
+    "t": 282486,
+    "key": "red_assistant"
+  },
+  {
+    "t": 299674,
+    "key": "red_clauses"
+  },
+  {
+    "t": 313728,
+    "key": "red_recherche"
+  },
+  {
+    "t": 327381,
+    "key": "red_rapports"
+  },
+  {
+    "t": 341336,
+    "key": "red_ia"
+  },
+  {
+    "t": 365488,
+    "key": "jur_intro"
+  },
+  {
+    "t": 369143,
+    "key": "jur_clause"
+  },
+  {
+    "t": 390318,
+    "key": "jur_recherche"
+  },
+  {
+    "t": 403425,
+    "key": "jur_ia"
+  },
+  {
+    "t": 427326,
+    "key": "adm_intro"
+  },
+  {
+    "t": 432094,
+    "key": "adm_users"
+  },
+  {
+    "t": 445127,
+    "key": "adm_workflows"
+  },
+  {
+    "t": 458403,
+    "key": "adm_audit"
+  },
+  {
+    "t": 471560,
+    "key": "adm_donnees"
+  },
+  {
+    "t": 498136,
+    "key": "adm_rapports"
+  },
+  {
+    "t": 511547,
+    "key": "vitrine"
+  }
+]

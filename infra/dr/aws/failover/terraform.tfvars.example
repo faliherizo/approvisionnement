@@ -1,0 +1,16 @@
+# Copier en terraform.tfvars au moment du sinistre (le runbook renseigne les valeurs dynamiques).
+project   = "vina-contrat"
+environment = "prod"
+dr_region = "ca-west-1"
+
+# Sorties du stack replication :
+source_automated_backups_arn = "arn:aws:rds:ca-west-1:<ACCT>:auto-backup:ab-xxxxxxxx"
+dr_kms_key_arn                = "arn:aws:kms:ca-west-1:<ACCT>:key/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+# Images répliquées dans l'ECR de la région DR (même dépôt, région ca-west-1) :
+backend_image  = "<ACCT>.dkr.ecr.ca-west-1.amazonaws.com/vina-contrat-prod-backend:latest"
+frontend_image = "<ACCT>.dkr.ecr.ca-west-1.amazonaws.com/vina-contrat-prod-frontend:latest"
+
+# Secrets copiés depuis Secrets Manager de la région primaire (ne pas committer) :
+# db_password = "..."
+# jwt_secret  = "..."

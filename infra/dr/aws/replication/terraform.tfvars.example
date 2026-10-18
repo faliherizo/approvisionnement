@@ -1,0 +1,6 @@
+# Copier en terraform.tfvars et ajuster.
+project               = "vina-contrat"
+environment           = "prod"
+source_region         = "ca-central-1" # Canada Central (production)
+dr_region             = "ca-west-1"     # seconde région canadienne (reprise) — données au Canada
+backup_retention_days = 14

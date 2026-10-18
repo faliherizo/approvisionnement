@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: {{ .Release.Namespace }}
+  labels: { app: backend }
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels: { app: backend }
+  template:
+    metadata:
+      labels: { app: backend }
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      # Répartition des répliques sur les zones de disponibilité = HA multi-zone (SLA 99,99 %).
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels: { app: backend }
+      containers:
+        - name: backend
+          image: "{{ .Values.image.registry }}/{{ .Values.image.backend }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.backend.port }}
+          readinessProbe:
+            httpGet: { path: /actuator/health/readiness, port: {{ .Values.backend.port }} }
+            initialDelaySeconds: 20
+          livenessProbe:
+            httpGet: { path: /actuator/health/liveness, port: {{ .Values.backend.port }} }
+            initialDelaySeconds: 30
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector: { app: backend }
+  ports:
+    - port: 80
+      targetPort: {{ .Values.backend.port }}
+---
+# Garantit qu'au moins 2 répliques restent disponibles pendant les mises à jour / incidents de zone.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: backend
+  namespace: {{ .Release.Namespace }}
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels: { app: backend }

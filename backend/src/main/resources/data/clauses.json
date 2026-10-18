@@ -1,0 +1,88 @@
+[
+  {
+    "code": "GEN-001",
+    "titre": "Objet du contrat",
+    "categorie": "STANDARD",
+    "corps": "Le présent contrat a pour objet la réalisation des prestations décrites au devis.",
+    "conditions": [],
+    "numero": "1.00",
+    "section": "Dispositions générales"
+  },
+  {
+    "code": "GEN-002",
+    "titre": "Langue française",
+    "categorie": "STANDARD",
+    "corps": "Conformément à la Charte de la langue française, tous les documents et échanges sont en français.",
+    "conditions": [],
+    "numero": "1.01",
+    "section": "Dispositions générales"
+  },
+  {
+    "code": "AOP-010",
+    "titre": "Garantie de soumission",
+    "categorie": "STANDARD",
+    "corps": "Le soumissionnaire doit joindre une garantie de soumission équivalant à 10 % du montant de sa soumission.",
+    "conditions": [
+      {
+        "attribut": "MODE_SOLLICITATION",
+        "valeur": "APPEL_OFFRES_PUBLIC"
+      }
+    ],
+    "numero": "2.00",
+    "section": "Appel d'offres public"
+  },
+  {
+    "code": "AOP-020",
+    "titre": "Autorisation de contracter (AMP)",
+    "categorie": "STANDARD",
+    "corps": "Le soumissionnaire doit détenir une autorisation de contracter délivrée par l'Autorité des marchés publics.",
+    "conditions": [
+      {
+        "attribut": "VALEUR_MIN",
+        "valeur": "1000000"
+      }
+    ],
+    "dependances": [
+      "AOP-010"
+    ],
+    "numero": "2.01",
+    "section": "Appel d'offres public"
+  },
+  {
+    "code": "BAIL-100",
+    "titre": "Durée du bail",
+    "categorie": "OPTIONNELLE",
+    "corps": "Le présent bail est consenti pour une durée de ____, renouvelable selon les modalités convenues.",
+    "conditions": [
+      {
+        "attribut": "TYPE_CONTRAT",
+        "valeur": "BAIL"
+      }
+    ],
+    "numero": "3.00",
+    "section": "Bail"
+  },
+  {
+    "code": "PRET-100",
+    "titre": "Prêt à usage (commodat)",
+    "categorie": "OPTIONNELLE",
+    "corps": "La Ville prête gratuitement le bien décrit, à charge pour l'emprunteur de le restituer dans l'état où il l'a reçu.",
+    "conditions": [
+      {
+        "attribut": "TYPE_CONTRAT",
+        "valeur": "PRET_A_USAGE"
+      }
+    ],
+    "numero": "4.00",
+    "section": "Prêt à usage"
+  },
+  {
+    "code": "PERSO-200",
+    "titre": "Clause particulière au projet",
+    "categorie": "PERSONNALISEE",
+    "corps": "Clause à personnaliser selon le contexte particulier du projet.",
+    "conditions": [],
+    "numero": "9.00",
+    "section": "Clauses particulières"
+  }
+]

@@ -1,0 +1,17 @@
+# Copier en terraform.tfvars et adapter. Ne pas committer (secrets/état).
+project     = "vina-contrat"
+environment = "prod"
+location    = "canadacentral"
+
+kubernetes_version = "1.30"
+aks_node_size      = "Standard_D4s_v5"
+aks_node_min       = 3
+aks_node_max       = 9
+
+postgres_version    = "16"
+postgres_sku        = "GP_Standard_D4s_v3"
+postgres_storage_mb = 131072
+
+app_hostname          = "contrat.vinaitsolution.com"
+availability_test_url = "https://contrat.vinaitsolution.com/actuator/health"
+alert_email           = "faliherizo@vinaitsolution.com"

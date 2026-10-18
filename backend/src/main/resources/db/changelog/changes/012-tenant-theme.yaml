@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 012-1-tenant-theme
+      author: levis
+      changes:
+        - addColumn:
+            tableName: tenant
+            columns:
+              - column: { name: couleur_primaire, type: VARCHAR(20) }
+              - column: { name: couleur_accent, type: VARCHAR(20) }
+              - column: { name: couleur_fond, type: VARCHAR(20) }
+              - column: { name: couleur_texte, type: VARCHAR(20) }
+              - column: { name: logo_texte, type: VARCHAR(120) }

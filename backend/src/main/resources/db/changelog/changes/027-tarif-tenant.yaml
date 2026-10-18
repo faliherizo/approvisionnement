@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 027-1-tarif-tenant
+      author: levis
+      changes:
+        - createTable:
+            tableName: tarif_tenant
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT }
+              - column: { name: forfait_annuel, type: "DECIMAL(12,2)", defaultValueNumeric: 0 }
+              - column: { name: devise, type: VARCHAR(3), defaultValue: CAD }
+              - column: { name: indexation_pct, type: "DECIMAL(5,2)", defaultValueNumeric: 0 }
+              - column: { name: nb_utilisateurs_inclus, type: INT }
+              - column: { name: notes, type: VARCHAR(500) }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: true, constraints: { nullable: false } }
+        - addUniqueConstraint:
+            tableName: tarif_tenant
+            columnNames: tenant_id
+            constraintName: uq_tarif_tenant_tenant

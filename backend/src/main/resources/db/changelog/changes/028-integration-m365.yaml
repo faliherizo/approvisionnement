@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 028-1-integration-m365
+      author: levis
+      changes:
+        - createTable:
+            tableName: integration_m365
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: false, constraints: { nullable: false } }
+              - column: { name: ms_tenant_id, type: VARCHAR(120) }
+              - column: { name: client_id, type: VARCHAR(120) }
+              - column: { name: client_secret_chiffre, type: VARCHAR(1000) }
+              - column: { name: sharepoint_site_id, type: VARCHAR(400) }
+              - column: { name: drive_id, type: VARCHAR(400) }
+              - column: { name: teams_team_id, type: VARCHAR(120) }
+              - column: { name: teams_channel_id, type: VARCHAR(120) }
+              - column: { name: outlook_expediteur, type: VARCHAR(200) }
+              - column: { name: dossier_racine, type: VARCHAR(300) }
+        - addUniqueConstraint:
+            tableName: integration_m365
+            columnNames: tenant_id
+            constraintName: uq_integration_m365_tenant

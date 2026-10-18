@@ -1,0 +1,66 @@
+# Réutilisable : déploie l'application sur le cluster (Helm, rolling update multi-zone).
+# Récupère le kubeconfig du cloud cible, puis applique le chart avec le tag d'image = SHA.
+name: reusable-deploy-k8s
+
+on:
+  workflow_call:
+    inputs:
+      cloud:          { type: string, required: true }   # aws | azure
+      region:         { type: string, default: "ca-central-1" }
+      cluster:        { type: string, required: true }
+      resource_group: { type: string, default: "" }       # requis si cloud=azure
+      registry:       { type: string, required: true }
+      values_file:    { type: string, required: true }
+    secrets:
+      AWS_DEPLOY_ROLE_ARN:   { required: false }
+      AZURE_CLIENT_ID:       { required: false }
+      AZURE_TENANT_ID:       { required: false }
+      AZURE_SUBSCRIPTION_ID: { required: false }
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-tools
+
+      - name: kubeconfig EKS (AWS)
+        if: inputs.cloud == 'aws'
+        run: |
+          # auth OIDC
+          echo "auth via aws-actions dans l'étape suivante"
+      - if: inputs.cloud == 'aws'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ inputs.region }}
+      - if: inputs.cloud == 'aws'
+        run: aws eks update-kubeconfig --region ${{ inputs.region }} --name ${{ inputs.cluster }}
+
+      - name: Azure OIDC + kubeconfig AKS
+        if: inputs.cloud == 'azure'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - if: inputs.cloud == 'azure'
+        run: az aks get-credentials -g ${{ inputs.resource_group }} -n ${{ inputs.cluster }} --overwrite-existing
+
+      - name: Déploiement Helm (rolling update)
+        run: |
+          helm upgrade --install contrat infra/k8s/chart \
+            --namespace contrat --create-namespace \
+            --values ${{ inputs.values_file }} \
+            --set image.registry=${{ inputs.registry }} \
+            --set image.tag=${{ github.sha }} \
+            --wait --timeout 10m
+
+      - name: Vérification du déploiement
+        run: |
+          kubectl -n contrat rollout status deploy/backend --timeout=5m
+          kubectl -n contrat rollout status deploy/frontend --timeout=5m

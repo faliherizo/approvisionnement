@@ -1,0 +1,241 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,Latency,IdleTime,Connect
+1789601862715,385,POST /api/auth/login,200,,Administrateurs donnees 1-1,text,true,,866,237,1,1,384,0,57
+1789601863104,95,GET /api/reversibilite/export,200,,Administrateurs donnees 1-1,text,true,,2950,380,1,1,95,0,0
+1789601863104,95,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-1,,true,,2950,380,1,1,95,1,0
+1789601863201,9,POST /api/import/clauses,200,,Administrateurs donnees 1-1,text,true,,476,464,1,1,9,0,0
+1789601863200,9,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-1,,true,,476,464,1,1,9,2,0
+1789601862572,489,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-1,,true,,4292,1081,1,1,488,150,57
+1789601863213,97,POST /api/auth/login,200,,Administrateurs donnees 1-1,text,true,,866,445,2,2,97,0,0
+1789601863311,26,GET /api/reversibilite/export,200,,Administrateurs donnees 1-1,text,true,,2950,380,2,2,26,0,0
+1789601863311,26,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-1,,true,,2950,380,2,2,26,0,0
+1789601863338,5,POST /api/import/clauses,200,,Administrateurs donnees 1-1,text,true,,476,464,2,2,5,0,0
+1789601863337,5,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-1,,true,,476,464,2,2,5,1,0
+1789601863212,128,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-1,,true,,4292,1289,2,2,128,4,0
+1789601863311,99,POST /api/auth/login,200,,Administrateurs donnees 1-2,text,true,,866,237,2,2,99,0,1
+1789601863411,20,GET /api/reversibilite/export,200,,Administrateurs donnees 1-2,text,true,,2946,380,2,2,20,0,0
+1789601863410,20,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-2,,true,,2946,380,2,2,20,2,0
+1789601863433,6,POST /api/import/clauses,200,,Administrateurs donnees 1-2,text,true,,476,464,2,2,6,0,0
+1789601863432,6,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-2,,true,,476,464,2,2,6,1,0
+1789601863310,125,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-2,,true,,4288,1081,2,2,125,4,1
+1789601863345,94,POST /api/auth/login,200,,Administrateurs donnees 1-1,text,true,,866,445,2,2,94,0,0
+1789601863440,26,GET /api/reversibilite/export,200,,Administrateurs donnees 1-1,text,true,,2950,380,2,2,26,0,0
+1789601863440,26,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-1,,true,,2950,380,2,2,26,1,0
+1789601863467,4,POST /api/import/clauses,200,,Administrateurs donnees 1-1,text,true,,476,464,2,2,4,0,0
+1789601863467,4,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-1,,true,,476,464,2,2,4,1,0
+1789601863344,124,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-1,,true,,4292,1289,2,2,124,4,0
+1789601863440,105,POST /api/auth/login,200,,Administrateurs donnees 1-2,text,true,,866,445,2,2,105,0,0
+1789601863546,20,GET /api/reversibilite/export,200,,Administrateurs donnees 1-2,text,true,,2951,380,2,2,20,0,0
+1789601863546,20,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-2,,true,,2951,380,2,2,20,0,0
+1789601863566,5,POST /api/import/clauses,200,,Administrateurs donnees 1-2,text,true,,476,464,2,2,5,0,0
+1789601863566,5,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-2,,true,,476,464,2,2,5,0,0
+1789601863440,130,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-2,,true,,4293,1289,2,2,130,1,0
+1789601863473,101,POST /api/auth/login,200,,Administrateurs donnees 1-1,text,true,,866,445,2,2,101,0,0
+1789601863575,25,GET /api/reversibilite/export,200,,Administrateurs donnees 1-1,text,true,,2948,380,2,2,25,0,0
+1789601863575,25,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-1,,true,,2948,380,2,2,25,1,0
+1789601863601,4,POST /api/import/clauses,200,,Administrateurs donnees 1-1,text,true,,476,464,2,2,4,0,0
+1789601863601,4,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-1,,true,,476,464,2,2,4,1,0
+1789601863472,130,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-1,,true,,4290,1289,2,2,130,4,0
+1789601863572,104,POST /api/auth/login,200,,Administrateurs donnees 1-2,text,true,,866,445,1,1,104,0,0
+1789601863676,16,GET /api/reversibilite/export,200,,Administrateurs donnees 1-2,text,true,,2950,380,1,1,16,0,0
+1789601863676,16,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-2,,true,,2950,380,1,1,16,1,0
+1789601863693,4,POST /api/import/clauses,200,,Administrateurs donnees 1-2,text,true,,476,464,1,1,4,0,0
+1789601863693,4,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-2,,true,,476,464,1,1,4,0,0
+1789601863572,124,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-2,,true,,4292,1289,1,1,124,1,0
+1789601863698,97,POST /api/auth/login,200,,Administrateurs donnees 1-2,text,true,,866,445,1,1,97,0,0
+1789601863796,17,GET /api/reversibilite/export,200,,Administrateurs donnees 1-2,text,true,,2946,380,1,1,17,0,0
+1789601863795,17,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-2,,true,,2946,380,1,1,17,1,0
+1789601863814,3,POST /api/import/clauses,200,,Administrateurs donnees 1-2,text,true,,476,464,1,1,3,0,0
+1789601863813,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-2,,true,,476,464,1,1,3,2,0
+1789601863698,117,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-2,,true,,4288,1289,1,1,117,3,0
+1789601864112,87,POST /api/auth/login,200,,Administrateurs donnees 1-3,text,true,,866,237,1,1,87,0,0
+1789601864200,17,GET /api/reversibilite/export,200,,Administrateurs donnees 1-3,text,true,,2948,380,1,1,17,0,0
+1789601864200,17,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-3,,true,,2948,380,1,1,17,0,0
+1789601864218,3,POST /api/import/clauses,200,,Administrateurs donnees 1-3,text,true,,476,464,1,1,3,0,0
+1789601864218,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-3,,true,,476,464,1,1,3,1,0
+1789601864111,107,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-3,,true,,4290,1081,1,1,107,4,0
+1789601864222,95,POST /api/auth/login,200,,Administrateurs donnees 1-3,text,true,,866,445,1,1,94,0,0
+1789601864317,14,GET /api/reversibilite/export,200,,Administrateurs donnees 1-3,text,true,,2949,380,1,1,14,0,0
+1789601864317,14,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-3,,true,,2949,380,1,1,14,0,0
+1789601864332,5,POST /api/import/clauses,200,,Administrateurs donnees 1-3,text,true,,476,464,1,1,5,0,0
+1789601864332,5,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-3,,true,,476,464,1,1,5,0,0
+1789601864222,114,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-3,,true,,4291,1289,1,1,113,1,0
+1789601864412,115,POST /api/auth/login,200,,Administrateurs donnees 1-3,text,true,,866,445,1,1,115,0,0
+1789601864528,19,GET /api/reversibilite/export,200,,Administrateurs donnees 1-3,text,true,,2949,380,1,1,19,0,0
+1789601864528,19,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-3,,true,,2949,380,1,1,19,1,0
+1789601864548,4,POST /api/import/clauses,200,,Administrateurs donnees 1-3,text,true,,476,464,1,1,4,0,0
+1789601864548,4,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-3,,true,,476,464,1,1,4,0,0
+1789601864382,138,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-3,,true,,4291,1289,1,1,138,32,0
+1789601864553,109,POST /api/auth/login,200,,Administrateurs donnees 1-3,text,true,,866,445,1,1,109,0,0
+1789601864663,16,GET /api/reversibilite/export,200,,Administrateurs donnees 1-3,text,true,,2951,380,1,1,16,0,0
+1789601864663,16,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-3,,true,,2951,380,1,1,16,0,0
+1789601864680,3,POST /api/import/clauses,200,,Administrateurs donnees 1-3,text,true,,476,464,1,1,3,0,0
+1789601864679,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-3,,true,,476,464,1,1,3,1,0
+1789601864553,128,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-3,,true,,4293,1289,1,1,128,2,0
+1789601864909,90,POST /api/auth/login,200,,Administrateurs donnees 1-4,text,true,,866,237,1,1,90,0,1
+1789601865000,12,GET /api/reversibilite/export,200,,Administrateurs donnees 1-4,text,true,,2949,380,1,1,12,0,0
+1789601864999,12,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-4,,true,,2949,380,1,1,12,2,0
+1789601865013,3,POST /api/import/clauses,200,,Administrateurs donnees 1-4,text,true,,476,464,1,1,3,0,0
+1789601865013,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-4,,true,,476,464,1,1,3,0,0
+1789601864909,105,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-4,,true,,4291,1081,1,1,105,3,1
+1789601865017,95,POST /api/auth/login,200,,Administrateurs donnees 1-4,text,true,,866,445,1,1,95,0,0
+1789601865112,14,GET /api/reversibilite/export,200,,Administrateurs donnees 1-4,text,true,,2949,380,1,1,14,0,0
+1789601865112,14,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-4,,true,,2949,380,1,1,14,1,0
+1789601865127,3,POST /api/import/clauses,200,,Administrateurs donnees 1-4,text,true,,476,464,1,1,3,0,0
+1789601865127,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-4,,true,,476,464,1,1,3,1,0
+1789601865017,112,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-4,,true,,4291,1289,1,1,112,2,0
+1789601865132,94,POST /api/auth/login,200,,Administrateurs donnees 1-4,text,true,,866,445,1,1,94,0,0
+1789601865227,14,GET /api/reversibilite/export,200,,Administrateurs donnees 1-4,text,true,,2946,380,1,1,14,0,0
+1789601865226,14,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-4,,true,,2946,380,1,1,14,1,0
+1789601865242,4,POST /api/import/clauses,200,,Administrateurs donnees 1-4,text,true,,476,464,1,1,4,0,0
+1789601865241,4,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-4,,true,,476,464,1,1,4,1,0
+1789601865131,112,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-4,,true,,4288,1289,1,1,112,3,0
+1789601865247,95,POST /api/auth/login,200,,Administrateurs donnees 1-4,text,true,,866,445,1,1,95,0,0
+1789601865343,12,GET /api/reversibilite/export,200,,Administrateurs donnees 1-4,text,true,,2951,380,1,1,12,0,0
+1789601865343,12,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-4,,true,,2951,380,1,1,12,0,0
+1789601865355,4,POST /api/import/clauses,200,,Administrateurs donnees 1-4,text,true,,476,464,1,1,4,0,0
+1789601865355,4,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-4,,true,,476,464,1,1,4,0,0
+1789601865246,111,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-4,,true,,4293,1289,1,1,111,2,0
+1789601865707,109,POST /api/auth/login,200,,Administrateurs donnees 1-5,text,true,,866,237,1,1,109,0,1
+1789601865817,20,GET /api/reversibilite/export,200,,Administrateurs donnees 1-5,text,true,,2948,380,1,1,20,0,0
+1789601865816,20,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-5,,true,,2948,380,1,1,20,2,0
+1789601865838,5,POST /api/import/clauses,200,,Administrateurs donnees 1-5,text,true,,476,464,1,1,5,0,0
+1789601865838,5,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-5,,true,,476,464,1,1,5,0,0
+1789601865706,134,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-5,,true,,4290,1081,1,1,134,3,1
+1789601865844,98,POST /api/auth/login,200,,Administrateurs donnees 1-5,text,true,,866,445,1,1,98,0,0
+1789601865943,14,GET /api/reversibilite/export,200,,Administrateurs donnees 1-5,text,true,,2951,380,1,1,14,0,0
+1789601865943,14,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-5,,true,,2951,380,1,1,14,0,0
+1789601865957,4,POST /api/import/clauses,200,,Administrateurs donnees 1-5,text,true,,476,464,1,1,3,0,0
+1789601865957,4,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-5,,true,,476,464,1,1,3,0,0
+1789601865844,116,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-5,,true,,4293,1289,1,1,115,1,0
+1789601865962,100,POST /api/auth/login,200,,Administrateurs donnees 1-5,text,true,,866,445,1,1,100,0,0
+1789601866063,12,GET /api/reversibilite/export,200,,Administrateurs donnees 1-5,text,true,,2950,380,1,1,12,0,0
+1789601866063,12,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-5,,true,,2950,380,1,1,12,1,0
+1789601866076,3,POST /api/import/clauses,200,,Administrateurs donnees 1-5,text,true,,476,464,1,1,3,0,0
+1789601866076,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-5,,true,,476,464,1,1,3,1,0
+1789601865961,115,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-5,,true,,4292,1289,1,1,115,4,0
+1789601866080,95,POST /api/auth/login,200,,Administrateurs donnees 1-5,text,true,,866,445,1,1,95,0,0
+1789601866175,13,GET /api/reversibilite/export,200,,Administrateurs donnees 1-5,text,true,,2950,380,1,1,13,0,0
+1789601866175,13,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-5,,true,,2950,380,1,1,13,1,0
+1789601866189,3,POST /api/import/clauses,200,,Administrateurs donnees 1-5,text,true,,476,464,1,1,3,0,0
+1789601866189,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-5,,true,,476,464,1,1,3,1,0
+1789601866080,111,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-5,,true,,4292,1289,1,1,111,2,0
+1789601866506,100,POST /api/auth/login,200,,Administrateurs donnees 1-6,text,true,,866,237,1,1,100,0,1
+1789601866606,12,GET /api/reversibilite/export,200,,Administrateurs donnees 1-6,text,true,,2950,380,1,1,12,0,0
+1789601866606,12,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-6,,true,,2950,380,1,1,12,0,0
+1789601866619,3,POST /api/import/clauses,200,,Administrateurs donnees 1-6,text,true,,476,464,1,1,3,0,0
+1789601866618,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-6,,true,,476,464,1,1,3,1,0
+1789601866505,115,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-6,,true,,4292,1081,1,1,115,2,1
+1789601866623,91,POST /api/auth/login,200,,Administrateurs donnees 1-6,text,true,,866,445,1,1,91,0,0
+1789601866714,10,GET /api/reversibilite/export,200,,Administrateurs donnees 1-6,text,true,,2948,380,1,1,10,0,0
+1789601866714,10,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-6,,true,,2948,380,1,1,10,1,0
+1789601866725,4,POST /api/import/clauses,200,,Administrateurs donnees 1-6,text,true,,476,464,1,1,4,0,0
+1789601866725,4,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-6,,true,,476,464,1,1,4,0,0
+1789601866622,105,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-6,,true,,4290,1289,1,1,105,2,0
+1789601866730,97,POST /api/auth/login,200,,Administrateurs donnees 1-6,text,true,,866,445,1,1,97,0,0
+1789601866828,10,GET /api/reversibilite/export,200,,Administrateurs donnees 1-6,text,true,,2946,380,1,1,10,0,0
+1789601866827,10,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-6,,true,,2946,380,1,1,10,1,0
+1789601866838,4,POST /api/import/clauses,200,,Administrateurs donnees 1-6,text,true,,476,464,1,1,4,0,0
+1789601866838,4,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-6,,true,,476,464,1,1,4,0,0
+1789601866730,111,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-6,,true,,4288,1289,1,1,111,1,0
+1789601866843,92,POST /api/auth/login,200,,Administrateurs donnees 1-6,text,true,,866,445,1,1,92,0,0
+1789601866935,11,GET /api/reversibilite/export,200,,Administrateurs donnees 1-6,text,true,,2950,380,1,1,11,0,0
+1789601866935,11,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-6,,true,,2950,380,1,1,11,1,0
+1789601866947,3,POST /api/import/clauses,200,,Administrateurs donnees 1-6,text,true,,476,464,1,1,3,0,0
+1789601866947,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-6,,true,,476,464,1,1,3,1,0
+1789601866842,106,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-6,,true,,4292,1289,1,1,106,3,0
+1789601867305,98,POST /api/auth/login,200,,Administrateurs donnees 1-7,text,true,,866,237,1,1,98,0,1
+1789601867404,11,GET /api/reversibilite/export,200,,Administrateurs donnees 1-7,text,true,,2949,380,1,1,11,0,0
+1789601867403,11,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-7,,true,,2949,380,1,1,11,1,0
+1789601867415,4,POST /api/import/clauses,200,,Administrateurs donnees 1-7,text,true,,476,464,1,1,4,0,0
+1789601867415,4,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-7,,true,,476,464,1,1,4,0,0
+1789601867304,113,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-7,,true,,4291,1081,1,1,113,2,1
+1789601867420,105,POST /api/auth/login,200,,Administrateurs donnees 1-7,text,true,,866,445,1,1,105,0,0
+1789601867526,18,GET /api/reversibilite/export,200,,Administrateurs donnees 1-7,text,true,,2951,380,1,1,18,0,0
+1789601867526,18,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-7,,true,,2951,380,1,1,18,1,0
+1789601867545,6,POST /api/import/clauses,200,,Administrateurs donnees 1-7,text,true,,476,464,1,1,6,0,0
+1789601867545,6,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-7,,true,,476,464,1,1,6,0,0
+1789601867420,129,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-7,,true,,4293,1289,1,1,129,3,0
+1789601867553,104,POST /api/auth/login,200,,Administrateurs donnees 1-7,text,true,,866,445,1,1,104,0,0
+1789601867657,13,GET /api/reversibilite/export,200,,Administrateurs donnees 1-7,text,true,,2948,380,1,1,13,0,0
+1789601867657,13,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-7,,true,,2948,380,1,1,13,0,0
+1789601867670,4,POST /api/import/clauses,200,,Administrateurs donnees 1-7,text,true,,476,464,1,1,4,0,0
+1789601867670,4,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-7,,true,,476,464,1,1,4,0,0
+1789601867552,121,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-7,,true,,4290,1289,1,1,121,1,0
+1789601867675,96,POST /api/auth/login,200,,Administrateurs donnees 1-7,text,true,,866,445,1,1,96,0,0
+1789601867772,14,GET /api/reversibilite/export,200,,Administrateurs donnees 1-7,text,true,,2946,380,1,1,14,0,0
+1789601867772,14,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-7,,true,,2946,380,1,1,14,0,0
+1789601867787,3,POST /api/import/clauses,200,,Administrateurs donnees 1-7,text,true,,476,464,1,1,3,0,0
+1789601867786,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-7,,true,,476,464,1,1,3,2,0
+1789601867675,113,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-7,,true,,4288,1289,1,1,113,3,0
+1789601868100,92,POST /api/auth/login,200,,Administrateurs donnees 1-8,text,true,,866,237,1,1,92,0,1
+1789601868193,10,GET /api/reversibilite/export,200,,Administrateurs donnees 1-8,text,true,,2945,380,1,1,10,0,0
+1789601868193,10,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-8,,true,,2945,380,1,1,10,1,0
+1789601868204,3,POST /api/import/clauses,200,,Administrateurs donnees 1-8,text,true,,476,464,1,1,3,0,0
+1789601868204,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-8,,true,,476,464,1,1,3,0,0
+1789601868099,105,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-8,,true,,4287,1081,1,1,105,3,1
+1789601868208,89,POST /api/auth/login,200,,Administrateurs donnees 1-8,text,true,,866,445,1,1,89,0,0
+1789601868297,13,GET /api/reversibilite/export,200,,Administrateurs donnees 1-8,text,true,,2947,380,1,1,13,0,0
+1789601868297,13,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-8,,true,,2947,380,1,1,13,1,0
+1789601868311,3,POST /api/import/clauses,200,,Administrateurs donnees 1-8,text,true,,476,464,1,1,3,0,0
+1789601868311,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-8,,true,,476,464,1,1,3,0,0
+1789601868207,105,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-8,,true,,4289,1289,1,1,105,2,0
+1789601868315,91,POST /api/auth/login,200,,Administrateurs donnees 1-8,text,true,,866,445,1,1,91,0,0
+1789601868407,10,GET /api/reversibilite/export,200,,Administrateurs donnees 1-8,text,true,,2948,380,1,1,10,0,0
+1789601868407,10,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-8,,true,,2948,380,1,1,10,0,0
+1789601868418,3,POST /api/import/clauses,200,,Administrateurs donnees 1-8,text,true,,476,464,1,1,3,0,0
+1789601868417,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-8,,true,,476,464,1,1,3,1,0
+1789601868314,104,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-8,,true,,4290,1289,1,1,104,3,0
+1789601868422,86,POST /api/auth/login,200,,Administrateurs donnees 1-8,text,true,,866,445,1,1,86,0,0
+1789601868509,7,GET /api/reversibilite/export,200,,Administrateurs donnees 1-8,text,true,,2949,380,1,1,7,0,0
+1789601868508,7,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-8,,true,,2949,380,1,1,7,2,0
+1789601868517,4,POST /api/import/clauses,200,,Administrateurs donnees 1-8,text,true,,476,464,1,1,4,0,0
+1789601868517,4,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-8,,true,,476,464,1,1,4,0,0
+1789601868422,97,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-8,,true,,4291,1289,1,1,97,2,0
+1789601868896,89,POST /api/auth/login,200,,Administrateurs donnees 1-9,text,true,,866,237,1,1,89,0,1
+1789601868985,9,GET /api/reversibilite/export,200,,Administrateurs donnees 1-9,text,true,,2949,380,1,1,9,0,0
+1789601868985,9,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-9,,true,,2949,380,1,1,9,1,0
+1789601868995,3,POST /api/import/clauses,200,,Administrateurs donnees 1-9,text,true,,476,464,1,1,3,0,0
+1789601868995,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-9,,true,,476,464,1,1,3,0,0
+1789601868896,101,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-9,,true,,4291,1081,1,1,101,1,1
+1789601868999,103,POST /api/auth/login,200,,Administrateurs donnees 1-9,text,true,,866,445,1,1,103,0,0
+1789601869102,38,GET /api/reversibilite/export,200,,Administrateurs donnees 1-9,text,true,,2950,380,1,1,38,0,0
+1789601869102,38,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-9,,true,,2950,380,1,1,38,1,0
+1789601869144,7,POST /api/import/clauses,200,,Administrateurs donnees 1-9,text,true,,476,464,1,1,7,0,0
+1789601869141,7,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-9,,true,,476,464,1,1,7,3,0
+1789601868999,148,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-9,,true,,4292,1289,1,1,148,4,0
+1789601869152,99,POST /api/auth/login,200,,Administrateurs donnees 1-9,text,true,,866,445,1,1,99,0,0
+1789601869251,8,GET /api/reversibilite/export,200,,Administrateurs donnees 1-9,text,true,,2951,380,1,1,8,0,0
+1789601869251,8,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-9,,true,,2951,380,1,1,8,0,0
+1789601869260,2,POST /api/import/clauses,200,,Administrateurs donnees 1-9,text,true,,476,464,1,1,2,0,0
+1789601869260,2,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-9,,true,,476,464,1,1,2,0,0
+1789601869152,109,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-9,,true,,4293,1289,1,1,109,1,0
+1789601869263,92,POST /api/auth/login,200,,Administrateurs donnees 1-9,text,true,,866,445,1,1,92,0,0
+1789601869356,9,GET /api/reversibilite/export,200,,Administrateurs donnees 1-9,text,true,,2948,380,1,1,9,0,0
+1789601869356,9,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-9,,true,,2948,380,1,1,9,0,0
+1789601869365,3,POST /api/import/clauses,200,,Administrateurs donnees 1-9,text,true,,476,464,1,1,3,0,0
+1789601869365,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-9,,true,,476,464,1,1,3,0,0
+1789601869263,104,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-9,,true,,4290,1289,1,1,104,1,0
+1789601869694,94,POST /api/auth/login,200,,Administrateurs donnees 1-10,text,true,,866,237,1,1,94,0,0
+1789601869789,9,GET /api/reversibilite/export,200,,Administrateurs donnees 1-10,text,true,,2950,380,1,1,9,0,0
+1789601869789,9,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-10,,true,,2950,380,1,1,9,0,0
+1789601869798,4,POST /api/import/clauses,200,,Administrateurs donnees 1-10,text,true,,476,465,1,1,4,0,0
+1789601869798,4,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-10,,true,,476,465,1,1,4,0,0
+1789601869693,107,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-10,,true,,4292,1082,1,1,107,2,0
+1789601869803,97,POST /api/auth/login,200,,Administrateurs donnees 1-10,text,true,,866,445,1,1,97,0,0
+1789601869901,10,GET /api/reversibilite/export,200,,Administrateurs donnees 1-10,text,true,,2948,380,1,1,10,0,0
+1789601869901,10,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-10,,true,,2948,380,1,1,10,0,0
+1789601869911,3,POST /api/import/clauses,200,,Administrateurs donnees 1-10,text,true,,476,465,1,1,3,0,0
+1789601869911,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-10,,true,,476,465,1,1,3,1,0
+1789601869802,110,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-10,,true,,4290,1290,1,1,110,3,0
+1789601869916,92,POST /api/auth/login,200,,Administrateurs donnees 1-10,text,true,,866,445,1,1,92,0,0
+1789601870009,9,GET /api/reversibilite/export,200,,Administrateurs donnees 1-10,text,true,,2950,380,1,1,9,0,0
+1789601870009,9,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-10,,true,,2950,380,1,1,9,0,0
+1789601870019,3,POST /api/import/clauses,200,,Administrateurs donnees 1-10,text,true,,476,465,1,1,3,0,0
+1789601870018,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-10,,true,,476,465,1,1,3,1,0
+1789601869915,104,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-10,,true,,4292,1290,1,1,104,3,0
+1789601870023,96,POST /api/auth/login,200,,Administrateurs donnees 1-10,text,true,,866,445,1,1,96,0,0
+1789601870120,8,GET /api/reversibilite/export,200,,Administrateurs donnees 1-10,text,true,,2948,380,1,1,8,0,0
+1789601870120,8,02 - Reversibilite export,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-10,,true,,2948,380,1,1,8,0,0
+1789601870128,3,POST /api/import/clauses,200,,Administrateurs donnees 1-10,text,true,,476,465,1,1,3,0,0
+1789601870128,3,03 - Import essai,200,"Number of samples in transaction : 1, number of failing samples : 0",Administrateurs donnees 1-10,,true,,476,465,1,1,3,0,0
+1789601870023,107,01 - Login,200,"Number of samples in transaction : 4, number of failing samples : 0",Administrateurs donnees 1-10,,true,,4290,1290,1,1,107,1,0

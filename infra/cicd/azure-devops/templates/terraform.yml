@@ -1,0 +1,36 @@
+# Template de stage : cycle Terraform (init/validate/plan|apply) pour Azure.
+parameters:
+  - name: serviceConnection
+    type: string
+  - name: workingDirectory
+    default: infra/terraform/azure
+  - name: command
+    default: plan            # plan | apply
+  - name: dependsOn
+    type: object
+    default: []
+
+stages:
+  - stage: Infra_${{ parameters.command }}
+    displayName: Terraform ${{ parameters.command }}
+    dependsOn: ${{ parameters.dependsOn }}
+    jobs:
+      - job: terraform
+        pool: { vmImage: ubuntu-latest }
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: ${{ parameters.serviceConnection }}
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                set -euo pipefail
+                cd ${{ parameters.workingDirectory }}
+                terraform fmt -check -recursive
+                terraform init -input=false
+                terraform validate
+                if [ "${{ parameters.command }}" = "apply" ]; then
+                  terraform apply -input=false -auto-approve
+                else
+                  terraform plan -input=false
+                fi

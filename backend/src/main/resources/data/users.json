@@ -1,0 +1,59 @@
+[
+  {
+    "email": "superadmin@plateforme.ca",
+    "nom": "Super Administrateur",
+    "direction": "Plateforme",
+    "motDePasse": "SuperPassw0rd!",
+    "roles": ["SUPERADMIN"],
+    "global": true
+  },
+  {
+    "email": "admin@levis.qc.ca",
+    "nom": "Admin Système",
+    "direction": "TI",
+    "motDePasse": "Passw0rd!",
+    "roles": ["ADMIN"]
+  },
+  {
+    "email": "redacteur@levis.qc.ca",
+    "nom": "Rédacteur Appro",
+    "direction": "Approvisionnement",
+    "motDePasse": "Passw0rd!",
+    "roles": ["REDACTEUR", "APPRO"]
+  },
+  {
+    "email": "juriste@levis.qc.ca",
+    "nom": "Juriste",
+    "direction": "Services juridiques",
+    "motDePasse": "Passw0rd!",
+    "roles": ["JURIDIQUE"]
+  },
+  {
+    "email": "direction@levis.qc.ca",
+    "nom": "Directrice",
+    "direction": "Direction requérante",
+    "motDePasse": "Passw0rd!",
+    "roles": ["DIRECTION"]
+  },
+  {
+    "email": "totp@levis.qc.ca",
+    "nom": "Agent TOTP",
+    "direction": "Approvisionnement",
+    "motDePasse": "Passw0rd!",
+    "roles": ["REDACTEUR"],
+    "mfaMethode": "TOTP",
+    "totpSecret": "JBSWY3DPEHPK3PXP"
+  },
+  {
+    "email": "question@levis.qc.ca",
+    "nom": "Agent Question",
+    "direction": "Approvisionnement",
+    "motDePasse": "Passw0rd!",
+    "roles": ["REDACTEUR"],
+    "mfaMethode": "QUESTION",
+    "questions": [
+      { "question": " ?", "reponse": "montreal" },
+      { "question": "Nom de votre première école ?", "reponse": "montreal" }
+    ]
+  }
+]

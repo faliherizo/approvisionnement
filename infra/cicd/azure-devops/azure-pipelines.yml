@@ -1,0 +1,38 @@
+# Orchestrateur Azure DevOps — compose des templates de stage (build-test, docker, terraform,
+# deploy-aks). Chaque préoccupation est isolée dans son propre fichier (templates/), pas de monolithe.
+# Prérequis : connexion de service ARM "sc-azure-vina" (fédération OIDC) ; environnement "prod-azure"
+# avec approbation manuelle (Project Settings → Environments).
+trigger:
+  branches: { include: [main] }
+  paths:
+    include: [backend, frontend, infra/terraform/azure, infra/k8s]
+
+variables:
+  serviceConnection: sc-azure-vina
+  acr: vinacontratprodacr
+  resourceGroup: vina-contrat-prod-rg
+  aks: vina-contrat-prod-aks
+
+stages:
+  - template: templates/build-test.yml
+
+  - template: templates/docker.yml
+    parameters:
+      serviceConnection: $(serviceConnection)
+      acr: $(acr)
+      dependsOn: [Test]
+
+  - template: templates/terraform.yml
+    parameters:
+      serviceConnection: $(serviceConnection)
+      command: apply
+      dependsOn: [Images]
+
+  - template: templates/deploy-aks.yml
+    parameters:
+      serviceConnection: $(serviceConnection)
+      environment: prod-azure
+      acr: $(acr)
+      resourceGroup: $(resourceGroup)
+      aks: $(aks)
+      dependsOn: [Infra_apply]

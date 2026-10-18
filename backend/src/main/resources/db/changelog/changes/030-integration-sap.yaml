@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 030-1-integration-sap
+      author: levis
+      changes:
+        - createTable:
+            tableName: integration_sap
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: false, constraints: { nullable: false } }
+              - column: { name: base_url, type: VARCHAR(400) }
+              - column: { name: service_path, type: VARCHAR(400) }
+              - column: { name: auth, type: VARCHAR(20), defaultValue: basic }
+              - column: { name: username, type: VARCHAR(200) }
+              - column: { name: password_chiffre, type: VARCHAR(1000) }
+              - column: { name: api_key_chiffre, type: VARCHAR(1000) }
+        - addUniqueConstraint:
+            tableName: integration_sap
+            columnNames: tenant_id
+            constraintName: uq_integration_sap_tenant

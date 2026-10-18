@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010-1-signataire-image
+      author: levis
+      changes:
+        - addColumn:
+            tableName: signataire
+            columns:
+              - column: { name: signature_image, type: "VARCHAR(1000000)" }

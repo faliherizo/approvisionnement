@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /$
+Allow: /accueil
+Allow: /login
+# Espaces authentifiés non indexables
+Disallow: /documents/
+Disallow: /dossiers
+Disallow: /assistant
+Disallow: /utilisateurs
+Disallow: /superadmin
+Disallow: /profil
+Disallow: /audit
+Disallow: /donnees
+Disallow: /workflows
+Disallow: /api/
+
+Sitemap: https://contrat.vinaitsolution.com/sitemap.xml

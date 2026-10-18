@@ -1,0 +1,20 @@
+# Copier en terraform.tfvars et adapter. Ne pas committer (secrets/état).
+project     = "vina-contrat"
+environment = "prod"
+location    = "canadacentral"
+
+image_tag       = "latest"
+backend_cpu     = 1.0
+backend_memory  = "2Gi"
+frontend_cpu    = 0.5
+frontend_memory = "1Gi"
+min_replicas    = 3
+max_replicas    = 10
+
+postgres_version    = "16"
+postgres_sku        = "GP_Standard_D4s_v3"
+postgres_storage_mb = 131072
+
+app_hostname          = "contrat.vinaitsolution.com"
+availability_test_url = "https://contrat.vinaitsolution.com/actuator/health"
+alert_email           = "faliherizo@vinaitsolution.com"

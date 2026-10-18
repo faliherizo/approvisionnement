@@ -1,0 +1,26 @@
+[
+  {
+    "code": "TPL-AOP",
+    "nom": "Appel d'offres public — travaux",
+    "type": "APPEL_OFFRES_PUBLIC",
+    "modeSollicitation": "APPEL_OFFRES_PUBLIC",
+    "description": "Devis type pour un appel d'offres public de travaux.",
+    "clauseCodes": ["GEN-001", "GEN-002", "AOP-010", "AOP-020"]
+  },
+  {
+    "code": "TPL-BAIL",
+    "nom": "Bail — gré à gré",
+    "type": "BAIL",
+    "modeSollicitation": "GRE_A_GRE",
+    "description": "Contrat de bail de gré à gré.",
+    "clauseCodes": ["GEN-001", "GEN-002", "BAIL-100"]
+  },
+  {
+    "code": "TPL-SERVICES",
+    "nom": "Contrat de services — demande de prix",
+    "type": "CONTRAT_SERVICES",
+    "modeSollicitation": "DEMANDE_PRIX",
+    "description": "Contrat de services par demande de prix.",
+    "clauseCodes": ["GEN-001", "GEN-002"]
+  }
+]

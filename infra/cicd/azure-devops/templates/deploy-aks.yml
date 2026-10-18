@@ -1,0 +1,44 @@
+# Template de stage de déploiement : Helm sur AKS via un environnement protégé (approbation).
+parameters:
+  - name: serviceConnection
+    type: string
+  - name: environment          # environnement Azure DevOps (portes d'approbation)
+    type: string
+  - name: acr
+    type: string
+  - name: resourceGroup
+    type: string
+  - name: aks
+    type: string
+  - name: dependsOn
+    type: object
+    default: []
+
+stages:
+  - stage: Deploy
+    displayName: Déploiement AKS
+    dependsOn: ${{ parameters.dependsOn }}
+    jobs:
+      - deployment: aks
+        environment: ${{ parameters.environment }}   # approbation manuelle configurée sur l'environnement
+        pool: { vmImage: ubuntu-latest }
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - task: AzureCLI@2
+                  inputs:
+                    azureSubscription: ${{ parameters.serviceConnection }}
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      set -euo pipefail
+                      TAG=$(Build.SourceVersion)
+                      az aks get-credentials -g ${{ parameters.resourceGroup }} -n ${{ parameters.aks }} --overwrite-existing
+                      helm upgrade --install contrat infra/k8s/chart \
+                        --namespace contrat --create-namespace \
+                        --values infra/k8s/values-azure.yaml \
+                        --set image.registry=${{ parameters.acr }}.azurecr.io \
+                        --set image.tag=$TAG --wait --timeout 10m
+                      kubectl -n contrat rollout status deploy/backend --timeout=5m

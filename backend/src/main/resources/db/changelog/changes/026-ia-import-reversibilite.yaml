@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 026-1-tenant-ia-activee
+      author: vina
+      changes:
+        - addColumn:
+            tableName: tenant
+            columns:
+              - column: { name: ia_activee, type: BOOLEAN, defaultValueBoolean: true, constraints: { nullable: false } }
+  - changeSet:
+      id: 026-2-ai-suggestion
+      author: vina
+      changes:
+        - createTable:
+            tableName: ai_suggestion
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: type_interaction, type: VARCHAR(40), constraints: { nullable: false } }
+              - column: { name: invite, type: VARCHAR(4000) }
+              - column: { name: reponse, type: VARCHAR(8000) }
+              - column: { name: modele, type: VARCHAR(255) }
+              - column: { name: utilisateur, type: VARCHAR(255) }
+              - column: { name: cree_le, type: TIMESTAMP }
+              - column: { name: tenant_id, type: BIGINT }

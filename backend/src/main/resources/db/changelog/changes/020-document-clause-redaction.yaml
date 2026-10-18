@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 020-1-document-clause-redaction
+      author: levis
+      changes:
+        - addColumn:
+            tableName: document_clause
+            columns:
+              - column: { name: modifie_localement, type: BOOLEAN, defaultValueBoolean: false }
+              - column: { name: normative, type: BOOLEAN, defaultValueBoolean: false }

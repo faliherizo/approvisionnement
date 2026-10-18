@@ -1,0 +1,12 @@
+{
+  "nouveau": {
+    "nom": "Template e2e",
+    "titreParDefaut": "Document genere depuis le template e2e",
+    "description": "Modele reutilisable de test",
+    "clauseCodes": "GEN-001",
+    "annexes": "Attestation Revenu Quebec"
+  },
+  "modifie": {
+    "nom": "Template e2e modifie"
+  }
+}

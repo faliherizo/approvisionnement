@@ -1,0 +1,18 @@
+# Surcharges AWS (EKS). Le registre ECR est injecté par le pipeline (--set image.registry).
+image:
+  tag: latest
+
+serviceAccount:
+  name: backend
+  # IRSA : associe ce ServiceAccount au rôle IAM (sortie backend_irsa_role_arn de Terraform).
+  annotations:
+    eks.amazonaws.com/role-arn: "arn:aws:iam::<ACCOUNT_ID>:role/vina-contrat-prod-backend-irsa"
+
+ingress:
+  className: alb
+  host: contrat.vinaitsolution.com
+  # AWS Load Balancer Controller : ALB public multi-AZ.
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /actuator/health

@@ -1,0 +1,18 @@
+{
+  "name": "contrat-e2e",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Tests e2e Playwright - rédaction contractuelle Ville de Lévis (sur H2)",
+  "scripts": {
+    "test": "playwright test",
+    "test:e2e": "playwright test tests/",
+    "test:views": "playwright test views/",
+    "test:headed": "playwright test --headed",
+    "report": "playwright show-report",
+    "install:browsers": "playwright install --with-deps chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.45.0",
+    "unpdf": "^1.6.2"
+  }
+}

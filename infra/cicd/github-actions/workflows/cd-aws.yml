@@ -1,0 +1,58 @@
+# Orchestrateur CD AWS — sur push main (ou manuel) : test → images → [approbation] → infra → déploiement.
+name: cd-aws
+
+on:
+  push:
+    branches: [main]
+    paths: ["backend/**", "frontend/**", "infra/terraform/aws/**", "infra/k8s/**"]
+  workflow_dispatch:
+
+concurrency:
+  group: cd-aws
+  cancel-in-progress: false   # ne jamais annuler un déploiement en cours
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build-test:
+    uses: ./.github/workflows/reusable-build-test.yml
+
+  images:
+    needs: build-test
+    uses: ./.github/workflows/reusable-docker.yml
+    with: { cloud: aws, region: ca-central-1 }
+    secrets:
+      AWS_DEPLOY_ROLE_ARN: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+
+  # Porte d'approbation : l'environnement « prod-aws » (GitHub → Settings → Environments)
+  # exige une validation manuelle avant tout changement d'infrastructure ou déploiement.
+  gate:
+    needs: images
+    runs-on: ubuntu-latest
+    environment: prod-aws
+    steps:
+      - run: echo "Déploiement AWS approuvé pour le commit ${{ github.sha }}"
+
+  infra:
+    needs: gate
+    uses: ./.github/workflows/reusable-terraform.yml
+    with:
+      cloud: aws
+      working-directory: infra/terraform/aws
+      action: apply
+    secrets:
+      AWS_DEPLOY_ROLE_ARN: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+
+  deploy:
+    needs: [images, infra]
+    uses: ./.github/workflows/reusable-deploy-k8s.yml
+    with:
+      cloud: aws
+      region: ca-central-1
+      cluster: vina-contrat-prod-eks
+      registry: ${{ needs.images.outputs.registry }}
+      values_file: infra/k8s/values-aws.yaml
+    secrets:
+      AWS_DEPLOY_ROLE_ARN: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}

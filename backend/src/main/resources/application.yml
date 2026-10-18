@@ -1,0 +1,79 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: contrat-backend
+  # Profil par défaut : H2 en mémoire (dév + tests e2e Playwright).
+  datasource:
+    url: jdbc:h2:mem:contrat;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      # Le schéma est géré par Liquibase, pas par Hibernate.
+      ddl-auto: none
+    open-in-view: false
+    show-sql: false
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# Documentation OpenAPI 3.0 / Swagger UI
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+
+# Paramètres applicatifs (JWT). En production : variable d'environnement + secret géré.
+app:
+  jwt:
+    secret: ${JWT_SECRET:changez-moi-cette-cle-secrete-de-256-bits-minimum-pour-la-ville-de-levis}
+    expiration-ms: 3600000   # 1 heure
+  cookie:
+    secure: ${COOKIE_SECURE:false}      # true en production (HTTPS)
+    same-site: ${COOKIE_SAMESITE:Lax}
+  cors:
+    # Motifs d'origines autorisées (compatibles allowCredentials). En dev/Docker,
+    # tout localhost est accepté ; en production, restreindre via APP_CORS_ALLOWED_ORIGINS.
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:http://localhost:*}
+  ai:
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      model: ${OLLAMA_MODEL:llama3.1}
+  publication:
+    # Répertoire de dépôt par défaut (SharePoint/OneDrive/Teams) quand aucun n'est saisi.
+    dossier-defaut: ${PUBLICATION_DOSSIER_DEFAUT:Contrats}
+    simulateur:
+      # Emplacement où le mode simulation écrit réellement les fichiers déposés (visualisables).
+      repertoire: ${PUBLICATION_SIMULATEUR_REPERTOIRE:data/simulateur}
+  crypto:
+    # Clé et sel (hex) de chiffrement des secrets stockés en base (ex. secret client M365 par tenant).
+    # OBLIGATOIRE en production : fournir via variables d'environnement, jamais en dur.
+    cle: ${APP_CRYPTO_KEY:changez-moi-cle-de-chiffrement-des-secrets}
+    sel: ${APP_CRYPTO_SALT:5c0ff33a1b2c3d4e}
+  m365:
+    # Bases d'API par défaut = Microsoft réel. Pour valider avec un simulateur, pointer ces URL vers
+    # le stub (ex. http://localhost:8099/v1.0 et http://localhost:8099) sans changer de code.
+    graph-base-url: ${M365_GRAPH_BASE_URL:https://graph.microsoft.com/v1.0}
+    login-base-url: ${M365_LOGIN_BASE_URL:https://login.microsoftonline.com}
+  # SAP : configuration désormais PAR TENANT (Paramètres → Intégration SAP), chiffrée en base — plus
+  # de config globale ici. Voir docs/tutoriel-sap.md et docs/tutoriel-sap-sandbox.md.
+
+# Journalisation (voir docs/journalisation.md). Niveaux pilotés ici, ajustables sans redéploiement
+# via LOG_APP_LEVEL. Aucune donnée sensible n'est journalisée (Loi 25).
+logging:
+  level:
+    root: INFO
+    qc.levis.contrat: ${LOG_APP_LEVEL:DEBUG}   # applicatif verbeux en dev
+    org.springframework: WARN
+    org.hibernate: WARN
+    liquibase: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"

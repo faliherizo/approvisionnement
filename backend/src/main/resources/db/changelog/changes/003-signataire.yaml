@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-1-signataire
+      author: levis
+      changes:
+        - createTable:
+            tableName: signataire
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: document_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: nom, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: courriel, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: role, type: VARCHAR(255) }
+              - column: { name: statut, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: jeton, type: VARCHAR(100), constraints: { nullable: false, unique: true } }
+              - column: { name: signe_le, type: TIMESTAMP }
+        - addForeignKeyConstraint:
+            baseTableName: signataire
+            baseColumnNames: document_id
+            referencedTableName: document
+            referencedColumnNames: id
+            constraintName: fk_signataire_document

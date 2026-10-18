@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009-1-knowledge-snippet
+      author: levis
+      changes:
+        - createTable:
+            tableName: knowledge_snippet
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT }
+              - column: { name: titre, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: source, type: VARCHAR(500) }
+              - column: { name: contenu, type: VARCHAR(8000), constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP }

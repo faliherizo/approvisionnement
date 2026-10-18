@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-1-tenant
+      author: levis
+      changes:
+        - createTable:
+            tableName: tenant
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: slug, type: VARCHAR(60), constraints: { nullable: false, unique: true } }
+              - column: { name: titre, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: sous_titre, type: VARCHAR(255) }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: true, constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP }
+
+  - changeSet:
+      id: 008-2-tenant-id-columns
+      author: levis
+      changes:
+        - addColumn: { tableName: app_user, columns: [ { column: { name: tenant_id, type: BIGINT } } ] }
+        - addColumn: { tableName: clause, columns: [ { column: { name: tenant_id, type: BIGINT } } ] }
+        - addColumn: { tableName: document, columns: [ { column: { name: tenant_id, type: BIGINT } } ] }
+        - addColumn: { tableName: document_template, columns: [ { column: { name: tenant_id, type: BIGINT } } ] }
+        - addColumn: { tableName: obligation, columns: [ { column: { name: tenant_id, type: BIGINT } } ] }

@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 023-1-template-categorie-acquisition
+      author: vina
+      changes:
+        - addColumn:
+            tableName: document_template
+            columns:
+              - column: { name: categorie_acquisition, type: VARCHAR(40) }

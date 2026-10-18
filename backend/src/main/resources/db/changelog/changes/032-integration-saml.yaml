@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 032-1-integration-saml
+      author: levis
+      changes:
+        - createTable:
+            tableName: integration_saml
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: false, constraints: { nullable: false } }
+              - column: { name: idp_entity_id, type: VARCHAR(500) }
+              - column: { name: idp_sso_url, type: VARCHAR(500) }
+              - column: { name: idp_certificat, type: VARCHAR(4000) }
+              - column: { name: sp_entity_id, type: VARCHAR(500) }
+              - column: { name: claim_courriel, type: VARCHAR(100), defaultValue: email }
+              - column: { name: bouton_libelle, type: VARCHAR(200), defaultValue: Connexion SAML }
+              - column: { name: auto_provision, type: BOOLEAN, defaultValueBoolean: true, constraints: { nullable: false } }
+              - column: { name: role_par_defaut, type: VARCHAR(30), defaultValue: REDACTEUR }
+        - addUniqueConstraint:
+            tableName: integration_saml
+            columnNames: tenant_id
+            constraintName: uq_integration_saml_tenant

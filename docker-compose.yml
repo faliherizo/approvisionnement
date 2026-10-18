@@ -1,0 +1,61 @@
+services:
+
+  # --- Assistance IA locale (Ollama) : modèle hébergé sur place, conforme Loi 25 ---
+  ollama:
+    image: ollama/ollama:latest
+    container_name: vina-ia
+    ports:
+      - "${VINA_OLLAMA_PORT:-11434}:11434"
+    volumes:
+      - ollama:/root/.ollama
+    restart: unless-stopped
+
+  # --- Base de données PostgreSQL (production) ---
+  db:
+    image: postgres:15
+    container_name: contrat-db
+    environment:
+      POSTGRES_DB: contrat
+      POSTGRES_USER: contrat
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-contrat}
+    ports:
+      # Port hôte 5433 (5432 occupé par une autre pile locale). Le backend joint la base via le
+      # réseau interne « db:5432 » : ce mapping ne sert qu'aux outils DB externes.
+      - "5433:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # --- Backend Java (Spring Boot, profil prod → PostgreSQL, schéma Liquibase) ---
+  backend:
+    build: ./backend
+    container_name: contrat-backend
+    depends_on:
+      - ollama
+      - db
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      APP_CORS_ALLOWED_ORIGINS: http://localhost:${FRONTEND_PORT:-8082}
+      DB_URL: jdbc:postgresql://db:5432/contrat
+      DB_USER: contrat
+      DB_PASSWORD: ${DB_PASSWORD:-contrat}
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.1}
+      JWT_SECRET: ${JWT_SECRET:-changez-moi-cette-cle-secrete-de-256-bits-minimum-pour-la-ville-de-levis}
+    ports:
+      - "8080:8085"
+    restart: unless-stopped
+
+  # --- Frontend React (build Vite servi par Nginx, proxy /api → backend) ---
+  frontend:
+    build: ./frontend
+    container_name: contrat-frontend
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-8082}:80"
+    restart: unless-stopped
+
+volumes:
+  ollama:
+  dbdata:

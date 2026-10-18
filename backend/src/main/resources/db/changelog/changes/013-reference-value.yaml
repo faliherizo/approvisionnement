@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 013-1-reference-value
+      author: levis
+      changes:
+        - createTable:
+            tableName: reference_value
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: categorie, type: VARCHAR(60), constraints: { nullable: false } }
+              - column: { name: code, type: VARCHAR(100), constraints: { nullable: false } }
+              - column: { name: libelle, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: tenant_id, type: BIGINT }
+              - column: { name: ordre, type: INT, defaultValueNumeric: 0 }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: true, constraints: { nullable: false } }

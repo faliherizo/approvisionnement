@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007-1-document-template
+      author: levis
+      changes:
+        - createTable:
+            tableName: document_template
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: code, type: VARCHAR(100), constraints: { nullable: false, unique: true } }
+              - column: { name: nom, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: type, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: mode_sollicitation, type: VARCHAR(50) }
+              - column: { name: description, type: VARCHAR(1000) }
+
+  - changeSet:
+      id: 007-2-document-template-clause
+      author: levis
+      changes:
+        - createTable:
+            tableName: document_template_clause
+            columns:
+              - column: { name: template_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: clause_code, type: VARCHAR(255) }
+        - addForeignKeyConstraint:
+            baseTableName: document_template_clause
+            baseColumnNames: template_id
+            referencedTableName: document_template
+            referencedColumnNames: id
+            constraintName: fk_template_clause_template

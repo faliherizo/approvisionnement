@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 014-1-clause-numerotation
+      author: levis
+      changes:
+        - addColumn:
+            tableName: clause
+            columns:
+              - column: { name: numero, type: VARCHAR(30) }
+              - column: { name: section, type: VARCHAR(120) }
+
+  - changeSet:
+      id: 014-2-document-parties
+      author: levis
+      changes:
+        - addColumn:
+            tableName: document
+            columns:
+              - column: { name: numero_ao, type: VARCHAR(60) }
+              - column: { name: organisme_public, type: VARCHAR(1000) }
+              - column: { name: prestataire, type: VARCHAR(1000) }
+
+  - changeSet:
+      id: 014-3-document-clause-numero
+      author: levis
+      changes:
+        - addColumn:
+            tableName: document_clause
+            columns:
+              - column: { name: numero, type: VARCHAR(30) }

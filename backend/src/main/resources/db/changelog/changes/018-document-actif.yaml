@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 018-1-document-actif
+      author: levis
+      changes:
+        - addColumn:
+            tableName: document
+            columns:
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: true, constraints: { nullable: false } }

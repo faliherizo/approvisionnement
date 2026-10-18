@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 016-1-tenant-logo-image
+      author: levis
+      changes:
+        - addColumn:
+            tableName: tenant
+            columns:
+              - column: { name: logo_image, type: CLOB }

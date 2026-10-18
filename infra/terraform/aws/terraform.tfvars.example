@@ -1,0 +1,17 @@
+# Copier en terraform.tfvars et adapter. Ne jamais committer terraform.tfvars (secrets/état).
+project     = "vina-contrat"
+environment = "prod"
+region      = "ca-central-1"
+azs         = ["ca-central-1a", "ca-central-1b", "ca-central-1d"]
+
+kubernetes_version      = "1.30"
+eks_node_instance_types = ["m6i.large"]
+eks_node_min            = 3
+eks_node_max            = 9
+
+postgres_version           = "16"
+postgres_instance_class    = "db.m6g.large"
+postgres_allocated_storage = 100
+
+availability_canary_url = "https://contrat.vinaitsolution.com/actuator/health"
+alarm_email             = "faliherizo@vinaitsolution.com"

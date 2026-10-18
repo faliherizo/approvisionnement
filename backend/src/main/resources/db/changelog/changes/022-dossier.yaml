@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: 022-1-dossier
+      author: vina
+      changes:
+        - createTable:
+            tableName: dossier
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: titre, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: numero_ao, type: VARCHAR(255) }
+              - column: { name: objet, type: VARCHAR(2000) }
+              - column: { name: type_acquisition, type: VARCHAR(40) }
+              - column: { name: mode_sollicitation, type: VARCHAR(40) }
+              - column: { name: statut, type: VARCHAR(40), defaultValue: OUVERT, constraints: { nullable: false } }
+              - column: { name: responsable, type: VARCHAR(255) }
+              - column: { name: cree_par, type: VARCHAR(255) }
+              - column: { name: cree_le, type: TIMESTAMP }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: true, constraints: { nullable: false } }
+              - column: { name: tenant_id, type: BIGINT }
+  - changeSet:
+      id: 022-2-document-dossier-id
+      author: vina
+      changes:
+        - addColumn:
+            tableName: document
+            columns:
+              - column: { name: dossier_id, type: BIGINT }
+        - createIndex:
+            tableName: document
+            indexName: idx_document_dossier
+            columns:
+              - column: { name: dossier_id }
