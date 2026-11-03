@@ -518,7 +518,7 @@ public class ParcoursService {
     @Transactional
     public void commenter(Long etapeId, Habilitations.Acteur acteur, ClmDto.CommentaireRequest req) {
         EtapeTrousse e = exigerEtape(etapeId);
-        Trousse t = lecture.exigerVisible(e.getTrousseId(), acteur);
+        Trousse t = lecture.exigerContribution(e.getTrousseId(), acteur);
         String texte = req == null || req.texte() == null ? "" : req.texte().trim();
         if (texte.isEmpty()) {
             throw new IllegalArgumentException("Commentaire vide.");

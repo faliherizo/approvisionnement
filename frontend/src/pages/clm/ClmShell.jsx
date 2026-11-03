@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../auth.jsx'
+import { espaceClmSeul } from '../../espaces.js'
+import { useModules } from '../../hooks/useModules.js'
 import { useI18n } from '../../i18n/I18nContext'
 import { chargerTheme } from '../../theme.js'
 import LangSwitcher from '../../components/LangSwitcher.jsx'
@@ -13,12 +15,13 @@ const PRINCIPAUX = [
   ['/clm/modeles', 'clm.nav.modeles'],
   ['/clm/suivi', 'clm.nav.suivi'],
 ]
+/** Entrées d'administration ; le journal d'audit (UI-23) est aussi celui de l'auditeur. */
 const ADMINISTRATION = [
   ['/clm/admin/notifications', 'clm.nav.notifications'],
   ['/clm/admin/integrations', 'clm.nav.integrations'],
   ['/clm/admin/parametres', 'clm.nav.parametres'],
   ['/clm/admin/utilisateurs', 'clm.nav.utilisateurs'],
-  ['/clm/admin/journal', 'clm.nav.journal'],
+  ['/clm/admin/journal', 'clm.nav.journal', 'AUDITEUR'],
   ['/clm/options', 'clm.nav.options'],
 ]
 
@@ -33,7 +36,11 @@ export default function ClmShell({ children }) {
   const [tenant, setTenant] = useState(null)
   const [menuOuvert, setMenuOuvert] = useState(false)
   const [q, setQ] = useState('')
+  const { modules, chargement } = useModules()
   const admin = hasRole('ADMIN') || hasRole('SUPERADMIN')
+  const administration = ADMINISTRATION.filter(([, , aussi]) => admin || (aussi && hasRole(aussi)))
+  // Une organisation qui ne souscrit que le CLM n'a pas d'autre espace vers lequel revenir.
+  const autreEspace = !chargement && !espaceClmSeul(modules)
 
   useEffect(() => { chargerTheme().then(setTenant) }, [])
   useEffect(() => { setMenuOuvert(false) }, [pathname])
@@ -63,7 +70,8 @@ export default function ClmShell({ children }) {
           <LangSwitcher compact />
           <span className="clm-shell__avatar" aria-hidden="true">{initiales(user?.nom)}</span>
           <span className="clm-shell__nom">{user?.nom}</span>
-          <Link to="/">{t('clm.gab.plateforme')}</Link>
+          <Link to="/clm/profil">{t('clm.gab.profil')}</Link>
+          {autreEspace && <Link to="/">{t('clm.gab.plateforme')}</Link>}
           <button type="button" onClick={() => { logout(); navigate('/login') }}>{t('action.logout')}</button>
         </div>
       </header>
@@ -72,11 +80,11 @@ export default function ClmShell({ children }) {
           <ul>
             {PRINCIPAUX.map(([chemin, cle, fin]) => <li key={chemin}><NavLink to={chemin} end={fin}>{t(cle)}</NavLink></li>)}
           </ul>
-          {admin && (
+          {administration.length > 0 && (
             <>
               <p id="clm-nav-admin" className="clm-shell__groupe">{t('clm.nav.administration')}</p>
               <ul aria-labelledby="clm-nav-admin">
-                {ADMINISTRATION.map(([chemin, cle]) => <li key={chemin}><NavLink to={chemin}>{t(cle)}</NavLink></li>)}
+                {administration.map(([chemin, cle]) => <li key={chemin}><NavLink to={chemin}>{t(cle)}</NavLink></li>)}
               </ul>
             </>
           )}

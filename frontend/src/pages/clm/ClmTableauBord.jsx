@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../auth.jsx'
 import { useI18n } from '../../i18n/I18nContext'
-import { GardeModule, Message, Statut, dateHeure, useRessource } from './commun.jsx'
+import { GardeModule, Message, Statut, dateHeure, usePeutInitier, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 
 const INDICATEURS = ['brouillons', 'enValidation', 'enSignature', 'enRetard', 'terminees']
@@ -21,6 +21,7 @@ function Contenu() {
   const maj = (k) => (e) => setForm({ ...form, [k]: e.target.value })
   const premiere = donnees?.mesActions?.[0]
   const admin = hasRole('ADMIN') || hasRole('SUPERADMIN')
+  const peutInitier = usePeutInitier()
 
   return (
     <EcranClm maquette="UI-01" titre={t('clm.tb.titre')} objectif={t('clm.tb.intro')}
@@ -29,7 +30,7 @@ function Contenu() {
           <Link className="clm-bouton secondaire" to="/clm/trousses">{t('clm.tb.ouvrir')}</Link>
           <button type="button" className="secondary" disabled={!premiere}
             onClick={() => navigate(`/clm/taches?etape=${premiere.etapeId}`)}>{t('clm.tb.reprendre')}</button>
-          <Link className="clm-bouton" to="/clm/trousses/nouvelle">{t('clm.tb.creer')}</Link>
+          {peutInitier && <Link className="clm-bouton" to="/clm/trousses/nouvelle">{t('clm.tb.creer')}</Link>}
           {admin && <Link className="clm-bouton secondaire" to="/clm/admin/integrations">{t('clm.tb.accederAlertes')}</Link>}
         </>
       )}>

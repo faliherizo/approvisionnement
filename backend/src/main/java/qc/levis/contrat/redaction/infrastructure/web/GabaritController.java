@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.redaction.application.GabaritService;
 import qc.levis.contrat.redaction.application.dto.GabaritRequest;
 import qc.levis.contrat.redaction.domain.Gabarit;
@@ -14,6 +15,7 @@ import qc.levis.contrat.redaction.domain.Gabarit;
  * modification, clonage et suppression sont réservés aux admins / superadmin.
  */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/gabarits")
 public class GabaritController {
 

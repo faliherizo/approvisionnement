@@ -5,11 +5,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import qc.levis.contrat.addenda.domain.Addenda;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.dossier.application.RapportService;
 import qc.levis.contrat.dossier.application.dto.RapportSuivi;
 
 /** Rapports de suivi consolidés (Addenda 1, exig. 22). Réservé aux rôles de pilotage. */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/rapports")
 public class RapportController {
 

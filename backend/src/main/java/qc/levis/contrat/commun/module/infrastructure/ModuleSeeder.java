@@ -7,8 +7,8 @@ import qc.levis.contrat.commun.module.application.repository.ModuleCatalogueRepo
 import qc.levis.contrat.commun.module.domain.ModuleCatalogue;
 
 /**
- * Amorce le catalogue des modules de la plateforme de formulaires (CHU). Tous sont
- * {@code actifParDefaut = false} : ils doivent être activés explicitement par le superadmin par tenant.
+ * Amorce le catalogue des modules activables par tenant depuis l'espace superadmin. Seul le socle de rédaction contractuelle
+ * est actif par défaut (les organisations existantes le gardent) ; les autres doivent être activés explicitement.
  * Les dépendances pilotent la résolution (activer « saisie » tire « formulaire », etc.).
  */
 @Component
@@ -24,6 +24,7 @@ public class ModuleSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) {
         // code, nom, famille, ordre, requiert
+        seedActifParDefaut("redaction", "Rédaction contractuelle (dossiers, clauses, gabarits, assistant, pilotage)", "Socle", 5);
         seed("formulaire", "Moteur de formulaires", "Plateforme", 10, null);
         seed("regle", "Règles & automatisation", "Plateforme", 20, "formulaire");
         seed("saisie", "Soumissions & workflow", "Plateforme", 30, "formulaire");
@@ -43,5 +44,10 @@ public class ModuleSeeder implements CommandLineRunner {
     private void seed(String code, String nom, String famille, int ordre, String requiert) {
         if (repo.existsByCode(code)) return;
         repo.save(new ModuleCatalogue(code, nom, famille, ordre, false, requiert));
+    }
+
+    private void seedActifParDefaut(String code, String nom, String famille, int ordre) {
+        if (repo.existsByCode(code)) return;
+        repo.save(new ModuleCatalogue(code, nom, famille, ordre, true, null));
     }
 }

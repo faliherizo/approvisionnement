@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { useAuth } from '../../auth.jsx'
 import { useI18n } from '../../i18n/I18nContext'
-import { GardeModule, Message, Statut, date, dateHeure, telecharger, useErreur, useRessource } from './commun.jsx'
+import { GardeModule, Message, Statut, date, dateHeure, telecharger, useErreur, usePeutInitier, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 
 const STATUTS = ['BROUILLON', 'EN_TRAITEMENT', 'TERMINEE', 'REJETEE', 'ANNULEE']
@@ -22,6 +23,10 @@ function Contenu() {
   const qs = new URLSearchParams(Object.entries(filtre).filter(([, v]) => v)).toString()
   const { donnees, erreur: errChargement, chargement, recharger } = useRessource(`/clm/trousses${qs ? `?${qs}` : ''}`)
   const maj = (k) => (e) => setForm({ ...form, [k]: e.target.value })
+  const peutInitier = usePeutInitier()
+  const { user, hasRole } = useAuth()
+  // Même règle que le serveur : l'initiateur et l'administration gèrent une trousse, l'auditeur la consulte.
+  const gere = (tr) => hasRole('ADMIN') || hasRole('SUPERADMIN') || tr.proprietaire?.toLowerCase() === user?.email?.toLowerCase()
 
   useEffect(() => {
     setForm((f) => ({ ...f, q: qUrl }))
@@ -58,7 +63,7 @@ function Contenu() {
     <EcranClm maquette="UI-02" titre={t('clm.tr.titre')} objectif={t('clm.tr.objectif')} zoneActions="05"
       actions={(
         <>
-          <Link className="clm-bouton" to="/clm/trousses/nouvelle">{t('clm.tb.creer')}</Link>
+          {peutInitier && <Link className="clm-bouton" to="/clm/trousses/nouvelle">{t('clm.tb.creer')}</Link>}
           <button type="button" className="secondary" onClick={exporter}>{t('clm.tr.exporter')}</button>
         </>
       )}>
@@ -118,7 +123,7 @@ function Contenu() {
                       <td data-label={t('clm.col.maj')}>{dateHeure(tr.majLe)}</td>
                       <td data-label={t('clm.col.actions')}>
                         <Link to={`/clm/trousses/${tr.id}`} aria-label={t('clm.tr.ouvrirDe', { ref: tr.reference })}>{t('clm.tr.ouvrir')}</Link>
-                        {tr.statut === 'BROUILLON' && <> · <Link to={`/clm/trousses/nouvelle?id=${tr.id}`} aria-label={t('clm.tr.modifierDe', { ref: tr.reference })}>{t('clm.dt.modifierBrouillon')}</Link></>}
+                        {tr.statut === 'BROUILLON' && gere(tr) && <> · <Link to={`/clm/trousses/nouvelle?id=${tr.id}`} aria-label={t('clm.tr.modifierDe', { ref: tr.reference })}>{t('clm.dt.modifierBrouillon')}</Link></>}
                       </td>
                     </tr>
                   ))}

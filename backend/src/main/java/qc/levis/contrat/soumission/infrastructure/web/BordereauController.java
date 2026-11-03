@@ -5,12 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.soumission.application.BordereauService;
 import qc.levis.contrat.soumission.application.dto.BordereauRequest;
 import qc.levis.contrat.soumission.domain.Bordereau;
 
 /** Bordereau de prix d'un document contractuel. */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/documents/{documentId}/bordereau")
 public class BordereauController {
 

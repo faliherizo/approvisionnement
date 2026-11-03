@@ -4,12 +4,14 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.reference.application.ReferenceService;
 import qc.levis.contrat.reference.application.dto.ReferenceRequest;
 import qc.levis.contrat.reference.domain.ReferenceValue;
 
 /** Gestion des valeurs de référence SPÉCIFIQUES au tenant (admin). */
 @RestController
+@ModuleRequis({"redaction", "formulaire"})
 @RequestMapping("/api/admin/reference")
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminReferenceController {

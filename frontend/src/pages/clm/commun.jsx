@@ -1,8 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import api from '../../api'
+import { useAuth } from '../../auth.jsx'
 import { useI18n } from '../../i18n/I18nContext'
 import { useModules } from '../../hooks/useModules.js'
 import './clm.css'
+
+/** Rôles qui créent une trousse, comme le vérifie le serveur ; l'auditeur et le lecteur consultent seulement. */
+const ROLES_INITIATEURS = ['REDACTEUR', 'APPRO', 'JURIDIQUE', 'DIRECTION', 'ADMIN', 'SUPERADMIN']
+
+export function usePeutInitier() {
+  const { hasRole } = useAuth()
+  return ROLES_INITIATEURS.some((r) => hasRole(r))
+}
 
 const ICONES = {
   BROUILLON: '✎', EN_TRAITEMENT: '⟳', TERMINEE: '✔', REJETEE: '✖', ANNULEE: '⊘', EN_ATTENTE: '…', ACTIVE: '▶',

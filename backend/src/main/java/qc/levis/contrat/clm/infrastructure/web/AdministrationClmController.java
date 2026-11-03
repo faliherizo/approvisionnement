@@ -34,6 +34,9 @@ public final class AdministrationClmController {
     @PreAuthorize("@modules.actif('clm') and hasAnyRole('ADMIN','SUPERADMIN')")
     public static class Administration {
 
+        /** UI-23 : auditeur et administrateur ; une annotation de méthode remplace celle de la classe, d'où le module répété. */
+        private static final String JOURNAL = "@modules.actif('clm') and hasAnyRole('ADMIN','SUPERADMIN','AUDITEUR')";
+
         private final MessagerieClm messagerie;
         private final SalesforceService salesforce;
         private final SuiviService suivi;
@@ -95,6 +98,7 @@ public final class AdministrationClmController {
         }
 
         @GetMapping("/journal")
+        @PreAuthorize(JOURNAL)
         public List<ClmDto.JournalLigne> journal(@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate du,
                                                  @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate au,
                                                  @RequestParam(required = false) String acteur, @RequestParam(required = false) String action,
@@ -103,6 +107,7 @@ public final class AdministrationClmController {
         }
 
         @GetMapping("/journal/export")
+        @PreAuthorize(JOURNAL)
         public ResponseEntity<byte[]> journalCsv(@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate du,
                                                  @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate au,
                                                  @RequestParam(required = false) String acteur, @RequestParam(required = false) String action,

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import qc.levis.contrat.commun.domain.Enums;
 import qc.levis.contrat.commun.infrastructure.TenantContext;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.redaction.application.dto.RechercheResultat;
 import qc.levis.contrat.redaction.application.repository.ClauseRepository;
 import qc.levis.contrat.redaction.application.repository.DocumentRepository;
@@ -23,6 +24,7 @@ import qc.levis.contrat.redaction.domain.DocumentTemplate;
  * (clauses), documents et templates, avec facettes (catégorie de clause, type de document).
  */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/search")
 public class SearchController {
 

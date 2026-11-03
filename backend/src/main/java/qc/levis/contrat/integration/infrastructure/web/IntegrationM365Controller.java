@@ -3,6 +3,7 @@ package qc.levis.contrat.integration.infrastructure.web;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import qc.levis.contrat.commun.infrastructure.TenantContext;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.integration.application.IntegrationM365Service;
 import qc.levis.contrat.integration.application.dto.IntegrationM365Request;
 import qc.levis.contrat.integration.application.dto.IntegrationM365Vue;
@@ -15,6 +16,7 @@ import qc.levis.contrat.integration.application.port.PublicationCiblePort;
  * jamais renvoyé : seule sa présence est indiquée.
  */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/parametres/integration-m365")
 @PreAuthorize("hasRole('ADMIN')")
 public class IntegrationM365Controller {

@@ -9,7 +9,7 @@ import { PDF, activerModules, auditerAxe, ciblesGrandPublic, connecterAdmin, con
  * zéro violation axe-core (WCAG 2.2 A/AA). Ajouter un écran = ajouter une entrée à ECRANS.
  */
 const LARGEURS = [390, 768, 1280, 1680]
-const ECRANS: { nom: string; chemin: string; titre: RegExp; maquette: string }[] = [
+const ECRANS: { nom: string; chemin: string; titre: RegExp; maquette?: string }[] = [
   { nom: 'UI-01 tableau de bord', chemin: '/clm', titre: /Tableau de bord des contrats/, maquette: 'UI-01' },
   { nom: 'UI-02 trousses', chemin: '/clm/trousses', titre: /Trousses/, maquette: 'UI-02' },
   { nom: 'UI-03 créer une trousse', chemin: '/clm/trousses/nouvelle', titre: /Créer une trousse/, maquette: 'UI-03' },
@@ -22,6 +22,11 @@ const ECRANS: { nom: string; chemin: string; titre: RegExp; maquette: string }[]
   { nom: 'UI-20 utilisateurs', chemin: '/clm/admin/utilisateurs', titre: /Utilisateurs/, maquette: 'UI-20' },
   { nom: 'UI-23 journal', chemin: '/clm/admin/journal', titre: /Journal d’audit et événements/, maquette: 'UI-23' },
   { nom: 'UI-24 options', chemin: '/clm/options', titre: /Options CLM et IA/, maquette: 'UI-24' },
+  // Fonctions transverses servies dans l'espace du module (un tenant CLM seul n'a pas d'autre espace).
+  { nom: 'UI-20 authentification unique', chemin: '/clm/admin/sso', titre: /Authentification unique \(SSO\)/, maquette: 'UI-20' },
+  { nom: 'journal de sécurité', chemin: '/clm/admin/audit', titre: /Journal d'audit/ },
+  { nom: 'mon profil', chemin: '/clm/profil', titre: /Mon profil/ },
+  { nom: 'sécurité du compte', chemin: '/clm/securite', titre: /Sécurité du compte/ },
 ]
 
 test.describe('Vues CLM — gabarit des maquettes, responsive, superposition, cibles, libellés et axe-core', () => {
@@ -35,7 +40,7 @@ test.describe('Vues CLM — gabarit des maquettes, responsive, superposition, ci
         await test.step(e.nom, async () => {
           await page.goto(e.chemin)
           await expect(page.getByRole('heading', { level: 1, name: e.titre })).toBeVisible()
-          await expect(page.locator(`[data-maquette="${e.maquette}"]`).first()).toBeAttached()
+          if (e.maquette) await expect(page.locator(`[data-maquette="${e.maquette}"]`).first()).toBeAttached()
           await controler(page)
           await auditerAxe(page)
         })

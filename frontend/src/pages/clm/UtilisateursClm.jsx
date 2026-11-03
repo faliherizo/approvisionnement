@@ -3,13 +3,15 @@ import { Link } from 'react-router-dom'
 import api from '../../api'
 import { useI18n } from '../../i18n/I18nContext'
 import { useModules } from '../../hooks/useModules.js'
+import IntegrationOidcManager from '../../components/IntegrationOidcManager.jsx'
+import IntegrationSamlManager from '../../components/IntegrationSamlManager.jsx'
 import SecuriteAvancee from '../SecuriteAvancee.jsx'
 import Users from '../Users.jsx'
 import { GardeModule, Message, useErreur } from './commun.jsx'
 import { BarreActions, Bloc, Blocs, EcranClm } from './gabarit.jsx'
 
-/** Rôles qui ouvrent un droit dans le module, dans l'ordre du parcours d'un contrat. */
-const ROLES_CLM = ['REDACTEUR', 'APPRO', 'JURIDIQUE', 'DIRECTION', 'ADMIN']
+/** Rôles qui ouvrent un droit dans le module, dans l'ordre du parcours d'un contrat, puis la consultation d'audit. */
+const ROLES_CLM = ['REDACTEUR', 'APPRO', 'JURIDIQUE', 'DIRECTION', 'ADMIN', 'AUDITEUR']
 
 /** UI-20, zone 02 : ce que chaque rôle permet dans le module ; attribution d'un rôle et retrait de l'accès d'un compte. */
 function RolesEtPermissions({ onChange }) {
@@ -98,7 +100,7 @@ function Utilisateurs() {
         </Bloc>
         <Bloc zone="04" titre={t('clm.ut.blocSso')}>
           <p>{t('clm.ut.ssoAide')}</p>
-          <Link to="/parametres">{t('clm.ad.lienParametresPlateforme')}</Link>
+          <Link to="/clm/admin/sso">{t('clm.ut.titreSso')}</Link>
         </Bloc>
         <Bloc zone="05" titre={t('clm.ut.blocJournal')} large>
           <p>{t('clm.ut.journalAide')}</p>
@@ -107,7 +109,7 @@ function Utilisateurs() {
       <BarreActions>
         {groupes ? <Link className="clm-bouton secondaire" to="/clm/admin/groupes">{t('clm.ut.creerGroupe')}</Link>
           : <button type="button" className="secondary" disabled aria-describedby="clm-ut-securite">{t('clm.ut.creerGroupe')}</button>}
-        <Link className="clm-bouton secondaire" to="/audit">{t('clm.ut.consulterAudit')}</Link>
+        <Link className="clm-bouton secondaire" to="/clm/admin/audit">{t('clm.ut.consulterAudit')}</Link>
       </BarreActions>
     </div>
   )
@@ -116,6 +118,22 @@ function Utilisateurs() {
 /** Groupes et unités (UI-20, zone 03) : écran de la sécurité avancée, ou motif de son absence quand le module est inactif. */
 export function GroupesClm() {
   return <GardeModule><Groupes /></GardeModule>
+}
+
+/** Source d'identité de l'organisation (UI-20, zone 04), configurée sans quitter l'espace du module. */
+export function SsoClm() {
+  return <GardeModule><Sso /></GardeModule>
+}
+
+function Sso() {
+  const { t } = useI18n()
+  return (
+    <EcranClm maquette="UI-20" titre={t('clm.ut.titreSso')} objectif={t('clm.ut.ssoObjectif')}>
+      <IntegrationOidcManager />
+      <IntegrationSamlManager />
+      <Link to="/clm/admin/utilisateurs">{t('clm.retour')}</Link>
+    </EcranClm>
+  )
 }
 
 function Groupes() {

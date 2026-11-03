@@ -19,6 +19,11 @@ public final class Habilitations {
         public boolean estAdmin() {
             return roles.contains("ADMIN") || roles.contains("SUPERADMIN");
         }
+
+        /** Auditeur / conformité : consulte tout le tenant, n'intervient sur rien. */
+        public boolean estAuditeur() {
+            return roles.contains("AUDITEUR");
+        }
     }
 
     private Habilitations() {
@@ -53,6 +58,15 @@ public final class Habilitations {
             return true;
         }
         return affectations.stream().anyMatch(a -> correspond(a, acteur, courrielsParticipants));
+    }
+
+    /**
+     * Consultation : ce que {@link #peutVoir} ouvre, plus tout le tenant pour l'auditeur. La consultation n'ouvre aucune
+     * intervention : commenter ou analyser reste réservé à qui {@link #peutVoir} la trousse.
+     */
+    public static boolean peutConsulter(Trousse t, Acteur acteur, Collection<Parcours.Affectation> affectations,
+                                        Map<Long, String> courrielsParticipants) {
+        return acteur.estAuditeur() || peutVoir(t, acteur, affectations, courrielsParticipants);
     }
 
     /** Qui initie une trousse ne valide ni n'approuve son propre dossier ; il peut toutefois la signer. */

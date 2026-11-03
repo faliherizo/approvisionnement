@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.dossier.application.DossierService;
 import qc.levis.contrat.dossier.application.dto.DossierRapport;
 import qc.levis.contrat.dossier.application.dto.DossierRequest;
@@ -14,6 +15,7 @@ import qc.levis.contrat.redaction.domain.Document;
 
 /** API REST des dossiers d'approvisionnement (regroupement de documents - art. 15). */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/dossiers")
 public class DossierController {
 

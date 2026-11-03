@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.redaction.application.TemplateService;
 import qc.levis.contrat.redaction.application.dto.InstancierTemplateRequest;
 import qc.levis.contrat.redaction.application.dto.TemplateRequest;
@@ -14,6 +15,7 @@ import qc.levis.contrat.redaction.domain.DocumentTemplate;
 
 /** Templates de documents nommés. */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/templates")
 public class TemplateController {
 

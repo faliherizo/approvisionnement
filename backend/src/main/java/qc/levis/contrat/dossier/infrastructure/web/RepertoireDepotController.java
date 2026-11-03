@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import qc.levis.contrat.auth.application.repository.UserRepository;
 import qc.levis.contrat.auth.domain.User;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.dossier.application.RepertoireDepotService;
 import qc.levis.contrat.dossier.domain.RepertoireDepot;
 
@@ -15,6 +16,7 @@ import qc.levis.contrat.dossier.domain.RepertoireDepot;
  * suggestions du champ « Répertoire de destination » à la publication.
  */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/profil/repertoires")
 public class RepertoireDepotController {
 

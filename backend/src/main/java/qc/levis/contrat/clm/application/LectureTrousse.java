@@ -63,15 +63,29 @@ public class LectureTrousse {
         return t;
     }
 
+    /** Commenter ou analyser exige d'intervenir sur la trousse : la consultation d'audit seule ne le permet pas. */
+    public Trousse exigerContribution(Long id, Habilitations.Acteur acteur) {
+        Trousse t = exigerVisible(id, acteur);
+        if (!Habilitations.peutVoir(t, acteur, affectations(t), courriels(t))) {
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "Profil de consultation : la trousse se consulte sans intervention (auditeur).");
+        }
+        return t;
+    }
+
     public boolean visible(Trousse t, Habilitations.Acteur acteur) {
         if (Habilitations.peutModifier(t, acteur)) {
             return true;
         }
+        return Habilitations.peutConsulter(t, acteur, affectations(t), courriels(t));
+    }
+
+    private List<Parcours.Affectation> affectations(Trousse t) {
         List<Parcours.Affectation> toutes = new ArrayList<>();
         for (EtapeTrousse e : etapes.findByTenantIdAndTrousseIdOrderByPhaseAscIdAsc(t.getTenantId(), t.getId())) {
             toutes.addAll(ctx.affectations(e.getAffectationsJson()));
         }
-        return Habilitations.peutVoir(t, acteur, toutes, courriels(t));
+        return toutes;
     }
 
     public Map<Long, String> courriels(Trousse t) {

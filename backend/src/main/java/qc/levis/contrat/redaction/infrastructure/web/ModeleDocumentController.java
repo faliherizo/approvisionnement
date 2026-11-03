@@ -2,6 +2,7 @@ package qc.levis.contrat.redaction.infrastructure.web;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.redaction.application.ModeleDocumentService;
 import qc.levis.contrat.redaction.application.dto.ModeleDocumentRequest;
 import qc.levis.contrat.redaction.domain.ModeleDocument;
@@ -11,6 +12,7 @@ import qc.levis.contrat.redaction.domain.ModeleDocument;
  * L'admin configure celui de son tenant ; le superadmin (contexte global) le défaut.
  */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/modele-document")
 public class ModeleDocumentController {
 

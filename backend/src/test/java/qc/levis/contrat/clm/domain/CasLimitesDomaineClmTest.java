@@ -164,6 +164,22 @@ class CasLimitesDomaineClmTest {
         assertTrue(new Habilitations.Acteur("sa@x.ca", Set.of("SUPERADMIN"), null).estAdmin());
     }
 
+    @Test
+    void l_auditeur_consulte_tout_le_tenant_sans_y_intervenir() {
+        Trousse t = new Trousse(1L, "TR-1", "T", "init@x.ca", Instant.EPOCH);
+        Habilitations.Acteur auditeur = new Habilitations.Acteur("audit@x.ca", Set.of("AUDITEUR"), null);
+        Habilitations.Acteur lecteur = new Habilitations.Acteur("lecteur@x.ca", Set.of("LECTEUR"), null);
+        Map<Long, String> courriels = Map.of(7L, "lecteur@x.ca");
+
+        assertTrue(auditeur.estAuditeur());
+        assertFalse(lecteur.estAuditeur());
+        assertTrue(Habilitations.peutConsulter(t, auditeur, List.of(), Map.of()), "l'auditeur voit une trousse où il n'intervient pas");
+        assertFalse(Habilitations.peutVoir(t, auditeur, List.of(), Map.of()), "la consultation n'en fait pas un intervenant");
+        assertFalse(Habilitations.peutModifier(t, auditeur));
+        assertFalse(Habilitations.peutConsulter(t, lecteur, List.of(), Map.of()), "hors audit, la consultation suit le périmètre");
+        assertTrue(Habilitations.peutConsulter(t, lecteur, List.of(), courriels), "un participant désigné consulte sa trousse");
+    }
+
     // --- Analyse ---
     @Test
     void sans_montant_dans_le_texte_aucune_divergence_n_est_signalee() {

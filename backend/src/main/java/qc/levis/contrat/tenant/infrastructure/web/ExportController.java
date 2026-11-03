@@ -4,11 +4,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.redaction.application.DocumentRenderingService;
 import qc.levis.contrat.redaction.infrastructure.DocumentRenderer;
 
 /** Génère les documents contractuels finaux (PDF/DOCX) via le pipeline composer + renderer. */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/documents/{id}/export")
 public class ExportController {
 

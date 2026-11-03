@@ -9,8 +9,10 @@ import qc.levis.contrat.addenda.application.AddendaService;
 import qc.levis.contrat.addenda.application.dto.AddendaChangeRequest;
 import qc.levis.contrat.addenda.application.dto.AddendaRequest;
 import qc.levis.contrat.addenda.domain.Addenda;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api")
 public class AddendaController {
 

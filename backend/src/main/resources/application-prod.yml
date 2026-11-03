@@ -19,6 +19,11 @@ spring:
     console:
       enabled: false
 
+# Aucune organisation ni aucun compte de démonstration en production (activable pour un environnement de démonstration).
+app:
+  amorcage:
+    tenants-demo: ${APP_TENANTS_DEMO:false}
+
 # Journalisation en production : applicatif en INFO (ajustable via LOG_APP_LEVEL), cadriciels en WARN,
 # sortie fichier pour la collecte. Aucune donnée sensible (voir docs/journalisation.md).
 logging:

@@ -42,7 +42,7 @@ public class AnalyseService {
 
     @Transactional
     public ClmDto.AnalyseVue lancer(Long trousseId, Long documentId, Habilitations.Acteur acteur) {
-        Trousse t = lecture.exigerVisible(trousseId, acteur);
+        Trousse t = lecture.exigerContribution(trousseId, acteur);
         DocumentTrousse d = documents.findByIdAndTenantId(documentId, t.getTenantId()).filter(x -> x.getTrousseId().equals(t.getId()))
                 .orElseThrow(() -> new NoSuchElementException("Document introuvable : " + documentId));
         if (d.getAnalyse() != DocumentTrousse.Analyse.PROPRE) {
@@ -84,7 +84,7 @@ public class AnalyseService {
     public ClmDto.AnalyseVue reviser(Long analyseId, ClmDto.RevisionRequest req, Habilitations.Acteur acteur) {
         AnalyseIa a = analyses.findByIdAndTenantId(analyseId, ctx.tenant())
                 .orElseThrow(() -> new NoSuchElementException("Analyse introuvable : " + analyseId));
-        Trousse t = lecture.exigerVisible(a.getTrousseId(), acteur);
+        Trousse t = lecture.exigerContribution(a.getTrousseId(), acteur);
         a.reviser(req.valide(), acteur.id(), req.justification(), ctx.maintenant());
         analyses.save(a);
         journal.consigner(t, req.valide() ? "ANALYSE_VALIDEE" : "ANALYSE_REJETEE", acteur.id(), req.justification());

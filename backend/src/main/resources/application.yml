@@ -38,6 +38,9 @@ springdoc:
 
 # Paramètres applicatifs (JWT). En production : variable d'environnement + secret géré.
 app:
+  amorcage:
+    # Organisations de démonstration (data/tenants-demo.json : tenant IQ et un compte par profil client). Faux en production.
+    tenants-demo: ${APP_TENANTS_DEMO:true}
   jwt:
     secret: ${JWT_SECRET:changez-moi-cette-cle-secrete-de-256-bits-minimum-pour-la-ville-de-levis}
     expiration-ms: 3600000   # 1 heure

@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.ia.application.AssistantGuideService;
 import qc.levis.contrat.ia.application.dto.AssistantContexteRequest;
 import qc.levis.contrat.ia.application.dto.AssistantGenerationRequest;
@@ -12,6 +13,7 @@ import qc.levis.contrat.redaction.domain.Document;
 
 /** Assistant guidé de génération de documents (art. 7.2, écart 5). */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/assistant")
 public class AssistantController {
 

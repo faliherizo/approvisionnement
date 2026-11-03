@@ -738,6 +738,57 @@ class ClmIntegrationTest {
         assertEquals("montant", corrige.at("/conflits/0/cle").asText(), "l'écart avec Salesforce reste tracé");
     }
 
+    @Test
+    void profils_iq_l_auditeur_consulte_et_exporte_sans_jamais_intervenir() throws Exception {
+        Cookie initiateur = login("initiateur@iq.example");
+        Cookie validateur = login("validateur@iq.example");
+        Cookie signataire = login("signataire@iq.example");
+        Cookie auditeur = login("auditeur@iq.example");
+        long id = appel(post("/api/clm/trousses", initiateur, "{\"titre\":\"Entente Essor IQ\",\"typeContrat\":\"SERVICES\"}"), status().isOk())
+                .at("/resume/id").asLong();
+        long doc = televerser(id, "entente.pdf", pdfMinimal(), status().isOk(), initiateur).get("id").asLong();
+        long analyse = appel(post("/api/clm/trousses/" + id + "/documents/" + doc + "/analyse", initiateur, "{}"), status().isOk()).get("id").asLong();
+        appel(put("/api/clm/trousses/" + id + "/parcours", initiateur, """
+                [{"cle":"v","libelle":"Validation juridique","phase":1,"type":"VALIDATION","affectations":[{"type":"UTILISATEUR","valeur":"validateur@iq.example"}]}]
+                """), status().isOk());
+        appel(post("/api/clm/trousses/" + id + "/lancer", initiateur, "{}"), status().isOk());
+        long etape = -1;
+        for (JsonNode tache : appel(get("/api/clm/taches", validateur), status().isOk())) {
+            etape = tache.get("trousseId").asLong() == id ? tache.get("etapeId").asLong() : etape;
+        }
+        appel(post("/api/clm/etapes/" + etape + "/commentaires", validateur, "{\"texte\":\"Clause 4 à revoir\"}"), status().isNoContent());
+
+        assertTrue(references(appel(get("/api/clm/trousses", auditeur), status().isOk())).contains(id), "l'auditeur voit tout le tenant");
+        assertEquals("[\"CONSULTER_PREUVE\"]", appel(get("/api/clm/trousses/" + id, auditeur), status().isOk()).get("actions").toString());
+        appel(get("/api/clm/trousses/" + id + "/historique", auditeur), status().isOk());
+        appel(get("/api/clm/trousses/" + id + "/preuve", auditeur), status().isOk());
+        byte[] zip = mvc.perform(MockMvcRequestBuilders.get("/api/clm/trousses/" + id + "/preuve/export").cookie(auditeur))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsByteArray();
+        assertTrue(entrees(zip).contains("certificat.pdf"), "l'auditeur exporte le dossier de preuve");
+        assertTrue(appel(get("/api/clm/admin/journal", auditeur), status().isOk()).size() > 0, "l'auditeur consulte le journal (UI-23)");
+        mvc.perform(MockMvcRequestBuilders.get("/api/clm/admin/journal/export").cookie(auditeur)).andExpect(status().isOk());
+
+        appel(post("/api/clm/trousses", auditeur, "{\"titre\":\"Interdite\"}"), status().isForbidden());
+        appel(put("/api/clm/trousses/" + id, auditeur, "{\"titre\":\"Modifiée\"}"), status().isForbidden());
+        appel(post("/api/clm/etapes/" + etape + "/commentaires", auditeur, "{\"texte\":\"Avis\"}"), status().isForbidden());
+        appel(post("/api/clm/etapes/" + etape + "/decider", auditeur, "{\"decision\":\"APPROUVE\"}"), status().isForbidden());
+        appel(post("/api/clm/trousses/" + id + "/documents/" + doc + "/analyse", auditeur, "{}"), status().isForbidden());
+        appel(post("/api/clm/analyses/" + analyse + "/revision", auditeur, "{\"valide\":true,\"justification\":\"Conforme\"}"),
+                status().isForbidden());
+        appel(get("/api/clm/admin/messages", auditeur), status().isForbidden());
+
+        appel(get("/api/clm/trousses/" + id, signataire), status().isNotFound());
+        assertFalse(references(appel(get("/api/clm/trousses", signataire), status().isOk())).contains(id),
+                "le signataire interne ne voit que les trousses où il intervient");
+        appel(get("/api/clm/admin/journal", signataire), status().isForbidden());
+    }
+
+    private static List<Long> references(JsonNode trousses) {
+        List<Long> ids = new ArrayList<>();
+        trousses.forEach(t -> ids.add(t.get("id").asLong()));
+        return ids;
+    }
+
     // --- Données ---
     private long modelePublie() throws Exception {
         JsonNode m = appel(post("/api/clm/modeles", redacteur, """
@@ -840,8 +891,12 @@ class ClmIntegrationTest {
     }
 
     private JsonNode televerser(long id, String nom, byte[] contenu, ResultMatcher attendu) throws Exception {
+        return televerser(id, nom, contenu, attendu, redacteur);
+    }
+
+    private JsonNode televerser(long id, String nom, byte[] contenu, ResultMatcher attendu, Cookie qui) throws Exception {
         return appel(MockMvcRequestBuilders.multipart("/api/clm/trousses/" + id + "/documents")
-                .file(new MockMultipartFile("fichier", nom, "application/octet-stream", contenu)).cookie(redacteur), attendu);
+                .file(new MockMultipartFile("fichier", nom, "application/octet-stream", contenu)).cookie(qui), attendu);
     }
 
     private JsonNode appel(MockHttpServletRequestBuilder req, ResultMatcher attendu) throws Exception {

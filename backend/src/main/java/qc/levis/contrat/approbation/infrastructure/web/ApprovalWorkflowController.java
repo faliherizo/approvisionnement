@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import qc.levis.contrat.approbation.application.ApprovalWorkflowService;
 import qc.levis.contrat.approbation.application.dto.WorkflowRequest;
 import qc.levis.contrat.approbation.domain.ApprovalWorkflow;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 
 /** Gabarits de circuit d'approbation configurables (art. 7.5, ADR-005). Réservé à l'administration. */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/workflows")
 @PreAuthorize("hasRole('ADMIN')")
 public class ApprovalWorkflowController {

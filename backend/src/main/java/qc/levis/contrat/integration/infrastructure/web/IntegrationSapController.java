@@ -3,6 +3,7 @@ package qc.levis.contrat.integration.infrastructure.web;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import qc.levis.contrat.commun.infrastructure.TenantContext;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.integration.application.IntegrationSapService;
 import qc.levis.contrat.integration.application.dto.IntegrationSapRequest;
 import qc.levis.contrat.integration.application.dto.IntegrationSapVue;
@@ -15,6 +16,7 @@ import qc.levis.contrat.integration.infrastructure.SapODataAdapter;
  * présence est indiquée.
  */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/parametres/integration-sap")
 @PreAuthorize("hasRole('ADMIN')")
 public class IntegrationSapController {

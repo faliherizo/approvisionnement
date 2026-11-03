@@ -5,12 +5,14 @@ import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.redaction.application.AnnexeService;
 import qc.levis.contrat.redaction.application.dto.AnnexeRequest;
 import qc.levis.contrat.redaction.domain.DocumentAnnexe;
 
 /** Annexes d'un document contractuel. */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/documents/{documentId}/annexes")
 public class AnnexeController {
 

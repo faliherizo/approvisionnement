@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.soumission.application.SignatureService;
 import qc.levis.contrat.soumission.application.dto.SignataireRequest;
 import qc.levis.contrat.soumission.application.dto.SignerRequest;
@@ -14,6 +15,7 @@ import qc.levis.contrat.soumission.domain.Signataire;
 /** Signature électronique. Les endpoints /api/signature/{jeton} sont publics
  *  (le cocontractant externe signe via un lien, sans compte). */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api")
 public class SignatureController {
 

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import qc.levis.contrat.commun.infrastructure.TenantContext;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.redaction.application.ClauseService;
 import qc.levis.contrat.redaction.application.dto.ClauseRequest;
 import qc.levis.contrat.redaction.application.repository.ClauseRepository;
@@ -12,6 +13,7 @@ import qc.levis.contrat.redaction.domain.Clause;
 import qc.levis.contrat.tenant.application.dto.PageResponse;
 
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/clauses")
 public class ClauseController {
 

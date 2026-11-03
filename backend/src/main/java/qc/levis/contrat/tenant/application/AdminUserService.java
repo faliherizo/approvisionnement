@@ -34,7 +34,7 @@ public class AdminUserService {
     /** Rôles assignables par un admin (SUPERADMIN exclu). */
     public List<String> rolesAssignables() {
         return List.of(Enums.Role.ADMIN, Enums.Role.REDACTEUR, Enums.Role.JURIDIQUE,
-                        Enums.Role.APPRO, Enums.Role.DIRECTION, Enums.Role.LECTEUR)
+                        Enums.Role.APPRO, Enums.Role.DIRECTION, Enums.Role.LECTEUR, Enums.Role.AUDITEUR)
                 .stream().map(Enum::name).toList();
     }
 

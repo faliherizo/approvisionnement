@@ -5,12 +5,14 @@ import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.redaction.application.ObligationService;
 import qc.levis.contrat.redaction.application.dto.ObligationRequest;
 import qc.levis.contrat.redaction.domain.Obligation;
 
 /** Obligations & échéances contractuelles. */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api")
 public class ObligationController {
 

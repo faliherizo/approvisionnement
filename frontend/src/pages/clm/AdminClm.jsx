@@ -260,7 +260,7 @@ function Parametres() {
             <div><dt>{t('clm.ad.dureeSession')}</dt><dd>{t('clm.ad.minutes', { n: p.sessionMinutes })}</dd></div>
             <div><dt>{t('clm.ad.cookieSecurise')}</dt><dd>{p.cookieSecurise ? t('clm.oui') : t('clm.non')}</dd></div>
           </dl>
-          <p className="muted">{t('clm.ad.sessionAide')} <Link to="/parametres">{t('clm.ad.lienParametresPlateforme')}</Link></p>
+          <p className="muted">{t('clm.ad.sessionAide')} <Link to="/clm/admin/sso">{t('clm.ut.titreSso')}</Link></p>
         </Bloc>
         <Bloc zone="03" titre={t('clm.ad.blocConservation')}>
           <dl className="clm-dl">

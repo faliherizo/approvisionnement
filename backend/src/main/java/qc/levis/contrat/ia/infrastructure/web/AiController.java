@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.ia.application.AiTraceabiliteService;
 import qc.levis.contrat.ia.application.KnowledgeService;
 import qc.levis.contrat.ia.application.dto.AiRedactionRequest;
@@ -23,6 +24,7 @@ import qc.levis.contrat.ia.domain.KnowledgeSnippet;
  * Le chat s'appuie sur une base de connaissances (RAG) alimentée par le tenant.
  */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/ia")
 public class AiController {
 

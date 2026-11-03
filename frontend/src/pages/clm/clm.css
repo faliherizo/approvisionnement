@@ -197,6 +197,10 @@ h3.clm-bloc__titre { font-size: 16px; }
 /* Portail du signataire (RST-19) : mobile d'abord, aucune action au survol seulement. */
 .clm-portail { min-height: 100vh; background: var(--bg); }
 .clm-portail__entete { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; background: var(--panel); border-bottom: 1px solid var(--bord); }
+.clm-portail__marque { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.clm-portail__marque .public-brand { margin: 0; overflow-wrap: anywhere; }
+.clm-portail__logo { max-height: 40px; max-width: 120px; object-fit: contain; }
+.clm-portail__sous-titre { margin: 0; font-size: 13px; color: var(--muted); }
 .clm-portail__main { max-width: 720px; margin: 0 auto; padding: 16px; }
 .clm-portail button, .clm-portail input, .clm-portail select, .clm-portail textarea { min-height: 44px; }
 /* Sélecteur de langue compact conçu pour un fond foncé : rétabli en texte foncé sur l'en-tête clair du portail (1.4.3). */

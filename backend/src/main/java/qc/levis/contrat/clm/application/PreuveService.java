@@ -142,7 +142,7 @@ public class PreuveService {
     @Transactional
     public byte[] exporter(Long trousseId, Habilitations.Acteur acteur) {
         Trousse t = lecture.exigerVisible(trousseId, acteur);
-        if (!Habilitations.peutModifier(t, acteur) && !acteur.roles().contains("AUDITEUR")) {
+        if (!Habilitations.peutModifier(t, acteur) && !acteur.estAuditeur()) {
             throw new org.springframework.security.access.AccessDeniedException("Export refusé par droits.");
         }
         journal.consigner(t, "PREUVE_EXPORTEE", acteur.id(), null);

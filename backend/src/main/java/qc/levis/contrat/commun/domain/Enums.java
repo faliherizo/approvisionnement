@@ -4,9 +4,12 @@ package qc.levis.contrat.commun.domain;
 public final class Enums {
     private Enums() {}
 
-    /** Rôles applicatifs (RBAC) - cf. organigramme. SUPERADMIN est global (hors tenant). */
+    /**
+     * Rôles applicatifs (RBAC) - cf. organigramme. SUPERADMIN est global (hors tenant). AUDITEUR consulte tout le tenant
+     * en lecture seule (profil « Auditeur / conformité » de l'AO IQ 2026-6370-0005).
+     */
     public enum Role {
-        SUPERADMIN, ADMIN, REDACTEUR, JURIDIQUE, APPRO, DIRECTION, LECTEUR
+        SUPERADMIN, ADMIN, REDACTEUR, JURIDIQUE, APPRO, DIRECTION, LECTEUR, AUDITEUR
     }
 
     /** Catégorie de clause. */

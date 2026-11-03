@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import api from '../api'
 import RepertoireDepotManager from '../components/RepertoireDepotManager.jsx'
+import { useModules } from '../hooks/useModules.js'
 import { useI18n } from '../i18n/I18nContext'
 
 export default function Profil() {
   const { t } = useI18n()
+  const { actif } = useModules()
+  // Dans l'espace CLM, la sécurité du compte s'ouvre sans quitter l'espace.
+  const securite = useLocation().pathname.startsWith('/clm') ? '/clm/securite' : '/securite'
   const [me, setMe] = useState(null)
   const [form, setForm] = useState({ nom: '', direction: '', motDePasseActuel: '', nouveauMotDePasse: '' })
   const [msg, setMsg] = useState(null)
@@ -39,7 +43,7 @@ export default function Profil() {
         <p><strong>{t('profil.secondFacteur')}</strong>{' '}
           <span className={`badge ${me.mfaActive ? 's-APPROUVE' : ''}`}>{me.mfaActive ? me.mfaMethode : t('profil.aucun')}</span>
         </p>
-        <p className="muted">{t('profil.configurerMfa')} <Link to="/securite">{t('profil.securite')}</Link></p>
+        <p className="muted">{t('profil.configurerMfa')} <Link to={securite}>{t('profil.securite')}</Link></p>
       </section>
 
       <section className="panel">
@@ -61,7 +65,7 @@ export default function Profil() {
         </form>
       </section>
     </div>
-    <RepertoireDepotManager />
+    {actif('redaction') && <RepertoireDepotManager />}
     </div>
   )
 }

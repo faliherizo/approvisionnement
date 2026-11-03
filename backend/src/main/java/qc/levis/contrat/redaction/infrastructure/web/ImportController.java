@@ -7,12 +7,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import qc.levis.contrat.commun.domain.Enums;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.redaction.application.ImportService;
 import qc.levis.contrat.redaction.application.dto.ImportRapport;
 import qc.levis.contrat.redaction.application.dto.ImportWordRapport;
 
 /** Import / migration de contenus réutilisables, avec migration d'essai (art. 22). Admin. */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/import")
 @PreAuthorize("hasRole('ADMIN')")
 public class ImportController {

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import qc.levis.contrat.commun.infrastructure.TenantContext;
+import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.integration.infrastructure.SimulateurDepotStore;
 
 /**
@@ -16,6 +17,7 @@ import qc.levis.contrat.integration.infrastructure.SimulateurDepotStore;
  * Permet aux clients de constater ce qui « part » avant de brancher leur vrai environnement.
  */
 @RestController
+@ModuleRequis("redaction")
 @RequestMapping("/api/simulateur/depots")
 @PreAuthorize("hasAnyRole('REDACTEUR','APPRO','ADMIN')")
 public class SimulateurController {

@@ -1,0 +1,18 @@
+[
+  {
+    "slug": "iq",
+    "titre": "Investissement Québec",
+    "sousTitre": "Contrats et signature électronique — AO 2026-6370-0005",
+    "motDePasse": "Passw0rd!",
+    "modules": { "clm": true, "clm_ia": true, "redaction": false },
+    "comptes": [
+      { "email": "initiateur@iq.example", "nom": "Camille Tremblay", "direction": "Financement des entreprises", "profil": "Initiateur", "roles": ["REDACTEUR"] },
+      { "email": "validateur@iq.example", "nom": "Louis Gagnon", "direction": "Affaires juridiques", "profil": "Validateur", "roles": ["JURIDIQUE"] },
+      { "email": "approbateur@iq.example", "nom": "Sophie Roy", "direction": "Vice-présidence Financement", "profil": "Approbateur", "roles": ["DIRECTION"] },
+      { "email": "signataire@iq.example", "nom": "Étienne Côté", "direction": "Direction générale", "profil": "Signataire interne", "roles": ["LECTEUR"] },
+      { "email": "admin.affaires@iq.example", "nom": "Julie Bouchard", "direction": "Gestion contractuelle", "profil": "Administrateur d'affaires", "roles": ["ADMIN"] },
+      { "email": "admin.ti@iq.example", "nom": "Patrick Morin", "direction": "Technologies de l'information", "profil": "Administrateur technique", "roles": ["ADMIN"] },
+      { "email": "auditeur@iq.example", "nom": "Nadia Lavoie", "direction": "Conformité et audit interne", "profil": "Auditeur / conformité", "roles": ["AUDITEUR"] }
+    ]
+  }
+]
