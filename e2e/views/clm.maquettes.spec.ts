@@ -147,6 +147,11 @@ test.describe('Fidélité aux maquettes SVG UI-01 à UI-24 : blocs et actions', 
     await json(admin.post(`/api/clm/trousses/${sf.id}/participants`, { data: {
       nom: 'Marc Bénéficiaire', courriel: 'marc@exemple.ca', telephone: '+15145550102', roleContrat: 'SIGNATAIRE_2', externe: true,
     } }))
+    const sfLancee = await trousseAvecDocument(admin, `Salesforce lancée ${suffixe}`, { modeleId: modele.id, sfDossierId: 'DEM-2026-0002' })
+    await json(admin.put(`/api/clm/trousses/${sfLancee.id}/parcours`, { data: [
+      { cle: 'v1', libelle: 'Validation juridique', phase: 1, type: 'VALIDATION', affectations: [{ type: 'UTILISATEUR', valeur: users.juriste.email }] },
+    ] }))
+    await json(admin.post(`/api/clm/trousses/${sfLancee.id}/lancer`, { data: {} }))
 
     const parcours = (participant: number) => [
       { cle: 'v1', libelle: 'Validation juridique', phase: 1, type: 'VALIDATION', affectations: [{ type: 'UTILISATEUR', valeur: users.juriste.email }] },
@@ -235,7 +240,7 @@ test.describe('Fidélité aux maquettes SVG UI-01 à UI-24 : blocs et actions', 
       { ui: 'UI-11', utilisateur: users.admin, etapes: [onglet(brouillon.id, 'parcours'), onglet(enValidation.id, 'parcours')] },
       { ui: 'UI-12', utilisateur: users.juriste, etapes: [aller('/clm/taches'), async (page) => {
         await page.getByRole('button', { name: 'Filtrer : Terminées' }).click()
-        await page.waitForLoadState('networkidle')
+        await expect(page.getByRole('button', { name: /^Ouvrir la tâche — / }).first()).toBeVisible()
       }] },
       { ui: 'UI-13', utilisateur: users.juriste, etapes: [tache(enValidation.reference)] },
       { ui: 'UI-14', utilisateur: users.direction, etapes: [tache(enApprobation.reference)] },

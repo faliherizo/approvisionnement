@@ -1,6 +1,8 @@
 package qc.levis.contrat.clm.infrastructure;
 
 import java.time.Clock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -11,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import qc.levis.contrat.clm.application.ClmProprietes;
 import qc.levis.contrat.clm.application.RappelService;
 import qc.levis.contrat.clm.application.SalesforceService;
+import qc.levis.contrat.clm.application.port.AlertesExploitation;
 
 /** Câblage du module CLM : propriétés, horloge et planificateur des rappels et du relais Salesforce. */
 @Configuration
@@ -29,18 +32,32 @@ public class ClmConfiguration {
     @ConditionalOnProperty(name = "app.clm.planificateur.actif", havingValue = "true", matchIfMissing = true)
     public static class Planificateur {
 
+        private static final Logger log = LoggerFactory.getLogger(Planificateur.class);
+
         private final RappelService rappels;
         private final SalesforceService salesforce;
+        private final AlertesExploitation alertes;
 
-        public Planificateur(RappelService rappels, SalesforceService salesforce) {
+        public Planificateur(RappelService rappels, SalesforceService salesforce, AlertesExploitation alertes) {
             this.rappels = rappels;
             this.salesforce = salesforce;
+            this.alertes = alertes;
         }
 
+        /** Chaque tâche est isolée : l'échec des rappels n'empêche pas le relais Salesforce, et chacun est signalé. */
         @Scheduled(fixedDelayString = "${app.clm.planificateur.delai-ms:60000}", initialDelayString = "${app.clm.planificateur.delai-ms:60000}")
         public void executer() {
-            rappels.executer();
-            salesforce.relayer();
+            executer("rappels et échéances", rappels::executer);
+            executer("relais Salesforce", salesforce::relayer);
+        }
+
+        private void executer(String tache, Runnable travail) {
+            try {
+                travail.run();
+            } catch (RuntimeException e) {
+                log.error("Planificateur CLM : échec de la tâche « {} »", tache, e);
+                alertes.signaler(AlertesExploitation.Code.PLANIFICATEUR_ECHEC, null, tache, e.getClass().getSimpleName());
+            }
         }
     }
 }

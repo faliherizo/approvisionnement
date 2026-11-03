@@ -68,7 +68,7 @@ test.describe('Vues CLM — gabarit des maquettes, responsive, superposition, ci
   })
 
   for (const largeur of [390, 1280]) {
-    test(`écrans avec données à ${largeur} px : assistant, détail et onglets, éditeur de modèle, décision`, async ({ page }) => {
+    test(`écrans avec données à ${largeur} px : assistant, détail et onglets, éditeur de modèle, décision`, async ({ page, playwright, baseURL }) => {
       await page.setViewportSize({ width: largeur, height: 900 })
       await connecterAdmin(page)
       const api = page.request
@@ -106,6 +106,58 @@ test.describe('Vues CLM — gabarit des maquettes, responsive, superposition, ci
       await page.getByRole('button', { name: /Prévisualiser — contrat.pdf/ }).click()
       await expect(page.locator('.clm-visionneuse')).toBeVisible()
       await verifier('UI-05 prévisualisation')
+      await page.getByRole('button', { name: /^Versions — contrat\.pdf/ }).click()
+      await page.getByRole('button', { name: /^Consulter les métadonnées — version 1/ }).click()
+      await expect(page.getByRole('definition').filter({ hasText: /^[0-9a-f]{64}$/ })).toBeVisible()
+      await verifier('UI-06 métadonnées d’une version')
+
+      // Trousse issue d'un modèle publié et d'un dossier Salesforce : valeurs corrigées, zone de signature, règle d'étape.
+      const redacteur = await playwright.request.newContext({ baseURL })
+      expect((await redacteur.post('/api/auth/login', { data: { email: users.redacteur.email, motDePasse: users.redacteur.motDePasse } })).ok()).toBeTruthy()
+      const publie = await (await redacteur.post('/api/clm/modeles', { data: {
+        nom: `Modèle publié e2e ${largeur}`, corps: 'Entre IQ et {{demandeur}} : {{montant}} $.\n{{clauses}}', clauses: [], parcours: [],
+        champs: [
+          { cle: 'demandeur', libelle: 'Demandeur', type: 'TEXTE', obligatoire: true, source: 'Demandeur' },
+          { cle: 'montant', libelle: 'Montant', type: 'TEXTE', obligatoire: true, source: 'Montant' },
+          { cle: 'signature1', libelle: 'Signature', type: 'SIGNATURE', roleDestinataire: 'SIGNATAIRE_1', position: { page: 1, x: 10, y: 70, largeur: 40, hauteur: 10 } },
+        ],
+      } })).json()
+      expect((await redacteur.post(`/api/clm/modeles/${publie.id}/soumettre`, { data: {} })).ok()).toBeTruthy()
+      await redacteur.dispose()
+      expect((await api.post(`/api/clm/modeles/${publie.id}/publier`, { data: {} })).ok()).toBeTruthy()
+      const sf = (await (await api.post('/api/clm/trousses', { data: {
+        titre: `Salesforce e2e ${largeur}`, risque: 'MOYEN', modeleId: publie.id, sfDossierId: 'DEM-2026-0001' } })).json()).resume
+      expect((await api.post(`/api/clm/trousses/${sf.id}/participants`, { data: {
+        nom: 'Marc Bénéficiaire', courriel: 'marc@exemple.ca', telephone: '+15145550102', roleContrat: 'SIGNATAIRE_2', externe: true } })).ok()).toBeTruthy()
+
+      await page.goto(`/clm/trousses/nouvelle?id=${sf.id}&etape=0`)
+      await page.getByRole('button', { name: 'Corriger la valeur — Montant' }).click()
+      await expect(page.getByLabel('Nouvelle valeur — Montant')).toBeFocused()
+      await verifier('UI-03/UI-10 correction d’une valeur ouverte')
+      await page.getByLabel('Nouvelle valeur — Montant').fill('90000')
+      await page.getByRole('button', { name: 'Enregistrer', exact: true }).click()
+      await expect(page.getByText(/« Montant » : Salesforce indique 250000\.00, saisie manuelle 90000/)).toBeVisible()
+      await verifier('UI-10 écart avec Salesforce tracé en conflit')
+
+      await page.goto(`/clm/trousses/${sf.id}?onglet=participants`)
+      await page.getByLabel('Signataire de la zone « Signature »').selectOption({ label: 'Marc Bénéficiaire · SIGNATAIRE_2' })
+      await page.getByRole('button', { name: 'Attribuer la zone — Signature' }).click()
+      await expect(page.getByText('Zone « Signature » attribuée.')).toBeVisible()
+      await verifier('UI-15 zone de signature attribuée')
+
+      await page.getByRole('tab', { name: /^Parcours/ }).click()
+      await page.getByRole('button', { name: 'Ajouter une étape' }).click()
+      await page.getByLabel('Si le champ').selectOption('montant')
+      await page.getByLabel('Opérateur').selectOption('SUP')
+      await expect(page.getByText(/si Montant est supérieur à/).first()).toBeVisible()
+      await verifier('UI-11 règle d’affaires d’une étape')
+
+      for (const [chemin, procedure] of [['/clm/admin/parametres', 'Modifier un paramètre autorisé'], ['/clm/admin/integrations', 'Rotation du secret selon la procédure']]) {
+        await page.goto(chemin)
+        await page.getByRole('button', { name: procedure }).click()
+        await expect(page.getByRole('note')).toBeVisible()
+        await verifier(`${chemin} : procédure dépliée`)
+      }
 
       expect((await api.post(`/api/clm/trousses/${id}/lancer`, { data: {} })).ok()).toBeTruthy()
       await page.goto(`/clm/trousses/${id}?onglet=parcours`)

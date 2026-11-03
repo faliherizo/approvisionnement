@@ -2,6 +2,7 @@ package qc.levis.contrat.tenant.application;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,6 +102,12 @@ public class TenantAdminService {
         Tenant t = tenants.findBySlug(slug)
                 .orElseThrow(() -> new NoSuchElementException("Tenant introuvable: " + slug));
         return new TenantPublic(t.getSlug(), t.getTitre(), t.getSousTitre(), theme(t));
+    }
+
+    /** Identité publique d'un tenant actif, pour les pages sans session qui le connaissent par son identifiant. */
+    public Optional<TenantPublic> publicParId(Long id) {
+        return tenants.findById(id).filter(Tenant::isActif)
+                .map(t -> new TenantPublic(t.getSlug(), t.getTitre(), t.getSousTitre(), theme(t)));
     }
 
     /** Thème du tenant, avec valeurs par défaut VINA (logo/texte de notre entreprise). */

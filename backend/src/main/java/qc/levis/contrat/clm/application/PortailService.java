@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import qc.levis.contrat.clm.application.dto.ClmDto;
 import qc.levis.contrat.clm.application.port.FournisseurSignature;
+import qc.levis.contrat.clm.application.port.IdentiteOrganisation;
 import qc.levis.contrat.clm.application.port.SourceAleatoire;
 import qc.levis.contrat.clm.application.repository.DocumentTrousseRepository;
 import qc.levis.contrat.clm.application.repository.InvitationRepository;
@@ -48,10 +49,12 @@ public class PortailService {
     private final LectureTrousse lecture;
     private final JournalClm journal;
     private final ContexteClm ctx;
+    private final IdentiteOrganisation identite;
 
     public PortailService(InvitationRepository invitations, ParticipantRepository participants, DocumentTrousseRepository documents,
                           FournisseurSignature fournisseur, ParcoursService parcours, TrousseService trousses,
-                          MessagerieClm messagerie, SourceAleatoire alea, LectureTrousse lecture, JournalClm journal, ContexteClm ctx) {
+                          MessagerieClm messagerie, SourceAleatoire alea, LectureTrousse lecture, JournalClm journal, ContexteClm ctx,
+                          IdentiteOrganisation identite) {
         this.invitations = invitations;
         this.participants = participants;
         this.documents = documents;
@@ -63,6 +66,7 @@ public class PortailService {
         this.lecture = lecture;
         this.journal = journal;
         this.ctx = ctx;
+        this.identite = identite;
     }
 
     private record Session(Invitation invitation, Participant participant, Trousse trousse) {
@@ -289,8 +293,10 @@ public class PortailService {
         }
         String question = inv.getNiveau() == Identite.Niveau.QUESTION ? s.participant().getQuestionIdentite() : null;
         String statut = inv.estExpiree(ctx.maintenant()) && inv.getStatut() != Invitation.Statut.SIGNEE ? "EXPIREE" : inv.getStatut().name();
+        IdentiteOrganisation.Organisation organisation = identite.de(s.trousse().getTenantId());
         return new ClmDto.PortailVue(s.trousse().getReference(), s.trousse().getTitre(), s.participant().getNom(), inv.getNiveau().name(),
-                statut, inv.getExpireLe(), verifiee, inv.getConsentementLe() != null, question, docs, champs, recu);
+                statut, inv.getExpireLe(), verifiee, inv.getConsentementLe() != null, question, docs, champs, recu,
+                organisation.nom(), organisation.logo());
     }
 
     private static String hash(String s) {

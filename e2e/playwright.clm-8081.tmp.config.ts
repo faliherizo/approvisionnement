@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test'
 export default defineConfig({
   testDir: '.',
-  testMatch: ['views/clm.view.spec.ts', 'views/clm.maquettes.spec.ts'],
+  testMatch: ['views/clm.view.spec.ts', 'views/clm.maquettes.spec.ts', 'views/clm.superadmin.spec.ts'],
   workers: 1,
   timeout: 300_000,
   expect: { timeout: 10_000 },

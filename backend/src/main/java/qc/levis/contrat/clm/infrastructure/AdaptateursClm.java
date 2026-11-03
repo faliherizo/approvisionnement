@@ -11,9 +11,13 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import qc.levis.contrat.clm.application.ClmProprietes;
+import qc.levis.contrat.clm.application.port.AlertesExploitation;
 import qc.levis.contrat.clm.application.port.AnalyseAntivirus;
+import qc.levis.contrat.clm.application.port.IdentiteOrganisation;
 import qc.levis.contrat.clm.application.port.NotificateurClm;
 import qc.levis.contrat.clm.application.port.PerimetreUtilisateur;
 import qc.levis.contrat.clm.application.port.PorteeTenant;
@@ -22,6 +26,7 @@ import qc.levis.contrat.clm.application.port.SourceAleatoire;
 import qc.levis.contrat.commun.infrastructure.TenantContext;
 import qc.levis.contrat.notification.application.port.CanalNotification;
 import qc.levis.contrat.securite.application.SecuriteService;
+import qc.levis.contrat.tenant.application.TenantAdminService;
 
 /** Adaptateurs techniques simples du module CLM. */
 public final class AdaptateursClm {
@@ -112,6 +117,42 @@ public final class AdaptateursClm {
             }
             return canaux.stream().filter(c -> c.canal().equals(canal)).findFirst()
                     .map(c -> c.envoyer(destinataire, sujet, corps)).orElse("ECHEC");
+        }
+    }
+
+    /**
+     * Alertes d'exploitation au journal applicatif, sur une ligne au format stable « CLM_ALERTE code=… » que Log Analytics
+     * relève (règles de infra/terraform/azure/monitoring.tf, procédures du runbook d'exploitation CLM).
+     */
+    @Component
+    public static class AlertesJournal implements AlertesExploitation {
+        private static final Logger ALERTES = LoggerFactory.getLogger("qc.levis.contrat.clm.ALERTES");
+
+        @Override
+        public void signaler(Code code, Long tenantId, String ressource, String detail) {
+            ALERTES.error("CLM_ALERTE code={} tenant={} ressource={} detail={}", code, tenantId == null ? "-" : tenantId,
+                    neutre(ressource), neutre(detail));
+        }
+
+        /** Une valeur tient sur une ligne : un retour chariot injecté ne forge pas une fausse entrée de journal. */
+        static String neutre(String valeur) {
+            return valeur == null || valeur.isBlank() ? "-" : valeur.replaceAll("[\\r\\n\\t]+", " ").trim();
+        }
+    }
+
+    /** Identité publique de l'organisation, lue par le service des tenants (nom et logo de son thème). */
+    @Component
+    public static class IdentiteTenant implements IdentiteOrganisation {
+        private final TenantAdminService tenants;
+
+        public IdentiteTenant(TenantAdminService tenants) {
+            this.tenants = tenants;
+        }
+
+        @Override
+        public Organisation de(Long tenantId) {
+            return tenants.publicParId(tenantId).map(t -> new Organisation(t.titre(), t.theme().logoImage()))
+                    .orElse(new Organisation(null, null));
         }
     }
 

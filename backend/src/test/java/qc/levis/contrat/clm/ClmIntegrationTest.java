@@ -37,6 +37,7 @@ import qc.levis.contrat.audit.domain.AuditLog;
 import qc.levis.contrat.auth.application.repository.UserRepository;
 import qc.levis.contrat.clm.application.port.NotificateurClm;
 import qc.levis.contrat.clm.application.repository.MessageSortantRepository;
+import qc.levis.contrat.clm.application.port.AlertesExploitation;
 import qc.levis.contrat.clm.domain.MessageSortant;
 import qc.levis.contrat.clm.domain.Relances;
 import qc.levis.contrat.commun.module.application.ModuleService;
@@ -52,6 +53,7 @@ import qc.levis.contrat.commun.module.application.ModuleService;
 class ClmIntegrationTest {
 
     static final List<String[]> ENVOIS = Collections.synchronizedList(new ArrayList<>());
+    static final List<String> ALERTES = Collections.synchronizedList(new ArrayList<>());
 
     @TestConfiguration
     static class Capture {
@@ -62,6 +64,12 @@ class ClmIntegrationTest {
                 ENVOIS.add(new String[]{canal, destinataire, sujet, corps});
                 return "SIMULE";
             };
+        }
+
+        @Bean
+        @Primary
+        AlertesExploitation alertesCapture() {
+            return (code, tenantId, ressource, detail) -> ALERTES.add(code + " " + ressource + " " + detail);
         }
     }
 
@@ -87,6 +95,7 @@ class ClmIntegrationTest {
         juriste = login("juriste@levis.qc.ca");
         direction = login("direction@levis.qc.ca");
         ENVOIS.clear();
+        ALERTES.clear();
     }
 
     @Test
@@ -146,6 +155,7 @@ class ClmIntegrationTest {
         String jeton = dernier("INVITATION", "COURRIEL", "/portail/([A-Za-z0-9_-]+)");
         JsonNode portail = appel(get("/api/clm/portail/" + jeton, null), status().isOk());
         assertEquals("ENVOYEE", portail.get("statut").asText());
+        assertEquals("Ville de Lévis", portail.get("organisation").asText(), "le signataire sait quelle organisation l'invite (F-12)");
         assertTrue(portail.get("documents").isEmpty(), "documents masqués avant vérification");
         appel(post("/api/clm/portail/" + jeton + "/signer", null, "{\"nomComplet\":\"Marie Tremblay\",\"consentement\":true}"), status().isConflict());
 
@@ -181,6 +191,7 @@ class ClmIntegrationTest {
 
         JsonNode integrite = appel(post("/api/clm/trousses/" + id + "/preuve/integrite", redacteur, "{}"), status().isOk());
         assertTrue(integrite.get("integre").asBoolean(), integrite.toString());
+        assertTrue(ALERTES.isEmpty(), "une preuve intacte n'alerte pas : " + ALERTES);
         byte[] zip = mvc.perform(MockMvcRequestBuilders.get("/api/clm/trousses/" + id + "/preuve/export").cookie(redacteur))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsByteArray();
         List<String> entrees = entrees(zip);
@@ -216,6 +227,9 @@ class ClmIntegrationTest {
         assertTrue(alteree.get("journalIntegre").asBoolean(), "le journal scellé n'a pas été touché");
         assertEquals("annexe.docx v1", alteree.at("/documentsAlteres/0").asText());
         assertEquals("Faussaire", alteree.at("/attestationsInvalides/0").asText());
+        String reference = fini.at("/resume/reference").asText();
+        assertTrue(ALERTES.contains("INTEGRITE_ALTEREE " + reference + " journal intact · 1 document(s) altéré(s) · 1 attestation(s) invalide(s)"),
+                "l'altération est signalée à l'exploitation (ST-14) : " + ALERTES);
     }
 
     @Test

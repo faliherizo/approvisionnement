@@ -79,12 +79,14 @@ function RacineRoute() {
 function Layout({ children }) {
   const { user, logout, hasRole } = useAuth()
   const { t } = useI18n()
-  const { actif: moduleActif } = useModules()
+  const { actif: moduleActif, recharger: rechargerModules } = useModules()
   const navigate = useNavigate()
   const location = useLocation()
   const [tenantInfo, setTenantInfo] = useState(null)
 
   useEffect(() => { chargerTheme().then(setTenantInfo) }, [])
+  // Les modules actifs dépendent de l'organisation de l'utilisateur : ils se relisent à chaque connexion.
+  useEffect(() => { if (user) rechargerModules() }, [user, rechargerModules])
 
   if (!user) return children
   const superadmin = hasRole('SUPERADMIN')

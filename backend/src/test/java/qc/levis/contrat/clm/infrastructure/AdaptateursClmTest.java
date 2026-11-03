@@ -1,23 +1,36 @@
 package qc.levis.contrat.clm.infrastructure;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import java.io.ByteArrayOutputStream;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 import qc.levis.contrat.clm.application.ClmProprietes;
+import qc.levis.contrat.clm.application.port.AlertesExploitation;
 import qc.levis.contrat.clm.application.port.FournisseurSignature;
+import qc.levis.contrat.clm.application.port.IdentiteOrganisation;
 import qc.levis.contrat.clm.application.port.PortSalesforce;
 import qc.levis.contrat.clm.application.port.RenduDocuments;
 import qc.levis.contrat.clm.domain.FormatDocument;
 import qc.levis.contrat.clm.domain.Identite;
 import qc.levis.contrat.clm.domain.Modele;
+import qc.levis.contrat.tenant.application.TenantAdminService;
+import qc.levis.contrat.tenant.application.dto.TenantPublic;
+import qc.levis.contrat.tenant.application.dto.Theme;
 
 /** Adaptateurs CLM : scellement, attestation, aléa, antivirus, Salesforce simulé, rendu PDF/Word. */
 class AdaptateursClmTest {
@@ -32,6 +45,38 @@ class AdaptateursClmTest {
                 new ClmProprietes(null, null, null, null, new ClmProprietes.Preuve(""), null, null));
         IllegalStateException e = assertThrows(IllegalStateException.class, () -> sansCle.sceller("manifeste".getBytes()));
         assertEquals("Scellement impossible", e.getMessage());
+    }
+
+    @Test
+    void l_organisation_presentee_au_signataire_vient_du_theme_de_son_tenant() {
+        TenantAdminService tenants = mock(TenantAdminService.class);
+        when(tenants.publicParId(1L)).thenReturn(Optional.of(new TenantPublic("levis", "Ville de Lévis", null,
+                new Theme(null, null, null, null, "Lévis", "data:image/png;base64,AAAA"))));
+        when(tenants.publicParId(9L)).thenReturn(Optional.empty());
+        AdaptateursClm.IdentiteTenant identite = new AdaptateursClm.IdentiteTenant(tenants);
+
+        assertEquals(new IdentiteOrganisation.Organisation("Ville de Lévis", "data:image/png;base64,AAAA"), identite.de(1L));
+        assertEquals(new IdentiteOrganisation.Organisation(null, null), identite.de(9L), "tenant inactif ou inconnu : identité neutre");
+    }
+
+    @Test
+    void une_alerte_s_ecrit_sur_une_ligne_au_format_releve_par_la_supervision() {
+        Logger journal = (Logger) LoggerFactory.getLogger("qc.levis.contrat.clm.ALERTES");
+        ListAppender<ILoggingEvent> lignes = new ListAppender<>();
+        lignes.start();
+        journal.addAppender(lignes);
+        try {
+            AdaptateursClm.AlertesJournal alertes = new AdaptateursClm.AlertesJournal();
+            alertes.signaler(AlertesExploitation.Code.INTEGRITE_ALTEREE, 3L, "TR-2026-00001", "1 document\r\nCLM_ALERTE forgée");
+            alertes.signaler(AlertesExploitation.Code.PLANIFICATEUR_ECHEC, null, " ", null);
+        } finally {
+            journal.detachAppender(lignes);
+        }
+        assertEquals(List.of(
+                "CLM_ALERTE code=INTEGRITE_ALTEREE tenant=3 ressource=TR-2026-00001 detail=1 document CLM_ALERTE forgée",
+                "CLM_ALERTE code=PLANIFICATEUR_ECHEC tenant=- ressource=- detail=-"),
+                lignes.list.stream().map(ILoggingEvent::getFormattedMessage).toList(), "un retour chariot ne forge pas une seconde ligne");
+        assertEquals(Level.ERROR, lignes.list.get(0).getLevel());
     }
 
     @Test

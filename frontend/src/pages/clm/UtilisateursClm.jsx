@@ -5,7 +5,7 @@ import { useI18n } from '../../i18n/I18nContext'
 import { useModules } from '../../hooks/useModules.js'
 import SecuriteAvancee from '../SecuriteAvancee.jsx'
 import Users from '../Users.jsx'
-import { Message, useErreur } from './commun.jsx'
+import { GardeModule, Message, useErreur } from './commun.jsx'
 import { BarreActions, Bloc, Blocs, EcranClm } from './gabarit.jsx'
 
 /** Rôles qui ouvrent un droit dans le module, dans l'ordre du parcours d'un contrat. */
@@ -77,6 +77,10 @@ function RolesEtPermissions({ onChange }) {
  * édition) ; le module y ajoute ses rôles et permissions, l'accès aux groupes et le renvoi au journal des changements.
  */
 export default function UtilisateursClm() {
+  return <GardeModule><Utilisateurs /></GardeModule>
+}
+
+function Utilisateurs() {
   const { t } = useI18n()
   const { actif } = useModules()
   const [version, setVersion] = useState(0)
@@ -111,6 +115,10 @@ export default function UtilisateursClm() {
 
 /** Groupes et unités (UI-20, zone 03) : écran de la sécurité avancée, ou motif de son absence quand le module est inactif. */
 export function GroupesClm() {
+  return <GardeModule><Groupes /></GardeModule>
+}
+
+function Groupes() {
   const { t } = useI18n()
   const { actif, chargement } = useModules()
   if (chargement) return <p role="status">{t('clm.chargement')}</p>

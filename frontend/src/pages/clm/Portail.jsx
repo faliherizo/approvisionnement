@@ -78,7 +78,13 @@ export default function Portail() {
     <div className="clm-portail" data-maquette="UI-16">
       <a className="skip-link" href="#contenu">{t('clm.po.allerContenu')}</a>
       <header className="clm-portail__entete">
-        <p className="public-brand">{t('clm.po.marque')}</p>
+        <div className="clm-portail__marque">
+          {vue?.logo && <img className="clm-portail__logo" src={vue.logo} alt="" />}
+          <div>
+            <p className="public-brand">{vue?.organisation || t('clm.po.marque')}</p>
+            {vue?.organisation && <p className="clm-portail__sous-titre">{t('clm.po.marque')}</p>}
+          </div>
+        </div>
         <LangSwitcher compact />
       </header>
       <main id="contenu" className="clm-portail__main" tabIndex={-1}>

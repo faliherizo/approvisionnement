@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.ZoneOffset;
 import java.util.Map;
@@ -20,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import qc.levis.contrat.clm.application.JournalClm;
 import qc.levis.contrat.clm.application.RappelService;
 import qc.levis.contrat.clm.application.SalesforceService;
+import qc.levis.contrat.clm.application.port.AlertesExploitation;
 import qc.levis.contrat.clm.application.port.PortSalesforce;
 import qc.levis.contrat.clm.infrastructure.web.WebClm;
 
@@ -39,11 +41,24 @@ class ConfigurationClmTest {
         RappelService rappels = mock(RappelService.class);
         SalesforceService salesforce = mock(SalesforceService.class);
 
-        new ClmConfiguration.Planificateur(rappels, salesforce).executer();
+        new ClmConfiguration.Planificateur(rappels, salesforce, mock(AlertesExploitation.class)).executer();
 
         InOrder ordre = inOrder(rappels, salesforce);
         ordre.verify(rappels).executer();
         ordre.verify(salesforce).relayer();
+    }
+
+    @Test
+    void une_tache_du_planificateur_en_echec_est_signalee_sans_bloquer_la_suivante() {
+        RappelService rappels = mock(RappelService.class);
+        SalesforceService salesforce = mock(SalesforceService.class);
+        AlertesExploitation alertes = mock(AlertesExploitation.class);
+        when(rappels.executer()).thenThrow(new IllegalStateException("base indisponible"));
+
+        new ClmConfiguration.Planificateur(rappels, salesforce, alertes).executer();
+
+        verify(salesforce).relayer();
+        verify(alertes).signaler(AlertesExploitation.Code.PLANIFICATEUR_ECHEC, null, "rappels et échéances", "IllegalStateException");
     }
 
     @Test

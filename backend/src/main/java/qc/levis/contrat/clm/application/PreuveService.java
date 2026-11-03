@@ -14,6 +14,7 @@ import java.util.zip.ZipOutputStream;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import qc.levis.contrat.clm.application.dto.ClmDto;
+import qc.levis.contrat.clm.application.port.AlertesExploitation;
 import qc.levis.contrat.clm.application.port.FournisseurSignature;
 import qc.levis.contrat.clm.application.port.RenduDocuments;
 import qc.levis.contrat.clm.application.port.Scelleur;
@@ -46,10 +47,11 @@ public class PreuveService {
     private final LectureTrousse lecture;
     private final JournalClm journal;
     private final ContexteClm ctx;
+    private final AlertesExploitation alertes;
 
     public PreuveService(DocumentTrousseRepository documents, InvitationRepository invitations, ParticipantRepository participants,
                          EvenementTrousseRepository evenements, FournisseurSignature fournisseur, Scelleur scelleur,
-                         RenduDocuments rendu, LectureTrousse lecture, JournalClm journal, ContexteClm ctx) {
+                         RenduDocuments rendu, LectureTrousse lecture, JournalClm journal, ContexteClm ctx, AlertesExploitation alertes) {
         this.documents = documents;
         this.invitations = invitations;
         this.participants = participants;
@@ -60,6 +62,7 @@ public class PreuveService {
         this.lecture = lecture;
         this.journal = journal;
         this.ctx = ctx;
+        this.alertes = alertes;
     }
 
     public ClmDto.PreuveVue dossier(Long trousseId, Habilitations.Acteur acteur) {
@@ -70,14 +73,25 @@ public class PreuveService {
                 .map(LectureTrousse::document).toList();
         return new ClmDto.PreuveVue(lecture.resume(t, List.of(), maintenant), finaux, signatures(t),
                 evenements.findByTenantIdAndTrousseIdOrderBySequenceAsc(t.getTenantId(), t.getId()).stream()
-                        .map(LectureTrousse::evenement).toList(), integrite(t));
+                        .map(LectureTrousse::evenement).toList(), controler(t));
     }
 
     @Transactional
     public ClmDto.Integrite verifier(Long trousseId, Habilitations.Acteur acteur) {
         Trousse t = lecture.exigerVisible(trousseId, acteur);
-        ClmDto.Integrite i = integrite(t);
+        ClmDto.Integrite i = controler(t);
         journal.consigner(t, "INTEGRITE_VERIFIEE", acteur.id(), i.integre() ? "intègre" : "ALTÉRATION DÉTECTÉE");
+        return i;
+    }
+
+    /** Une altération constatée, quelle que soit la consultation qui la révèle, est signalée à l'exploitation (ST-14). */
+    private ClmDto.Integrite controler(Trousse t) {
+        ClmDto.Integrite i = integrite(t);
+        if (!i.integre()) {
+            alertes.signaler(AlertesExploitation.Code.INTEGRITE_ALTEREE, t.getTenantId(), t.getReference(),
+                    "journal " + (i.journalIntegre() ? "intact" : "rompu") + " · " + i.documentsAlteres().size() + " document(s) altéré(s) · "
+                            + i.attestationsInvalides().size() + " attestation(s) invalide(s)");
+        }
         return i;
     }
 

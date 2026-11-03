@@ -175,7 +175,7 @@ public final class ClmDto {
 
     public record PortailVue(String reference, String titre, String participant, String niveau, String statut,
                              Instant expireLe, boolean verifiee, boolean consentement, String question,
-                             List<DocumentPortail> documents, List<ChampPortail> champs, Recu recu) {
+                             List<DocumentPortail> documents, List<ChampPortail> champs, Recu recu, String organisation, String logo) {
     }
 
     public record Recu(String reference, String signataire, Instant signeeLe, String empreinteDocuments, String attestation) {

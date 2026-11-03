@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import qc.levis.contrat.clm.application.dto.ClmDto;
+import qc.levis.contrat.clm.application.port.AlertesExploitation;
 import qc.levis.contrat.clm.application.port.PortSalesforce;
 import qc.levis.contrat.clm.application.port.SourceAleatoire;
 import qc.levis.contrat.clm.application.repository.MessageSortantRepository;
@@ -33,15 +34,17 @@ public class SalesforceService {
     private final SourceAleatoire alea;
     private final ClmProprietes proprietes;
     private final ContexteClm ctx;
+    private final AlertesExploitation alertes;
     private volatile ClmDto.PortSalesforceEtat dernierTest;
 
     public SalesforceService(PortSalesforce salesforce, MessageSortantRepository sorties, SourceAleatoire alea,
-                             ClmProprietes proprietes, ContexteClm ctx) {
+                             ClmProprietes proprietes, ContexteClm ctx, AlertesExploitation alertes) {
         this.salesforce = salesforce;
         this.sorties = sorties;
         this.alea = alea;
         this.proprietes = proprietes;
         this.ctx = ctx;
+        this.alertes = alertes;
     }
 
     public PortSalesforce.Dossier lireDossier(String identifiant) {
@@ -95,6 +98,10 @@ public class SalesforceService {
             } catch (RuntimeException e) {
                 log.warn("Retour de statut Salesforce en échec (corrélation {}) : {}", m.getCorrelationId(), e.getMessage());
                 m.echouer(e.getMessage(), maintenant);
+                if (m.getStatut() == MessageSortant.Statut.ECHEC) {
+                    alertes.signaler(AlertesExploitation.Code.SALESFORCE_FILE_ERREUR, m.getTenantId(), "corrélation " + m.getCorrelationId(),
+                            m.getEvenement() + " · " + m.getTentatives() + " tentatives");
+                }
                 return false;
             } finally {
                 sorties.save(m);
