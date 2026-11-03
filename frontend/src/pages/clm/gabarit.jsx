@@ -3,9 +3,10 @@ import { useI18n } from '../../i18n/I18nContext'
 
 /**
  * Gabarit d'écran des maquettes UI-01 à UI-24 : titre et objectif, blocs en grille de deux colonnes,
- * barre d'actions en pied. `data-maquette` et `data-zone` relient chaque écran à sa maquette.
+ * barre d'actions en pied. `data-maquette` et `data-zone` relient chaque écran à sa maquette ; `zoneActions` rattache
+ * la barre d'actions au bloc de la maquette qui la décrit (« Actions permises selon état et rôle »).
  */
-export function EcranClm({ maquette, titre, objectif, ariane, statut, actions, titreRef, children }) {
+export function EcranClm({ maquette, titre, objectif, ariane, statut, actions, zoneActions, titreRef, children }) {
   const { t } = useI18n()
   return (
     <div className="clm-ecran" data-maquette={maquette}>
@@ -16,14 +17,14 @@ export function EcranClm({ maquette, titre, objectif, ariane, statut, actions, t
         {statut}
       </header>
       {children}
-      {actions && <BarreActions>{actions}</BarreActions>}
+      {actions && <BarreActions zone={zoneActions}>{actions}</BarreActions>}
     </div>
   )
 }
 
-export function BarreActions({ children, libelle }) {
+export function BarreActions({ children, libelle, zone }) {
   const { t } = useI18n()
-  return <div className="clm-barre" role="group" aria-label={libelle || t('clm.gab.actions')}>{children}</div>
+  return <div className="clm-barre" role="group" aria-label={libelle || t('clm.gab.actions')} data-zone={zone}>{children}</div>
 }
 
 export function Blocs({ children }) {

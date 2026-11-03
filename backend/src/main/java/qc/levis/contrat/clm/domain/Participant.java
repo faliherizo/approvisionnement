@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import java.util.Locale;
 
 /** Participant d'une trousse (ST-03/ST-09) : interne ou externe, avec le niveau d'identité exigé pour signer. */
 @Entity
@@ -69,6 +70,14 @@ public class Participant {
     public void definirQuestion(String question, String reponseHash) {
         this.questionIdentite = question;
         this.reponseIdentiteHash = reponseHash;
+    }
+
+    /** Une zone de signature d'un modèle désigne un rôle : attribuer la zone, c'est attribuer ce rôle au participant (UI-15). */
+    public void attribuerRole(String role) {
+        if (role == null || role.isBlank()) {
+            throw new IllegalArgumentException("Rôle dans le contrat requis.");
+        }
+        this.roleContrat = role.trim().toUpperCase(Locale.ROOT);
     }
 
     public Long getId() { return id; }

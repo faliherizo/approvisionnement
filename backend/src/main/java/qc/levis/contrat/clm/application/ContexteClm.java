@@ -6,6 +6,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -13,13 +14,19 @@ import org.springframework.stereotype.Component;
 import qc.levis.contrat.clm.application.port.PerimetreUtilisateur;
 import qc.levis.contrat.clm.application.port.PorteeTenant;
 import qc.levis.contrat.clm.domain.Habilitations;
+import qc.levis.contrat.clm.domain.Modele;
 import qc.levis.contrat.clm.domain.Parcours;
+import qc.levis.contrat.clm.domain.Preremplissage;
 
 /** Contexte partagé des cas d'utilisation CLM : tenant courant, acteur, horloge et sérialisation JSON. */
 @Component
 public class ContexteClm {
 
     private static final TypeReference<List<Parcours.Affectation>> AFFECTATIONS = new TypeReference<>() {
+    };
+    private static final TypeReference<List<Modele.Condition>> CONDITIONS = new TypeReference<>() {
+    };
+    private static final TypeReference<Map<String, Preremplissage.Valeur>> VALEURS = new TypeReference<>() {
     };
 
     private final PerimetreUtilisateur perimetre;
@@ -91,5 +98,16 @@ public class ContexteClm {
 
     public List<Parcours.Affectation> affectations(String texte) {
         return lire(texte, AFFECTATIONS, List.of());
+    }
+
+    public List<Modele.Condition> conditions(String texte) {
+        return lire(texte, CONDITIONS, List.of());
+    }
+
+    /** Valeurs de la trousse réduites à leur contenu, telles que les règles les évaluent. */
+    public Map<String, Object> valeursBrutes(String texte) {
+        Map<String, Object> brutes = new LinkedHashMap<>();
+        lire(texte, VALEURS, Map.<String, Preremplissage.Valeur>of()).forEach((cle, v) -> brutes.put(cle, v.valeur()));
+        return brutes;
     }
 }

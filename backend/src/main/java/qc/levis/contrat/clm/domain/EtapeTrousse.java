@@ -58,6 +58,9 @@ public class EtapeTrousse {
     @Column(name = "delai_jours")
     private Integer delaiJours;
 
+    @Column(name = "conditions_json", nullable = false, length = 10_000)
+    private String conditionsJson = "[]";
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 12)
     private Parcours.StatutEtape statut = Parcours.StatutEtape.EN_ATTENTE;
@@ -83,6 +86,10 @@ public class EtapeTrousse {
     }
 
     public EtapeTrousse(Long tenantId, Long trousseId, Parcours.DefinitionEtape d, String affectationsJson) {
+        this(tenantId, trousseId, d, affectationsJson, "[]");
+    }
+
+    public EtapeTrousse(Long tenantId, Long trousseId, Parcours.DefinitionEtape d, String affectationsJson, String conditionsJson) {
         this.tenantId = tenantId;
         this.trousseId = trousseId;
         this.cle = d.cle();
@@ -93,6 +100,7 @@ public class EtapeTrousse {
         this.quorum = d.quorum();
         this.politique = d.politique();
         this.delaiJours = d.delaiJours();
+        this.conditionsJson = conditionsJson;
     }
 
     public void activer(Instant maintenant) {
@@ -107,6 +115,11 @@ public class EtapeTrousse {
     public void terminer(Parcours.StatutEtape resultat, Instant maintenant) {
         this.statut = resultat;
         this.termineeLe = maintenant;
+    }
+
+    /** Règle d'affaires non satisfaite au lancement : l'étape est écartée sans décision. */
+    public void ecarter(Instant maintenant) {
+        terminer(Parcours.StatutEtape.NON_REQUISE, maintenant);
     }
 
     public void reinitialiser() {
@@ -144,6 +157,7 @@ public class EtapeTrousse {
     public void setQuorum(int quorum) { this.quorum = quorum; }
     public Parcours.PolitiqueRejet getPolitique() { return politique; }
     public Integer getDelaiJours() { return delaiJours; }
+    public String getConditionsJson() { return conditionsJson; }
     public Parcours.StatutEtape getStatut() { return statut; }
     public Instant getActiveeLe() { return activeeLe; }
     public Instant getEcheance() { return echeance; }

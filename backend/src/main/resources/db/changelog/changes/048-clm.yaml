@@ -296,3 +296,12 @@ databaseChangeLog:
             columns:
               - column: { name: tenant_id }
               - column: { name: trousse_id }
+  - changeSet:
+      id: 048-6-clm-etape-regle
+      author: levis
+      comment: "Règle d'affaires d'une étape (F-05, UI-11) : l'étape n'est requise que si ses conditions sont vraies."
+      changes:
+        - addColumn:
+            tableName: clm_etape
+            columns:
+              - column: { name: conditions_json, type: TEXT, defaultValue: "[]", constraints: { nullable: false } }

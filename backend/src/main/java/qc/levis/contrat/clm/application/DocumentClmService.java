@@ -23,7 +23,6 @@ import qc.levis.contrat.clm.domain.ModeleContrat;
 import qc.levis.contrat.clm.domain.Trousse;
 import qc.levis.contrat.regle.application.MoteurRegles;
 import qc.levis.contrat.regle.application.ResultatEvaluation;
-import qc.levis.contrat.regle.domain.ConditionDef;
 import qc.levis.contrat.regle.domain.RegleDef;
 
 /** Documents d'une trousse (ST-04, RST-16, UI-05/UI-06) et génération depuis un modèle (ST-05/ST-06). */
@@ -161,10 +160,10 @@ public class DocumentClmService {
         List<Modele.Clause> clauses = ctx.lire(m.getClausesJson(), ModeleService.CLAUSES, List.of());
         List<RegleDef> regles = new ArrayList<>();
         for (Modele.Clause c : clauses) {
-            regles.add(new RegleDef("VISIBILITE", c.combinateur(), versMoteur(c.conditions()), "clause:" + c.cle(), null));
+            regles.add(new RegleDef("VISIBILITE", c.combinateur(), ReglesClm.versMoteur(c.conditions()), "clause:" + c.cle(), null));
         }
         for (Modele.Champ c : champs) {
-            regles.add(new RegleDef("VISIBILITE", "ET", versMoteur(c.conditions()), "champ:" + c.cle(), null));
+            regles.add(new RegleDef("VISIBILITE", "ET", ReglesClm.versMoteur(c.conditions()), "champ:" + c.cle(), null));
         }
         ResultatEvaluation r = MoteurRegles.evaluer(regles, valeurs);
         Set<String> clausesExclues = new HashSet<>();
@@ -181,10 +180,6 @@ public class DocumentClmService {
         String texte = Modele.assembler(m.getCorps(), clauses, visibles, clausesExclues);
         List<String> retenues = clauses.stream().map(Modele.Clause::cle).filter(c -> !clausesExclues.contains(c)).toList();
         return new ClmDto.ApercuModele(texte, retenues, champsMasques, List.of());
-    }
-
-    private static List<ConditionDef> versMoteur(List<Modele.Condition> conditions) {
-        return conditions.stream().map(c -> new ConditionDef(c.champ(), c.operateur(), c.valeur())).toList();
     }
 
     private DocumentTrousse exiger(Trousse t, Long documentId) {

@@ -92,9 +92,17 @@ public class ParcoursService {
     }
 
     // --- Moteur ---
+    /** Une étape dont la règle d'affaires n'est pas satisfaite par les valeurs de la trousse est écartée (F-05). */
     void demarrer(Trousse t, String acteur) {
+        Map<String, Object> valeurs = ctx.valeursBrutes(t.getValeursJson());
+        Instant maintenant = ctx.maintenant();
         for (EtapeTrousse e : etapesDe(t)) {
             e.reinitialiser();
+            List<Modele.Condition> regle = ctx.conditions(e.getConditionsJson());
+            if (!regle.isEmpty() && !ReglesClm.satisfaites(regle, valeurs)) {
+                e.ecarter(maintenant);
+                journal.consigner(t, "ETAPE_NON_REQUISE", "systeme", e.getLibelle() + " · règle d'affaires non satisfaite");
+            }
             etapes.save(e);
         }
         avancer(t, acteur);

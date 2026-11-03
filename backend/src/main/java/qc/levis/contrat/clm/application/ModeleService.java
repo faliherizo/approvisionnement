@@ -85,7 +85,9 @@ public class ModeleService {
         List<ClmDto.EtapeRequest> parcours = ctx.lire(m.getParcoursJson(), TrousseService.PARCOURS, List.of());
         if (!parcours.isEmpty()) {
             try {
-                erreurs.addAll(Parcours.valider(TrousseService.definitions(parcours)));
+                List<Parcours.DefinitionEtape> defs = TrousseService.definitions(parcours);
+                erreurs.addAll(Parcours.valider(defs));
+                erreurs.addAll(TrousseService.reglesInconnues(champs(m), defs));
             } catch (IllegalArgumentException e) {
                 erreurs.add(e.getMessage());
             }

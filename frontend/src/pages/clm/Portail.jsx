@@ -75,7 +75,7 @@ export default function Portail() {
   const tousLus = vue && vue.documents.every((d) => lus[d.id])
 
   return (
-    <div className="clm-portail">
+    <div className="clm-portail" data-maquette="UI-16">
       <a className="skip-link" href="#contenu">{t('clm.po.allerContenu')}</a>
       <header className="clm-portail__entete">
         <p className="public-brand">{t('clm.po.marque')}</p>
@@ -87,14 +87,14 @@ export default function Portail() {
         {!vue && !erreur && <p role="status">{t('clm.chargement')}</p>}
         {vue && (
           <>
-            <section className="panel">
+            <section className="panel" data-zone="01">
               <h1 ref={titre} tabIndex={-1}>{recu ? t('clm.po.merci') : vue.titre}</h1>
               <p>{t('clm.po.invitation', { nom: vue.participant, ref: vue.reference })}</p>
               <p className="clm-meta"><Statut valeur={vue.statut} /> <span>{t('clm.po.expire', { d: dateHeure(vue.expireLe) })}</span></p>
             </section>
 
             {recu && (
-              <section className="panel" aria-labelledby="clm-recu">
+              <section className="panel" aria-labelledby="clm-recu" data-zone="06">
                 <h2 id="clm-recu">{t('clm.po.recu')}</h2>
                 <dl className="clm-dl">
                   <div><dt>{t('clm.col.reference')}</dt><dd>{recu.reference}</dd></div>
@@ -110,7 +110,7 @@ export default function Portail() {
             {!recu && ferme && <section className="panel"><p>{t(`clm.po.ferme.${vue.statut}`)}</p></section>}
 
             {!recu && !ferme && !vue.verifiee && (
-              <section className="panel" aria-labelledby="clm-verif">
+              <section className="panel" aria-labelledby="clm-verif" data-zone="02">
                 <h2 id="clm-verif">{t('clm.po.etape1')}</h2>
                 <p>{t(`clm.po.niveau.${vue.niveau}`)}</p>
                 {vue.niveau === 'QUESTION' || codeEnvoye ? (
@@ -129,7 +129,7 @@ export default function Portail() {
             {!recu && !ferme && vue.verifiee && (
               <form className="panel form" onSubmit={signer} aria-labelledby="clm-signer">
                 <h2 id="clm-signer">{t('clm.po.etape2')}</h2>
-                <ul className="clm-liste">
+                <ul className="clm-liste" data-zone="03" aria-label={t('clm.po.documents')}>
                   {vue.documents.map((d) => (
                     <li key={d.id} className="clm-portail__doc">
                       <span>{d.nom} <span className="muted">({d.type} · {taille(d.taille)})</span> {lus[d.id] && <span role="img" aria-label={t('clm.po.consulte')}>✔</span>}</span>
@@ -137,28 +137,29 @@ export default function Portail() {
                     </li>
                   ))}
                 </ul>
-                {vue.champs.length > 0 && (
-                  <fieldset className="form-fieldset">
-                    <legend>{t('clm.po.champs')}</legend>
-                    {vue.champs.map((c) => (
-                      <label key={c.cle}>{c.libelle}{c.obligatoire && <span aria-hidden="true"> *</span>}
-                        {c.type === 'LISTE' ? (
-                          <select value={champs[c.cle] || ''} onChange={(e) => setChamps({ ...champs, [c.cle]: e.target.value })} required={c.obligatoire}>
-                            <option value="">—</option>{c.options.map((o) => <option key={o} value={o}>{o}</option>)}
-                          </select>
-                        ) : (
-                          <input type={c.type === 'DATE' ? 'date' : 'text'} value={champs[c.cle] || ''} required={c.obligatoire} aria-required={c.obligatoire}
-                            onChange={(e) => setChamps({ ...champs, [c.cle]: e.target.value })} />
-                        )}
-                      </label>
-                    ))}
-                  </fieldset>
-                )}
-                <label>{t('clm.po.nomComplet')}<input value={nom} onChange={(e) => setNom(e.target.value)} required autoComplete="name" /></label>
-                <label className="check-row clm-consentement">
-                  <input type="checkbox" checked={consentement} onChange={(e) => setConsentement(e.target.checked)} required />
-                  {t('clm.po.consentement')}
-                </label>
+                <fieldset className="form-fieldset" data-zone="05">
+                  <legend>{t('clm.po.champs')}</legend>
+                  {vue.champs.length === 0 && <p className="muted">{t('clm.po.aucunChamp')}</p>}
+                  {vue.champs.map((c) => (
+                    <label key={c.cle}>{c.libelle}{c.obligatoire && <span aria-hidden="true"> *</span>}
+                      {c.type === 'LISTE' ? (
+                        <select value={champs[c.cle] || ''} onChange={(e) => setChamps({ ...champs, [c.cle]: e.target.value })} required={c.obligatoire}>
+                          <option value="">—</option>{c.options.map((o) => <option key={o} value={o}>{o}</option>)}
+                        </select>
+                      ) : (
+                        <input type={c.type === 'DATE' ? 'date' : 'text'} value={champs[c.cle] || ''} required={c.obligatoire} aria-required={c.obligatoire}
+                          onChange={(e) => setChamps({ ...champs, [c.cle]: e.target.value })} />
+                      )}
+                    </label>
+                  ))}
+                </fieldset>
+                <div className="form" data-zone="04">
+                  <label>{t('clm.po.nomComplet')}<input value={nom} onChange={(e) => setNom(e.target.value)} required autoComplete="name" /></label>
+                  <label className="check-row clm-consentement">
+                    <input type="checkbox" checked={consentement} onChange={(e) => setConsentement(e.target.checked)} required />
+                    {t('clm.po.consentement')}
+                  </label>
+                </div>
                 {!tousLus && <p className="muted">{t('clm.po.lireAvant')}</p>}
                 <button type="submit" disabled={occupe || !consentement || !tousLus}>{t('clm.po.signer')}</button>
               </form>

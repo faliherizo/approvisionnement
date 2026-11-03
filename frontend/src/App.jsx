@@ -59,7 +59,7 @@ import SuiviClm from './pages/clm/SuiviClm.jsx'
 import { IntegrationsClm, NotificationsClm, ParametresClm } from './pages/clm/AdminClm.jsx'
 import JournalClm from './pages/clm/JournalClm.jsx'
 import OptionsClm from './pages/clm/OptionsClm.jsx'
-import UtilisateursClm from './pages/clm/UtilisateursClm.jsx'
+import UtilisateursClm, { GroupesClm } from './pages/clm/UtilisateursClm.jsx'
 import ClmShell from './pages/clm/ClmShell.jsx'
 import Portail from './pages/clm/Portail.jsx'
 
@@ -216,7 +216,7 @@ export default function App() {
             <Route path="/clm/admin/integrations" element={<IntegrationsClm />} />
             <Route path="/clm/admin/parametres" element={<ParametresClm />} />
             <Route path="/clm/admin/utilisateurs" element={<UtilisateursClm />} />
-            <Route path="/clm/admin/groupes" element={<SecuriteAvancee />} />
+            <Route path="/clm/admin/groupes" element={<GroupesClm />} />
             <Route path="/clm/admin/journal" element={<JournalClm />} />
             <Route path="/clm/options" element={<OptionsClm />} />
             <Route path="*" element={<Navigate to="/clm" replace />} />

@@ -106,7 +106,8 @@ public class LectureTrousse {
                 .map(a -> new ClmDto.AffectationDto(a.type().name(), a.valeur())).toList();
         boolean retard = e.getStatut() == Parcours.StatutEtape.ACTIVE && Relances.enRetard(e.getEcheance(), maintenant);
         return new ClmDto.EtapeVue(e.getId(), e.getCle(), e.getLibelle(), e.getPhase(), e.getType().name(), affs, e.getQuorum(),
-                e.getPolitique().name(), e.getDelaiJours(), e.getStatut().name(), e.getActiveeLe(), e.getEcheance(), retard, ds);
+                e.getPolitique().name(), e.getDelaiJours(), ctx.conditions(e.getConditionsJson()), e.getStatut().name(),
+                e.getActiveeLe(), e.getEcheance(), retard, ds);
     }
 
     public static ClmDto.DocumentVue document(DocumentTrousse d) {

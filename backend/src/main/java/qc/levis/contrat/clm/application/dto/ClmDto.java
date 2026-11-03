@@ -28,7 +28,7 @@ public final class ClmDto {
     }
 
     public record EtapeRequest(String cle, String libelle, int phase, String type, List<AffectationDto> affectations,
-                               Integer quorum, String politique, Integer delaiJours) {
+                               Integer quorum, String politique, Integer delaiJours, List<Modele.Condition> conditions) {
     }
 
     public record DecisionRequest(String decision, String commentaire) {
@@ -38,6 +38,14 @@ public final class ClmDto {
     }
 
     public record PreremplissageRequest(String sfDossierId, Map<String, Object> valeursManuelles) {
+    }
+
+    /** Valeurs saisies ou corrigées par l'initiateur ; une valeur vide retire la saisie. */
+    public record ValeursRequest(Map<String, Object> valeurs) {
+    }
+
+    /** Zone de signature attribuée à un participant, désignée par son rôle dans le modèle. */
+    public record ZoneRequest(String roleContrat) {
     }
 
     public record ModeleRequest(String nom, String categorie, String groupes, String corps, List<Modele.Champ> champs,
@@ -90,8 +98,8 @@ public final class ClmDto {
     }
 
     public record EtapeVue(Long id, String cle, String libelle, int phase, String type, List<AffectationDto> affectations,
-                           int quorum, String politique, Integer delaiJours, String statut, Instant activeeLe,
-                           Instant echeance, boolean enRetard, List<DecisionVue> decisions) {
+                           int quorum, String politique, Integer delaiJours, List<Modele.Condition> conditions, String statut,
+                           Instant activeeLe, Instant echeance, boolean enRetard, List<DecisionVue> decisions) {
     }
 
     public record InvitationVue(Long id, Long participantId, String participant, Long etapeId, String statut, String niveau,
@@ -99,6 +107,7 @@ public final class ClmDto {
     }
 
     public record TrousseDetail(TrousseResume resume, String risque, Long modeleId, Map<String, Preremplissage.Valeur> valeurs,
+                                List<Modele.Champ> champs, List<String> manquants,
                                 int rappelFrequenceJours, int rappelsMax, String copies, Instant sfRecupereLe,
                                 List<DocumentVue> documents, List<ParticipantVue> participants, List<EtapeVue> etapes,
                                 List<InvitationVue> invitations, Set<String> actions, List<String> alertes) {

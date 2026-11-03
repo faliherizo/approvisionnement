@@ -133,7 +133,7 @@ public final class Modele {
             erreurs.add("Zone sans signataire : « " + c.cle() + " » exige un rôle et une position.");
         }
         Pattern format = compiler(c, erreurs);
-        if (c.valeurDefaut() != null && !c.valeurDefaut().isBlank() && !defautValide(c, format)) {
+        if (c.valeurDefaut() != null && !c.valeurDefaut().isBlank() && !conforme(c, c.valeurDefaut(), format)) {
             erreurs.add("Valeur par défaut invalide pour « " + c.cle() + " ».");
         }
         if (c.position() != null && !positionValide(c.position())) {
@@ -153,8 +153,14 @@ public final class Modele {
         }
     }
 
-    private static boolean defautValide(Champ c, Pattern format) {
-        String v = c.valeurDefaut();
+    /** Valeur saisie pour un champ d'un modèle publié (F-04) : conforme à son format puis à son type. */
+    public static boolean valeurValide(Champ c, String valeur) {
+        List<String> formatIllisible = new ArrayList<>();
+        Pattern format = compiler(c, formatIllisible);
+        return formatIllisible.isEmpty() && conforme(c, valeur, format);
+    }
+
+    private static boolean conforme(Champ c, String v, Pattern format) {
         if (format != null && !format.matcher(v).matches()) {
             return false;
         }

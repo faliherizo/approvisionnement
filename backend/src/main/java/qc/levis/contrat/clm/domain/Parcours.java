@@ -16,7 +16,7 @@ public final class Parcours {
 
     public enum TypeEtape { VALIDATION, APPROBATION, SIGNATURE }
 
-    public enum StatutEtape { EN_ATTENTE, ACTIVE, APPROUVEE, REJETEE, ANNULEE }
+    public enum StatutEtape { EN_ATTENTE, ACTIVE, APPROUVEE, REJETEE, ANNULEE, NON_REQUISE }
 
     /** UN_REFUS : un refus suffit à rejeter ; QUORUM_INATTEIGNABLE : rejet seulement si le quorum ne peut plus être atteint. */
     public enum PolitiqueRejet { UN_REFUS, QUORUM_INATTEIGNABLE }
@@ -32,11 +32,18 @@ public final class Parcours {
         }
     }
 
+    /** {@code conditions} : règle d'affaires (toutes vraies) qui rend l'étape requise ; vide = toujours requise. */
     public record DefinitionEtape(String cle, String libelle, int phase, TypeEtape type, List<Affectation> affectations,
-                                  int quorum, PolitiqueRejet politique, Integer delaiJours) {
+                                  int quorum, PolitiqueRejet politique, Integer delaiJours, List<Modele.Condition> conditions) {
         public DefinitionEtape {
             affectations = affectations == null ? List.of() : List.copyOf(affectations);
             politique = politique == null ? PolitiqueRejet.UN_REFUS : politique;
+            conditions = conditions == null ? List.of() : List.copyOf(conditions);
+        }
+
+        public DefinitionEtape(String cle, String libelle, int phase, TypeEtape type, List<Affectation> affectations,
+                               int quorum, PolitiqueRejet politique, Integer delaiJours) {
+            this(cle, libelle, phase, type, affectations, quorum, politique, delaiJours, List.of());
         }
     }
 
@@ -75,12 +82,19 @@ public final class Parcours {
             if (e.delaiJours() != null && e.delaiJours() < 1) {
                 erreurs.add("Échéance invalide pour l'étape " + nom);
             }
+            if (e.conditions().stream().anyMatch(c -> vide(c.champ()) || vide(c.operateur()))) {
+                erreurs.add("Règle incomplète pour l'étape " + nom);
+            }
         }
         // Chaque étape ajoute sa phase : l'ensemble n'est jamais vide ici.
         if (phases.first() != 1 || phases.last() != phases.size()) {
             erreurs.add("Les phases doivent être consécutives à partir de 1.");
         }
         return erreurs;
+    }
+
+    private static boolean vide(String s) {
+        return s == null || s.isBlank();
     }
 
     private static void validerAffectations(DefinitionEtape e, String nom, List<String> erreurs) {
@@ -118,7 +132,8 @@ public final class Parcours {
 
     /** Fait progresser le parcours : rejet global, fin, ou activation de la prochaine phase incomplète. */
     public static Avancement avancer(List<EtatEtape> etapes) {
-        List<EtatEtape> vivantes = etapes.stream().filter(e -> e.statut() != StatutEtape.ANNULEE).toList();
+        List<EtatEtape> vivantes = etapes.stream()
+                .filter(e -> e.statut() != StatutEtape.ANNULEE && e.statut() != StatutEtape.NON_REQUISE).toList();
         if (vivantes.stream().anyMatch(e -> e.statut() == StatutEtape.REJETEE)) {
             return new Avancement(Set.of(), Optional.of(StatutTrousse.REJETEE));
         }

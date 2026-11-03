@@ -104,6 +104,9 @@ h3.clm-bloc__titre { font-size: 16px; }
 }
 .clm-canvas__etape--APPROBATION { border-left-color: #6e4d00; }
 .clm-canvas__etape--SIGNATURE { border-left-color: #9a0b22; }
+.clm-canvas__etape.is-choisie { outline: 3px solid var(--bleu); outline-offset: 2px; }
+.clm-affectation { align-items: end; margin-bottom: 8px; }
+.clm-empreinte { overflow-wrap: anywhere; word-break: break-all; }
 
 /* UI-08 : éditeur en deux colonnes (prévisualisation à gauche, panneaux à droite). */
 .clm-editeur { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 28px; align-items: start; margin-bottom: 20px; }

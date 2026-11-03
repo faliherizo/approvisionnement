@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import api from '../../api'
 import { useI18n } from '../../i18n/I18nContext'
 import { Message, Statut, Visionneuse, dateHeure, taille, telecharger, useErreur, useRessource } from './commun.jsx'
@@ -18,6 +19,8 @@ export default function OngletDocuments({ trousse, peutGerer, peutGenerer, iaAct
   const [versionDe, setVersionDe] = useState(null)
   const [motif, setMotif] = useState('')
   const [historiqueDe, setHistoriqueDe] = useState(null)
+  const [metaDe, setMetaDe] = useState(null)
+  const fichierVersion = useRef(null)
   const analyses = useRessource(iaActive ? `/clm/trousses/${trousse.resume.id}/analyses` : null, iaActive)
   const id = trousse.resume.id
   const parCle = {}
@@ -28,6 +31,10 @@ export default function OngletDocuments({ trousse, peutGerer, peutGenerer, iaAct
   const finale = versions.find((v) => v.statut === 'SIGNE')
   const modifiable = (doc) => peutGerer && !['SIGNE', 'RETIRE'].includes(doc.statut)
   const categorie = (doc) => (analyses.donnees || []).find((a) => a.documentId === doc.id)?.resultat?.categorie
+  const meta = versions.find((v) => v.id === metaDe)
+  const suivi = versions[0]
+
+  useEffect(() => { if (versionDe) fichierVersion.current?.focus() }, [versionDe])
 
   async function envoyer(fichier, url, extra) {
     if (!fichier) return
@@ -104,8 +111,8 @@ export default function OngletDocuments({ trousse, peutGerer, peutGenerer, iaAct
                         <button type="button" className="lien" aria-label={`${t('clm.doc.apercu')} — ${doc.nom}`} onClick={() => setApercu(doc)}>{t('clm.doc.apercu')}</button>
                         <button type="button" className="lien" aria-label={`${t('clm.doc.telecharger')} — ${doc.nom}`} onClick={() => charger(doc)}>{t('clm.doc.telecharger')}</button>
                         <button type="button" className="lien" aria-label={`${t('clm.doc.voirVersions')} — ${doc.nom}`} onClick={() => setHistoriqueDe(doc.cleDocument)}>{t('clm.doc.voirVersions')}</button>
-                        {modifiable(doc) && <button type="button" className="lien" aria-label={`${t('clm.doc.nouvelleVersion')} — ${doc.nom}`} onClick={() => setVersionDe(doc.cleDocument)}>{t('clm.doc.nouvelleVersion')}</button>}
-                        {modifiable(doc) && <button type="button" className="lien danger" aria-label={`${t('clm.doc.retirer')} — ${doc.nom}`}
+                        {modifiable(doc) && <button type="button" className="lien" aria-label={t('clm.doc.remplacerPar', { nom: doc.nom })} onClick={() => setVersionDe(doc.cleDocument)}>{t('clm.doc.remplacer')}</button>}
+                        {modifiable(doc) && <button type="button" className="lien danger" aria-label={t('clm.doc.retirerAvant', { nom: doc.nom })}
                           onClick={() => window.confirm(t('clm.doc.confirmerRetrait')) && executer(() => api.delete(`/clm/trousses/${id}/documents/${doc.id}`), t('clm.doc.retire'))}>{t('clm.doc.retirer')}</button>}
                         {iaActive && doc.analyse === 'PROPRE' && doc.statut !== 'RETIRE' && <button type="button" className="lien" aria-label={`${t('clm.ia.lancer')} — ${doc.nom}`}
                           onClick={() => executer(() => api.post(`/clm/trousses/${id}/documents/${doc.id}/analyse`), t('clm.ia.lancee'))}>{t('clm.ia.lancer')}</button>}
@@ -119,7 +126,7 @@ export default function OngletDocuments({ trousse, peutGerer, peutGenerer, iaAct
           {versionDe && (
             <form className="form clm-sousform" onSubmit={(e) => { e.preventDefault(); envoyer(e.target.fichier.files[0], `/clm/trousses/${id}/documents/${versionDe}/versions`, { motif }) }}>
               <h3>{t('clm.doc.remplacerDe', { nom: parCle[versionDe][0].nom })}</h3>
-              <label>{t('clm.doc.fichier')}<input name="fichier" type="file" accept={ACCEPT} required /></label>
+              <label>{t('clm.doc.fichier')}<input ref={fichierVersion} name="fichier" type="file" accept={ACCEPT} required /></label>
               <label>{t('clm.col.motif')}<input value={motif} onChange={(e) => setMotif(e.target.value)} required /></label>
               <div className="cmp-row"><button type="button" className="secondary" onClick={() => setVersionDe(null)}>{t('clm.annuler')}</button><button type="submit" disabled={enCours}>{t('clm.doc.remplacer')}</button></div>
             </form>
@@ -148,36 +155,65 @@ export default function OngletDocuments({ trousse, peutGerer, peutGenerer, iaAct
           ))}
         </Bloc>
         {courants.length > 0 && (
-          <Bloc maquette="UI-06" titre={t('clm.doc.blocVersions')} large>
+          <Bloc titre={t('clm.doc.blocVersions')} large>
             <label className="clm-champ-court">{t('clm.doc.documentSuivi')}
-              <select value={cleHistorique} onChange={(e) => setHistoriqueDe(e.target.value)}>
+              <select value={cleHistorique} onChange={(e) => { setHistoriqueDe(e.target.value); setMetaDe(null) }}>
                 {courants.map((doc) => <option key={doc.cleDocument} value={doc.cleDocument}>{doc.nom}</option>)}
               </select>
             </label>
-            <div className="table-scroll">
-              <table className="table clm-table">
-                <caption className="sr-only">{t('clm.doc.versions', { n: versions.length })}</caption>
-                <thead><tr><th scope="col">{t('clm.col.version')}</th><th scope="col">{t('clm.col.date')}</th><th scope="col">{t('clm.col.auteur')}</th>
-                  <th scope="col">{t('clm.col.motif')}</th><th scope="col">{t('clm.col.empreinte')}</th><th scope="col">{t('clm.col.statut')}</th><th scope="col">{t('clm.col.actions')}</th></tr></thead>
-                <tbody>
-                  {versions.map((v) => (
-                    <tr key={v.id}>
-                      <td data-label={t('clm.col.version')}>v{v.version}</td>
-                      <td data-label={t('clm.col.date')}>{dateHeure(v.creeLe)}</td>
-                      <td data-label={t('clm.col.auteur')}>{v.auteur}</td>
-                      <td data-label={t('clm.col.motif')}>{v.motif || '—'}</td>
-                      <td data-label={t('clm.col.empreinte')}><code title={v.empreinte}>{v.empreinte.slice(0, 16)}…</code></td>
-                      <td data-label={t('clm.col.statut')}><Statut valeur={v.statut} /></td>
-                      <td data-label={t('clm.col.actions')}>
-                        <button type="button" className="lien" aria-label={`${t('clm.doc.telechargerVersion')} v${v.version}`} onClick={() => charger(v)}>{t('clm.doc.telechargerVersion')}</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div data-maquette="UI-06">
+              <Blocs>
+                <Bloc zone="01" niveau={3} titre={t('clm.doc.blocListeVersions')} large>
+                  <div className="table-scroll">
+                    <table className="table clm-table">
+                      <caption className="sr-only">{t('clm.doc.versions', { n: versions.length })}</caption>
+                      <thead><tr><th scope="col">{t('clm.col.version')}</th><th scope="col">{t('clm.col.date')}</th><th scope="col">{t('clm.col.auteur')}</th>
+                        <th scope="col">{t('clm.col.statut')}</th><th scope="col">{t('clm.col.actions')}</th></tr></thead>
+                      <tbody>
+                        {versions.map((v) => (
+                          <tr key={v.id}>
+                            <td data-label={t('clm.col.version')}>v{v.version}</td>
+                            <td data-label={t('clm.col.date')}>{dateHeure(v.creeLe)}</td>
+                            <td data-label={t('clm.col.auteur')}>{v.auteur}</td>
+                            <td data-label={t('clm.col.statut')}><Statut valeur={v.statut} /></td>
+                            <td data-label={t('clm.col.actions')} className="clm-actions-ligne">
+                              <button type="button" className="lien" aria-label={`${t('clm.doc.telechargerVersion')} v${v.version}`} onClick={() => charger(v)}>{t('clm.doc.telechargerVersion')}</button>
+                              <button type="button" className="lien" aria-pressed={metaDe === v.id} aria-label={t('clm.doc.consulterMeta', { v: v.version })} onClick={() => setMetaDe(v.id)}>{t('clm.doc.metadonnees')}</button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </Bloc>
+                <Bloc zone="02" niveau={3} titre={t('clm.doc.blocMetaVersion')}>
+                  {!meta ? <p className="muted">{t('clm.doc.choisirVersion')}</p> : (
+                    <dl className="clm-dl" aria-label={t('clm.doc.consulterMeta', { v: meta.version })}>
+                      <div><dt>{t('clm.col.version')}</dt><dd>v{meta.version} · {meta.type} · {taille(meta.taille)}</dd></div>
+                      <div><dt>{t('clm.col.auteur')}</dt><dd>{meta.auteur}</dd></div>
+                      <div><dt>{t('clm.col.date')}</dt><dd>{dateHeure(meta.creeLe)}</dd></div>
+                      <div><dt>{t('clm.col.motif')}</dt><dd>{meta.motif || '—'}</dd></div>
+                      <div><dt>{t('clm.col.empreinte')}</dt><dd><code className="clm-empreinte">{meta.empreinte}</code></dd></div>
+                      <div><dt>{t('clm.col.statut')}</dt><dd><Statut valeur={meta.statut} /></dd></div>
+                    </dl>
+                  )}
+                </Bloc>
+                <Bloc zone="03" niveau={3} titre={t('clm.doc.blocEtatVersions')}>
+                  <ul className="clm-liste">
+                    {versions.map((v) => <li key={v.id}>v{v.version} : <Statut valeur={v.statut} /></li>)}
+                  </ul>
+                  <p className="muted">{t('clm.doc.etatsAide')}</p>
+                </Bloc>
+                <Bloc zone="04" niveau={3} titre={t('clm.doc.blocFinale')} large>
+                  <p>{finale ? t('clm.doc.finale', { v: finale.version }) : t('clm.doc.pasDeFinale')}
+                    {finale && <> <button type="button" className="lien" aria-label={`${t('clm.doc.telechargerVersion')} v${finale.version}`} onClick={() => charger(finale)}>{t('clm.doc.telecharger')}</button></>}</p>
+                  <div className="cmp-row">
+                    <Link className="clm-bouton secondaire" to={`/clm/trousses/${id}?onglet=historique`}>{t('clm.doc.historiqueModifs')}</Link>
+                    {suivi && modifiable(suivi) && <button type="button" className="secondary" onClick={() => setVersionDe(suivi.cleDocument)}>{t('clm.doc.creerVersion')}</button>}
+                  </div>
+                </Bloc>
+              </Blocs>
             </div>
-            <p>{finale ? t('clm.doc.finale', { v: finale.version }) : t('clm.doc.pasDeFinale')}
-              {finale && <> <button type="button" className="lien" onClick={() => charger(finale)}>{t('clm.doc.telecharger')}</button></>}</p>
           </Bloc>
         )}
       </Blocs>

@@ -1,27 +1,21 @@
 import { useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 import api from '../../api'
 import { useI18n } from '../../i18n/I18nContext'
 import { Message, Statut, dateHeure, useErreur, useRessource } from './commun.jsx'
 import { BarreActions, Bloc, Blocs } from './gabarit.jsx'
-import { libelleAffectation } from './OngletParcours.jsx'
+import { libelleAffectation, modeParcours } from './OngletParcours.jsx'
 
 const NIVEAUX = ['', 'COURRIEL', 'CODE_SMS', 'QUESTION', 'FORTE']
 const VIDE = { nom: '', courriel: '', telephone: '', roleContrat: 'SIGNATAIRE_1', externe: true, niveauIdentite: '', question: '', reponse: '' }
-
-/** Mode d'enchaînement déduit des phases : une étape par phase = séquentiel, une seule phase = parallèle, sinon mixte. */
-export function modeParcours(etapes) {
-  const phases = [...new Set(etapes.map((e) => e.phase))]
-  if (etapes.length <= 1 || phases.length === etapes.length) return 'SEQUENTIEL'
-  return phases.length === 1 ? 'PARALLELE' : 'MIXTE'
-}
 
 /** UI-15 — Préparation de la signature : documents, participants, ordre, zones, vérification d'identité, aperçu du parcours. */
 export default function OngletParticipants({ trousse, peutGerer, onChange, onOrdre, onLancer }) {
   const { t } = useI18n()
   const versErreur = useErreur()
   const premierChamp = useRef(null)
+  const premiereZone = useRef(null)
   const [form, setForm] = useState(VIDE)
+  const [choixZone, setChoixZone] = useState({})
   const [erreur, setErreur] = useState(null)
   const [info, setInfo] = useState('')
   const id = trousse.resume.id
@@ -47,6 +41,16 @@ export default function OngletParticipants({ trousse, peutGerer, onChange, onOrd
     setErreur(null)
     try { await api.delete(`/clm/trousses/${id}/participants/${p.id}`); onChange() } catch (e) { setErreur(versErreur(e)) }
   }
+  async function attribuer(zone) {
+    setErreur(null)
+    try {
+      await api.put(`/clm/trousses/${id}/participants/${choixZone[zone.cle]}/role`, { roleContrat: zone.roleDestinataire })
+      setInfo(t('clm.part.zoneAttribuee', { zone: zone.libelle || zone.cle }))
+      setChoixZone({ ...choixZone, [zone.cle]: undefined })
+      onChange()
+    } catch (e) { setErreur(versErreur(e)) }
+  }
+  const zonesAttribuables = peutGerer && trousse.participants.length > 0
 
   return (
     <div data-maquette="UI-15">
@@ -117,11 +121,26 @@ export default function OngletParticipants({ trousse, peutGerer, onChange, onOrd
         <Bloc zone="04" titre={t('clm.part.blocZones')}>
           {!trousse.modeleId ? <p className="muted">{t('clm.part.sansZones')}</p> : zones.length === 0 ? <p className="muted">{t('clm.part.aucuneZone')}</p> : (
             <ul className="clm-liste">
-              {zones.map((c) => {
+              {zones.map((c, i) => {
                 const p = parRole(c.roleDestinataire)
+                const nomZone = c.libelle || c.cle
                 return (
-                  <li key={c.cle}>{c.libelle || c.cle} ({t(`clm.mo.type.${c.type}`)}) → <code>{c.roleDestinataire || '—'}</code> :{' '}
-                    {p ? p.nom : <strong><span aria-hidden="true">⚠</span> {t('clm.part.roleSansParticipant')}</strong>}</li>
+                  <li key={c.cle}>{nomZone} ({t(`clm.mo.type.${c.type}`)}) → <code>{c.roleDestinataire || '—'}</code> :{' '}
+                    {p ? p.nom : <strong><span aria-hidden="true">⚠</span> {t('clm.part.roleSansParticipant')}</strong>}
+                    {zonesAttribuables && c.roleDestinataire && (
+                      <div className="cmp-row clm-zone-attribution">
+                        <label>{t('clm.part.signataireZone', { zone: nomZone })}
+                          <select ref={i === 0 ? premiereZone : undefined} value={choixZone[c.cle] ?? ''}
+                            onChange={(e) => setChoixZone({ ...choixZone, [c.cle]: e.target.value })}>
+                            <option value="">—</option>
+                            {trousse.participants.map((x) => <option key={x.id} value={x.id}>{x.nom} · {x.roleContrat}</option>)}
+                          </select>
+                        </label>
+                        <button type="button" className="secondary" disabled={!choixZone[c.cle]} onClick={() => attribuer(c)}>
+                          {t('clm.part.attribuerZoneDe', { zone: nomZone })}</button>
+                      </div>
+                    )}
+                  </li>
                 )
               })}
             </ul>
@@ -144,7 +163,9 @@ export default function OngletParticipants({ trousse, peutGerer, onChange, onOrd
       <BarreActions>
         {peutGerer && <button type="button" className="secondary" onClick={() => premierChamp.current?.focus()}>{t('clm.part.ajouter')}</button>}
         {onOrdre && <button type="button" className="secondary" onClick={onOrdre}>{t('clm.part.reordonner')}</button>}
-        {trousse.modeleId && <Link className="clm-bouton secondaire" to={`/clm/modeles/${trousse.modeleId}`}>{t('clm.part.attribuerZone')}</Link>}
+        {zonesAttribuables && zones.some((c) => c.roleDestinataire) && (
+          <button type="button" className="secondary" onClick={() => premiereZone.current?.focus()}>{t('clm.part.attribuerZone')}</button>
+        )}
         {onLancer && <button type="button" onClick={onLancer}>{t('clm.part.envoyer')}</button>}
       </BarreActions>
     </div>

@@ -8,6 +8,7 @@ import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 import OngletDocuments from './OngletDocuments.jsx'
 import OngletParticipants from './OngletParticipants.jsx'
 import OngletParcours from './OngletParcours.jsx'
+import ValeursTrousse from './ValeursTrousse.jsx'
 
 const ETAPES = ['source', 'documents', 'participants', 'processus', 'recapitulatif']
 const RISQUES = ['FAIBLE', 'MOYEN', 'ELEVE']
@@ -20,51 +21,10 @@ const depuisDetail = (d) => ({ source: d.resume.source, sfDossierId: d.resume.sf
   titre: d.resume.titre, reference: d.resume.reference, typeContrat: d.resume.typeContrat || '', unite: d.resume.unite || '', risque: d.risque,
   echeance: d.resume.echeance || '', copies: d.copies || '', rappelFrequenceJours: d.rappelFrequenceJours, rappelsMax: d.rappelsMax })
 
-/** Résumé d'import Salesforce (UI-10) : provenance, date de récupération, champs manquants ou en conflit. */
-export function ResumePreremplissage({ vue }) {
+/** Résumé d'un dossier Salesforce (UI-10, zone 02) : dossier consulté par la recherche ou importé dans la trousse. */
+export function ApercuDossier({ dossier }) {
   const { t } = useI18n()
-  if (!vue) return null
-  return (
-    <div>
-      <p>{t('clm.sf.dossier', { numero: vue.numero, id: vue.sfDossierId })} · {t('clm.sf.recupereLe', { d: dateHeure(vue.recupereLe) })}</p>
-      <dl className="clm-dl">
-        {['Demandeur', 'Programme', 'Montant', 'Entite'].map((k) => (
-          <div key={k}><dt>{t(`clm.sf.champ.${k}`)}</dt><dd>{vue.dossier?.[k] ?? '—'}</dd></div>
-        ))}
-      </dl>
-      {vue.correspondances.length > 0 && (
-        <div className="table-scroll">
-          <table className="table clm-table">
-            <caption>{t('clm.sf.correspondance')}</caption>
-            <thead><tr><th scope="col">{t('clm.sf.cible')}</th><th scope="col">{t('clm.sf.source')}</th>
-              <th scope="col">{t('clm.col.valeur')}</th><th scope="col">{t('clm.sf.provenance')}</th></tr></thead>
-            <tbody>
-              {vue.correspondances.map((c) => (
-                <tr key={c.champ}>
-                  <td data-label={t('clm.sf.cible')}>{c.libelle}</td>
-                  <td data-label={t('clm.sf.source')}>{c.source || t('clm.sf.mappingAbsent')}</td>
-                  <td data-label={t('clm.col.valeur')}>{c.valeur ?? '—'}</td>
-                  <td data-label={t('clm.sf.provenance')}>{c.provenance ? t(`clm.provenance.${c.provenance}`) : t('clm.sf.manquant')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-      {vue.manquants.length > 0 && <p className="erreur" role="alert">{t('clm.sf.manquants', { liste: vue.manquants.join(', ') })}</p>}
-      {vue.conflits.length > 0 && (
-        <ul className="clm-liste" aria-label={t('clm.sf.conflits')}>
-          {vue.conflits.map((c) => <li key={c.cle}>{t('clm.sf.conflit', { cle: c.cle, source: c.valeurSource, manuelle: c.valeurManuelle })}</li>)}
-        </ul>
-      )}
-    </div>
-  )
-}
-
-/** Aperçu d'un dossier Salesforce avant import (UI-10, zone 02). */
-function ApercuDossier({ dossier }) {
-  const { t } = useI18n()
-  if (!dossier) return null
+  if (!dossier) return <p className="muted">{t('clm.sf.aucunDossier')}</p>
   return (
     <div className="clm-apercu">
       <p>{t('clm.sf.dossier', { numero: dossier.numero, id: dossier.id })} · {t('clm.sf.recupereLe', { d: dateHeure(dossier.recupereLe) })}</p>
@@ -75,8 +35,11 @@ function ApercuDossier({ dossier }) {
   )
 }
 
-/** Étape 1 (UI-03 + UI-10) : origine, dossier Salesforce, informations du contrat, brouillon, données importées. */
-function EtapeSource({ form, setForm, modeles, dossier, onRechercher, d, import_, enregistreLe, onImporter }) {
+/** Dossier à résumer : celui de la dernière recherche, sinon celui du dernier import. */
+export const dossierImporte = (vue) => (vue?.sfDossierId ? { id: vue.sfDossierId, numero: vue.numero, champs: vue.dossier, recupereLe: vue.recupereLe } : null)
+
+/** Étape 1 (UI-03 + UI-10) : origine, dossier Salesforce, informations du contrat, brouillon, données importées et corrigées. */
+function EtapeSource({ form, setForm, modeles, dossier, onRechercher, d, import_, enregistreLe, onImporter, onValeurs }) {
   const { t } = useI18n()
   const maj = (k) => (e) => setForm({ ...form, [k]: e.target.type === 'number' ? Number(e.target.value) : e.target.value })
   return (
@@ -89,13 +52,22 @@ function EtapeSource({ form, setForm, modeles, dossier, onRechercher, d, import_
           ))}
         </fieldset>
         {form.source === 'SALESFORCE' && (
-          <div className="form clm-sousform">
-            <label>{t('clm.cr.sfId')} <span className="muted">{t('clm.cr.sfAide')}</span>
-              <input value={form.sfDossierId} onChange={maj('sfDossierId')} required aria-required="true" autoComplete="off" />
-            </label>
-            <div className="cmp-row"><button type="button" className="secondary" onClick={onRechercher}>{t('clm.rechercher')}</button></div>
-            <ApercuDossier dossier={dossier} />
-          </div>
+          <>
+            <Bloc maquette="UI-10" zone="01" niveau={3} titre={t('clm.sf.blocRecherche')}>
+              <div className="form clm-sousform">
+                <label>{t('clm.cr.sfId')} <span className="muted">{t('clm.cr.sfAide')}</span>
+                  <input value={form.sfDossierId} onChange={maj('sfDossierId')} required aria-required="true" autoComplete="off" />
+                </label>
+                <div className="cmp-row">
+                  <button type="button" className="secondary" onClick={onRechercher}>{t('clm.rechercher')}</button>
+                  {d && form.sfDossierId && <button type="button" className="secondary" onClick={onImporter}>{t('clm.cr.importer')}</button>}
+                </div>
+              </div>
+            </Bloc>
+            <Bloc maquette="UI-10" zone="02" niveau={3} titre={t('clm.sf.blocResume')}>
+              <ApercuDossier dossier={dossier || dossierImporte(import_)} />
+            </Bloc>
+          </>
         )}
       </Bloc>
       <Bloc zone="03" titre={t('clm.cr.blocInformations')}>
@@ -127,17 +99,9 @@ function EtapeSource({ form, setForm, modeles, dossier, onRechercher, d, import_
         ) : <p>{t('clm.cr.nonEnregistre')}</p>}
         <p className="muted">{t('clm.cr.brouillonAide')}</p>
       </Bloc>
-      <Bloc zone="05" titre={t('clm.cr.blocImport')}>
-        {import_ ? <ResumePreremplissage vue={import_} /> : d && Object.keys(d.valeurs).length > 0 ? (
-          <dl className="clm-dl">
-            {Object.entries(d.valeurs).map(([k, v]) => (
-              <div key={k}><dt>{k}</dt><dd>{String(v.valeur)} <span className="muted">({t(`clm.provenance.${v.provenance}`)}{v.recupereLe ? ` · ${dateHeure(v.recupereLe)}` : ''})</span></dd></div>
-            ))}
-          </dl>
-        ) : <p className="muted">{form.source === 'SALESFORCE' ? t('clm.cr.importApres') : t('clm.cr.importManuel')}</p>}
-        {d && form.source === 'SALESFORCE' && form.sfDossierId && (
-          <button type="button" className="secondary" onClick={onImporter}>{t('clm.cr.importer')}</button>
-        )}
+      <Bloc zone="05" titre={t('clm.cr.blocImport')} large>
+        {d ? <ValeursTrousse trousse={d} conflits={import_?.conflits} modifiable={d.actions.includes('PREREMPLIR')} onChange={onValeurs} />
+          : <p className="muted">{form.source === 'SALESFORCE' ? t('clm.cr.importApres') : t('clm.cr.importManuel')}</p>}
       </Bloc>
     </Blocs>
   )
@@ -330,7 +294,8 @@ function Contenu() {
       <Message erreur={erreur || (id ? detail.erreur : null)} info={info} />
       {etape === 0 && (
         <EtapeSource form={form} setForm={setForm} modeles={modeles} dossier={dossier} onRechercher={rechercherSf}
-          d={d} import_={import_} enregistreLe={enregistreLe} onImporter={actualiserImport} />
+          d={d} import_={import_} enregistreLe={enregistreLe} onImporter={actualiserImport}
+          onValeurs={(vue) => { if (vue.sfDossierId) setImport(vue); detail.recharger() }} />
       )}
       {etape > 0 && !d && <p role="status">{t('clm.chargement')}</p>}
       {etape === 1 && d && (

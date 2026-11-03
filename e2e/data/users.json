@@ -2,6 +2,7 @@
   "redacteur": { "email": "redacteur@levis.qc.ca", "motDePasse": "Passw0rd!" },
   "admin": { "email": "admin@levis.qc.ca", "motDePasse": "Passw0rd!" },
   "juriste": { "email": "juriste@levis.qc.ca", "motDePasse": "Passw0rd!" },
+  "direction": { "email": "direction@levis.qc.ca", "motDePasse": "Passw0rd!" },
   "question": {
     "email": "question@levis.qc.ca",
     "motDePasse": "Passw0rd!",

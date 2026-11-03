@@ -192,7 +192,8 @@ function Contenu() {
         <Bloc zone="01" titre={t('clm.ta.filtres')} large>
           <div className="clm-onglets" role="group" aria-label={t('clm.ta.filtres')}>
             {FILTRES.map((f) => (
-              <button key={f} type="button" aria-pressed={filtre === f} className={filtre === f ? 'is-actif' : ''} onClick={() => setParams({ filtre: f })}>{t(`clm.ta.filtre.${f}`)}</button>
+              <button key={f} type="button" aria-pressed={filtre === f} className={filtre === f ? 'is-actif' : ''} onClick={() => setParams({ filtre: f })}
+                aria-label={t('clm.ta.filtrerPar', { f: t(`clm.ta.filtre.${f}`) })}>{t(`clm.ta.filtre.${f}`)}</button>
             ))}
           </div>
         </Bloc>
@@ -213,7 +214,7 @@ function Contenu() {
                       <td data-label={t('clm.col.echeance')}>{dateHeure(x.echeance)} {x.enRetard && <Statut valeur="EXPIREE" />}</td>
                       <td data-label={t('clm.col.statut')}>{x.decidee ? <Statut valeur={x.maDecision === 'APPROUVE' ? 'APPROUVEE' : 'REJETEE'} /> : <Statut valeur={x.statut} />}</td>
                       <td data-label={t('clm.col.actions')} className="clm-actions-ligne">
-                        <button type="button" className="lien" aria-label={`${t('clm.ta.traiter')} — ${x.reference} ${x.libelle}`} onClick={() => ouvrir(x)}>{x.decidee ? t('clm.ta.ouvrir') : t('clm.ta.traiter')}</button>
+                        <button type="button" className="lien" aria-label={`${x.decidee ? t('clm.ta.ouvrirTache') : t('clm.ta.traiter')} — ${x.reference} ${x.libelle}`} onClick={() => ouvrir(x)}>{x.decidee ? t('clm.ta.ouvrir') : t('clm.ta.traiter')}</button>
                         <Link to={`/clm/trousses/${x.trousseId}?onglet=historique`} aria-label={`${t('clm.ta.voirHistorique')} — ${x.reference}`}>{t('clm.ta.voirHistorique')}</Link>
                       </td>
                     </tr>

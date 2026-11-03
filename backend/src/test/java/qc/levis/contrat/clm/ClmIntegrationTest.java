@@ -291,6 +291,13 @@ class ClmIntegrationTest {
         appel(post("/api/clm/admin/messages/RAPPEL/test", admin, "{\"canal\":\"COURRIEL\",\"destinataire\":\"pas-une-adresse\"}"), status().isBadRequest());
         assertEquals("SIMULE", appel(post("/api/clm/admin/messages/RAPPEL/test", admin, "{\"canal\":\"COURRIEL\",\"destinataire\":\"a@b.ca\"}"),
                 status().isOk()).get("statut").asText());
+        appel(put("/api/clm/admin/messages", admin, "{\"evenement\":\"RAPPEL\",\"canal\":\"FAX\",\"sujet\":\"s\",\"corps\":\"c\"}"), status().isBadRequest());
+        appel(put("/api/clm/admin/messages", admin, "{\"evenement\":\"RAPPEL\",\"canal\":\"SMS\",\"sujet\":\" \",\"corps\":\"c\"}"), status().isBadRequest());
+        String rappelSms = "{\"evenement\":\"RAPPEL\",\"canal\":\"SMS\",\"sujet\":\"Rappel\",\"corps\":\"Rappel {{reference}}\",\"actif\":%s}";
+        appel(put("/api/clm/admin/messages", admin, rappelSms.formatted("false")), status().isOk());
+        assertEquals("DESACTIVE", appel(post("/api/clm/admin/messages/RAPPEL/test", admin, "{\"canal\":\"SMS\",\"destinataire\":\"+15145550101\"}"),
+                status().isOk()).get("statut").asText(), "un message désactivé n'est pas envoyé");
+        appel(put("/api/clm/admin/messages", admin, rappelSms.formatted("true")), status().isOk());
         appel(get("/api/clm/portail/jeton-inexistant-0123456789", null), status().isNotFound());
     }
 
@@ -324,6 +331,12 @@ class ClmIntegrationTest {
         assertTrue(appel(get("/api/clm/modeles?statut=RETIRE", redacteur), status().isOk()).size() >= 2);
 
         appel(post("/api/clm/modeles", admin, "{\"nom\":\" \"}"), status().isBadRequest());
+        long regleOrpheline = appel(post("/api/clm/modeles", redacteur, "{\"nom\":\"Règle orpheline\",\"corps\":\"Texte\",\"champs\":[],\"clauses\":[],"
+                + "\"parcours\":[{\"cle\":\"a\",\"phase\":1,\"type\":\"APPROBATION\",\"affectations\":[{\"type\":\"ROLE\",\"valeur\":\"DIRECTION\"}],"
+                + "\"conditions\":[{\"champ\":\"montant\",\"operateur\":\"SUP\",\"valeur\":\"1\"}]}]}"), status().isOk()).get("id").asLong();
+        assertEquals("[\"Règle de l'étape a : « montant » n'est pas un champ que l'initiateur complète.\"]",
+                appel(get("/api/clm/modeles/" + regleOrpheline + "/validation", redacteur), status().isOk()).get("erreurs").toString(),
+                "un modèle ne publie pas une règle d'étape sur un champ qu'il ne définit pas");
         long auto = appel(post("/api/clm/modeles", admin, "{\"nom\":\"Auto-publication\",\"corps\":\"Texte\",\"champs\":[],\"clauses\":[],\"parcours\":[]}"),
                 status().isOk()).get("id").asLong();
         appel(put("/api/clm/modeles/" + auto, redacteur, "{\"nom\":\"Intrus\",\"corps\":\"\",\"champs\":[],\"clauses\":[],\"parcours\":[]}"),
@@ -636,6 +649,81 @@ class ClmIntegrationTest {
         assertEquals("TERMINEE", appel(get("/api/clm/trousses/" + id, redacteur), status().isOk()).at("/resume/statut").asText());
     }
 
+    /** F-04 : l'initiateur complète les valeurs d'une trousse manuelle. F-05 : une étape à règle n'est requise que si elle est satisfaite. */
+    @Test
+    void valeurs_saisies_par_l_initiateur_et_etape_ecartee_par_sa_regle() throws Exception {
+        long modeleId = modelePublie();
+        long sansModele = appel(post("/api/clm/trousses", redacteur, "{\"titre\":\"Sans modèle\"}"), status().isOk()).at("/resume/id").asLong();
+        appel(put("/api/clm/trousses/" + sansModele + "/valeurs", redacteur, "{\"valeurs\":{\"montant\":\"1\"}}"), status().isConflict());
+
+        JsonNode creee = appel(post("/api/clm/trousses", redacteur, "{\"titre\":\"Saisie\",\"risque\":\"FAIBLE\",\"modeleId\":" + modeleId + "}"),
+                status().isOk());
+        long id = creee.at("/resume/id").asLong();
+        assertEquals("[\"demandeur\",\"montant\"]", creee.get("manquants").toString(), "données à compléter avant lancement");
+        assertEquals(2, creee.get("champs").size(), "seuls les champs de l'initiateur sont proposés à la saisie");
+        televerser(id, "contrat.pdf", pdfMinimal(), status().isOk());
+        long ana = appel(post("/api/clm/trousses/" + id + "/participants", redacteur,
+                "{\"nom\":\"Ana Lima\",\"courriel\":\"ana@coop.example\",\"roleContrat\":\"SIGNATAIRE_1\",\"externe\":true}"), status().isOk()).get("id").asLong();
+        long benoit = appel(post("/api/clm/trousses/" + id + "/participants", redacteur,
+                "{\"nom\":\"Benoit Roy\",\"courriel\":\"benoit@coop.example\",\"roleContrat\":\"SIGNATAIRE_2\",\"externe\":true}"), status().isOk()).get("id").asLong();
+        JsonNode zones = appel(put("/api/clm/trousses/" + id + "/participants/" + benoit + "/role", redacteur, "{\"roleContrat\":\"signataire_1\"}"),
+                status().isOk());
+        assertEquals("SIGNATAIRE_2", zones.get(0).get("roleContrat").asText(), "le titulaire précédent de la zone reçoit l'ancien rôle");
+        assertEquals("SIGNATAIRE_1", zones.get(1).get("roleContrat").asText());
+        appel(put("/api/clm/trousses/" + id + "/participants/" + ana + "/role", redacteur, "{\"roleContrat\":\"TEMOIN\"}"), status().isOk());
+        appel(put("/api/clm/trousses/" + id + "/participants/" + ana + "/role", redacteur, "{\"roleContrat\":\" \"}"), status().isBadRequest());
+        appel(put("/api/clm/trousses/" + id + "/participants/999999/role", redacteur, "{\"roleContrat\":\"X\"}"), status().isNotFound());
+        String regles = """
+                [{"cle":"v","libelle":"Validation juridique","phase":1,"type":"VALIDATION","affectations":[{"type":"UTILISATEUR","valeur":"juriste@levis.qc.ca"}]},
+                 {"cle":"g","libelle":"Comité des grands dossiers","phase":2,"type":"APPROBATION",
+                  "affectations":[{"type":"ROLE","valeur":"ADMIN"}],"conditions":[{"champ":"%s","operateur":"SUP","valeur":"100000"}]},
+                 {"cle":"d","libelle":"Approbation direction","phase":2,"type":"APPROBATION",
+                  "affectations":[{"type":"UTILISATEUR","valeur":"direction@levis.qc.ca"}],"conditions":[{"champ":"montant","operateur":"INFEGAL","valeur":"100000"}]}]
+                """;
+        JsonNode essai = appel(post("/api/clm/trousses/" + id + "/parcours/tester", redacteur, regles.formatted("inconnu")), status().isOk());
+        assertFalse(essai.get("valide").asBoolean());
+        assertEquals("Règle de l'étape g : « inconnu » n'est pas un champ que l'initiateur complète.", essai.at("/erreurs/0").asText());
+        assertTrue(appel(post("/api/clm/trousses/" + id + "/parcours/tester", redacteur, regles.formatted("titreSignataire")), status().isOk())
+                .toString().contains("« titreSignataire » n'est pas un champ que l'initiateur complète"), "un champ du signataire n'a pas de valeur au lancement");
+        assertTrue(appel(post("/api/clm/trousses/" + id + "/parcours/tester", redacteur, regles.formatted(" ")), status().isOk())
+                .toString().contains("Règle incomplète pour l'étape Comité des grands dossiers"));
+        assertEquals(1, appel(post("/api/clm/trousses/" + id + "/parcours/tester", redacteur, regles.formatted("x").replace("\"x\"", "null")),
+                status().isOk()).get("erreurs").size(), "une règle sans champ n'est signalée qu'une fois");
+        appel(put("/api/clm/trousses/" + id + "/parcours", redacteur, regles.formatted("inconnu")), status().isBadRequest());
+        JsonNode etapes = appel(put("/api/clm/trousses/" + id + "/parcours", redacteur, regles.formatted("montant")), status().isOk());
+        assertEquals("SUP", etapes.at("/1/conditions/0/operateur").asText(), "la règle est conservée avec l'étape");
+
+        assertTrue(appel(post("/api/clm/trousses/" + id + "/lancer", redacteur, "{}"), status().isBadRequest())
+                .get("message").asText().contains("Données incomplètes : demandeur, montant"), "sans saisie, la trousse ne part pas");
+        assertTrue(appel(put("/api/clm/trousses/" + id + "/valeurs", redacteur, "{\"valeurs\":{\"titreSignataire\":\"x\",\"montant\":\"beaucoup\"}}"),
+                status().isBadRequest()).get("message").asText()
+                .equals("Champ inconnu ou non modifiable : titreSignataire. Valeur invalide pour « Montant »."));
+        appel(put("/api/clm/trousses/" + id + "/valeurs", juriste, "{\"valeurs\":{\"montant\":\"1\"}}"), status().isForbidden());
+        JsonNode saisie = appel(put("/api/clm/trousses/" + id + "/valeurs", redacteur,
+                "{\"valeurs\":{\"demandeur\":\"Coopérative de Lévis\",\"montant\":\"50000\"}}"), status().isOk());
+        assertTrue(saisie.get("manquants").isEmpty(), saisie.toString());
+        assertEquals("MANUEL", saisie.at("/correspondances/1/provenance").asText());
+        assertEquals("[\"montant\"]", appel(put("/api/clm/trousses/" + id + "/valeurs", redacteur, "{\"valeurs\":{\"montant\":null}}"),
+                status().isOk()).get("manquants").toString(), "une valeur vide retire la saisie");
+        appel(put("/api/clm/trousses/" + id + "/valeurs", redacteur, "{}"), status().isOk());
+        appel(put("/api/clm/trousses/" + id + "/valeurs", redacteur, "{\"valeurs\":{\"montant\":\"50000.00\"}}"), status().isOk());
+
+        JsonNode lance = appel(post("/api/clm/trousses/" + id + "/lancer", redacteur, "{}"), status().isOk());
+        assertEquals("NON_REQUISE", lance.at("/etapes/1/statut").asText(), "50 000 $ ne requiert pas le comité");
+        assertEquals("EN_ATTENTE", lance.at("/etapes/2/statut").asText());
+        appel(post("/api/clm/etapes/" + lance.at("/etapes/0/id").asLong() + "/decider", juriste, "{\"decision\":\"APPROUVE\"}"), status().isOk());
+        appel(post("/api/clm/etapes/" + lance.at("/etapes/2/id").asLong() + "/decider", direction, "{\"decision\":\"APPROUVE\"}"), status().isOk());
+        assertEquals("TERMINEE", appel(get("/api/clm/trousses/" + id, redacteur), status().isOk()).at("/resume/statut").asText());
+        String historique = appel(get("/api/clm/trousses/" + id + "/historique", redacteur), status().isOk()).toString();
+        assertTrue(historique.contains("VALEURS_SAISIES") && historique.contains("ETAPE_NON_REQUISE") && historique.contains("ZONE_ATTRIBUEE"), historique);
+
+        long sf = appel(post("/api/clm/trousses", redacteur, "{\"titre\":\"Correction\",\"modeleId\":" + modeleId + ",\"sfDossierId\":\"DEM-2026-0001\"}"),
+                status().isOk()).at("/resume/id").asLong();
+        JsonNode corrige = appel(put("/api/clm/trousses/" + sf + "/valeurs", redacteur, "{\"valeurs\":{\"montant\":\"90000\"}}"), status().isOk());
+        assertEquals("DEM-2026-0001", corrige.get("numero").asText(), "Salesforce est relu à la correction");
+        assertEquals("montant", corrige.at("/conflits/0/cle").asText(), "l'écart avec Salesforce reste tracé");
+    }
+
     // --- Données ---
     private long modelePublie() throws Exception {
         JsonNode m = appel(post("/api/clm/modeles", redacteur, """
@@ -643,7 +731,7 @@ class ClmIntegrationTest {
                  "corps":"Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $.\\n{{clauses}}",
                  "champs":[
                    {"cle":"demandeur","libelle":"Demandeur","type":"TEXTE","obligatoire":true,"source":"Demandeur"},
-                   {"cle":"montant","libelle":"Montant","type":"TEXTE","obligatoire":true,"source":"Montant"},
+                   {"cle":"montant","libelle":"Montant","type":"TEXTE","obligatoire":true,"source":"Montant","format":"\\\\d+(\\\\.\\\\d{2})?"},
                    {"cle":"titreSignataire","libelle":"Titre","type":"TEXTE","obligatoire":true,"roleDestinataire":"SIGNATAIRE_1"},
                    {"cle":"signature1","libelle":"Signature","type":"SIGNATURE","roleDestinataire":"SIGNATAIRE_1",
                     "position":{"page":1,"x":10,"y":70,"largeur":40,"hauteur":10}}],

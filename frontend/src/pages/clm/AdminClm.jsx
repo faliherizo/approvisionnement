@@ -168,7 +168,7 @@ function Integrations() {
                     <td data-label={t('clm.col.tentatives')}>{m.tentatives}</td>
                     <td data-label={t('clm.col.actions')} className="clm-actions-ligne">
                       <button type="button" className="lien" aria-expanded={detail === m.id} aria-label={`${t('clm.ad.details')} — ${m.correlationId.slice(0, 8)}`} onClick={() => setDetail(detail === m.id ? null : m.id)}>{t('clm.ad.details')}</button>
-                      {m.statut !== 'ENVOYE' && <button type="button" className="lien" aria-label={`${t('clm.ad.relancer')} — ${m.correlationId.slice(0, 8)}`} onClick={() => relancer(m)}>{t('clm.ad.relancer')}</button>}
+                      {m.statut !== 'ENVOYE' && <button type="button" className="lien" aria-label={t('clm.ad.relancerEvenement', { c: m.correlationId.slice(0, 8) })} onClick={() => relancer(m)}>{t('clm.ad.relancer')}</button>}
                     </td>
                   </tr>
                 ))}
@@ -194,7 +194,7 @@ function Integrations() {
                 <li key={m.id}><Statut valeur={m.statut} /> {m.evenement} · {m.sfDossierId} · {t('clm.col.tentatives')} {m.tentatives}
                   {m.statut === 'EN_ATTENTE' && <><br /><span className="muted">{t('clm.ad.reprise', { d: dateHeure(m.prochainEssai) })}</span></>}
                   <br /><span className="muted">{m.derniereErreur}</span>{' '}
-                  <button type="button" className="lien" onClick={() => relancer(m)}>{t('clm.ad.relancer')}</button></li>
+                  <button type="button" className="lien" aria-label={t('clm.ad.relancerEvenement', { c: m.correlationId.slice(0, 8) })} onClick={() => relancer(m)}>{t('clm.ad.relancer')}</button></li>
               ))}
             </ul>
           )}
@@ -216,11 +216,12 @@ const duree = (depuis) => {
   return { h: Math.floor(minutes / 60), m: minutes % 60 }
 }
 
-/** UI-22 — Paramètres et environnements (lecture seule : la configuration se modifie par déploiement). */
+/** UI-22 — Paramètres et environnements : lecture seule, un paramètre autorisé se modifie par déploiement, selon la procédure. */
 function Parametres() {
   const { t } = useI18n()
   const { donnees: p, erreur, recharger } = useRessource('/clm/admin/parametres')
   const [info, setInfo] = useState('')
+  const [procedure, setProcedure] = useState(false)
   if (!p) return <Message erreur={erreur} info={t('clm.chargement')} onReessayer={recharger} />
   const enLigne = duree(p.demarreLe)
   function consulter() {
@@ -238,10 +239,17 @@ function Parametres() {
       actions={(
         <>
           <button type="button" className="secondary" onClick={consulter}>{t('clm.ad.consulterConfiguration')}</button>
+          <button type="button" className="secondary" aria-expanded={procedure} aria-controls="clm-procedure-parametre" onClick={() => setProcedure(!procedure)}>{t('clm.ad.modifierParametre')}</button>
           <button type="button" className="secondary" onClick={() => { recharger(); setInfo(t('clm.ad.statutActualise')) }}>{t('clm.ad.consulterStatut')}</button>
         </>
       )}>
       <Message info={info} />
+      {procedure && (
+        <div id="clm-procedure-parametre" className="clm-info-statique" role="note">
+          <p>{t('clm.ad.parametresModifiables')}</p>
+          <p>{p.modificationPermise ? t('clm.ad.procedureParametre') : t('clm.ad.procedureParametreProd')}</p>
+        </div>
+      )}
       <Blocs>
         <Bloc zone="01" titre={t('clm.ad.blocEnvironnement')} large>
           <p className={`clm-environnement clm-environnement--${p.environnement.toLowerCase()}`}><strong>{t('clm.ad.environnement')} : {p.environnement}</strong></p>

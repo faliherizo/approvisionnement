@@ -212,6 +212,11 @@ public class TrousseService {
     }
 
     static ClmDto.PreremplissageVue vuePreremplissage(PortSalesforce.Dossier dossier, List<Modele.Champ> champs, Preremplissage.Resultat r) {
+        return new ClmDto.PreremplissageVue(dossier.id(), dossier.numero(), dossier.champs(), dossier.recupereLe(),
+                correspondances(champs, r), r.manquants(), r.conflits());
+    }
+
+    private static List<ClmDto.Correspondance> correspondances(List<Modele.Champ> champs, Preremplissage.Resultat r) {
         List<ClmDto.Correspondance> corr = new ArrayList<>();
         for (Modele.Champ c : champs) {
             if (!c.completeALaGeneration()) {
@@ -221,8 +226,60 @@ public class TrousseService {
             corr.add(new ClmDto.Correspondance(c.cle(), c.libelle(), c.source(), v == null ? null : v.valeur(),
                     v == null ? null : v.provenance().name(), v == null ? null : v.recupereLe()));
         }
-        return new ClmDto.PreremplissageVue(dossier.id(), dossier.numero(), dossier.champs(), dossier.recupereLe(), corr,
-                r.manquants(), r.conflits());
+        return corr;
+    }
+
+    /**
+     * Saisie ou correction des valeurs que l'initiateur complète (F-02, F-04) : chaque valeur est contrôlée contre son
+     * champ, une valeur vide retire la saisie, et une trousse Salesforce est relue pour que l'écart reste tracé en conflit.
+     */
+    @Transactional
+    public ClmDto.PreremplissageVue saisirValeurs(Long id, ClmDto.ValeursRequest req, Habilitations.Acteur acteur) {
+        Trousse t = lecture.exigerGestion(id, acteur);
+        t.exigerModifiable();
+        List<Modele.Champ> champs = champsDuModele(t);
+        if (champs.isEmpty()) {
+            throw new IllegalStateException("Aucun modèle associé : la trousse n'a pas de champ à compléter.");
+        }
+        Map<String, Object> manuelles = new LinkedHashMap<>();
+        valeurs(t).forEach((cle, v) -> {
+            if (v.provenance() == Preremplissage.Provenance.MANUEL) {
+                manuelles.put(cle, v.valeur());
+            }
+        });
+        List<String> erreurs = appliquerSaisie(champs, req.valeurs() == null ? Map.of() : req.valeurs(), manuelles);
+        if (!erreurs.isEmpty()) {
+            throw new IllegalArgumentException(String.join(" ", erreurs));
+        }
+        if (t.getSource() == Trousse.Source.SALESFORCE) {
+            return preremplir(t, t.getSfDossierId(), manuelles, acteur.id());
+        }
+        Preremplissage.Resultat r = Preremplissage.appliquer(champs, Map.of(), null, manuelles);
+        t.setValeursJson(ctx.ecrire(r.valeurs()));
+        t.toucher(ctx.maintenant());
+        trousses.save(t);
+        journal.consigner(t, "VALEURS_SAISIES", acteur.id(), r.valeurs().size() + " valeur(s), " + r.manquants().size() + " manquant(s)");
+        return new ClmDto.PreremplissageVue(null, null, Map.of(), null, correspondances(champs, r), r.manquants(), r.conflits());
+    }
+
+    private static List<String> appliquerSaisie(List<Modele.Champ> champs, Map<String, Object> saisie, Map<String, Object> manuelles) {
+        Map<String, Modele.Champ> parCle = new LinkedHashMap<>();
+        champs.stream().filter(Modele.Champ::completeALaGeneration).forEach(c -> parCle.put(c.cle(), c));
+        List<String> erreurs = new ArrayList<>();
+        saisie.forEach((cle, brute) -> {
+            Modele.Champ c = parCle.get(cle);
+            String valeur = brute == null ? "" : String.valueOf(brute).trim();
+            if (c == null) {
+                erreurs.add("Champ inconnu ou non modifiable : " + cle + ".");
+            } else if (valeur.isEmpty()) {
+                manuelles.remove(cle);
+            } else if (Modele.valeurValide(c, valeur)) {
+                manuelles.put(cle, valeur);
+            } else {
+                erreurs.add("Valeur invalide pour « " + c.libelle() + " ».");
+            }
+        });
+        return erreurs;
     }
 
     List<Modele.Champ> champsDuModele(Trousse t) {
@@ -281,6 +338,29 @@ public class TrousseService {
         journal.consigner(t, "PARTICIPANT_RETIRE", acteur.id(), p.getNom());
     }
 
+    /** Attribuer une zone (UI-15) : le participant prend le rôle de la zone ; celui qui le tenait reçoit l'ancien rôle. */
+    @Transactional
+    public List<ClmDto.ParticipantVue> attribuerZone(Long id, Long participantId, ClmDto.ZoneRequest req, Habilitations.Acteur acteur) {
+        Trousse t = lecture.exigerGestion(id, acteur);
+        t.exigerModifiable();
+        List<Participant> tous = participants.findByTenantIdAndTrousseIdOrderByIdAsc(t.getTenantId(), t.getId());
+        Participant p = tous.stream().filter(x -> x.getId().equals(participantId)).findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Participant introuvable : " + participantId));
+        String ancien = p.getRoleContrat();
+        p.attribuerRole(req.roleContrat());
+        for (Participant autre : tous) {
+            if (autre != p && autre.getRoleContrat().equals(p.getRoleContrat())) {
+                autre.attribuerRole(ancien);
+                participants.save(autre);
+                resoudreRole(t, autre);
+            }
+        }
+        participants.save(p);
+        resoudreRole(t, p);
+        journal.consigner(t, "ZONE_ATTRIBUEE", acteur.id(), p.getNom() + " · " + p.getRoleContrat());
+        return tous.stream().map(LectureTrousse::participant).toList();
+    }
+
     // --- Parcours (UI-11) ---
     @Transactional
     public List<ClmDto.EtapeVue> definirParcours(Long id, List<ClmDto.EtapeRequest> req, Habilitations.Acteur acteur) {
@@ -289,6 +369,7 @@ public class TrousseService {
         List<Parcours.DefinitionEtape> defs = definitions(req);
         List<String> erreurs = new ArrayList<>(Parcours.valider(defs));
         erreurs.addAll(participantsInconnus(t, defs));
+        erreurs.addAll(reglesInconnues(champsDuModele(t), defs));
         if (!erreurs.isEmpty()) {
             throw new IllegalArgumentException(String.join(" ", erreurs));
         }
@@ -307,6 +388,7 @@ public class TrousseService {
             List<Parcours.DefinitionEtape> defs = definitions(req);
             erreurs.addAll(Parcours.valider(defs));
             erreurs.addAll(participantsInconnus(t, defs));
+            erreurs.addAll(reglesInconnues(champsDuModele(t), defs));
         } catch (IllegalArgumentException e) {
             erreurs.add(e.getMessage());
         }
@@ -327,10 +409,25 @@ public class TrousseService {
         return erreurs;
     }
 
+    /** Une règle d'étape ne porte que sur un champ que l'initiateur complète : lui seul a une valeur au lancement. */
+    static List<String> reglesInconnues(List<Modele.Champ> champs, List<Parcours.DefinitionEtape> defs) {
+        Set<String> cles = new HashSet<>();
+        champs.stream().filter(Modele.Champ::completeALaGeneration).forEach(c -> cles.add(c.cle()));
+        List<String> erreurs = new ArrayList<>();
+        for (Parcours.DefinitionEtape d : defs) {
+            for (Modele.Condition c : d.conditions()) {
+                if (c.champ() != null && !c.champ().isBlank() && !cles.contains(c.champ())) {
+                    erreurs.add("Règle de l'étape " + d.cle() + " : « " + c.champ() + " » n'est pas un champ que l'initiateur complète.");
+                }
+            }
+        }
+        return erreurs;
+    }
+
     private void enregistrerEtapes(Trousse t, List<Parcours.DefinitionEtape> defs) {
         etapes.deleteAll(parcours.etapesDe(t));
         for (Parcours.DefinitionEtape d : defs) {
-            etapes.save(new EtapeTrousse(t.getTenantId(), t.getId(), d, ctx.ecrire(d.affectations())));
+            etapes.save(new EtapeTrousse(t.getTenantId(), t.getId(), d, ctx.ecrire(d.affectations()), ctx.ecrire(d.conditions())));
         }
     }
 
@@ -345,7 +442,8 @@ public class TrousseService {
             int quorum = r.quorum() == null ? (type == Parcours.TypeEtape.SIGNATURE ? affs.size() : 1) : r.quorum();
             Parcours.PolitiqueRejet politique = r.politique() == null || r.politique().isBlank() ? Parcours.PolitiqueRejet.UN_REFUS
                     : enumere(Parcours.PolitiqueRejet.class, r.politique(), "Politique de rejet invalide : " + r.politique());
-            res.add(new Parcours.DefinitionEtape(r.cle(), r.libelle(), r.phase(), type, affs, quorum, politique, r.delaiJours()));
+            res.add(new Parcours.DefinitionEtape(r.cle(), r.libelle(), r.phase(), type, affs, quorum, politique, r.delaiJours(),
+                    r.conditions()));
         }
         return res;
     }
@@ -381,10 +479,13 @@ public class TrousseService {
         }
         List<EtapeTrousse> lesEtapes = parcours.etapesDe(t);
         List<Parcours.DefinitionEtape> defs = lesEtapes.stream().map(e -> new Parcours.DefinitionEtape(e.getCle(), e.getLibelle(),
-                e.getPhase(), e.getType(), ctx.affectations(e.getAffectationsJson()), e.getQuorum(), e.getPolitique(), e.getDelaiJours())).toList();
+                e.getPhase(), e.getType(), ctx.affectations(e.getAffectationsJson()), e.getQuorum(), e.getPolitique(), e.getDelaiJours(),
+                ctx.conditions(e.getConditionsJson()))).toList();
+        List<Modele.Champ> champs = champsDuModele(t);
         erreurs.addAll(Parcours.valider(defs));
         erreurs.addAll(participantsInconnus(t, defs));
-        List<String> manquants = Preremplissage.appliquer(champsDuModele(t), Map.of(), null, rawValeurs(t)).manquants();
+        erreurs.addAll(reglesInconnues(champs, defs));
+        List<String> manquants = Preremplissage.appliquer(champs, Map.of(), null, rawValeurs(t)).manquants();
         if (!manquants.isEmpty()) {
             erreurs.add("Données incomplètes : " + String.join(", ", manquants));
         }
@@ -404,9 +505,7 @@ public class TrousseService {
     }
 
     private Map<String, Object> rawValeurs(Trousse t) {
-        Map<String, Object> m = new LinkedHashMap<>();
-        valeurs(t).forEach((k, v) -> m.put(k, v.valeur()));
-        return m;
+        return ctx.valeursBrutes(t.getValeursJson());
     }
 
     @Transactional
@@ -506,8 +605,10 @@ public class TrousseService {
         invitations.findByTenantIdAndTrousseIdOrderByIdAsc(t.getTenantId(), t.getId()).stream()
                 .filter(i -> i.getStatut() == Invitation.Statut.BLOQUEE)
                 .forEach(i -> alertes.add("Vérification d'identité bloquée : " + noms.get(i.getParticipantId())));
+        List<Modele.Champ> aCompleter = champsDuModele(t).stream().filter(Modele.Champ::completeALaGeneration).toList();
+        List<String> manquants = Preremplissage.appliquer(aCompleter, Map.of(), null, rawValeurs(t)).manquants();
         return new ClmDto.TrousseDetail(lecture.resume(t, lesEtapes, maintenant), t.getRisque().name(), t.getModeleId(), valeurs(t),
-                t.getRappelFrequenceJours(), t.getRappelsMax(), t.getCopies(), t.getSfRecupereLe(),
+                aCompleter, manquants, t.getRappelFrequenceJours(), t.getRappelsMax(), t.getCopies(), t.getSfRecupereLe(),
                 documents.findByTenantIdAndTrousseIdOrderByCleDocumentAscVersionDesc(t.getTenantId(), t.getId()).stream()
                         .map(LectureTrousse::document).toList(),
                 parts, lesEtapes.stream().map(e -> lecture.etape(e, maintenant)).toList(), invs, actions(t, acteur), alertes);

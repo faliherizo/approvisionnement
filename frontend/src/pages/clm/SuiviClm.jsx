@@ -58,7 +58,7 @@ function Contenu() {
         <Bloc zone="01" titre={t('clm.su.blocTable')} large>
           {donnees && lignes.length === 0 ? <p className="muted">{t('clm.aucun')}</p> : (
             <div className="table-scroll">
-              <table className="table clm-table">
+              <table className="table clm-table" data-zone="03">
                 <caption className="sr-only">{t('clm.su.titre')}</caption>
                 <thead><tr><th scope="col">{t('clm.col.reference')}</th><th scope="col">{t('clm.col.statut')}</th><th scope="col">{t('clm.col.etapes')}</th>
                   <th scope="col">{t('clm.col.attente')}</th><th scope="col">{t('clm.col.echeance')}</th><th scope="col">{t('clm.col.dernierEvenement')}</th>

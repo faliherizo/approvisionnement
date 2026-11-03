@@ -2,41 +2,16 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import api from '../../api'
 import { useI18n } from '../../i18n/I18nContext'
-import { GardeModule, Message, Statut, dateHeure, useErreur } from './commun.jsx'
+import { EditeurCondition, GardeModule, Message, Statut, dateHeure, useErreur } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
-import { EditeurParcours, depuisRequete, nouvelleEtape, versRequete } from './OngletParcours.jsx'
+import { EditeurParcours, depuisRequete, versRequete } from './OngletParcours.jsx'
 
 const TYPES = ['TEXTE', 'LISTE', 'DATE', 'CASE', 'SIGNATURE']
-const OPERATEURS = ['EGAL', 'DIFFERENT', 'SUP', 'INF', 'SUPEGAL', 'INFEGAL', 'CONTIENT', 'VIDE', 'NON_VIDE']
 const CHAMP_VIDE = { cle: '', libelle: '', type: 'TEXTE', obligatoire: false, format: '', options: [], source: '', valeurDefaut: '', conditions: [], roleDestinataire: '', position: null }
 const PAS = 1
 
 const nettoyerChamp = (c) => ({ ...c, format: c.format || null, source: c.source || null, valeurDefaut: c.valeurDefaut || null,
   roleDestinataire: c.roleDestinataire || null, options: (c.options || []).filter(Boolean), conditions: (c.conditions || []).filter((x) => x.champ) })
-
-/** Condition simple « champ opérateur valeur » (moteur de règles partagé). */
-function EditeurCondition({ conditions, onChange, champs, idChamp }) {
-  const { t } = useI18n()
-  const c = conditions[0] || { champ: '', operateur: 'EGAL', valeur: '' }
-  const maj = (k, v) => onChange([{ ...c, [k]: v }])
-  return (
-    <fieldset className="form-fieldset">
-      <legend>{t('clm.mo.condition')}</legend>
-      <div className="form-grid">
-        <label>{t('clm.mo.condChamp')}
-          <select id={idChamp} value={c.champ} onChange={(e) => (e.target.value ? maj('champ', e.target.value) : onChange([]))}>
-            <option value="">{t('clm.mo.toujours')}</option>
-            {champs.map((x) => <option key={x} value={x}>{x}</option>)}
-          </select>
-        </label>
-        <label>{t('clm.mo.condOperateur')}
-          <select value={c.operateur} onChange={(e) => maj('operateur', e.target.value)} disabled={!c.champ}>{OPERATEURS.map((o) => <option key={o} value={o}>{t(`clm.op.${o}`)}</option>)}</select>
-        </label>
-        <label className="col-2">{t('clm.col.valeur')}<input value={c.valeur || ''} onChange={(e) => maj('valeur', e.target.value)} disabled={!c.champ} /></label>
-      </div>
-    </fieldset>
-  )
-}
 
 /** Positionnement visuel (ST-05) : page schématique ; la zone sélectionnée se déplace aux flèches (alternative au glisser, WCAG 2.5.7). */
 function PagePositions({ champs, choisi, onChoisir, onDeplacer }) {
@@ -181,34 +156,52 @@ function Contenu() {
               </ul>
             )}
           </Bloc>
-          <Bloc zone="04" maquette="UI-09" titre={t('clm.mo.blocProprietes')}>
+          <Bloc zone="04" titre={t('clm.mo.blocProprietes')}>
             {c ? (
               <div className="form">
-                <div className="form-grid">
-                  <label>{t('clm.mo.cle')}<input value={c.cle} onChange={(e) => majChamp(choisi, 'cle', e.target.value)} required /></label>
-                  <label>{t('clm.mo.libelle')}<input value={c.libelle} onChange={(e) => majChamp(choisi, 'libelle', e.target.value)} required /></label>
-                  <label>{t('clm.col.type')}<select value={c.type} onChange={(e) => majChamp(choisi, 'type', e.target.value)}>{TYPES.map((ty) => <option key={ty} value={ty}>{t(`clm.mo.type.${ty}`)}</option>)}</select></label>
-                  <label className="check-row"><input type="checkbox" checked={c.obligatoire} onChange={(e) => majChamp(choisi, 'obligatoire', e.target.checked)} />{t('clm.mo.obligatoire')}</label>
-                  <label>{t('clm.mo.format')} <span className="muted">{t('clm.mo.formatAide')}</span><input value={c.format || ''} onChange={(e) => majChamp(choisi, 'format', e.target.value)} /></label>
-                  <label>{t('clm.mo.source')} <span className="muted">{t('clm.mo.sourceAide')}</span><input value={c.source || ''} onChange={(e) => majChamp(choisi, 'source', e.target.value)} /></label>
-                  <label>{t('clm.mo.defaut')}<input value={c.valeurDefaut || ''} onChange={(e) => majChamp(choisi, 'valeurDefaut', e.target.value)} /></label>
-                  <label>{t('clm.mo.role')} <span className="muted">{t('clm.mo.roleAide')}</span><input value={c.roleDestinataire || ''} onChange={(e) => majChamp(choisi, 'roleDestinataire', e.target.value)} /></label>
-                  {c.type === 'LISTE' && <label className="col-2">{t('clm.mo.options')}<input value={(c.options || []).join(', ')} onChange={(e) => majChamp(choisi, 'options', e.target.value.split(',').map((s) => s.trim()))} /></label>}
-                </div>
-                <EditeurCondition idChamp="clm-condition-champ" conditions={c.conditions || []} champs={champs.map((x) => x.cle).filter((k) => k && k !== c.cle)} onChange={(v) => majChamp(choisi, 'conditions', v)} />
-                <fieldset className="form-fieldset">
-                  <legend>{t('clm.mo.position')}</legend>
-                  {c.position ? (
-                    <div className="form-grid form-grid--4">
-                      {['page', 'x', 'y', 'largeur', 'hauteur'].map((k) => (
-                        <label key={k}>{t(`clm.mo.pos.${k}`)}<input type="number" min={k === 'page' ? 1 : 0} max={k === 'page' ? undefined : 100} value={c.position[k]}
-                          onChange={(e) => majChamp(choisi, 'position', { ...c.position, [k]: Number(e.target.value) })} /></label>
-                      ))}
-                      <button type="button" className="secondary" onClick={() => majChamp(choisi, 'position', null)}>{t('clm.mo.sansPosition')}</button>
-                    </div>
-                  ) : <button type="button" className="secondary" onClick={() => majChamp(choisi, 'position', { page: 1, x: 10, y: 80, largeur: 30, hauteur: 8 })}>{t('clm.mo.positionner')}</button>}
+                <fieldset className="form-fieldset" data-maquette="UI-09" data-zone="01">
+                  <legend>{t('clm.mo.zoneNom')}</legend>
+                  <div className="form-grid">
+                    <label>{t('clm.mo.cle')}<input value={c.cle} onChange={(e) => majChamp(choisi, 'cle', e.target.value)} required /></label>
+                    <label>{t('clm.mo.libelle')}<input value={c.libelle} onChange={(e) => majChamp(choisi, 'libelle', e.target.value)} required /></label>
+                  </div>
                 </fieldset>
-                <div className="clm-apercu" aria-label={t('clm.mo.apercuChamp')} role="group">
+                <fieldset className="form-fieldset" data-maquette="UI-09" data-zone="02">
+                  <legend>{t('clm.mo.zoneType')}</legend>
+                  <div className="form-grid">
+                    <label>{t('clm.col.type')}<select value={c.type} onChange={(e) => majChamp(choisi, 'type', e.target.value)}>{TYPES.map((ty) => <option key={ty} value={ty}>{t(`clm.mo.type.${ty}`)}</option>)}</select></label>
+                    <label className="check-row"><input type="checkbox" checked={c.obligatoire} onChange={(e) => majChamp(choisi, 'obligatoire', e.target.checked)} />{t('clm.mo.obligatoire')}</label>
+                    <label className="col-2">{t('clm.mo.format')} <span className="muted">{t('clm.mo.formatAide')}</span><input value={c.format || ''} onChange={(e) => majChamp(choisi, 'format', e.target.value)} /></label>
+                    {c.type === 'LISTE' && <label className="col-2">{t('clm.mo.options')}<input value={(c.options || []).join(', ')} onChange={(e) => majChamp(choisi, 'options', e.target.value.split(',').map((s) => s.trim()))} /></label>}
+                  </div>
+                </fieldset>
+                <fieldset className="form-fieldset" data-maquette="UI-09" data-zone="03">
+                  <legend>{t('clm.mo.zoneSource')}</legend>
+                  <div className="form-grid">
+                    <label>{t('clm.mo.source')} <span className="muted">{t('clm.mo.sourceAide')}</span><input value={c.source || ''} onChange={(e) => majChamp(choisi, 'source', e.target.value)} /></label>
+                    <label>{t('clm.mo.defaut')}<input value={c.valeurDefaut || ''} onChange={(e) => majChamp(choisi, 'valeurDefaut', e.target.value)} /></label>
+                  </div>
+                </fieldset>
+                <div data-maquette="UI-09" data-zone="04">
+                  <EditeurCondition idChamp="clm-condition-champ" conditions={c.conditions || []} champs={champs.filter((x) => x.cle && x.cle !== c.cle)} onChange={(v) => majChamp(choisi, 'conditions', v)} />
+                </div>
+                <fieldset className="form-fieldset" data-maquette="UI-09" data-zone="05">
+                  <legend>{t('clm.mo.zoneRole')}</legend>
+                  <label>{t('clm.mo.role')} <span className="muted">{t('clm.mo.roleAide')}</span><input value={c.roleDestinataire || ''} onChange={(e) => majChamp(choisi, 'roleDestinataire', e.target.value)} /></label>
+                  <fieldset className="form-fieldset">
+                    <legend>{t('clm.mo.position')}</legend>
+                    {c.position ? (
+                      <div className="form-grid form-grid--4">
+                        {['page', 'x', 'y', 'largeur', 'hauteur'].map((k) => (
+                          <label key={k}>{t(`clm.mo.pos.${k}`)}<input type="number" min={k === 'page' ? 1 : 0} max={k === 'page' ? undefined : 100} value={c.position[k]}
+                            onChange={(e) => majChamp(choisi, 'position', { ...c.position, [k]: Number(e.target.value) })} /></label>
+                        ))}
+                        <button type="button" className="secondary" onClick={() => majChamp(choisi, 'position', null)}>{t('clm.mo.sansPosition')}</button>
+                      </div>
+                    ) : <button type="button" className="secondary" onClick={() => majChamp(choisi, 'position', { page: 1, x: 10, y: 80, largeur: 30, hauteur: 8 })}>{t('clm.mo.positionner')}</button>}
+                  </fieldset>
+                </fieldset>
+                <div className="clm-apercu" aria-label={t('clm.mo.apercuChamp')} role="group" data-maquette="UI-09" data-zone="06">
                   <p className="muted">{t('clm.mo.apercuChamp')}</p>
                   <p><strong>{c.libelle || c.cle}</strong>{c.obligatoire ? ' *' : ''} · {t(`clm.mo.type.${c.type}`)}{c.type === 'LISTE' && c.options?.length ? ` (${c.options.join(' / ')})` : ''}</p>
                 </div>
@@ -225,20 +218,20 @@ function Contenu() {
                   <label>{t('clm.mo.titreClause')}<input value={cl.titre || ''} onChange={(e) => majClause(i, 'titre', e.target.value)} /></label>
                   <label className="col-2">{t('clm.mo.texte')}<textarea rows={3} value={cl.texte || ''} onChange={(e) => majClause(i, 'texte', e.target.value)} /></label>
                 </div>
-                <EditeurCondition conditions={cl.conditions || []} champs={champs.map((x) => x.cle).filter(Boolean)} onChange={(v) => majClause(i, 'conditions', v)} />
+                <EditeurCondition conditions={cl.conditions || []} champs={champs.filter((x) => x.cle)} onChange={(v) => majClause(i, 'conditions', v)} />
                 <button type="button" className="danger" onClick={() => setM({ ...m, clauses: m.clauses.filter((_, j) => j !== i) })}>{t('clm.retirer')}</button>
               </fieldset>
             ))}
             <button type="button" className="secondary" onClick={() => setM({ ...m, clauses: [...m.clauses, { cle: `clause${m.clauses.length + 1}`, titre: '', texte: '', combinateur: 'ET', conditions: [] }] })}>{t('clm.mo.ajouterClause')}</button>
           </Bloc>
         </div>
-        <div className="clm-editeur__plein">
-          <EditeurParcours etapes={parcours} onChange={setParcours} aideParticipants={t('clm.mo.parcoursAide')} />
-          {modifiable && <div className="cmp-row"><button type="button" className="secondary" onClick={() => setParcours([...parcours, nouvelleEtape(parcours)])}>{t('clm.pc.ajouterEtape')}</button></div>}
+        <div className="clm-editeur__plein" data-maquette="UI-11">
+          <EditeurParcours etapes={parcours} onChange={setParcours} modifiable={modifiable} aideParticipants={t('clm.mo.parcoursAide')}
+            champs={champs.filter((x) => x.cle && x.type !== 'SIGNATURE' && (!x.roleDestinataire?.trim() || x.roleDestinataire === 'INITIATEUR'))} />
         </div>
       </fieldset>
       <Blocs>
-        <Bloc zone="06" maquette="UI-09" titre={t('clm.mo.blocTest')} large>
+        <Bloc maquette="UI-09" titre={t('clm.mo.blocTest')} large>
           <p className="muted">{t('clm.mo.essaiAide')}</p>
           <div className="form-grid">
             {champs.filter((x) => x.type !== 'SIGNATURE').map((x) => (

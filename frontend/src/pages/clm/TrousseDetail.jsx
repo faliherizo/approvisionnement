@@ -6,7 +6,8 @@ import { useI18n } from '../../i18n/I18nContext'
 import { useModules } from '../../hooks/useModules.js'
 import { GardeModule, Message, Onglets, Panneau, Statut, date, dateHeure, useErreur, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
-import { ResumePreremplissage } from './TrousseCreer.jsx'
+import { ApercuDossier, dossierImporte } from './TrousseCreer.jsx'
+import ValeursTrousse from './ValeursTrousse.jsx'
 import OngletDocuments from './OngletDocuments.jsx'
 import OngletParticipants from './OngletParticipants.jsx'
 import OngletParcours, { libelleAffectation } from './OngletParcours.jsx'
@@ -70,7 +71,7 @@ function Contenu() {
   ]
 
   return (
-    <EcranClm maquette="UI-04" titre={r.titre} objectif={t('clm.dt.objectif')}
+    <EcranClm maquette="UI-04" titre={r.titre} objectif={t('clm.dt.objectif')} zoneActions="05"
       ariane={<><Link to="/clm/trousses">{t('clm.tr.titre')}</Link> / {r.reference}</>}
       statut={(
         <dl className="clm-bandeau-meta" data-zone="01">
@@ -129,19 +130,15 @@ function Contenu() {
           <Onglets onglets={onglets} actif={onglet} onChange={setOnglet} label={t('clm.dt.sections')} />
           <Panneau id="resume" actif={onglet}>
             <Blocs>
-              <Bloc titre={t('clm.dt.donnees')} niveau={3}>
-                {Object.keys(d.valeurs).length === 0 ? <p className="muted">{t('clm.dt.aucuneDonnee')}</p> : (
-                  <dl className="clm-dl">
-                    {Object.entries(d.valeurs).map(([k, v]) => (
-                      <div key={k}><dt>{k}</dt><dd>{String(v.valeur)} <span className="muted">({t(`clm.provenance.${v.provenance}`)}{v.recupereLe ? ` · ${dateHeure(v.recupereLe)}` : ''})</span></dd></div>
-                    ))}
-                  </dl>
-                )}
-                {peut('PREREMPLIR') && r.sfDossierId && (
-                  <button type="button" className="secondary" onClick={() => action('preremplissage', { sfDossierId: r.sfDossierId }, t('clm.dt.actualise'))}>{t('clm.dt.actualiserSf')}</button>
-                )}
-                <ResumePreremplissage vue={import_} />
-              </Bloc>
+              {r.sfDossierId && (
+                <Bloc titre={t('clm.dt.donnees')} niveau={3}>
+                  {import_ ? <ApercuDossier dossier={dossierImporte(import_)} />
+                    : <p>{t('clm.sf.dossierCourt', { id: r.sfDossierId, d: dateHeure(d.sfRecupereLe) })}</p>}
+                  {peut('PREREMPLIR') && (
+                    <button type="button" className="secondary" onClick={() => action('preremplissage', { sfDossierId: r.sfDossierId }, t('clm.dt.actualise'))}>{t('clm.dt.actualiserSf')}</button>
+                  )}
+                </Bloc>
+              )}
               <Bloc titre={t('clm.dt.parametres')} niveau={3}>
                 <dl className="clm-dl">
                   <div><dt>{t('clm.champ.typeContrat')}</dt><dd>{r.typeContrat || '—'}</dd></div>
@@ -153,6 +150,8 @@ function Contenu() {
                 </dl>
               </Bloc>
             </Blocs>
+            <ValeursTrousse trousse={d} conflits={import_?.conflits} modifiable={peut('PREREMPLIR')}
+              onChange={(vue) => { if (vue.sfDossierId) setImport(vue); recharger() }} />
           </Panneau>
           <Panneau id="documents" actif={onglet}>
             <OngletDocuments trousse={d} peutGerer={peut('AJOUTER_DOCUMENT')} peutGenerer={peut('GENERER') && !!d.modeleId}

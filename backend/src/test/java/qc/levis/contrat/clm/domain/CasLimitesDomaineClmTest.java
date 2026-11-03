@@ -53,6 +53,66 @@ class CasLimitesDomaineClmTest {
                 new DefinitionEtape("b", "B", 3, TypeEtape.APPROBATION, List.of(JURISTE), 1, null, null))));
     }
 
+    // --- Règle d'affaires d'une étape (F-05, UI-11 bloc 04) ---
+    @ParameterizedTest(name = "champ « {0} », opérateur « {1} » : règle incomplète")
+    @CsvSource(value = {"NUL,EGAL", "' ',EGAL", "montant,NUL", "montant,' '"}, nullValues = "NUL")
+    void une_regle_d_etape_sans_champ_ou_sans_operateur_est_incomplete(String champ, String operateur) {
+        DefinitionEtape d = new DefinitionEtape("a", "Direction", 1, TypeEtape.APPROBATION, List.of(JURISTE), 1, null, null,
+                List.of(new Modele.Condition(champ, operateur, "1")));
+        assertEquals(List.of("Règle incomplète pour l'étape Direction"), Parcours.valider(List.of(d)));
+    }
+
+    @Test
+    void une_regle_d_etape_complete_est_conservee_et_l_absence_de_regle_vaut_liste_vide() {
+        Modele.Condition seuil = new Modele.Condition("montant", "SUP", "100000");
+        DefinitionEtape avecRegle = new DefinitionEtape("a", "A", 1, TypeEtape.APPROBATION, List.of(JURISTE), 1, null, null, List.of(seuil));
+        assertEquals(List.of(), Parcours.valider(List.of(avecRegle)));
+        assertEquals(List.of(seuil), avecRegle.conditions());
+        assertEquals(List.of(), new DefinitionEtape("b", "B", 1, TypeEtape.VALIDATION, List.of(JURISTE), 1, null, null, null).conditions());
+    }
+
+    @Test
+    void une_etape_non_requise_ne_retient_pas_sa_phase_ni_la_fin_du_parcours() {
+        Parcours.Avancement a = Parcours.avancer(List.of(new Parcours.EtatEtape(1L, 1, Parcours.StatutEtape.NON_REQUISE),
+                new Parcours.EtatEtape(2L, 2, Parcours.StatutEtape.EN_ATTENTE)));
+        assertEquals(Set.of(2L), a.aActiver());
+        assertEquals(StatutTrousse.TERMINEE, Parcours.avancer(List.of(new Parcours.EtatEtape(1L, 1, Parcours.StatutEtape.APPROUVEE),
+                new Parcours.EtatEtape(2L, 2, Parcours.StatutEtape.NON_REQUISE))).resultat().orElseThrow());
+    }
+
+    @Test
+    void une_etape_ecartee_est_close_sans_decision_et_garde_sa_regle() {
+        EtapeTrousse e = new EtapeTrousse(1L, 10L, new DefinitionEtape("k", "Étape", 1, TypeEtape.APPROBATION, List.of(JURISTE), 1, null, null),
+                "[]", "[{\"champ\":\"montant\",\"operateur\":\"SUP\",\"valeur\":\"100000\"}]");
+        e.ecarter(Instant.EPOCH);
+        assertEquals(Parcours.StatutEtape.NON_REQUISE, e.getStatut());
+        assertTrue(e.getConditionsJson().contains("montant"));
+        assertThrows(IllegalStateException.class, e::exigerModifiable);
+        assertEquals("[]", new EtapeTrousse(1L, 10L, new DefinitionEtape("k", "K", 1, TypeEtape.VALIDATION, List.of(JURISTE), 1, null, null), "[]")
+                .getConditionsJson());
+    }
+
+    // --- Zone de signature attribuée (UI-15) ---
+    @Test
+    void attribuer_une_zone_exige_un_role_et_le_normalise() {
+        Participant p = new Participant(1L, 10L, "Marie", "m@x.ca", null, "SIGNATAIRE_1", true, Identite.Niveau.COURRIEL);
+        assertThrows(IllegalArgumentException.class, () -> p.attribuerRole(null));
+        assertThrows(IllegalArgumentException.class, () -> p.attribuerRole(" "));
+        p.attribuerRole(" signataire_2 ");
+        assertEquals("SIGNATAIRE_2", p.getRoleContrat());
+    }
+
+    // --- Valeurs saisies par l'initiateur (F-04) ---
+    @ParameterizedTest(name = "« {1} » pour un champ {0} au format « {2} » : {3}")
+    @CsvSource(value = {
+            "TEXTE,QC-123,QC-\\d+,true", "TEXTE,123,QC-\\d+,false", "TEXTE,x,[,false", "TEXTE,libre,NUL,true",
+            "LISTE,b,NUL,true", "LISTE,z,NUL,false", "DATE,2026-11-02,NUL,true", "DATE,02/11/2026,NUL,false",
+            "CASE,true,NUL,true", "CASE,oui,NUL,false"}, nullValues = "NUL")
+    void une_valeur_saisie_respecte_le_format_puis_le_type_du_champ(Modele.TypeChamp type, String valeur, String format, boolean attendu) {
+        Modele.Champ c = champ("c", "C", type, format, List.of("a", "b"), null, null, null);
+        assertEquals(attendu, Modele.valeurValide(c, valeur));
+    }
+
     // --- Identité ---
     @Test
     void le_code_d_un_niveau_courriel_part_par_courriel() {

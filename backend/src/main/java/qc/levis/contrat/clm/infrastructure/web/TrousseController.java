@@ -74,9 +74,20 @@ public class TrousseController {
         return trousses.preremplir(id, req, acteurs.de(auth));
     }
 
+    @PutMapping("/{id}/valeurs")
+    public ClmDto.PreremplissageVue saisirValeurs(@PathVariable Long id, @RequestBody ClmDto.ValeursRequest req, Authentication auth) {
+        return trousses.saisirValeurs(id, req, acteurs.de(auth));
+    }
+
     @PostMapping("/{id}/participants")
     public ClmDto.ParticipantVue ajouterParticipant(@PathVariable Long id, @RequestBody ClmDto.ParticipantRequest req, Authentication auth) {
         return trousses.ajouterParticipant(id, req, acteurs.de(auth));
+    }
+
+    @PutMapping("/{id}/participants/{participantId}/role")
+    public List<ClmDto.ParticipantVue> attribuerZone(@PathVariable Long id, @PathVariable Long participantId, @RequestBody ClmDto.ZoneRequest req,
+                                                     Authentication auth) {
+        return trousses.attribuerZone(id, participantId, req, acteurs.de(auth));
     }
 
     @DeleteMapping("/{id}/participants/{participantId}")

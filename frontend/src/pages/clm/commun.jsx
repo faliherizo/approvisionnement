@@ -8,7 +8,7 @@ const ICONES = {
   BROUILLON: '✎', EN_TRAITEMENT: '⟳', TERMINEE: '✔', REJETEE: '✖', ANNULEE: '⊘', EN_ATTENTE: '…', ACTIVE: '▶',
   APPROUVEE: '✔', ENVOYEE: '✉', VERIFIEE: '☑', SIGNEE: '✍', REFUSEE: '✖', BLOQUEE: '⛔', EXPIREE: '⌛', ENVOYE: '➜',
   SIGNE: '🔒', REMPLACE: '↺', RETIRE: '⊘', EN_REVISION: '◐', PUBLIE: '✔', ECHEC: '⚠', A_REVISER: '◐', VALIDEE: '✔',
-  PROPRE: '✔', INFECTE: '⚠',
+  PROPRE: '✔', INFECTE: '⚠', NON_REQUISE: '⤳',
 }
 const TONS = { TERMINEE: 'ok', APPROUVEE: 'ok', SIGNEE: 'ok', SIGNE: 'ok', PUBLIE: 'ok', VALIDEE: 'ok', PROPRE: 'ok', ENVOYE: 'ok',
   REJETEE: 'ko', REFUSEE: 'ko', BLOQUEE: 'ko', ECHEC: 'ko', INFECTE: 'ko', EXPIREE: 'ko',
@@ -65,6 +65,35 @@ export function Onglets({ onglets, actif, onChange, label }) {
 export function Panneau({ id, actif, children }) {
   if (actif !== id) return null
   return <section role="tabpanel" id={`panneau-${id}`} aria-labelledby={`onglet-${id}`} tabIndex={0}>{children}</section>
+}
+
+export const OPERATEURS = ['EGAL', 'DIFFERENT', 'SUP', 'INF', 'SUPEGAL', 'INFEGAL', 'CONTIENT', 'VIDE', 'NON_VIDE']
+
+/**
+ * Condition simple « champ opérateur valeur », évaluée par le moteur de règles partagé : affichage d'un champ ou d'une
+ * clause dans un modèle, règle d'affaires d'une étape de parcours. `champs` : [{ cle, libelle }].
+ */
+export function EditeurCondition({ conditions, onChange, champs, idChamp, legende, aucune }) {
+  const { t } = useI18n()
+  const c = conditions[0] || { champ: '', operateur: 'EGAL', valeur: '' }
+  const maj = (k, v) => onChange([{ ...c, [k]: v }])
+  return (
+    <fieldset className="form-fieldset">
+      <legend>{legende || t('clm.mo.condition')}</legend>
+      <div className="form-grid">
+        <label>{t('clm.mo.condChamp')}
+          <select id={idChamp} value={c.champ} onChange={(e) => (e.target.value ? maj('champ', e.target.value) : onChange([]))}>
+            <option value="">{aucune || t('clm.mo.toujours')}</option>
+            {champs.map((x) => <option key={x.cle} value={x.cle}>{x.libelle || x.cle}</option>)}
+          </select>
+        </label>
+        <label>{t('clm.mo.condOperateur')}
+          <select value={c.operateur} onChange={(e) => maj('operateur', e.target.value)} disabled={!c.champ}>{OPERATEURS.map((o) => <option key={o} value={o}>{t(`clm.op.${o}`)}</option>)}</select>
+        </label>
+        <label className="col-2">{t('clm.col.valeur')}<input value={c.valeur || ''} onChange={(e) => maj('valeur', e.target.value)} disabled={!c.champ} /></label>
+      </div>
+    </fieldset>
+  )
 }
 
 export const dateHeure = (iso) => (iso ? new Date(iso).toLocaleString('fr-CA', { dateStyle: 'medium', timeStyle: 'short' }) : '—')

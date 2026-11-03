@@ -37,6 +37,8 @@ function Contenu() {
   const pages = Math.max(1, Math.ceil(lignes.length / PAR_PAGE))
   const visibles = lignes.slice(page * PAR_PAGE, (page + 1) * PAR_PAGE)
   const trier = (col) => setTri((x) => ({ col, asc: x.col === col ? !x.asc : true }))
+  const colonnesTriables = { reference: t('clm.col.reference'), titre: t('clm.col.objet'), statut: t('clm.col.statut'),
+    echeance: t('clm.col.echeance'), majLe: t('clm.col.maj') }
   const ariaTri = (col) => (tri.col === col ? (tri.asc ? 'ascending' : 'descending') : 'none')
   const entete = (col, libelle) => (
     <th scope="col" aria-sort={ariaTri(col)}>
@@ -53,7 +55,7 @@ function Contenu() {
   }
 
   return (
-    <EcranClm maquette="UI-02" titre={t('clm.tr.titre')} objectif={t('clm.tr.objectif')}
+    <EcranClm maquette="UI-02" titre={t('clm.tr.titre')} objectif={t('clm.tr.objectif')} zoneActions="05"
       actions={(
         <>
           <Link className="clm-bouton" to="/clm/trousses/nouvelle">{t('clm.tb.creer')}</Link>
@@ -124,13 +126,12 @@ function Contenu() {
               </table>
             </div>
           )}
-          {pages > 1 && (
-            <nav className="pagination cmp-row" aria-label={t('clm.pagination')} data-zone="04">
-              <button type="button" className="secondary" disabled={page === 0} onClick={() => setPage(page - 1)}>{t('clm.precedent')}</button>
-              <span aria-live="polite">{t('clm.pageSur', { p: page + 1, n: pages })}</span>
-              <button type="button" className="secondary" disabled={page >= pages - 1} onClick={() => setPage(page + 1)}>{t('clm.suivant')}</button>
-            </nav>
-          )}
+          <nav className="pagination cmp-row" aria-label={t('clm.pagination')} data-zone="04">
+            <span>{t('clm.tr.triePar', { col: colonnesTriables[tri.col], sens: t(tri.asc ? 'clm.tri.croissant' : 'clm.tri.decroissant') })}</span>
+            <button type="button" className="secondary" disabled={page === 0} onClick={() => setPage(page - 1)}>{t('clm.precedent')}</button>
+            <span aria-live="polite">{t('clm.pageSur', { p: page + 1, n: pages })}</span>
+            <button type="button" className="secondary" disabled={page >= pages - 1} onClick={() => setPage(page + 1)}>{t('clm.suivant')}</button>
+          </nav>
         </Bloc>
       </Blocs>
     </EcranClm>
