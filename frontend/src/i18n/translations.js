@@ -3,7 +3,10 @@
 // sont générées automatiquement et À RELIRE par un locuteur. Convention de clé : `namespace.sousCle`.
 // Interpolation : « {n} » dans le texte, remplacé via t('clé', { n: 3 }).
 
-import messages from './messages.json'
+import socle from './messages.json'
+import clm from './clm.messages.js'
+
+const messages = { ...socle, ...clm }
 
 export const LOCALES = [
   { code: 'fr-CA', label: 'Français (Canada)', drapeau: '🇨🇦' },

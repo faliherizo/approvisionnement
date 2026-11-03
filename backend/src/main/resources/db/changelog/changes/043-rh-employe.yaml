@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: 043-1-employe
+      author: levis
+      comment: "Dossiers employés (RH). NAS masqué à la lecture (Loi 25) ; attributs additionnels en JSON."
+      changes:
+        - createTable:
+            tableName: employe
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: matricule, type: VARCHAR(40) }
+              - column: { name: prenom, type: VARCHAR(120), constraints: { nullable: false } }
+              - column: { name: nom, type: VARCHAR(120), constraints: { nullable: false } }
+              - column: { name: nas, type: VARCHAR(15) }
+              - column: { name: courriel, type: VARCHAR(180) }
+              - column: { name: telephone, type: VARCHAR(40) }
+              - column: { name: date_embauche, type: VARCHAR(10) }
+              - column: { name: date_fin, type: VARCHAR(10) }
+              - column: { name: statut, type: VARCHAR(20) }
+              - column: { name: poste, type: VARCHAR(150) }
+              - column: { name: departement, type: VARCHAR(120) }
+              - column: { name: salaire_annuel, type: DOUBLE }
+              - column: { name: frequence, type: VARCHAR(20) }
+              - column: { name: province, type: VARCHAR(40) }
+              - column: { name: type_travailleur, type: VARCHAR(40) }
+              - column: { name: attributs_json, type: TEXT }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: true, constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - addUniqueConstraint:
+            tableName: employe
+            columnNames: tenant_id, matricule
+            constraintName: uq_employe_tenant_matricule

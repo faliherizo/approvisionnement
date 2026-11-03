@@ -43,10 +43,12 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/oidc/**").permitAll() // flux OIDC (authorization code + PKCE)
                 .requestMatchers("/api/auth/saml/**").permitAll() // flux SAML 2.0 SP-initiated
                 .requestMatchers("/api/signature/**").permitAll() // signature externe par jeton
+                .requestMatchers("/api/clm/portail/**").permitAll() // portail CLM du signataire (jeton + vérification d'identité)
                 .requestMatchers(HttpMethod.GET, "/api/tenants", "/api/tenants/*/public").permitAll() // sélecteur & titre de connexion
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/health").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                .requestMatchers("/api/public/**").permitAll() // API publique tokenisée (auth par jeton d'API/OAuth)
                 .anyRequest().authenticated()
             )
             .headers(h -> h.frameOptions(f -> f.disable())) // H2 console (dév)

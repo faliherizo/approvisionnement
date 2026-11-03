@@ -1,0 +1,70 @@
+databaseChangeLog:
+  - changeSet:
+      id: 044-1-regle-approbation
+      author: levis
+      comment: "Règles d'approbation multi-niveaux configurables (moteur Approbations porté de Nexu VINA)."
+      changes:
+        - createTable:
+            tableName: regle_approbation
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: document_type, type: VARCHAR(80), constraints: { nullable: false } }
+              - column: { name: champ, type: VARCHAR(80), constraints: { nullable: false } }
+              - column: { name: operateur, type: VARCHAR(10), constraints: { nullable: false } }
+              - column: { name: valeur, type: VARCHAR(200) }
+              - column: { name: niveau, type: INT, constraints: { nullable: false } }
+              - column: { name: approbateur_role, type: VARCHAR(60) }
+              - column: { name: approbateur_id, type: VARCHAR(150) }
+        - createIndex:
+            tableName: regle_approbation
+            indexName: ix_regleappro
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: document_type }
+  - changeSet:
+      id: 044-2-demande-approbation
+      author: levis
+      changes:
+        - createTable:
+            tableName: demande_approbation
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: document_type, type: VARCHAR(80), constraints: { nullable: false } }
+              - column: { name: document_id, type: VARCHAR(120) }
+              - column: { name: contexte_json, type: TEXT }
+              - column: { name: demandeur, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: statut, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - createIndex:
+            tableName: demande_approbation
+            indexName: ix_demappro
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: statut }
+  - changeSet:
+      id: 044-3-etape-approbation
+      author: levis
+      changes:
+        - createTable:
+            tableName: etape_approbation
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: demande_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: niveau, type: INT, constraints: { nullable: false } }
+              - column: { name: approbateur_role, type: VARCHAR(60) }
+              - column: { name: approbateur_id, type: VARCHAR(150) }
+              - column: { name: rule_id, type: VARCHAR(80) }
+              - column: { name: statut, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: decide_par, type: VARCHAR(150) }
+              - column: { name: commentaire, type: VARCHAR(2000) }
+              - column: { name: decide_le, type: TIMESTAMP }
+        - createIndex:
+            tableName: etape_approbation
+            indexName: ix_etappro
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: approbateur_role }
+              - column: { name: statut }

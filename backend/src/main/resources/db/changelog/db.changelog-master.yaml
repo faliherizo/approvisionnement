@@ -63,3 +63,35 @@ databaseChangeLog:
       file: db/changelog/changes/031-integration-oidc.yaml
   - include:
       file: db/changelog/changes/032-integration-saml.yaml
+  - include:
+      file: db/changelog/changes/033-module-registry.yaml
+  - include:
+      file: db/changelog/changes/034-formulaire.yaml
+  - include:
+      file: db/changelog/changes/035-saisie.yaml
+  - include:
+      file: db/changelog/changes/036-notification.yaml
+  - include:
+      file: db/changelog/changes/037-securite-fine.yaml
+  - include:
+      file: db/changelog/changes/038-rapport-interop.yaml
+  - include:
+      file: db/changelog/changes/039-domaine-numero.yaml
+  - include:
+      file: db/changelog/changes/040-processus.yaml
+  - include:
+      file: db/changelog/changes/041-document.yaml
+  - include:
+      file: db/changelog/changes/042-application.yaml
+  - include:
+      file: db/changelog/changes/043-rh-employe.yaml
+  - include:
+      file: db/changelog/changes/044-approbation.yaml
+  - include:
+      file: db/changelog/changes/045-feuille-temps.yaml
+  - include:
+      file: db/changelog/changes/046-conservation.yaml
+  - include:
+      file: db/changelog/changes/047-projet-tache.yaml
+  - include:
+      file: db/changelog/changes/048-clm.yaml

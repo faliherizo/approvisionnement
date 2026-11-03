@@ -1,0 +1,51 @@
+databaseChangeLog:
+  # Type binaire par SGBD : bytea sur PostgreSQL (aligné sur le mapping Hibernate de byte[]),
+  # BLOB sur H2 (tests). Évite le défaut Liquibase BLOB→oid de PostgreSQL (incompatible bytea).
+  - property: { name: blob.type, value: bytea, dbms: postgresql }
+  - property: { name: blob.type, value: BLOB, dbms: h2 }
+  - changeSet:
+      id: 041-1-document-demande
+      author: levis
+      comment: "Pièces jointes d'une demande (métadonnées + binaire bytea) — écran 8, ADR-005."
+      changes:
+        - createTable:
+            tableName: document_demande
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: saisie_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: formulaire_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: nom_original, type: VARCHAR(300), constraints: { nullable: false } }
+              - column: { name: media_type, type: VARCHAR(150) }
+              - column: { name: taille_octets, type: BIGINT }
+              - column: { name: classification, type: VARCHAR(20) }
+              - column: { name: contenu, type: "${blob.type}" }
+              - column: { name: uploade_par, type: VARCHAR(150) }
+              - column: { name: uploade_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - createIndex:
+            tableName: document_demande
+            indexName: ix_docdem_saisie
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: saisie_id }
+  - changeSet:
+      id: 041-2-commentaire-demande
+      author: levis
+      comment: "Commentaires/compléments d'une demande (append-only, visibilité interne/demandeur)."
+      changes:
+        - createTable:
+            tableName: commentaire_demande
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: saisie_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: visibilite, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: corps, type: VARCHAR(4000), constraints: { nullable: false } }
+              - column: { name: auteur, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - createIndex:
+            tableName: commentaire_demande
+            indexName: ix_comdem_saisie
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: saisie_id }

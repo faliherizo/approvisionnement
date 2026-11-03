@@ -50,7 +50,7 @@ export default function Users() {
         <h1>{t('users.title', { n: data.total })}</h1>
         <button onClick={() => { setEdit({ ...VIDE }); setErr(null) }}>{t('users.newUser')}</button>
       </div>
-      <input className="search-input" placeholder={t('users.searchPlaceholder')} value={q}
+      <input className="search-input" aria-label={t('users.searchPlaceholder')} placeholder={t('users.searchPlaceholder')} value={q}
              onChange={(e) => { setPage(0); setQ(e.target.value) }} />
       <div className="table-wrap">
         <table className="table">

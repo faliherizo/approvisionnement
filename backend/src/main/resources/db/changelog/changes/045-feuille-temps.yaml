@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 045-1-feuille-temps
+      author: levis
+      comment: "Feuilles de temps (Espace RH) : lignes JSON + total, cycle BROUILLON→SOUMISE→APPROUVEE/REFUSEE."
+      changes:
+        - createTable:
+            tableName: feuille_temps
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: proprietaire, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: employe_id, type: BIGINT }
+              - column: { name: periode_debut, type: VARCHAR(10) }
+              - column: { name: periode_fin, type: VARCHAR(10) }
+              - column: { name: statut, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: lignes_json, type: TEXT }
+              - column: { name: total_heures, type: DOUBLE }
+              - column: { name: approbateur, type: VARCHAR(150) }
+              - column: { name: commentaire, type: VARCHAR(2000) }
+              - column: { name: maj_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - createIndex:
+            tableName: feuille_temps
+            indexName: ix_feuilletemps
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: proprietaire }

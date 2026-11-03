@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 033-1-module-catalogue
+      author: levis
+      changes:
+        - createTable:
+            tableName: module_catalogue
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: code, type: VARCHAR(50), constraints: { nullable: false, unique: true, uniqueConstraintName: uq_module_catalogue_code } }
+              - column: { name: nom, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: famille, type: VARCHAR(50) }
+              - column: { name: ordre, type: INT, defaultValueNumeric: 0, constraints: { nullable: false } }
+              - column: { name: actif_par_defaut, type: BOOLEAN, defaultValueBoolean: false, constraints: { nullable: false } }
+              - column: { name: requiert, type: VARCHAR(500) }
+  - changeSet:
+      id: 033-2-tenant-module
+      author: levis
+      changes:
+        - createTable:
+            tableName: tenant_module
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: module_code, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: false, constraints: { nullable: false } }
+              - column: { name: active_le, type: TIMESTAMP }
+              - column: { name: active_par, type: VARCHAR(150) }
+        - addUniqueConstraint:
+            tableName: tenant_module
+            columnNames: tenant_id, module_code
+            constraintName: uq_tenant_module

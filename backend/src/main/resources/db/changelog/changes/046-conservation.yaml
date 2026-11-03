@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 046-1-formulaire-conservation
+      author: levis
+      comment: "Durée de conservation des fiches par formulaire (politique de rétention — §6 de l'avis)."
+      changes:
+        - addColumn:
+            tableName: formulaire
+            columns:
+              - column: { name: conservation_jours, type: INT }

@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: 036-1-notification-modele
+      author: levis
+      changes:
+        - createTable:
+            tableName: notification_modele
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: code, type: VARCHAR(80), constraints: { nullable: false } }
+              - column: { name: canal, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: sujet, type: VARCHAR(300) }
+              - column: { name: corps, type: TEXT }
+        - addUniqueConstraint:
+            tableName: notification_modele
+            columnNames: tenant_id, code
+            constraintName: uq_notif_modele
+  - changeSet:
+      id: 036-2-notification-regle
+      author: levis
+      changes:
+        - createTable:
+            tableName: notification_regle
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: formulaire_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: declencheur, type: VARCHAR(30), constraints: { nullable: false } }
+              - column: { name: modele_code, type: VARCHAR(80), constraints: { nullable: false } }
+              - column: { name: destinataires, type: VARCHAR(2000) }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: true, constraints: { nullable: false } }
+  - changeSet:
+      id: 036-3-notification-envoi
+      author: levis
+      changes:
+        - createTable:
+            tableName: notification_envoi
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: canal, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: destinataire, type: VARCHAR(300) }
+              - column: { name: sujet, type: VARCHAR(300) }
+              - column: { name: corps, type: TEXT }
+              - column: { name: statut, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: envoye_le, type: TIMESTAMP, constraints: { nullable: false } }

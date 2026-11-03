@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 039-1-formulaire-domaine
+      author: levis
+      comment: "Rattachement d'un formulaire à un domaine métier (RH / APPROVISIONNEMENT), cloisonnement — architecture §5.2 DOMAIN."
+      changes:
+        - addColumn:
+            tableName: formulaire
+            columns:
+              - column: { name: domaine, type: VARCHAR(40) }
+  - changeSet:
+      id: 039-2-saisie-numero
+      author: levis
+      comment: "Numéro de demande lisible généré côté serveur (ex. AP-2026-000123), unique — architecture §5.3."
+      changes:
+        - addColumn:
+            tableName: saisie
+            columns:
+              - column: { name: numero, type: VARCHAR(40) }
+        - addUniqueConstraint:
+            tableName: saisie
+            columnNames: numero
+            constraintName: uq_saisie_numero

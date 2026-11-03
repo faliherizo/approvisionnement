@@ -5168,5 +5168,3130 @@
     "fr": "Tester la configuration",
     "en": "Test configuration",
     "mg": "Tsapao ny fanamboarana"
+  },
+  "nav.formulaires": {
+    "fr": "Formulaires",
+    "en": "Forms",
+    "mg": "Formulaires"
+  },
+  "nav.formulairesConception": {
+    "fr": "Conception",
+    "en": "Design",
+    "mg": "Conception"
+  },
+  "module.titre": {
+    "fr": "Modules par tenant",
+    "en": "Modules per tenant",
+    "mg": "Modules par tenant"
+  },
+  "module.description": {
+    "fr": "Activez ou désactivez les modules pour chaque organisation. Les dépendances sont résolues automatiquement.",
+    "en": "Enable or disable modules for each organization. Dependencies are resolved automatically.",
+    "mg": "Activez ou désactivez les modules pour chaque organisation. Les dépendances sont résolues automatiquement."
+  },
+  "module.choisirTenant": {
+    "fr": "Organisation",
+    "en": "Organization",
+    "mg": "Organisation"
+  },
+  "module.choisir": {
+    "fr": "— Choisir —",
+    "en": "— Select —",
+    "mg": "— Choisir —"
+  },
+  "module.colModule": {
+    "fr": "Module",
+    "en": "Module",
+    "mg": "Module"
+  },
+  "module.colFamille": {
+    "fr": "Famille",
+    "en": "Family",
+    "mg": "Famille"
+  },
+  "module.colPrerequis": {
+    "fr": "Prérequis",
+    "en": "Prerequisites",
+    "mg": "Prérequis"
+  },
+  "module.colEtat": {
+    "fr": "État",
+    "en": "Status",
+    "mg": "État"
+  },
+  "module.colActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Actions"
+  },
+  "module.actif": {
+    "fr": "Actif",
+    "en": "Active",
+    "mg": "Actif"
+  },
+  "module.inactif": {
+    "fr": "Inactif",
+    "en": "Inactive",
+    "mg": "Inactif"
+  },
+  "module.activer": {
+    "fr": "Activer",
+    "en": "Enable",
+    "mg": "Activer"
+  },
+  "module.desactiver": {
+    "fr": "Désactiver",
+    "en": "Disable",
+    "mg": "Désactiver"
+  },
+  "module.aucun": {
+    "fr": "Aucun module pour {tenant}.",
+    "en": "No module for {tenant}.",
+    "mg": "Aucun module pour {tenant}."
+  },
+  "module.bascule.ok": {
+    "fr": "Mise à jour effectuée.",
+    "en": "Update applied.",
+    "mg": "Mise à jour effectuée."
+  },
+  "module.bascule.erreur": {
+    "fr": "La bascule du module a échoué.",
+    "en": "Module toggle failed.",
+    "mg": "La bascule du module a échoué."
+  },
+  "formulaires.titre": {
+    "fr": "Formulaires",
+    "en": "Forms",
+    "mg": "Formulaires"
+  },
+  "formulaires.intro": {
+    "fr": "Concevez des formulaires configurables : pages, champs et règles, sans aucune colonne figée.",
+    "en": "Design configurable forms: pages, fields and rules, with no fixed columns.",
+    "mg": "Concevez des formulaires configurables : pages, champs et règles, sans aucune colonne figée."
+  },
+  "formulaires.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "formulaires.moduleInactif": {
+    "fr": "Le module « Formulaires » n’est pas activé pour votre organisation.",
+    "en": "The “Forms” module is not enabled for your organization.",
+    "mg": "Le module « Formulaires » n’est pas activé pour votre organisation."
+  },
+  "formulaires.colNom": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Nom"
+  },
+  "formulaires.colCode": {
+    "fr": "Code",
+    "en": "Code",
+    "mg": "Code"
+  },
+  "formulaires.colVersion": {
+    "fr": "Version",
+    "en": "Version",
+    "mg": "Version"
+  },
+  "formulaires.colStatut": {
+    "fr": "Statut",
+    "en": "Status",
+    "mg": "Statut"
+  },
+  "formulaires.colActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Actions"
+  },
+  "formulaires.concevoir": {
+    "fr": "Concevoir",
+    "en": "Design",
+    "mg": "Concevoir"
+  },
+  "formulaires.remplir": {
+    "fr": "Remplir",
+    "en": "Fill",
+    "mg": "Remplir"
+  },
+  "formulaires.fiches": {
+    "fr": "Fiches",
+    "en": "Entries",
+    "mg": "Fiches"
+  },
+  "formulaires.supprimer": {
+    "fr": "Supprimer",
+    "en": "Delete",
+    "mg": "Supprimer"
+  },
+  "formulaires.aucun": {
+    "fr": "Aucun formulaire.",
+    "en": "No form yet.",
+    "mg": "Aucun formulaire."
+  },
+  "formulaires.nouveau": {
+    "fr": "Nouveau formulaire",
+    "en": "New form",
+    "mg": "Nouveau formulaire"
+  },
+  "formulaires.phCode": {
+    "fr": "Code (ex. demande_acces)",
+    "en": "Code (e.g. access_request)",
+    "mg": "Code (ex. demande_acces)"
+  },
+  "formulaires.phNom": {
+    "fr": "Nom du formulaire",
+    "en": "Form name",
+    "mg": "Nom du formulaire"
+  },
+  "formulaires.creer": {
+    "fr": "Créer",
+    "en": "Create",
+    "mg": "Créer"
+  },
+  "formulaires.erreurCreation": {
+    "fr": "La création a échoué (code déjà utilisé ?).",
+    "en": "Creation failed (code already used?).",
+    "mg": "La création a échoué (code déjà utilisé ?)."
+  },
+  "formulaires.confirmerSuppression": {
+    "fr": "Supprimer ce formulaire ?",
+    "en": "Delete this form?",
+    "mg": "Supprimer ce formulaire ?"
+  },
+  "formulaires.retourListe": {
+    "fr": "Retour à la liste",
+    "en": "Back to list",
+    "mg": "Retour à la liste"
+  },
+  "builder.chargement": {
+    "fr": "Chargement du formulaire…",
+    "en": "Loading form…",
+    "mg": "Chargement du formulaire…"
+  },
+  "builder.erreurChargement": {
+    "fr": "Impossible de charger la version du formulaire.",
+    "en": "Could not load the form version.",
+    "mg": "Impossible de charger la version du formulaire."
+  },
+  "builder.version": {
+    "fr": "Version {n}",
+    "en": "Version {n}",
+    "mg": "Version {n}"
+  },
+  "builder.apercu": {
+    "fr": "Aperçu",
+    "en": "Preview",
+    "mg": "Aperçu"
+  },
+  "builder.masquerApercu": {
+    "fr": "Masquer l’aperçu",
+    "en": "Hide preview",
+    "mg": "Masquer l’aperçu"
+  },
+  "builder.apercuTitre": {
+    "fr": "Aperçu du formulaire",
+    "en": "Form preview",
+    "mg": "Aperçu du formulaire"
+  },
+  "builder.enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Enregistrer"
+  },
+  "builder.enregistre": {
+    "fr": "Structure enregistrée.",
+    "en": "Structure saved.",
+    "mg": "Structure enregistrée."
+  },
+  "builder.erreurEnregistrement": {
+    "fr": "L’enregistrement a échoué.",
+    "en": "Save failed.",
+    "mg": "L’enregistrement a échoué."
+  },
+  "builder.erreurAction": {
+    "fr": "L’action a échoué.",
+    "en": "Action failed.",
+    "mg": "L’action a échoué."
+  },
+  "builder.soumettre": {
+    "fr": "Soumettre à l’approbation",
+    "en": "Submit for approval",
+    "mg": "Soumettre à l’approbation"
+  },
+  "builder.soumis": {
+    "fr": "Formulaire soumis à l’approbation.",
+    "en": "Form submitted for approval.",
+    "mg": "Formulaire soumis à l’approbation."
+  },
+  "builder.publier": {
+    "fr": "Publier",
+    "en": "Publish",
+    "mg": "Publier"
+  },
+  "builder.publie": {
+    "fr": "Formulaire publié.",
+    "en": "Form published.",
+    "mg": "Formulaire publié."
+  },
+  "builder.publieNote": {
+    "fr": "Cette version est publiée (figée). Un enregistrement créera un nouveau brouillon.",
+    "en": "This version is published (frozen). Saving will create a new draft.",
+    "mg": "Cette version est publiée (figée). Un enregistrement créera un nouveau brouillon."
+  },
+  "builder.pages": {
+    "fr": "Pages",
+    "en": "Pages",
+    "mg": "Pages"
+  },
+  "builder.ajouterPage": {
+    "fr": "Ajouter une page",
+    "en": "Add page",
+    "mg": "Ajouter une page"
+  },
+  "builder.aucunePage": {
+    "fr": "Aucune page. Ajoutez-en une pour commencer.",
+    "en": "No page. Add one to start.",
+    "mg": "Aucune page. Ajoutez-en une pour commencer."
+  },
+  "builder.pageDefaut": {
+    "fr": "Page {n}",
+    "en": "Page {n}",
+    "mg": "Page {n}"
+  },
+  "builder.titrePage": {
+    "fr": "Titre de la page",
+    "en": "Page title",
+    "mg": "Titre de la page"
+  },
+  "builder.retirerPage": {
+    "fr": "Retirer la page",
+    "en": "Remove page",
+    "mg": "Retirer la page"
+  },
+  "builder.colLibelle": {
+    "fr": "Libellé",
+    "en": "Label",
+    "mg": "Libellé"
+  },
+  "builder.colCode": {
+    "fr": "Code",
+    "en": "Code",
+    "mg": "Code"
+  },
+  "builder.colType": {
+    "fr": "Type",
+    "en": "Type",
+    "mg": "Type"
+  },
+  "builder.colOptions": {
+    "fr": "Options",
+    "en": "Options",
+    "mg": "Options"
+  },
+  "builder.colObligatoire": {
+    "fr": "Obligatoire",
+    "en": "Required",
+    "mg": "Obligatoire"
+  },
+  "builder.colActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Actions"
+  },
+  "builder.optionsPlaceholder": {
+    "fr": "Valeurs séparées par des virgules",
+    "en": "Comma-separated values",
+    "mg": "Valeurs séparées par des virgules"
+  },
+  "builder.monter": {
+    "fr": "Monter",
+    "en": "Move up",
+    "mg": "Monter"
+  },
+  "builder.descendre": {
+    "fr": "Descendre",
+    "en": "Move down",
+    "mg": "Descendre"
+  },
+  "builder.retirer": {
+    "fr": "Retirer",
+    "en": "Remove",
+    "mg": "Retirer"
+  },
+  "builder.aucunChamp": {
+    "fr": "Aucun champ sur cette page.",
+    "en": "No field on this page.",
+    "mg": "Aucun champ sur cette page."
+  },
+  "builder.ajouterChamp": {
+    "fr": "Ajouter un champ",
+    "en": "Add field",
+    "mg": "Ajouter un champ"
+  },
+  "builder.champDefaut": {
+    "fr": "Nouveau champ",
+    "en": "New field",
+    "mg": "Nouveau champ"
+  },
+  "builder.regles": {
+    "fr": "Règles",
+    "en": "Rules",
+    "mg": "Règles"
+  },
+  "builder.ajouterRegle": {
+    "fr": "Ajouter une règle",
+    "en": "Add rule",
+    "mg": "Ajouter une règle"
+  },
+  "builder.reglesAide": {
+    "fr": "Visibilité, obligation, validation, calcul ou routage — évaluées en direct dans l’aperçu.",
+    "en": "Visibility, requirement, validation, calculation or routing — evaluated live in the preview.",
+    "mg": "Visibilité, obligation, validation, calcul ou routage — évaluées en direct dans l’aperçu."
+  },
+  "builder.aucuneRegle": {
+    "fr": "Aucune règle.",
+    "en": "No rule.",
+    "mg": "Aucune règle."
+  },
+  "builder.regleN": {
+    "fr": "Règle {n}",
+    "en": "Rule {n}",
+    "mg": "Règle {n}"
+  },
+  "builder.regleType": {
+    "fr": "Type",
+    "en": "Type",
+    "mg": "Type"
+  },
+  "builder.regleCombinateur": {
+    "fr": "Combinaison",
+    "en": "Combination",
+    "mg": "Combinaison"
+  },
+  "builder.combinateurET": {
+    "fr": "Toutes (ET)",
+    "en": "All (AND)",
+    "mg": "Toutes (ET)"
+  },
+  "builder.combinateurOU": {
+    "fr": "Au moins une (OU)",
+    "en": "Any (OR)",
+    "mg": "Au moins une (OU)"
+  },
+  "builder.regleCible": {
+    "fr": "Cible",
+    "en": "Target",
+    "mg": "Cible"
+  },
+  "builder.cibleChoisir": {
+    "fr": "— Choisir —",
+    "en": "— Select —",
+    "mg": "— Choisir —"
+  },
+  "builder.regleValeur": {
+    "fr": "Valeur",
+    "en": "Value",
+    "mg": "Valeur"
+  },
+  "builder.regleValeurAide": {
+    "fr": "message, expression (somme:a,b) ou rôle",
+    "en": "message, expression (sum:a,b) or role",
+    "mg": "message, expression (somme:a,b) ou rôle"
+  },
+  "builder.retirerRegle": {
+    "fr": "Retirer",
+    "en": "Remove",
+    "mg": "Retirer"
+  },
+  "builder.conditions": {
+    "fr": "Conditions",
+    "en": "Conditions",
+    "mg": "Conditions"
+  },
+  "builder.ajouterCondition": {
+    "fr": "Ajouter une condition",
+    "en": "Add condition",
+    "mg": "Ajouter une condition"
+  },
+  "builder.valeurCondition": {
+    "fr": "Valeur",
+    "en": "Value",
+    "mg": "Valeur"
+  },
+  "rendu.aucuneStructure": {
+    "fr": "Ce formulaire n’a pas encore de structure.",
+    "en": "This form has no structure yet.",
+    "mg": "Ce formulaire n’a pas encore de structure."
+  },
+  "rendu.choisir": {
+    "fr": "— Choisir —",
+    "en": "— Select —",
+    "mg": "— Choisir —"
+  },
+  "rendu.pageN": {
+    "fr": "Page {n}",
+    "en": "Page {n}",
+    "mg": "Page {n}"
+  },
+  "rendu.pageVide": {
+    "fr": "Aucun champ visible.",
+    "en": "No visible field.",
+    "mg": "Aucun champ visible."
+  },
+  "rendu.erreursTitre": {
+    "fr": "Veuillez corriger :",
+    "en": "Please fix:",
+    "mg": "Veuillez corriger :"
+  },
+  "remplir.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "remplir.moduleInactif": {
+    "fr": "Le dépôt de fiches n’est pas activé.",
+    "en": "Entry submission is not enabled.",
+    "mg": "Le dépôt de fiches n’est pas activé."
+  },
+  "remplir.titre": {
+    "fr": "Remplir le formulaire",
+    "en": "Fill the form",
+    "mg": "Remplir le formulaire"
+  },
+  "remplir.erreurOuverture": {
+    "fr": "Impossible d’ouvrir le formulaire.",
+    "en": "Could not open the form.",
+    "mg": "Impossible d’ouvrir le formulaire."
+  },
+  "remplir.sauvegarde": {
+    "fr": "Enregistré",
+    "en": "Saved",
+    "mg": "Enregistré"
+  },
+  "remplir.sauvegardeEnCours": {
+    "fr": "Enregistrement…",
+    "en": "Saving…",
+    "mg": "Enregistrement…"
+  },
+  "remplir.sauvegardeEchec": {
+    "fr": "Échec de l’enregistrement",
+    "en": "Save failed",
+    "mg": "Échec de l’enregistrement"
+  },
+  "remplir.captcha": {
+    "fr": "Je ne suis pas un robot",
+    "en": "I am not a robot",
+    "mg": "Je ne suis pas un robot"
+  },
+  "remplir.soumettre": {
+    "fr": "Soumettre",
+    "en": "Submit",
+    "mg": "Soumettre"
+  },
+  "remplir.merci": {
+    "fr": "Votre fiche a été soumise avec succès.",
+    "en": "Your entry was submitted successfully.",
+    "mg": "Votre fiche a été soumise avec succès."
+  },
+  "remplir.confirmationTitre": {
+    "fr": "Merci",
+    "en": "Thank you",
+    "mg": "Merci"
+  },
+  "remplir.voirFiches": {
+    "fr": "Voir les fiches",
+    "en": "View entries",
+    "mg": "Voir les fiches"
+  },
+  "remplir.erreurSoumission": {
+    "fr": "La soumission a échoué.",
+    "en": "Submission failed.",
+    "mg": "La soumission a échoué."
+  },
+  "fiches.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "fiches.moduleInactif": {
+    "fr": "Le module « Fiches » n’est pas activé.",
+    "en": "The “Entries” module is not enabled.",
+    "mg": "Le module « Fiches » n’est pas activé."
+  },
+  "fiches.retour": {
+    "fr": "Retour aux formulaires",
+    "en": "Back to forms",
+    "mg": "Retour aux formulaires"
+  },
+  "fiches.titre": {
+    "fr": "Fiches soumises",
+    "en": "Submitted entries",
+    "mg": "Fiches soumises"
+  },
+  "fiches.resume": {
+    "fr": "Résumé",
+    "en": "Summary",
+    "mg": "Résumé"
+  },
+  "fiches.aucuneDonneeResume": {
+    "fr": "Aucune donnée.",
+    "en": "No data.",
+    "mg": "Aucune donnée."
+  },
+  "fiches.exportExcel": {
+    "fr": "Exporter en Excel",
+    "en": "Export to Excel",
+    "mg": "Exporter en Excel"
+  },
+  "fiches.liste": {
+    "fr": "Liste des fiches",
+    "en": "Entries list",
+    "mg": "Liste des fiches"
+  },
+  "fiches.colStatut": {
+    "fr": "Statut",
+    "en": "Status",
+    "mg": "Statut"
+  },
+  "fiches.colMaj": {
+    "fr": "Mise à jour",
+    "en": "Updated",
+    "mg": "Mise à jour"
+  },
+  "fiches.colSoumis": {
+    "fr": "Soumis le",
+    "en": "Submitted",
+    "mg": "Soumis le"
+  },
+  "fiches.colActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Actions"
+  },
+  "fiches.details": {
+    "fr": "Détails",
+    "en": "Details",
+    "mg": "Détails"
+  },
+  "fiches.masquer": {
+    "fr": "Masquer",
+    "en": "Hide",
+    "mg": "Masquer"
+  },
+  "fiches.valider": {
+    "fr": "Valider",
+    "en": "Approve",
+    "mg": "Valider"
+  },
+  "fiches.rejeter": {
+    "fr": "Rejeter",
+    "en": "Reject",
+    "mg": "Rejeter"
+  },
+  "fiches.aucune": {
+    "fr": "Aucune fiche.",
+    "en": "No entry.",
+    "mg": "Aucune fiche."
+  },
+  "fiches.aucuneReponse": {
+    "fr": "Aucune réponse.",
+    "en": "No answer.",
+    "mg": "Aucune réponse."
+  },
+  "fiches.erreurAction": {
+    "fr": "L’action a échoué.",
+    "en": "Action failed.",
+    "mg": "L’action a échoué."
+  },
+  "fiches.erreurExport": {
+    "fr": "L’export a échoué.",
+    "en": "Export failed.",
+    "mg": "L’export a échoué."
+  },
+  "statut.BROUILLON": {
+    "fr": "Brouillon",
+    "en": "Draft",
+    "mg": "Brouillon"
+  },
+  "statut.EN_APPROBATION": {
+    "fr": "En approbation",
+    "en": "Pending approval",
+    "mg": "En approbation"
+  },
+  "statut.PUBLIE": {
+    "fr": "Publié",
+    "en": "Published",
+    "mg": "Publié"
+  },
+  "statut.ARCHIVE": {
+    "fr": "Archivé",
+    "en": "Archived",
+    "mg": "Archivé"
+  },
+  "statutSaisie.BROUILLON": {
+    "fr": "Brouillon",
+    "en": "Draft",
+    "mg": "Brouillon"
+  },
+  "statutSaisie.SOUMIS": {
+    "fr": "Soumis",
+    "en": "Submitted",
+    "mg": "Soumis"
+  },
+  "statutSaisie.VALIDE": {
+    "fr": "Validé",
+    "en": "Approved",
+    "mg": "Validé"
+  },
+  "statutSaisie.REJETE": {
+    "fr": "Rejeté",
+    "en": "Rejected",
+    "mg": "Rejeté"
+  },
+  "regleType.VISIBILITE": {
+    "fr": "Visibilité",
+    "en": "Visibility",
+    "mg": "Visibilité"
+  },
+  "regleType.OBLIGATION": {
+    "fr": "Obligation",
+    "en": "Requirement",
+    "mg": "Obligation"
+  },
+  "regleType.VALIDATION": {
+    "fr": "Validation",
+    "en": "Validation",
+    "mg": "Validation"
+  },
+  "regleType.CALCUL": {
+    "fr": "Calcul",
+    "en": "Calculation",
+    "mg": "Calcul"
+  },
+  "regleType.ROUTAGE": {
+    "fr": "Routage",
+    "en": "Routing",
+    "mg": "Routage"
+  },
+  "operateur.EGAL": {
+    "fr": "= égal à",
+    "en": "= equals",
+    "mg": "= égal à"
+  },
+  "operateur.DIFFERENT": {
+    "fr": "≠ différent de",
+    "en": "≠ differs from",
+    "mg": "≠ différent de"
+  },
+  "operateur.SUP": {
+    "fr": "> supérieur à",
+    "en": "> greater than",
+    "mg": "> supérieur à"
+  },
+  "operateur.INF": {
+    "fr": "< inférieur à",
+    "en": "< less than",
+    "mg": "< inférieur à"
+  },
+  "operateur.SUPEGAL": {
+    "fr": "≥ au moins",
+    "en": "≥ at least",
+    "mg": "≥ au moins"
+  },
+  "operateur.INFEGAL": {
+    "fr": "≤ au plus",
+    "en": "≤ at most",
+    "mg": "≤ au plus"
+  },
+  "operateur.CONTIENT": {
+    "fr": "contient",
+    "en": "contains",
+    "mg": "contient"
+  },
+  "operateur.VIDE": {
+    "fr": "est vide",
+    "en": "is empty",
+    "mg": "est vide"
+  },
+  "operateur.NON_VIDE": {
+    "fr": "n’est pas vide",
+    "en": "is not empty",
+    "mg": "n’est pas vide"
+  },
+  "nav.notifications": {
+    "fr": "Notifications",
+    "en": "Notifications",
+    "mg": "Notifications"
+  },
+  "nav.securiteFine": {
+    "fr": "Sécurité fine",
+    "en": "Fine-grained security",
+    "mg": "Sécurité fine"
+  },
+  "nav.interop": {
+    "fr": "API & intégrations",
+    "en": "API & integrations",
+    "mg": "API & intégrations"
+  },
+  "declencheur.SOUMISSION": {
+    "fr": "Soumission",
+    "en": "Submission",
+    "mg": "Soumission"
+  },
+  "declencheur.VALIDATION": {
+    "fr": "Validation",
+    "en": "Approval",
+    "mg": "Validation"
+  },
+  "declencheur.REJET": {
+    "fr": "Rejet",
+    "en": "Rejection",
+    "mg": "Rejet"
+  },
+  "notif.titre": {
+    "fr": "Notifications",
+    "en": "Notifications",
+    "mg": "Notifications"
+  },
+  "notif.intro": {
+    "fr": "Gabarits de message, règles (déclencheur → gabarit → canal) et journal des envois.",
+    "en": "Message templates, rules (trigger → template → channel) and send log.",
+    "mg": "Gabarits de message, règles (déclencheur → gabarit → canal) et journal des envois."
+  },
+  "notif.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "notif.moduleInactif": {
+    "fr": "Le module « Notifications » n’est pas activé.",
+    "en": "The “Notifications” module is not enabled.",
+    "mg": "Le module « Notifications » n’est pas activé."
+  },
+  "notif.erreur": {
+    "fr": "L’opération a échoué.",
+    "en": "The operation failed.",
+    "mg": "L’opération a échoué."
+  },
+  "notif.gabarits": {
+    "fr": "Gabarits",
+    "en": "Templates",
+    "mg": "Gabarits"
+  },
+  "notif.colCode": {
+    "fr": "Code",
+    "en": "Code",
+    "mg": "Code"
+  },
+  "notif.colCanal": {
+    "fr": "Canal",
+    "en": "Channel",
+    "mg": "Canal"
+  },
+  "notif.colSujet": {
+    "fr": "Sujet",
+    "en": "Subject",
+    "mg": "Sujet"
+  },
+  "notif.aucunGabarit": {
+    "fr": "Aucun gabarit.",
+    "en": "No template.",
+    "mg": "Aucun gabarit."
+  },
+  "notif.phCode": {
+    "fr": "Code (ex. accuse_reception)",
+    "en": "Code (e.g. acknowledgement)",
+    "mg": "Code (ex. accuse_reception)"
+  },
+  "notif.phSujet": {
+    "fr": "Sujet",
+    "en": "Subject",
+    "mg": "Sujet"
+  },
+  "notif.corps": {
+    "fr": "Corps du message",
+    "en": "Message body",
+    "mg": "Corps du message"
+  },
+  "notif.corpsAide": {
+    "fr": "Utilisez {{code_champ}} pour insérer une réponse.",
+    "en": "Use {{field_code}} to insert an answer.",
+    "mg": "Utilisez {{code_champ}} pour insérer une réponse."
+  },
+  "notif.ajouterGabarit": {
+    "fr": "Ajouter le gabarit",
+    "en": "Add template",
+    "mg": "Ajouter le gabarit"
+  },
+  "notif.regles": {
+    "fr": "Règles d’envoi",
+    "en": "Send rules",
+    "mg": "Règles d’envoi"
+  },
+  "notif.colFormulaire": {
+    "fr": "Formulaire (id)",
+    "en": "Form (id)",
+    "mg": "Formulaire (id)"
+  },
+  "notif.colDeclencheur": {
+    "fr": "Déclencheur",
+    "en": "Trigger",
+    "mg": "Déclencheur"
+  },
+  "notif.colGabarit": {
+    "fr": "Gabarit",
+    "en": "Template",
+    "mg": "Gabarit"
+  },
+  "notif.colDestinataires": {
+    "fr": "Destinataires",
+    "en": "Recipients",
+    "mg": "Destinataires"
+  },
+  "notif.aucuneRegle": {
+    "fr": "Aucune règle.",
+    "en": "No rule.",
+    "mg": "Aucune règle."
+  },
+  "notif.phFormulaireId": {
+    "fr": "Id du formulaire",
+    "en": "Form id",
+    "mg": "Id du formulaire"
+  },
+  "notif.choisirGabarit": {
+    "fr": "— Gabarit —",
+    "en": "— Template —",
+    "mg": "— Gabarit —"
+  },
+  "notif.phDestinataires": {
+    "fr": "Destinataires (courriels, rôles…)",
+    "en": "Recipients (emails, roles…)",
+    "mg": "Destinataires (courriels, rôles…)"
+  },
+  "notif.ajouterRegle": {
+    "fr": "Ajouter la règle",
+    "en": "Add rule",
+    "mg": "Ajouter la règle"
+  },
+  "notif.journal": {
+    "fr": "Journal des envois",
+    "en": "Send log",
+    "mg": "Journal des envois"
+  },
+  "notif.colDestinataire": {
+    "fr": "Destinataire",
+    "en": "Recipient",
+    "mg": "Destinataire"
+  },
+  "notif.colStatut": {
+    "fr": "Statut",
+    "en": "Status",
+    "mg": "Statut"
+  },
+  "notif.colDate": {
+    "fr": "Date",
+    "en": "Date",
+    "mg": "Date"
+  },
+  "notif.aucunEnvoi": {
+    "fr": "Aucun envoi.",
+    "en": "No send yet.",
+    "mg": "Aucun envoi."
+  },
+  "secf.titre": {
+    "fr": "Sécurité fine",
+    "en": "Fine-grained security",
+    "mg": "Sécurité fine"
+  },
+  "secf.intro": {
+    "fr": "Permissions granulaires (refus par défaut) et groupes d’utilisateurs.",
+    "en": "Granular permissions (deny by default) and user groups.",
+    "mg": "Permissions granulaires (refus par défaut) et groupes d’utilisateurs."
+  },
+  "secf.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "secf.moduleInactif": {
+    "fr": "Le module « Sécurité fine » n’est pas activé.",
+    "en": "The “Fine-grained security” module is not enabled.",
+    "mg": "Le module « Sécurité fine » n’est pas activé."
+  },
+  "secf.erreur": {
+    "fr": "L’opération a échoué.",
+    "en": "The operation failed.",
+    "mg": "L’opération a échoué."
+  },
+  "secf.permissions": {
+    "fr": "Permissions",
+    "en": "Permissions",
+    "mg": "Permissions"
+  },
+  "secf.colSujet": {
+    "fr": "Sujet",
+    "en": "Subject",
+    "mg": "Sujet"
+  },
+  "secf.colPortee": {
+    "fr": "Portée",
+    "en": "Scope",
+    "mg": "Portée"
+  },
+  "secf.colCible": {
+    "fr": "Cible",
+    "en": "Target",
+    "mg": "Cible"
+  },
+  "secf.colAction": {
+    "fr": "Action",
+    "en": "Action",
+    "mg": "Action"
+  },
+  "secf.colActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Actions"
+  },
+  "secf.supprimer": {
+    "fr": "Supprimer",
+    "en": "Delete",
+    "mg": "Supprimer"
+  },
+  "secf.aucunePermission": {
+    "fr": "Aucune permission (tout est refusé par défaut).",
+    "en": "No permission (everything denied by default).",
+    "mg": "Aucune permission (tout est refusé par défaut)."
+  },
+  "secf.phSujet": {
+    "fr": "Rôle / groupe / utilisateur",
+    "en": "Role / group / user",
+    "mg": "Rôle / groupe / utilisateur"
+  },
+  "secf.phCible": {
+    "fr": "Code du champ / de la fiche / du bouton",
+    "en": "Field / entry / button code",
+    "mg": "Code du champ / de la fiche / du bouton"
+  },
+  "secf.ajouterPermission": {
+    "fr": "Ajouter la permission",
+    "en": "Add permission",
+    "mg": "Ajouter la permission"
+  },
+  "secf.groupes": {
+    "fr": "Groupes",
+    "en": "Groups",
+    "mg": "Groupes"
+  },
+  "secf.colCode": {
+    "fr": "Code",
+    "en": "Code",
+    "mg": "Code"
+  },
+  "secf.colNom": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Nom"
+  },
+  "secf.colMembre": {
+    "fr": "Ajouter un membre",
+    "en": "Add member",
+    "mg": "Ajouter un membre"
+  },
+  "secf.phUtilisateur": {
+    "fr": "Identifiant / courriel",
+    "en": "Username / email",
+    "mg": "Identifiant / courriel"
+  },
+  "secf.ajouterMembre": {
+    "fr": "Ajouter",
+    "en": "Add",
+    "mg": "Ajouter"
+  },
+  "secf.aucunGroupe": {
+    "fr": "Aucun groupe.",
+    "en": "No group.",
+    "mg": "Aucun groupe."
+  },
+  "secf.phCodeGroupe": {
+    "fr": "Code du groupe",
+    "en": "Group code",
+    "mg": "Code du groupe"
+  },
+  "secf.phNomGroupe": {
+    "fr": "Nom du groupe",
+    "en": "Group name",
+    "mg": "Nom du groupe"
+  },
+  "secf.ajouterGroupe": {
+    "fr": "Ajouter le groupe",
+    "en": "Add group",
+    "mg": "Ajouter le groupe"
+  },
+  "interop.titre": {
+    "fr": "API & intégrations",
+    "en": "API & integrations",
+    "mg": "API & intégrations"
+  },
+  "interop.intro": {
+    "fr": "Clients d’API (OAuth2 client_credentials) pour le dépôt de fiches par des systèmes tiers.",
+    "en": "API clients (OAuth2 client_credentials) for third-party systems submitting entries.",
+    "mg": "Clients d’API (OAuth2 client_credentials) pour le dépôt de fiches par des systèmes tiers."
+  },
+  "interop.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "interop.moduleInactif": {
+    "fr": "Le module « API & intégrations » n’est pas activé.",
+    "en": "The “API & integrations” module is not enabled.",
+    "mg": "Le module « API & intégrations » n’est pas activé."
+  },
+  "interop.erreur": {
+    "fr": "L’opération a échoué.",
+    "en": "The operation failed.",
+    "mg": "L’opération a échoué."
+  },
+  "interop.identifiantsTitre": {
+    "fr": "Identifiants du client",
+    "en": "Client credentials",
+    "mg": "Identifiants du client"
+  },
+  "interop.secretUneFois": {
+    "fr": "Copiez ce secret maintenant : il ne sera plus affiché.",
+    "en": "Copy this secret now: it will not be shown again.",
+    "mg": "Copiez ce secret maintenant : il ne sera plus affiché."
+  },
+  "interop.compris": {
+    "fr": "J’ai copié le secret",
+    "en": "I have copied the secret",
+    "mg": "J’ai copié le secret"
+  },
+  "interop.clients": {
+    "fr": "Clients d’API",
+    "en": "API clients",
+    "mg": "Clients d’API"
+  },
+  "interop.colNom": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Nom"
+  },
+  "interop.colScopes": {
+    "fr": "Portées",
+    "en": "Scopes",
+    "mg": "Portées"
+  },
+  "interop.colActif": {
+    "fr": "Actif",
+    "en": "Active",
+    "mg": "Actif"
+  },
+  "interop.oui": {
+    "fr": "Oui",
+    "en": "Yes",
+    "mg": "Oui"
+  },
+  "interop.non": {
+    "fr": "Non",
+    "en": "No",
+    "mg": "Non"
+  },
+  "interop.aucun": {
+    "fr": "Aucun client.",
+    "en": "No client.",
+    "mg": "Aucun client."
+  },
+  "interop.phNom": {
+    "fr": "Nom du client",
+    "en": "Client name",
+    "mg": "Nom du client"
+  },
+  "interop.phScopes": {
+    "fr": "Portées (ex. fiches:ecrire)",
+    "en": "Scopes (e.g. entries:write)",
+    "mg": "Portées (ex. fiches:ecrire)"
+  },
+  "interop.creer": {
+    "fr": "Créer le client",
+    "en": "Create client",
+    "mg": "Créer le client"
+  },
+  "formulaires.filtreDomaine": {
+    "fr": "Domaine",
+    "en": "Domain",
+    "mg": "Domaine"
+  },
+  "formulaires.tousDomaines": {
+    "fr": "Tous les domaines",
+    "en": "All domains",
+    "mg": "Tous les domaines"
+  },
+  "formulaires.colDomaine": {
+    "fr": "Domaine",
+    "en": "Domain",
+    "mg": "Domaine"
+  },
+  "formulaires.sansDomaine": {
+    "fr": "— Domaine (optionnel) —",
+    "en": "— Domain (optional) —",
+    "mg": "— Domaine (optionnel) —"
+  },
+  "fiches.colNumero": {
+    "fr": "N° de demande",
+    "en": "Request no.",
+    "mg": "N° de demande"
+  },
+  "nav.portail": {
+    "fr": "Mes services",
+    "en": "My services",
+    "mg": "Mes services"
+  },
+  "nav.mesDemandes": {
+    "fr": "Mes demandes",
+    "en": "My requests",
+    "mg": "Mes demandes"
+  },
+  "nav.nouvelleDemande": {
+    "fr": "Nouvelle demande",
+    "en": "New request",
+    "mg": "Nouvelle demande"
+  },
+  "demandes.titre": {
+    "fr": "Mes demandes",
+    "en": "My requests",
+    "mg": "Mes demandes"
+  },
+  "demandes.intro": {
+    "fr": "Suivez l’état de vos demandes et reprenez vos brouillons.",
+    "en": "Track your requests and resume your drafts.",
+    "mg": "Suivez l’état de vos demandes et reprenez vos brouillons."
+  },
+  "demandes.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "demandes.moduleInactif": {
+    "fr": "Le dépôt de demandes n’est pas activé.",
+    "en": "Request submission is not enabled.",
+    "mg": "Le dépôt de demandes n’est pas activé."
+  },
+  "demandes.nouvelle": {
+    "fr": "Nouvelle demande",
+    "en": "New request",
+    "mg": "Nouvelle demande"
+  },
+  "demandes.erreur": {
+    "fr": "L’action a échoué.",
+    "en": "The action failed.",
+    "mg": "L’action a échoué."
+  },
+  "demandes.confirmerAnnulation": {
+    "fr": "Annuler ce brouillon ?",
+    "en": "Cancel this draft?",
+    "mg": "Annuler ce brouillon ?"
+  },
+  "demandes.reprendre": {
+    "fr": "Reprendre",
+    "en": "Resume",
+    "mg": "Reprendre"
+  },
+  "demandes.completer": {
+    "fr": "Compléter",
+    "en": "Complete",
+    "mg": "Compléter"
+  },
+  "demandes.annuler": {
+    "fr": "Annuler",
+    "en": "Cancel",
+    "mg": "Annuler"
+  },
+  "demandes.details": {
+    "fr": "Détails",
+    "en": "Details",
+    "mg": "Détails"
+  },
+  "demandes.section.brouillons": {
+    "fr": "Brouillons",
+    "en": "Drafts",
+    "mg": "Brouillons"
+  },
+  "demandes.section.soumises": {
+    "fr": "Soumises",
+    "en": "Submitted",
+    "mg": "Soumises"
+  },
+  "demandes.section.aCompleter": {
+    "fr": "À compléter",
+    "en": "To complete",
+    "mg": "À compléter"
+  },
+  "demandes.section.terminees": {
+    "fr": "Terminées",
+    "en": "Closed",
+    "mg": "Terminées"
+  },
+  "demandes.colNumero": {
+    "fr": "N° de demande",
+    "en": "Request no.",
+    "mg": "N° de demande"
+  },
+  "demandes.colFormulaire": {
+    "fr": "Demande",
+    "en": "Request",
+    "mg": "Demande"
+  },
+  "demandes.colDomaine": {
+    "fr": "Domaine",
+    "en": "Domain",
+    "mg": "Domaine"
+  },
+  "demandes.colStatut": {
+    "fr": "Statut",
+    "en": "Status",
+    "mg": "Statut"
+  },
+  "demandes.colMaj": {
+    "fr": "Mise à jour",
+    "en": "Updated",
+    "mg": "Mise à jour"
+  },
+  "demandes.colActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Actions"
+  },
+  "demandes.aucune": {
+    "fr": "Aucune demande.",
+    "en": "No request.",
+    "mg": "Aucune demande."
+  },
+  "catalogue.titre": {
+    "fr": "Nouvelle demande",
+    "en": "New request",
+    "mg": "Nouvelle demande"
+  },
+  "catalogue.intro": {
+    "fr": "Choisissez un formulaire publié à remplir.",
+    "en": "Choose a published form to fill.",
+    "mg": "Choisissez un formulaire publié à remplir."
+  },
+  "catalogue.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "catalogue.moduleInactif": {
+    "fr": "Le module « Formulaires » n’est pas activé.",
+    "en": "The “Forms” module is not enabled.",
+    "mg": "Le module « Formulaires » n’est pas activé."
+  },
+  "catalogue.filtreDomaine": {
+    "fr": "Domaine",
+    "en": "Domain",
+    "mg": "Domaine"
+  },
+  "catalogue.tousDomaines": {
+    "fr": "Tous les domaines",
+    "en": "All domains",
+    "mg": "Tous les domaines"
+  },
+  "catalogue.remplir": {
+    "fr": "Remplir",
+    "en": "Fill",
+    "mg": "Remplir"
+  },
+  "catalogue.saisieInactive": {
+    "fr": "Dépôt indisponible",
+    "en": "Submission unavailable",
+    "mg": "Dépôt indisponible"
+  },
+  "catalogue.aucun": {
+    "fr": "Aucun formulaire publié.",
+    "en": "No published form.",
+    "mg": "Aucun formulaire publié."
+  },
+  "statutSaisie.EN_TRAITEMENT": {
+    "fr": "En traitement",
+    "en": "In review",
+    "mg": "En traitement"
+  },
+  "statutSaisie.A_COMPLETER": {
+    "fr": "À compléter",
+    "en": "To complete",
+    "mg": "À compléter"
+  },
+  "statutSaisie.CLOTURE": {
+    "fr": "Clôturée",
+    "en": "Closed",
+    "mg": "Clôturée"
+  },
+  "statutSaisie.ANNULE": {
+    "fr": "Annulée",
+    "en": "Cancelled",
+    "mg": "Annulée"
+  },
+  "nav.taches": {
+    "fr": "Tâches et approbations",
+    "en": "Tasks & approvals",
+    "mg": "Tâches et approbations"
+  },
+  "formulaires.ongletStructure": {
+    "fr": "Structure",
+    "en": "Structure",
+    "mg": "Structure"
+  },
+  "formulaires.ongletWorkflow": {
+    "fr": "Workflow",
+    "en": "Workflow",
+    "mg": "Workflow"
+  },
+  "workflow.titre": {
+    "fr": "Concepteur de workflow",
+    "en": "Workflow designer",
+    "mg": "Concepteur de workflow"
+  },
+  "workflow.intro": {
+    "fr": "Séquence d’étapes ; une étape conditionnelle ne s’applique que si ses conditions sont vraies (routage par montant).",
+    "en": "Sequence of steps; a conditional step applies only when its conditions hold (routing by amount).",
+    "mg": "Séquence d’étapes ; une étape conditionnelle ne s’applique que si ses conditions sont vraies (routage par montant)."
+  },
+  "workflow.erreurChargement": {
+    "fr": "Impossible de charger le workflow.",
+    "en": "Could not load the workflow.",
+    "mg": "Impossible de charger le workflow."
+  },
+  "workflow.erreurEnregistrement": {
+    "fr": "L’enregistrement a échoué.",
+    "en": "Save failed.",
+    "mg": "L’enregistrement a échoué."
+  },
+  "workflow.enregistre": {
+    "fr": "Workflow enregistré.",
+    "en": "Workflow saved.",
+    "mg": "Workflow enregistré."
+  },
+  "workflow.enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Enregistrer"
+  },
+  "workflow.ajouterEtape": {
+    "fr": "Ajouter une étape",
+    "en": "Add step",
+    "mg": "Ajouter une étape"
+  },
+  "workflow.aucuneEtape": {
+    "fr": "Aucune étape. La demande sera validée manuellement.",
+    "en": "No step. Requests will be approved manually.",
+    "mg": "Aucune étape. La demande sera validée manuellement."
+  },
+  "workflow.etapeDefaut": {
+    "fr": "Étape {n}",
+    "en": "Step {n}",
+    "mg": "Étape {n}"
+  },
+  "workflow.etapeN": {
+    "fr": "Étape {n}",
+    "en": "Step {n}",
+    "mg": "Étape {n}"
+  },
+  "workflow.nom": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Nom"
+  },
+  "workflow.type": {
+    "fr": "Type",
+    "en": "Type",
+    "mg": "Type"
+  },
+  "workflow.type.VERIFICATION": {
+    "fr": "Vérification",
+    "en": "Verification",
+    "mg": "Vérification"
+  },
+  "workflow.type.APPROBATION": {
+    "fr": "Approbation",
+    "en": "Approval",
+    "mg": "Approbation"
+  },
+  "workflow.type.TRAITEMENT": {
+    "fr": "Traitement",
+    "en": "Processing",
+    "mg": "Traitement"
+  },
+  "workflow.role": {
+    "fr": "Responsable (rôle)",
+    "en": "Assignee (role)",
+    "mg": "Responsable (rôle)"
+  },
+  "workflow.delai": {
+    "fr": "Délai (jours)",
+    "en": "Deadline (days)",
+    "mg": "Délai (jours)"
+  },
+  "workflow.commentaireRefus": {
+    "fr": "Commentaire obligatoire au refus",
+    "en": "Comment required on refusal",
+    "mg": "Commentaire obligatoire au refus"
+  },
+  "workflow.monter": {
+    "fr": "Monter",
+    "en": "Move up",
+    "mg": "Monter"
+  },
+  "workflow.descendre": {
+    "fr": "Descendre",
+    "en": "Move down",
+    "mg": "Descendre"
+  },
+  "workflow.retirer": {
+    "fr": "Retirer",
+    "en": "Remove",
+    "mg": "Retirer"
+  },
+  "workflow.conditions": {
+    "fr": "Conditions de routage",
+    "en": "Routing conditions",
+    "mg": "Conditions de routage"
+  },
+  "workflow.conditionsAide": {
+    "fr": "(l’étape ne s’applique que si toutes les conditions sont vraies)",
+    "en": "(step applies only if all conditions hold)",
+    "mg": "(l’étape ne s’applique que si toutes les conditions sont vraies)"
+  },
+  "workflow.champ": {
+    "fr": "— Champ —",
+    "en": "— Field —",
+    "mg": "— Champ —"
+  },
+  "workflow.valeur": {
+    "fr": "Valeur",
+    "en": "Value",
+    "mg": "Valeur"
+  },
+  "workflow.ajouterCondition": {
+    "fr": "Ajouter une condition",
+    "en": "Add condition",
+    "mg": "Ajouter une condition"
+  },
+  "taches.titre": {
+    "fr": "Tâches et approbations",
+    "en": "Tasks & approvals",
+    "mg": "Tâches et approbations"
+  },
+  "taches.intro": {
+    "fr": "Les tâches ouvertes assignées à vos rôles.",
+    "en": "Open tasks assigned to your roles.",
+    "mg": "Les tâches ouvertes assignées à vos rôles."
+  },
+  "taches.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "taches.moduleInactif": {
+    "fr": "Le module « Processus » n’est pas activé.",
+    "en": "The “Process” module is not enabled.",
+    "mg": "Le module « Processus » n’est pas activé."
+  },
+  "taches.erreur": {
+    "fr": "L’action a échoué.",
+    "en": "The action failed.",
+    "mg": "L’action a échoué."
+  },
+  "taches.colDossier": {
+    "fr": "Dossier",
+    "en": "Case",
+    "mg": "Dossier"
+  },
+  "taches.colEtape": {
+    "fr": "Étape",
+    "en": "Step",
+    "mg": "Étape"
+  },
+  "taches.colDomaine": {
+    "fr": "Domaine",
+    "en": "Domain",
+    "mg": "Domaine"
+  },
+  "taches.colEcheance": {
+    "fr": "Échéance",
+    "en": "Deadline",
+    "mg": "Échéance"
+  },
+  "taches.colActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Actions"
+  },
+  "taches.examiner": {
+    "fr": "Examiner",
+    "en": "Review",
+    "mg": "Examiner"
+  },
+  "taches.aucune": {
+    "fr": "Aucune tâche.",
+    "en": "No task.",
+    "mg": "Aucune tâche."
+  },
+  "taches.examenTitre": {
+    "fr": "Examen — {numero}",
+    "en": "Review — {numero}",
+    "mg": "Examen — {numero}"
+  },
+  "taches.commentaire": {
+    "fr": "Commentaire",
+    "en": "Comment",
+    "mg": "Commentaire"
+  },
+  "taches.approuver": {
+    "fr": "Approuver",
+    "en": "Approve",
+    "mg": "Approuver"
+  },
+  "taches.retour": {
+    "fr": "Retourner pour correction",
+    "en": "Return for correction",
+    "mg": "Retourner pour correction"
+  },
+  "taches.refuser": {
+    "fr": "Refuser",
+    "en": "Refuse",
+    "mg": "Refuser"
+  },
+  "annexes.documents": {
+    "fr": "Documents",
+    "en": "Documents",
+    "mg": "Documents"
+  },
+  "annexes.colNom": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Nom"
+  },
+  "annexes.colTaille": {
+    "fr": "Taille",
+    "en": "Size",
+    "mg": "Taille"
+  },
+  "annexes.colClassification": {
+    "fr": "Classification",
+    "en": "Classification",
+    "mg": "Classification"
+  },
+  "annexes.colActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Actions"
+  },
+  "annexes.telecharger": {
+    "fr": "Télécharger",
+    "en": "Download",
+    "mg": "Télécharger"
+  },
+  "annexes.aucunDocument": {
+    "fr": "Aucun document.",
+    "en": "No document.",
+    "mg": "Aucun document."
+  },
+  "annexes.ajouterDocument": {
+    "fr": "Ajouter un document",
+    "en": "Add a document",
+    "mg": "Ajouter un document"
+  },
+  "annexes.envoiEnCours": {
+    "fr": "Téléversement…",
+    "en": "Uploading…",
+    "mg": "Téléversement…"
+  },
+  "annexes.erreurUpload": {
+    "fr": "Le téléversement a échoué.",
+    "en": "Upload failed.",
+    "mg": "Le téléversement a échoué."
+  },
+  "annexes.commentaires": {
+    "fr": "Commentaires",
+    "en": "Comments",
+    "mg": "Commentaires"
+  },
+  "annexes.aucunCommentaire": {
+    "fr": "Aucun commentaire.",
+    "en": "No comment.",
+    "mg": "Aucun commentaire."
+  },
+  "annexes.erreurCommentaire": {
+    "fr": "L’ajout du commentaire a échoué.",
+    "en": "Adding the comment failed.",
+    "mg": "L’ajout du commentaire a échoué."
+  },
+  "annexes.visibiliteLabel": {
+    "fr": "Visibilité",
+    "en": "Visibility",
+    "mg": "Visibilité"
+  },
+  "annexes.visibilite.INTERNE": {
+    "fr": "Interne",
+    "en": "Internal",
+    "mg": "Interne"
+  },
+  "annexes.visibilite.DEMANDEUR": {
+    "fr": "Visible du demandeur",
+    "en": "Visible to requester",
+    "mg": "Visible du demandeur"
+  },
+  "annexes.commentairePlaceholder": {
+    "fr": "Votre commentaire…",
+    "en": "Your comment…",
+    "mg": "Votre commentaire…"
+  },
+  "annexes.commenter": {
+    "fr": "Commenter",
+    "en": "Comment",
+    "mg": "Commenter"
+  },
+  "nav.applications": {
+    "fr": "Applications",
+    "en": "Applications",
+    "mg": "Applications"
+  },
+  "formulaires.ongletVersions": {
+    "fr": "Versions",
+    "en": "Versions",
+    "mg": "Versions"
+  },
+  "applications.titre": {
+    "fr": "Applications",
+    "en": "Applications",
+    "mg": "Applications"
+  },
+  "applications.intro": {
+    "fr": "Espaces fonctionnels regroupant des formulaires par domaine et environnement.",
+    "en": "Functional spaces grouping forms by domain and environment.",
+    "mg": "Espaces fonctionnels regroupant des formulaires par domaine et environnement."
+  },
+  "applications.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "applications.moduleInactif": {
+    "fr": "Le module « Applications » n’est pas activé.",
+    "en": "The “Applications” module is not enabled.",
+    "mg": "Le module « Applications » n’est pas activé."
+  },
+  "applications.erreur": {
+    "fr": "L’opération a échoué.",
+    "en": "The operation failed.",
+    "mg": "L’opération a échoué."
+  },
+  "applications.filtreDomaine": {
+    "fr": "Domaine",
+    "en": "Domain",
+    "mg": "Domaine"
+  },
+  "applications.tousDomaines": {
+    "fr": "Tous les domaines",
+    "en": "All domains",
+    "mg": "Tous les domaines"
+  },
+  "applications.colNom": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Nom"
+  },
+  "applications.colDomaine": {
+    "fr": "Domaine",
+    "en": "Domain",
+    "mg": "Domaine"
+  },
+  "applications.colEnv": {
+    "fr": "Environnement",
+    "en": "Environment",
+    "mg": "Environnement"
+  },
+  "applications.colStatut": {
+    "fr": "État",
+    "en": "Status",
+    "mg": "État"
+  },
+  "applications.colActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Actions"
+  },
+  "applications.statut.BROUILLON": {
+    "fr": "Brouillon",
+    "en": "Draft",
+    "mg": "Brouillon"
+  },
+  "applications.statut.TEST": {
+    "fr": "Test",
+    "en": "Test",
+    "mg": "Test"
+  },
+  "applications.statut.ACTIF": {
+    "fr": "Actif",
+    "en": "Active",
+    "mg": "Actif"
+  },
+  "applications.editer": {
+    "fr": "Éditer",
+    "en": "Edit",
+    "mg": "Éditer"
+  },
+  "applications.archiver": {
+    "fr": "Archiver",
+    "en": "Archive",
+    "mg": "Archiver"
+  },
+  "applications.reactiver": {
+    "fr": "Réactiver",
+    "en": "Reactivate",
+    "mg": "Réactiver"
+  },
+  "applications.aucune": {
+    "fr": "Aucune application.",
+    "en": "No application.",
+    "mg": "Aucune application."
+  },
+  "applications.nouvelle": {
+    "fr": "Nouvelle application",
+    "en": "New application",
+    "mg": "Nouvelle application"
+  },
+  "applications.modifier": {
+    "fr": "Modifier l’application",
+    "en": "Edit application",
+    "mg": "Modifier l’application"
+  },
+  "applications.phCode": {
+    "fr": "Code (ex. portail_appro)",
+    "en": "Code (e.g. procurement_portal)",
+    "mg": "Code (ex. portail_appro)"
+  },
+  "applications.phNom": {
+    "fr": "Nom de l’application",
+    "en": "Application name",
+    "mg": "Nom de l’application"
+  },
+  "applications.sansDomaine": {
+    "fr": "— Domaine —",
+    "en": "— Domain —",
+    "mg": "— Domaine —"
+  },
+  "applications.phProprietaire": {
+    "fr": "Propriétaire / équipe responsable",
+    "en": "Owner / responsible team",
+    "mg": "Propriétaire / équipe responsable"
+  },
+  "applications.phDescription": {
+    "fr": "Description",
+    "en": "Description",
+    "mg": "Description"
+  },
+  "applications.creer": {
+    "fr": "Créer",
+    "en": "Create",
+    "mg": "Créer"
+  },
+  "applications.enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Enregistrer"
+  },
+  "applications.annuler": {
+    "fr": "Annuler",
+    "en": "Cancel",
+    "mg": "Annuler"
+  },
+  "versions.titre": {
+    "fr": "Versions et publications",
+    "en": "Versions & publications",
+    "mg": "Versions et publications"
+  },
+  "versions.intro": {
+    "fr": "Historique des versions du formulaire ; revenir à une version crée un nouveau brouillon.",
+    "en": "Form version history; reverting to a version creates a new draft.",
+    "mg": "Historique des versions du formulaire ; revenir à une version crée un nouveau brouillon."
+  },
+  "versions.erreur": {
+    "fr": "L’opération a échoué.",
+    "en": "The operation failed.",
+    "mg": "L’opération a échoué."
+  },
+  "versions.confirmer": {
+    "fr": "Revenir à la version {n} (crée un nouveau brouillon) ?",
+    "en": "Revert to version {n} (creates a new draft)?",
+    "mg": "Revenir à la version {n} (crée un nouveau brouillon) ?"
+  },
+  "versions.restaure": {
+    "fr": "Version {n} restaurée dans un nouveau brouillon.",
+    "en": "Version {n} restored into a new draft.",
+    "mg": "Version {n} restaurée dans un nouveau brouillon."
+  },
+  "versions.colVersion": {
+    "fr": "Version",
+    "en": "Version",
+    "mg": "Version"
+  },
+  "versions.colStatut": {
+    "fr": "Statut",
+    "en": "Status",
+    "mg": "Statut"
+  },
+  "versions.colNote": {
+    "fr": "Note",
+    "en": "Note",
+    "mg": "Note"
+  },
+  "versions.colPublie": {
+    "fr": "Publié le",
+    "en": "Published",
+    "mg": "Publié le"
+  },
+  "versions.colActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Actions"
+  },
+  "versions.revenir": {
+    "fr": "Revenir à cette version",
+    "en": "Revert to this version",
+    "mg": "Revenir à cette version"
+  },
+  "versions.aucune": {
+    "fr": "Aucune version.",
+    "en": "No version.",
+    "mg": "Aucune version."
+  },
+  "nav.paie": {
+    "fr": "Paie (RH)",
+    "en": "Payroll (HR)",
+    "mg": "Paie (RH)"
+  },
+  "paie.titre": {
+    "fr": "Aperçu de paie",
+    "en": "Payroll preview",
+    "mg": "Aperçu de paie"
+  },
+  "paie.intro": {
+    "fr": "Retenues Revenu Québec (RRQ/RRQ2, AE, RQAP, impôt fédéral + Québec) — moteur de calcul réutilisé.",
+    "en": "Revenu Québec deductions (QPP/QPP2, EI, QPIP, federal + Quebec tax) — reused calculation engine.",
+    "mg": "Retenues Revenu Québec (RRQ/RRQ2, AE, RQAP, impôt fédéral + Québec) — moteur de calcul réutilisé."
+  },
+  "paie.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "paie.moduleInactif": {
+    "fr": "Le module « Paie » n’est pas activé.",
+    "en": "The “Payroll” module is not enabled.",
+    "mg": "Le module « Paie » n’est pas activé."
+  },
+  "paie.erreur": {
+    "fr": "Le calcul a échoué.",
+    "en": "Calculation failed.",
+    "mg": "Le calcul a échoué."
+  },
+  "paie.brut": {
+    "fr": "Salaire brut de la période ($)",
+    "en": "Gross salary for the period ($)",
+    "mg": "Salaire brut de la période ($)"
+  },
+  "paie.frequence": {
+    "fr": "Fréquence",
+    "en": "Frequency",
+    "mg": "Fréquence"
+  },
+  "paie.freq.weekly": {
+    "fr": "Hebdomadaire",
+    "en": "Weekly",
+    "mg": "Hebdomadaire"
+  },
+  "paie.freq.biweekly": {
+    "fr": "Aux deux semaines",
+    "en": "Biweekly",
+    "mg": "Aux deux semaines"
+  },
+  "paie.freq.semimonthly": {
+    "fr": "Bimensuelle",
+    "en": "Semi-monthly",
+    "mg": "Bimensuelle"
+  },
+  "paie.freq.monthly": {
+    "fr": "Mensuelle",
+    "en": "Monthly",
+    "mg": "Mensuelle"
+  },
+  "paie.sansRetenues": {
+    "fr": "Sans retenues (travailleur indépendant)",
+    "en": "No deductions (self-employed)",
+    "mg": "Sans retenues (travailleur indépendant)"
+  },
+  "paie.calculer": {
+    "fr": "Calculer",
+    "en": "Calculate",
+    "mg": "Calculer"
+  },
+  "paie.retenuesEmploye": {
+    "fr": "Retenues de l’employé",
+    "en": "Employee deductions",
+    "mg": "Retenues de l’employé"
+  },
+  "paie.chargesEmployeur": {
+    "fr": "Charges de l’employeur",
+    "en": "Employer costs",
+    "mg": "Charges de l’employeur"
+  },
+  "paie.federalTax": {
+    "fr": "Impôt fédéral",
+    "en": "Federal tax",
+    "mg": "Impôt fédéral"
+  },
+  "paie.quebecTax": {
+    "fr": "Impôt du Québec",
+    "en": "Quebec tax",
+    "mg": "Impôt du Québec"
+  },
+  "paie.qpp": {
+    "fr": "RRQ",
+    "en": "QPP",
+    "mg": "RRQ"
+  },
+  "paie.qpp2": {
+    "fr": "RRQ2",
+    "en": "QPP2",
+    "mg": "RRQ2"
+  },
+  "paie.ei": {
+    "fr": "Assurance-emploi (AE)",
+    "en": "Employment Insurance (EI)",
+    "mg": "Assurance-emploi (AE)"
+  },
+  "paie.qpip": {
+    "fr": "RQAP",
+    "en": "QPIP",
+    "mg": "RQAP"
+  },
+  "paie.totalRetenues": {
+    "fr": "Total des retenues",
+    "en": "Total deductions",
+    "mg": "Total des retenues"
+  },
+  "paie.net": {
+    "fr": "Salaire net",
+    "en": "Net pay",
+    "mg": "Salaire net"
+  },
+  "paie.employerQpp": {
+    "fr": "RRQ (employeur)",
+    "en": "QPP (employer)",
+    "mg": "RRQ (employeur)"
+  },
+  "paie.employerEi": {
+    "fr": "AE (employeur)",
+    "en": "EI (employer)",
+    "mg": "AE (employeur)"
+  },
+  "paie.employerQpip": {
+    "fr": "RQAP (employeur)",
+    "en": "QPIP (employer)",
+    "mg": "RQAP (employeur)"
+  },
+  "paie.employerCnesst": {
+    "fr": "CNESST",
+    "en": "CNESST",
+    "mg": "CNESST"
+  },
+  "paie.employerFss": {
+    "fr": "FSS",
+    "en": "FSS",
+    "mg": "FSS"
+  },
+  "paie.coutTotal": {
+    "fr": "Coût total employeur",
+    "en": "Total employer cost",
+    "mg": "Coût total employeur"
+  },
+  "nav.espaceRh": {
+    "fr": "Espace RH",
+    "en": "HR space",
+    "mg": "Espace RH"
+  },
+  "nav.impot": {
+    "fr": "Impôt sur le revenu",
+    "en": "Income tax",
+    "mg": "Impôt sur le revenu"
+  },
+  "nav.declarations": {
+    "fr": "Déclarations",
+    "en": "Filings",
+    "mg": "Déclarations"
+  },
+  "impot.titre": {
+    "fr": "Impôt sur le revenu",
+    "en": "Income tax",
+    "mg": "Impôt sur le revenu"
+  },
+  "impot.intro": {
+    "fr": "Société, travailleur autonome ou salarié — moteur ImpôtSurLeRevenu réutilisé.",
+    "en": "Corporation, self-employed or employee — reused income-tax engine.",
+    "mg": "Société, travailleur autonome ou salarié — moteur ImpôtSurLeRevenu réutilisé."
+  },
+  "impot.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "impot.moduleInactif": {
+    "fr": "Le module « Paie » n’est pas activé.",
+    "en": "The “Payroll” module is not enabled.",
+    "mg": "Le module « Paie » n’est pas activé."
+  },
+  "impot.erreur": {
+    "fr": "Le calcul a échoué.",
+    "en": "Calculation failed.",
+    "mg": "Le calcul a échoué."
+  },
+  "impot.profil": {
+    "fr": "Profil",
+    "en": "Profile",
+    "mg": "Profil"
+  },
+  "impot.profil.incorporated": {
+    "fr": "Société par actions",
+    "en": "Corporation",
+    "mg": "Société par actions"
+  },
+  "impot.profil.self_employed": {
+    "fr": "Travailleur autonome",
+    "en": "Self-employed",
+    "mg": "Travailleur autonome"
+  },
+  "impot.profil.employee": {
+    "fr": "Salarié",
+    "en": "Employee",
+    "mg": "Salarié"
+  },
+  "impot.revenu": {
+    "fr": "Revenu / chiffre d’affaires ($)",
+    "en": "Revenue ($)",
+    "mg": "Revenu / chiffre d’affaires ($)"
+  },
+  "impot.salaires": {
+    "fr": "Salaires versés ($)",
+    "en": "Salaries paid ($)",
+    "mg": "Salaires versés ($)"
+  },
+  "impot.sousTraitance": {
+    "fr": "Sous-traitance ($)",
+    "en": "Subcontracting ($)",
+    "mg": "Sous-traitance ($)"
+  },
+  "impot.autresCharges": {
+    "fr": "Autres charges déductibles ($)",
+    "en": "Other deductible expenses ($)",
+    "mg": "Autres charges déductibles ($)"
+  },
+  "impot.calculer": {
+    "fr": "Calculer",
+    "en": "Calculate",
+    "mg": "Calculer"
+  },
+  "impot.resultat": {
+    "fr": "Résultat",
+    "en": "Result",
+    "mg": "Résultat"
+  },
+  "impot.revenuTotal": {
+    "fr": "Revenu total",
+    "en": "Total revenue",
+    "mg": "Revenu total"
+  },
+  "impot.chargesTotal": {
+    "fr": "Charges déductibles",
+    "en": "Deductible expenses",
+    "mg": "Charges déductibles"
+  },
+  "impot.imposable": {
+    "fr": "Revenu imposable",
+    "en": "Taxable income",
+    "mg": "Revenu imposable"
+  },
+  "impot.federal": {
+    "fr": "Impôt fédéral",
+    "en": "Federal tax",
+    "mg": "Impôt fédéral"
+  },
+  "impot.quebec": {
+    "fr": "Impôt du Québec",
+    "en": "Quebec tax",
+    "mg": "Impôt du Québec"
+  },
+  "impot.totalImpot": {
+    "fr": "Total de l’impôt",
+    "en": "Total tax",
+    "mg": "Total de l’impôt"
+  },
+  "impot.net": {
+    "fr": "Revenu net",
+    "en": "Net income",
+    "mg": "Revenu net"
+  },
+  "decl.titre": {
+    "fr": "Déclarations",
+    "en": "Filings",
+    "mg": "Déclarations"
+  },
+  "decl.intro": {
+    "fr": "FPZ-500 (TPS/TVQ), retenues à la source (TPZ-1015.R.14 / PD7A), Relevé 1 et T4.",
+    "en": "FPZ-500 (GST/QST), source deductions (TPZ-1015.R.14 / PD7A), RL-1 and T4.",
+    "mg": "FPZ-500 (TPS/TVQ), retenues à la source (TPZ-1015.R.14 / PD7A), Relevé 1 et T4."
+  },
+  "decl.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "decl.moduleInactif": {
+    "fr": "Le module « Paie » n’est pas activé.",
+    "en": "The “Payroll” module is not enabled.",
+    "mg": "Le module « Paie » n’est pas activé."
+  },
+  "decl.erreur": {
+    "fr": "Le calcul a échoué.",
+    "en": "Calculation failed.",
+    "mg": "Le calcul a échoué."
+  },
+  "decl.onglet.taxes": {
+    "fr": "TPS/TVQ (FPZ-500)",
+    "en": "GST/QST (FPZ-500)",
+    "mg": "TPS/TVQ (FPZ-500)"
+  },
+  "decl.onglet.retenues": {
+    "fr": "Retenues à la source",
+    "en": "Source deductions",
+    "mg": "Retenues à la source"
+  },
+  "decl.onglet.annee": {
+    "fr": "Relevé 1 + T4",
+    "en": "RL-1 + T4",
+    "mg": "Relevé 1 + T4"
+  },
+  "decl.fpz500": {
+    "fr": "Taxes nettes à verser (FPZ-500)",
+    "en": "Net taxes payable (FPZ-500)",
+    "mg": "Taxes nettes à verser (FPZ-500)"
+  },
+  "decl.debut": {
+    "fr": "Début",
+    "en": "Start",
+    "mg": "Début"
+  },
+  "decl.fin": {
+    "fr": "Fin",
+    "en": "End",
+    "mg": "Fin"
+  },
+  "decl.tpsPercue": {
+    "fr": "TPS perçue ($)",
+    "en": "GST collected ($)",
+    "mg": "TPS perçue ($)"
+  },
+  "decl.tvqPercue": {
+    "fr": "TVQ perçue ($)",
+    "en": "QST collected ($)",
+    "mg": "TVQ perçue ($)"
+  },
+  "decl.depenses": {
+    "fr": "Dépenses de la période",
+    "en": "Expenses for the period",
+    "mg": "Dépenses de la période"
+  },
+  "decl.categorie": {
+    "fr": "Catégorie",
+    "en": "Category",
+    "mg": "Catégorie"
+  },
+  "decl.ajouterDepense": {
+    "fr": "Ajouter une dépense",
+    "en": "Add an expense",
+    "mg": "Ajouter une dépense"
+  },
+  "decl.calculer": {
+    "fr": "Calculer",
+    "en": "Calculate",
+    "mg": "Calculer"
+  },
+  "decl.tpsNette": {
+    "fr": "TPS nette",
+    "en": "Net GST",
+    "mg": "TPS nette"
+  },
+  "decl.tvqNette": {
+    "fr": "TVQ nette",
+    "en": "Net QST",
+    "mg": "TVQ nette"
+  },
+  "decl.retenues": {
+    "fr": "Retenues à la source à remettre",
+    "en": "Source deductions to remit",
+    "mg": "Retenues à la source à remettre"
+  },
+  "decl.releveT4": {
+    "fr": "Synthèse annuelle (Relevé 1 + T4)",
+    "en": "Year-end summary (RL-1 + T4)",
+    "mg": "Synthèse annuelle (Relevé 1 + T4)"
+  },
+  "decl.employe": {
+    "fr": "Employé",
+    "en": "Employee",
+    "mg": "Employé"
+  },
+  "decl.annee": {
+    "fr": "Année",
+    "en": "Year",
+    "mg": "Année"
+  },
+  "decl.bulletins": {
+    "fr": "Bulletins de paie (recalculés)",
+    "en": "Pay slips (recomputed)",
+    "mg": "Bulletins de paie (recalculés)"
+  },
+  "decl.brut": {
+    "fr": "Brut",
+    "en": "Gross",
+    "mg": "Brut"
+  },
+  "decl.ajouterBulletin": {
+    "fr": "Ajouter un bulletin",
+    "en": "Add a pay slip",
+    "mg": "Ajouter un bulletin"
+  },
+  "decl.versRQ": {
+    "fr": "À verser à Revenu Québec",
+    "en": "To remit to Revenu Québec",
+    "mg": "À verser à Revenu Québec"
+  },
+  "decl.versARC": {
+    "fr": "À verser à l’ARC",
+    "en": "To remit to CRA",
+    "mg": "À verser à l’ARC"
+  },
+  "decl.paies": {
+    "fr": "paies",
+    "en": "runs",
+    "mg": "paies"
+  },
+  "nav.personnel": {
+    "fr": "Personnel",
+    "en": "Staff",
+    "mg": "Personnel"
+  },
+  "personnel.titre": {
+    "fr": "Personnel",
+    "en": "Staff",
+    "mg": "Personnel"
+  },
+  "personnel.intro": {
+    "fr": "Dossiers employés : coordonnées, poste, rémunération.",
+    "en": "Employee records: contact, position, compensation.",
+    "mg": "Dossiers employés : coordonnées, poste, rémunération."
+  },
+  "personnel.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "personnel.moduleInactif": {
+    "fr": "Le module « Dossiers employés (RH) » n’est pas activé.",
+    "en": "The “Employee records (HR)” module is not enabled.",
+    "mg": "Le module « Dossiers employés (RH) » n’est pas activé."
+  },
+  "personnel.erreur": {
+    "fr": "L’opération a échoué.",
+    "en": "The operation failed.",
+    "mg": "L’opération a échoué."
+  },
+  "personnel.recherche": {
+    "fr": "Rechercher",
+    "en": "Search",
+    "mg": "Rechercher"
+  },
+  "personnel.recherchePh": {
+    "fr": "Nom, matricule, poste…",
+    "en": "Name, ID, position…",
+    "mg": "Nom, matricule, poste…"
+  },
+  "personnel.colMatricule": {
+    "fr": "Matricule",
+    "en": "ID",
+    "mg": "Matricule"
+  },
+  "personnel.colNom": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Nom"
+  },
+  "personnel.colPoste": {
+    "fr": "Poste",
+    "en": "Position",
+    "mg": "Poste"
+  },
+  "personnel.colStatut": {
+    "fr": "Statut",
+    "en": "Status",
+    "mg": "Statut"
+  },
+  "personnel.colActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Actions"
+  },
+  "personnel.statut.ACTIF": {
+    "fr": "Actif",
+    "en": "Active",
+    "mg": "Actif"
+  },
+  "personnel.statut.INACTIF": {
+    "fr": "Inactif",
+    "en": "Inactive",
+    "mg": "Inactif"
+  },
+  "personnel.editer": {
+    "fr": "Éditer",
+    "en": "Edit",
+    "mg": "Éditer"
+  },
+  "personnel.archiver": {
+    "fr": "Archiver",
+    "en": "Archive",
+    "mg": "Archiver"
+  },
+  "personnel.reactiver": {
+    "fr": "Réactiver",
+    "en": "Reactivate",
+    "mg": "Réactiver"
+  },
+  "personnel.aucun": {
+    "fr": "Aucun employé.",
+    "en": "No employee.",
+    "mg": "Aucun employé."
+  },
+  "personnel.nouveau": {
+    "fr": "Nouvel employé",
+    "en": "New employee",
+    "mg": "Nouvel employé"
+  },
+  "personnel.modifier": {
+    "fr": "Modifier l’employé",
+    "en": "Edit employee",
+    "mg": "Modifier l’employé"
+  },
+  "personnel.prenom": {
+    "fr": "Prénom",
+    "en": "First name",
+    "mg": "Prénom"
+  },
+  "personnel.nom": {
+    "fr": "Nom",
+    "en": "Last name",
+    "mg": "Nom"
+  },
+  "personnel.nas": {
+    "fr": "NAS",
+    "en": "SIN",
+    "mg": "NAS"
+  },
+  "personnel.courriel": {
+    "fr": "Courriel",
+    "en": "Email",
+    "mg": "Courriel"
+  },
+  "personnel.telephone": {
+    "fr": "Téléphone",
+    "en": "Phone",
+    "mg": "Téléphone"
+  },
+  "personnel.dateEmbauche": {
+    "fr": "Date d’embauche",
+    "en": "Hire date",
+    "mg": "Date d’embauche"
+  },
+  "personnel.poste": {
+    "fr": "Poste",
+    "en": "Position",
+    "mg": "Poste"
+  },
+  "personnel.departement": {
+    "fr": "Département",
+    "en": "Department",
+    "mg": "Département"
+  },
+  "personnel.salaire": {
+    "fr": "Salaire annuel ($)",
+    "en": "Annual salary ($)",
+    "mg": "Salaire annuel ($)"
+  },
+  "personnel.frequence": {
+    "fr": "Fréquence de paie",
+    "en": "Pay frequency",
+    "mg": "Fréquence de paie"
+  },
+  "personnel.type": {
+    "fr": "Type de travailleur",
+    "en": "Worker type",
+    "mg": "Type de travailleur"
+  },
+  "personnel.creer": {
+    "fr": "Créer",
+    "en": "Create",
+    "mg": "Créer"
+  },
+  "personnel.enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Enregistrer"
+  },
+  "personnel.annuler": {
+    "fr": "Annuler",
+    "en": "Cancel",
+    "mg": "Annuler"
+  },
+  "dossier.retour": {
+    "fr": "Retour au personnel",
+    "en": "Back to staff",
+    "mg": "Retour au personnel"
+  },
+  "dossier.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "dossier.moduleInactif": {
+    "fr": "Le module « Dossiers employés (RH) » n’est pas activé.",
+    "en": "The “Employee records (HR)” module is not enabled.",
+    "mg": "Le module « Dossiers employés (RH) » n’est pas activé."
+  },
+  "dossier.erreur": {
+    "fr": "Impossible de charger le dossier.",
+    "en": "Could not load the record.",
+    "mg": "Impossible de charger le dossier."
+  },
+  "dossier.erreurPaie": {
+    "fr": "Le calcul de paie a échoué.",
+    "en": "Payroll calculation failed.",
+    "mg": "Le calcul de paie a échoué."
+  },
+  "dossier.onglet.infos": {
+    "fr": "Informations",
+    "en": "Information",
+    "mg": "Informations"
+  },
+  "dossier.onglet.paie": {
+    "fr": "Paie",
+    "en": "Payroll",
+    "mg": "Paie"
+  },
+  "dossier.onglet.historique": {
+    "fr": "Historique",
+    "en": "History",
+    "mg": "Historique"
+  },
+  "dossier.province": {
+    "fr": "Province",
+    "en": "Province",
+    "mg": "Province"
+  },
+  "dossier.modifierDansPersonnel": {
+    "fr": "Modifier dans Personnel",
+    "en": "Edit in Staff",
+    "mg": "Modifier dans Personnel"
+  },
+  "dossier.paieInactive": {
+    "fr": "Activez le module « Paie » pour calculer le bulletin.",
+    "en": "Enable the “Payroll” module to compute the pay slip.",
+    "mg": "Activez le module « Paie » pour calculer le bulletin."
+  },
+  "dossier.paieIntro": {
+    "fr": "Bulletin calculé à partir du salaire annuel ({salaire}) et de la fréquence ({frequence}).",
+    "en": "Pay slip computed from annual salary ({salaire}) and frequency ({frequence}).",
+    "mg": "Bulletin calculé à partir du salaire annuel ({salaire}) et de la fréquence ({frequence})."
+  },
+  "dossier.calculerBulletin": {
+    "fr": "Calculer le bulletin",
+    "en": "Compute pay slip",
+    "mg": "Calculer le bulletin"
+  },
+  "dossier.historiqueVide": {
+    "fr": "Aucun événement enregistré pour le moment.",
+    "en": "No event recorded yet.",
+    "mg": "Aucun événement enregistré pour le moment."
+  },
+  "builder.libelleEn": {
+    "fr": "Libellé (EN)",
+    "en": "Label (EN)",
+    "mg": "Libellé (EN)"
+  },
+  "nav.approbations": {
+    "fr": "Approbations",
+    "en": "Approvals",
+    "mg": "Approbations"
+  },
+  "nav.feuilleTemps": {
+    "fr": "Feuille de temps",
+    "en": "Timesheet",
+    "mg": "Feuille de temps"
+  },
+  "appro.titre": {
+    "fr": "Approbations multi-niveaux",
+    "en": "Multi-level approvals",
+    "mg": "Approbations multi-niveaux"
+  },
+  "appro.intro": {
+    "fr": "Circuits d’approbation par règles (champ/opérateur/valeur/niveau) — moteur Approbations.",
+    "en": "Rule-based approval chains (field/operator/value/level) — Approbations engine.",
+    "mg": "Circuits d’approbation par règles (champ/opérateur/valeur/niveau) — moteur Approbations."
+  },
+  "appro.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "appro.moduleInactif": {
+    "fr": "Le module « Processus » n’est pas activé.",
+    "en": "The “Process” module is not enabled.",
+    "mg": "Le module « Processus » n’est pas activé."
+  },
+  "appro.erreur": {
+    "fr": "L’opération a échoué.",
+    "en": "The operation failed.",
+    "mg": "L’opération a échoué."
+  },
+  "appro.mesEtapes": {
+    "fr": "Mes approbations en attente",
+    "en": "My pending approvals",
+    "mg": "Mes approbations en attente"
+  },
+  "appro.colDemande": {
+    "fr": "Demande",
+    "en": "Request",
+    "mg": "Demande"
+  },
+  "appro.colNiveau": {
+    "fr": "Niveau",
+    "en": "Level",
+    "mg": "Niveau"
+  },
+  "appro.colRole": {
+    "fr": "Approbateur",
+    "en": "Approver",
+    "mg": "Approbateur"
+  },
+  "appro.colActions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Actions"
+  },
+  "appro.colStatut": {
+    "fr": "Statut",
+    "en": "Status",
+    "mg": "Statut"
+  },
+  "appro.colEtapes": {
+    "fr": "Étapes",
+    "en": "Steps",
+    "mg": "Étapes"
+  },
+  "appro.approuver": {
+    "fr": "Approuver",
+    "en": "Approve",
+    "mg": "Approuver"
+  },
+  "appro.refuser": {
+    "fr": "Refuser",
+    "en": "Refuse",
+    "mg": "Refuser"
+  },
+  "appro.aucuneEtape": {
+    "fr": "Aucune approbation en attente.",
+    "en": "No pending approval.",
+    "mg": "Aucune approbation en attente."
+  },
+  "appro.nouvelleDemande": {
+    "fr": "Nouvelle demande d’approbation",
+    "en": "New approval request",
+    "mg": "Nouvelle demande d’approbation"
+  },
+  "appro.documentType": {
+    "fr": "Type de document",
+    "en": "Document type",
+    "mg": "Type de document"
+  },
+  "appro.documentId": {
+    "fr": "Référence (optionnel)",
+    "en": "Reference (optional)",
+    "mg": "Référence (optionnel)"
+  },
+  "appro.montant": {
+    "fr": "Montant",
+    "en": "Amount",
+    "mg": "Montant"
+  },
+  "appro.creerDemande": {
+    "fr": "Créer la demande",
+    "en": "Create request",
+    "mg": "Créer la demande"
+  },
+  "appro.directe": {
+    "fr": "Approuvée directement",
+    "en": "Auto-approved",
+    "mg": "Approuvée directement"
+  },
+  "appro.aucuneDemande": {
+    "fr": "Aucune demande.",
+    "en": "No request.",
+    "mg": "Aucune demande."
+  },
+  "appro.regles": {
+    "fr": "Règles d’approbation",
+    "en": "Approval rules",
+    "mg": "Règles d’approbation"
+  },
+  "appro.condition": {
+    "fr": "Condition",
+    "en": "Condition",
+    "mg": "Condition"
+  },
+  "appro.champ": {
+    "fr": "Champ",
+    "en": "Field",
+    "mg": "Champ"
+  },
+  "appro.operateur": {
+    "fr": "Opérateur",
+    "en": "Operator",
+    "mg": "Opérateur"
+  },
+  "appro.valeur": {
+    "fr": "Valeur",
+    "en": "Value",
+    "mg": "Valeur"
+  },
+  "appro.ajouterRegle": {
+    "fr": "Ajouter la règle",
+    "en": "Add rule",
+    "mg": "Ajouter la règle"
+  },
+  "appro.aucuneRegle": {
+    "fr": "Aucune règle.",
+    "en": "No rule.",
+    "mg": "Aucune règle."
+  },
+  "temps.titre": {
+    "fr": "Feuilles de temps",
+    "en": "Timesheets",
+    "mg": "Feuilles de temps"
+  },
+  "temps.intro": {
+    "fr": "Saisie des heures par jour et catégorie, soumission et approbation.",
+    "en": "Enter hours by day and category, submit and approve.",
+    "mg": "Saisie des heures par jour et catégorie, soumission et approbation."
+  },
+  "temps.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "temps.moduleInactif": {
+    "fr": "Le module « Dossiers employés (RH) » n’est pas activé.",
+    "en": "The “Employee records (HR)” module is not enabled.",
+    "mg": "Le module « Dossiers employés (RH) » n’est pas activé."
+  },
+  "temps.erreur": {
+    "fr": "L’opération a échoué.",
+    "en": "The operation failed.",
+    "mg": "L’opération a échoué."
+  },
+  "temps.retour": {
+    "fr": "Retour",
+    "en": "Back",
+    "mg": "Retour"
+  },
+  "temps.nouvelle": {
+    "fr": "Nouvelle feuille",
+    "en": "New timesheet",
+    "mg": "Nouvelle feuille"
+  },
+  "temps.modifier": {
+    "fr": "Modifier la feuille",
+    "en": "Edit timesheet",
+    "mg": "Modifier la feuille"
+  },
+  "temps.debut": {
+    "fr": "Début de période",
+    "en": "Period start",
+    "mg": "Début de période"
+  },
+  "temps.fin": {
+    "fr": "Fin de période",
+    "en": "Period end",
+    "mg": "Fin de période"
+  },
+  "temps.colDate": {
+    "fr": "Date",
+    "en": "Date",
+    "mg": "Date"
+  },
+  "temps.colCategorie": {
+    "fr": "Catégorie",
+    "en": "Category",
+    "mg": "Catégorie"
+  },
+  "temps.colHeures": {
+    "fr": "Heures",
+    "en": "Hours",
+    "mg": "Heures"
+  },
+  "temps.cat.travail": {
+    "fr": "Travail",
+    "en": "Work",
+    "mg": "Travail"
+  },
+  "temps.cat.reunion": {
+    "fr": "Réunion",
+    "en": "Meeting",
+    "mg": "Réunion"
+  },
+  "temps.cat.formation": {
+    "fr": "Formation",
+    "en": "Training",
+    "mg": "Formation"
+  },
+  "temps.cat.conge": {
+    "fr": "Congé",
+    "en": "Leave",
+    "mg": "Congé"
+  },
+  "temps.cat.maladie": {
+    "fr": "Maladie",
+    "en": "Sick",
+    "mg": "Maladie"
+  },
+  "temps.cat.autre": {
+    "fr": "Autre",
+    "en": "Other",
+    "mg": "Autre"
+  },
+  "temps.total": {
+    "fr": "Total",
+    "en": "Total",
+    "mg": "Total"
+  },
+  "temps.ajouterLigne": {
+    "fr": "Ajouter une ligne",
+    "en": "Add a line",
+    "mg": "Ajouter une ligne"
+  },
+  "temps.enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Enregistrer"
+  },
+  "temps.soumettre": {
+    "fr": "Soumettre",
+    "en": "Submit",
+    "mg": "Soumettre"
+  },
+  "temps.colPeriode": {
+    "fr": "Période",
+    "en": "Period",
+    "mg": "Période"
+  },
+  "temps.colTotal": {
+    "fr": "Total (h)",
+    "en": "Total (h)",
+    "mg": "Total (h)"
+  },
+  "temps.colStatut": {
+    "fr": "Statut",
+    "en": "Status",
+    "mg": "Statut"
+  },
+  "temps.statut.BROUILLON": {
+    "fr": "Brouillon",
+    "en": "Draft",
+    "mg": "Brouillon"
+  },
+  "temps.statut.SOUMISE": {
+    "fr": "Soumise",
+    "en": "Submitted",
+    "mg": "Soumise"
+  },
+  "temps.statut.APPROUVEE": {
+    "fr": "Approuvée",
+    "en": "Approved",
+    "mg": "Approuvée"
+  },
+  "temps.statut.REFUSEE": {
+    "fr": "Refusée",
+    "en": "Rejected",
+    "mg": "Refusée"
+  },
+  "temps.ouvrir": {
+    "fr": "Ouvrir",
+    "en": "Open",
+    "mg": "Ouvrir"
+  },
+  "temps.aucune": {
+    "fr": "Aucune feuille de temps.",
+    "en": "No timesheet.",
+    "mg": "Aucune feuille de temps."
+  },
+  "temps.aApprouver": {
+    "fr": "Feuilles à approuver",
+    "en": "Timesheets to approve",
+    "mg": "Feuilles à approuver"
+  },
+  "temps.colProprietaire": {
+    "fr": "Employé",
+    "en": "Employee",
+    "mg": "Employé"
+  },
+  "temps.approuver": {
+    "fr": "Approuver",
+    "en": "Approve",
+    "mg": "Approuver"
+  },
+  "temps.refuser": {
+    "fr": "Refuser",
+    "en": "Refuse",
+    "mg": "Refuser"
+  },
+  "temps.motifRefus": {
+    "fr": "À corriger",
+    "en": "Needs correction",
+    "mg": "À corriger"
+  },
+  "temps.rienAApprouver": {
+    "fr": "Rien à approuver.",
+    "en": "Nothing to approve.",
+    "mg": "Rien à approuver."
+  },
+  "formulaires.conservation": {
+    "fr": "Conservation (jours)",
+    "en": "Retention (days)",
+    "mg": "Conservation (jours)"
+  },
+  "nav.projetsTaches": {
+    "fr": "Projets & tâches",
+    "en": "Projects & tasks",
+    "mg": "Projets & tâches"
+  },
+  "pt.titre": {
+    "fr": "Projets & tâches",
+    "en": "Projects & tasks",
+    "mg": "Projets & tâches"
+  },
+  "pt.intro": {
+    "fr": "Créez des tâches, assignez-les à une personne et suivez leur avancement.",
+    "en": "Create tasks, assign them to a person and track progress.",
+    "mg": "Créez des tâches, assignez-les à une personne et suivez leur avancement."
+  },
+  "pt.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Chargement…"
+  },
+  "pt.moduleInactif": {
+    "fr": "Le module « Dossiers employés (RH) » n’est pas activé.",
+    "en": "The “Employee records (HR)” module is not enabled.",
+    "mg": "Le module « Dossiers employés (RH) » n’est pas activé."
+  },
+  "pt.erreur": {
+    "fr": "L’opération a échoué.",
+    "en": "The operation failed.",
+    "mg": "L’opération a échoué."
+  },
+  "pt.confirmSuppr": {
+    "fr": "Supprimer cette tâche ?",
+    "en": "Delete this task?",
+    "mg": "Supprimer cette tâche ?"
+  },
+  "pt.mesTaches": {
+    "fr": "Mes tâches assignées",
+    "en": "My assigned tasks",
+    "mg": "Mes tâches assignées"
+  },
+  "pt.toutesTaches": {
+    "fr": "Toutes les tâches",
+    "en": "All tasks",
+    "mg": "Toutes les tâches"
+  },
+  "pt.filtreProjet": {
+    "fr": "Projet",
+    "en": "Project",
+    "mg": "Projet"
+  },
+  "pt.tousProjets": {
+    "fr": "Tous les projets",
+    "en": "All projects",
+    "mg": "Tous les projets"
+  },
+  "pt.colTache": {
+    "fr": "Tâche",
+    "en": "Task",
+    "mg": "Tâche"
+  },
+  "pt.colProjet": {
+    "fr": "Projet",
+    "en": "Project",
+    "mg": "Projet"
+  },
+  "pt.colAssigne": {
+    "fr": "Assigné à",
+    "en": "Assigned to",
+    "mg": "Assigné à"
+  },
+  "pt.colStatut": {
+    "fr": "Statut",
+    "en": "Status",
+    "mg": "Statut"
+  },
+  "pt.colEcheance": {
+    "fr": "Échéance",
+    "en": "Due date",
+    "mg": "Échéance"
+  },
+  "pt.nonAssigne": {
+    "fr": "Non assignée",
+    "en": "Unassigned",
+    "mg": "Non assignée"
+  },
+  "pt.statut.A_FAIRE": {
+    "fr": "À faire",
+    "en": "To do",
+    "mg": "À faire"
+  },
+  "pt.statut.EN_COURS": {
+    "fr": "En cours",
+    "en": "In progress",
+    "mg": "En cours"
+  },
+  "pt.statut.TERMINEE": {
+    "fr": "Terminée",
+    "en": "Done",
+    "mg": "Terminée"
+  },
+  "pt.statut.ANNULEE": {
+    "fr": "Annulée",
+    "en": "Cancelled",
+    "mg": "Annulée"
+  },
+  "pt.editer": {
+    "fr": "Éditer",
+    "en": "Edit",
+    "mg": "Éditer"
+  },
+  "pt.supprimer": {
+    "fr": "Supprimer",
+    "en": "Delete",
+    "mg": "Supprimer"
+  },
+  "pt.aucuneTache": {
+    "fr": "Aucune tâche.",
+    "en": "No task.",
+    "mg": "Aucune tâche."
+  },
+  "pt.nouvelleTache": {
+    "fr": "Nouvelle tâche",
+    "en": "New task",
+    "mg": "Nouvelle tâche"
+  },
+  "pt.modifierTache": {
+    "fr": "Modifier la tâche",
+    "en": "Edit task",
+    "mg": "Modifier la tâche"
+  },
+  "pt.choisirProjet": {
+    "fr": "— Projet —",
+    "en": "— Project —",
+    "mg": "— Projet —"
+  },
+  "pt.nomTache": {
+    "fr": "Nom de la tâche",
+    "en": "Task name",
+    "mg": "Nom de la tâche"
+  },
+  "pt.type": {
+    "fr": "Type",
+    "en": "Type",
+    "mg": "Type"
+  },
+  "pt.heures": {
+    "fr": "Heures estimées",
+    "en": "Estimated hours",
+    "mg": "Heures estimées"
+  },
+  "pt.description": {
+    "fr": "Description",
+    "en": "Description",
+    "mg": "Description"
+  },
+  "pt.creerTache": {
+    "fr": "Créer la tâche",
+    "en": "Create task",
+    "mg": "Créer la tâche"
+  },
+  "pt.enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Enregistrer"
+  },
+  "pt.annuler": {
+    "fr": "Annuler",
+    "en": "Cancel",
+    "mg": "Annuler"
+  },
+  "pt.projets": {
+    "fr": "Projets",
+    "en": "Projects",
+    "mg": "Projets"
+  },
+  "pt.colCode": {
+    "fr": "Code",
+    "en": "Code",
+    "mg": "Code"
+  },
+  "pt.colNomProjet": {
+    "fr": "Nom du projet",
+    "en": "Project name",
+    "mg": "Nom du projet"
+  },
+  "pt.colGestionnaire": {
+    "fr": "Gestionnaire",
+    "en": "Manager",
+    "mg": "Gestionnaire"
+  },
+  "pt.colBudget": {
+    "fr": "Budget (h)",
+    "en": "Budget (h)",
+    "mg": "Budget (h)"
+  },
+  "pt.aucunProjet": {
+    "fr": "Aucun projet.",
+    "en": "No project.",
+    "mg": "Aucun projet."
+  },
+  "pt.creerProjet": {
+    "fr": "Créer le projet",
+    "en": "Create project",
+    "mg": "Créer le projet"
   }
 }

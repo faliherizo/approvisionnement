@@ -1,0 +1,31 @@
+{
+  "form": {
+    "code": "demande_achat_e2e",
+    "nom": "Demande d'achat (e2e)",
+    "domaine": "APPROVISIONNEMENT",
+    "structure": {
+      "pages": [
+        {
+          "code": "p1",
+          "titre": "Demande d'achat",
+          "champs": [
+            { "code": "objet", "type": "texte", "libelle": "Objet de la demande", "obligatoire": true },
+            { "code": "montant", "type": "montant", "libelle": "Montant estimé ($)", "obligatoire": true },
+            { "code": "justification", "type": "zone_texte", "libelle": "Justification", "obligatoire": false }
+          ]
+        }
+      ],
+      "regles": [
+        {
+          "type": "VALIDATION",
+          "combinateur": "ET",
+          "conditions": [ { "champ": "montant", "operateur": "VIDE", "valeur": "" } ],
+          "cible": "montant",
+          "valeur": "Le montant estimé est obligatoire."
+        }
+      ]
+    }
+  },
+  "reponsesSousSeuil": { "objet": "Fournitures de bureau", "montant": "500", "justification": "Réassort trimestriel" },
+  "reponsesAuDessusSeuil": { "objet": "Serveurs de calcul", "montant": "25000", "justification": "Renouvellement du parc" }
+}

@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 042-1-application-catalogue
+      author: levis
+      comment: "Catalogue d'applications / espaces fonctionnels (domaine, environnement, état) — écran 2."
+      changes:
+        - createTable:
+            tableName: application_catalogue
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: code, type: VARCHAR(80), constraints: { nullable: false } }
+              - column: { name: nom, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: domaine, type: VARCHAR(40) }
+              - column: { name: environnement, type: VARCHAR(20) }
+              - column: { name: statut, type: VARCHAR(20) }
+              - column: { name: proprietaire, type: VARCHAR(200) }
+              - column: { name: description, type: VARCHAR(1000) }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: true, constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - addUniqueConstraint:
+            tableName: application_catalogue
+            columnNames: tenant_id, code
+            constraintName: uq_application_tenant_code

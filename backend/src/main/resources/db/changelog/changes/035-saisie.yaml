@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 035-1-saisie
+      author: levis
+      changes:
+        - createTable:
+            tableName: saisie
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: formulaire_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: version_numero, type: INT, defaultValueNumeric: 1, constraints: { nullable: false } }
+              - column: { name: statut, type: VARCHAR(20), defaultValue: BROUILLON, constraints: { nullable: false } }
+              - column: { name: donnees_json, type: TEXT }
+              - column: { name: parent_saisie_id, type: BIGINT }
+              - column: { name: cree_par, type: VARCHAR(150) }
+              - column: { name: maj_le, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: soumis_le, type: TIMESTAMP }
+        - createIndex:
+            tableName: saisie
+            indexName: idx_saisie_tenant_formulaire
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: formulaire_id }

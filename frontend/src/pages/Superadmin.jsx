@@ -5,6 +5,7 @@ import ReferenceManager from '../components/ReferenceManager.jsx'
 import ModeleDocumentManager from '../components/ModeleDocumentManager.jsx'
 import TarifTenantManager from '../components/TarifTenantManager.jsx'
 import GabaritManager from '../components/GabaritManager.jsx'
+import ModuleManager from '../components/ModuleManager.jsx'
 import Modal from '../components/Modal.jsx'
 import { useI18n } from '../i18n/I18nContext'
 
@@ -193,6 +194,8 @@ export default function Superadmin() {
         <h2>⚙️ {tr('superadmin.valeursSelecteurs')}</h2>
         <ReferenceManager portee="superadmin" />
       </section>
+
+      <ModuleManager />
 
       <TarifTenantManager />
 

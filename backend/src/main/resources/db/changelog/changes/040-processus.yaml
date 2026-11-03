@@ -1,0 +1,74 @@
+databaseChangeLog:
+  - changeSet:
+      id: 040-1-workflow
+      author: levis
+      comment: "Workflow par formulaire (définition étapes/conditions en JSON) — écran 5, architecture §5.2 WORKFLOW."
+      changes:
+        - createTable:
+            tableName: workflow
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: formulaire_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: definition_json, type: TEXT }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: true, constraints: { nullable: false } }
+        - addUniqueConstraint:
+            tableName: workflow
+            columnNames: tenant_id, formulaire_id
+            constraintName: uq_workflow_tenant_form
+  - changeSet:
+      id: 040-2-tache
+      author: levis
+      comment: "Tâches de workflow générées pour une demande — écran 7, architecture §15.2."
+      changes:
+        - createTable:
+            tableName: tache
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: saisie_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: formulaire_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: etape_code, type: VARCHAR(80), constraints: { nullable: false } }
+              - column: { name: etape_nom, type: VARCHAR(200) }
+              - column: { name: assigne_role, type: VARCHAR(60) }
+              - column: { name: assigne_groupe, type: VARCHAR(80) }
+              - column: { name: commentaire_refus_obligatoire, type: BOOLEAN, defaultValueBoolean: false, constraints: { nullable: false } }
+              - column: { name: ordre, type: INT, constraints: { nullable: false } }
+              - column: { name: statut, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: echeance_le, type: TIMESTAMP }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: termine_le, type: TIMESTAMP }
+        - createIndex:
+            tableName: tache
+            indexName: ix_tache_assignation
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: assigne_role }
+              - column: { name: statut }
+        - createIndex:
+            tableName: tache
+            indexName: ix_tache_saisie
+            columns:
+              - column: { name: saisie_id }
+              - column: { name: statut }
+  - changeSet:
+      id: 040-3-decision
+      author: levis
+      comment: "Décisions append-only sur les tâches (acteur, date, motif) — architecture §5.3."
+      changes:
+        - createTable:
+            tableName: decision
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: tache_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: saisie_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: acteur, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: decision, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: commentaire, type: VARCHAR(2000) }
+              - column: { name: decide_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - createIndex:
+            tableName: decision
+            indexName: ix_decision_tache
+            columns:
+              - column: { name: tache_id }

@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: 037-1-permission-acces
+      author: levis
+      changes:
+        - createTable:
+            tableName: permission_acces
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: sujet_type, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: sujet, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: portee, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: cible, type: VARCHAR(120), constraints: { nullable: false } }
+              - column: { name: action, type: VARCHAR(20), constraints: { nullable: false } }
+  - changeSet:
+      id: 037-2-groupe-acces
+      author: levis
+      changes:
+        - createTable:
+            tableName: groupe_acces
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: code, type: VARCHAR(80), constraints: { nullable: false } }
+              - column: { name: nom, type: VARCHAR(200), constraints: { nullable: false } }
+        - addUniqueConstraint:
+            tableName: groupe_acces
+            columnNames: tenant_id, code
+            constraintName: uq_groupe_code
+  - changeSet:
+      id: 037-3-groupe-membre
+      author: levis
+      changes:
+        - createTable:
+            tableName: groupe_membre
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: groupe_code, type: VARCHAR(80), constraints: { nullable: false } }
+              - column: { name: utilisateur, type: VARCHAR(150), constraints: { nullable: false } }
+        - addUniqueConstraint:
+            tableName: groupe_membre
+            columnNames: tenant_id, groupe_code, utilisateur
+            constraintName: uq_groupe_membre

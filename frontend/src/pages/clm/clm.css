@@ -1,0 +1,222 @@
+/* Module CLM (IQ 2026-6370-0005) — contrastes calculés ≥ 4,5:1 sur chaque fond, cibles ≥ 44 px au portail. */
+
+/* --- Gabarit des maquettes UI-01 à UI-24 : bandeau marine 68 px, barre latérale 248 px, blocs en grille --- */
+.clm-shell { min-height: 100vh; display: flex; flex-direction: column; background: #f8fafc; }
+.clm-shell__entete {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 10px 20px; min-height: 68px; padding: 10px 24px;
+  background: #102a43; color: #fff;
+}
+.clm-shell__entete a, .clm-shell__entete a:visited { color: #fff; }
+.clm-shell__entete a:focus-visible, .clm-shell__entete button:focus-visible,
+.clm-shell__entete input:focus-visible, .clm-shell__entete select:focus-visible { outline-color: #fff; }
+.clm-shell__marque { margin-right: auto; font-size: 18px; font-weight: 700; text-decoration: none; overflow-wrap: anywhere; min-width: 0; }
+.clm-shell__marque:hover { text-decoration: underline; }
+.clm-shell__recherche { display: flex; flex: 0 1 320px; min-width: 0; }
+.clm-shell__recherche input { flex: 1 1 auto; min-width: 0; border: 1px solid #fff; border-radius: 6px 0 0 6px; }
+.clm-shell__recherche button { border-radius: 0 6px 6px 0; background: #dbeafe; color: #102a43; }
+.clm-shell__recherche button:hover { background: #fff; }
+.clm-shell__profil { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; min-width: 0; }
+.clm-shell__profil > a { display: inline-flex; align-items: center; min-height: 24px; padding: 4px 2px; text-decoration: underline; }
+.clm-shell__profil > button, .clm-shell__menu { background: transparent; color: #fff; border: 1px solid #fff; }
+.clm-shell__profil > button:hover, .clm-shell__menu:hover { background: rgba(255, 255, 255, .14); }
+.clm-shell__avatar {
+  display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%;
+  background: #dbeafe; color: #102a43; font-size: 13px; font-weight: 700;
+}
+.clm-shell__menu { display: none; }
+.clm-shell__corps { flex: 1; display: grid; grid-template-columns: 248px minmax(0, 1fr); }
+.clm-shell__nav { background: #eaf0f6; border-right: 1px solid #c9d6e3; padding: 22px 14px; }
+.clm-shell__nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.clm-shell__nav a {
+  display: flex; align-items: center; min-height: 42px; padding: 8px 14px; border-radius: 6px;
+  color: #102a43; font-weight: 600; text-decoration: none;
+}
+.clm-shell__nav a:hover { background: #dbe6f1; text-decoration: underline; }
+.clm-shell__nav a[aria-current="page"] { background: #dbeafe; box-shadow: inset 4px 0 0 var(--bleu); }
+.clm-shell__groupe { margin: 22px 14px 8px; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #3e4c59; }
+.clm-shell__main { flex: 1; min-width: 0; max-width: none; margin: 0; padding: 24px 32px 40px; }
+@media (max-width: 900px) {
+  .clm-shell__menu { display: inline-flex; }
+  .clm-shell__corps { grid-template-columns: minmax(0, 1fr); }
+  .clm-shell__nav { display: none; border-right: 0; border-bottom: 1px solid #c9d6e3; }
+  .clm-shell__nav.is-ouvert { display: block; }
+  .clm-shell__recherche { order: 3; flex: 1 1 100%; }
+  .clm-shell__main { padding: 16px; }
+}
+@media (max-width: 480px) { .clm-shell__nom { display: none; } }
+
+.clm-ecran__entete { margin: 0 0 18px; }
+.clm-ecran__ariane { margin-bottom: 4px; font-size: 14px; }
+.clm-ecran__objectif { margin: 4px 0 0; color: var(--muted); }
+.clm-blocs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 28px; margin-bottom: 20px; }
+.clm-bloc { min-width: 0; padding: 18px 20px; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; }
+.clm-bloc--large { grid-column: 1 / -1; }
+.clm-bloc__titre { margin: 0 0 10px; font-size: 17px; }
+h3.clm-bloc__titre { font-size: 16px; }
+.clm-bloc .clm-blocs { margin-bottom: 0; }
+.clm-barre {
+  display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; margin: 8px 0 20px; padding: 12px 20px;
+  background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px;
+}
+.clm-barre button.secondary, .clm-barre .clm-bouton.secondaire { border: 1px solid #6b7c93; }
+.clm-barre__groupe { display: inline-flex; flex-wrap: wrap; align-items: flex-end; gap: 8px; }
+.clm-bandeau-meta { display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 10px 0 0; }
+.clm-bandeau-meta dt { font-size: 13px; font-weight: 600; color: var(--muted); }
+.clm-bandeau-meta dd { margin: 2px 0 0; }
+.clm-info-statique { margin: 0 0 12px; padding: 8px 12px; border-radius: 7px; background: #eef2f7; color: #1c2733; }
+.clm-etape-courante { margin: 10px 0 0; font-weight: 600; }
+.clm-actions-ligne { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+.clm-actions-ligne > a { display: inline-flex; align-items: center; min-height: 24px; }
+.clm-champ-court { max-width: 420px; margin-bottom: 10px; }
+.clm-dl--compact { margin: 0 0 10px; padding-bottom: 10px; border-bottom: 1px dashed var(--bord); }
+.clm-bloc-ligne { display: block; }
+.clm-table tr.is-choisie td { background: #eef5ff; }
+@media (max-width: 900px) { .clm-blocs { grid-template-columns: minmax(0, 1fr); } }
+
+/* UI-05 : zone de dépôt (le sélecteur de fichier reste accessible au clavier). */
+.clm-depose {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 18px;
+  background: #f8fafc; border: 2px dashed #64748b; border-radius: 8px;
+}
+.clm-depose.is-survol { background: #dbeafe; border-color: var(--bleu); }
+.clm-depose p { margin: 0; }
+.clm-depose label { align-self: stretch; min-width: 0; }
+.clm-depose input[type="file"] { width: 100%; min-width: 0; }
+
+/* UI-13 : visionneuse PDF / texte. */
+.clm-visionneuse iframe { display: block; width: 100%; height: 70vh; min-height: 360px; border: 1px solid #cbd5e1; border-radius: 6px; }
+.clm-visionneuse pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 60vh; overflow: auto; margin: 0; font-size: 13.5px; }
+
+/* UI-11 : canvas des phases (une colonne par phase, retour à la ligne plutôt que défilement). */
+.clm-canvas { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 16px 34px; }
+.clm-canvas__phase {
+  position: relative; flex: 0 1 230px; min-width: 0; display: flex; flex-direction: column; gap: 8px; padding: 10px;
+  background: #f8fafc; border: 1px dashed #64748b; border-radius: 8px;
+}
+.clm-canvas__phase:not(:last-child)::after {
+  content: "→"; position: absolute; right: -26px; top: 50%; transform: translateY(-50%); color: #475569; font-size: 20px;
+}
+.clm-canvas__phase h3 { margin: 0; font-size: 14px; }
+.clm-canvas__phase ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.clm-canvas__etape {
+  padding: 8px 10px; background: #fff; border: 1px solid #cbd5e1; border-left: 4px solid var(--bleu); border-radius: 6px;
+  font-size: 14px; overflow-wrap: anywhere;
+}
+.clm-canvas__etape--APPROBATION { border-left-color: #6e4d00; }
+.clm-canvas__etape--SIGNATURE { border-left-color: #9a0b22; }
+
+/* UI-08 : éditeur en deux colonnes (prévisualisation à gauche, panneaux à droite). */
+.clm-editeur { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 28px; align-items: start; margin-bottom: 20px; }
+.clm-editeur__col { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.clm-editeur__plein { grid-column: 1 / -1; min-width: 0; }
+@media (max-width: 900px) { .clm-editeur { grid-template-columns: minmax(0, 1fr); } }
+
+.clm-entete { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.clm-entete > * { min-width: 0; }
+.clm-meta { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: 6px 0 0; font-size: 14px; }
+
+.clm-bouton {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 16px;
+  border-radius: 9px; background: var(--bleu); color: #fff !important; font-weight: 600; text-decoration: none;
+}
+.clm-bouton:hover { background: var(--bleu-fonce); }
+.clm-bouton.secondaire { background: #eef2f7; color: var(--bleu-fonce) !important; }
+
+.clm-statut {
+  display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 20px;
+  font-size: 12.5px; font-weight: 600; line-height: 1.6; white-space: nowrap;
+  background: #eef2f7; color: #1c2733; border: 1px solid #c7d0db;
+}
+.clm-statut--ok { background: #d9f5e3; color: #145c33; border-color: #8fcfa8; }
+.clm-statut--ko { background: #fde8ea; color: #9a0b22; border-color: #f0a3ae; }
+.clm-statut--info { background: #dbeafe; color: #083560; border-color: #93b7e8; }
+.clm-statut--attente { background: #fff3d6; color: #6e4d00; border-color: #e6c46e; }
+
+.clm-kpis { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.clm-kpi { border: 1px solid var(--bord); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 4px; }
+.clm-kpi__val { font-size: 30px; font-weight: 800; color: var(--bleu); line-height: 1.1; }
+.clm-kpi__lib { color: var(--muted); font-size: 14px; }
+.clm-kpi--alerte { border-color: #f0a3ae; background: #fff7f8; }
+.clm-kpi--alerte .clm-kpi__val { color: #9a0b22; }
+
+.clm-onglets { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; border-bottom: 2px solid var(--bord); }
+.clm-onglets button {
+  background: transparent; color: var(--bleu-fonce); border-radius: 8px 8px 0 0; min-height: 44px;
+  border-bottom: 3px solid transparent; margin-bottom: -2px; font-weight: 600;
+}
+.clm-onglets button:hover { background: #eef2f7; }
+.clm-onglets button.is-actif, .clm-onglets button[aria-selected="true"], .clm-onglets button[aria-pressed="true"] {
+  border-bottom-color: var(--bleu); background: var(--panel); text-decoration: underline; text-underline-offset: 4px;
+}
+
+.clm-chrono { margin: 0 0 16px; padding-left: 1.3rem; display: flex; flex-direction: column; gap: 10px; }
+.clm-chrono--compact { gap: 6px; font-size: 14px; }
+.clm-liste { margin: 4px 0 12px; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 6px; }
+.clm-dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px 16px; margin: 8px 0 16px; }
+.clm-dl > div { min-width: 0; }
+.clm-dl dt { font-weight: 600; font-size: 13px; color: var(--muted); }
+.clm-dl dd { margin: 2px 0 0; overflow-wrap: anywhere; }
+
+.clm-carte { border: 1px solid var(--bord); border-radius: 10px; padding: 14px; margin: 0 0 12px; }
+.clm-carte h3 { margin: 0 0 4px; overflow-wrap: anywhere; }
+.clm-carte .actions { margin-top: 10px; }
+.clm-sousform { border-top: 1px dashed var(--bord); margin-top: 12px; padding-top: 12px; }
+.clm-apercu { margin-top: 12px; border: 1px solid var(--bord); border-radius: 10px; padding: 12px; }
+.clm-apercu pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 50vh; overflow: auto; margin: 0; font-size: 13.5px; }
+.clm-alertes { border-color: #f0a3ae; background: #fff7f8; }
+.clm-ok { background: #d9f5e3; color: #145c33; padding: 8px 12px; border-radius: 7px; }
+.clm-info:empty { display: block; height: 0; margin: 0; }
+.clm-info:not(:empty) { margin: 0 0 12px; padding: 8px 12px; border-radius: 7px; background: #dbeafe; color: #083560; }
+.clm-message { margin-bottom: 12px; }
+.clm-sans-bordure { border: 0; padding: 0; margin: 0; min-width: 0; }
+.clm-etape-edit { margin-bottom: 12px; }
+.clm-casse { overflow-wrap: anywhere; word-break: break-all; }
+
+.clm-etapes { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 10px 0 0; }
+.clm-etapes li { padding: 6px 12px; border-radius: 20px; background: #eef2f7; color: #1c2733; font-size: 14px; }
+.clm-etapes li.is-actif { background: var(--bleu); color: #fff; font-weight: 700; }
+.clm-etapes li.is-fait { background: #d9f5e3; color: #145c33; }
+
+/* Page schématique : proportions d'une lettre US (8,5 × 11). */
+.clm-page { position: relative; width: 100%; max-width: 340px; aspect-ratio: 8.5 / 11; border: 1px solid #8a96a3; background: #fff; margin: 10px 0; }
+.clm-zone {
+  position: absolute; min-height: 24px; min-width: 24px; padding: 2px 4px; overflow: hidden;
+  background: rgba(11, 74, 138, .10); border: 2px dashed var(--bleu); color: var(--bleu-fonce); font-size: 11px; text-align: left;
+  border-radius: 4px; line-height: 1.2;
+}
+.clm-zone--sig { background: rgba(176, 13, 39, .08); border-color: #9a0b22; color: #9a0b22; }
+.clm-zone.is-actif { border-style: solid; z-index: 2; box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--focus); }
+
+.clm-environnement { padding: 8px 12px; border-radius: 7px; background: #eef2f7; color: #1c2733; }
+.clm-environnement--prod { background: #fde8ea; color: #9a0b22; }
+.clm-environnement--test, .clm-environnement--acceptation { background: #fff3d6; color: #6e4d00; }
+
+/* Portail du signataire (RST-19) : mobile d'abord, aucune action au survol seulement. */
+.clm-portail { min-height: 100vh; background: var(--bg); }
+.clm-portail__entete { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; background: var(--panel); border-bottom: 1px solid var(--bord); }
+.clm-portail__main { max-width: 720px; margin: 0 auto; padding: 16px; }
+.clm-portail button, .clm-portail input, .clm-portail select, .clm-portail textarea { min-height: 44px; }
+/* Sélecteur de langue compact conçu pour un fond foncé : rétabli en texte foncé sur l'en-tête clair du portail (1.4.3). */
+.clm-portail .lang-switcher.compact select { background: #fff; color: var(--texte); border-color: #8a96a3; }
+.clm-portail__doc { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.clm-portail__doc > span { min-width: 0; overflow-wrap: anywhere; }
+.clm-consentement { align-items: flex-start; font-weight: 600; }
+.clm-consentement input { min-height: 24px; min-width: 24px; margin-top: 2px; }
+
+/* Tableaux : cartes empilées sur petit écran, libellé de colonne lu depuis data-label. */
+@media (max-width: 640px) {
+  .clm-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .clm-table, .clm-table tbody, .clm-table tr, .clm-table td { display: block; width: 100%; }
+  .clm-table tr { border: 1px solid var(--bord); border-radius: 10px; padding: 6px 10px; margin-bottom: 10px; }
+  .clm-table td { border: 0; padding: 4px 0; }
+  .clm-table td[data-label]::before { content: attr(data-label); display: block; font-size: 12px; font-weight: 700; color: var(--muted); }
+  /* Tableau triable : les en-têtes de tri restent visibles et atteignables (barre de tri), jamais focalisables hors écran. */
+  .clm-table--triable thead { position: static; width: auto; height: auto; overflow: visible; clip: auto; }
+  .clm-table--triable thead tr { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 0 0 8px; padding: 0; border: 0; }
+  .clm-table--triable thead th { display: block; width: auto; padding: 0; border: 0; }
+  .clm-table--triable thead th:not([aria-sort]) { display: none; }
+  .clm-entete .clm-bouton { width: 100%; }
+}
+@media print {
+  .clm-portail__entete, .clm-portail button { display: none; }
+}

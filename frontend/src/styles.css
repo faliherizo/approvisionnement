@@ -628,3 +628,17 @@ img, svg, canvas { max-width: 100%; height: auto; }
 @media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
 .modele-apercu { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 14px; border: 1px solid var(--bord); border-top: 4px solid var(--bleu); border-radius: 8px; background: #fff; }
 .modele-accent { width: 40px; height: 14px; border-radius: 4px; display: inline-block; }
+
+/* Moteur de formulaires : lien-bouton d'action (tableaux), radios en ligne, détails d'une fiche. */
+a.btn-lien {
+  display: inline-flex; align-items: center; min-height: 24px; padding: 9px 16px;
+  background: #eef2f7; color: var(--bleu-fonce); border-radius: 7px; font-weight: 600;
+  text-decoration: none;
+}
+a.btn-lien:hover, a.btn-lien:focus-visible { background: #e0e7f1; text-decoration: none; }
+.radio-inline { display: inline-flex; align-items: center; gap: 6px; margin-right: 14px; font-weight: 400; }
+.radio-inline input { width: auto; min-height: 0; }
+.fiche-details { margin: 0; }
+.fiche-details .cmp-row { margin-top: 4px; align-items: baseline; }
+.fiche-details dt { min-width: 160px; font-weight: 600; }
+.fiche-details dd { margin: 0; }

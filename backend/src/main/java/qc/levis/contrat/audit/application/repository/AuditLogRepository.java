@@ -19,8 +19,8 @@ public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
               AND (:utilisateur IS NULL OR a.utilisateur = :utilisateur)
               AND (:action IS NULL OR a.action = :action)
               AND (:entite IS NULL OR a.entite = :entite)
-              AND (:depuis IS NULL OR a.horodatage >= :depuis)
-              AND (:jusqua IS NULL OR a.horodatage <= :jusqua)
+              AND (CAST(:depuis AS timestamp) IS NULL OR a.horodatage >= :depuis)
+              AND (CAST(:jusqua AS timestamp) IS NULL OR a.horodatage <= :jusqua)
             ORDER BY a.horodatage DESC
             """)
     List<AuditLog> rechercher(@Param("tenantId") Long tenantId,

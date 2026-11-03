@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 034-1-formulaire
+      author: levis
+      changes:
+        - createTable:
+            tableName: formulaire
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: code, type: VARCHAR(80), constraints: { nullable: false } }
+              - column: { name: nom, type: VARCHAR(300), constraints: { nullable: false } }
+              - column: { name: parent_id, type: BIGINT }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: true, constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - addUniqueConstraint:
+            tableName: formulaire
+            columnNames: tenant_id, code
+            constraintName: uq_formulaire_tenant_code
+  - changeSet:
+      id: 034-2-formulaire-version
+      author: levis
+      changes:
+        - createTable:
+            tableName: formulaire_version
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: formulaire_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: numero, type: INT, constraints: { nullable: false } }
+              - column: { name: statut, type: VARCHAR(20), defaultValue: BROUILLON, constraints: { nullable: false } }
+              - column: { name: structure_json, type: TEXT }
+              - column: { name: note, type: VARCHAR(1000) }
+              - column: { name: publie_le, type: TIMESTAMP }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - addUniqueConstraint:
+            tableName: formulaire_version
+            columnNames: formulaire_id, numero
+            constraintName: uq_formulaire_version

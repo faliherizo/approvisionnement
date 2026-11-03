@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: contrat-backend
+  # Borne de transport ; chaque module applique la sienne (document : 10 Mo, clm : app.clm.documents.taille-max-octets).
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 32MB
   # Profil par défaut : H2 en mémoire (dév + tests e2e Playwright).
   datasource:
     url: jdbc:h2:mem:contrat;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -65,6 +70,29 @@ app:
     login-base-url: ${M365_LOGIN_BASE_URL:https://login.microsoftonline.com}
   # SAP : configuration désormais PAR TENANT (Paramètres → Intégration SAP), chiffrée en base — plus
   # de config globale ici. Voir docs/tutoriel-sap.md et docs/tutoriel-sap-sandbox.md.
+  # CLM IQ 2026-6370-0005 : trousses, signature probante, preuve, Salesforce.
+  clm:
+    environnement: ${CLM_ENVIRONNEMENT:DEV}
+    portail-url: ${CLM_PORTAIL_URL:http://localhost:5173/portail}
+    documents:
+      taille-max-octets: ${CLM_TAILLE_MAX_OCTETS:26214400}   # 25 Mo (NF-07)
+    invitation:
+      validite-jours: ${CLM_INVITATION_JOURS:14}
+    preuve:
+      # Clé de scellement des dossiers de preuve et de l'horodatage local. OBLIGATOIRE en production.
+      cle: ${CLM_PREUVE_CLE:changez-moi-cle-de-scellement-des-preuves}
+    planificateur:
+      actif: ${CLM_PLANIFICATEUR_ACTIF:true}
+      delai-ms: ${CLM_PLANIFICATEUR_DELAI_MS:60000}
+    salesforce:
+      # simulation (défaut, données de démonstration) | rest (API Salesforce réelle, OAuth2 client credentials)
+      mode: ${CLM_SALESFORCE_MODE:simulation}
+      instance-url: ${CLM_SALESFORCE_INSTANCE_URL:}
+      token-url: ${CLM_SALESFORCE_TOKEN_URL:}
+      client-id: ${CLM_SALESFORCE_CLIENT_ID:}
+      client-secret: ${CLM_SALESFORCE_CLIENT_SECRET:}
+      objet: ${CLM_SALESFORCE_OBJET:FundingRequest}
+      version-api: ${CLM_SALESFORCE_VERSION_API:v60.0}
 
 # Journalisation (voir docs/journalisation.md). Niveaux pilotés ici, ajustables sans redéploiement
 # via LOG_APP_LEVEL. Aucune donnée sensible n'est journalisée (Loi 25).
