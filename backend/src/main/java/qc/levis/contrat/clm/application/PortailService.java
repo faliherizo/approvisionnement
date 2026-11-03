@@ -27,7 +27,6 @@ import qc.levis.contrat.clm.domain.ModeleMessage.Evenement;
 import qc.levis.contrat.clm.domain.Participant;
 import qc.levis.contrat.clm.domain.StatutTrousse;
 import qc.levis.contrat.clm.domain.Trousse;
-import qc.levis.contrat.commun.infrastructure.TenantContext;
 
 /**
  * Portail du signataire (ST-09, RST-17, RST-19, UI-16), accessible sans compte par un jeton à usage unique.
@@ -204,16 +203,12 @@ public class PortailService {
             throw new NoSuchElementException(INTROUVABLE);
         }
         Invitation inv = invitations.findByJetonHash(hash(jeton)).orElseThrow(() -> new NoSuchElementException(INTROUVABLE));
-        Long precedent = TenantContext.get();
-        TenantContext.set(inv.getTenantId());
-        try {
+        return ctx.dansTenant(inv.getTenantId(), () -> {
             Trousse t = lecture.exiger(inv.getTrousseId());
             Participant p = participants.findByIdAndTenantId(inv.getParticipantId(), inv.getTenantId())
                     .orElseThrow(() -> new NoSuchElementException(INTROUVABLE));
             return action.apply(new Session(inv, p, t));
-        } finally {
-            TenantContext.set(precedent);
-        }
+        });
     }
 
     private void exigerVerifiee(Session s) {

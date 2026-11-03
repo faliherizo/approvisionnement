@@ -4,7 +4,7 @@
 - **Priorité** : Must
 - **Traçabilité** : F-06; F-10
 - **User story** : En tant qu'initiateur, je veux faire signer les documents selon un ordre configurable afin d'obtenir les consentements requis.
-- **Statut** : à raffiner en atelier métier et technique.
+- **Statut** : 🟡 Partielle — identité par risque, consentement et parcours de signature livrés ; restent l'adaptateur du fournisseur certifié et l'horodatage qualifié (décision V1). État à jour : [§ 0](../../06-Roadmap/reste_stories_et_roadmap.md).
 
 ## 2. Contexte et valeur
 Cette story met en œuvre une capacité demandée par IQ. Elle doit être livrée en cohérence avec les règles d'accès, la traçabilité et la conservation des preuves. Les comportements détaillés ci-dessous sont une conception proposée lorsqu'ils ne sont pas littéralement spécifiés dans les sources.

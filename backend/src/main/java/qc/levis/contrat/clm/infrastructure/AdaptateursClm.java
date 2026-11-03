@@ -8,6 +8,7 @@ import java.util.HexFormat;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Supplier;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.stereotype.Component;
@@ -15,8 +16,10 @@ import qc.levis.contrat.clm.application.ClmProprietes;
 import qc.levis.contrat.clm.application.port.AnalyseAntivirus;
 import qc.levis.contrat.clm.application.port.NotificateurClm;
 import qc.levis.contrat.clm.application.port.PerimetreUtilisateur;
+import qc.levis.contrat.clm.application.port.PorteeTenant;
 import qc.levis.contrat.clm.application.port.Scelleur;
 import qc.levis.contrat.clm.application.port.SourceAleatoire;
+import qc.levis.contrat.commun.infrastructure.TenantContext;
 import qc.levis.contrat.notification.application.port.CanalNotification;
 import qc.levis.contrat.securite.application.SecuriteService;
 
@@ -109,6 +112,31 @@ public final class AdaptateursClm {
             }
             return canaux.stream().filter(c -> c.canal().equals(canal)).findFirst()
                     .map(c -> c.envoyer(destinataire, sujet, corps)).orElse("ECHEC");
+        }
+    }
+
+    /** Tenant porté par le fil d'exécution, alimenté par le filtre d'authentification de la plateforme. */
+    @Component
+    public static class PorteeTenantFil implements PorteeTenant {
+        @Override
+        public Long courant() {
+            return TenantContext.get();
+        }
+
+        @Override
+        public <T> T executerDans(Long tenantId, Supplier<T> action) {
+            Long precedent = TenantContext.get();
+            TenantContext.set(tenantId);
+            try {
+                return action.get();
+            } finally {
+                // Retirer plutôt que poser null : un fil réutilisé par le serveur ne garde aucune trace du traitement.
+                if (precedent == null) {
+                    TenantContext.clear();
+                } else {
+                    TenantContext.set(precedent);
+                }
+            }
         }
     }
 

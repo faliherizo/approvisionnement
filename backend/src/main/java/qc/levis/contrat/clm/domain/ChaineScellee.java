@@ -49,10 +49,15 @@ public final class ChaineScellee {
     }
 
     public static String sha256(byte[] octets) {
+        return condenser("SHA-256", octets);
+    }
+
+    /** L'indisponibilité d'un algorithme devient une erreur typée plutôt qu'une exception contrôlée propagée. */
+    static String condenser(String algorithme, byte[] octets) {
         try {
-            return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(octets));
+            return HexFormat.of().formatHex(MessageDigest.getInstance(algorithme).digest(octets));
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("SHA-256 indisponible", e);
+            throw new IllegalStateException(algorithme + " indisponible", e);
         }
     }
 

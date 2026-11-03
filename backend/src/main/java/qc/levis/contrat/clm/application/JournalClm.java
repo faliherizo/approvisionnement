@@ -35,4 +35,9 @@ public class JournalClm {
                 t.getReference() + (detail == null || detail.isBlank() ? "" : " · " + detail));
         return e;
     }
+
+    /** Refus d'accès (ST-02) : événement de sécurité du tenant, hors du journal scellé d'une trousse. */
+    public void refus(String acteur, String ressource, String motif) {
+        audit.log(acteur == null || acteur.isBlank() ? "anonyme" : acteur, "CLM_ACCES_REFUSE", "API", null, ressource + " · " + motif);
+    }
 }

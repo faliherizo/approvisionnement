@@ -193,8 +193,6 @@ public class Invitation {
     public Instant getSigneeLe() { return signeeLe; }
     public String getNomSigne() { return nomSigne; }
     public String getIp() { return ip; }
-    public String getAgent() { return agent; }
     public String getAttestationJson() { return attestationJson; }
-    public String getChampsJson() { return champsJson; }
     public String getMotif() { return motif; }
 }

@@ -16,7 +16,6 @@ import qc.levis.contrat.clm.domain.ModeleMessage.Evenement;
 import qc.levis.contrat.clm.domain.Parcours;
 import qc.levis.contrat.clm.domain.Relances;
 import qc.levis.contrat.clm.domain.Trousse;
-import qc.levis.contrat.commun.infrastructure.TenantContext;
 
 /**
  * Rappels de non-réponse et signalement des échéances dépassées (ST-11). Exécuté par le planificateur, tous tenants
@@ -52,17 +51,11 @@ public class RappelService {
         Instant maintenant = ctx.maintenant();
         int envoyes = 0;
         for (EtapeTrousse e : etapes.findByStatut(Parcours.StatutEtape.ACTIVE)) {
-            Long precedent = TenantContext.get();
             try {
-                TenantContext.set(e.getTenantId());
-                Trousse t = trousses.findByIdAndTenantId(e.getTrousseId(), e.getTenantId()).orElse(null);
-                if (t != null) {
-                    envoyes += traiter(t, e, maintenant);
-                }
+                envoyes += ctx.dansTenant(e.getTenantId(), () -> trousses.findByIdAndTenantId(e.getTrousseId(), e.getTenantId())
+                        .map(t -> traiter(t, e, maintenant)).orElse(0));
             } catch (RuntimeException ex) {
                 log.warn("Rappel CLM impossible pour l'étape {} : {}", e.getId(), ex.getMessage());
-            } finally {
-                TenantContext.set(precedent);
             }
         }
         return envoyes;

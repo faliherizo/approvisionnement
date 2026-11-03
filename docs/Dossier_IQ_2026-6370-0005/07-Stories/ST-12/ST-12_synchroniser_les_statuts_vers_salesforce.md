@@ -4,7 +4,7 @@
 - **Priorité** : Must
 - **Traçabilité** : F-10
 - **User story** : En tant que système IQ, je veux recevoir les statuts et références de signature afin de garder le dossier source à jour.
-- **Statut** : à raffiner en atelier métier et technique.
+- **Statut** : ✅🔌 Livrée et testée (2026-11-03) — ne plus analyser ; reste la recette sur le bac à sable Salesforce d'IQ. État à jour : [§ 0](../../06-Roadmap/reste_stories_et_roadmap.md).
 
 ## 2. Contexte et valeur
 Cette story met en œuvre une capacité demandée par IQ. Elle doit être livrée en cohérence avec les règles d'accès, la traçabilité et la conservation des preuves. Les comportements détaillés ci-dessous sont une conception proposée lorsqu'ils ne sont pas littéralement spécifiés dans les sources.

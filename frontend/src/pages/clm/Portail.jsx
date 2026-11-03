@@ -132,7 +132,7 @@ export default function Portail() {
                 <ul className="clm-liste">
                   {vue.documents.map((d) => (
                     <li key={d.id} className="clm-portail__doc">
-                      <span>{d.nom} <span className="muted">({d.type} · {taille(d.taille)})</span> {lus[d.id] && <span aria-label={t('clm.po.consulte')}>✔</span>}</span>
+                      <span>{d.nom} <span className="muted">({d.type} · {taille(d.taille)})</span> {lus[d.id] && <span role="img" aria-label={t('clm.po.consulte')}>✔</span>}</span>
                       <button type="button" className="secondary" onClick={() => ouvrir(d)}>{t('clm.po.lire')}</button>
                     </li>
                   ))}

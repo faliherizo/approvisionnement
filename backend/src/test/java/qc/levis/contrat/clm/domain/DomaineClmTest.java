@@ -17,7 +17,6 @@ import qc.levis.contrat.clm.domain.Parcours.PolitiqueRejet;
 import qc.levis.contrat.clm.domain.Parcours.StatutEtape;
 import qc.levis.contrat.clm.domain.Parcours.TypeAffecte;
 import qc.levis.contrat.clm.domain.Parcours.TypeEtape;
-import qc.levis.contrat.regle.domain.ConditionDef;
 
 /** Règles pures du domaine CLM : parcours, identité, formats, scellement, modèles, préremplissage, relances, IA. */
 class DomaineClmTest {
@@ -162,7 +161,7 @@ class DomaineClmTest {
     }
 
     // --- Modèles (ST-05) ---
-    private static Modele.Champ champ(String cle, Modele.TypeChamp type, ConditionDef... conds) {
+    private static Modele.Champ champ(String cle, Modele.TypeChamp type, Modele.Condition... conds) {
         return new Modele.Champ(cle, cle, type, false, null, null, null, null, List.of(conds), null, null);
     }
 
@@ -172,7 +171,7 @@ class DomaineClmTest {
                 new Modele.Champ("sig", "Signature", Modele.TypeChamp.SIGNATURE, true, null, null, null, null, null, "SIGNATAIRE_1",
                         new Modele.Position(1, 10, 80, 30, 10)));
         List<Modele.Clause> clauses = List.of(new Modele.Clause("g", "Garantie", "Garantie de {{montant}}.", "ET",
-                List.of(new ConditionDef("montant", "SUP", "100"))));
+                List.of(new Modele.Condition("montant", "SUP", "100"))));
         assertTrue(Modele.valider("Montant : {{montant}} {{clauses}}", champs, clauses).isEmpty());
         assertEquals("Montant : 500\n\nGarantie\nGarantie de 500.", Modele.assembler("Montant : {{montant}}", clauses, Map.of("montant", "500"), Set.of()));
         assertEquals("Montant : [montant]", Modele.assembler("Montant : {{montant}}", clauses, Map.of(), Set.of("g")));
@@ -192,9 +191,9 @@ class DomaineClmTest {
                 new Modele.Champ("d", "D", Modele.TypeChamp.DATE, false, null, null, null, "2026-13-40", null, null, null),
                 new Modele.Champ("c", "C", Modele.TypeChamp.CASE, false, "\\w+", null, null, "oui", null, null, null),
                 new Modele.Champ("s", "S", Modele.TypeChamp.SIGNATURE, false, null, null, null, null, null, null, new Modele.Position(1, 90, 0, 20, 5)),
-                champ("a", Modele.TypeChamp.TEXTE, new ConditionDef("b", "EGAL", "1")),
-                champ("b", Modele.TypeChamp.TEXTE, new ConditionDef("a", "EGAL", "1"), new ConditionDef("fantome", "EGAL", "1")));
-        List<Modele.Clause> clauses = List.of(new Modele.Clause("k", "K", "t", null, List.of(new ConditionDef("zz", "EGAL", "1"))),
+                champ("a", Modele.TypeChamp.TEXTE, new Modele.Condition("b", "EGAL", "1")),
+                champ("b", Modele.TypeChamp.TEXTE, new Modele.Condition("a", "EGAL", "1"), new Modele.Condition("fantome", "EGAL", "1")));
+        List<Modele.Clause> clauses = List.of(new Modele.Clause("k", "K", "t", null, List.of(new Modele.Condition("zz", "EGAL", "1"))),
                 new Modele.Clause("k", "K", "t", null, null));
         String tout = String.join("|", Modele.valider("{{inconnue}} {{a}}", champs, clauses));
         for (String attendu : List.of("Nom technique invalide : 1bad", "Nom technique en doublon : dup", "Libellé requis", "Type requis",

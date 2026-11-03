@@ -49,14 +49,14 @@ public class AnalyseService {
             throw new IllegalStateException("Données non admissibles : document non analysé ou infecté.");
         }
         String texte = rendu.texte(d.getType(), d.getContenu());
-        AnalyseContrat.Resultat r = AnalyseContrat.analyser(texte, montantAttendu(t));
+        AnalyseContrat.Resultat r = AnalyseContrat.analyser(texte, montantAttendu(trousses.valeurs(t).get("montant")));
         AnalyseIa a = analyses.save(new AnalyseIa(t.getTenantId(), t.getId(), d.getId(), ctx.ecrire(r), acteur.id(), ctx.maintenant()));
         journal.consigner(t, "ANALYSE_IA", acteur.id(), d.getNom() + " · " + r.categorie() + " · " + r.anomalies().size() + " anomalie(s)");
         return vue(a);
     }
 
-    private BigDecimal montantAttendu(Trousse t) {
-        Preremplissage.Valeur v = trousses.valeurs(t).get("montant");
+    /** Montant du dossier à comparer au texte ; absent ou illisible, aucune divergence n'est signalée. */
+    static BigDecimal montantAttendu(Preremplissage.Valeur v) {
         if (v == null || v.valeur() == null) {
             return null;
         }

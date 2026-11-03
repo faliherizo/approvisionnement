@@ -14,8 +14,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import qc.levis.contrat.regle.domain.ConditionDef;
-
 /**
  * Modèle de contrat (ST-05, UI-07 à UI-09) : corps à variables {@code {{cle}}}, champs typés positionnés sur le
  * document et assignables à un rôle de participant, clauses conditionnelles. Règles pures, sans E/S.
@@ -50,8 +48,12 @@ public final class Modele {
     public record Position(int page, double x, double y, double largeur, double hauteur) {
     }
 
+    /** Condition d'affichage d'un champ ou d'une clause : {@code champ operateur valeur}, évaluée par le moteur de règles. */
+    public record Condition(String champ, String operateur, String valeur) {
+    }
+
     public record Champ(String cle, String libelle, TypeChamp type, boolean obligatoire, String format, List<String> options,
-                        String source, String valeurDefaut, List<ConditionDef> conditions, String roleDestinataire,
+                        String source, String valeurDefaut, List<Condition> conditions, String roleDestinataire,
                         Position position) {
         public Champ {
             options = options == null ? List.of() : List.copyOf(options);
@@ -65,7 +67,7 @@ public final class Modele {
         }
     }
 
-    public record Clause(String cle, String titre, String texte, String combinateur, List<ConditionDef> conditions) {
+    public record Clause(String cle, String titre, String texte, String combinateur, List<Condition> conditions) {
         public Clause {
             conditions = conditions == null ? List.of() : List.copyOf(conditions);
         }
@@ -83,7 +85,7 @@ public final class Modele {
             validerChamp(c, cles, erreurs);
         }
         for (Champ c : lesChamps) {
-            for (ConditionDef cond : c.conditions()) {
+            for (Condition cond : c.conditions()) {
                 if (!cles.contains(cond.champ())) {
                     erreurs.add("Variable source inconnue dans la condition de « " + c.cle() + " » : " + cond.champ());
                 }
@@ -95,7 +97,7 @@ public final class Modele {
             if (cl.cle() == null || !CLE.matcher(cl.cle()).matches() || !clesClauses.add(cl.cle())) {
                 erreurs.add("Clé de clause invalide ou en doublon : " + cl.cle());
             }
-            for (ConditionDef cond : cl.conditions()) {
+            for (Condition cond : cl.conditions()) {
                 if (!cles.contains(cond.champ())) {
                     erreurs.add("Variable source inconnue dans la clause « " + cl.cle() + " » : " + cond.champ());
                 }
@@ -183,7 +185,7 @@ public final class Modele {
         Map<String, List<String>> graphe = new HashMap<>();
         for (Champ c : champs) {
             if (c.cle() != null) {
-                graphe.put(c.cle(), c.conditions().stream().map(ConditionDef::champ).toList());
+                graphe.put(c.cle(), c.conditions().stream().map(Condition::champ).toList());
             }
         }
         Set<String> enCycle = new LinkedHashSet<>();

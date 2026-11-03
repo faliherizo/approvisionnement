@@ -25,12 +25,15 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import qc.levis.contrat.audit.application.repository.AuditLogRepository;
+import qc.levis.contrat.audit.domain.AuditLog;
 import qc.levis.contrat.auth.application.repository.UserRepository;
 import qc.levis.contrat.clm.application.port.NotificateurClm;
 import qc.levis.contrat.clm.application.repository.MessageSortantRepository;
@@ -67,6 +70,8 @@ class ClmIntegrationTest {
     @Autowired ModuleService modules;
     @Autowired UserRepository users;
     @Autowired MessageSortantRepository sorties;
+    @Autowired AuditLogRepository auditLogs;
+    @Autowired JdbcTemplate jdbc;
 
     Cookie admin;
     Cookie redacteur;
@@ -111,6 +116,13 @@ class ClmIntegrationTest {
                 .cookie(redacteur)).andReturn().getResponse().getContentAsString();
         assertTrue(texte.contains("Coopérative Agri-Nord"), texte);
         assertTrue(texte.contains("Garantie"), "clause conditionnelle retenue au-delà de 100 000 $");
+
+        assertEquals("DEM-2026-0001", appel(post("/api/clm/trousses/" + id + "/preremplissage", redacteur, "{\"sfDossierId\":\"DEM-2026-0001\"}"),
+                status().isOk()).get("numero").asText(), "données Salesforce relues avant de régénérer");
+        assertEquals(2, appel(post("/api/clm/trousses/" + id + "/generer", redacteur, "{}"), status().isOk()).get("version").asInt());
+        JsonNode versions = appel(get("/api/clm/trousses/" + id + "/documents/" + genere.get("cleDocument").asText() + "/versions", redacteur),
+                status().isOk());
+        assertEquals("REMPLACE", versions.get(1).get("statut").asText(), "la régénération remplace la version précédente");
 
         JsonNode docx = televerser(id, "annexe.docx", docx("Annexe : conditions du programme Essor."), status().isOk());
         assertEquals("DOCX", docx.get("type").asText());
@@ -162,7 +174,7 @@ class ClmIntegrationTest {
         assertEquals("TERMINEE", fini.at("/resume/statut").asText());
         boolean signe = false;
         for (JsonNode d : fini.get("documents")) {
-            signe |= "SIGNE".equals(d.get("statut").asText()) && "PDF".equals(d.get("type").asText()) && d.get("version").asInt() == 2;
+            signe |= "SIGNE".equals(d.get("statut").asText()) && "PDF".equals(d.get("type").asText()) && d.get("version").asInt() == 3;
         }
         assertTrue(signe, "version PDF signée et verrouillée");
         assertTrue(ENVOIS.stream().anyMatch(e -> "suivi@iq.example".equals(e[1])), "copie de fin de parcours");
@@ -194,6 +206,16 @@ class ClmIntegrationTest {
                 "{\"valide\":true,\"justification\":\"Montant confirmé\"}"), status().isOk());
         assertEquals(1, appel(get("/api/clm/trousses/" + id + "/analyses", redacteur), status().isOk()).size());
         assertTrue(appel(get("/api/clm/taches?filtre=terminees", juriste), status().isOk()).toString().contains("\"maDecision\":\"APPROUVE\""));
+
+        // Altération directe en base, hors de l'application : empreinte du document et attestation ne correspondent plus.
+        jdbc.update("UPDATE clm_document SET contenu = ? WHERE id = ?", "falsifié".getBytes(java.nio.charset.StandardCharsets.UTF_8),
+                docx.get("id").asLong());
+        jdbc.update("UPDATE clm_invitation SET nom_signe = ? WHERE trousse_id = ? AND statut = 'SIGNEE'", "Faussaire", id);
+        JsonNode alteree = appel(post("/api/clm/trousses/" + id + "/preuve/integrite", redacteur, "{}"), status().isOk());
+        assertFalse(alteree.get("integre").asBoolean());
+        assertTrue(alteree.get("journalIntegre").asBoolean(), "le journal scellé n'a pas été touché");
+        assertEquals("annexe.docx v1", alteree.at("/documentsAlteres/0").asText());
+        assertEquals("Faussaire", alteree.at("/attestationsInvalides/0").asText());
     }
 
     @Test
@@ -536,6 +558,7 @@ class ClmIntegrationTest {
         appel(post("/api/clm/etapes/" + s1 + "/lien-signature", direction, "{}"), status().isForbidden());
         assertTrue(appel(post("/api/clm/etapes/" + s1 + "/lien-signature", juriste, "{}"), status().isOk()).get("lien").asText()
                 .contains("/portail/"));
+        appel(post("/api/clm/etapes/" + v1 + "/lien-signature", juriste, "{}"), status().isConflict());
         appel(get("/api/clm/trousses/" + id + "/preuve/export", juriste), status().isForbidden());
 
         appel(put("/api/clm/etapes/" + s1 + "/affectations", redacteur,
@@ -568,6 +591,49 @@ class ClmIntegrationTest {
                 status().isBadRequest());
         assertTrue(bloque.get("message").asText().contains("bloquée"), "cinq échecs bloquent l'invitation");
         assertEquals("BLOQUEE", appel(get("/api/clm/portail/" + nouveau, null), status().isOk()).get("statut").asText());
+
+        JsonNode preuve = appel(get("/api/clm/trousses/" + id + "/preuve", redacteur), status().isOk());
+        assertTrue(preuve.at("/integrite/integre").asBoolean(), "seules les invitations signées portent une attestation à vérifier");
+        assertFalse(preuve.get("signatures").isEmpty());
+        for (JsonNode s : preuve.get("signatures")) {
+            assertNotEquals("ANNULEE", s.get("statut").asText(), "une invitation annulée ne figure pas au dossier de preuve");
+        }
+    }
+
+    /** ST-02 : l'initiateur ne décide pas son propre dossier ; chaque refus d'accès est expliqué et journalisé. */
+    @Test
+    void separation_des_responsabilites_et_refus_journalises() throws Exception {
+        long id = appel(post("/api/clm/trousses", redacteur, "{\"titre\":\"Séparation\",\"risque\":\"FAIBLE\"}"), status().isOk())
+                .at("/resume/id").asLong();
+        televerser(id, "contrat.pdf", pdfMinimal(), status().isOk());
+        appel(put("/api/clm/trousses/" + id + "/parcours", redacteur, """
+                [{"cle":"a","libelle":"Approbation","phase":1,"type":"APPROBATION",
+                  "affectations":[{"type":"UTILISATEUR","valeur":"redacteur@levis.qc.ca"},{"type":"UTILISATEUR","valeur":"juriste@levis.qc.ca"}]},
+                 {"cle":"d","libelle":"Direction","phase":2,"type":"APPROBATION","affectations":[{"type":"UTILISATEUR","valeur":"direction@levis.qc.ca"}]}]
+                """), status().isOk());
+        appel(post("/api/clm/trousses/" + id + "/lancer", redacteur, "{}"), status().isOk());
+        long etape = appel(get("/api/clm/trousses/" + id, redacteur), status().isOk()).at("/etapes/0/id").asLong();
+
+        assertTrue(appel(post("/api/clm/etapes/" + etape + "/decider", redacteur, "{\"decision\":\"APPROUVE\"}"), status().isConflict())
+                .get("message").asText().startsWith("Séparation des responsabilités"), "l'initiateur désigné ne peut pas approuver");
+        assertEquals("Cette tâche ne vous est pas assignée.",
+                appel(post("/api/clm/etapes/" + etape + "/decider", direction, "{\"decision\":\"APPROUVE\"}"), status().isForbidden())
+                        .get("message").asText());
+        assertEquals("Accès refusé.", appel(get("/api/clm/admin/parametres", redacteur), status().isForbidden()).get("message").asText());
+
+        Long tenant = users.findByEmail("admin@levis.qc.ca").orElseThrow().getTenantId();
+        List<AuditLog> refusDirection = auditLogs.rechercher(tenant, "direction@levis.qc.ca", "CLM_ACCES_REFUSE", null, null, null);
+        assertTrue(refusDirection.stream().anyMatch(a -> a.getDetails().startsWith("POST /api/clm/etapes/" + etape + "/decider")),
+                "refus métier journalisé avec la ressource visée");
+        assertTrue(auditLogs.rechercher(tenant, "redacteur@levis.qc.ca", "CLM_ACCES_REFUSE", null, null, null).stream()
+                .anyMatch(a -> a.getDetails().startsWith("GET /api/clm/admin/parametres")), "refus par rôle journalisé");
+
+        appel(post("/api/clm/etapes/" + etape + "/decider", juriste, "{\"decision\":\"APPROUVE\"}"), status().isOk());
+        JsonNode avance = appel(get("/api/clm/trousses/" + id, redacteur), status().isOk());
+        assertEquals("ACTIVE", avance.at("/etapes/1/statut").asText(), "un autre approbateur désigné fait avancer le parcours");
+        appel(post("/api/clm/etapes/" + avance.at("/etapes/1/id").asLong() + "/decider", direction, "{\"decision\":\"APPROUVE\"}"),
+                status().isOk());
+        assertEquals("TERMINEE", appel(get("/api/clm/trousses/" + id, redacteur), status().isOk()).at("/resume/statut").asText());
     }
 
     // --- Données ---

@@ -72,7 +72,6 @@ public class Participant {
     }
 
     public Long getId() { return id; }
-    public Long getTenantId() { return tenantId; }
     public Long getTrousseId() { return trousseId; }
     public String getNom() { return nom; }
     public String getCourriel() { return courriel; }

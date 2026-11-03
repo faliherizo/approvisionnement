@@ -4,7 +4,7 @@
 - **Priorité** : Must
 - **Traçabilité** : F-07; F-05
 - **User story** : En tant qu'utilisateur, je veux recevoir des notifications et rappels afin de traiter les actions dans les délais.
-- **Statut** : à raffiner en atelier métier et technique.
+- **Statut** : ✅ Livrée et testée (2026-11-03) — ne plus analyser. État à jour : [§ 0](../../06-Roadmap/reste_stories_et_roadmap.md).
 
 ## 2. Contexte et valeur
 Cette story met en œuvre une capacité demandée par IQ. Elle doit être livrée en cohérence avec les règles d'accès, la traçabilité et la conservation des preuves. Les comportements détaillés ci-dessous sont une conception proposée lorsqu'ils ne sont pas littéralement spécifiés dans les sources.

@@ -4,7 +4,7 @@
 - **Priorité** : Must
 - **Traçabilité** : F-09; F-06; NF-04; NF-13
 - **User story** : En tant qu'auditeur, je veux consulter et exporter document signé, certificat et piste d'audit afin de démontrer l'intégrité du processus.
-- **Statut** : à raffiner en atelier métier et technique.
+- **Statut** : ✅ Livrée et testée (2026-11-03) — ne plus analyser. État à jour : [§ 0](../../06-Roadmap/reste_stories_et_roadmap.md).
 
 ## 2. Contexte et valeur
 Cette story met en œuvre une capacité demandée par IQ. Elle doit être livrée en cohérence avec les règles d'accès, la traçabilité et la conservation des preuves. Les comportements détaillés ci-dessous sont une conception proposée lorsqu'ils ne sont pas littéralement spécifiés dans les sources.

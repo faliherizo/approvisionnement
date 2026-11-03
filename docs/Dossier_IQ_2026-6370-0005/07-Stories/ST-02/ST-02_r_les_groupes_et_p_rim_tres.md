@@ -4,7 +4,7 @@
 - **Priorité** : Must
 - **Traçabilité** : F-11; NF-03
 - **User story** : En tant qu'administrateur, je veux gérer rôles et groupes afin de limiter les données et actions selon les responsabilités.
-- **Statut** : à raffiner en atelier métier et technique.
+- **Statut** : ✅ Livrée et testée (2026-11-03) — ne plus analyser ; reste à charger la liste des unités d'IQ (donnée d'atelier). État à jour : [§ 0](../../06-Roadmap/reste_stories_et_roadmap.md).
 
 ## 2. Contexte et valeur
 Cette story met en œuvre une capacité demandée par IQ. Elle doit être livrée en cohérence avec les règles d'accès, la traçabilité et la conservation des preuves. Les comportements détaillés ci-dessous sont une conception proposée lorsqu'ils ne sont pas littéralement spécifiés dans les sources.

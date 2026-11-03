@@ -10,7 +10,6 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +28,6 @@ import qc.levis.contrat.clm.domain.Invitation;
 import qc.levis.contrat.clm.domain.ModeleMessage;
 import qc.levis.contrat.clm.domain.Parcours;
 import qc.levis.contrat.clm.domain.Trousse;
-import qc.levis.contrat.commun.infrastructure.TenantContext;
 
 /** Rappels de non-réponse et retards (ST-11), avec une horloge fixe trois jours après l'activation. */
 @ExtendWith(MockitoExtension.class)
@@ -44,22 +42,18 @@ class RappelServiceTest {
     @Mock ParcoursService parcours;
     @Mock JournalClm journal;
     @Mock PerimetreUtilisateur perimetre;
+    final PorteeTenantMemoire portee = new PorteeTenantMemoire();
     RappelService service;
     Trousse trousse;
 
     @BeforeEach
     void preparer() {
-        ContexteClm ctx = new ContexteClm(perimetre, new ObjectMapper(), Clock.fixed(ACTIVATION.plusSeconds(3 * 86_400), ZoneOffset.UTC));
+        ContexteClm ctx = new ContexteClm(perimetre, portee, new ObjectMapper(), Clock.fixed(ACTIVATION.plusSeconds(3 * 86_400), ZoneOffset.UTC));
         lenient().doCallRealMethod().when(decisions).duCycleEnCours(any());
         service = new RappelService(etapes, decisions, trousses, invitations, parcours, journal, ctx);
         trousse = new Trousse(1L, "TR-1", "T", "init@x.ca", ACTIVATION);
         ReflectionTestUtils.setField(trousse, "id", 10L);
         when(trousses.findByIdAndTenantId(10L, 1L)).thenReturn(Optional.of(trousse));
-    }
-
-    @AfterEach
-    void nettoyer() {
-        TenantContext.clear();
     }
 
     private EtapeTrousse etape(Parcours.TypeEtape type, String affectationsJson, Integer delai) {
@@ -86,7 +80,8 @@ class RappelServiceTest {
 
         assertEquals(0, service.executer(), "le rappel suivant attend une nouvelle période");
         verify(parcours, times(1)).notifierProprietaire(any(), eq(ModeleMessage.Evenement.RETARD), any());
-        assertNull(TenantContext.get(), "le contexte tenant est restauré");
+        assertEquals(List.of(1L, 1L), portee.traverses(), "chaque passage traite l'étape dans son tenant");
+        assertNull(portee.courant(), "le contexte tenant est restauré");
     }
 
     @Test
@@ -112,5 +107,15 @@ class RappelServiceTest {
         when(etapes.findByStatut(Parcours.StatutEtape.ACTIVE)).thenReturn(List.of(e, e));
         when(decisions.findByTenantIdAndEtapeIdOrderByDecideLeAsc(1L, 20L)).thenThrow(new IllegalStateException("panne")).thenReturn(List.of());
         assertEquals(1, service.executer());
+        assertNull(portee.courant(), "l'erreur n'a pas laissé le tenant de l'étape en place");
+    }
+
+    @Test
+    void une_etape_dont_la_trousse_a_disparu_est_ignoree() {
+        EtapeTrousse e = etape(Parcours.TypeEtape.VALIDATION, "[{\"type\":\"GROUPE\",\"valeur\":\"G\"}]", null);
+        when(etapes.findByStatut(Parcours.StatutEtape.ACTIVE)).thenReturn(List.of(e));
+        when(trousses.findByIdAndTenantId(10L, 1L)).thenReturn(Optional.empty());
+        assertEquals(0, service.executer());
+        verifyNoInteractions(parcours, journal);
     }
 }

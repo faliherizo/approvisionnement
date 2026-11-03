@@ -4,7 +4,7 @@
 - **Priorité** : Must
 - **Traçabilité** : F-01; F-08
 - **User story** : En tant qu'initiateur, je veux créer un dossier et une trousse afin de regrouper documents et participants d'un processus.
-- **Statut** : à raffiner en atelier métier et technique.
+- **Statut** : ✅ Livrée et testée (2026-11-03) — ne plus analyser. État à jour : [§ 0](../../06-Roadmap/reste_stories_et_roadmap.md).
 
 ## 2. Contexte et valeur
 Cette story met en œuvre une capacité demandée par IQ. Elle doit être livrée en cohérence avec les règles d'accès, la traçabilité et la conservation des preuves. Les comportements détaillés ci-dessous sont une conception proposée lorsqu'ils ne sont pas littéralement spécifiés dans les sources.

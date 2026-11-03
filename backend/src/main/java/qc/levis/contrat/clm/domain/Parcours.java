@@ -76,7 +76,8 @@ public final class Parcours {
                 erreurs.add("Échéance invalide pour l'étape " + nom);
             }
         }
-        if (!phases.isEmpty() && (phases.first() != 1 || phases.last() != phases.size())) {
+        // Chaque étape ajoute sa phase : l'ensemble n'est jamais vide ici.
+        if (phases.first() != 1 || phases.last() != phases.size()) {
             erreurs.add("Les phases doivent être consécutives à partir de 1.");
         }
         return erreurs;

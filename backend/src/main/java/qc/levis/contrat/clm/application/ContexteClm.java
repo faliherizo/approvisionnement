@@ -8,11 +8,12 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import org.springframework.stereotype.Component;
 import qc.levis.contrat.clm.application.port.PerimetreUtilisateur;
+import qc.levis.contrat.clm.application.port.PorteeTenant;
 import qc.levis.contrat.clm.domain.Habilitations;
 import qc.levis.contrat.clm.domain.Parcours;
-import qc.levis.contrat.commun.infrastructure.TenantContext;
 
 /** Contexte partagé des cas d'utilisation CLM : tenant courant, acteur, horloge et sérialisation JSON. */
 @Component
@@ -22,21 +23,28 @@ public class ContexteClm {
     };
 
     private final PerimetreUtilisateur perimetre;
+    private final PorteeTenant portee;
     private final ObjectMapper json;
     private final Clock horloge;
 
-    public ContexteClm(PerimetreUtilisateur perimetre, ObjectMapper json, Clock horloge) {
+    public ContexteClm(PerimetreUtilisateur perimetre, PorteeTenant portee, ObjectMapper json, Clock horloge) {
         this.perimetre = perimetre;
+        this.portee = portee;
         this.json = json;
         this.horloge = horloge;
     }
 
     public Long tenant() {
-        Long t = TenantContext.get();
+        Long t = portee.courant();
         if (t == null) {
             throw new IllegalStateException("Opération réservée à un espace tenant.");
         }
         return t;
+    }
+
+    /** Traitement hors requête (portail, planificateur) rattaché au tenant de la donnée traitée. */
+    public <T> T dansTenant(Long tenantId, Supplier<T> action) {
+        return portee.executerDans(tenantId, action);
     }
 
     public Habilitations.Acteur acteur(String id, Collection<String> roles) {
@@ -51,6 +59,15 @@ public class ContexteClm {
     public String ecrire(Object valeur) {
         try {
             return json.writeValueAsString(valeur);
+        } catch (Exception e) {
+            throw new IllegalStateException("Sérialisation impossible", e);
+        }
+    }
+
+    /** JSON indenté, pour les fichiers destinés à être relus hors de l'application (dossier de preuve). */
+    public byte[] ecrireLisible(Object valeur) {
+        try {
+            return json.writerWithDefaultPrettyPrinter().writeValueAsBytes(valeur);
         } catch (Exception e) {
             throw new IllegalStateException("Sérialisation impossible", e);
         }
@@ -74,9 +91,5 @@ public class ContexteClm {
 
     public List<Parcours.Affectation> affectations(String texte) {
         return lire(texte, AFFECTATIONS, List.of());
-    }
-
-    public ObjectMapper json() {
-        return json;
     }
 }

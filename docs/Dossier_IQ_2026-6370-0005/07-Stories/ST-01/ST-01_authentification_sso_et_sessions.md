@@ -4,7 +4,7 @@
 - **Priorité** : Must
 - **Traçabilité** : F-11; NF-03
 - **User story** : En tant qu'employé IQ, je veux accéder à la plateforme avec l'identité organisationnelle afin d'éviter une gestion de compte parallèle.
-- **Statut** : à raffiner en atelier métier et technique.
+- **Statut** : ⏳ En attente de décision IQ (V1) — socle OIDC/SAML/MFA en place ; restent le mapping de l'IdP d'IQ, la politique de session et les invités internes. État à jour : [§ 0](../../06-Roadmap/reste_stories_et_roadmap.md).
 
 ## 2. Contexte et valeur
 Cette story met en œuvre une capacité demandée par IQ. Elle doit être livrée en cohérence avec les règles d'accès, la traçabilité et la conservation des preuves. Les comportements détaillés ci-dessous sont une conception proposée lorsqu'ils ne sont pas littéralement spécifiés dans les sources.

@@ -2,6 +2,7 @@ package qc.levis.contrat.clm.application;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -150,7 +151,9 @@ public class PreuveService {
         fichiers.put("manifeste.json", manifesteOctets);
         fichiers.put("sceau.json", json(Map.of("algorithme", "HMAC-SHA256", "portee", "manifeste.json",
                 "sceau", scelleur.sceller(manifesteOctets), "scelleLe", ctx.maintenant().toString())));
-        return zip(fichiers);
+        ByteArrayOutputStream archive = new ByteArrayOutputStream();
+        archiver(fichiers, archive);
+        return archive.toByteArray();
     }
 
     /** Certificat lisible et durable (PDF) : documents finaux, signataires, identités, consentements, intégrité. */
@@ -201,22 +204,18 @@ public class PreuveService {
     }
 
     private byte[] json(Object o) {
-        try {
-            return ctx.json().writerWithDefaultPrettyPrinter().writeValueAsBytes(o);
-        } catch (IOException e) {
-            throw new IllegalStateException("Sérialisation de la preuve impossible", e);
-        }
+        return ctx.ecrireLisible(o);
     }
 
-    private static byte[] zip(Map<String, byte[]> fichiers) {
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream(); ZipOutputStream zip = new ZipOutputStream(out)) {
+    /** Écrit l'archive dans {@code sortie} ; une écriture interrompue ne livre jamais une archive partielle. */
+    static void archiver(Map<String, byte[]> fichiers, OutputStream sortie) {
+        try (ZipOutputStream zip = new ZipOutputStream(sortie)) {
             for (Map.Entry<String, byte[]> f : fichiers.entrySet()) {
                 zip.putNextEntry(new ZipEntry(f.getKey()));
                 zip.write(f.getValue());
                 zip.closeEntry();
             }
             zip.finish();
-            return out.toByteArray();
         } catch (IOException e) {
             throw new IllegalStateException("Archive de preuve impossible", e);
         }

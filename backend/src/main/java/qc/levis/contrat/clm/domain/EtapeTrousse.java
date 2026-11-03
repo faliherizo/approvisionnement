@@ -147,7 +147,6 @@ public class EtapeTrousse {
     public Parcours.StatutEtape getStatut() { return statut; }
     public Instant getActiveeLe() { return activeeLe; }
     public Instant getEcheance() { return echeance; }
-    public Instant getTermineeLe() { return termineeLe; }
     public int getRappelsEnvoyes() { return rappelsEnvoyes; }
     public Instant getDernierRappel() { return dernierRappel; }
     public boolean isRetardSignale() { return retardSignale; }

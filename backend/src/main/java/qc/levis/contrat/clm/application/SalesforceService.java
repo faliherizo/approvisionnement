@@ -6,17 +6,18 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import qc.levis.contrat.clm.application.dto.ClmDto;
 import qc.levis.contrat.clm.application.port.PortSalesforce;
 import qc.levis.contrat.clm.application.port.SourceAleatoire;
 import qc.levis.contrat.clm.application.repository.MessageSortantRepository;
 import qc.levis.contrat.clm.domain.MessageSortant;
 import qc.levis.contrat.clm.domain.Trousse;
-import qc.levis.contrat.commun.infrastructure.TenantContext;
 
 /**
  * Intégration Salesforce (ST-06/ST-12, UI-21). Les retours de statut passent par une boîte d'envoi transactionnelle :
@@ -85,21 +86,20 @@ public class SalesforceService {
     }
 
     private boolean publier(MessageSortant m, Instant maintenant) {
-        Long precedent = TenantContext.get();
-        try {
-            TenantContext.set(m.getTenantId());
-            salesforce.publierStatut(new PortSalesforce.Statut(m.getSfDossierId(), m.getEvenement(), m.getCorrelationId(),
-                    m.getCleIdempotence(), ctx.lireObjet(m.getPayloadJson())));
-            m.reussir(maintenant);
-            return true;
-        } catch (RuntimeException e) {
-            log.warn("Retour de statut Salesforce en échec (corrélation {}) : {}", m.getCorrelationId(), e.getMessage());
-            m.echouer(e.getMessage(), maintenant);
-            return false;
-        } finally {
-            sorties.save(m);
-            TenantContext.set(precedent);
-        }
+        return ctx.dansTenant(m.getTenantId(), () -> {
+            try {
+                salesforce.publierStatut(new PortSalesforce.Statut(m.getSfDossierId(), m.getEvenement(), m.getCorrelationId(),
+                        m.getCleIdempotence(), ctx.lireObjet(m.getPayloadJson())));
+                m.reussir(maintenant);
+                return true;
+            } catch (RuntimeException e) {
+                log.warn("Retour de statut Salesforce en échec (corrélation {}) : {}", m.getCorrelationId(), e.getMessage());
+                m.echouer(e.getMessage(), maintenant);
+                return false;
+            } finally {
+                sorties.save(m);
+            }
+        });
     }
 
     // --- Administration (UI-21) ---

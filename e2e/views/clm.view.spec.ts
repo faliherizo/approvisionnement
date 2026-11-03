@@ -88,6 +88,19 @@ async function auditerAxe(page: Page) {
   expect(violations.map((v) => `${v.id} (${v.nodes.length}) : ${v.nodes[0]?.target.join(' ')}`), 'violations axe-core').toEqual([])
 }
 
+/**
+ * Interface grand public (signataires externes) : cibles portées à 44 px. Une case à cocher compte avec son libellé,
+ * qui fait partie de la cible cliquable ; le lien d'évitement, hors écran tant qu'il n'a pas le focus, est ignoré.
+ */
+async function ciblesGrandPublic(page: Page) {
+  const petites = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>('a[href], button, input:not([type=hidden]), select, textarea')]
+    .filter((e) => e.checkVisibility() && !e.classList.contains('skip-link'))
+    .map((e) => ({ e, r: ((e as HTMLInputElement).type === 'checkbox' ? e.closest('label') ?? e : e).getBoundingClientRect() }))
+    .filter(({ r }) => r.width > 0 && (r.width < 44 || r.height < 44))
+    .map(({ e, r }) => `${e.outerHTML.slice(0, 70)} (${Math.round(r.width)}×${Math.round(r.height)})`))
+  expect(petites, 'cibles < 44 px sur le portail grand public').toEqual([])
+}
+
 /** Connexion terminée (cookie de session posé) avant toute navigation directe. */
 async function connecterAdmin(page: Page) {
   await new LoginPage(page).connecter(users.admin)
@@ -195,6 +208,83 @@ test.describe('Vues CLM — gabarit des maquettes, responsive, superposition, ci
       await page.getByRole('button', { name: new RegExp(`Traiter — ${trousse.resume.reference}`) }).click()
       await expect(page.getByRole('heading', { level: 1, name: /Validation — Validation juridique/ })).toBeVisible()
       await verifier('UI-13 validation documentaire')
+    })
+  }
+
+  /**
+   * RST-19 — parcours mobile du signataire, de l'invitation au reçu, sans interruption : chaque état du portail est
+   * contrôlé (géométrie, libellés, cibles grand public de 44 px, axe-core) au téléphone puis à la tablette.
+   */
+  for (const largeur of [390, 768]) {
+    test(`portail du signataire à ${largeur} px : vérification, refus, lecture, consentement, signature et reçu`, async ({ page }) => {
+      await page.setViewportSize({ width: largeur, height: 844 })
+      await connecterAdmin(page)
+      const api = page.request
+      const titre = `Signature mobile ${largeur}`
+      const trousse = await (await api.post('/api/clm/trousses', { data: { titre, risque: 'FAIBLE' } })).json()
+      const id = trousse.resume.id
+      expect((await api.post(`/api/clm/trousses/${id}/documents`, { multipart: { fichier: { name: 'convention.pdf', mimeType: 'application/pdf', buffer: Buffer.from(PDF, 'latin1') } } })).ok()).toBeTruthy()
+      const signataire = await (await api.post(`/api/clm/trousses/${id}/participants`, { data: {
+        nom: 'Julie Juriste', courriel: users.juriste.email, roleContrat: 'SIGNATAIRE_1', externe: false,
+        niveauIdentite: 'QUESTION', question: 'Ville du siège ?', reponse: 'Lévis',
+      } })).json()
+      expect((await api.put(`/api/clm/trousses/${id}/parcours`, { data: [
+        { cle: 's1', libelle: 'Signature', phase: 1, type: 'SIGNATURE', affectations: [{ type: 'PARTICIPANT', valeur: String(signataire.id) }] },
+      ] })).ok()).toBeTruthy()
+      expect((await api.post(`/api/clm/trousses/${id}/lancer`, { data: {} })).ok()).toBeTruthy()
+      const etape = (await (await api.get(`/api/clm/trousses/${id}`)).json()).etapes[0].id
+
+      // Le signataire interne obtient son lien depuis son compte ; le portail lui-même ne dépend d'aucune session.
+      expect((await api.post('/api/auth/login', { data: { email: users.juriste.email, motDePasse: users.juriste.motDePasse } })).ok()).toBeTruthy()
+      const { lien } = await (await api.post(`/api/clm/etapes/${etape}/lien-signature`, { data: {} })).json()
+      const jeton = /\/portail\/([A-Za-z0-9_-]+)/.exec(lien)![1]
+      await page.context().clearCookies()
+
+      const etat = (nom: string) => test.step(nom, async () => { await controler(page); await ciblesGrandPublic(page); await auditerAxe(page) })
+
+      await page.goto(`/portail/${jeton}`)
+      await expect(page.getByRole('heading', { level: 1, name: titre })).toBeVisible()
+      const reponse = page.getByLabel('Ville du siège ?')
+      await expect(reponse).toBeVisible()
+      await etat('invitation et question de vérification')
+
+      await page.getByRole('button', { name: /Refuser de signer/ }).click()
+      await expect(page.getByLabel('Motif')).toBeVisible()
+      await etat('formulaire de refus ouvert')
+      await page.getByRole('button', { name: 'Annuler' }).click()
+
+      await reponse.fill('Québec')
+      await page.getByRole('button', { name: 'Vérifier' }).click()
+      await expect(page.getByRole('alert')).toContainText(/\S/)
+      await etat('réponse refusée annoncée')
+
+      await reponse.fill('Lévis')
+      await page.getByRole('button', { name: 'Vérifier' }).click()
+      await expect(page.getByRole('heading', { level: 2, name: /Lire, consentir et signer/ })).toBeVisible()
+      const signer = page.getByRole('button', { name: 'Signer', exact: true })
+      await expect(signer).toBeDisabled()
+      await etat('identité vérifiée, documents à lire')
+
+      const telechargement = page.waitForEvent('download')
+      await page.getByRole('button', { name: /Lire \/ télécharger/ }).click()
+      expect((await telechargement).suggestedFilename()).toBe('convention.pdf')
+      await expect(page.getByLabel('consulté')).toBeVisible()
+      await etat('document consulté')
+
+      await page.getByLabel('Votre nom complet').fill('Julie Juriste')
+      await page.getByLabel(/je consens à les signer/).check()
+      await expect(signer).toBeEnabled()
+      await etat('consentement donné, prêt à signer')
+
+      await signer.click()
+      await expect(page.getByRole('heading', { level: 1, name: /Merci, votre signature est enregistrée/ })).toBeVisible()
+      await expect(page.getByRole('heading', { level: 2, name: 'Reçu de signature' })).toBeVisible()
+      await expect(page.getByText('Julie Juriste', { exact: true })).toBeVisible()
+      await etat('reçu de signature')
+
+      await page.reload()
+      await expect(page.getByRole('heading', { level: 2, name: 'Reçu de signature' })).toBeVisible()
+      await etat('reçu relu après rechargement')
     })
   }
 

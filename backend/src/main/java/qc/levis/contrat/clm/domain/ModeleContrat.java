@@ -112,7 +112,6 @@ public class ModeleContrat {
     public String getChampsJson() { return champsJson; }
     public String getClausesJson() { return clausesJson; }
     public String getParcoursJson() { return parcoursJson; }
-    public Instant getCreeLe() { return creeLe; }
     public Instant getMajLe() { return majLe; }
     public long getVerrou() { return verrou; }
 }
