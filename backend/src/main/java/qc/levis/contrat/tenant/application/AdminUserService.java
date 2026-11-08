@@ -14,6 +14,7 @@ import qc.levis.contrat.auth.domain.User;
 import qc.levis.contrat.commun.domain.Enums;
 import qc.levis.contrat.commun.infrastructure.TenantContext;
 import qc.levis.contrat.tenant.application.dto.AdminUserRequest;
+import qc.levis.contrat.tenant.application.dto.MembreOrganisation;
 import qc.levis.contrat.tenant.application.dto.PageResponse;
 
 /**
@@ -36,6 +37,12 @@ public class AdminUserService {
         return List.of(Enums.Role.ADMIN, Enums.Role.REDACTEUR, Enums.Role.JURIDIQUE,
                         Enums.Role.APPRO, Enums.Role.DIRECTION, Enums.Role.LECTEUR, Enums.Role.AUDITEUR)
                 .stream().map(Enum::name).toList();
+    }
+
+    /** Annuaire des comptes actifs d'une organisation, servi aux modules qui confient une tâche à quelqu'un. */
+    public List<MembreOrganisation> membresActifs(Long tenantId) {
+        return users.findByTenantIdAndActifTrueOrderByNomAsc(tenantId).stream()
+                .map(u -> new MembreOrganisation(u.getEmail(), u.getNom())).toList();
     }
 
     public PageResponse<User> lister(int page, int taille, String q) {

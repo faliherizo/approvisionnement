@@ -5,13 +5,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.reference.application.ReferenceService;
 import qc.levis.contrat.reference.application.dto.Option;
 
-/** Lecture des options de sélecteurs (global + tenant courant) pour les modules qui les emploient (socle, formulaires). */
+/**
+ * Lecture des options d'un sélecteur (liste effective de l'organisation courante). Chaque liste relève du module qui la
+ * déclare : le service refuse celle d'un module non souscrit.
+ */
 @RestController
-@ModuleRequis({"redaction", "formulaire"})
 @RequestMapping("/api/reference")
 public class ReferenceController {
 

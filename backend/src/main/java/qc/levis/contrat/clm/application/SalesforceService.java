@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,17 +33,18 @@ public class SalesforceService {
     private final PortSalesforce salesforce;
     private final MessageSortantRepository sorties;
     private final SourceAleatoire alea;
-    private final ClmProprietes proprietes;
+    private final ConnexionsSalesforce connexions;
     private final ContexteClm ctx;
     private final AlertesExploitation alertes;
-    private volatile ClmDto.PortSalesforceEtat dernierTest;
+    /** Dernier test de connexion de chaque organisation : le résultat de l'une n'apparaît jamais chez une autre. */
+    private final Map<Long, ClmDto.PortSalesforceEtat> derniersTests = new ConcurrentHashMap<>();
 
     public SalesforceService(PortSalesforce salesforce, MessageSortantRepository sorties, SourceAleatoire alea,
-                             ClmProprietes proprietes, ContexteClm ctx, AlertesExploitation alertes) {
+                             ConnexionsSalesforce connexions, ContexteClm ctx, AlertesExploitation alertes) {
         this.salesforce = salesforce;
         this.sorties = sorties;
         this.alea = alea;
-        this.proprietes = proprietes;
+        this.connexions = connexions;
         this.ctx = ctx;
         this.alertes = alertes;
     }
@@ -97,7 +99,7 @@ public class SalesforceService {
                 return true;
             } catch (RuntimeException e) {
                 log.warn("Retour de statut Salesforce en échec (corrélation {}) : {}", m.getCorrelationId(), e.getMessage());
-                m.echouer(e.getMessage(), maintenant);
+                m.echouer(e.getMessage(), maintenant, connexions.courante().reprisesMax());
                 if (m.getStatut() == MessageSortant.Statut.ECHEC) {
                     alertes.signaler(AlertesExploitation.Code.SALESFORCE_FILE_ERREUR, m.getTenantId(), "corrélation " + m.getCorrelationId(),
                             m.getEvenement() + " · " + m.getTentatives() + " tentatives");
@@ -117,15 +119,7 @@ public class SalesforceService {
         long envoyes = journal.stream().filter(m -> m.getStatut() == MessageSortant.Statut.ENVOYE).count();
         List<ClmDto.SortieVue> vues = new ArrayList<>();
         journal.forEach(m -> vues.add(vue(m)));
-        return new ClmDto.IntegrationVue(dernierTest, attente, echec, envoyes, vues, config());
-    }
-
-    ClmDto.ConfigIntegration config() {
-        ClmProprietes.Salesforce sf = proprietes.salesforce();
-        String id = sf.clientId();
-        String masque = id == null || id.isBlank() ? null : id.length() <= 6 ? "••••" : id.substring(0, 4) + "…" + id.substring(id.length() - 2);
-        return new ClmDto.ConfigIntegration(sf.mode(), sf.instanceUrl(), sf.objet(), sf.versionApi(), masque,
-                sf.clientSecret() != null && !sf.clientSecret().isBlank());
+        return new ClmDto.IntegrationVue(derniersTests.get(ctx.tenant()), attente, echec, envoyes, vues, connexions.configuration());
     }
 
     /** Remet en file les retours en échec d'une trousse (« Relancer intégration », UI-18). */
@@ -142,8 +136,9 @@ public class SalesforceService {
 
     public ClmDto.PortSalesforceEtat tester() {
         PortSalesforce.EtatConnexion e = salesforce.tester();
-        dernierTest = new ClmDto.PortSalesforceEtat(e.disponible(), e.mode(), e.detail(), ctx.maintenant());
-        return dernierTest;
+        ClmDto.PortSalesforceEtat etat = new ClmDto.PortSalesforceEtat(e.disponible(), e.mode(), e.detail(), ctx.maintenant());
+        derniersTests.put(ctx.tenant(), etat);
+        return etat;
     }
 
     @Transactional

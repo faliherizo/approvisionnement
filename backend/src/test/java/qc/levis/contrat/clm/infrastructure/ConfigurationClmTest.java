@@ -62,8 +62,10 @@ class ConfigurationClmTest {
     }
 
     @Test
-    void l_horloge_par_defaut_est_en_utc() {
-        assertEquals(ZoneOffset.UTC, new ClmConfiguration().horloge().getZone());
+    void l_horloge_porte_le_fuseau_configure_sans_changer_les_instants() {
+        java.time.Clock horloge = new ClmConfiguration().horloge("America/Toronto");
+        assertEquals(java.time.ZoneId.of("America/Toronto"), horloge.getZone());
+        assertTrue(Math.abs(horloge.millis() - System.currentTimeMillis()) < 5_000, "les instants restent universels");
     }
 
     @Test

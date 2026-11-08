@@ -38,6 +38,8 @@ final class FakeMicrosoft365Server {
     volatile String derniereAutorisation;
     volatile String dernierContentType;
     volatile int nbDepots = 0;
+    // Chemin du dernier téléversement réussi : d'autres appels (ex. nom du canal Teams) peuvent le suivre.
+    volatile String dernierDepot;
 
     FakeMicrosoft365Server() {
         try {
@@ -87,6 +89,7 @@ final class FakeMicrosoft365Server {
                 corps = "{\"error\":{\"code\":\"accessDenied\",\"message\":\"refuse\"}}";
             } else {
                 nbDepots++;
+                dernierDepot = dernierChemin;
                 code = 201;
                 corps = "{\"id\":\"01FAKE\",\"name\":\"fichier\",\"webUrl\":\"https://fake.m365"
                         + dernierChemin + "\"}";

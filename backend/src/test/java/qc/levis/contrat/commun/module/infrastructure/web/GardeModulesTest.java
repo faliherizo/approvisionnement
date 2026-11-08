@@ -63,7 +63,7 @@ class GardeModulesTest {
         InterceptorRegistry registre = mock(InterceptorRegistry.class);
         InterceptorRegistration inscription = mock(InterceptorRegistration.class);
         when(registre.addInterceptor(garde)).thenReturn(inscription);
-        garde.addInterceptors(registre);
+        new ConfigurationGardeModules(garde).addInterceptors(registre);
         verify(inscription).addPathPatterns("/api/**");
     }
 

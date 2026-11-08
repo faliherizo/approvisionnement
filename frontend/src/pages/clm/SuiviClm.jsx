@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import api from '../../api'
 import { useAuth } from '../../auth.jsx'
 import { useI18n } from '../../i18n/I18nContext'
-import { GardeModule, Message, Statut, dateHeure, telecharger, useErreur, useRessource } from './commun.jsx'
+import { ChoixListe, GardeModule, Message, Statut, dateHeure, telecharger, useErreur, useListe, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 
 const STATUTS = ['BROUILLON', 'EN_TRAITEMENT', 'TERMINEE', 'REJETEE', 'ANNULEE']
@@ -23,6 +23,7 @@ function Contenu() {
   const { donnees, erreur: errChargement, chargement, recharger } = useRessource(`/clm/suivi?${qs}`)
   const maj = (k) => (e) => setForm({ ...form, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
   const admin = hasRole('ADMIN') || hasRole('SUPERADMIN')
+  const unites = useListe('CLM_UNITE')
   const lignes = donnees || []
   const exporter = () => telecharger(`/clm/suivi/export?${qs}`, 'suivi-clm.csv').catch((e) => setErreur(e.response?.status === 403 ? t('clm.tr.exportRefuse') : versErreur(e)))
 
@@ -43,7 +44,8 @@ function Contenu() {
           <form className="form-grid form-grid--4" aria-label={t('clm.su.blocFiltres')} onSubmit={(e) => { e.preventDefault(); setFiltre(form) }}>
             <label>{t('clm.rechercher')}<input type="search" value={form.q} onChange={maj('q')} /></label>
             <label>{t('clm.col.statut')}<select value={form.statut} onChange={maj('statut')}><option value="">{t('clm.tr.tousStatuts')}</option>{STATUTS.map((s) => <option key={s} value={s}>{t(`clm.statut.${s}`)}</option>)}</select></label>
-            <label>{t('clm.champ.unite')}<input value={form.unite} onChange={maj('unite')} /></label>
+            <label>{t('clm.champ.unite')}<ChoixListe liste={unites} value={form.unite} vide={t('clm.liste.toutes')}
+              onChange={(v) => setForm({ ...form, unite: v })} /></label>
             <label>{t('clm.col.responsable')}<input value={form.responsable} onChange={maj('responsable')} /></label>
             <label>{t('clm.col.source')}<select value={form.source} onChange={maj('source')}><option value="">{t('clm.su.toutesSources')}</option><option value="MANUELLE">{t('clm.source.MANUELLE')}</option><option value="SALESFORCE">{t('clm.source.SALESFORCE')}</option></select></label>
             <label>{t('clm.su.du')}<input type="date" value={form.du} onChange={maj('du')} /></label>
@@ -66,7 +68,7 @@ function Contenu() {
                 <tbody>
                   {lignes.map((l) => (
                     <tr key={l.id}>
-                      <td data-label={t('clm.col.reference')}>{l.reference}<br /><span className="muted">{l.titre} · {l.unite || '—'} · {l.proprietaire} · {t(`clm.source.${l.source}`)}</span></td>
+                      <td data-label={t('clm.col.reference')}>{l.reference}<br /><span className="muted">{l.titre} · {unites.libelle(l.unite) || '—'} · {l.proprietaire} · {t(`clm.source.${l.source}`)}</span></td>
                       <td data-label={t('clm.col.statut')}><Statut valeur={l.statut} /></td>
                       <td data-label={t('clm.col.etapes')}>{l.etapesActives.join(', ') || '—'}</td>
                       <td data-label={t('clm.col.attente')}>{l.enAttenteDe.join(', ') || '—'}</td>

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,9 +31,11 @@ import qc.levis.contrat.clm.domain.Identite;
 import qc.levis.contrat.clm.domain.Invitation;
 import qc.levis.contrat.clm.domain.Modele;
 import qc.levis.contrat.clm.domain.ModeleContrat;
+import qc.levis.contrat.clm.domain.ParametresClm;
 import qc.levis.contrat.clm.domain.Parcours;
 import qc.levis.contrat.clm.domain.Participant;
 import qc.levis.contrat.clm.domain.Preremplissage;
+import qc.levis.contrat.clm.domain.Relances;
 import qc.levis.contrat.clm.domain.StatutTrousse;
 import qc.levis.contrat.clm.domain.Trousse;
 
@@ -58,12 +61,14 @@ public class TrousseService {
     private final SalesforceService salesforce;
     private final JournalClm journal;
     private final LectureTrousse lecture;
+    private final ParametresClmService parametres;
+    private final ListesClm listes;
     private final ContexteClm ctx;
 
     public TrousseService(TrousseRepository trousses, ParticipantRepository participants, EtapeTrousseRepository etapes,
                           DocumentTrousseRepository documents, InvitationRepository invitations, EvenementTrousseRepository evenements,
                           ModeleContratRepository modeles, ParcoursService parcours, SalesforceService salesforce, JournalClm journal,
-                          LectureTrousse lecture, ContexteClm ctx) {
+                          LectureTrousse lecture, ParametresClmService parametres, ListesClm listes, ContexteClm ctx) {
         this.trousses = trousses;
         this.participants = participants;
         this.etapes = etapes;
@@ -75,6 +80,8 @@ public class TrousseService {
         this.salesforce = salesforce;
         this.journal = journal;
         this.lecture = lecture;
+        this.parametres = parametres;
+        this.listes = listes;
         this.ctx = ctx;
     }
 
@@ -82,14 +89,17 @@ public class TrousseService {
     @Transactional
     public ClmDto.TrousseDetail creer(ClmDto.TrousseRequest req, Habilitations.Acteur acteur) {
         Long tenant = ctx.tenant();
+        ParametresClm.Reglages reglages = parametres.reglages(tenant);
         String titre = exiger(req.titre(), "Titre requis.");
         String reference = req.reference() == null || req.reference().isBlank()
-                ? prochaineReference(tenant)
+                ? prochaineReference(tenant, reglages.prefixeReference())
                 : req.reference().trim().toUpperCase(Locale.ROOT);
         if (trousses.existsByTenantIdAndReference(tenant, reference)) {
             throw new IllegalStateException("Doublon de référence : " + reference);
         }
         Trousse t = new Trousse(tenant, reference, titre, acteur.id(), ctx.maintenant());
+        t.setRappelFrequenceJours(reglages.rappelFrequenceJours());
+        t.setRappelsMax(reglages.rappelsMax());
         appliquer(t, req);
         if (req.modeleId() != null) {
             ModeleContrat m = modelePublie(req.modeleId());
@@ -123,31 +133,37 @@ public class TrousseService {
         return detail(t, acteur);
     }
 
-    private String prochaineReference(Long tenant) {
+    /** Référence attribuée : préfixe de l'organisation, année et rang (ex. TR-2026-00001). */
+    private String prochaineReference(Long tenant, String prefixe) {
         int annee = ctx.maintenant().atZone(java.time.ZoneOffset.UTC).getYear();
         long n = trousses.findByTenantIdOrderByMajLeDesc(tenant).size() + 1L;
-        String ref = String.format("TR-%d-%05d", annee, n);
+        String ref = String.format("%s-%d-%05d", prefixe, annee, n);
         while (trousses.existsByTenantIdAndReference(tenant, ref)) {
-            ref = String.format("TR-%d-%05d", annee, ++n);
+            ref = String.format("%s-%d-%05d", prefixe, annee, ++n);
         }
         return ref;
     }
 
+    /** Type et unité viennent des listes de l'organisation ; une valeur inchangée reste admise même retirée depuis. */
     private void appliquer(Trousse t, ClmDto.TrousseRequest req) {
-        if (req.typeContrat() != null) t.setTypeContrat(vide(req.typeContrat()));
-        if (req.unite() != null) t.setUnite(vide(req.unite()));
+        if (req.typeContrat() != null && !Objects.equals(vide(req.typeContrat()), t.getTypeContrat())) {
+            t.setTypeContrat(listes.exiger(ListesClm.Liste.TYPE_CONTRAT, req.typeContrat()));
+        }
+        if (req.unite() != null && !Objects.equals(vide(req.unite()), t.getUnite())) {
+            t.setUnite(listes.exiger(ListesClm.Liste.UNITE, req.unite()));
+        }
         if (req.echeance() != null) t.setEcheance(req.echeance());
         if (req.copies() != null) t.setCopies(vide(req.copies()));
         if (req.risque() != null && !req.risque().isBlank()) t.setRisque(Identite.Risque.valueOf(req.risque().trim().toUpperCase()));
         if (req.rappelFrequenceJours() != null) {
-            if (req.rappelFrequenceJours() < 1 || req.rappelFrequenceJours() > 30) {
-                throw new IllegalArgumentException("Fréquence de rappel entre 1 et 30 jours.");
+            if (req.rappelFrequenceJours() < 1 || req.rappelFrequenceJours() > Relances.FREQUENCE_MAX_JOURS) {
+                throw new IllegalArgumentException("Fréquence de rappel entre 1 et " + Relances.FREQUENCE_MAX_JOURS + " jours.");
             }
             t.setRappelFrequenceJours(req.rappelFrequenceJours());
         }
         if (req.rappelsMax() != null) {
-            if (req.rappelsMax() < 0 || req.rappelsMax() > 10) {
-                throw new IllegalArgumentException("Nombre de rappels entre 0 et 10.");
+            if (req.rappelsMax() < 0 || req.rappelsMax() > Relances.RAPPELS_PLAFOND) {
+                throw new IllegalArgumentException("Nombre de rappels entre 0 et " + Relances.RAPPELS_PLAFOND + ".");
             }
             t.setRappelsMax(req.rappelsMax());
         }
@@ -301,10 +317,11 @@ public class TrousseService {
         t.exigerModifiable();
         String nom = exiger(req.nom(), "Nom du participant requis.");
         String courriel = req.courriel() == null ? null : req.courriel().trim().toLowerCase(Locale.ROOT);
-        String role = exiger(req.roleContrat(), "Rôle dans le contrat requis.").toUpperCase(Locale.ROOT);
+        String role = listes.exiger(ListesClm.Liste.ROLE_CONTRAT, exiger(req.roleContrat(), "Rôle dans le contrat requis."))
+                .toUpperCase(Locale.ROOT);
         Identite.Niveau demande = req.niveauIdentite() == null || req.niveauIdentite().isBlank() ? null
                 : Identite.Niveau.valueOf(req.niveauIdentite().trim().toUpperCase());
-        Identite.Niveau niveau = Identite.niveauApplique(t.getRisque(), req.externe(), demande);
+        Identite.Niveau niveau = parametres.reglages(t.getTenantId()).identite().niveauApplique(t.getRisque(), req.externe(), demande);
         Identite.verifierCoordonnees(niveau, courriel, req.telephone(), req.question(), req.reponse());
         boolean doublon = participants.findByTenantIdAndTrousseIdOrderByIdAsc(t.getTenantId(), t.getId()).stream()
                 .anyMatch(p -> p.getCourriel().equalsIgnoreCase(courriel) || p.getRoleContrat().equals(role));
@@ -347,7 +364,7 @@ public class TrousseService {
         Participant p = tous.stream().filter(x -> x.getId().equals(participantId)).findFirst()
                 .orElseThrow(() -> new NoSuchElementException("Participant introuvable : " + participantId));
         String ancien = p.getRoleContrat();
-        p.attribuerRole(req.roleContrat());
+        p.attribuerRole(listes.exiger(ListesClm.Liste.ROLE_CONTRAT, req.roleContrat()));
         for (Participant autre : tous) {
             if (autre != p && autre.getRoleContrat().equals(p.getRoleContrat())) {
                 autre.attribuerRole(ancien);

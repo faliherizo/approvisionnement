@@ -13,11 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import qc.levis.contrat.clm.application.ClmProprietes;
+import qc.levis.contrat.clm.application.ConnexionsSalesforce;
 import qc.levis.contrat.clm.application.port.PortSalesforce;
+import qc.levis.contrat.clm.domain.ConnexionSalesforce;
 
 /** Adaptateur Salesforce REST contre un serveur HTTP local qui imite l'API (OAuth, sobjects, SOQL, PATCH). */
 class SalesforceRestTest {
@@ -63,9 +65,14 @@ class SalesforceRestTest {
     }
 
     private static SalesforceRest client(String instance, String jeton) {
-        return new SalesforceRest(new ClmProprietes(null, null, null, null, null, null,
-                new ClmProprietes.Salesforce("rest", instance, jeton, "id", "secret", "FundingRequest", "v60.0")),
+        return new SalesforceRest(() -> connexion(null, instance, jeton, "secret", ConnexionsSalesforce.CHAMPS_PAR_DEFAUT),
                 new ObjectMapper(), Clock.systemUTC());
+    }
+
+    private static ConnexionsSalesforce.Connexion connexion(Long proprietaire, String instance, String jeton, String secret,
+                                                           ConnexionSalesforce.ChampsRetour champs) {
+        return new ConnexionsSalesforce.Connexion(proprietaire, ConnexionSalesforce.Mode.REST, instance, jeton, "id", secret,
+                "FundingRequest", "v60.0", champs, 8);
     }
 
     @AfterEach
@@ -157,5 +164,32 @@ class SalesforceRestTest {
                 () -> sf.publierStatut(new PortSalesforce.Statut("a01", "X", "c", "k", Map.of("reference", new Object()))));
         assertTrue(appels.isEmpty(), appels.toString());
         assertEquals(0, jetons.get(), "aucune authentification n'a été tentée");
+    }
+
+    @Test
+    void le_retour_de_statut_alimente_les_champs_choisis_par_l_organisation() {
+        ConnexionSalesforce.ChampsRetour champs = new ConnexionSalesforce.ChampsRetour("Etat_CLM__c", "No_Trousse__c", "Trace__c");
+        SalesforceRest propre = new SalesforceRest(() -> connexion(42L, base, base + "/token", "secret", champs), new ObjectMapper(),
+                Clock.systemUTC());
+        propre.publierStatut(new PortSalesforce.Statut("a01", "SIGNEE", "corr-9", "k", Map.of("reference", "IQ-1")));
+        assertTrue(appels.stream().anyMatch(a -> a.contains("\"Etat_CLM__c\":\"SIGNEE\"") && a.contains("\"No_Trousse__c\":\"IQ-1\"")
+                && a.contains("\"Trace__c\":\"corr-9\"")), appels.toString());
+        assertTrue(appels.stream().noneMatch(a -> a.contains("CLM_Statut__c")), "aucun champ de la plateforme n'est écrit");
+    }
+
+    @Test
+    void chaque_connexion_obtient_son_jeton_et_un_secret_change_en_exige_un_nouveau() {
+        AtomicReference<ConnexionsSalesforce.Connexion> courante = new AtomicReference<>(
+                connexion(1L, base, base + "/token", "secret-1", ConnexionsSalesforce.CHAMPS_PAR_DEFAUT));
+        SalesforceRest partage = new SalesforceRest(courante::get, new ObjectMapper(), Clock.systemUTC());
+        partage.lireDossier("a01");
+        partage.lireDossier("a01");
+        assertEquals(1, jetons.get(), "le jeton de l'organisation 1 est réutilisé");
+        courante.set(connexion(2L, base, base + "/token", "secret-2", ConnexionsSalesforce.CHAMPS_PAR_DEFAUT));
+        partage.lireDossier("a01");
+        assertEquals(2, jetons.get(), "l'organisation 2 ne réutilise jamais le jeton de l'organisation 1");
+        courante.set(connexion(2L, base, base + "/token", "secret-2-rotation", ConnexionsSalesforce.CHAMPS_PAR_DEFAUT));
+        partage.lireDossier("a01");
+        assertEquals(3, jetons.get(), "un secret remplacé exige une nouvelle authentification");
     }
 }

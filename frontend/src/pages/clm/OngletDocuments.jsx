@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../../api'
 import { useI18n } from '../../i18n/I18nContext'
-import { Message, Statut, Visionneuse, dateHeure, taille, telecharger, useErreur, useRessource } from './commun.jsx'
+import { Message, Statut, Visionneuse, dateHeure, taille, telecharger, useErreur, useListe, useRessource } from './commun.jsx'
 import { Bloc, Blocs } from './gabarit.jsx'
 
 const ACCEPT = '.pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -22,6 +22,9 @@ export default function OngletDocuments({ trousse, peutGerer, peutGenerer, iaAct
   const [metaDe, setMetaDe] = useState(null)
   const fichierVersion = useRef(null)
   const analyses = useRessource(iaActive ? `/clm/trousses/${trousse.resume.id}/analyses` : null, iaActive)
+  const types = useListe('CLM_TYPE_CONTRAT', iaActive)
+  const clauses = useListe('CLM_CLAUSE_ATTENDUE', iaActive)
+  const nomCategorie = (c) => (c === 'INDETERMINEE' ? t('clm.ia.indeterminee') : types.libelle(c))
   const id = trousse.resume.id
   const parCle = {}
   trousse.documents.forEach((d) => { (parCle[d.cleDocument] ||= []).push(d) })
@@ -30,7 +33,10 @@ export default function OngletDocuments({ trousse, peutGerer, peutGenerer, iaAct
   const versions = parCle[cleHistorique] || []
   const finale = versions.find((v) => v.statut === 'SIGNE')
   const modifiable = (doc) => peutGerer && !['SIGNE', 'RETIRE'].includes(doc.statut)
-  const categorie = (doc) => (analyses.donnees || []).find((a) => a.documentId === doc.id)?.resultat?.categorie
+  const categorie = (doc) => {
+    const c = (analyses.donnees || []).find((a) => a.documentId === doc.id)?.resultat?.categorie
+    return c ? nomCategorie(c) : null
+  }
   const meta = versions.find((v) => v.id === metaDe)
   const suivi = versions[0]
 
@@ -217,13 +223,13 @@ export default function OngletDocuments({ trousse, peutGerer, peutGenerer, iaAct
           </Bloc>
         )}
       </Blocs>
-      {iaActive && <AnalysesIa analyses={analyses} onChange={analyses.recharger} />}
+      {iaActive && <AnalysesIa analyses={analyses} onChange={analyses.recharger} nomCategorie={nomCategorie} clauses={clauses} />}
     </div>
   )
 }
 
 /** UI-24 — Résultats d'analyse : niveau de confiance, validation humaine justifiée. */
-function AnalysesIa({ analyses, onChange }) {
+function AnalysesIa({ analyses, onChange, nomCategorie, clauses }) {
   const { t } = useI18n()
   const versErreur = useErreur()
   const [justif, setJustif] = useState({})
@@ -241,10 +247,10 @@ function AnalysesIa({ analyses, onChange }) {
         {analyses.donnees.map((a) => (
           <article key={a.id} className="clm-carte">
             <p className="clm-meta"><Statut valeur={a.statut} /> <span>{dateHeure(a.creeLe)} · {a.lanceePar}</span></p>
-            <p>{t('clm.ia.categorie', { c: a.resultat.categorie, p: Math.round((a.resultat.confianceCategorie || 0) * 100) })}</p>
+            <p>{t('clm.ia.categorie', { c: nomCategorie(a.resultat.categorie), p: Math.round((a.resultat.confianceCategorie || 0) * 100) })}</p>
             <ul className="clm-liste">
               {(a.resultat.metadonnees || []).map((m) => <li key={m.cle}>{m.cle} : <strong>{m.valeur}</strong> ({Math.round(m.confiance * 100)} %)</li>)}
-              {(a.resultat.anomalies || []).map((m) => <li key={m.cle + m.valeur}><span aria-hidden="true">⚠</span> {t(`clm.ia.anomalie.${m.cle}`)} : {m.valeur} ({Math.round(m.confiance * 100)} %)</li>)}
+              {(a.resultat.anomalies || []).map((m) => <li key={m.cle + m.valeur}><span aria-hidden="true">⚠</span> {t(`clm.ia.anomalie.${m.cle}`)} : {m.cle === 'clauseAbsente' ? clauses.libelle(m.valeur) : m.valeur} ({Math.round(m.confiance * 100)} %)</li>)}
             </ul>
             {a.statut === 'A_REVISER' ? (
               <div className="form">

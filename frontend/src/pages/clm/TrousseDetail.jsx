@@ -4,7 +4,7 @@ import api from '../../api'
 import { useAuth } from '../../auth.jsx'
 import { useI18n } from '../../i18n/I18nContext'
 import { useModules } from '../../hooks/useModules.js'
-import { GardeModule, Message, Onglets, Panneau, Statut, date, dateHeure, useErreur, useRessource } from './commun.jsx'
+import { GardeModule, Message, Onglets, Panneau, Statut, date, dateHeure, useErreur, useListe, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 import { ApercuDossier, dossierImporte } from './TrousseCreer.jsx'
 import ValeursTrousse from './ValeursTrousse.jsx'
@@ -31,6 +31,8 @@ function Contenu() {
   const [aRelancer, setARelancer] = useState('')
   const { donnees: d, erreur: errChargement, chargement, recharger } = useRessource(`/clm/trousses/${id}`)
   const historique = useRessource(onglet === 'historique' ? `/clm/trousses/${id}/historique` : null)
+  const types = useListe('CLM_TYPE_CONTRAT')
+  const unites = useListe('CLM_UNITE')
 
   async function action(chemin, corps, messageOk, confirmation) {
     if (confirmation && !window.confirm(confirmation)) return
@@ -141,8 +143,8 @@ function Contenu() {
               )}
               <Bloc titre={t('clm.dt.parametres')} niveau={3}>
                 <dl className="clm-dl">
-                  <div><dt>{t('clm.champ.typeContrat')}</dt><dd>{r.typeContrat || '—'}</dd></div>
-                  <div><dt>{t('clm.champ.unite')}</dt><dd>{r.unite || '—'}</dd></div>
+                  <div><dt>{t('clm.champ.typeContrat')}</dt><dd>{types.libelle(r.typeContrat) || '—'}</dd></div>
+                  <div><dt>{t('clm.champ.unite')}</dt><dd>{unites.libelle(r.unite) || '—'}</dd></div>
                   <div><dt>{t('clm.champ.risque')}</dt><dd>{t(`clm.risque.${d.risque}`)}</dd></div>
                   <div><dt>{t('clm.dt.rappels')}</dt><dd>{t('clm.dt.rappelsValeur', { f: d.rappelFrequenceJours, n: d.rappelsMax })}</dd></div>
                   <div><dt>{t('clm.champ.copies')}</dt><dd>{d.copies || '—'}</dd></div>

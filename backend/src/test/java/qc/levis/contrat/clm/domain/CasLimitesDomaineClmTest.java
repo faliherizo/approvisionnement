@@ -183,7 +183,7 @@ class CasLimitesDomaineClmTest {
     // --- Analyse ---
     @Test
     void sans_montant_dans_le_texte_aucune_divergence_n_est_signalee() {
-        assertTrue(AnalyseContrat.analyser("Convention sans chiffre.", BigDecimal.TEN).anomalies().stream()
+        assertTrue(AnalyseContrat.analyser("Convention sans chiffre.", BigDecimal.TEN, Map.of(), Map.of()).anomalies().stream()
                 .noneMatch(a -> a.cle().equals("montantDivergent")));
     }
 

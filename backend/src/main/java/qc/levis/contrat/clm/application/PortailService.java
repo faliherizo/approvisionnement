@@ -50,11 +50,12 @@ public class PortailService {
     private final JournalClm journal;
     private final ContexteClm ctx;
     private final IdentiteOrganisation identite;
+    private final ParametresClmService parametres;
 
     public PortailService(InvitationRepository invitations, ParticipantRepository participants, DocumentTrousseRepository documents,
                           FournisseurSignature fournisseur, ParcoursService parcours, TrousseService trousses,
                           MessagerieClm messagerie, SourceAleatoire alea, LectureTrousse lecture, JournalClm journal, ContexteClm ctx,
-                          IdentiteOrganisation identite) {
+                          IdentiteOrganisation identite, ParametresClmService parametres) {
         this.invitations = invitations;
         this.participants = participants;
         this.documents = documents;
@@ -67,6 +68,7 @@ public class PortailService {
         this.journal = journal;
         this.ctx = ctx;
         this.identite = identite;
+        this.parametres = parametres;
     }
 
     private record Session(Invitation invitation, Participant participant, Trousse trousse) {
@@ -88,7 +90,8 @@ public class PortailService {
             List<String> canaux = Identite.canauxDuCode(inv.getNiveau());
             if (!canaux.isEmpty()) {
                 String code = alea.code();
-                inv.preparerCode(hash(code), ctx.maintenant().plus(Duration.ofMinutes(Identite.CODE_VALIDITE_MINUTES)));
+                int validite = politique(s).codeValiditeMinutes();
+                inv.preparerCode(hash(code), ctx.maintenant().plus(Duration.ofMinutes(validite)));
                 envoyerCode(s, code, canaux);
                 invitations.save(inv);
             }
@@ -118,19 +121,25 @@ public class PortailService {
             inv.exigerOuverte(maintenant);
             String reponse = req == null || req.reponse() == null ? "" : req.reponse();
             if (!reponseValide(s, reponse, maintenant)) {
-                inv.echecVerification();
+                int tentativesMax = politique(s).tentativesMax();
+                inv.echecVerification(tentativesMax);
                 invitations.save(inv);
                 journal.consigner(s.trousse(), "VERIFICATION_ECHOUEE", s.participant().getCourriel(), "tentative " + inv.getTentatives());
                 if (inv.getStatut() == Invitation.Statut.BLOQUEE) {
                     throw new IllegalArgumentException("Vérification échouée : invitation bloquée, contactez l'expéditeur.");
                 }
-                throw new IllegalArgumentException("Vérification échouée : " + (Identite.TENTATIVES_MAX - inv.getTentatives()) + " tentative(s) restante(s).");
+                throw new IllegalArgumentException("Vérification échouée : " + (tentativesMax - inv.getTentatives()) + " tentative(s) restante(s).");
             }
             inv.verifier(maintenant);
             invitations.save(inv);
             journal.consigner(s.trousse(), "IDENTITE_VERIFIEE", s.participant().getCourriel(), inv.getNiveau().name());
             return vue(s);
         });
+    }
+
+    /** Politique d'identité de l'organisation qui a émis l'invitation. */
+    private Identite.Politique politique(Session s) {
+        return parametres.reglages(s.trousse().getTenantId()).identite();
     }
 
     private boolean reponseValide(Session s, String reponse, Instant maintenant) {

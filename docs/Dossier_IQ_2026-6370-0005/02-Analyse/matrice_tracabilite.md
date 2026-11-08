@@ -23,6 +23,44 @@
 | NF-07 | 25 Mo minimum | ST-04 | Test upload 25 Mo+ |
 | NF-13 | Portabilité | ST-10 | Export / import de contrôle |
 
+## Validation de l'implémentation (2026-11-03)
+
+État vérifié dans le code, l'interface et les tests du module CLM (`backend/…/clm`, `frontend/src/pages/clm`).
+✅ implémentée et testée · ✅🔌 implémentée, recette sur le système réel d'IQ en attente · 🟡 partielle · ⏳ décision IQ.
+
+| Exigence | Serveur (repères) | Interface | Tests | État | Reste |
+|---|---|---|---|---|---|
+| F-01 | `TrousseService`, `DocumentClmService` | UI-02 à UI-05 | `ClmIntegrationTest`, e2e `clm.view` | ✅ | — |
+| F-02 | `SalesforceRest`, `Preremplissage`, `RenduDocuments` | UI-03, UI-10 | `ClmIntegrationTest`, `SalesforceRestTest` | ✅🔌 | Recette sur le bac à sable Salesforce d'IQ |
+| F-03 | `ModeleService`, `Modele` (versions, partage, publication) | UI-07 à UI-09 | `ClmIntegrationTest`, `DomaineClmTest` | ✅ | — |
+| F-04 | `Modele.Champ`, `ReglesClm`, saisie des valeurs, étapes conditionnelles | UI-09 à UI-11 | `ClmIntegrationTest`, `CasLimitesDomaineClmTest` | ✅ | — |
+| F-05 | `Parcours`, `ParcoursService` (séquentiel, parallèle, mixte, quorum, délégation) | UI-11 à UI-14 | `ClmIntegrationTest`, `DomaineClmTest` | ✅ | — |
+| F-06 | `PortailService`, `Identite`, port `FournisseurSignature` | UI-15, UI-16 | `ClmIntegrationTest`, e2e portail | 🟡 | Fournisseur certifié et horodatage qualifié (ST-09) |
+| F-07 | `RappelService`, `MessagerieClm` | UI-17 | `RappelServiceTest`, `ClmIntegrationTest` | ✅ | — |
+| F-08 | `SuiviService` (périmètre, exceptions, export) | UI-01, UI-18 | `ClmIntegrationTest` | ✅ | — |
+| F-09 | Versions, `ChaineScellee`, `PreuveService` | UI-06, UI-19, UI-23 | `ClmIntegrationTest`, `DomaineClmTest` | 🟡 | Conservation et destruction selon la politique d'IQ |
+| F-10 | `SalesforceService` (boîte d'envoi, idempotence, reprises), API REST `/api/clm` | UI-21 | `ClmIntegrationTest`, `SalesforceServiceAlerteTest` | ✅🔌 | Recette Salesforce d'IQ |
+| F-11 | OIDC/SAML/MFA, `Habilitations`, rôle `AUDITEUR`, garde de module (ADR-009) | UI-20, UI-22, UI-23, `/clm/admin/sso` | `ArchitectureClmTest`, `ArchitectureModulesTest`, `IsolationTenantIqTest` | 🟡 | IdP d'IQ (ST-01), domaines d'affaires, rôles d'administration distincts, journal des changements de rôles |
+| F-12 | Identité de l'organisation sur le portail (`IdentiteOrganisation`) | UI-01 à UI-24, portail à 44 px, français et anglais | e2e aux 4 largeurs, axe-core | ✅ | — |
+| F-13 | `AnalyseService`, module `clm_ia` | UI-24 | `ClmIntegrationTest`, `DomaineClmTest` | ✅ | — |
+| NF-01 | Terraform Azure (`infra/terraform/azure`, région Canada) | — | `terraform validate` | ⏳ | Québec ou Canada (RST-18) |
+| NF-02 | API REST documentée (OpenAPI), ports et adaptateurs | — | Tests de contrat des ports | ✅ | — |
+| NF-03 | Refus par défaut (`@PreAuthorize`, garde de module), session httpOnly, MFA, scellé HMAC, analyse antivirus (port) | — | Tests d'architecture et d'intégration | 🟡 | Destruction à échéance ; audit indépendant |
+| NF-04 | Journal scellé par trousse et audit du tenant | UI-19, UI-23 | `ClmIntegrationTest` | ✅ | — |
+| NF-05 | AKS, alertes d'exploitation (ST-14), runbook | — | `AdaptateursClmTest`, `terraform validate` | 🟡 | Mesure du SLA (RST-18) |
+| NF-06 | Requêtes bornées au tenant | Pagination côté client | — | 🟡 | Pagination serveur et test de charge CLM (les plans JMeter de `perf/` couvrent le socle) |
+| NF-07 | `CLM_TAILLE_MAX_OCTETS` = 25 Mo, format vérifié sur les octets | UI-05 | `ClmIntegrationTest` | ✅ | — |
+| NF-08 | `app.clm.environnement` (DEV à PROD), paramètres en lecture seule | UI-22 | `ClmIntegrationTest` | ✅ | — |
+| NF-09 | Plans de reprise (`infra/dr`) | — | — | 🟡 | RTO/RPO à convenir et exercer |
+| NF-10 | Monolithe modulaire (ADR-006 à ADR-009), règles d'architecture et couverture vérifiées à la construction | — | `ArchitectureClmTest`, `ArchitectureModulesTest`, porte JaCoCo | ✅ | — |
+| NF-11 | Idempotence, reprises, file d'erreur, corrélation | UI-21 | `ClmIntegrationTest` | ✅ | — |
+| NF-12 | Interface en français, WCAG 2.2 AA | UI-01 à UI-24 | e2e axe-core aux 4 largeurs | ✅ | — |
+| NF-13 | Archive de preuve ZIP, exports CSV du suivi et du journal | UI-18, UI-19, UI-23 | `ClmIntegrationTest` | ✅ | — |
+| NF-14 | Consentement, preuve, courriels masqués dans les journaux (Loi 25) | UI-16 | `ClmIntegrationTest` | 🟡 | Attestations du fournisseur de signature et de l'hébergeur |
+
+Isolation du tenant d'IQ (aucune fonctionnalité d'un autre module) : voir
+[`11-Tenant-IQ/validation_isolation_tenant_iq.md`](../11-Tenant-IQ/validation_isolation_tenant_iq.md).
+
 ## Sources documentaires
 - Cahier des besoins et exigences, sections 1.4.2 à 1.4.12, 2 à 6.
 - Document d'appel d'offres, sections 3.1 à 3.10, 4, annexes 2, 9 et 10.

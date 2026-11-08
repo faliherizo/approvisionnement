@@ -3,7 +3,6 @@ package qc.levis.contrat.clm.domain;
 import java.math.BigDecimal;
 import java.text.Normalizer;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -14,26 +13,15 @@ import java.util.regex.Pattern;
 
 /**
  * Option CLM/IA (ST-15, UI-24) : extraction de métadonnées, classification et détection d'anomalies sur le texte
- * d'un contrat. Chaque résultat porte un niveau de confiance et reste « à réviser » jusqu'à validation humaine.
+ * d'un contrat. Chaque résultat porte un niveau de confiance et reste « à réviser » jusqu'à validation humaine. Les
+ * catégories et les clauses attendues, avec leurs mots-clés, viennent des listes de référence de l'organisation.
  */
 public final class AnalyseContrat {
 
     private static final Pattern MONTANT = Pattern.compile("(\\d{1,3}(?:[ \\u00A0\\u202F]\\d{3})+|\\d+)(?:[,.](\\d{2}))?\\s?\\$");
     private static final Pattern DATE = Pattern.compile("\\b(\\d{4}-\\d{2}-\\d{2})\\b");
     private static final Pattern DUREE = Pattern.compile("\\b(\\d{1,3})\\s+(mois|ans?|années?)\\b");
-    private static final Map<String, List<String>> CATEGORIES = new LinkedHashMap<>();
-    private static final Map<String, List<String>> CLAUSES_ATTENDUES = new LinkedHashMap<>();
-
-    static {
-        CATEGORIES.put("SUBVENTION", List.of("subvention", "aide financiere", "programme", "beneficiaire"));
-        CATEGORIES.put("SERVICES", List.of("prestataire", "services professionnels", "honoraires", "mandat"));
-        CATEGORIES.put("CONFIDENTIALITE", List.of("confidentialite", "non-divulgation", "renseignements confidentiels"));
-        CATEGORIES.put("PRET", List.of("pret", "remboursement", "taux d'interet", "emprunteur"));
-        CLAUSES_ATTENDUES.put("RESILIATION", List.of("resiliation", "resilier"));
-        CLAUSES_ATTENDUES.put("CONFIDENTIALITE", List.of("confidentialite", "confidentiel"));
-        CLAUSES_ATTENDUES.put("RENSEIGNEMENTS_PERSONNELS", List.of("renseignements personnels", "loi 25"));
-        CLAUSES_ATTENDUES.put("DROIT_APPLICABLE", List.of("lois du quebec", "droit applicable", "tribunaux du quebec"));
-    }
+    private static final Pattern SEPARATEURS = Pattern.compile("[,;\\n]");
 
     public record Element(String cle, String valeur, double confiance) {
     }
@@ -44,7 +32,21 @@ public final class AnalyseContrat {
     private AnalyseContrat() {
     }
 
-    public static Resultat analyser(String texte, BigDecimal montantAttendu) {
+    /** Mots-clés saisis par l'administration (séparés par virgule, point-virgule ou ligne), comparés sans casse ni accents. */
+    public static List<String> motsCles(String saisie) {
+        if (saisie == null) {
+            return List.of();
+        }
+        return SEPARATEURS.splitAsStream(saisie).map(String::trim).filter(m -> !m.isEmpty()).map(AnalyseContrat::normaliser)
+                .distinct().toList();
+    }
+
+    /**
+     * @param categories       catégorie → mots-clés qui la signalent ; une catégorie sans mot-clé n'est pas proposée
+     * @param clausesAttendues clause → mots-clés dont l'un au moins doit figurer au texte ; sans mot-clé, rien n'est vérifié
+     */
+    public static Resultat analyser(String texte, BigDecimal montantAttendu, Map<String, List<String>> categories,
+                                    Map<String, List<String>> clausesAttendues) {
         String brut = texte == null ? "" : texte;
         String norme = normaliser(brut);
         List<Element> meta = new ArrayList<>();
@@ -62,7 +64,10 @@ public final class AnalyseContrat {
         }
         String categorie = "INDETERMINEE";
         double confiance = 0;
-        for (Map.Entry<String, List<String>> e : CATEGORIES.entrySet()) {
+        for (Map.Entry<String, List<String>> e : categories.entrySet()) {
+            if (e.getValue().isEmpty()) {
+                continue;
+            }
             long trouves = e.getValue().stream().filter(norme::contains).count();
             double score = (double) trouves / e.getValue().size();
             if (score > confiance) {
@@ -71,8 +76,8 @@ public final class AnalyseContrat {
             }
         }
         List<Element> anomalies = new ArrayList<>();
-        for (Map.Entry<String, List<String>> e : CLAUSES_ATTENDUES.entrySet()) {
-            if (e.getValue().stream().noneMatch(norme::contains)) {
+        for (Map.Entry<String, List<String>> e : clausesAttendues.entrySet()) {
+            if (!e.getValue().isEmpty() && e.getValue().stream().noneMatch(norme::contains)) {
                 anomalies.add(new Element("clauseAbsente", e.getKey(), 0.7));
             }
         }

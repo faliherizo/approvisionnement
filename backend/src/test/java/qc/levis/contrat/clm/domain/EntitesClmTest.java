@@ -36,9 +36,12 @@ class EntitesClmTest {
     @Test
     void invitation_bloquee_expiree_annulee_refusee() {
         Invitation i = invitation();
-        for (int n = 0; n < Identite.TENTATIVES_MAX; n++) {
-            i.echecVerification();
+        int tentativesMax = Identite.Politique.DEFAUT.tentativesMax();
+        for (int n = 0; n < tentativesMax - 1; n++) {
+            i.echecVerification(tentativesMax);
         }
+        assertNotEquals(Invitation.Statut.BLOQUEE, i.getStatut());
+        i.echecVerification(tentativesMax);
         assertEquals(Invitation.Statut.BLOQUEE, i.getStatut());
         assertThrows(IllegalStateException.class, () -> i.exigerOuverte(T0));
         Invitation e = invitation();
@@ -56,12 +59,12 @@ class EntitesClmTest {
     @Test
     void message_sortant_reprises_puis_echec_et_relance() {
         MessageSortant m = new MessageSortant(1L, 2L, "sf", "LANCEE", "k", "c", "{}", T0);
-        m.echouer("x".repeat(2000), T0);
+        m.echouer("x".repeat(2000), T0, Relances.REPRISES_PAR_DEFAUT);
         assertEquals(1, m.getTentatives());
         assertEquals(1000, m.getDerniereErreur().length());
         assertEquals(T0.plusSeconds(60), m.getProchainEssai());
-        for (int i = 1; i < Relances.REPRISES_MAX; i++) {
-            m.echouer(null, T0);
+        for (int i = 1; i < Relances.REPRISES_PAR_DEFAUT; i++) {
+            m.echouer(null, T0, Relances.REPRISES_PAR_DEFAUT);
         }
         assertEquals(MessageSortant.Statut.ECHEC, m.getStatut());
         m.relancer(T0);

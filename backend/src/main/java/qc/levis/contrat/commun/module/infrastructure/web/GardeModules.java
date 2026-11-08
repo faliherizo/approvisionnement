@@ -15,18 +15,17 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import qc.levis.contrat.commun.infrastructure.TenantContext;
 import qc.levis.contrat.commun.module.application.ModuleAccess;
+import qc.levis.contrat.commun.module.application.ModuleNonSouscrit;
 
 /**
  * Applique {@link ModuleRequis} à toute l'API : refus par défaut d'une fonctionnalité que l'organisation n'a pas souscrite,
  * quel que soit le rôle de l'appelant. Le superadmin et les appels sans session (jetons publics) passent : leur tenant est nul
- * et ils relèvent d'autres contrôles.
+ * et ils relèvent d'autres contrôles. Inscrit par {@link ConfigurationGardeModules}.
  */
 @Component
-public class GardeModules implements HandlerInterceptor, WebMvcConfigurer {
+public class GardeModules implements HandlerInterceptor {
 
     private static final Logger log = LoggerFactory.getLogger(GardeModules.class);
 
@@ -36,11 +35,6 @@ public class GardeModules implements HandlerInterceptor, WebMvcConfigurer {
     public GardeModules(ModuleAccess modules, ObjectMapper json) {
         this.modules = modules;
         this.json = json;
-    }
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registre) {
-        registre.addInterceptor(this).addPathPatterns("/api/**");
     }
 
     @Override
@@ -58,8 +52,7 @@ public class GardeModules implements HandlerInterceptor, WebMvcConfigurer {
         reponse.setStatus(HttpStatus.FORBIDDEN.value());
         reponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
         reponse.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        json.writeValue(reponse.getWriter(), Map.of("message",
-                "Fonctionnalité non souscrite par votre organisation (module « " + codes + " »)."));
+        json.writeValue(reponse.getWriter(), Map.of("message", ModuleNonSouscrit.message(codes)));
         return false;
     }
 }

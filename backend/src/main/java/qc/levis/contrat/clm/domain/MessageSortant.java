@@ -81,10 +81,11 @@ public class MessageSortant {
         this.derniereErreur = null;
     }
 
-    public void echouer(String erreur, Instant maintenant) {
+    /** Échec d'envoi : nouvel essai différé, ou abandon une fois atteint le nombre de reprises de l'organisation. */
+    public void echouer(String erreur, Instant maintenant, int reprisesMax) {
         this.tentatives++;
         this.derniereErreur = erreur == null ? null : erreur.substring(0, Math.min(erreur.length(), 1000));
-        if (Relances.abandonner(tentatives)) {
+        if (Relances.abandonner(tentatives, reprisesMax)) {
             this.statut = Statut.ECHEC;
         } else {
             this.prochainEssai = Relances.prochainEssai(tentatives, maintenant);

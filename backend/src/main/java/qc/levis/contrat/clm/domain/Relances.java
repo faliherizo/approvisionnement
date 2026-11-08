@@ -9,7 +9,14 @@ import java.time.Instant;
  */
 public final class Relances {
 
-    public static final int REPRISES_MAX = 8;
+    /** Reprises d'un retour de statut avant abandon, tant que l'organisation n'en fixe pas d'autres. */
+    public static final int REPRISES_PAR_DEFAUT = 8;
+    /** Bornes d'un rappel, par trousse comme par défaut de l'organisation. */
+    public static final int FREQUENCE_MAX_JOURS = 30;
+    public static final int RAPPELS_PLAFOND = 10;
+    /** Rappels d'une nouvelle trousse, tant que l'organisation n'en fixe pas d'autres (UI-22). */
+    public static final int FREQUENCE_PAR_DEFAUT_JOURS = 2;
+    public static final int RAPPELS_PAR_DEFAUT = 3;
     private static final Duration DELAI_INITIAL = Duration.ofMinutes(1);
     private static final Duration DELAI_PLAFOND = Duration.ofHours(1);
 
@@ -41,7 +48,7 @@ public final class Relances {
         return maintenant.plus(delai);
     }
 
-    public static boolean abandonner(int tentatives) {
-        return tentatives >= REPRISES_MAX;
+    public static boolean abandonner(int tentatives, int reprisesMax) {
+        return tentatives >= reprisesMax;
     }
 }

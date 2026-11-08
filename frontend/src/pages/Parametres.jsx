@@ -19,7 +19,7 @@ export default function Parametres() {
     <div>
       <section className="panel">
         <h1>{t('parametres.titre')}</h1>
-        {(redaction || actif('formulaire')) && <ReferenceManager portee="admin" />}
+        {(redaction || actif('formulaire')) && <ReferenceManager portee="admin" modules={['redaction', 'formulaire']} />}
       </section>
       {redaction && <ModeleDocumentManager portee="admin" />}
       {redaction && <IntegrationM365Manager />}

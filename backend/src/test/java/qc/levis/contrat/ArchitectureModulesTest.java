@@ -48,6 +48,8 @@ class ArchitectureModulesTest {
             entry("TenantController", "console superadmin, hors tenant"),
             entry("SuperadminModuleController", "console superadmin, hors tenant"),
             entry("SuperadminReferenceController", "console superadmin, hors tenant"),
+            entry("ReferenceController", "listes de référence de tous les modules : le service refuse celle d'un module non souscrit"),
+            entry("AdminReferenceController", "listes de référence de tous les modules : le service refuse celle d'un module non souscrit"),
             entry("InteropPublicController", "jeton d'API : le tenant n'est connu qu'après le jeton ; le contrôleur vérifie alors le module"),
             entry("PortailController", "portail public du signataire : le tenant n'est connu qu'à la lecture du jeton d'invitation"));
 

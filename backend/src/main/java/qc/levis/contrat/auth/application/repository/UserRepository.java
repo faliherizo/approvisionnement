@@ -1,5 +1,6 @@
 package qc.levis.contrat.auth.application.repository;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,8 @@ import qc.levis.contrat.auth.domain.User;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
+
+    List<User> findByTenantIdAndActifTrueOrderByNomAsc(Long tenantId);
 
     /**
      * Recherche paginée des utilisateurs d'un tenant (le superadmin, dont tenantId

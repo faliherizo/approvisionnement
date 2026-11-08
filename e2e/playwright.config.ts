@@ -1,5 +1,10 @@
 import { defineConfig, devices } from '@playwright/test'
 
+// Surchargeables pour viser des serveurs déjà lancés ailleurs (ex. port 8080 occupé) :
+// E2E_FRONTEND_URL=http://localhost:5174 E2E_BACKEND_URL=http://localhost:8081 npx playwright test …
+const frontend = process.env.E2E_FRONTEND_URL || 'http://localhost:5173'
+const backend = process.env.E2E_BACKEND_URL || 'http://localhost:8080'
+
 /**
  * Configuration Playwright.
  * Démarre automatiquement le backend Java (H2, profil par défaut) et le frontend
@@ -15,7 +20,7 @@ export default defineConfig({
   expect: { timeout: 10_000 },
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: frontend,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
@@ -25,17 +30,18 @@ export default defineConfig({
   webServer: [
     {
       // Backend Spring Boot sur H2 (schéma via Liquibase)
-      command: 'mvn -q -DskipTests spring-boot:run',
+      command: `mvn -q -DskipTests spring-boot:run -Dspring-boot.run.arguments=--server.port=${new URL(backend).port || 8080}`,
       cwd: '../backend',
-      url: 'http://localhost:8080/api/health',
+      url: `${backend}/api/health`,
       timeout: 180_000,
       reuseExistingServer: true,
     },
     {
-      // Frontend React (Vite) — proxy /api -> :8080
+      // Frontend React (Vite) — proxy /api -> backend
       command: 'npm run dev',
       cwd: '../frontend',
-      url: 'http://localhost:5173',
+      env: { BACKEND_URL: backend, VITE_PORT: new URL(frontend).port || '5173' },
+      url: frontend,
       timeout: 120_000,
       reuseExistingServer: true,
     },

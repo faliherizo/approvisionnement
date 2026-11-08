@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../auth.jsx'
 import { useI18n } from '../../i18n/I18nContext'
-import { GardeModule, Message, Statut, date, dateHeure, telecharger, useErreur, usePeutInitier, useRessource } from './commun.jsx'
+import { ChoixListe, GardeModule, Message, Statut, date, dateHeure, telecharger, useErreur, useListe, usePeutInitier, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 
 const STATUTS = ['BROUILLON', 'EN_TRAITEMENT', 'TERMINEE', 'REJETEE', 'ANNULEE']
@@ -23,6 +23,7 @@ function Contenu() {
   const qs = new URLSearchParams(Object.entries(filtre).filter(([, v]) => v)).toString()
   const { donnees, erreur: errChargement, chargement, recharger } = useRessource(`/clm/trousses${qs ? `?${qs}` : ''}`)
   const maj = (k) => (e) => setForm({ ...form, [k]: e.target.value })
+  const types = useListe('CLM_TYPE_CONTRAT')
   const peutInitier = usePeutInitier()
   const { user, hasRole } = useAuth()
   // Même règle que le serveur : l'initiateur et l'administration gèrent une trousse, l'auditeur la consulte.
@@ -89,7 +90,8 @@ function Contenu() {
               <label>{t('clm.tr.initiateur')}<input value={form.initiateur} onChange={maj('initiateur')} /></label>
               <label>{t('clm.tr.creeDu')}<input type="date" value={form.du} onChange={maj('du')} /></label>
               <label>{t('clm.su.au')}<input type="date" value={form.au} onChange={maj('au')} /></label>
-              <label className="col-2">{t('clm.champ.typeContrat')}<input value={form.type} onChange={maj('type')} /></label>
+              <label className="col-2">{t('clm.champ.typeContrat')}<ChoixListe liste={types} value={form.type} vide={t('clm.liste.tous')}
+                onChange={(v) => setForm({ ...form, type: v })} /></label>
             </div>
           </Bloc>
         </Blocs>
@@ -115,7 +117,7 @@ function Contenu() {
                   {visibles.map((tr) => (
                     <tr key={tr.id}>
                       <td data-label={t('clm.col.reference')}>{tr.reference}</td>
-                      <td data-label={t('clm.col.objet')}>{tr.titre}<br /><span className="muted">{tr.proprietaire}{tr.typeContrat ? ` · ${tr.typeContrat}` : ''}</span></td>
+                      <td data-label={t('clm.col.objet')}>{tr.titre}<br /><span className="muted">{tr.proprietaire}{tr.typeContrat ? ` · ${types.libelle(tr.typeContrat)}` : ''}</span></td>
                       <td data-label={t('clm.col.source')}>{t(`clm.source.${tr.source}`)}{tr.sfDossierId ? ` · ${tr.sfDossierId}` : ''}</td>
                       <td data-label={t('clm.col.statut')}><Statut valeur={tr.statut} /></td>
                       <td data-label={t('clm.col.prochaineAction')}>{tr.prochaineAction}{tr.enRetard && <> <Statut valeur="EXPIREE" /></>}</td>

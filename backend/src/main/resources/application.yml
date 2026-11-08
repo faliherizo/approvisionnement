@@ -74,11 +74,17 @@ app:
   # SAP : configuration désormais PAR TENANT (Paramètres → Intégration SAP), chiffrée en base — plus
   # de config globale ici. Voir docs/tutoriel-sap.md et docs/tutoriel-sap-sandbox.md.
   # CLM IQ 2026-6370-0005 : trousses, signature probante, preuve, Salesforce.
+  # Valeurs de PLATEFORME : chaque organisation remplace les siennes depuis son espace d'administration
+  # (UI-21 intégrations, UI-22 paramètres, listes de référence) ; environnement, preuve et planificateur restent ici.
   clm:
     environnement: ${CLM_ENVIRONNEMENT:DEV}
+    # Fuseau qui fixe « aujourd'hui » pour les échéances en date (tâches assignées) ; les horodatages restent en UTC.
+    fuseau: ${CLM_FUSEAU:America/Toronto}
     portail-url: ${CLM_PORTAIL_URL:http://localhost:5173/portail}
     documents:
       taille-max-octets: ${CLM_TAILLE_MAX_OCTETS:26214400}   # 25 Mo (NF-07)
+      # Plafond qu'aucune organisation ne dépasse : aligné sur spring.servlet.multipart.max-file-size.
+      plafond-octets: ${CLM_PLAFOND_OCTETS:31457280}
     invitation:
       validite-jours: ${CLM_INVITATION_JOURS:14}
     preuve:
@@ -96,6 +102,8 @@ app:
       client-secret: ${CLM_SALESFORCE_CLIENT_SECRET:}
       objet: ${CLM_SALESFORCE_OBJET:FundingRequest}
       version-api: ${CLM_SALESFORCE_VERSION_API:v60.0}
+      # Domaines qu'une organisation peut désigner (instance, jetons) : protection contre la falsification de requêtes.
+      hotes-autorises: ${CLM_SALESFORCE_HOTES_AUTORISES:salesforce.com,force.com}
 
 # Journalisation (voir docs/journalisation.md). Niveaux pilotés ici, ajustables sans redéploiement
 # via LOG_APP_LEVEL. Aucune donnée sensible n'est journalisée (Loi 25).

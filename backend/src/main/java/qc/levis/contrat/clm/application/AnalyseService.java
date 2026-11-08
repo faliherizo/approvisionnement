@@ -27,16 +27,21 @@ public class AnalyseService {
     private final TrousseService trousses;
     private final LectureTrousse lecture;
     private final JournalClm journal;
+    private final ListesClm listes;
+    private final ParametresClmService parametres;
     private final ContexteClm ctx;
 
     public AnalyseService(AnalyseIaRepository analyses, DocumentTrousseRepository documents, RenduDocuments rendu,
-                          TrousseService trousses, LectureTrousse lecture, JournalClm journal, ContexteClm ctx) {
+                          TrousseService trousses, LectureTrousse lecture, JournalClm journal, ListesClm listes,
+                          ParametresClmService parametres, ContexteClm ctx) {
         this.analyses = analyses;
         this.documents = documents;
         this.rendu = rendu;
         this.trousses = trousses;
         this.lecture = lecture;
         this.journal = journal;
+        this.listes = listes;
+        this.parametres = parametres;
         this.ctx = ctx;
     }
 
@@ -49,7 +54,9 @@ public class AnalyseService {
             throw new IllegalStateException("Données non admissibles : document non analysé ou infecté.");
         }
         String texte = rendu.texte(d.getType(), d.getContenu());
-        AnalyseContrat.Resultat r = AnalyseContrat.analyser(texte, montantAttendu(trousses.valeurs(t).get("montant")));
+        String champMontant = parametres.reglages(t.getTenantId()).champMontant();
+        AnalyseContrat.Resultat r = AnalyseContrat.analyser(texte, montantAttendu(trousses.valeurs(t).get(champMontant)),
+                listes.motsCles(ListesClm.Liste.TYPE_CONTRAT), listes.motsCles(ListesClm.Liste.CLAUSE_ATTENDUE));
         AnalyseIa a = analyses.save(new AnalyseIa(t.getTenantId(), t.getId(), d.getId(), ctx.ecrire(r), acteur.id(), ctx.maintenant()));
         journal.consigner(t, "ANALYSE_IA", acteur.id(), d.getNom() + " · " + r.categorie() + " · " + r.anomalies().size() + " anomalie(s)");
         return vue(a);

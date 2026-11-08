@@ -6,10 +6,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import qc.levis.contrat.clm.application.dto.ClmDto;
+import qc.levis.contrat.clm.application.port.ReferencesClm;
 import qc.levis.contrat.clm.application.port.SourceAleatoire;
 import qc.levis.contrat.clm.application.repository.ModeleContratRepository;
 import qc.levis.contrat.clm.application.repository.TrousseRepository;
@@ -31,12 +35,15 @@ public class ModeleService {
     private final ModeleContratRepository modeles;
     private final TrousseRepository trousses;
     private final SourceAleatoire alea;
+    private final ListesClm listes;
     private final ContexteClm ctx;
 
-    public ModeleService(ModeleContratRepository modeles, TrousseRepository trousses, SourceAleatoire alea, ContexteClm ctx) {
+    public ModeleService(ModeleContratRepository modeles, TrousseRepository trousses, SourceAleatoire alea, ListesClm listes,
+                         ContexteClm ctx) {
         this.modeles = modeles;
         this.trousses = trousses;
         this.alea = alea;
+        this.listes = listes;
         this.ctx = ctx;
     }
 
@@ -69,8 +76,11 @@ public class ModeleService {
         return vue(modeles.save(m));
     }
 
+    /** La catégorie vient de la liste des types de contrat ; une catégorie inchangée reste admise même retirée depuis. */
     private void appliquer(ModeleContrat m, ClmDto.ModeleRequest req) {
-        m.modifier(exigerNom(req), vide(req.categorie()), vide(req.groupes()), req.corps(), new ModeleContrat.Contenu(
+        String categorie = Objects.equals(vide(req.categorie()), m.getCategorie()) ? m.getCategorie()
+                : listes.exiger(ListesClm.Liste.TYPE_CONTRAT, req.categorie());
+        m.modifier(exigerNom(req), categorie, vide(req.groupes()), req.corps(), new ModeleContrat.Contenu(
                 ctx.ecrire(req.champs() == null ? List.of() : req.champs()),
                 ctx.ecrire(req.clauses() == null ? List.of() : req.clauses()),
                 ctx.ecrire(req.parcours() == null ? List.of() : req.parcours())), ctx.maintenant());
@@ -82,6 +92,7 @@ public class ModeleService {
 
     ClmDto.Validation validation(ModeleContrat m) {
         List<String> erreurs = new ArrayList<>(Modele.valider(m.getCorps(), champs(m), clauses(m)));
+        erreurs.addAll(rolesHorsListe(champs(m)));
         List<ClmDto.EtapeRequest> parcours = ctx.lire(m.getParcoursJson(), TrousseService.PARCOURS, List.of());
         if (!parcours.isEmpty()) {
             try {
@@ -93,6 +104,19 @@ public class ModeleService {
             }
         }
         return new ClmDto.Validation(erreurs.isEmpty(), erreurs);
+    }
+
+    /** Zones et champs adressés à un rôle que la liste de l'organisation ne connaît pas : aucun participant ne les recevrait. */
+    private List<String> rolesHorsListe(List<Modele.Champ> champs) {
+        List<ReferencesClm.Valeur> roles = listes.valeurs(ListesClm.Liste.ROLE_CONTRAT);
+        if (roles.isEmpty()) {
+            return List.of();
+        }
+        Set<String> connus = roles.stream().map(ReferencesClm.Valeur::code).collect(Collectors.toSet());
+        return champs.stream().map(Modele.Champ::roleDestinataire)
+                .filter(r -> r != null && !r.isBlank() && !Modele.ROLE_INITIATEUR.equals(r) && !connus.contains(r)).distinct()
+                .map(r -> "Rôle « " + r + " » absent de la liste « " + ListesClm.Liste.ROLE_CONTRAT.libelle() + " » de l'organisation.")
+                .toList();
     }
 
     /** « Tester règle » : aperçu avec des valeurs d'essai, sans rien enregistrer. */

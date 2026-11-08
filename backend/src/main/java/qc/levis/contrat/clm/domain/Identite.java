@@ -1,5 +1,11 @@
 package qc.levis.contrat.clm.domain;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Vérification d'identité du signataire selon le risque (RST-17, F-06/F-11). Les niveaux sont ordonnés :
  * un niveau imposé par l'initiateur ne peut jamais descendre sous le minimum exigé par le risque.
@@ -10,10 +16,75 @@ public final class Identite {
 
     public enum Niveau { COURRIEL, CODE_SMS, QUESTION, FORTE }
 
-    public static final int TENTATIVES_MAX = 5;
-    public static final int CODE_VALIDITE_MINUTES = 10;
-
     private Identite() {
+    }
+
+    /**
+     * Politique d'identité d'une organisation : niveau minimal par risque pour les signataires externes et internes,
+     * tentatives permises et validité d'un code. Un risque plus élevé n'exige jamais un niveau plus faible ; un risque
+     * sans niveau défini exige le plus fort (refus par défaut).
+     */
+    public record Politique(Map<Risque, Niveau> externes, Map<Risque, Niveau> internes, int tentativesMax, int codeValiditeMinutes) {
+
+        public static final Politique DEFAUT = new Politique(
+                Map.of(Risque.FAIBLE, Niveau.COURRIEL, Risque.MOYEN, Niveau.CODE_SMS, Risque.ELEVE, Niveau.FORTE),
+                Map.of(Risque.FAIBLE, Niveau.COURRIEL, Risque.MOYEN, Niveau.COURRIEL, Risque.ELEVE, Niveau.CODE_SMS), 5, 10);
+
+        public Politique {
+            externes = copie(externes);
+            internes = copie(internes);
+        }
+
+        private static Map<Risque, Niveau> copie(Map<Risque, Niveau> niveaux) {
+            Map<Risque, Niveau> m = new EnumMap<>(Risque.class);
+            if (niveaux != null) {
+                niveaux.forEach((r, n) -> {
+                    if (r != null && n != null) {
+                        m.put(r, n);
+                    }
+                });
+            }
+            return Collections.unmodifiableMap(m);
+        }
+
+        public Niveau minimumRequis(Risque risque, boolean externe) {
+            Risque r = risque == null ? Risque.MOYEN : risque;
+            return (externe ? externes : internes).getOrDefault(r, Niveau.FORTE);
+        }
+
+        public Niveau niveauApplique(Risque risque, boolean externe, Niveau demande) {
+            Niveau minimum = minimumRequis(risque, externe);
+            return demande == null || demande.ordinal() < minimum.ordinal() ? minimum : demande;
+        }
+
+        public List<String> erreurs() {
+            List<String> erreurs = new ArrayList<>();
+            croissante(externes, "externes", erreurs);
+            croissante(internes, "internes", erreurs);
+            if (tentativesMax < 3 || tentativesMax > 10) {
+                erreurs.add("Tentatives de vérification permises : entre 3 et 10.");
+            }
+            if (codeValiditeMinutes < 5 || codeValiditeMinutes > 60) {
+                erreurs.add("Validité d'un code de vérification : entre 5 et 60 minutes.");
+            }
+            return erreurs;
+        }
+
+        private static void croissante(Map<Risque, Niveau> niveaux, String signataires, List<String> erreurs) {
+            Niveau precedent = Niveau.COURRIEL;
+            for (Risque r : Risque.values()) {
+                Niveau n = niveaux.get(r);
+                if (n == null) {
+                    erreurs.add("Niveau d'identité requis pour les signataires " + signataires + " au risque " + r + ".");
+                    return;
+                }
+                if (n.ordinal() < precedent.ordinal()) {
+                    erreurs.add("Signataires " + signataires + " : le risque " + r + " ne peut exiger moins que le risque précédent.");
+                    return;
+                }
+                precedent = n;
+            }
+        }
     }
 
     /** Canaux d'envoi du code : la vérification forte scinde le code entre courriel et SMS (double canal). */
@@ -24,23 +95,6 @@ public final class Identite {
             case FORTE -> java.util.List.of("COURRIEL", "SMS");
             case QUESTION -> java.util.List.of();
         };
-    }
-
-    public static Niveau minimumRequis(Risque risque, boolean externe) {
-        Risque r = risque == null ? Risque.MOYEN : risque;
-        if (!externe) {
-            return r == Risque.ELEVE ? Niveau.CODE_SMS : Niveau.COURRIEL;
-        }
-        return switch (r) {
-            case FAIBLE -> Niveau.COURRIEL;
-            case MOYEN -> Niveau.CODE_SMS;
-            case ELEVE -> Niveau.FORTE;
-        };
-    }
-
-    public static Niveau niveauApplique(Risque risque, boolean externe, Niveau demande) {
-        Niveau minimum = minimumRequis(risque, externe);
-        return demande == null || demande.ordinal() < minimum.ordinal() ? minimum : demande;
     }
 
     /** Coordonnée exigée par le niveau : un code SMS sans téléphone ne peut pas être envoyé (UI-15). */

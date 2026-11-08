@@ -1,0 +1,78 @@
+databaseChangeLog:
+  - changeSet:
+      id: 049-1-reference-categorie
+      author: levis
+      comment: "Listes de référence déclarées par module (souscription contrôlée par liste) ; détail facultatif par valeur."
+      changes:
+        - createTable:
+            tableName: reference_categorie
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: code, type: VARCHAR(60), constraints: { nullable: false, unique: true, uniqueConstraintName: uk_reference_categorie_code } }
+              - column: { name: module, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: libelle, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: aide, type: VARCHAR(500) }
+              - column: { name: libelle_detail, type: VARCHAR(255) }
+              - column: { name: ordre, type: INT, defaultValueNumeric: 0, constraints: { nullable: false } }
+        - addColumn:
+            tableName: reference_value
+            columns:
+              - column: { name: detail, type: VARCHAR(2000) }
+        - createIndex:
+            tableName: reference_value
+            indexName: ix_reference_value_categorie
+            columns:
+              - column: { name: categorie }
+              - column: { name: tenant_id }
+  - changeSet:
+      id: 049-2-clm-parametres
+      author: levis
+      comment: "CLM : paramètres du module propres à une organisation (UI-22) ; à défaut, ceux de la plateforme."
+      changes:
+        - createTable:
+            tableName: clm_parametres
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false, unique: true, uniqueConstraintName: uk_clm_parametres_tenant } }
+              - column: { name: taille_max_octets, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: invitation_validite_jours, type: INT, constraints: { nullable: false } }
+              - column: { name: portail_url, type: VARCHAR(500), constraints: { nullable: false } }
+              - column: { name: prefixe_reference, type: VARCHAR(10), constraints: { nullable: false } }
+              - column: { name: rappel_frequence_jours, type: INT, constraints: { nullable: false } }
+              - column: { name: rappels_max, type: INT, constraints: { nullable: false } }
+              - column: { name: externe_faible, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: externe_moyen, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: externe_eleve, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: interne_faible, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: interne_moyen, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: interne_eleve, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: tentatives_identite, type: INT, constraints: { nullable: false } }
+              - column: { name: code_validite_minutes, type: INT, constraints: { nullable: false } }
+              - column: { name: champ_montant, type: VARCHAR(64), constraints: { nullable: false } }
+              - column: { name: modifie_par, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: modifie_le, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: version, type: BIGINT, constraints: { nullable: false } }
+  - changeSet:
+      id: 049-3-clm-connexion-salesforce
+      author: levis
+      comment: "CLM : connexion Salesforce propre à une organisation (UI-21), secret chiffré au repos."
+      changes:
+        - createTable:
+            tableName: clm_connexion_salesforce
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false, unique: true, uniqueConstraintName: uk_clm_connexion_sf_tenant } }
+              - column: { name: mode, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: instance_url, type: VARCHAR(500) }
+              - column: { name: token_url, type: VARCHAR(500) }
+              - column: { name: client_id, type: VARCHAR(255) }
+              - column: { name: secret_chiffre, type: VARCHAR(1000) }
+              - column: { name: objet, type: VARCHAR(80), constraints: { nullable: false } }
+              - column: { name: version_api, type: VARCHAR(10), constraints: { nullable: false } }
+              - column: { name: champ_statut, type: VARCHAR(80), constraints: { nullable: false } }
+              - column: { name: champ_reference, type: VARCHAR(80), constraints: { nullable: false } }
+              - column: { name: champ_correlation, type: VARCHAR(80), constraints: { nullable: false } }
+              - column: { name: reprises_max, type: INT, constraints: { nullable: false } }
+              - column: { name: modifie_par, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: modifie_le, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: version, type: BIGINT, constraints: { nullable: false } }

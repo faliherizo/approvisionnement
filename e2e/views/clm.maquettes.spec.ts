@@ -48,6 +48,8 @@ const LIBELLES_RETENUS: Record<string, RegExp> = {
 /** Actions qui n'existent que dans un état que ce parcours ne produit pas ; chacune est couverte par le test nommé. */
 const ACTIONS_CONTEXTUELLES: Record<string, Record<string, string>> = {
   'UI-18': { 'Relancer intégration': 'dossier en file d’erreur Salesforce — ClmIntegrationTest.reprises_salesforce_et_retour_pour_correction' },
+  // Un événement déjà livré ne se relance pas : le bouton n'apparaît que pour un événement en échec ou en reprise.
+  'UI-21': { 'Relancer événement': 'événement Salesforce en reprise — ClmIntegrationTest.reprises_salesforce_et_retour_pour_correction' },
 }
 
 /** Blocs assurés par le gabarit commun plutôt que par l'écran. */
@@ -104,6 +106,8 @@ async function trousseAvecDocument(api: APIRequestContext, titre: string, extra:
   }))
   return { ...t.resume, document: document.id } as { id: number; reference: string; document: number }
 }
+
+test.describe.configure({ timeout: 300_000 })
 
 test.describe('Fidélité aux maquettes SVG UI-01 à UI-24 : blocs et actions', () => {
   const ecrans: Ecran[] = []

@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import api from '../../api'
 import { useI18n } from '../../i18n/I18nContext'
 import { useModules } from '../../hooks/useModules.js'
-import { GardeModule, Message, Statut, date, dateHeure, useErreur, useRessource } from './commun.jsx'
+import { ChoixListe, GardeModule, Message, Statut, date, dateHeure, useErreur, useListe, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 import OngletDocuments from './OngletDocuments.jsx'
 import OngletParticipants from './OngletParticipants.jsx'
@@ -12,24 +12,31 @@ import ValeursTrousse from './ValeursTrousse.jsx'
 
 const ETAPES = ['source', 'documents', 'participants', 'processus', 'recapitulatif']
 const RISQUES = ['FAIBLE', 'MOYEN', 'ELEVE']
-const CHAMPS_SF = ['Demandeur', 'Programme', 'Montant', 'Entite']
+/** Rappels laissés vides : l'organisation applique ses valeurs par défaut (UI-22) tant que l'initiateur n'en fixe pas. */
 const FORM_VIDE = { source: 'MANUELLE', sfDossierId: '', modeleId: '', titre: '', reference: '', typeContrat: '', unite: '',
-  risque: 'MOYEN', echeance: '', copies: '', rappelFrequenceJours: 2, rappelsMax: 3 }
+  risque: 'MOYEN', echeance: '', copies: '', rappelFrequenceJours: '', rappelsMax: '' }
 const ACTIFS = (docs) => docs.filter((x) => !['REMPLACE', 'RETIRE'].includes(x.statut))
+const nombreOuNul = (v) => (v === '' || v === null || v === undefined ? null : Number(v))
 
 const depuisDetail = (d) => ({ source: d.resume.source, sfDossierId: d.resume.sfDossierId || '', modeleId: d.modeleId ? String(d.modeleId) : '',
   titre: d.resume.titre, reference: d.resume.reference, typeContrat: d.resume.typeContrat || '', unite: d.resume.unite || '', risque: d.risque,
   echeance: d.resume.echeance || '', copies: d.copies || '', rappelFrequenceJours: d.rappelFrequenceJours, rappelsMax: d.rappelsMax })
 
+/** Champs Salesforce à résumer : ceux de la liste de l'organisation, sinon tous ceux du dossier. */
+const champsSalesforce = (liste, dossier) => (liste.valeurs.length > 0
+  ? liste.valeurs.map((v) => [v.code, v.libelle])
+  : Object.keys(dossier?.champs || {}).map((k) => [k, k]))
+
 /** Résumé d'un dossier Salesforce (UI-10, zone 02) : dossier consulté par la recherche ou importé dans la trousse. */
 export function ApercuDossier({ dossier }) {
   const { t } = useI18n()
+  const champs = useListe('CLM_CHAMP_SALESFORCE')
   if (!dossier) return <p className="muted">{t('clm.sf.aucunDossier')}</p>
   return (
     <div className="clm-apercu">
       <p>{t('clm.sf.dossier', { numero: dossier.numero, id: dossier.id })} · {t('clm.sf.recupereLe', { d: dateHeure(dossier.recupereLe) })}</p>
       <dl className="clm-dl">
-        {CHAMPS_SF.map((k) => <div key={k}><dt>{t(`clm.sf.champ.${k}`)}</dt><dd>{String(dossier.champs?.[k] ?? '—')}</dd></div>)}
+        {champsSalesforce(champs, dossier).map(([k, libelle]) => <div key={k}><dt>{libelle}</dt><dd>{String(dossier.champs?.[k] ?? '—')}</dd></div>)}
       </dl>
     </div>
   )
@@ -39,9 +46,13 @@ export function ApercuDossier({ dossier }) {
 export const dossierImporte = (vue) => (vue?.sfDossierId ? { id: vue.sfDossierId, numero: vue.numero, champs: vue.dossier, recupereLe: vue.recupereLe } : null)
 
 /** Étape 1 (UI-03 + UI-10) : origine, dossier Salesforce, informations du contrat, brouillon, données importées et corrigées. */
-function EtapeSource({ form, setForm, modeles, dossier, onRechercher, d, import_, enregistreLe, onImporter, onValeurs }) {
+function EtapeSource({ form, setForm, modeles, dossier, onRechercher, d, import_, enregistreLe, onImporter, onValeurs, publics }) {
   const { t } = useI18n()
-  const maj = (k) => (e) => setForm({ ...form, [k]: e.target.type === 'number' ? Number(e.target.value) : e.target.value })
+  const types = useListe('CLM_TYPE_CONTRAT')
+  const unites = useListe('CLM_UNITE')
+  const maj = (k) => (e) => setForm({ ...form, [k]: e.target.type === 'number' ? (e.target.value === '' ? '' : Number(e.target.value)) : e.target.value })
+  const choisir = (k) => (v) => setForm({ ...form, [k]: v })
+  const niveau = (cote) => publics?.[cote]?.[form.risque.toLowerCase()]
   return (
     <Blocs>
       <Bloc zone="02" titre={t('clm.cr.blocSalesforce')}>
@@ -76,8 +87,8 @@ function EtapeSource({ form, setForm, modeles, dossier, onRechercher, d, import_
             <input value={form.titre} onChange={maj('titre')} required aria-required="true" maxLength={250} /></label>
           <label>{t('clm.champ.reference')} <span className="muted">{t('clm.cr.referenceAide')}</span>
             <input value={form.reference} onChange={maj('reference')} maxLength={60} disabled={!!d} /></label>
-          <label>{t('clm.champ.typeContrat')}<input value={form.typeContrat} onChange={maj('typeContrat')} maxLength={80} /></label>
-          <label>{t('clm.champ.unite')}<input value={form.unite} onChange={maj('unite')} maxLength={120} /></label>
+          <label>{t('clm.champ.typeContrat')}<ChoixListe liste={types} value={form.typeContrat} onChange={choisir('typeContrat')} maxLength={80} /></label>
+          <label>{t('clm.champ.unite')}<ChoixListe liste={unites} value={form.unite} onChange={choisir('unite')} maxLength={120} /></label>
           <label>{t('clm.cr.modele')}
             <select value={form.modeleId} onChange={maj('modeleId')} disabled={!!d}>
               <option value="">{t('clm.cr.sansModele')}</option>
@@ -85,8 +96,10 @@ function EtapeSource({ form, setForm, modeles, dossier, onRechercher, d, import_
             </select>
           </label>
           <label>{t('clm.champ.risque')}
-            <select value={form.risque} onChange={maj('risque')}>{RISQUES.map((r) => <option key={r} value={r}>{t(`clm.risque.${r}`)}</option>)}</select>
+            <select value={form.risque} onChange={maj('risque')} aria-describedby="clm-risque-aide">{RISQUES.map((r) => <option key={r} value={r}>{t(`clm.risque.${r}`)}</option>)}</select>
           </label>
+          <p id="clm-risque-aide" className="muted">{publics ? t('clm.cr.identiteExigee', { externe: t(`clm.niveau.${niveau('identiteExterne')}`),
+            interne: t(`clm.niveau.${niveau('identiteInterne')}`) }) : ''}</p>
           <label>{t('clm.champ.echeance')}<input type="date" value={form.echeance} onChange={maj('echeance')} /></label>
           <label className="col-2">{t('clm.champ.copies')} <span className="muted">{t('clm.cr.copiesAide')}</span><input value={form.copies} onChange={maj('copies')} /></label>
           <label>{t('clm.champ.frequence')}<input type="number" min={1} max={30} value={form.rappelFrequenceJours} onChange={maj('rappelFrequenceJours')} /></label>
@@ -110,6 +123,8 @@ function EtapeSource({ form, setForm, modeles, dossier, onRechercher, d, import_
 /** Étape 5 : récapitulatif et contrôles avant lancement. */
 function Recapitulatif({ d, form, modeles }) {
   const { t } = useI18n()
+  const unites = useListe('CLM_UNITE')
+  const roles = useListe('CLM_ROLE_CONTRAT')
   const docs = ACTIFS(d.documents)
   const phases = [...new Set(d.etapes.map((e) => e.phase))].sort((a, b) => a - b)
   const controles = [
@@ -124,7 +139,7 @@ function Recapitulatif({ d, form, modeles }) {
           <div><dt>{t('clm.cr.origine')}</dt><dd>{t(`clm.source.${d.resume.source}`)}{d.resume.sfDossierId ? ` · ${d.resume.sfDossierId}` : ''}</dd></div>
           <div><dt>{t('clm.champ.titre')}</dt><dd>{d.resume.titre}</dd></div>
           <div><dt>{t('clm.champ.reference')}</dt><dd>{d.resume.reference}</dd></div>
-          <div><dt>{t('clm.champ.unite')}</dt><dd>{d.resume.unite || '—'}</dd></div>
+          <div><dt>{t('clm.champ.unite')}</dt><dd>{unites.libelle(d.resume.unite) || '—'}</dd></div>
           <div><dt>{t('clm.champ.risque')}</dt><dd>{t(`clm.risque.${d.risque}`)}</dd></div>
           <div><dt>{t('clm.champ.echeance')}</dt><dd>{date(d.resume.echeance)}</dd></div>
           <div><dt>{t('clm.cr.modele')}</dt><dd>{(modeles || []).find((m) => String(m.id) === String(form.modeleId))?.nom || t('clm.cr.sansModele')}</dd></div>
@@ -143,7 +158,7 @@ function Recapitulatif({ d, form, modeles }) {
       </Bloc>
       <Bloc zone="R4" titre={t('clm.cr.etape.participants')}>
         {d.participants.length === 0 ? <p className="muted">{t('clm.part.aucun')}</p> : (
-          <ul className="clm-liste">{d.participants.map((p) => <li key={p.id}>{p.nom} · {p.roleContrat} · {t(`clm.niveau.${p.niveauIdentite}`)}</li>)}</ul>
+          <ul className="clm-liste">{d.participants.map((p) => <li key={p.id}>{p.nom} · {roles.libelle(p.roleContrat)} · {t(`clm.niveau.${p.niveauIdentite}`)}</li>)}</ul>
         )}
       </Bloc>
       <Bloc zone="R5" titre={t('clm.pc.resume')} large>
@@ -180,10 +195,17 @@ function Contenu() {
   const [enregistreLe, setEnregistreLe] = useState(null)
   const detail = useRessource(id ? `/clm/trousses/${id}` : null, !!id)
   const { donnees: modeles } = useRessource('/clm/modeles?statut=PUBLIE')
+  const { donnees: publics } = useRessource('/clm/parametres')
+  const champsSf = useListe('CLM_CHAMP_SALESFORCE')
   const d = id ? detail.donnees : null
   const peut = (a) => !!d?.actions?.includes(a)
 
   useEffect(() => { if (d) setForm(depuisDetail(d)) }, [d?.resume?.id]) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (id || !publics) return
+    setForm((f) => ({ ...f, rappelFrequenceJours: f.rappelFrequenceJours === '' ? publics.rappelFrequenceJours : f.rappelFrequenceJours,
+      rappelsMax: f.rappelsMax === '' ? publics.rappelsMax : f.rappelsMax }))
+  }, [publics, id])
   useEffect(() => {
     if (etapePrecedente.current === etape) return
     etapePrecedente.current = etape
@@ -199,7 +221,10 @@ function Contenu() {
     try {
       const { data } = await api.get(`/clm/salesforce/dossiers/${encodeURIComponent(form.sfDossierId.trim())}`)
       setDossier(data)
-      if (!form.titre.trim()) setForm((f) => ({ ...f, titre: [data.champs?.Programme, data.champs?.Demandeur].filter(Boolean).join(' — ') }))
+      // Titre suggéré : les deux premiers champs renseignés de la liste de l'organisation, hors numéro de demande.
+      const suggestion = champsSalesforce(champsSf, data).map(([k]) => k).filter((k) => k !== 'Name' && data.champs?.[k])
+        .slice(0, 2).map((k) => data.champs[k]).join(' — ')
+      if (!form.titre.trim() && suggestion) setForm((f) => ({ ...f, titre: suggestion }))
       setInfo(t('clm.cr.sfTrouve', { numero: data.numero }))
     } catch (e) { setErreur(versErreur(e)) }
   }
@@ -216,7 +241,8 @@ function Contenu() {
     setErreur(null)
     try {
       const corps = { ...form, modeleId: form.modeleId ? Number(form.modeleId) : null, echeance: form.echeance || null,
-        reference: form.reference || null, sfDossierId: null }
+        reference: form.reference || null, sfDossierId: null, rappelFrequenceJours: nombreOuNul(form.rappelFrequenceJours),
+        rappelsMax: nombreOuNul(form.rappelsMax) }
       const r = id ? await api.put(`/clm/trousses/${id}`, corps) : await api.post('/clm/trousses', corps)
       const nouvelId = String(r.data.resume.id)
       setEnregistreLe(new Date().toISOString())
@@ -293,7 +319,7 @@ function Contenu() {
       </Blocs>
       <Message erreur={erreur || (id ? detail.erreur : null)} info={info} />
       {etape === 0 && (
-        <EtapeSource form={form} setForm={setForm} modeles={modeles} dossier={dossier} onRechercher={rechercherSf}
+        <EtapeSource form={form} setForm={setForm} modeles={modeles} dossier={dossier} onRechercher={rechercherSf} publics={publics}
           d={d} import_={import_} enregistreLe={enregistreLe} onImporter={actualiserImport}
           onValeurs={(vue) => { if (vue.sfDossierId) setImport(vue); detail.recharger() }} />
       )}

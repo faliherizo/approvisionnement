@@ -227,3 +227,10 @@ h3.clm-bloc__titre { font-size: 16px; }
 @media print {
   .clm-portail__entete, .clm-portail button { display: none; }
 }
+
+/* Une liste déroulante prend la largeur de sa plus longue option : sans plafond, un nom de participant suffit à faire
+   déborder l'écran du téléphone (UI-15 à 390 px). */
+.clm-ecran select { max-width: 100%; }
+.clm-zone-attribution { align-items: flex-end; }
+.clm-zone-attribution label { flex: 1 1 14rem; min-width: 0; }
+.clm-zone-attribution select { width: 100%; }

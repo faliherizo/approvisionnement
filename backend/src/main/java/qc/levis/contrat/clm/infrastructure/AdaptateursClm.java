@@ -17,15 +17,19 @@ import org.springframework.stereotype.Component;
 import qc.levis.contrat.clm.application.ClmProprietes;
 import qc.levis.contrat.clm.application.port.AlertesExploitation;
 import qc.levis.contrat.clm.application.port.AnalyseAntivirus;
+import qc.levis.contrat.clm.application.port.AnnuaireOrganisation;
 import qc.levis.contrat.clm.application.port.IdentiteOrganisation;
 import qc.levis.contrat.clm.application.port.NotificateurClm;
 import qc.levis.contrat.clm.application.port.PerimetreUtilisateur;
 import qc.levis.contrat.clm.application.port.PorteeTenant;
+import qc.levis.contrat.clm.application.port.ReferencesClm;
 import qc.levis.contrat.clm.application.port.Scelleur;
 import qc.levis.contrat.clm.application.port.SourceAleatoire;
 import qc.levis.contrat.commun.infrastructure.TenantContext;
 import qc.levis.contrat.notification.application.port.CanalNotification;
+import qc.levis.contrat.reference.application.ReferenceService;
 import qc.levis.contrat.securite.application.SecuriteService;
+import qc.levis.contrat.tenant.application.AdminUserService;
 import qc.levis.contrat.tenant.application.TenantAdminService;
 
 /** Adaptateurs techniques simples du module CLM. */
@@ -192,6 +196,36 @@ public final class AdaptateursClm {
         @Override
         public Set<String> groupes(Long tenantId, String utilisateur) {
             return tenantId == null || utilisateur == null ? Set.of() : securite.groupesDe(tenantId, utilisateur);
+        }
+    }
+
+    /** Annuaire de l'organisation, lu par le service des comptes : courriel et nom, jamais les rôles ni les secrets. */
+    @Component
+    public static class AnnuaireComptes implements AnnuaireOrganisation {
+        private final AdminUserService comptes;
+
+        public AnnuaireComptes(AdminUserService comptes) {
+            this.comptes = comptes;
+        }
+
+        @Override
+        public List<Membre> membres(Long tenantId) {
+            return comptes.membresActifs(tenantId).stream().map(m -> new Membre(m.courriel(), m.nom())).toList();
+        }
+    }
+
+    /** Listes effectives de l'organisation, servies par le service des références de la plateforme. */
+    @Component
+    public static class ReferencesPlateforme implements ReferencesClm {
+        private final ReferenceService references;
+
+        public ReferencesPlateforme(ReferenceService references) {
+            this.references = references;
+        }
+
+        @Override
+        public List<Valeur> valeurs(String liste) {
+            return references.options(liste).stream().map(o -> new Valeur(o.code(), o.libelle(), o.detail())).toList();
         }
     }
 }

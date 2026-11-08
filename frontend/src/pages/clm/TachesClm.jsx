@@ -4,6 +4,7 @@ import api from '../../api'
 import { useI18n } from '../../i18n/I18nContext'
 import { GardeModule, Message, Statut, Visionneuse, dateHeure, useErreur, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
+import TachesAssignees from './TachesAssignees.jsx'
 
 const FILTRES = ['a_traiter', 'en_retard', 'terminees', 'deleguees']
 const JOUR_MS = 86_400_000
@@ -236,6 +237,7 @@ function Contenu() {
             <ul className="clm-liste">{reassignees.map((x) => <li key={x.etapeId}>{x.reference} · {x.libelle}</li>)}</ul>
           )}
         </Bloc>
+        <TachesAssignees />
       </Blocs>
     </EcranClm>
   )

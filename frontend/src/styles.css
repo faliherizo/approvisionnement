@@ -136,6 +136,8 @@ h3 { color: var(--bleu-fonce); font-size: clamp(15px, 0.95rem + 0.3vw, 17.5px); 
 /* --- Formulaires --- */
 .form { display: flex; flex-direction: column; gap: 14px; }
 label { display: flex; flex-direction: column; gap: 5px; font-size: 14px; font-weight: 600; color: var(--texte); }
+/* Libellé associé par id (le nom accessible n'inclut pas la valeur choisie) : même mise en page qu'un libellé englobant. */
+.champ-associe { display: flex; flex-direction: column; gap: 5px; }
 input, select, textarea {
   padding: 10px 12px; border: 1px solid var(--bord); border-radius: 9px;
   font: inherit; font-weight: 400; background: var(--panel); color: var(--texte);

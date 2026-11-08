@@ -19,15 +19,18 @@ const ECRANS: { nom: string; chemin: string; titre: RegExp; maquette?: string }[
   { nom: 'UI-17 notifications', chemin: '/clm/admin/notifications', titre: /Notifications et rappels/, maquette: 'UI-17' },
   { nom: 'UI-21 intégrations', chemin: '/clm/admin/integrations', titre: /Intégrations API/, maquette: 'UI-21' },
   { nom: 'UI-22 paramètres', chemin: '/clm/admin/parametres', titre: /Paramètres et environnements/, maquette: 'UI-22' },
+  { nom: 'listes de référence', chemin: '/clm/admin/listes', titre: /Listes de référence/ },
   { nom: 'UI-20 utilisateurs', chemin: '/clm/admin/utilisateurs', titre: /Utilisateurs/, maquette: 'UI-20' },
   { nom: 'UI-23 journal', chemin: '/clm/admin/journal', titre: /Journal d’audit et événements/, maquette: 'UI-23' },
   { nom: 'UI-24 options', chemin: '/clm/options', titre: /Options CLM et IA/, maquette: 'UI-24' },
   // Fonctions transverses servies dans l'espace du module (un tenant CLM seul n'a pas d'autre espace).
   { nom: 'UI-20 authentification unique', chemin: '/clm/admin/sso', titre: /Authentification unique \(SSO\)/, maquette: 'UI-20' },
-  { nom: 'journal de sécurité', chemin: '/clm/admin/audit', titre: /Journal d'audit/ },
+  { nom: 'journal de sécurité', chemin: '/clm/admin/audit', titre: /Journal d’audit/ },
   { nom: 'mon profil', chemin: '/clm/profil', titre: /Mon profil/ },
   { nom: 'sécurité du compte', chemin: '/clm/securite', titre: /Sécurité du compte/ },
 ]
+
+test.describe.configure({ timeout: 300_000 })
 
 test.describe('Vues CLM — gabarit des maquettes, responsive, superposition, cibles, libellés et axe-core', () => {
   test.beforeAll(async ({ request }) => { await activerModules(request) })
@@ -145,7 +148,7 @@ test.describe('Vues CLM — gabarit des maquettes, responsive, superposition, ci
       await verifier('UI-10 écart avec Salesforce tracé en conflit')
 
       await page.goto(`/clm/trousses/${sf.id}?onglet=participants`)
-      await page.getByLabel('Signataire de la zone « Signature »').selectOption({ label: 'Marc Bénéficiaire · SIGNATAIRE_2' })
+      await page.getByLabel('Signataire de la zone « Signature »').selectOption({ label: 'Marc Bénéficiaire · Deuxième signataire' })
       await page.getByRole('button', { name: 'Attribuer la zone — Signature' }).click()
       await expect(page.getByText('Zone « Signature » attribuée.')).toBeVisible()
       await verifier('UI-15 zone de signature attribuée')
@@ -157,11 +160,15 @@ test.describe('Vues CLM — gabarit des maquettes, responsive, superposition, ci
       await expect(page.getByText(/si Montant est supérieur à/).first()).toBeVisible()
       await verifier('UI-11 règle d’affaires d’une étape')
 
-      for (const [chemin, procedure] of [['/clm/admin/parametres', 'Modifier un paramètre autorisé'], ['/clm/admin/integrations', 'Rotation du secret selon la procédure']]) {
+      // UI-22 : le bouton ouvre l'édition des paramètres de l'organisation ; UI-21 : il déplie la procédure de rotation.
+      for (const [chemin, bouton, ouvert] of [
+        ['/clm/admin/parametres', 'Modifier un paramètre autorisé', page.getByRole('form', { name: 'Paramètres du module de l’organisation' })],
+        ['/clm/admin/integrations', 'Rotation du secret selon la procédure', page.getByRole('note')],
+      ] as const) {
         await page.goto(chemin)
-        await page.getByRole('button', { name: procedure }).click()
-        await expect(page.getByRole('note')).toBeVisible()
-        await verifier(`${chemin} : procédure dépliée`)
+        await page.getByRole('button', { name: bouton }).click()
+        await expect(ouvert).toBeVisible()
+        await verifier(`${chemin} : ${bouton} — état ouvert`)
       }
 
       expect((await api.post(`/api/clm/trousses/${id}/lancer`, { data: {} })).ok()).toBeTruthy()
@@ -182,6 +189,61 @@ test.describe('Vues CLM — gabarit des maquettes, responsive, superposition, ci
       await page.getByRole('button', { name: new RegExp(`Traiter — ${trousse.resume.reference}`) }).click()
       await expect(page.getByRole('heading', { level: 1, name: /Validation — Validation juridique/ })).toBeVisible()
       await verifier('UI-13 validation documentaire')
+    })
+  }
+
+  /**
+   * Boîte de tâches, zone « Tâches assignées » : l'administrateur confie une tâche à la juriste (personne choisie dans
+   * l'annuaire, priorité tirée de la liste de l'organisation) ; la juriste la démarre puis la termine. Chaque état —
+   * formulaire ouvert, tâche confiée, réassignation ouverte, tâche terminée — est contrôlé au téléphone et au portable.
+   */
+  for (const largeur of [390, 1280]) {
+    test(`tâches assignées à ${largeur} px : confier, réassigner, démarrer, terminer`, async ({ page }) => {
+      await page.setViewportSize({ width: largeur, height: 900 })
+      const verifier = async (nom: string) => test.step(nom, async () => { await controler(page); await auditerAxe(page) })
+      const titre = `Relire l’annexe financière ${largeur}-${Date.now() % 100000}`
+      await connecterAdmin(page)
+      await page.goto('/clm/taches')
+      const bloc = page.getByRole('region', { name: 'Tâches assignées' })
+      await bloc.getByRole('button', { name: 'Nouvelle tâche' }).click()
+      await expect(bloc.getByLabel('Tâche', { exact: true })).toBeFocused()
+      await verifier('formulaire de création ouvert')
+
+      await bloc.getByRole('button', { name: 'Confier la tâche' }).click()
+      await expect(bloc.getByLabel('Tâche', { exact: true })).toBeFocused()
+      await bloc.getByLabel('Tâche', { exact: true }).fill(titre)
+      await bloc.getByLabel('Assignée à').selectOption(users.redacteur.email)
+      await bloc.getByLabel('Priorité').selectOption('HAUTE')
+      await bloc.getByLabel('Description').fill('Vérifier le montant de la garantie.')
+      await bloc.getByRole('button', { name: 'Confier la tâche' }).click()
+      await expect(bloc.getByText(`Tâche confiée à ${users.redacteur.email}.`)).toBeVisible()
+
+      await bloc.getByRole('button', { name: 'Que j’ai confiées' }).click()
+      const ligne = () => bloc.getByRole('row').filter({ hasText: titre })
+      await expect(ligne()).toContainText('Haute')
+      await verifier('tâche confiée, vue « que j’ai confiées »')
+
+      await bloc.getByRole('button', { name: `Réassigner — ${titre}` }).click()
+      await expect(bloc.getByLabel('Nouvelle personne assignée')).toBeFocused()
+      await verifier('réassignation ouverte')
+      await bloc.getByLabel('Nouvelle personne assignée').selectOption(users.juriste.email)
+      await bloc.getByLabel('Motif').fill('Expertise juridique requise')
+      await bloc.getByRole('button', { name: 'Confirmer la réassignation' }).click()
+      await expect(bloc.getByText(`Tâche réassignée à ${users.juriste.email}.`)).toBeVisible()
+
+      await page.context().clearCookies()
+      await new LoginPage(page).connecter(users.juriste)
+      await page.waitForURL((url) => !url.pathname.startsWith('/login'))
+      await page.goto('/clm/taches')
+      await bloc.getByRole('button', { name: `Démarrer — ${titre}` }).click()
+      await expect(bloc.getByText(`« ${titre} » démarrée.`)).toBeVisible()
+      await expect(ligne()).toContainText('En cours')
+      await verifier('tâche démarrée par la personne assignée')
+      await bloc.getByRole('button', { name: `Terminer — ${titre}` }).click()
+      await expect(bloc.getByText(`« ${titre} » terminée.`)).toBeVisible()
+      await bloc.getByRole('button', { name: 'Que j’ai terminées' }).click()
+      await expect(ligne()).toContainText('Terminée')
+      await verifier('tâche terminée')
     })
   }
 

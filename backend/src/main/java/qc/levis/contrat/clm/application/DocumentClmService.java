@@ -39,12 +39,12 @@ public class DocumentClmService {
     private final TrousseService trousses;
     private final LectureTrousse lecture;
     private final JournalClm journal;
-    private final ClmProprietes proprietes;
+    private final ParametresClmService parametres;
     private final ContexteClm ctx;
 
     public DocumentClmService(DocumentTrousseRepository documents, ModeleContratRepository modeles, AnalyseAntivirus antivirus,
                               RenduDocuments rendu, SourceAleatoire alea, TrousseService trousses, LectureTrousse lecture,
-                              JournalClm journal, ClmProprietes proprietes, ContexteClm ctx) {
+                              JournalClm journal, ParametresClmService parametres, ContexteClm ctx) {
         this.documents = documents;
         this.modeles = modeles;
         this.antivirus = antivirus;
@@ -53,7 +53,7 @@ public class DocumentClmService {
         this.trousses = trousses;
         this.lecture = lecture;
         this.journal = journal;
-        this.proprietes = proprietes;
+        this.parametres = parametres;
         this.ctx = ctx;
     }
 
@@ -83,7 +83,7 @@ public class DocumentClmService {
     }
 
     private ClmDto.DocumentVue enregistrer(Trousse t, String cle, int version, String nomFichier, byte[] contenu, String auteur, String motif) {
-        FormatDocument.Type type = FormatDocument.verifier(nomFichier, contenu, proprietes.documents().tailleMaxOctets());
+        FormatDocument.Type type = FormatDocument.verifier(nomFichier, contenu, parametres.reglages(t.getTenantId()).tailleMaxOctets());
         DocumentTrousse d = new DocumentTrousse(t.getTenantId(), t.getId(), cle, version, FormatDocument.nomSur(nomFichier), type,
                 contenu, auteur, motif, ctx.maintenant());
         d.setAnalyse(antivirus.estSain(contenu) ? DocumentTrousse.Analyse.PROPRE : DocumentTrousse.Analyse.INFECTE);

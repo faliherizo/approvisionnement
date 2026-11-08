@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 050-1-clm-tache-assignee
+      author: levis
+      comment: "CLM : tâches confiées à la main à une personne (boîte de tâches UI-12), rattachées ou non à une trousse."
+      changes:
+        - createTable:
+            tableName: clm_tache_assignee
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: trousse_id, type: BIGINT }
+              - column: { name: titre, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: description, type: VARCHAR(2000) }
+              - column: { name: assigne_a, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: priorite, type: VARCHAR(60) }
+              - column: { name: echeance, type: DATE }
+              - column: { name: statut, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: cree_par, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: modifie_le, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: terminee_le, type: TIMESTAMP }
+              - column: { name: version, type: BIGINT, constraints: { nullable: false } }
+        - addForeignKeyConstraint:
+            baseTableName: clm_tache_assignee
+            baseColumnNames: trousse_id
+            referencedTableName: clm_trousse
+            referencedColumnNames: id
+            constraintName: fk_clm_tache_trousse
+        - createIndex:
+            tableName: clm_tache_assignee
+            indexName: ix_clm_tache_assigne
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: assigne_a }
+              - column: { name: statut }
+        - createIndex:
+            tableName: clm_tache_assignee
+            indexName: ix_clm_tache_createur
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: cree_par }
+        - createIndex:
+            tableName: clm_tache_assignee
+            indexName: ix_clm_tache_trousse
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: trousse_id }

@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +15,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import qc.levis.contrat.clm.application.AnalyseService;
 import qc.levis.contrat.clm.application.ClmProprietes;
+import qc.levis.contrat.clm.application.ConnexionsSalesforce;
 import qc.levis.contrat.clm.application.MessagerieClm;
+import qc.levis.contrat.clm.application.ParametresClmService;
 import qc.levis.contrat.clm.application.SalesforceService;
 import qc.levis.contrat.clm.application.SuiviService;
 import qc.levis.contrat.clm.application.dto.ClmDto;
-import qc.levis.contrat.clm.domain.FormatDocument;
+import qc.levis.contrat.clm.domain.ConnexionSalesforce;
 import qc.levis.contrat.clm.infrastructure.SalesforceSimulation;
 
 /** Administration CLM : notifications (UI-17), intégrations (UI-21), paramètres (UI-22) et option IA (UI-24). */
@@ -41,17 +42,22 @@ public final class AdministrationClmController {
         private final SalesforceService salesforce;
         private final SuiviService suivi;
         private final ClmProprietes proprietes;
-        private final Optional<SalesforceSimulation> simulation;
+        private final ParametresClmService parametres;
+        private final ConnexionsSalesforce connexions;
+        private final SalesforceSimulation simulation;
         private final long sessionMs;
         private final boolean cookieSecurise;
 
         public Administration(MessagerieClm messagerie, SalesforceService salesforce, SuiviService suivi, ClmProprietes proprietes,
-                              Optional<SalesforceSimulation> simulation, @Value("${app.jwt.expiration-ms:3600000}") long sessionMs,
+                              ParametresClmService parametres, ConnexionsSalesforce connexions, SalesforceSimulation simulation,
+                              @Value("${app.jwt.expiration-ms:3600000}") long sessionMs,
                               @Value("${app.cookie.secure:false}") boolean cookieSecurise) {
             this.messagerie = messagerie;
             this.salesforce = salesforce;
             this.suivi = suivi;
             this.proprietes = proprietes;
+            this.parametres = parametres;
+            this.connexions = connexions;
             this.simulation = simulation;
             this.sessionMs = sessionMs;
             this.cookieSecurise = cookieSecurise;
@@ -80,6 +86,17 @@ public final class AdministrationClmController {
         @PostMapping("/integrations/salesforce/tester")
         public ClmDto.PortSalesforceEtat testerConnexion() {
             return salesforce.tester();
+        }
+
+        /** UI-21 : connexion propre à l'organisation ; le secret n'est jamais renvoyé. */
+        @PutMapping("/integrations/salesforce/configuration")
+        public ClmDto.ConfigIntegration configurer(@RequestBody ClmDto.ConnexionRequest req, Authentication auth) {
+            return connexions.modifier(req, auth.getName());
+        }
+
+        @DeleteMapping("/integrations/salesforce/configuration")
+        public ClmDto.ConfigIntegration retablirConnexion(Authentication auth) {
+            return connexions.retablir(auth.getName());
         }
 
         @PostMapping("/integrations/salesforce/evenements/{id}/relancer")
@@ -116,21 +133,51 @@ public final class AdministrationClmController {
             return TrousseController.fichier(("\uFEFF" + csv).getBytes(StandardCharsets.UTF_8), "text/csv;charset=UTF-8", "journal-clm.csv");
         }
 
+        /** La panne simulée n'a de sens que pour une organisation reliée à la simulation. */
         @PutMapping("/integrations/salesforce/simulation/panne")
         public ClmDto.PortSalesforceEtat panne(@RequestBody Map<String, Boolean> corps) {
-            SalesforceSimulation sim = simulation.orElseThrow(() -> new NoSuchElementException("Mode simulation inactif."));
-            sim.simulerPanne(Boolean.TRUE.equals(corps.get("panne")));
+            if (connexions.courante().mode() != ConnexionSalesforce.Mode.SIMULATION) {
+                throw new NoSuchElementException("Mode simulation inactif.");
+            }
+            simulation.simulerPanne(Boolean.TRUE.equals(corps.get("panne")));
             return salesforce.tester();
         }
 
-        /** Lecture seule : en production, la configuration se change par variables d'environnement et déploiement. */
+        /** UI-22 : réglages de la plateforme en lecture seule et paramètres du module de l'organisation. */
         @GetMapping("/parametres")
         public ClmDto.ParametresVue parametres() {
-            return new ClmDto.ParametresVue(proprietes.environnement(), proprietes.documents().tailleMaxOctets(),
-                    proprietes.invitation().validiteJours(), proprietes.salesforce().mode(), proprietes.planificateur().actif(),
-                    proprietes.planificateur().delaiMs(), !"PROD".equalsIgnoreCase(proprietes.environnement()),
-                    java.util.Arrays.stream(FormatDocument.Type.values()).map(FormatDocument.Type::mime).toList(),
-                    sessionMs / 60_000, cookieSecurise, Instant.ofEpochMilli(ManagementFactory.getRuntimeMXBean().getStartTime()));
+            return new ClmDto.ParametresVue(proprietes.environnement(), connexions.configuration().mode(),
+                    proprietes.planificateur().actif(), proprietes.planificateur().delaiMs(), ParametresClmService.formats(),
+                    sessionMs / 60_000, cookieSecurise,
+                    Instant.ofEpochMilli(ManagementFactory.getRuntimeMXBean().getStartTime()), parametres.lire());
+        }
+
+        @PutMapping("/parametres")
+        public ClmDto.ParametresModule modifierParametres(@RequestBody ClmDto.ParametresModuleRequest req, Authentication auth) {
+            return parametres.modifier(req, auth.getName());
+        }
+
+        @DeleteMapping("/parametres")
+        public ClmDto.ParametresModule retablirParametres(Authentication auth) {
+            return parametres.retablir(auth.getName());
+        }
+    }
+
+    /** Paramètres du module dont tout utilisateur a besoin (création de trousse, participants, dépôt). */
+    @RestController
+    @RequestMapping("/api/clm")
+    @PreAuthorize("@modules.actif('clm')")
+    public static class Consultation {
+
+        private final ParametresClmService parametres;
+
+        public Consultation(ParametresClmService parametres) {
+            this.parametres = parametres;
+        }
+
+        @GetMapping("/parametres")
+        public ClmDto.ParametresPublics parametres() {
+            return parametres.publics();
         }
     }
 

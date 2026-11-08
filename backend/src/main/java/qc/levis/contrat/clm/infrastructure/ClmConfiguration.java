@@ -1,8 +1,10 @@
 package qc.levis.contrat.clm.infrastructure;
 
 import java.time.Clock;
+import java.time.ZoneId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -20,10 +22,14 @@ import qc.levis.contrat.clm.application.port.AlertesExploitation;
 @EnableConfigurationProperties(ClmProprietes.class)
 public class ClmConfiguration {
 
+    /**
+     * Les instants restent universels ; le fuseau ({@code app.clm.fuseau}) ne sert qu'à dire quel jour on est, pour les
+     * échéances exprimées en date : une tâche due aujourd'hui n'est pas en retard à 20 h, heure du Québec.
+     */
     @Bean
     @ConditionalOnMissingBean
-    public Clock horloge() {
-        return Clock.systemUTC();
+    public Clock horloge(@Value("${app.clm.fuseau:America/Toronto}") String fuseau) {
+        return Clock.system(ZoneId.of(fuseau));
     }
 
     /** Désactivable ({@code app.clm.planificateur.actif=false}) pour les tests et les instances secondaires. */

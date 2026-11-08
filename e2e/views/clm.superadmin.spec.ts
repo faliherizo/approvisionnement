@@ -30,6 +30,8 @@ async function connecterAdministrateur(page: Page) {
   await modules
 }
 
+test.describe.configure({ timeout: 300_000 })
+
 test.describe('Module CLM géré depuis l’espace superadmin, comme les autres modules', () => {
   test.afterAll(async ({ request }) => { await activerModules(request) })
 

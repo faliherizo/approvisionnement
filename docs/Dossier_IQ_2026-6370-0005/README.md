@@ -9,6 +9,7 @@ Solution de signature électronique et de génération de contrats.
 4. Consulter `06-Roadmap/` puis chaque dossier de story sous `07-Stories/`.
 5. Les décisions d'architecture globales sont sous `08-ADR/`; les décisions locales sont rappelées dans chaque story.
 6. Les points à clarifier sont recensés dans `09-Questions/`.
+7. Le tenant de démonstration IQ (organisation, profils, rôles) et la validation de son isolation sont sous `11-Tenant-IQ/`.
 
 ## Base documentaire et prudence
 Les deux sources sont :

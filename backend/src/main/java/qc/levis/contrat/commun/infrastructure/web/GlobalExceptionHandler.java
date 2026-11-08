@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import qc.levis.contrat.commun.module.application.ModuleNonSouscrit;
 
 /**
  * Traduit les exceptions métier en réponses JSON {@code { "message": ... }} avec un
@@ -29,6 +30,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> conflit(IllegalStateException e) {
         log.warn("Conflit métier (409) : {}", e.getMessage());
         return corps(HttpStatus.CONFLICT, e.getMessage());
+    }
+
+    /** Ressource d'un module que l'organisation n'a pas souscrit : refus, quel que soit le rôle. */
+    @ExceptionHandler(ModuleNonSouscrit.class)
+    public ResponseEntity<Map<String, String>> nonSouscrit(ModuleNonSouscrit e) {
+        log.warn("Accès refusé (403) : {}", e.getMessage());
+        return corps(HttpStatus.FORBIDDEN, e.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

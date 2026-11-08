@@ -127,10 +127,10 @@ public class Invitation {
         this.codeExpireLe = expireLe;
     }
 
-    /** Une réponse fausse consomme une tentative ; à la limite, l'invitation est bloquée. */
-    public void echecVerification() {
+    /** Une réponse fausse consomme une tentative ; à la limite fixée par la politique d'identité, l'invitation est bloquée. */
+    public void echecVerification(int tentativesMax) {
         this.tentatives++;
-        if (tentatives >= Identite.TENTATIVES_MAX) {
+        if (tentatives >= tentativesMax) {
             this.statut = Statut.BLOQUEE;
         }
     }

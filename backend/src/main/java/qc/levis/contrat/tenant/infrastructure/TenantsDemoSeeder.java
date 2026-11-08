@@ -16,16 +16,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import qc.levis.contrat.auth.application.repository.UserRepository;
 import qc.levis.contrat.auth.domain.User;
-import qc.levis.contrat.commun.application.LogSafe;
 import qc.levis.contrat.commun.domain.Enums;
+import qc.levis.contrat.commun.infrastructure.TenantContext;
 import qc.levis.contrat.commun.module.application.ModuleService;
+import qc.levis.contrat.reference.application.ReferenceService;
+import qc.levis.contrat.reference.application.dto.ReferenceRequest;
 import qc.levis.contrat.tenant.application.repository.TenantRepository;
 import qc.levis.contrat.tenant.domain.Tenant;
 
 /**
- * Organisations de démonstration ({@code data/tenants-demo.json}) : tenant, modules souscrits et un compte par profil demandé
- * par le client. Idempotent : les modules ne s'appliquent qu'à la création du tenant (le superadmin a pu les changer depuis) et
- * un compte existant n'est jamais modifié. S'exécute après le catalogue des modules ; inactif en production.
+ * Organisations de démonstration ({@code data/tenants-demo.json}) : tenant, modules souscrits, valeurs propres de ses listes
+ * de référence et un compte par profil demandé par le client. Idempotent : modules et listes ne s'appliquent qu'à la création
+ * du tenant (le superadmin et l'administration ont pu les changer depuis) et un compte existant n'est jamais modifié.
+ * S'exécute après le catalogue des modules et la déclaration des listes ; inactif en production.
  */
 @Component
 @Order(7)
@@ -39,21 +42,28 @@ public class TenantsDemoSeeder implements CommandLineRunner {
     public record CompteDemo(String email, String nom, String direction, String profil, List<String> roles) {
     }
 
+    /** Valeur propre à l'organisation dans une liste de référence ; un code de la plateforme la personnalise. */
+    public record ValeurDemo(String code, String libelle, String detail) {
+    }
+
     /** Modules dans l'ordre d'application : activer une option tire ses prérequis, désactiver retire ses dépendants. */
     public record TenantDemo(String slug, String titre, String sousTitre, String motDePasse, Map<String, Boolean> modules,
-                             List<CompteDemo> comptes) {
+                             Map<String, List<ValeurDemo>> listes, List<CompteDemo> comptes) {
     }
 
     private final TenantRepository tenants;
     private final UserRepository users;
     private final ModuleService modules;
+    private final ReferenceService references;
     private final PasswordEncoder encoder;
     private final ObjectMapper json = new ObjectMapper();
 
-    public TenantsDemoSeeder(TenantRepository tenants, UserRepository users, ModuleService modules, PasswordEncoder encoder) {
+    public TenantsDemoSeeder(TenantRepository tenants, UserRepository users, ModuleService modules, ReferenceService references,
+                             PasswordEncoder encoder) {
         this.tenants = tenants;
         this.users = users;
         this.modules = modules;
+        this.references = references;
         this.encoder = encoder;
     }
 
@@ -64,8 +74,7 @@ public class TenantsDemoSeeder implements CommandLineRunner {
             for (CompteDemo c : demo.comptes()) {
                 if (!users.existsByEmail(c.email())) {
                     users.save(compte(c, demo.motDePasse(), t.getId()));
-                    log.info("Compte de démonstration {} : profil « {} » ({})", LogSafe.courriel(c.email()), c.profil(),
-                            String.join(", ", c.roles()));
+                    log.info("Compte de démonstration créé : profil « {} », rôles {}", c.profil(), c.roles());
                 }
             }
         }
@@ -87,7 +96,26 @@ public class TenantsDemoSeeder implements CommandLineRunner {
             }
         });
         log.info("Organisation de démonstration créée : {} (modules {})", demo.slug(), demo.modules());
+        if (demo.listes() != null) {
+            listes(t.getId(), demo.listes());
+        }
         return t;
+    }
+
+    /** Valeurs créées comme le ferait l'administration de l'organisation : chaque liste exige son module souscrit. */
+    private void listes(Long tenantId, Map<String, List<ValeurDemo>> listes) {
+        TenantContext.set(tenantId);
+        try {
+            for (Map.Entry<String, List<ValeurDemo>> liste : listes.entrySet()) {
+                int ordre = 0;
+                for (ValeurDemo v : liste.getValue()) {
+                    ordre += 10;
+                    references.creer(new ReferenceRequest(liste.getKey(), v.code(), v.libelle(), v.detail(), ordre, true), false);
+                }
+            }
+        } finally {
+            TenantContext.clear();
+        }
     }
 
     private User compte(CompteDemo c, String motDePasse, Long tenantId) {

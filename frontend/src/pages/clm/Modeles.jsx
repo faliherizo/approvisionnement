@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import api from '../../api'
 import { useI18n } from '../../i18n/I18nContext'
 import { useAuth } from '../../auth.jsx'
-import { GardeModule, Message, Statut, dateHeure, useErreur, useRessource } from './commun.jsx'
+import { GardeModule, Message, Statut, dateHeure, useErreur, useListe, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 
 const STATUTS = ['BROUILLON', 'EN_REVISION', 'PUBLIE', 'RETIRE']
@@ -21,7 +21,9 @@ function Contenu() {
   const { donnees, erreur: errChargement, recharger } = useRessource('/clm/modeles')
   const admin = hasRole('ADMIN') || hasRole('SUPERADMIN')
   const tous = donnees || []
-  const categories = [...new Set(tous.map((m) => m.categorie).filter(Boolean))].sort()
+  const types = useListe('CLM_TYPE_CONTRAT')
+  // Catégories de la liste de l'organisation, plus celles encore portées par un modèle après leur retrait de la liste.
+  const categories = [...new Set([...types.valeurs.map((v) => v.code), ...tous.map((m) => m.categorie).filter(Boolean)])]
   const groupes = [...new Set(tous.flatMap(groupesDe))].sort()
   const derniere = (m) => !tous.some((x) => x.cleModele === m.cleModele && x.numero > m.numero)
   const maj = (k) => (e) => setFiltre({ ...filtre, [k]: e.target.value })
@@ -53,7 +55,7 @@ function Contenu() {
             <label>{t('clm.col.categorie')}
               <select value={filtre.categorie} onChange={maj('categorie')}>
                 <option value="">{t('clm.mo.toutes')}</option>
-                {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+                {categories.map((c) => <option key={c} value={c}>{types.libelle(c)}</option>)}
               </select>
             </label>
             <label>{t('clm.col.statut')}
@@ -88,7 +90,7 @@ function Contenu() {
                   {lignes.map((m) => (
                     <tr key={m.id}>
                       <td data-label={t('clm.col.nom')}><Link to={`/clm/modeles/${m.id}`}>{m.nom}</Link>{m.groupes ? <><br /><span className="muted">{t('clm.mo.partage', { g: m.groupes })}</span></> : null}</td>
-                      <td data-label={t('clm.col.categorie')}>{m.categorie || '—'}</td>
+                      <td data-label={t('clm.col.categorie')}>{m.categorie ? types.libelle(m.categorie) : '—'}</td>
                       <td data-label={t('clm.col.proprietaire')}>{m.proprietaire}</td>
                       <td data-label={t('clm.mo.versionPubliee')}>v{m.numero}</td>
                       <td data-label={t('clm.col.statut')}><Statut valeur={m.statut} /></td>

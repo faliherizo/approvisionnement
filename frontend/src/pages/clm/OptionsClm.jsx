@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useI18n } from '../../i18n/I18nContext'
 import { useModules } from '../../hooks/useModules.js'
-import { GardeModule, Message, Statut, dateHeure, useRessource } from './commun.jsx'
+import { GardeModule, Message, Statut, dateHeure, useListe, useRessource } from './commun.jsx'
 import { BarreActions, Bloc, Blocs, EcranClm } from './gabarit.jsx'
 
 const CAPACITES = ['clauses', 'metadonnees', 'classification', 'anomalies']
@@ -14,6 +14,8 @@ function Contenu() {
   const { actif } = useModules()
   const ia = actif('clm_ia')
   const { donnees, erreur, recharger } = useRessource(ia ? '/clm/analyses' : null, ia)
+  const types = useListe('CLM_TYPE_CONTRAT', ia)
+  const nomCategorie = (c) => (c === 'INDETERMINEE' ? t('clm.ia.indeterminee') : types.libelle(c))
   const [note, setNote] = useState(false)
   const analyses = donnees || []
   const aReviser = analyses.filter((a) => a.statut === 'A_REVISER')
@@ -52,7 +54,7 @@ function Contenu() {
                     <tr key={a.id}>
                       <td data-label={t('clm.col.date')}>{dateHeure(a.creeLe)}</td>
                       <td data-label={t('clm.opt.trousse')}><Link to={versDocuments(a)}>#{a.trousseId}</Link> <span className="muted">· {t('clm.opt.document', { id: a.documentId })}</span></td>
-                      <td data-label={t('clm.col.categorie')}>{t('clm.ia.categorie', { c: a.resultat.categorie, p: pourcent(a.resultat.confianceCategorie) })}</td>
+                      <td data-label={t('clm.col.categorie')}>{t('clm.ia.categorie', { c: nomCategorie(a.resultat.categorie), p: pourcent(a.resultat.confianceCategorie) })}</td>
                       <td data-label={t('clm.opt.anomalies')}>{(a.resultat.anomalies || []).length === 0 ? '—' : (a.resultat.anomalies || []).map((m) => (
                         <span key={m.cle + m.valeur} className="clm-bloc-ligne"><span aria-hidden="true">⚠</span> {t(`clm.ia.anomalie.${m.cle}`)} ({pourcent(m.confiance)} %)</span>
                       ))}</td>

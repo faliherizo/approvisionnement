@@ -57,7 +57,7 @@ import Modeles from './pages/clm/Modeles.jsx'
 import ModeleEditeur from './pages/clm/ModeleEditeur.jsx'
 import TachesClm from './pages/clm/TachesClm.jsx'
 import SuiviClm from './pages/clm/SuiviClm.jsx'
-import { IntegrationsClm, NotificationsClm, ParametresClm } from './pages/clm/AdminClm.jsx'
+import { IntegrationsClm, ListesClm, NotificationsClm, ParametresClm } from './pages/clm/AdminClm.jsx'
 import JournalClm from './pages/clm/JournalClm.jsx'
 import OptionsClm from './pages/clm/OptionsClm.jsx'
 import UtilisateursClm, { GroupesClm, SsoClm } from './pages/clm/UtilisateursClm.jsx'
@@ -247,6 +247,7 @@ export default function App() {
             <Route path="/clm/admin/notifications" element={<NotificationsClm />} />
             <Route path="/clm/admin/integrations" element={<IntegrationsClm />} />
             <Route path="/clm/admin/parametres" element={<ParametresClm />} />
+            <Route path="/clm/admin/listes" element={<ListesClm />} />
             <Route path="/clm/admin/utilisateurs" element={<UtilisateursClm />} />
             <Route path="/clm/admin/groupes" element={<GroupesClm />} />
             <Route path="/clm/admin/journal" element={<JournalClm />} />

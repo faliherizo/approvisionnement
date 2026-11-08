@@ -166,8 +166,8 @@
                                     <element>BUNDLE</element>
                                     <limits>
                                         <limit><counter>LINE</counter><value>COVEREDRATIO</value><minimum>0.96</minimum></limit>
-                                        <!-- Cible 0,92 : 0,86 est le niveau atteint, plancher du cliquet. -->
-                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.86</minimum></limit>
+                                        <!-- Cible 0,92 : 0,87 est le niveau atteint, plancher du cliquet. -->
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.87</minimum></limit>
                                     </limits>
                                 </rule>
                                 <rule>

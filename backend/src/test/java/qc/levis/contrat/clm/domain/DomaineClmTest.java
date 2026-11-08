@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -98,16 +100,43 @@ class DomaineClmTest {
     // --- Identité (RST-17) ---
     @Test
     void niveau_identite_jamais_sous_le_minimum_du_risque() {
-        assertEquals(Identite.Niveau.COURRIEL, Identite.minimumRequis(Identite.Risque.FAIBLE, true));
-        assertEquals(Identite.Niveau.CODE_SMS, Identite.minimumRequis(null, true));
-        assertEquals(Identite.Niveau.FORTE, Identite.minimumRequis(Identite.Risque.ELEVE, true));
-        assertEquals(Identite.Niveau.CODE_SMS, Identite.minimumRequis(Identite.Risque.ELEVE, false));
-        assertEquals(Identite.Niveau.COURRIEL, Identite.minimumRequis(Identite.Risque.MOYEN, false));
-        assertEquals(Identite.Niveau.FORTE, Identite.niveauApplique(Identite.Risque.ELEVE, true, Identite.Niveau.COURRIEL));
-        assertEquals(Identite.Niveau.QUESTION, Identite.niveauApplique(Identite.Risque.FAIBLE, true, Identite.Niveau.QUESTION));
-        assertEquals(Identite.Niveau.COURRIEL, Identite.niveauApplique(Identite.Risque.FAIBLE, true, null));
+        Identite.Politique p = Identite.Politique.DEFAUT;
+        assertEquals(Identite.Niveau.COURRIEL, p.minimumRequis(Identite.Risque.FAIBLE, true));
+        assertEquals(Identite.Niveau.CODE_SMS, p.minimumRequis(null, true));
+        assertEquals(Identite.Niveau.FORTE, p.minimumRequis(Identite.Risque.ELEVE, true));
+        assertEquals(Identite.Niveau.CODE_SMS, p.minimumRequis(Identite.Risque.ELEVE, false));
+        assertEquals(Identite.Niveau.COURRIEL, p.minimumRequis(Identite.Risque.MOYEN, false));
+        assertEquals(Identite.Niveau.FORTE, p.niveauApplique(Identite.Risque.ELEVE, true, Identite.Niveau.COURRIEL));
+        assertEquals(Identite.Niveau.QUESTION, p.niveauApplique(Identite.Risque.FAIBLE, true, Identite.Niveau.QUESTION));
+        assertEquals(Identite.Niveau.COURRIEL, p.niveauApplique(Identite.Risque.FAIBLE, true, null));
+        assertTrue(p.erreurs().isEmpty(), p.erreurs().toString());
         assertEquals(List.of("COURRIEL", "SMS"), Identite.canauxDuCode(Identite.Niveau.FORTE));
         assertTrue(Identite.canauxDuCode(Identite.Niveau.QUESTION).isEmpty());
+    }
+
+    @Test
+    void la_politique_d_une_organisation_est_bornee_et_croissante_avec_le_risque() {
+        Map<Identite.Risque, Identite.Niveau> stricte = Map.of(Identite.Risque.FAIBLE, Identite.Niveau.CODE_SMS,
+                Identite.Risque.MOYEN, Identite.Niveau.FORTE, Identite.Risque.ELEVE, Identite.Niveau.FORTE);
+        Identite.Politique propre = new Identite.Politique(stricte, stricte, 3, 30);
+        assertTrue(propre.erreurs().isEmpty());
+        assertEquals(Identite.Niveau.CODE_SMS, propre.niveauApplique(Identite.Risque.FAIBLE, false, Identite.Niveau.COURRIEL));
+
+        Map<Identite.Risque, Identite.Niveau> decroissante = Map.of(Identite.Risque.FAIBLE, Identite.Niveau.FORTE,
+                Identite.Risque.MOYEN, Identite.Niveau.COURRIEL, Identite.Risque.ELEVE, Identite.Niveau.FORTE);
+        Map<Identite.Risque, Identite.Niveau> incomplete = new HashMap<>();
+        incomplete.put(Identite.Risque.FAIBLE, Identite.Niveau.COURRIEL);
+        incomplete.put(Identite.Risque.MOYEN, null);
+        incomplete.put(null, Identite.Niveau.COURRIEL);
+        Identite.Politique fautive = new Identite.Politique(decroissante, incomplete, 2, 61);
+        List<String> erreurs = fautive.erreurs();
+        assertEquals(4, erreurs.size(), erreurs.toString());
+        assertTrue(erreurs.get(0).contains("externes") && erreurs.get(0).contains("MOYEN"), erreurs.get(0));
+        assertTrue(erreurs.get(1).contains("internes") && erreurs.get(1).contains("MOYEN"), erreurs.get(1));
+        assertEquals(Identite.Niveau.FORTE, fautive.minimumRequis(Identite.Risque.MOYEN, false), "un risque sans niveau exige le plus fort");
+        List<String> vide = new Identite.Politique(null, null, 11, 4).erreurs();
+        assertEquals(4, vide.size(), vide.toString());
+        assertEquals(2, vide.stream().filter(e -> e.startsWith("Niveau")).count());
     }
 
     @Test
@@ -274,8 +303,9 @@ class DomaineClmTest {
         assertEquals(debut.plusSeconds(240), Relances.prochainEssai(3, debut));
         assertEquals(debut.plusSeconds(3600), Relances.prochainEssai(20, debut));
         assertEquals(debut.plusSeconds(60), Relances.prochainEssai(0, debut));
-        assertTrue(Relances.abandonner(Relances.REPRISES_MAX));
-        assertFalse(Relances.abandonner(1));
+        assertTrue(Relances.abandonner(Relances.REPRISES_PAR_DEFAUT, Relances.REPRISES_PAR_DEFAUT));
+        assertFalse(Relances.abandonner(1, Relances.REPRISES_PAR_DEFAUT));
+        assertTrue(Relances.abandonner(3, 3), "l'organisation fixe son propre nombre de reprises");
     }
 
     // --- Habilitations (ST-02) ---
@@ -305,21 +335,45 @@ class DomaineClmTest {
     }
 
     // --- Option IA (ST-15) ---
+    /** Catégories et clauses telles que les listes de référence de l'organisation les fournissent. */
+    static final Map<String, List<String>> CATEGORIES = new LinkedHashMap<>();
+    static final Map<String, List<String>> CLAUSES = new LinkedHashMap<>();
+
+    static {
+        CATEGORIES.put("SANS_MOT_CLE", List.of());
+        CATEGORIES.put("SUBVENTION", AnalyseContrat.motsCles("subvention, aide financière, programme, bénéficiaire"));
+        CATEGORIES.put("SERVICES", AnalyseContrat.motsCles("prestataire, services professionnels, honoraires, mandat"));
+        CLAUSES.put("RESILIATION", AnalyseContrat.motsCles("résiliation, résilier"));
+        CLAUSES.put("CONFIDENTIALITE", AnalyseContrat.motsCles("confidentialité, confidentiel"));
+        CLAUSES.put("RENSEIGNEMENTS_PERSONNELS", AnalyseContrat.motsCles("renseignements personnels, loi 25"));
+        CLAUSES.put("DROIT_APPLICABLE", AnalyseContrat.motsCles("lois du Québec, droit applicable"));
+        CLAUSES.put("SANS_MOT_CLE", List.of());
+    }
+
     @Test
     void analyse_extrait_classe_et_signale_les_anomalies() {
         String texte = "Convention d'aide financière du programme Essor. Le bénéficiaire reçoit 250 000,00 $ à compter du 2026-12-01 "
                 + "pour 36 mois. Clause de résiliation. Confidentialité des renseignements personnels. Lois du Québec.";
-        AnalyseContrat.Resultat r = AnalyseContrat.analyser(texte, new BigDecimal("250000.00"));
+        AnalyseContrat.Resultat r = AnalyseContrat.analyser(texte, new BigDecimal("250000.00"), CATEGORIES, CLAUSES);
         assertEquals("SUBVENTION", r.categorie());
         assertTrue(r.confianceCategorie() > 0);
         assertTrue(r.metadonnees().stream().anyMatch(m -> m.cle().equals("montant") && m.valeur().equals("250000.00")));
         assertTrue(r.metadonnees().stream().anyMatch(m -> m.cle().equals("dateDebut")));
         assertTrue(r.metadonnees().stream().anyMatch(m -> m.cle().equals("duree")));
         assertTrue(r.anomalies().isEmpty(), r.anomalies().toString());
-        AnalyseContrat.Resultat vide = AnalyseContrat.analyser(null, null);
+        AnalyseContrat.Resultat vide = AnalyseContrat.analyser(null, null, CATEGORIES, CLAUSES);
         assertEquals("INDETERMINEE", vide.categorie());
-        assertEquals(4, vide.anomalies().size());
-        assertTrue(AnalyseContrat.analyser("Prix 10 $", BigDecimal.ONE).anomalies().stream().anyMatch(a -> a.cle().equals("montantDivergent")));
+        assertEquals(4, vide.anomalies().size(), "une clause sans mot-clé n'est jamais signalée");
+        assertTrue(AnalyseContrat.analyser("Prix 10 $", BigDecimal.ONE, CATEGORIES, CLAUSES).anomalies().stream()
+                .anyMatch(a -> a.cle().equals("montantDivergent")));
         assertEquals(List.of(new BigDecimal("1500"), new BigDecimal("12.50")), AnalyseContrat.montants("1 500 $ et 12,50 $"));
+    }
+
+    @Test
+    void les_mots_cles_saisis_se_comparent_sans_casse_ni_accents() {
+        assertEquals(List.of("pret", "taux d'interet"), AnalyseContrat.motsCles(" Prêt ; taux d'intérêt\n, ,PRET"));
+        assertTrue(AnalyseContrat.motsCles(null).isEmpty());
+        assertEquals("PRET", AnalyseContrat.analyser("Contrat de PRÊT", null, Map.of("PRET", AnalyseContrat.motsCles("prêt")), Map.of())
+                .categorie());
     }
 }

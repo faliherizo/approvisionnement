@@ -16,7 +16,7 @@
 - ✅ [ST-11 — Notifications, rappels et échéances](ST-11/ST-11_notifications_rappels_et_ch_ances.md)
 - ✅🔌 [ST-12 — Synchroniser les statuts vers Salesforce](ST-12/ST-12_synchroniser_les_statuts_vers_salesforce.md)
 - ✅ [ST-13 — Vue de suivi centralisée](ST-13/ST-13_vue_de_suivi_centralis_e.md)
-- 🟡 [ST-14 — Administration, audit et exploitation](ST-14/ST-14_administration_audit_et_exploitation.md)
+- ✅ [ST-14 — Administration, audit et exploitation](ST-14/ST-14_administration_audit_et_exploitation.md)
 - ✅ [ST-15 — Capacités CLM avancées et IA (option)](ST-15/ST-15_capacit_s_clm_avanc_es_et_ia_option.md)
 
 Stories issues des écarts (sans fiche) : ✅ RST-16 · ✅ RST-17 · ⏳ RST-18 · ✅ RST-19.

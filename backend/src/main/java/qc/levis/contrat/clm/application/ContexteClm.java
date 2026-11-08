@@ -58,6 +58,11 @@ public class ContexteClm {
         return new Habilitations.Acteur(id, java.util.Set.copyOf(roles), perimetre.groupes(tenant(), id));
     }
 
+    /** Jour courant dans le fuseau de la plateforme, pour les échéances exprimées en date. */
+    public java.time.LocalDate aujourdhui() {
+        return java.time.LocalDate.now(horloge);
+    }
+
     /** Millisecondes seulement : l'horodatage relu de la base doit redonner exactement l'empreinte scellée. */
     public Instant maintenant() {
         return Instant.now(horloge).truncatedTo(ChronoUnit.MILLIS);

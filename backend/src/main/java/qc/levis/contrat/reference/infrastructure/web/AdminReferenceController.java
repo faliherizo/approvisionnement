@@ -4,14 +4,16 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.reference.application.ReferenceService;
+import qc.levis.contrat.reference.application.dto.CategorieVue;
 import qc.levis.contrat.reference.application.dto.ReferenceRequest;
-import qc.levis.contrat.reference.domain.ReferenceValue;
+import qc.levis.contrat.reference.application.dto.ValeurReference;
 
-/** Gestion des valeurs de référence SPÉCIFIQUES au tenant (admin). */
+/**
+ * Listes de référence de l'organisation (admin) : ajout, personnalisation ou retrait des valeurs de la plateforme.
+ * Chaque liste relève du module qui la déclare : le service refuse celle d'un module non souscrit.
+ */
 @RestController
-@ModuleRequis({"redaction", "formulaire"})
 @RequestMapping("/api/admin/reference")
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminReferenceController {
@@ -22,18 +24,23 @@ public class AdminReferenceController {
         this.service = service;
     }
 
+    @GetMapping("/categories")
+    public List<CategorieVue> categories() {
+        return service.categories();
+    }
+
     @GetMapping
-    public List<ReferenceValue> lister(@RequestParam String categorie) {
+    public List<ValeurReference> lister(@RequestParam String categorie) {
         return service.lister(categorie, false);
     }
 
     @PostMapping
-    public ReferenceValue creer(@Valid @RequestBody ReferenceRequest req) {
+    public ValeurReference creer(@Valid @RequestBody ReferenceRequest req) {
         return service.creer(req, false);
     }
 
     @PutMapping("/{id}")
-    public ReferenceValue modifier(@PathVariable Long id, @Valid @RequestBody ReferenceRequest req) {
+    public ValeurReference modifier(@PathVariable Long id, @Valid @RequestBody ReferenceRequest req) {
         return service.modifier(id, req, false);
     }
 

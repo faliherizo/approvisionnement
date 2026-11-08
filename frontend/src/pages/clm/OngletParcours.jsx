@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import api from '../../api'
 import { useI18n } from '../../i18n/I18nContext'
-import { EditeurCondition, Message, Statut, date, dateHeure, useErreur } from './commun.jsx'
+import { ChoixListe, EditeurCondition, Message, Statut, date, dateHeure, useErreur, useListe } from './commun.jsx'
 import { BarreActions, Bloc, Blocs } from './gabarit.jsx'
 
 const TYPES = ['VALIDATION', 'APPROBATION', 'SIGNATURE']
@@ -99,7 +99,19 @@ export function ResumeParcours({ etapes, champs }) {
 /** Responsables d'une étape (UI-11, zone 04) : utilisateur, groupe, rôle ou participant de la trousse. */
 function EditeurAffectations({ affectations, onChange, participants, legende }) {
   const { t } = useI18n()
+  const roles = useListe('CLM_ROLE_CONTRAT')
   const maj = (k, cle, v) => onChange(affectations.map((a, j) => (j === k ? { ...a, [cle]: v } : a)))
+  /** Un participant se désigne parmi ceux de la trousse ; dans un modèle, par un rôle de la liste de l'organisation. */
+  const champValeur = (a, k) => {
+    if (a.type !== 'PARTICIPANT') return <input value={a.valeur} onChange={(x) => maj(k, 'valeur', x.target.value)} />
+    if (!participants?.length) return <ChoixListe liste={roles} value={a.valeur} onChange={(v) => maj(k, 'valeur', v)} />
+    return (
+      <select value={a.valeur} onChange={(x) => maj(k, 'valeur', x.target.value)}>
+        <option value="">—</option>
+        {participants.map((p) => <option key={p.id} value={String(p.id)}>{p.nom} · {roles.libelle(p.roleContrat)}</option>)}
+      </select>
+    )
+  }
   return (
     <fieldset className="form-fieldset">
       <legend>{legende}</legend>
@@ -112,12 +124,7 @@ function EditeurAffectations({ affectations, onChange, participants, legende }) 
             </select>
           </label>
           <label>{t('clm.pc.responsable', { n: k + 1 })}
-            {a.type === 'PARTICIPANT' && participants?.length ? (
-              <select value={a.valeur} onChange={(x) => maj(k, 'valeur', x.target.value)}>
-                <option value="">—</option>
-                {participants.map((p) => <option key={p.id} value={String(p.id)}>{p.nom} · {p.roleContrat}</option>)}
-              </select>
-            ) : <input value={a.valeur} onChange={(x) => maj(k, 'valeur', x.target.value)} />}
+            {champValeur(a, k)}
           </label>
           <button type="button" className="secondary" onClick={() => onChange(affectations.filter((_, j) => j !== k))}>
             {t('clm.pc.retirerResponsable', { n: k + 1 })}</button>

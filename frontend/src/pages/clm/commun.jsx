@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import api from '../../api'
 import { useAuth } from '../../auth.jsx'
 import { useI18n } from '../../i18n/I18nContext'
@@ -17,11 +17,11 @@ const ICONES = {
   BROUILLON: '✎', EN_TRAITEMENT: '⟳', TERMINEE: '✔', REJETEE: '✖', ANNULEE: '⊘', EN_ATTENTE: '…', ACTIVE: '▶',
   APPROUVEE: '✔', ENVOYEE: '✉', VERIFIEE: '☑', SIGNEE: '✍', REFUSEE: '✖', BLOQUEE: '⛔', EXPIREE: '⌛', ENVOYE: '➜',
   SIGNE: '🔒', REMPLACE: '↺', RETIRE: '⊘', EN_REVISION: '◐', PUBLIE: '✔', ECHEC: '⚠', A_REVISER: '◐', VALIDEE: '✔',
-  PROPRE: '✔', INFECTE: '⚠', NON_REQUISE: '⤳',
+  PROPRE: '✔', INFECTE: '⚠', NON_REQUISE: '⤳', A_FAIRE: '○', EN_COURS: '◑',
 }
 const TONS = { TERMINEE: 'ok', APPROUVEE: 'ok', SIGNEE: 'ok', SIGNE: 'ok', PUBLIE: 'ok', VALIDEE: 'ok', PROPRE: 'ok', ENVOYE: 'ok',
   REJETEE: 'ko', REFUSEE: 'ko', BLOQUEE: 'ko', ECHEC: 'ko', INFECTE: 'ko', EXPIREE: 'ko',
-  EN_TRAITEMENT: 'info', ACTIVE: 'info', ENVOYEE: 'info', VERIFIEE: 'info', EN_REVISION: 'attente', A_REVISER: 'attente', EN_ATTENTE: 'attente' }
+  EN_TRAITEMENT: 'info', ACTIVE: 'info', EN_COURS: 'info', A_FAIRE: 'attente', ENVOYEE: 'info', VERIFIEE: 'info', EN_REVISION: 'attente', A_REVISER: 'attente', EN_ATTENTE: 'attente' }
 
 /** Statut lisible : icône + texte, jamais la couleur seule (WCAG 1.4.1). */
 export function Statut({ valeur }) {
@@ -138,6 +138,36 @@ export function GardeModule({ code = 'clm', children }) {
   if (chargement) return <div className="panel" role="status">{t('clm.chargement')}</div>
   if (!actif(code)) return <div className="panel" role="status">{t(code === 'clm' ? 'clm.moduleInactif' : 'clm.ia.nonSouscrite')}</div>
   return children
+}
+
+/**
+ * Liste de référence de l'organisation (types de contrat, unités, rôles, champs Salesforce…), gérée dans son
+ * administration : valeurs actives et libellé d'un code enregistré.
+ */
+export function useListe(code, actif = true) {
+  const { donnees } = useRessource(actif ? `/reference/${code}` : null, actif)
+  return useMemo(() => {
+    const valeurs = donnees || []
+    return { valeurs, charge: donnees !== null, libelle: (v) => valeurs.find((x) => x.code === v)?.libelle || v || '' }
+  }, [donnees])
+}
+
+/**
+ * Choix dans une liste de l'organisation. Sans liste, la saisie reste libre : l'organisation n'a rien imposé. Une valeur
+ * enregistrée puis retirée de la liste reste affichée, pour ne pas être perdue à la prochaine modification.
+ */
+export function ChoixListe({ liste, value, onChange, vide, ...attributs }) {
+  const { t } = useI18n()
+  if (!liste.charge) return <select {...attributs} value="" disabled><option value="">{t('clm.chargement')}</option></select>
+  if (liste.valeurs.length === 0) return <input {...attributs} value={value || ''} onChange={(e) => onChange(e.target.value)} />
+  const connue = !value || liste.valeurs.some((v) => v.code === value)
+  return (
+    <select {...attributs} value={value || ''} onChange={(e) => onChange(e.target.value)}>
+      <option value="">{vide || t('clm.liste.aucune')}</option>
+      {!connue && <option value={value}>{value}</option>}
+      {liste.valeurs.map((v) => <option key={v.code} value={v.code}>{v.libelle}</option>)}
+    </select>
+  )
 }
 
 /** Visionneuse (UI-05, UI-13) : PDF affiché par le navigateur, Word en texte extrait côté serveur. */

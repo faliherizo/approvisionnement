@@ -20,4 +20,11 @@ public class ModuleAccess {
     public boolean actif(String code) {
         return service.estActif(TenantContext.get(), code);
     }
+
+    /** Refus explicite lorsqu'une ressource relève d'un module que l'organisation n'a pas souscrit. */
+    public void exiger(String code) {
+        if (!actif(code)) {
+            throw new ModuleNonSouscrit(code);
+        }
+    }
 }

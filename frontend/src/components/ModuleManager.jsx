@@ -5,7 +5,8 @@ import { useI18n } from '../i18n/I18nContext'
 /**
  * Activation/désactivation des modules par tenant (superadmin). Les dépendances sont résolues côté
  * serveur : activer un module active ses prérequis, le désactiver désactive ses dépendants. Le message
- * de retour énumère les modules réellement affectés.
+ * de retour énumère les modules réellement affectés, y compris le produit concurrent retiré (approvisionnement
+ * et IQ s'excluent : voir ADR-010).
  */
 export default function ModuleManager() {
   const { t } = useI18n()
@@ -43,6 +44,7 @@ export default function ModuleManager() {
     <section className="panel">
       <h2>🧩 {t('module.titre')}</h2>
       <p className="muted">{t('module.description')}</p>
+      <p className="muted">{t('module.exclusivite')}</p>
       {msg && <div className="erreur" style={{ background: '#d9f5e3', color: '#1a7a44' }}>{msg}</div>}
       {err && <div className="erreur">{err}</div>}
 

@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../../api'
+import { useAuth } from '../../auth.jsx'
+import ReferenceManager from '../../components/ReferenceManager.jsx'
 import { useI18n } from '../../i18n/I18nContext'
 import { GardeModule, Message, Statut, dateHeure, taille, useErreur, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
@@ -38,7 +40,7 @@ function Notifications() {
         <>
           <button type="button" className="secondary" disabled={!edite} onClick={() => { basculer(edite); setEdite({ ...edite, actif: !edite.actif }) }}>{t('clm.ad.activerDesactiver')}</button>
           <button type="button" className="secondary" disabled={!edite} onClick={() => document.getElementById('clm-msg-sujet')?.focus()}>{t('clm.ad.modifierModele')}</button>
-          <Link className="clm-bouton secondaire" to="/clm/trousses/nouvelle">{t('clm.ad.configurerFrequence')}</Link>
+          <Link className="clm-bouton secondaire" to="/clm/admin/parametres">{t('clm.ad.configurerFrequence')}</Link>
           <button type="button" disabled={!edite || !test} onClick={tester}>{t('clm.ad.envoyerTest')}</button>
         </>
       )}>
@@ -104,6 +106,46 @@ function Notifications() {
   )
 }
 
+/** Connexion propre à l'organisation (UI-21, zone 02) ; un secret ou un identifiant client laissé vide conserve celui en place. */
+function FormulaireConnexion({ config, secretRef, onEnregistrer, onAnnuler, onRetablir }) {
+  const { t } = useI18n()
+  const [f, setF] = useState(() => ({ mode: config.mode, instanceUrl: config.instanceUrl || '', tokenUrl: config.tokenUrl || '',
+    clientId: '', clientSecret: '', objet: config.objet, versionApi: config.versionApi, champStatut: config.champStatut,
+    champReference: config.champReference, champCorrelation: config.champCorrelation, reprisesMax: config.reprisesMax }))
+  const maj = (k) => (e) => setF({ ...f, [k]: e.target.type === 'number' ? Number(e.target.value) : e.target.value })
+  const domaines = config.hotesAutorises.join(', ')
+  return (
+    <form id="clm-connexion-sf" className="form clm-sousform" onSubmit={(e) => { e.preventDefault(); onEnregistrer(f) }} aria-label={t('clm.ad.configurerConnexion')}>
+      <p className="muted">{t('clm.ad.connexionAide')}</p>
+      <div className="form-grid">
+        <label>{t('clm.ad.mode')}
+          <select value={f.mode} onChange={maj('mode')}>
+            {['SIMULATION', 'REST'].map((m) => <option key={m} value={m}>{t(`clm.ad.modeSf.${m}`)}</option>)}
+          </select>
+        </label>
+        <label>{t('clm.ad.reprisesMax')}<input type="number" min={1} max={20} value={f.reprisesMax} onChange={maj('reprisesMax')} required /></label>
+        <label className="col-2">{t('clm.ad.instance')} <span className="muted">{t('clm.ad.domainesAutorises', { d: domaines })}</span>
+          <input type="url" value={f.instanceUrl} onChange={maj('instanceUrl')} placeholder="https://" /></label>
+        <label className="col-2">{t('clm.ad.serveurJetons')}<input type="url" value={f.tokenUrl} onChange={maj('tokenUrl')} placeholder="https://" /></label>
+        <label>{t('clm.ad.clientId')} <span className="muted">{config.clientIdMasque ? t('clm.ad.conserverSiVide', { v: config.clientIdMasque }) : ''}</span>
+          <input value={f.clientId} onChange={maj('clientId')} autoComplete="off" /></label>
+        <label>{t('clm.ad.secret')} <span className="muted">{config.secretConfigure ? t('clm.ad.secretConserve') : ''}</span>
+          <input ref={secretRef} type="password" value={f.clientSecret} onChange={maj('clientSecret')} autoComplete="new-password" /></label>
+        <label>{t('clm.ad.objet')}<input value={f.objet} onChange={maj('objet')} required /></label>
+        <label>{t('clm.ad.versionApi')}<input value={f.versionApi} onChange={maj('versionApi')} required /></label>
+        <label>{t('clm.ad.champStatut')}<input value={f.champStatut} onChange={maj('champStatut')} required /></label>
+        <label>{t('clm.ad.champReference')}<input value={f.champReference} onChange={maj('champReference')} required /></label>
+        <label>{t('clm.ad.champCorrelation')}<input value={f.champCorrelation} onChange={maj('champCorrelation')} required /></label>
+      </div>
+      <div className="cmp-row">
+        <button type="button" className="secondary" onClick={onAnnuler}>{t('clm.annuler')}</button>
+        {config.personnalisee && <button type="button" className="secondary" onClick={onRetablir}>{t('clm.ad.retablirConnexion')}</button>}
+        <button type="submit">{t('clm.enregistrer')}</button>
+      </div>
+    </form>
+  )
+}
+
 /** UI-21 — Intégrations API (Salesforce) : connexion, identifiants masqués, journal avec corrélation, erreurs et reprises, version. */
 function Integrations() {
   const { t } = useI18n()
@@ -114,14 +156,24 @@ function Integrations() {
   const [info, setInfo] = useState('')
   const [detail, setDetail] = useState(null)
   const [procedure, setProcedure] = useState(false)
+  const [edition, setEdition] = useState(false)
+  const secretRef = useRef(null)
+  useEffect(() => { if (edition && procedure) secretRef.current?.focus() }, [edition, procedure])
   async function faire(fn, ok) {
     setErreur(null)
-    try { const r = await fn(); setInfo(typeof ok === 'function' ? ok(r.data) : ok); recharger() } catch (x) { setErreur(versErreur(x)) }
+    try { const r = await fn(); setInfo(typeof ok === 'function' ? ok(r.data) : ok); recharger(); return true } catch (x) { setErreur(versErreur(x)); return false }
   }
   if (!e) return <p role="status">{t('clm.chargement')}</p>
   const echecs = e.journal.filter((m) => m.statut === 'ECHEC' || (m.statut === 'EN_ATTENTE' && m.tentatives > 0))
   const derniereSync = e.journal.map((m) => m.envoyeLe).filter(Boolean).sort().pop()
   const relancer = (m) => faire(() => api.post(`/clm/admin/integrations/salesforce/evenements/${m.id}/relancer`), t('clm.ad.relance'))
+  const enregistrer = async (f) => {
+    if (await faire(() => api.put('/clm/admin/integrations/salesforce/configuration', f), t('clm.ad.connexionEnregistree'))) setEdition(false)
+  }
+  const retablir = async () => {
+    if (!window.confirm(t('clm.ad.confirmerRetablirConnexion'))) return
+    if (await faire(() => api.delete('/clm/admin/integrations/salesforce/configuration'), t('clm.ad.connexionRetablie'))) setEdition(false)
+  }
 
   return (
     <EcranClm maquette="UI-21" titre={t('clm.ad.integrations')} objectif={t('clm.ad.integrationsObjectif')}
@@ -129,7 +181,8 @@ function Integrations() {
         <>
           <button type="button" className="secondary" onClick={() => faire(() => api.post('/clm/admin/integrations/salesforce/tester'), t('clm.ad.testFait'))}>{t('clm.ad.tester')}</button>
           <button type="button" className="secondary" onClick={() => faire(() => api.post('/clm/admin/integrations/salesforce/relayer'), (d) => t('clm.ad.relaye', { n: d.envoyes }))}>{t('clm.ad.relayer')}</button>
-          <button type="button" className="secondary" aria-expanded={procedure} aria-controls="clm-procedure-secret" onClick={() => setProcedure(!procedure)}>{t('clm.ad.rotation')}</button>
+          <button type="button" className="secondary" aria-expanded={edition} aria-controls="clm-connexion-sf" onClick={() => { setProcedure(false); setEdition(!edition) }}>{t('clm.ad.configurerConnexion')}</button>
+          <button type="button" className="secondary" aria-expanded={procedure} aria-controls="clm-procedure-secret" onClick={() => { setProcedure(!procedure); setEdition(true) }}>{t('clm.ad.rotation')}</button>
         </>
       )}>
       <Message erreur={erreur} info={info} />
@@ -145,12 +198,17 @@ function Integrations() {
           </dl>
         </Bloc>
         <Bloc zone="02" titre={t('clm.ad.blocIdentifiants')}>
+          <p>{e.config.personnalisee ? t('clm.ad.connexionPropre', { par: e.config.modifiePar, le: dateHeure(e.config.modifieLe) }) : t('clm.ad.connexionPlateforme')}</p>
           <dl className="clm-dl">
-            <div><dt>{t('clm.ad.mode')}</dt><dd>{e.config.mode}</dd></div>
+            <div><dt>{t('clm.ad.mode')}</dt><dd>{t(`clm.ad.modeSf.${e.config.mode}`)}</dd></div>
             <div><dt>{t('clm.ad.instance')}</dt><dd className="clm-casse">{e.config.instanceUrl || '—'}</dd></div>
+            <div><dt>{t('clm.ad.serveurJetons')}</dt><dd className="clm-casse">{e.config.tokenUrl || '—'}</dd></div>
             <div><dt>{t('clm.ad.clientId')}</dt><dd><code>{e.config.clientIdMasque || '—'}</code></dd></div>
             <div><dt>{t('clm.ad.secret')}</dt><dd>{e.config.secretConfigure ? t('clm.ad.secretConfigure') : t('clm.ad.secretAbsent')}</dd></div>
+            <div><dt>{t('clm.ad.champsRetour')}</dt><dd><code>{e.config.champStatut}</code>, <code>{e.config.champReference}</code>, <code>{e.config.champCorrelation}</code></dd></div>
+            <div><dt>{t('clm.ad.reprisesMax')}</dt><dd>{e.config.reprisesMax}</dd></div>
           </dl>
+          {edition && <FormulaireConnexion config={e.config} secretRef={secretRef} onEnregistrer={enregistrer} onAnnuler={() => setEdition(false)} onRetablir={retablir} />}
         </Bloc>
         <Bloc zone="03" titre={t('clm.ad.journal')} large>
           <div className="table-scroll">
@@ -216,14 +274,106 @@ const duree = (depuis) => {
   return { h: Math.floor(minutes / 60), m: minutes % 60 }
 }
 
-/** UI-22 — Paramètres et environnements : lecture seule, un paramètre autorisé se modifie par déploiement, selon la procédure. */
+const MO = 1_048_576
+const NIVEAUX_IDENTITE = ['COURRIEL', 'CODE_SMS', 'QUESTION', 'FORTE']
+const RISQUES_IDENTITE = ['faible', 'moyen', 'eleve']
+const enMo = (octets) => Math.round((octets / MO) * 10) / 10
+
+/** Paramètres du module propres à l'organisation (UI-22) ; chaque borne est vérifiée par le serveur. */
+function FormulaireParametres({ module, onEnregistrer, onAnnuler, onRetablir }) {
+  const { t } = useI18n()
+  const premier = useRef(null)
+  const initial = enMo(module.tailleMaxOctets)
+  const [f, setF] = useState(() => ({ tailleMo: initial, invitationValiditeJours: module.invitationValiditeJours, portailUrl: module.portailUrl,
+    prefixeReference: module.prefixeReference, rappelFrequenceJours: module.rappelFrequenceJours, rappelsMax: module.rappelsMax,
+    identiteExterne: { ...module.identiteExterne }, identiteInterne: { ...module.identiteInterne }, tentativesIdentite: module.tentativesIdentite,
+    codeValiditeMinutes: module.codeValiditeMinutes, champMontant: module.champMontant }))
+  useEffect(() => { premier.current?.focus() }, [])
+  const maj = (k) => (e) => setF({ ...f, [k]: e.target.type === 'number' ? Number(e.target.value) : e.target.value })
+  const niveau = (cote, r) => (e) => setF({ ...f, [cote]: { ...f[cote], [r]: e.target.value } })
+  const envoyer = (e) => {
+    e.preventDefault()
+    const { tailleMo, ...reste } = f
+    // Une taille inchangée n'est pas renvoyée : l'arrondi en Mo ne modifie pas la valeur en place.
+    onEnregistrer({ ...reste, tailleMaxOctets: Number(tailleMo) === initial ? null : Math.round(Number(tailleMo) * MO) })
+  }
+  return (
+    <form id="clm-parametres-module" className="form clm-sousform" onSubmit={envoyer} aria-label={t('clm.ad.pm.titre')}>
+      <p className="muted">{t('clm.ad.pm.aide')}</p>
+      <fieldset className="form-fieldset">
+        <legend>{t('clm.ad.pm.documents')}</legend>
+        <div className="form-grid">
+          <label>{t('clm.ad.pm.tailleMo')} <span className="muted">{t('clm.ad.pm.plafond', { n: enMo(module.plafondOctets) })}</span>
+            <input ref={premier} type="number" min={0.1} max={enMo(module.plafondOctets)} step={0.1} value={f.tailleMo} onChange={maj('tailleMo')} required /></label>
+          <label>{t('clm.ad.pm.validiteJours')}<input type="number" min={1} max={90} value={f.invitationValiditeJours} onChange={maj('invitationValiditeJours')} required /></label>
+          <label className="col-2">{t('clm.ad.pm.portail')} <span className="muted">{t('clm.ad.pm.portailAide')}</span>
+            <input type="url" value={f.portailUrl} onChange={maj('portailUrl')} required /></label>
+        </div>
+      </fieldset>
+      <fieldset className="form-fieldset">
+        <legend>{t('clm.ad.pm.trousses')}</legend>
+        <div className="form-grid">
+          <label>{t('clm.ad.pm.prefixe')} <span className="muted">{t('clm.ad.pm.prefixeAide')}</span>
+            <input value={f.prefixeReference} onChange={(e) => setF({ ...f, prefixeReference: e.target.value.toUpperCase() })} maxLength={10} required /></label>
+          <label>{t('clm.champ.frequence')}<input type="number" min={1} max={30} value={f.rappelFrequenceJours} onChange={maj('rappelFrequenceJours')} required /></label>
+          <label>{t('clm.champ.rappelsMax')}<input type="number" min={0} max={10} value={f.rappelsMax} onChange={maj('rappelsMax')} required /></label>
+        </div>
+      </fieldset>
+      <fieldset className="form-fieldset">
+        <legend>{t('clm.ad.pm.identite')}</legend>
+        <p className="muted">{t('clm.ad.pm.identiteAide')}</p>
+        <div className="table-scroll">
+          <table className="table clm-table">
+            <caption className="sr-only">{t('clm.ad.pm.identite')}</caption>
+            <thead><tr><th scope="col">{t('clm.champ.risque')}</th><th scope="col">{t('clm.ad.pm.externes')}</th><th scope="col">{t('clm.ad.pm.internes')}</th></tr></thead>
+            <tbody>
+              {RISQUES_IDENTITE.map((r) => (
+                <tr key={r}>
+                  <th scope="row">{t(`clm.risque.${r.toUpperCase()}`)}</th>
+                  {['identiteExterne', 'identiteInterne'].map((cote) => (
+                    <td key={cote} data-label={t(cote === 'identiteExterne' ? 'clm.ad.pm.externes' : 'clm.ad.pm.internes')}>
+                      <select aria-label={`${t(cote === 'identiteExterne' ? 'clm.ad.pm.externes' : 'clm.ad.pm.internes')} — ${t(`clm.risque.${r.toUpperCase()}`)}`}
+                        value={f[cote][r]} onChange={niveau(cote, r)} style={{ width: '100%' }}>
+                        {NIVEAUX_IDENTITE.map((n) => <option key={n} value={n}>{t(`clm.niveau.${n}`)}</option>)}
+                      </select>
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="form-grid">
+          <label>{t('clm.ad.pm.tentatives')}<input type="number" min={3} max={10} value={f.tentativesIdentite} onChange={maj('tentativesIdentite')} required /></label>
+          <label>{t('clm.ad.pm.codeMinutes')}<input type="number" min={5} max={60} value={f.codeValiditeMinutes} onChange={maj('codeValiditeMinutes')} required /></label>
+        </div>
+      </fieldset>
+      <fieldset className="form-fieldset">
+        <legend>{t('clm.ad.pm.ia')}</legend>
+        <label>{t('clm.ad.pm.champMontant')} <span className="muted">{t('clm.ad.pm.champMontantAide')}</span>
+          <input value={f.champMontant} onChange={maj('champMontant')} required /></label>
+      </fieldset>
+      <div className="cmp-row">
+        <button type="button" className="secondary" onClick={onAnnuler}>{t('clm.annuler')}</button>
+        {module.personnalise && <button type="button" className="secondary" onClick={onRetablir}>{t('clm.ad.pm.retablir')}</button>}
+        <button type="submit">{t('clm.enregistrer')}</button>
+      </div>
+    </form>
+  )
+}
+
+/** UI-22 — Paramètres et environnements : réglages de la plateforme en lecture seule, paramètres du module modifiables par l'organisation. */
 function Parametres() {
   const { t } = useI18n()
+  const versErreur = useErreur()
   const { donnees: p, erreur, recharger } = useRessource('/clm/admin/parametres')
   const [info, setInfo] = useState('')
-  const [procedure, setProcedure] = useState(false)
+  const [erreurEdition, setErreurEdition] = useState(null)
+  const [edition, setEdition] = useState(false)
   if (!p) return <Message erreur={erreur} info={t('clm.chargement')} onReessayer={recharger} />
+  const m = p.module
   const enLigne = duree(p.demarreLe)
+  const niveaux = (cote) => RISQUES_IDENTITE.map((r) => `${t(`clm.risque.${r.toUpperCase()}`)} : ${t(`clm.niveau.${m[cote][r]}`)}`).join(' · ')
   function consulter() {
     const lien = document.createElement('a')
     lien.href = URL.createObjectURL(new Blob([JSON.stringify(p, null, 2)], { type: 'application/json' }))
@@ -233,27 +383,41 @@ function Parametres() {
     lien.remove()
     setTimeout(() => URL.revokeObjectURL(lien.href), 1000)
   }
+  async function faire(appel, message) {
+    setErreurEdition(null)
+    try { await appel(); setInfo(message); setEdition(false); recharger() } catch (x) { setErreurEdition(versErreur(x)) }
+  }
+  const enregistrer = (corps) => faire(() => api.put('/clm/admin/parametres', corps), t('clm.ad.pm.enregistres'))
+  const retablir = () => { if (window.confirm(t('clm.ad.pm.confirmerRetablir'))) faire(() => api.delete('/clm/admin/parametres'), t('clm.ad.pm.retablis')) }
 
   return (
     <EcranClm maquette="UI-22" titre={t('clm.ad.parametres')} objectif={t('clm.ad.parametresObjectif')}
       actions={(
         <>
           <button type="button" className="secondary" onClick={consulter}>{t('clm.ad.consulterConfiguration')}</button>
-          <button type="button" className="secondary" aria-expanded={procedure} aria-controls="clm-procedure-parametre" onClick={() => setProcedure(!procedure)}>{t('clm.ad.modifierParametre')}</button>
+          <button type="button" className="secondary" aria-expanded={edition} aria-controls="clm-parametres-module" onClick={() => setEdition(!edition)}>{t('clm.ad.modifierParametre')}</button>
           <button type="button" className="secondary" onClick={() => { recharger(); setInfo(t('clm.ad.statutActualise')) }}>{t('clm.ad.consulterStatut')}</button>
         </>
       )}>
-      <Message info={info} />
-      {procedure && (
-        <div id="clm-procedure-parametre" className="clm-info-statique" role="note">
-          <p>{t('clm.ad.parametresModifiables')}</p>
-          <p>{p.modificationPermise ? t('clm.ad.procedureParametre') : t('clm.ad.procedureParametreProd')}</p>
-        </div>
-      )}
+      <Message erreur={erreurEdition} info={info} />
       <Blocs>
         <Bloc zone="01" titre={t('clm.ad.blocEnvironnement')} large>
           <p className={`clm-environnement clm-environnement--${p.environnement.toLowerCase()}`}><strong>{t('clm.ad.environnement')} : {p.environnement}</strong></p>
-          <p>{p.modificationPermise ? t('clm.ad.modificationParDeploiement') : t('clm.ad.prodInterdite')}</p>
+          <p>{t('clm.ad.environnementAide')}</p>
+        </Bloc>
+        <Bloc titre={t('clm.ad.pm.titre')} large>
+          <p>{m.personnalise ? t('clm.ad.pm.propres', { par: m.modifiePar, le: dateHeure(m.modifieLe) }) : t('clm.ad.pm.plateforme')}</p>
+          <dl className="clm-dl">
+            <div><dt>{t('clm.ad.pm.portail')}</dt><dd className="clm-casse">{m.portailUrl}</dd></div>
+            <div><dt>{t('clm.ad.pm.prefixe')}</dt><dd><code>{m.prefixeReference}</code></dd></div>
+            <div><dt>{t('clm.ad.pm.rappels')}</dt><dd>{t('clm.ad.pm.rappelsValeur', { j: m.rappelFrequenceJours, n: m.rappelsMax })}</dd></div>
+            <div><dt>{t('clm.ad.pm.externes')}</dt><dd>{niveaux('identiteExterne')}</dd></div>
+            <div><dt>{t('clm.ad.pm.internes')}</dt><dd>{niveaux('identiteInterne')}</dd></div>
+            <div><dt>{t('clm.ad.pm.tentatives')}</dt><dd>{m.tentativesIdentite}</dd></div>
+            <div><dt>{t('clm.ad.pm.codeMinutes')}</dt><dd>{t('clm.ad.minutes', { n: m.codeValiditeMinutes })}</dd></div>
+            <div><dt>{t('clm.ad.pm.champMontant')}</dt><dd><code>{m.champMontant}</code></dd></div>
+          </dl>
+          {edition && <FormulaireParametres module={m} onEnregistrer={enregistrer} onAnnuler={() => setEdition(false)} onRetablir={retablir} />}
         </Bloc>
         <Bloc zone="02" titre={t('clm.ad.blocSession')}>
           <dl className="clm-dl">
@@ -264,9 +428,9 @@ function Parametres() {
         </Bloc>
         <Bloc zone="03" titre={t('clm.ad.blocConservation')}>
           <dl className="clm-dl">
-            <div><dt>{t('clm.ad.tailleMax')}</dt><dd>{taille(p.tailleMaxOctets)}</dd></div>
+            <div><dt>{t('clm.ad.tailleMax')}</dt><dd>{taille(m.tailleMaxOctets)}</dd></div>
             <div><dt>{t('clm.ad.formats')}</dt><dd>{p.formats.map((f) => (f.includes('pdf') ? t('clm.doc.formatPdf') : f.includes('wordprocessingml') ? t('clm.doc.formatWord') : f)).join(', ')}</dd></div>
-            <div><dt>{t('clm.ad.validiteInvitation')}</dt><dd>{t('clm.ad.jours', { n: p.invitationValiditeJours })}</dd></div>
+            <div><dt>{t('clm.ad.validiteInvitation')}</dt><dd>{t('clm.ad.jours', { n: m.invitationValiditeJours })}</dd></div>
           </dl>
           <p>{t('clm.ad.exportAutorise')}</p>
           <p className="muted">{t('clm.ad.conservationAide')}</p>
@@ -275,7 +439,7 @@ function Parametres() {
           <p>{t('clm.ad.sauvegardesFournisseur')}</p>
           <dl className="clm-dl">
             <div><dt>{t('clm.ad.planificateur')}</dt><dd>{p.planificateurActif ? t('clm.ad.actifToutes', { s: Math.round(p.planificateurDelaiMs / 1000) }) : t('clm.ad.inactif')}</dd></div>
-            <div><dt>{t('clm.ad.salesforceMode')}</dt><dd>{p.salesforceMode}</dd></div>
+            <div><dt>{t('clm.ad.salesforceMode')}</dt><dd>{t(`clm.ad.modeSf.${p.salesforceMode}`)}</dd></div>
           </dl>
         </Bloc>
         <Bloc zone="05" titre={t('clm.ad.blocDisponibilite')}>
@@ -285,6 +449,22 @@ function Parametres() {
             <div><dt>{t('clm.ad.enLigneDepuis')}</dt><dd>{t('clm.ad.dureeHm', enLigne)}</dd></div>
           </dl>
           <p className="muted">{t('clm.ad.incidentsAide')} <Link to="/clm/admin/journal">{t('clm.nav.journal')}</Link></p>
+        </Bloc>
+      </Blocs>
+    </EcranClm>
+  )
+}
+
+/** Listes de référence du module : l'organisation adapte celles de la plateforme ; le superadmin en fixe les valeurs par défaut. */
+function Listes() {
+  const { t } = useI18n()
+  const { hasRole } = useAuth()
+  const plateforme = hasRole('SUPERADMIN') && !hasRole('ADMIN')
+  return (
+    <EcranClm titre={t('clm.ad.listes')} objectif={t('clm.ad.listesObjectif')}>
+      <Blocs>
+        <Bloc titre={t('clm.ad.blocListes')} large>
+          <ReferenceManager portee={plateforme ? 'superadmin' : 'admin'} modules={['clm', 'clm_ia']} />
         </Bloc>
       </Blocs>
     </EcranClm>
@@ -301,4 +481,8 @@ export function IntegrationsClm() {
 
 export function ParametresClm() {
   return <GardeModule><Parametres /></GardeModule>
+}
+
+export function ListesClm() {
+  return <GardeModule><Listes /></GardeModule>
 }

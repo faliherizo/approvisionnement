@@ -80,7 +80,9 @@ class HttpMicrosoft365ClientTest {
                 client.deposer(config, Enums.CiblePublication.TEAMS, contenu());
         assertTrue(r.succes());
         assertEquals("/v1.0/drives/CHANDRIVE/items/CHANFOLDER:/Contrats/2027/contrat-12.pdf:/content",
-                serveur.dernierChemin);
+                serveur.dernierDepot);
+        // Le lien renvoyé ouvre le canal dans Teams ; nom du canal indisponible (404) → « canal ».
+        assertEquals("https://teams.microsoft.com/l/channel/chan-1/canal?groupId=team-1&tenantId=tenant-1", r.url());
     }
 
     @Test

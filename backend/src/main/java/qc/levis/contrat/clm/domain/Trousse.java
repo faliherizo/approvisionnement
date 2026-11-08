@@ -73,10 +73,10 @@ public class Trousse {
     private String valeursJson = "{}";
 
     @Column(name = "rappel_frequence_jours", nullable = false)
-    private int rappelFrequenceJours = 2;
+    private int rappelFrequenceJours = Relances.FREQUENCE_PAR_DEFAUT_JOURS;
 
     @Column(name = "rappels_max", nullable = false)
-    private int rappelsMax = 3;
+    private int rappelsMax = Relances.RAPPELS_PAR_DEFAUT;
 
     @Column(length = 1000)
     private String copies;

@@ -40,4 +40,9 @@ public class JournalClm {
     public void refus(String acteur, String ressource, String motif) {
         audit.log(acteur == null || acteur.isBlank() ? "anonyme" : acteur, "CLM_ACCES_REFUSE", "API", null, ressource + " · " + motif);
     }
+
+    /** Changement de configuration du module par l'administration de l'organisation (UI-21, UI-22). */
+    public void configuration(String acteur, String objet, String detail) {
+        audit.log(acteur, "CLM_CONFIGURATION", objet, null, detail);
+    }
 }

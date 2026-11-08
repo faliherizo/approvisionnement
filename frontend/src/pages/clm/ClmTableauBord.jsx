@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../auth.jsx'
 import { useI18n } from '../../i18n/I18nContext'
-import { GardeModule, Message, Statut, dateHeure, usePeutInitier, useRessource } from './commun.jsx'
+import { ChoixListe, GardeModule, Message, Statut, dateHeure, useListe, usePeutInitier, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 
 const INDICATEURS = ['brouillons', 'enValidation', 'enSignature', 'enRetard', 'terminees']
@@ -19,6 +19,7 @@ function Contenu() {
   const qs = new URLSearchParams(Object.entries(filtre).filter(([, v]) => v)).toString()
   const { donnees, erreur, chargement, recharger } = useRessource(`/clm/tableau-de-bord${qs ? `?${qs}` : ''}`)
   const maj = (k) => (e) => setForm({ ...form, [k]: e.target.value })
+  const unites = useListe('CLM_UNITE')
   const premiere = donnees?.mesActions?.[0]
   const admin = hasRole('ADMIN') || hasRole('SUPERADMIN')
   const peutInitier = usePeutInitier()
@@ -94,7 +95,8 @@ function Contenu() {
             <form className="form-grid form-grid--4" onSubmit={(e) => { e.preventDefault(); setFiltre(form) }}>
               <label>{t('clm.su.du')}<input type="date" value={form.du} onChange={maj('du')} /></label>
               <label>{t('clm.su.au')}<input type="date" value={form.au} onChange={maj('au')} /></label>
-              <label>{t('clm.champ.unite')}<input value={form.unite} onChange={maj('unite')} /></label>
+              <label>{t('clm.champ.unite')}<ChoixListe liste={unites} value={form.unite} vide={t('clm.liste.toutes')}
+                onChange={(v) => setForm({ ...form, unite: v })} /></label>
               <label>{t('clm.col.statut')}
                 <select value={form.statut} onChange={maj('statut')}>
                   <option value="">{t('clm.tr.tousStatuts')}</option>

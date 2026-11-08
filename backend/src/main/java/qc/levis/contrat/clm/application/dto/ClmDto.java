@@ -67,6 +67,14 @@ public final class ClmDto {
     public record DelegationRequest(String vers, String motif) {
     }
 
+    public record TacheAssigneeRequest(Long trousseId, String titre, String description, String assigneA, String priorite,
+                                       LocalDate echeance) {
+    }
+
+    /** {@code action} : DEMARRER, TERMINER, ROUVRIR ou ANNULER. */
+    public record ActionTacheRequest(String action) {
+    }
+
     /** Critères de la liste des trousses (UI-02) ; tous facultatifs. */
     public record CritereListe(String q, String statut, String initiateur, String type, LocalDate du, LocalDate au) {
     }
@@ -121,6 +129,15 @@ public final class ClmDto {
                            String maDecision, boolean reassignee) {
     }
 
+    public record TacheAssigneeVue(Long id, Long trousseId, String reference, String titre, String description,
+                                   String assigneA, String priorite, LocalDate echeance, boolean enRetard, String statut,
+                                   String creePar, Instant creeLe, Instant termineeLe, boolean peutDemarrer,
+                                   boolean peutAnnuler) {
+    }
+
+    public record MembreVue(String courriel, String nom) {
+    }
+
     public record Correspondance(String champ, String libelle, String source, Object valeur, String provenance, Instant recupereLe) {
     }
 
@@ -158,9 +175,20 @@ public final class ClmDto {
                                  ConfigIntegration config) {
     }
 
-    /** Identifiants techniques toujours masqués : l'interface n'affiche jamais un secret. */
-    public record ConfigIntegration(String mode, String instanceUrl, String objet, String versionApi, String clientIdMasque,
-                                    boolean secretConfigure) {
+    /**
+     * Connexion Salesforce de l'organisation, ou celle de la plateforme tant qu'elle n'en a pas ({@code personnalisee}
+     * faux). Identifiants techniques toujours masqués : l'interface n'affiche jamais un secret.
+     */
+    public record ConfigIntegration(String mode, String instanceUrl, String tokenUrl, String objet, String versionApi,
+                                    String clientIdMasque, boolean secretConfigure, String champStatut, String champReference,
+                                    String champCorrelation, int reprisesMax, boolean personnalisee, String modifiePar,
+                                    Instant modifieLe, List<String> hotesAutorises) {
+    }
+
+    /** Connexion propre à l'organisation ; un secret vide conserve celui en place, un secret saisi le remplace (rotation). */
+    public record ConnexionRequest(String mode, String instanceUrl, String tokenUrl, String clientId, String clientSecret,
+                                   String objet, String versionApi, String champStatut, String champReference,
+                                   String champCorrelation, Integer reprisesMax) {
     }
 
     public record PortSalesforceEtat(boolean disponible, String mode, String detail, Instant testeLe) {
@@ -200,10 +228,34 @@ public final class ClmDto {
     public record MessageVue(Long id, String evenement, String canal, String sujet, String corps, boolean actif) {
     }
 
-    public record ParametresVue(String environnement, long tailleMaxOctets, int invitationValiditeJours,
-                                String salesforceMode, boolean planificateurActif, long planificateurDelaiMs,
-                                boolean modificationPermise, List<String> formats, long sessionMinutes,
-                                boolean cookieSecurise, Instant demarreLe) {
+    /** UI-22 : réglages de la plateforme (lecture seule) et paramètres du module que l'organisation modifie. */
+    public record ParametresVue(String environnement, String salesforceMode, boolean planificateurActif, long planificateurDelaiMs,
+                                List<String> formats, long sessionMinutes, boolean cookieSecurise, Instant demarreLe,
+                                ParametresModule module) {
+    }
+
+    /** Niveau d'identité minimal par risque. */
+    public record NiveauxIdentite(String faible, String moyen, String eleve) {
+    }
+
+    /** Paramètres effectifs du module ; {@code personnalise} faux : l'organisation suit ceux de la plateforme. */
+    public record ParametresModule(long tailleMaxOctets, long plafondOctets, int invitationValiditeJours, String portailUrl,
+                                   String prefixeReference, int rappelFrequenceJours, int rappelsMax,
+                                   NiveauxIdentite identiteExterne, NiveauxIdentite identiteInterne, int tentativesIdentite,
+                                   int codeValiditeMinutes, String champMontant, boolean personnalise, String modifiePar,
+                                   Instant modifieLe) {
+    }
+
+    /** Modification partielle : un paramètre absent garde sa valeur effective. */
+    public record ParametresModuleRequest(Long tailleMaxOctets, Integer invitationValiditeJours, String portailUrl,
+                                          String prefixeReference, Integer rappelFrequenceJours, Integer rappelsMax,
+                                          NiveauxIdentite identiteExterne, NiveauxIdentite identiteInterne,
+                                          Integer tentativesIdentite, Integer codeValiditeMinutes, String champMontant) {
+    }
+
+    /** Paramètres dont tout utilisateur du module a besoin : dépôt, rappels par défaut, identité exigée par risque. */
+    public record ParametresPublics(long tailleMaxOctets, List<String> formats, int rappelFrequenceJours, int rappelsMax,
+                                    NiveauxIdentite identiteExterne, NiveauxIdentite identiteInterne) {
     }
 
     /** Ligne du journal d'audit CLM (UI-23) ; {@code systeme} distingue les événements automatiques des actions métier. */

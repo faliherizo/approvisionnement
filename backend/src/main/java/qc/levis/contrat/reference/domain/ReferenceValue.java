@@ -31,6 +31,10 @@ public class ReferenceValue {
     @Column(nullable = false)
     private boolean actif = true;
 
+    /** Complément propre à la liste (ex. mots-clés de classification), selon sa déclaration. */
+    @Column(length = 2000)
+    private String detail;
+
     public ReferenceValue() {}
 
     public ReferenceValue(String categorie, String code, String libelle, Long tenantId, int ordre) {
@@ -54,4 +58,6 @@ public class ReferenceValue {
     public void setOrdre(int ordre) { this.ordre = ordre; }
     public boolean isActif() { return actif; }
     public void setActif(boolean actif) { this.actif = actif; }
+    public String getDetail() { return detail; }
+    public void setDetail(String detail) { this.detail = detail; }
 }

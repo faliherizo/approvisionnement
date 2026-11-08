@@ -20,6 +20,7 @@ const ADMINISTRATION = [
   ['/clm/admin/notifications', 'clm.nav.notifications'],
   ['/clm/admin/integrations', 'clm.nav.integrations'],
   ['/clm/admin/parametres', 'clm.nav.parametres'],
+  ['/clm/admin/listes', 'clm.nav.listes'],
   ['/clm/admin/utilisateurs', 'clm.nav.utilisateurs'],
   ['/clm/admin/journal', 'clm.nav.journal', 'AUDITEUR'],
   ['/clm/options', 'clm.nav.options'],

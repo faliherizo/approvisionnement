@@ -277,8 +277,8 @@ class ClmIntegrationTest {
         assertEquals(0, appel(post("/api/clm/admin/integrations/salesforce/trousses/" + id + "/relancer", admin, "{}"), status().isOk())
                 .get("relances").asInt(), "un retour encore en reprise automatique n'est pas en file d'erreur");
         MessageSortant sortie = sorties.findById(enReprise).orElseThrow();
-        for (int i = 0; i < Relances.REPRISES_MAX; i++) {
-            sortie.echouer("Salesforce indisponible (panne simulée).", java.time.Instant.now());
+        for (int i = 0; i < Relances.REPRISES_PAR_DEFAUT; i++) {
+            sortie.echouer("Salesforce indisponible (panne simulée).", java.time.Instant.now(), Relances.REPRISES_PAR_DEFAUT);
         }
         sorties.save(sortie);
         assertEquals(1, appel(post("/api/clm/admin/integrations/salesforce/trousses/" + id + "/relancer", admin, "{}"), status().isOk())
@@ -297,7 +297,7 @@ class ClmIntegrationTest {
     void administration_reservee_et_messages_valides() throws Exception {
         appel(get("/api/clm/admin/parametres", redacteur), status().isForbidden());
         JsonNode p = appel(get("/api/clm/admin/parametres", admin), status().isOk());
-        assertEquals(200000, p.get("tailleMaxOctets").asLong());
+        assertEquals(200000, p.at("/module/tailleMaxOctets").asLong());
         appel(put("/api/clm/admin/messages", admin, "{\"evenement\":\"RAPPEL\",\"canal\":\"COURRIEL\",\"sujet\":\"R {{inconnue}}\",\"corps\":\"x\"}"),
                 status().isBadRequest());
         appel(put("/api/clm/admin/messages", admin, "{\"evenement\":\"RAPPEL\",\"canal\":\"COURRIEL\",\"sujet\":\"Rappel {{reference}}\",\"corps\":\"Merci\"}"),
@@ -373,7 +373,7 @@ class ClmIntegrationTest {
                 """), status().isOk());
         assertEquals("FORTE", p.get("niveauIdentite").asText(), "risque élevé : forte imposée");
         appel(post("/api/clm/trousses/" + id + "/participants", redacteur, """
-                {"nom":"Q","courriel":"q@x.ca","roleContrat":"S2","externe":false,"niveauIdentite":"QUESTION","question":"Ville ?","reponse":"Lévis"}
+                {"nom":"Q","courriel":"q@x.ca","roleContrat":"signataire_2","externe":false,"niveauIdentite":"QUESTION","question":"Ville ?","reponse":"Lévis"}
                 """), status().isOk());
         String etapes = "[{\"cle\":\"s\",\"phase\":1,\"type\":\"SIGNATURE\",\"affectations\":[{\"type\":\"PARTICIPANT\",\"valeur\":\"" + p.get("id").asLong() + "\"}]}]";
         assertTrue(appel(post("/api/clm/trousses/" + id + "/parcours/tester", redacteur, etapes), status().isOk()).get("valide").asBoolean());
@@ -519,7 +519,7 @@ class ClmIntegrationTest {
 
         assertEquals(0, appel(post("/api/clm/admin/integrations/salesforce/trousses/" + id + "/relancer", admin, "{}"), status().isOk())
                 .get("relances").asInt());
-        assertEquals("simulation", appel(get("/api/clm/admin/integrations/salesforce", admin), status().isOk()).at("/config/mode").asText());
+        assertEquals("SIMULATION", appel(get("/api/clm/admin/integrations/salesforce", admin), status().isOk()).at("/config/mode").asText());
         assertEquals(60, appel(get("/api/clm/admin/parametres", admin), status().isOk()).get("sessionMinutes").asLong());
         assertTrue(appel(get("/api/clm/analyses", redacteur), status().isOk()).isArray());
         for (JsonNode m : appel(get("/api/clm/modeles", redacteur), status().isOk())) {

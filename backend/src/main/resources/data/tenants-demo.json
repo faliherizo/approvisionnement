@@ -5,6 +5,18 @@
     "sousTitre": "Contrats et signature électronique — AO 2026-6370-0005",
     "motDePasse": "Passw0rd!",
     "modules": { "clm": true, "clm_ia": true, "redaction": false },
+    "listes": {
+      "CLM_UNITE": [
+        { "code": "FINANCEMENT_ENTREPRISES", "libelle": "Financement des entreprises" },
+        { "code": "VP_FINANCEMENT", "libelle": "Vice-présidence Financement" },
+        { "code": "AFFAIRES_JURIDIQUES", "libelle": "Affaires juridiques" },
+        { "code": "GESTION_CONTRACTUELLE", "libelle": "Gestion contractuelle" },
+        { "code": "DIRECTION_GENERALE", "libelle": "Direction générale" }
+      ],
+      "CLM_TYPE_CONTRAT": [
+        { "code": "GARANTIE", "libelle": "Garantie de prêt", "detail": "garantie, garant, cautionnement, prêteur" }
+      ]
+    },
     "comptes": [
       { "email": "initiateur@iq.example", "nom": "Camille Tremblay", "direction": "Financement des entreprises", "profil": "Initiateur", "roles": ["REDACTEUR"] },
       { "email": "validateur@iq.example", "nom": "Louis Gagnon", "direction": "Affaires juridiques", "profil": "Validateur", "roles": ["JURIDIQUE"] },

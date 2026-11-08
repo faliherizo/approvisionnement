@@ -10,16 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import qc.levis.contrat.clm.application.port.PortSalesforce;
 
 /**
- * Salesforce Grantmaking simulé (défaut) : demandes de financement de démonstration et journal des statuts reçus.
- * Permet de dérouler ST-06/ST-12 de bout en bout sans sandbox, et de simuler une panne pour éprouver les reprises.
+ * Salesforce Grantmaking simulé : demandes de financement de démonstration et journal des statuts reçus, pour les
+ * organisations en mode SIMULATION (interdit en production). Permet de dérouler ST-06/ST-12 de bout en bout sans
+ * sandbox, et de simuler une panne pour éprouver les reprises.
  */
 @Component
-@ConditionalOnProperty(name = "app.clm.salesforce.mode", havingValue = "simulation", matchIfMissing = true)
 public class SalesforceSimulation implements PortSalesforce {
 
     private final Map<String, Map<String, Object>> dossiers = new ConcurrentHashMap<>();

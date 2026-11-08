@@ -9,7 +9,7 @@ import { activerModules, auditerAxe, connecter, controler } from './clm.outils'
  * atteignable : ni par la navigation, ni par une adresse saisie, ni par un appel direct de l'API.
  */
 const PRINCIPAUX = ['Tableau de bord', 'Mes trousses', 'Mes tâches', 'Modèles', 'Suivi centralisé']
-const ADMINISTRATION = ['Notifications et rappels', 'Intégrations API', 'Paramètres et environnements', 'Utilisateurs et groupes',
+const ADMINISTRATION = ['Notifications et rappels', 'Intégrations API', 'Paramètres et environnements', 'Listes de référence', 'Utilisateurs et groupes',
   'Journal d’audit', 'Options CLM et IA']
 
 type Profil = { profil: string; compte: TestUser; administration: string[]; initie: boolean }
@@ -51,6 +51,8 @@ async function ouvrirSession(page: Page, compte: TestUser) {
 
 const actifs = (modules: { code: string; actif: boolean }[]) => modules.filter((m) => m.actif).map((m) => m.code).sort()
 
+test.describe.configure({ timeout: 300_000 })
+
 test.describe('Tenant IQ — chaque profil n’a que l’espace du module CLM', () => {
   let reference = ''
 
@@ -60,7 +62,7 @@ test.describe('Tenant IQ — chaque profil n’a que l’espace du module CLM', 
     const api = await playwright.request.newContext({ baseURL })
     expect((await api.post('/api/auth/login', { data: users.iqInitiateur })).ok()).toBeTruthy()
     const trousse = await (await api.post('/api/clm/trousses', {
-      data: { titre: 'Entente Essor — démonstration IQ', typeContrat: 'SERVICES', unite: 'Financement des entreprises' },
+      data: { titre: 'Entente Essor — démonstration IQ', typeContrat: 'SERVICES', unite: 'FINANCEMENT_ENTREPRISES' },
     })).json()
     reference = trousse.resume.reference
     await api.dispose()

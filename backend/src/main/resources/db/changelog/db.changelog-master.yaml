@@ -95,3 +95,7 @@ databaseChangeLog:
       file: db/changelog/changes/047-projet-tache.yaml
   - include:
       file: db/changelog/changes/048-clm.yaml
+  - include:
+      file: db/changelog/changes/049-references-parametres-clm.yaml
+  - include:
+      file: db/changelog/changes/050-clm-tache-assignee.yaml

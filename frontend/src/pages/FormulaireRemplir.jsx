@@ -23,6 +23,9 @@ export default function FormulaireRemplir() {
   const [err, setErr] = useState(null)
   const [envoye, setEnvoye] = useState(false)
   const timers = useRef({})
+  // Un seul brouillon par formulaire ouvert : l'effet ci-dessous peut s'exécuter plusieurs fois (mode strict, rechargement
+  // des modules, changement de langue) ; chaque exécution réutilise la création en cours au lieu d'en lancer une autre.
+  const creations = useRef({})
 
   useEffect(() => {
     if (chargement || !actif('saisie')) return
@@ -37,8 +40,13 @@ export default function FormulaireRemplir() {
           saisie = ex.data
           try { if (saisie.donneesJson) setValeurs(JSON.parse(saisie.donneesJson)) } catch { /* données illisibles : repart vide */ }
         } else {
-          const c = await api.post(`/formulaires/${id}/saisies`)
-          saisie = c.data
+          creations.current[id] ??= api.post(`/formulaires/${id}/saisies`)
+          try {
+            saisie = (await creations.current[id]).data
+          } catch (e) {
+            delete creations.current[id]
+            throw e
+          }
         }
         if (annule) return
         setStructure(parsed); setSaisieId(saisie.id)

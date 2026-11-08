@@ -34,6 +34,7 @@ import qc.levis.contrat.clm.domain.Habilitations;
 import qc.levis.contrat.clm.domain.Invitation;
 import qc.levis.contrat.clm.domain.Modele;
 import qc.levis.contrat.clm.domain.ModeleMessage.Evenement;
+import qc.levis.contrat.clm.domain.ParametresClm;
 import qc.levis.contrat.clm.domain.Parcours;
 import qc.levis.contrat.clm.domain.Participant;
 import qc.levis.contrat.clm.domain.Relances;
@@ -63,7 +64,7 @@ public class ParcoursService {
     private final SalesforceService salesforce;
     private final JournalClm journal;
     private final SourceAleatoire alea;
-    private final ClmProprietes proprietes;
+    private final ParametresClmService parametres;
     private final LectureTrousse lecture;
     private final ContexteClm ctx;
 
@@ -71,7 +72,7 @@ public class ParcoursService {
                            EvenementTrousseRepository evenements,
                            ParticipantRepository participants, InvitationRepository invitations, DocumentTrousseRepository documents,
                            ModeleContratRepository modeles, RenduDocuments rendu, MessagerieClm messagerie,
-                           SalesforceService salesforce, JournalClm journal, SourceAleatoire alea, ClmProprietes proprietes,
+                           SalesforceService salesforce, JournalClm journal, SourceAleatoire alea, ParametresClmService parametres,
                            LectureTrousse lecture, ContexteClm ctx) {
         this.trousses = trousses;
         this.etapes = etapes;
@@ -86,7 +87,7 @@ public class ParcoursService {
         this.salesforce = salesforce;
         this.journal = journal;
         this.alea = alea;
-        this.proprietes = proprietes;
+        this.parametres = parametres;
         this.lecture = lecture;
         this.ctx = ctx;
     }
@@ -167,13 +168,14 @@ public class ParcoursService {
 
     /** Crée l'invitation et envoie le lien ; le jeton en clair ne vit que dans le message. */
     String inviter(Trousse t, EtapeTrousse e, Participant p) {
+        ParametresClm.Reglages reglages = parametres.reglages(t.getTenantId());
         String jeton = alea.jeton();
-        Instant expire = ctx.maintenant().plus(Duration.ofDays(proprietes.invitation().validiteJours()));
+        Instant expire = ctx.maintenant().plus(Duration.ofDays(reglages.invitationValiditeJours()));
         invitations.save(new Invitation(t.getTenantId(), t.getId(), e.getId(), p.getId(), ChaineScellee.sha256(jeton.getBytes(
                 java.nio.charset.StandardCharsets.UTF_8)), expire, p.getNiveauIdentite()));
         Map<String, Object> vars = variables(t, e);
         vars.put("destinataire", p.getNom());
-        vars.put("lien", proprietes.portailUrl() + "/" + jeton);
+        vars.put("lien", lienPortail(reglages, jeton));
         vars.put("echeance", expire.toString().substring(0, 10));
         messagerie.envoyer(t.getTenantId(), Evenement.INVITATION, "COURRIEL", p.getCourriel(), vars, List.of());
         journal.consigner(t, "INVITATION_ENVOYEE", "systeme", p.getNom() + " · " + p.getNiveauIdentite());
@@ -593,7 +595,12 @@ public class ParcoursService {
                 invitations.save(i);
             }
         }
-        return proprietes.portailUrl() + "/" + inviter(t, e, moi);
+        return lienPortail(parametres.reglages(t.getTenantId()), inviter(t, e, moi));
+    }
+
+    private static String lienPortail(ParametresClm.Reglages reglages, String jeton) {
+        String portail = reglages.portailUrl();
+        return (portail.endsWith("/") ? portail : portail + "/") + jeton;
     }
 
     EtapeTrousse exigerEtape(Long id) {

@@ -370,7 +370,7 @@
     "mg": "Réf."
   },
   "audit.titre": {
-    "fr": "Journal d'audit",
+    "fr": "Journal d’audit",
     "en": "Audit log",
     "mg": "Diarin'ny fanaraha-maso"
   },
@@ -3049,100 +3049,211 @@
     "en": "User",
     "mg": "Mpampiasa"
   },
-  "referencemanager.actif": {
-    "fr": "Actif",
-    "en": "Active",
-    "mg": "Mavitrika"
-  },
   "referencemanager.actions": {
     "fr": "Actions",
     "en": "Actions",
     "mg": "Hetsika"
   },
   "referencemanager.ajouter": {
-    "fr": "Ajouter",
-    "en": "Add",
-    "mg": "Hampiditra"
+    "fr": "Ajouter une valeur",
+    "en": "Add a value"
   },
-  "referencemanager.aucuneValeur": {
-    "fr": "Aucune valeur.",
-    "en": "No value.",
-    "mg": "Tsy misy sanda."
+  "referencemanager.annuler": {
+    "fr": "Annuler",
+    "en": "Cancel"
   },
-  "referencemanager.categorie": {
-    "fr": "Catégorie",
-    "en": "Category",
-    "mg": "Sokajy"
+  "referencemanager.aucuneListe": {
+    "fr": "Aucune liste de référence pour les modules souscrits.",
+    "en": "No reference list for the subscribed modules."
   },
-  "referencemanager.categorieClause": {
+  "referencemanager.cat.CATEGORIE_CLAUSE": {
     "fr": "Catégories de clause",
     "en": "Clause categories",
     "mg": "Sokajin'ny fepetra"
+  },
+  "referencemanager.cat.CLASSIFICATION": {
+    "fr": "Niveaux de classification",
+    "en": "Classification levels"
+  },
+  "referencemanager.cat.CLM_CHAMP_SALESFORCE": {
+    "fr": "Champs Salesforce",
+    "en": "Salesforce fields"
+  },
+  "referencemanager.cat.CLM_CLAUSE_ATTENDUE": {
+    "fr": "Clauses attendues (option IA)",
+    "en": "Expected clauses (AI option)"
+  },
+  "referencemanager.cat.CLM_ROLE_CONTRAT": {
+    "fr": "Rôles dans le contrat",
+    "en": "Roles in the contract"
+  },
+  "referencemanager.cat.CLM_TYPE_CONTRAT": {
+    "fr": "Types de contrat et d'entente",
+    "en": "Contract and agreement types"
+  },
+  "referencemanager.cat.CLM_UNITE": {
+    "fr": "Unités administratives",
+    "en": "Administrative units"
+  },
+  "referencemanager.cat.DOMAINE": {
+    "fr": "Domaines métier",
+    "en": "Business domains"
+  },
+  "referencemanager.cat.MODE_SOLLICITATION": {
+    "fr": "Modes de sollicitation",
+    "en": "Solicitation modes",
+    "mg": "Fomba fangatahana"
+  },
+  "referencemanager.cat.TYPE_CHAMP": {
+    "fr": "Types de champ",
+    "en": "Field types"
+  },
+  "referencemanager.cat.TYPE_CONTRAT": {
+    "fr": "Types de contrat",
+    "en": "Contract types",
+    "mg": "Karazana fifanarahana"
+  },
+  "referencemanager.cat.TYPE_OBLIGATION": {
+    "fr": "Types d'obligation",
+    "en": "Obligation types",
+    "mg": "Karazana adidy"
+  },
+  "referencemanager.categorie": {
+    "fr": "Liste",
+    "en": "List"
+  },
+  "referencemanager.chargement": {
+    "fr": "Chargement des listes…",
+    "en": "Loading lists…"
   },
   "referencemanager.code": {
     "fr": "Code",
     "en": "Code",
     "mg": "Kaody"
   },
-  "referencemanager.codePlaceholder": {
-    "fr": "CODE",
-    "en": "CODE",
-    "mg": "KAODY"
+  "referencemanager.codeAide": {
+    "fr": "Code stable, en majuscules (ex. SERVICES) : il désigne la valeur dans les données enregistrées.",
+    "en": "Stable upper-case code (e.g. SERVICES): it identifies the value in stored data."
+  },
+  "referencemanager.codeFixe": {
+    "fr": "Le code est celui de la valeur de la plateforme : il ne change pas.",
+    "en": "The code is that of the platform value: it does not change."
+  },
+  "referencemanager.enregistre": {
+    "fr": "Valeur enregistrée.",
+    "en": "Value saved."
+  },
+  "referencemanager.enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save"
   },
   "referencemanager.erreur": {
     "fr": "Erreur",
     "en": "Error",
     "mg": "Hadisoana"
   },
+  "referencemanager.etat": {
+    "fr": "État",
+    "en": "Status"
+  },
+  "referencemanager.form.ajout": {
+    "fr": "Nouvelle valeur",
+    "en": "New value"
+  },
+  "referencemanager.form.modification": {
+    "fr": "Modifier la valeur",
+    "en": "Edit the value"
+  },
+  "referencemanager.form.personnalisation": {
+    "fr": "Personnaliser la valeur de la plateforme",
+    "en": "Customize the platform value"
+  },
   "referencemanager.libelle": {
     "fr": "Libellé",
     "en": "Label",
     "mg": "Anarana"
   },
-  "referencemanager.modeSollicitation": {
-    "fr": "Modes de sollicitation",
-    "en": "Solicitation modes",
-    "mg": "Fomba fangatahana"
+  "referencemanager.listeVide": {
+    "fr": "Liste vide : les écrans qui l'emploient acceptent une saisie libre.",
+    "en": "Empty list: screens using it accept free input."
   },
-  "referencemanager.non": {
-    "fr": "non",
-    "en": "no",
-    "mg": "tsia"
+  "referencemanager.modifier": {
+    "fr": "Modifier",
+    "en": "Edit"
   },
   "referencemanager.ordre": {
     "fr": "Ordre",
     "en": "Order",
     "mg": "Filaharana"
   },
-  "referencemanager.oui": {
-    "fr": "oui",
-    "en": "yes",
-    "mg": "eny"
+  "referencemanager.origine": {
+    "fr": "Origine",
+    "en": "Origin"
+  },
+  "referencemanager.origine.ORGANISATION": {
+    "fr": "Propre à l'organisation",
+    "en": "Organization's own"
+  },
+  "referencemanager.origine.PERSONNALISEE": {
+    "fr": "Personnalisée",
+    "en": "Customized"
+  },
+  "referencemanager.origine.PLATEFORME": {
+    "fr": "Plateforme",
+    "en": "Platform"
+  },
+  "referencemanager.personnaliser": {
+    "fr": "Personnaliser",
+    "en": "Customize"
+  },
+  "referencemanager.proposee": {
+    "fr": "Proposée",
+    "en": "Offered"
+  },
+  "referencemanager.reactivee": {
+    "fr": "Valeur de nouveau proposée.",
+    "en": "Value offered again."
+  },
+  "referencemanager.reactiver": {
+    "fr": "Proposer de nouveau",
+    "en": "Offer again"
+  },
+  "referencemanager.retablie": {
+    "fr": "Valeur de la plateforme rétablie.",
+    "en": "Platform value restored."
+  },
+  "referencemanager.retablir": {
+    "fr": "Rétablir",
+    "en": "Restore"
+  },
+  "referencemanager.retiree": {
+    "fr": "Valeur retirée des sélecteurs.",
+    "en": "Value withdrawn from selectors."
+  },
+  "referencemanager.retireeEtat": {
+    "fr": "Retirée",
+    "en": "Withdrawn"
+  },
+  "referencemanager.retirer": {
+    "fr": "Retirer",
+    "en": "Withdraw"
+  },
+  "referencemanager.supprimee": {
+    "fr": "Valeur supprimée.",
+    "en": "Value deleted."
   },
   "referencemanager.supprimer": {
-    "fr": "Suppr.",
+    "fr": "Supprimer",
     "en": "Delete",
     "mg": "Fafao"
   },
-  "referencemanager.typeContrat": {
-    "fr": "Types de contrat",
-    "en": "Contract types",
-    "mg": "Karazana fifanarahana"
-  },
-  "referencemanager.typeObligation": {
-    "fr": "Types d'obligation",
-    "en": "Obligation types",
-    "mg": "Karazana adidy"
-  },
   "referencemanager.valeursGlobales": {
-    "fr": "Valeurs GLOBALES appliquées à tous les tenants.",
-    "en": "GLOBAL values applied to all tenants.",
-    "mg": "Sanda MANERANTANY ampiharina amin'ny mpampiasa rehetra."
+    "fr": "Valeurs de la plateforme, proposées par défaut à toute organisation qui a souscrit le module de la liste.",
+    "en": "Platform values, offered by default to every organization subscribed to the list's module."
   },
   "referencemanager.valeursTenant": {
-    "fr": "Valeurs propres à votre tenant (s'ajoutent aux valeurs globales).",
-    "en": "Values specific to your tenant (added to the global values).",
-    "mg": "Sanda manokana ho an'ny mpampiasanao (ampiana amin'ny sanda manerantany)."
+    "fr": "Listes de votre organisation : ajoutez vos valeurs, personnalisez ou retirez celles de la plateforme ; « Rétablir » revient à la valeur de la plateforme.",
+    "en": "Your organization's lists: add your own values, customize or withdraw the platform's; “Restore” returns to the platform value."
   },
   "repertoiredepotmanager.ajoutImpossible": {
     "fr": "Ajout impossible.",
@@ -5188,6 +5299,11 @@
     "fr": "Activez ou désactivez les modules pour chaque organisation. Les dépendances sont résolues automatiquement.",
     "en": "Enable or disable modules for each organization. Dependencies are resolved automatically.",
     "mg": "Activez ou désactivez les modules pour chaque organisation. Les dépendances sont résolues automatiquement."
+  },
+  "module.exclusivite": {
+    "fr": "Approvisionnement (famille « Plateforme ») et IQ — contrats et signature (famille « CLM ») sont deux produits exclusifs : activer un module de l’un désactive l’autre en entier. Sécurité et RH cohabitent avec les deux.",
+    "en": "Procurement (“Plateforme” family) and IQ — contracts & signature (“CLM” family) are mutually exclusive products: enabling a module of one disables the other entirely. Security and HR work with both.",
+    "mg": "Tsy azo miaraka ny Fividianana (fianakaviana « Plateforme ») sy IQ — fifanarahana sy sonia (fianakaviana « CLM ») : ny fampandehanana ny iray dia manajanona tanteraka ny iray hafa. Mety amin'izy roa ny Fiarovana sy ny RH."
   },
   "module.choisirTenant": {
     "fr": "Organisation",

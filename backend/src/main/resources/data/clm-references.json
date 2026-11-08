@@ -1,0 +1,83 @@
+[
+  {
+    "code": "CLM_TYPE_CONTRAT",
+    "module": "clm",
+    "libelle": "Types de contrat et d'entente",
+    "aide": "Proposés à la création d'une trousse et d'un modèle. L'option IA s'appuie sur les mots-clés pour classer un contrat.",
+    "libelleDetail": "Mots-clés de classification (option IA), séparés par des virgules",
+    "ordre": 100,
+    "valeurs": [
+      { "code": "SUBVENTION", "libelle": "Convention d'aide financière", "detail": "subvention, aide financière, programme, bénéficiaire" },
+      { "code": "PRET", "libelle": "Contrat de prêt", "detail": "prêt, remboursement, taux d'intérêt, emprunteur" },
+      { "code": "SERVICES", "libelle": "Contrat de services", "detail": "prestataire, services professionnels, honoraires, mandat" },
+      { "code": "CONFIDENTIALITE", "libelle": "Entente de confidentialité", "detail": "confidentialité, non-divulgation, renseignements confidentiels" },
+      { "code": "BAIL", "libelle": "Bail", "detail": "bail, locateur, locataire, loyer" }
+    ]
+  },
+  {
+    "code": "CLM_UNITE",
+    "module": "clm",
+    "libelle": "Unités administratives",
+    "aide": "Unités responsables des trousses. Tant que la liste est vide, l'unité se saisit librement.",
+    "ordre": 110,
+    "valeurs": []
+  },
+  {
+    "code": "CLM_ROLE_CONTRAT",
+    "module": "clm",
+    "libelle": "Rôles dans le contrat",
+    "aide": "Rôles des signataires : ils relient chaque participant à sa zone de signature dans le modèle.",
+    "ordre": 120,
+    "valeurs": [
+      { "code": "SIGNATAIRE_1", "libelle": "Premier signataire" },
+      { "code": "SIGNATAIRE_2", "libelle": "Deuxième signataire" },
+      { "code": "SIGNATAIRE_3", "libelle": "Troisième signataire" },
+      { "code": "TEMOIN", "libelle": "Témoin" }
+    ]
+  },
+  {
+    "code": "CLM_CHAMP_SALESFORCE",
+    "module": "clm",
+    "libelle": "Champs Salesforce",
+    "aide": "Champs de la demande Salesforce (nom d'API) qu'un modèle peut reprendre comme source d'un champ.",
+    "ordre": 130,
+    "valeurs": [
+      { "code": "Name", "libelle": "Numéro de la demande" },
+      { "code": "Demandeur", "libelle": "Demandeur" },
+      { "code": "Programme", "libelle": "Programme" },
+      { "code": "Montant", "libelle": "Montant" },
+      { "code": "Entite", "libelle": "Entité légale" },
+      { "code": "CourrielDemandeur", "libelle": "Courriel du demandeur" },
+      { "code": "TelephoneDemandeur", "libelle": "Téléphone du demandeur" },
+      { "code": "Responsable", "libelle": "Responsable" },
+      { "code": "DateDebut", "libelle": "Date de début" }
+    ]
+  },
+  {
+    "code": "CLM_PRIORITE_TACHE",
+    "module": "clm",
+    "libelle": "Priorités des tâches assignées",
+    "aide": "Proposées à la création d'une tâche dans la boîte de tâches, dans l'ordre affiché. Tant que la liste est vide, la priorité est facultative et libre.",
+    "ordre": 135,
+    "valeurs": [
+      { "code": "BASSE", "libelle": "Basse" },
+      { "code": "NORMALE", "libelle": "Normale" },
+      { "code": "HAUTE", "libelle": "Haute" },
+      { "code": "URGENTE", "libelle": "Urgente" }
+    ]
+  },
+  {
+    "code": "CLM_CLAUSE_ATTENDUE",
+    "module": "clm_ia",
+    "libelle": "Clauses attendues (option IA)",
+    "aide": "Clauses que l'option IA vérifie dans chaque contrat : une clause dont aucun mot-clé n'apparaît est signalée.",
+    "libelleDetail": "Mots-clés qui attestent la clause, séparés par des virgules",
+    "ordre": 140,
+    "valeurs": [
+      { "code": "RESILIATION", "libelle": "Résiliation", "detail": "résiliation, résilier" },
+      { "code": "CONFIDENTIALITE", "libelle": "Confidentialité", "detail": "confidentialité, confidentiel" },
+      { "code": "RENSEIGNEMENTS_PERSONNELS", "libelle": "Renseignements personnels", "detail": "renseignements personnels, loi 25" },
+      { "code": "DROIT_APPLICABLE", "libelle": "Droit applicable", "detail": "lois du Québec, droit applicable, tribunaux du Québec" }
+    ]
+  }
+]

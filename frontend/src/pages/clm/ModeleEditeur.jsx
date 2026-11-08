@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import api from '../../api'
 import { useI18n } from '../../i18n/I18nContext'
-import { EditeurCondition, GardeModule, Message, Statut, dateHeure, useErreur } from './commun.jsx'
+import { ChoixListe, EditeurCondition, GardeModule, Message, Statut, dateHeure, useErreur, useListe } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 import { EditeurParcours, depuisRequete, versRequete } from './OngletParcours.jsx'
 
@@ -52,6 +52,13 @@ function Contenu() {
   const [apercu, setApercu] = useState(null)
   const [erreur, setErreur] = useState(null)
   const [info, setInfo] = useState('')
+  const categories = useListe('CLM_TYPE_CONTRAT')
+  const sources = useListe('CLM_CHAMP_SALESFORCE')
+  const roles = useListe('CLM_ROLE_CONTRAT')
+  // L'initiateur complète lui-même un champ ; les autres rôles sont ceux de la liste de l'organisation.
+  const destinataires = roles.valeurs.length === 0 ? roles : { ...roles,
+    valeurs: [{ code: 'INITIATEUR', libelle: t('clm.mo.roleInitiateur') }, ...roles.valeurs],
+    libelle: (v) => (v === 'INITIATEUR' ? t('clm.mo.roleInitiateur') : roles.libelle(v)) }
 
   const charger = () => api.get(`/clm/modeles/${id}`).then((r) => { setM(r.data); setParcours(depuisRequete(r.data.parcours)) }).catch((e) => setErreur(versErreur(e)))
   useEffect(() => { charger() }, [id]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -140,7 +147,7 @@ function Contenu() {
             </dl>
             <div className="form-grid">
               <label>{t('clm.col.nom')}<input value={m.nom} onChange={(e) => setM({ ...m, nom: e.target.value })} required /></label>
-              <label>{t('clm.col.categorie')}<input value={m.categorie || ''} onChange={(e) => setM({ ...m, categorie: e.target.value })} /></label>
+              <label>{t('clm.col.categorie')}<ChoixListe liste={categories} value={m.categorie || ''} onChange={(v) => setM({ ...m, categorie: v })} /></label>
               <label className="col-2">{t('clm.mo.groupes')} <span className="muted">{t('clm.mo.groupesAide')}</span><input value={m.groupes || ''} onChange={(e) => setM({ ...m, groupes: e.target.value })} /></label>
             </div>
           </Bloc>
@@ -151,7 +158,7 @@ function Contenu() {
               <ul className="clm-liste">
                 {champs.map((x, i) => (
                   <li key={i}><button type="button" className={`lien ${choisi === i ? 'is-actif' : ''}`} aria-pressed={choisi === i} onClick={() => setChoisi(i)}>
-                    {x.libelle || x.cle || t('clm.mo.sansNom')}</button> <span className="muted">{t(`clm.mo.type.${x.type}`)}{x.obligatoire ? ` · ${t('clm.mo.obligatoire')}` : ''}{x.roleDestinataire ? ` · ${x.roleDestinataire}` : ''}</span></li>
+                    {x.libelle || x.cle || t('clm.mo.sansNom')}</button> <span className="muted">{t(`clm.mo.type.${x.type}`)}{x.obligatoire ? ` · ${t('clm.mo.obligatoire')}` : ''}{x.roleDestinataire ? ` · ${destinataires.libelle(x.roleDestinataire)}` : ''}</span></li>
                 ))}
               </ul>
             )}
@@ -178,7 +185,8 @@ function Contenu() {
                 <fieldset className="form-fieldset" data-maquette="UI-09" data-zone="03">
                   <legend>{t('clm.mo.zoneSource')}</legend>
                   <div className="form-grid">
-                    <label>{t('clm.mo.source')} <span className="muted">{t('clm.mo.sourceAide')}</span><input value={c.source || ''} onChange={(e) => majChamp(choisi, 'source', e.target.value)} /></label>
+                    <label>{t('clm.mo.source')} <span className="muted">{t('clm.mo.sourceAide')}</span>
+                      <ChoixListe liste={sources} value={c.source || ''} vide={t('clm.mo.sansSource')} onChange={(v) => majChamp(choisi, 'source', v)} /></label>
                     <label>{t('clm.mo.defaut')}<input value={c.valeurDefaut || ''} onChange={(e) => majChamp(choisi, 'valeurDefaut', e.target.value)} /></label>
                   </div>
                 </fieldset>
@@ -187,7 +195,8 @@ function Contenu() {
                 </div>
                 <fieldset className="form-fieldset" data-maquette="UI-09" data-zone="05">
                   <legend>{t('clm.mo.zoneRole')}</legend>
-                  <label>{t('clm.mo.role')} <span className="muted">{t('clm.mo.roleAide')}</span><input value={c.roleDestinataire || ''} onChange={(e) => majChamp(choisi, 'roleDestinataire', e.target.value)} /></label>
+                  <label>{t('clm.mo.role')} <span className="muted">{t('clm.mo.roleAide')}</span>
+                    <ChoixListe liste={destinataires} value={c.roleDestinataire || ''} vide={t('clm.mo.sansRole')} onChange={(v) => majChamp(choisi, 'roleDestinataire', v)} /></label>
                   <fieldset className="form-fieldset">
                     <legend>{t('clm.mo.position')}</legend>
                     {c.position ? (

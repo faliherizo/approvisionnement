@@ -1,12 +1,15 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import api from '../../api'
 import { useI18n } from '../../i18n/I18nContext'
-import { Message, Statut, dateHeure, useErreur, useRessource } from './commun.jsx'
+import { ChoixListe, Message, Statut, dateHeure, useErreur, useListe, useRessource } from './commun.jsx'
 import { BarreActions, Bloc, Blocs } from './gabarit.jsx'
 import { libelleAffectation, modeParcours } from './OngletParcours.jsx'
 
 const NIVEAUX = ['', 'COURRIEL', 'CODE_SMS', 'QUESTION', 'FORTE']
-const VIDE = { nom: '', courriel: '', telephone: '', roleContrat: 'SIGNATAIRE_1', externe: true, niveauIdentite: '', question: '', reponse: '' }
+const VIDE = { nom: '', courriel: '', telephone: '', roleContrat: '', externe: true, niveauIdentite: '', question: '', reponse: '' }
+
+/** Premier rôle de la liste de l'organisation qu'aucun participant ne tient encore. */
+const roleLibre = (roles, participants) => roles.valeurs.map((r) => r.code).find((c) => !participants.some((p) => p.roleContrat === c)) || ''
 
 /** UI-15 — Préparation de la signature : documents, participants, ordre, zones, vérification d'identité, aperçu du parcours. */
 export default function OngletParticipants({ trousse, peutGerer, onChange, onOrdre, onLancer }) {
@@ -14,6 +17,8 @@ export default function OngletParticipants({ trousse, peutGerer, onChange, onOrd
   const versErreur = useErreur()
   const premierChamp = useRef(null)
   const premiereZone = useRef(null)
+  const roles = useListe('CLM_ROLE_CONTRAT')
+  const { donnees: publics } = useRessource('/clm/parametres')
   const [form, setForm] = useState(VIDE)
   const [choixZone, setChoixZone] = useState({})
   const [erreur, setErreur] = useState(null)
@@ -25,6 +30,11 @@ export default function OngletParticipants({ trousse, peutGerer, onChange, onOrd
   const zones = (modele.donnees?.champs || []).filter((c) => c.type === 'SIGNATURE' || (c.roleDestinataire && c.roleDestinataire !== 'INITIATEUR'))
   const parRole = (role) => trousse.participants.find((p) => p.roleContrat === role)
   const phases = [...new Set(trousse.etapes.map((e) => e.phase))].sort((a, b) => a - b)
+  const minimum = (cote) => publics?.[cote]?.[trousse.risque.toLowerCase()]
+
+  useEffect(() => {
+    setForm((f) => (f.roleContrat ? f : { ...f, roleContrat: roleLibre(roles, trousse.participants) }))
+  }, [roles, trousse.participants])
 
   async function ajouter(e) {
     e.preventDefault()
@@ -32,7 +42,7 @@ export default function OngletParticipants({ trousse, peutGerer, onChange, onOrd
     try {
       const { data } = await api.post(`/clm/trousses/${id}/participants`, { ...form, niveauIdentite: form.niveauIdentite || null })
       setInfo(t('clm.part.ajoute', { nom: data.nom, niveau: t(`clm.niveau.${data.niveauIdentite}`) }))
-      setForm({ ...VIDE, roleContrat: `SIGNATAIRE_${trousse.participants.length + 2}` })
+      setForm({ ...VIDE, roleContrat: roleLibre(roles, [...trousse.participants, data]) })
       onChange()
     } catch (e2) { setErreur(versErreur(e2)) }
   }
@@ -82,7 +92,7 @@ export default function OngletParticipants({ trousse, peutGerer, onChange, onOrd
                     return (
                       <tr key={p.id}>
                         <td data-label={t('clm.col.nom')}>{p.nom} <span className="muted">#{p.id} · {p.externe ? t('clm.part.externe') : t('clm.part.interne')}</span></td>
-                        <td data-label={t('clm.part.role')}><code>{p.roleContrat}</code></td>
+                        <td data-label={t('clm.part.role')}>{roles.libelle(p.roleContrat)}</td>
                         <td data-label={t('clm.part.coordonnees')}>{p.courriel}{p.telephone ? <><br />{p.telephone}</> : null}</td>
                         <td data-label={t('clm.part.invitation')}>{inv ? <><Statut valeur={inv.statut} /><br /><span className="muted">{inv.signeeLe ? dateHeure(inv.signeeLe) : t('clm.part.expire', { d: dateHeure(inv.expireLe) })}</span></> : '—'}</td>
                         {peutGerer && <td data-label={t('clm.col.actions')}><button type="button" className="lien danger" aria-label={`${t('clm.retirer')} — ${p.nom}`} onClick={() => retirer(p)}>{t('clm.retirer')}</button></td>}
@@ -100,7 +110,8 @@ export default function OngletParticipants({ trousse, peutGerer, onChange, onOrd
                 <label>{t('clm.col.nom')} <span aria-hidden="true">*</span><input ref={premierChamp} value={form.nom} onChange={maj('nom')} required aria-required="true" autoComplete="name" /></label>
                 <label>{t('clm.part.courriel')} <span aria-hidden="true">*</span><input type="email" value={form.courriel} onChange={maj('courriel')} required aria-required="true" autoComplete="email" /></label>
                 <label>{t('clm.part.telephone')} <span className="muted">{t('clm.part.telephoneAide')}</span><input type="tel" value={form.telephone} onChange={maj('telephone')} autoComplete="tel" /></label>
-                <label>{t('clm.part.role')} <span className="muted">{t('clm.part.roleAide')}</span><input value={form.roleContrat} onChange={maj('roleContrat')} required /></label>
+                <label>{t('clm.part.role')} <span className="muted">{t('clm.part.roleAide')}</span>
+                  <ChoixListe liste={roles} value={form.roleContrat} onChange={(v) => setForm({ ...form, roleContrat: v })} required aria-required="true" /></label>
                 <label className="check-row"><input type="checkbox" checked={form.externe} onChange={maj('externe')} />{t('clm.part.externe')}</label>
                 <label>{t('clm.part.niveau')} <span className="muted">{t('clm.part.niveauAide', { risque: t(`clm.risque.${trousse.risque}`) })}</span>
                   <select value={form.niveauIdentite} onChange={maj('niveauIdentite')}>
@@ -125,7 +136,7 @@ export default function OngletParticipants({ trousse, peutGerer, onChange, onOrd
                 const p = parRole(c.roleDestinataire)
                 const nomZone = c.libelle || c.cle
                 return (
-                  <li key={c.cle}>{nomZone} ({t(`clm.mo.type.${c.type}`)}) → <code>{c.roleDestinataire || '—'}</code> :{' '}
+                  <li key={c.cle}>{nomZone} ({t(`clm.mo.type.${c.type}`)}) → {c.roleDestinataire ? roles.libelle(c.roleDestinataire) : '—'} :{' '}
                     {p ? p.nom : <strong><span aria-hidden="true">⚠</span> {t('clm.part.roleSansParticipant')}</strong>}
                     {zonesAttribuables && c.roleDestinataire && (
                       <div className="cmp-row clm-zone-attribution">
@@ -133,7 +144,7 @@ export default function OngletParticipants({ trousse, peutGerer, onChange, onOrd
                           <select ref={i === 0 ? premiereZone : undefined} value={choixZone[c.cle] ?? ''}
                             onChange={(e) => setChoixZone({ ...choixZone, [c.cle]: e.target.value })}>
                             <option value="">—</option>
-                            {trousse.participants.map((x) => <option key={x.id} value={x.id}>{x.nom} · {x.roleContrat}</option>)}
+                            {trousse.participants.map((x) => <option key={x.id} value={x.id}>{x.nom} · {roles.libelle(x.roleContrat)}</option>)}
                           </select>
                         </label>
                         <button type="button" className="secondary" disabled={!choixZone[c.cle]} onClick={() => attribuer(c)}>
@@ -148,6 +159,9 @@ export default function OngletParticipants({ trousse, peutGerer, onChange, onOrd
         </Bloc>
         <Bloc zone="05" titre={t('clm.part.blocIdentite')}>
           <p className="muted">{t('clm.part.minimumRisque', { risque: t(`clm.risque.${trousse.risque}`) })}</p>
+          {publics && (
+            <p>{t('clm.part.minimumPolitique', { externe: t(`clm.niveau.${minimum('identiteExterne')}`), interne: t(`clm.niveau.${minimum('identiteInterne')}`) })}</p>
+          )}
           {trousse.participants.length === 0 ? <p className="muted">{t('clm.part.aucun')}</p> : (
             <ul className="clm-liste">{trousse.participants.map((p) => <li key={p.id}>{p.nom} : {t(`clm.niveau.${p.niveauIdentite}`)}</li>)}</ul>
           )}

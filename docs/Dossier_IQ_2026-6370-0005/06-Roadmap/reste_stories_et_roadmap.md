@@ -16,7 +16,7 @@ Légende : ✅ livrée et testée · ✅🔌 livrée et testée, recette sur le 
 | Story | État | Livré (repères code et tests) | Reste |
 |---|---|---|---|
 | ST-01 SSO & sessions | ⏳ | Socle plateforme OIDC/SAML/MFA/JWT ; les signataires externes passent par le portail à jeton, sans compte (RST-17) | Mapper l'IdP d'IQ ; politique de durée de session ; gestion des invités internes |
-| ST-02 Rôles, groupes, périmètres | ✅ | `Habilitations` (périmètre par unité/groupe, séparation initiateur/approbateur), `@PreAuthorize` sur chaque API, refus journalisés `CLM_ACCES_REFUSE`, `ArchitectureClmTest` (10 règles ArchUnit) | Charger la liste des unités administratives d'IQ (donnée d'atelier, pas de code) |
+| ST-02 Rôles, groupes, périmètres | ✅ | `Habilitations` (périmètre par unité/groupe, séparation initiateur/approbateur, consultation d'audit), rôle `AUDITEUR`, `@PreAuthorize` sur chaque API, garde de module par tenant (ADR-009), refus journalisés `CLM_ACCES_REFUSE`, `ArchitectureClmTest` et `ArchitectureModulesTest` ; organisation IQ et un compte par profil (`11-Tenant-IQ/`) | Charger la liste des unités administratives d'IQ (donnée d'atelier, pas de code) ; rôles d'administration distincts si IQ l'exige |
 | ST-03 Dossiers & trousses | ✅ | `Trousse`, `TrousseService`, journal scellé `EvenementTrousse` ; UI-02/03/04 | — |
 | ST-04 Documents & versions | ✅ | `DocumentClmService` (versions, remplacement, verrou après signature), `FormatDocument` ; UI-05/06 | — |
 | ST-05 Modèles & champs | ✅ | `Modele`/`ModeleContrat` : champs positionnés, assignés à un rôle, cycle de vie, versions, partage par groupes, auto-publication refusée ; UI-07/08/09 | — |
@@ -28,18 +28,19 @@ Légende : ✅ livrée et testée · ✅🔌 livrée et testée, recette sur le 
 | ST-11 Notifications, rappels, échéances | ✅ | `RappelService` (non-réponse, échéances), `MessagerieClm` (modèle par événement et canal, copies) ; UI-17 | — |
 | ST-12 Statuts vers Salesforce | ✅🔌 | Boîte d'envoi `MessageSortant` : idempotence, reprises, file d'erreur, relance, corrélation ; UI-21 | Recette sur le bac à sable Salesforce d'IQ |
 | ST-13 Suivi centralisé | ✅ | `SuiviService` : filtres par périmètre, exceptions, export CSV ; UI-01/18 | — |
-| ST-14 Administration, audit, exploitation | 🟡 | Audit lié à la trousse (journal scellé + audit du tenant), configuration UI-17/21/22, journal UI-23 et export CSV | Runbooks et règles d'alerte (file d'erreur Salesforce, altération détectée, échec du planificateur), à câbler sur la supervision de l'hébergement retenu (RST-18) |
+| ST-14 Administration, audit, exploitation | ✅ | Audit lié à la trousse (journal scellé + audit du tenant), configuration UI-17/21/22, journal UI-23 et export CSV ; alertes d'exploitation (`AlertesExploitation` : altération détectée, file d'erreur Salesforce, échec du planificateur) relevées par Azure Monitor (`infra/terraform/azure/monitoring.tf`) ; runbook `04-Architecture/runbook_exploitation_clm.md` | Appliquer le Terraform sur l'abonnement retenu (RST-18) |
 | ST-15 CLM avancé & IA (option) | ✅ | `AnalyseService`/`AnalyseContrat` : métadonnées, classification, anomalies, validation humaine justifiée ; module `clm_ia` activable par le superadmin ; UI-24 | — |
 | RST-16 25 Mo + PDF/Word | ✅ | Taille configurable (`CLM_TAILLE_MAX_OCTETS`, 25 Mo), format vérifié sur les octets, analyse antivirus (port) | — |
 | RST-17 Identité du signataire selon le risque | ✅ | `Identite` : niveau minimal par risque (courriel, SMS, question, forte à double canal), blocage après 5 essais | Brancher les passerelles courriel et SMS réelles au déploiement (simulations en place) |
-| RST-18 Résidence & SLA | ⏳ | — | Décision en atelier puis ADR (aucun code) |
+| RST-18 Résidence & SLA | ⏳ | Azure retenu : Terraform validé (AKS, PostgreSQL, Key Vault, Front Door, supervision), région `canadacentral` par défaut | Choisir la région (`canadacentral` ou `canadaeast`, ou Québec exigé) et la grille SLA, puis ADR |
 | RST-19 Parcours mobile du signataire | ✅ | Portail UI-16 (cibles de 44 px) ; e2e à 390 et 768 px sur 8 états, de l'invitation au reçu, avec axe-core | — |
 
-**Qualité (au 2026-11-03)** : 104 tests backend CLM verts (unitaires, contrat, architecture, intégration), 11 tests e2e
-(4 largeurs, axe-core sans violation) ; couverture CLM de 99,1 % des lignes et de 86,8 % des branches, domaine à 100 %.
-Le build (`mvn verify`, règle `jacoco:check@check-clm`) échoue si la couverture repasse sous 96 % de lignes (agrégé et
-chaque classe), 86 % de branches ou 100 % sur le domaine. Reste transverse : porter les branches de 86,8 % à 92 % et
-exécuter un test de mutation (PIT).
+**Qualité (au 2026-11-03)** : 130 tests backend CLM verts (unitaires, contrat, architecture, intégration) ; 23 tests e2e
+(vues CLM aux 4 largeurs, fidélité aux 24 maquettes, gestion superadmin, isolation du tenant IQ ; axe-core sans
+violation) ; couverture CLM de 99,36 % des lignes et de 87,88 % des branches, domaine à 100 %. Le build (`mvn verify`,
+règle `jacoco:check@check-clm`) échoue si la couverture repasse sous 96 % de lignes (agrégé et chaque classe), 87 % de
+branches ou 100 % sur le domaine. Reste transverse : porter les branches à 92 %, exécuter un test de mutation (PIT),
+pagination serveur et test de charge CLM (NF-06), politique de conservation et de destruction (F-09, NF-03).
 
 ## 1. Reste à implémenter par story existante
 
