@@ -61,7 +61,7 @@ public class ParcoursService {
     private final ModeleContratRepository modeles;
     private final RenduDocuments rendu;
     private final MessagerieClm messagerie;
-    private final SalesforceService salesforce;
+    private final DiffusionStatut diffusion;
     private final JournalClm journal;
     private final SourceAleatoire alea;
     private final ParametresClmService parametres;
@@ -72,7 +72,7 @@ public class ParcoursService {
                            EvenementTrousseRepository evenements,
                            ParticipantRepository participants, InvitationRepository invitations, DocumentTrousseRepository documents,
                            ModeleContratRepository modeles, RenduDocuments rendu, MessagerieClm messagerie,
-                           SalesforceService salesforce, JournalClm journal, SourceAleatoire alea, ParametresClmService parametres,
+                           DiffusionStatut diffusion, JournalClm journal, SourceAleatoire alea, ParametresClmService parametres,
                            LectureTrousse lecture, ContexteClm ctx) {
         this.trousses = trousses;
         this.etapes = etapes;
@@ -84,7 +84,7 @@ public class ParcoursService {
         this.modeles = modeles;
         this.rendu = rendu;
         this.messagerie = messagerie;
-        this.salesforce = salesforce;
+        this.diffusion = diffusion;
         this.journal = journal;
         this.alea = alea;
         this.parametres = parametres;
@@ -332,7 +332,7 @@ public class ParcoursService {
         annulerInvitations(t);
         long seq = journal.consigner(t, "TROUSSE_REJETEE", acteur, motif).getSequence();
         notifierProprietaire(t, Evenement.REJET, motif);
-        salesforce.enfiler(t, "REJETEE", seq, Map.of("motif", motif == null ? "" : motif));
+        diffusion.enfiler(t, "REJETEE", seq, Map.of("motif", motif == null ? "" : motif));
     }
 
     void retourner(Trousse t, String acteur, String motif) {
@@ -351,7 +351,7 @@ public class ParcoursService {
         }
         long seq = journal.consigner(t, "RETOUR_CORRECTION", acteur, motif).getSequence();
         notifierProprietaire(t, Evenement.REJET, "Retour pour correction : " + motif);
-        salesforce.enfiler(t, "RETOURNEE", seq, Map.of("motif", motif == null ? "" : motif));
+        diffusion.enfiler(t, "RETOURNEE", seq, Map.of("motif", motif == null ? "" : motif));
     }
 
     void finaliser(Trousse t, String acteur) {
@@ -368,7 +368,7 @@ public class ParcoursService {
         trousses.save(t);
         long seq = journal.consigner(t, "TROUSSE_TERMINEE", acteur, signees.size() + " signature(s)").getSequence();
         notifierProprietaire(t, Evenement.TERMINEE, "");
-        salesforce.enfiler(t, "SIGNATURE_TERMINEE", seq, Map.of("signatures", signees.size(), "termineeLe", maintenant.toString()));
+        diffusion.enfiler(t, "SIGNATURE_TERMINEE", seq, Map.of("signatures", signees.size(), "termineeLe", maintenant.toString()));
     }
 
     private void verrouiller(Trousse t, DocumentTrousse d, List<Invitation> signees, List<Modele.Champ> zones, Instant maintenant) {

@@ -82,7 +82,7 @@ class ConfigurationServicesClmTest {
         ParametresClmService service = parametres("DEV");
         when(parametres.findByTenantId(IQ)).thenReturn(Optional.empty());
         ClmDto.ParametresModule vue = portee.executerDans(IQ, () -> service.modifier(new ClmDto.ParametresModuleRequest(null, null, null,
-                " iq ", null, null, null, new ClmDto.NiveauxIdentite(null, " ", "forte"), null, null, null), "admin@iq.example"));
+                " iq ", null, null, null, null, new ClmDto.NiveauxIdentite(null, " ", "forte"), null, null, null), "admin@iq.example"));
         assertTrue(vue.personnalise());
         assertEquals("IQ", vue.prefixeReference());
         assertEquals("admin@iq.example", vue.modifiePar());
@@ -96,10 +96,11 @@ class ConfigurationServicesClmTest {
         enregistres.appliquer(service.plateforme(), "admin@iq.example", T0);
         when(parametres.findByTenantId(IQ)).thenReturn(Optional.of(enregistres));
         ClmDto.ParametresModuleRequest complet = new ClmDto.ParametresModuleRequest(2L * ParametresClm.UN_MO, 10, "https://iq.example/p",
-                "IQ", 4, 1, new ClmDto.NiveauxIdentite("CODE_SMS", "CODE_SMS", "FORTE"), new ClmDto.NiveauxIdentite("COURRIEL", "CODE_SMS", "FORTE"),
+                "IQ", 4, 1, 3, new ClmDto.NiveauxIdentite("CODE_SMS", "CODE_SMS", "FORTE"), new ClmDto.NiveauxIdentite("COURRIEL", "CODE_SMS", "FORTE"),
                 4, 20, "montantAide");
         ClmDto.ParametresModule tout = portee.executerDans(IQ, () -> service.modifier(complet, "admin@iq.example"));
         assertEquals(4, tout.tentativesIdentite());
+        assertEquals(3, tout.preavisEcheanceJours());
         assertEquals("montantAide", tout.champMontant());
         assertEquals("https://iq.example/p", tout.portailUrl());
         assertEquals(10, tout.invitationValiditeJours());
@@ -115,16 +116,16 @@ class ConfigurationServicesClmTest {
         when(parametres.findByTenantId(IQ)).thenReturn(Optional.empty());
         IllegalArgumentException http = assertThrows(IllegalArgumentException.class, () -> portee.executerDans(IQ,
                 () -> service.modifier(new ClmDto.ParametresModuleRequest(null, null, "http://iq.example/p", null, null, null, null, null,
-                        null, null, null), "a")));
+                        null, null, null, null), "a")));
         assertTrue(http.getMessage().contains("https requis en production"), http.getMessage());
         assertTrue(portee.executerDans(IQ, () -> service.modifier(new ClmDto.ParametresModuleRequest(null, null, "HTTPS://iq.example/p",
-                null, null, null, null, null, null, null, null), "a")).personnalise(), "https accepté en production");
+                null, null, null, null, null, null, null, null, null), "a")).personnalise(), "https accepté en production");
         IllegalArgumentException niveau = assertThrows(IllegalArgumentException.class, () -> portee.executerDans(IQ,
-                () -> service.modifier(new ClmDto.ParametresModuleRequest(null, null, null, null, null, null,
+                () -> service.modifier(new ClmDto.ParametresModuleRequest(null, null, null, null, null, null, null,
                         new ClmDto.NiveauxIdentite("RETINE", null, null), null, null, null, null), "a")));
         assertEquals("Niveau d'identité inconnu : RETINE.", niveau.getMessage());
         assertThrows(IllegalArgumentException.class, () -> portee.executerDans(IQ, () -> service.modifier(
-                new ClmDto.ParametresModuleRequest(null, 0, null, null, null, null, null, null, null, null, null), "a")));
+                new ClmDto.ParametresModuleRequest(null, 0, null, null, null, null, null, null, null, null, null, null), "a")));
     }
 
     // --- Connexion Salesforce ---

@@ -10,6 +10,7 @@ Solution de signature électronique et de génération de contrats.
 5. Les décisions d'architecture globales sont sous `08-ADR/`; les décisions locales sont rappelées dans chaque story.
 6. Les points à clarifier sont recensés dans `09-Questions/`.
 7. Le tenant de démonstration IQ (organisation, profils, rôles) et la validation de son isolation sont sous `11-Tenant-IQ/`.
+8. Les bacs à sable (Salesforce imité, annuaire Keycloak, horodatage RFC 3161) et la façon de tester ce qui dépend d'IQ sont sous `12-Bacs-a-sable/`.
 
 ## Base documentaire et prudence
 Les deux sources sont :

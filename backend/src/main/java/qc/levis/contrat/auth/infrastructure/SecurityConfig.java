@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/saml/**").permitAll() // flux SAML 2.0 SP-initiated
                 .requestMatchers("/api/signature/**").permitAll() // signature externe par jeton
                 .requestMatchers("/api/clm/portail/**").permitAll() // portail CLM du signataire (jeton + vérification d'identité)
+                .requestMatchers("/api/clm/integration/**").permitAll() // API d'intégration : jeton client credentials vérifié par le contrôleur
                 .requestMatchers(HttpMethod.GET, "/api/tenants", "/api/tenants/*/public").permitAll() // sélecteur & titre de connexion
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/health").permitAll()
@@ -67,8 +68,12 @@ public class SecurityConfig {
         cfg.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource src = new UrlBasedCorsConfigurationSource();
         src.registerCorsConfiguration("/**", cfg);
-        return src;
+        // Le retour SAML (ACS) est une navigation de page postée par l'IdP, souvent avec « Origin: null » ou l'origine de
+        // l'IdP : CORS ne la protège pas et la refuserait (403) avant la vérification de l'assertion signée, qui fait foi.
+        return request -> SAML_ACS.equals(request.getRequestURI()) ? null : src.getCorsConfiguration(request);
     }
+
+    static final String SAML_ACS = "/api/auth/saml/callback";
 
     @Bean
     public PasswordEncoder passwordEncoder() {

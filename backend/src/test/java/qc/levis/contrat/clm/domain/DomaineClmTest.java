@@ -299,6 +299,13 @@ class DomaineClmTest {
         assertNull(Relances.echeance(null, 5));
         assertTrue(Relances.enRetard(debut, debut.plusSeconds(1)));
         assertFalse(Relances.enRetard(null, debut));
+        Instant echeance = debut.plusSeconds(5 * 86_400);
+        assertTrue(Relances.echeanceProche(echeance, echeance.minusSeconds(86_400), 1), "début du préavis inclus");
+        assertTrue(Relances.echeanceProche(echeance, echeance, 1), "jour même inclus");
+        assertFalse(Relances.echeanceProche(echeance, echeance.minusSeconds(86_401), 1), "avant le préavis");
+        assertFalse(Relances.echeanceProche(echeance, echeance.plusSeconds(1), 1), "dépassée : relève du retard");
+        assertFalse(Relances.echeanceProche(echeance, echeance, 0), "préavis nul : jamais d'alerte");
+        assertFalse(Relances.echeanceProche(null, debut, 1));
         assertEquals(debut.plusSeconds(60), Relances.prochainEssai(1, debut));
         assertEquals(debut.plusSeconds(240), Relances.prochainEssai(3, debut));
         assertEquals(debut.plusSeconds(3600), Relances.prochainEssai(20, debut));

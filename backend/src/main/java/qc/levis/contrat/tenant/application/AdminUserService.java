@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import qc.levis.contrat.audit.application.AuditService;
 import qc.levis.contrat.auth.application.repository.UserRepository;
 import qc.levis.contrat.auth.domain.User;
 import qc.levis.contrat.commun.domain.Enums;
@@ -26,10 +27,12 @@ public class AdminUserService {
 
     private final UserRepository users;
     private final PasswordEncoder encoder;
+    private final AuditService audit;
 
-    public AdminUserService(UserRepository users, PasswordEncoder encoder) {
+    public AdminUserService(UserRepository users, PasswordEncoder encoder, AuditService audit) {
         this.users = users;
         this.encoder = encoder;
+        this.audit = audit;
     }
 
     /** Rôles assignables par un admin (SUPERADMIN exclu). */
@@ -53,7 +56,7 @@ public class AdminUserService {
     }
 
     @Transactional
-    public User creer(AdminUserRequest req) {
+    public User creer(AdminUserRequest req, String par) {
         if (users.existsByEmail(req.email())) {
             throw new IllegalArgumentException("Courriel déjà utilisé: " + req.email());
         }
@@ -63,22 +66,53 @@ public class AdminUserService {
         u.setMotDePasseHash(encoder.encode(
                 req.motDePasse() != null ? req.motDePasse() : "ChangezMoi!1"));
         appliquer(u, req);
-        return users.save(u);
+        User cree = users.save(u);
+        audit.log(par, "COMPTE_CREE", "Utilisateur", cree.getId(), cree.getEmail() + " · rôles " + roles(cree));
+        return cree;
     }
 
+    /**
+     * Les changements de rôles, d'activation et de mot de passe sont consignés au journal d'audit (UI-20, zone 05) :
+     * l'auditeur doit pouvoir reconstituer qui a accordé quel droit. Le mot de passe lui-même n'y figure jamais.
+     */
     @Transactional
-    public User modifier(Long id, AdminUserRequest req) {
+    public User modifier(Long id, AdminUserRequest req, String par) {
         User u = exigerDansTenant(id);
-        if (req.motDePasse() != null && !req.motDePasse().isBlank()) {
+        String rolesAvant = roles(u);
+        boolean actifAvant = u.isActif();
+        boolean motDePasseChange = req.motDePasse() != null && !req.motDePasse().isBlank();
+        if (motDePasseChange) {
             u.setMotDePasseHash(encoder.encode(req.motDePasse()));
         }
         appliquer(u, req);
-        return users.save(u);
+        User modifie = users.save(u);
+        journaliserModification(modifie, par, rolesAvant, actifAvant, motDePasseChange);
+        return modifie;
     }
 
     @Transactional
-    public void supprimer(Long id) {
-        users.delete(exigerDansTenant(id));
+    public void supprimer(Long id, String par) {
+        User u = exigerDansTenant(id);
+        users.delete(u);
+        audit.log(par, "COMPTE_SUPPRIME", "Utilisateur", id, u.getEmail() + " · rôles " + roles(u));
+    }
+
+    private void journaliserModification(User u, String par, String rolesAvant, boolean actifAvant, boolean motDePasseChange) {
+        String rolesApres = roles(u);
+        if (!rolesAvant.equals(rolesApres)) {
+            audit.log(par, "COMPTE_ROLES_MODIFIES", "Utilisateur", u.getId(), u.getEmail() + " · " + rolesAvant + " → " + rolesApres);
+        }
+        if (actifAvant != u.isActif()) {
+            audit.log(par, u.isActif() ? "COMPTE_REACTIVE" : "COMPTE_DESACTIVE", "Utilisateur", u.getId(), u.getEmail());
+        }
+        if (motDePasseChange) {
+            audit.log(par, "COMPTE_MOT_DE_PASSE_REINITIALISE", "Utilisateur", u.getId(), u.getEmail());
+        }
+        audit.log(par, "COMPTE_MODIFIE", "Utilisateur", u.getId(), u.getEmail());
+    }
+
+    private static String roles(User u) {
+        return u.getRoles() == null ? "[]" : u.getRoles().stream().map(Enum::name).sorted().toList().toString();
     }
 
     private void appliquer(User u, AdminUserRequest req) {

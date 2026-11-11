@@ -82,6 +82,9 @@ public class EtapeTrousse {
     @Column(name = "retard_signale", nullable = false)
     private boolean retardSignale;
 
+    @Column(name = "echeance_proche_signalee", nullable = false)
+    private boolean echeanceProcheSignalee;
+
     protected EtapeTrousse() {
     }
 
@@ -110,6 +113,7 @@ public class EtapeTrousse {
         this.rappelsEnvoyes = 0;
         this.dernierRappel = null;
         this.retardSignale = false;
+        this.echeanceProcheSignalee = false;
     }
 
     public void terminer(Parcours.StatutEtape resultat, Instant maintenant) {
@@ -144,6 +148,10 @@ public class EtapeTrousse {
         this.retardSignale = true;
     }
 
+    public void signalerEcheanceProche() {
+        this.echeanceProcheSignalee = true;
+    }
+
     public Long getId() { return id; }
     public Long getTenantId() { return tenantId; }
     public Long getTrousseId() { return trousseId; }
@@ -164,4 +172,5 @@ public class EtapeTrousse {
     public int getRappelsEnvoyes() { return rappelsEnvoyes; }
     public Instant getDernierRappel() { return dernierRappel; }
     public boolean isRetardSignale() { return retardSignale; }
+    public boolean isEcheanceProcheSignalee() { return echeanceProcheSignalee; }
 }

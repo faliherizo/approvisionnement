@@ -118,6 +118,12 @@ public class DocumentClmService {
         return d;
     }
 
+    /** Toutes les versions des documents d'une trousse, la plus récente d'abord pour chaque document. */
+    public List<ClmDto.DocumentVue> documentsDe(Trousse t) {
+        return documents.findByTenantIdAndTrousseIdOrderByCleDocumentAscVersionDesc(t.getTenantId(), t.getId()).stream()
+                .map(LectureTrousse::document).toList();
+    }
+
     public List<ClmDto.DocumentVue> versions(Long trousseId, String cleDocument, Habilitations.Acteur acteur) {
         Trousse t = lecture.exigerVisible(trousseId, acteur);
         return documents.findByTenantIdAndTrousseIdAndCleDocumentOrderByVersionDesc(t.getTenantId(), t.getId(), cleDocument)

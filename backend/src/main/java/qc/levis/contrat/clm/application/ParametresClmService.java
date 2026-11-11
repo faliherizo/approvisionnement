@@ -40,7 +40,7 @@ public class ParametresClmService {
     public ParametresClm.Reglages plateforme() {
         return new ParametresClm.Reglages(proprietes.documents().tailleMaxOctets(), proprietes.invitation().validiteJours(),
                 proprietes.portailUrl(), ParametresClm.PREFIXE_PAR_DEFAUT, Relances.FREQUENCE_PAR_DEFAUT_JOURS,
-                Relances.RAPPELS_PAR_DEFAUT, Identite.Politique.DEFAUT, ParametresClm.CHAMP_MONTANT_PAR_DEFAUT);
+                Relances.RAPPELS_PAR_DEFAUT, Relances.PREAVIS_PAR_DEFAUT_JOURS, Identite.Politique.DEFAUT, ParametresClm.CHAMP_MONTANT_PAR_DEFAUT);
     }
 
     /** Paramètres effectifs d'une organisation. */
@@ -95,8 +95,8 @@ public class ParametresClmService {
     private ClmDto.ParametresModule vue(ParametresClm.Reglages r, ParametresClm propres) {
         Identite.Politique p = r.identite();
         return new ClmDto.ParametresModule(r.tailleMaxOctets(), proprietes.documents().plafondOctets(), r.invitationValiditeJours(),
-                r.portailUrl(), r.prefixeReference(), r.rappelFrequenceJours(), r.rappelsMax(), niveaux(p, true), niveaux(p, false),
-                p.tentativesMax(), p.codeValiditeMinutes(), r.champMontant(), propres != null,
+                r.portailUrl(), r.prefixeReference(), r.rappelFrequenceJours(), r.rappelsMax(), r.preavisEcheanceJours(), niveaux(p, true),
+                niveaux(p, false), p.tentativesMax(), p.codeValiditeMinutes(), r.champMontant(), propres != null,
                 propres == null ? null : propres.getModifiePar(), propres == null ? null : propres.getModifieLe());
     }
 
@@ -113,7 +113,8 @@ public class ParametresClmService {
                 choix(req.invitationValiditeJours(), a.invitationValiditeJours()),
                 texte(req.portailUrl(), a.portailUrl(), Function.identity()),
                 texte(req.prefixeReference(), a.prefixeReference(), s -> s.toUpperCase(Locale.ROOT)),
-                choix(req.rappelFrequenceJours(), a.rappelFrequenceJours()), choix(req.rappelsMax(), a.rappelsMax()), identite,
+                choix(req.rappelFrequenceJours(), a.rappelFrequenceJours()), choix(req.rappelsMax(), a.rappelsMax()),
+                choix(req.preavisEcheanceJours(), a.preavisEcheanceJours()), identite,
                 texte(req.champMontant(), a.champMontant(), Function.identity()));
     }
 
@@ -156,7 +157,7 @@ public class ParametresClmService {
         Identite.Politique p = r.identite();
         return "taille max " + r.tailleMaxOctets() + " o · invitation " + r.invitationValiditeJours() + " j · portail " + r.portailUrl()
                 + " · préfixe " + r.prefixeReference() + " · rappels " + r.rappelFrequenceJours() + " j × " + r.rappelsMax()
-                + " · identité externes " + niveaux(p, true) + " internes " + niveaux(p, false) + " · tentatives " + p.tentativesMax()
+                + " · préavis d'échéance " + r.preavisEcheanceJours() + " j · identité externes " + niveaux(p, true) + " internes " + niveaux(p, false) + " · tentatives " + p.tentativesMax()
                 + " · code " + p.codeValiditeMinutes() + " min · champ montant " + r.champMontant();
     }
 }

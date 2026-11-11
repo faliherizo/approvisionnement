@@ -32,6 +32,8 @@ public class MessagerieClm {
                 "Une action vous est assignée sur la trousse « {{titre}} » ({{reference}}) : {{etape}}. Échéance : {{echeance}}."});
         DEFAUTS.put(Evenement.RAPPEL, new String[]{"Rappel : {{etape}} — {{reference}}",
                 "Rappel : l'étape « {{etape}} » de la trousse {{reference}} attend toujours votre réponse. Échéance : {{echeance}}."});
+        DEFAUTS.put(Evenement.ECHEANCE, new String[]{"Échéance proche : {{etape}} — {{reference}}",
+                "L'étape « {{etape}} » de la trousse {{reference}} arrive à échéance le {{echeance}}. Merci d'y donner suite avant cette date."});
         DEFAUTS.put(Evenement.RETARD, new String[]{"Échéance dépassée — {{reference}}",
                 "L'étape « {{etape}} » de la trousse {{reference}} a dépassé son échéance ({{echeance}})."});
         DEFAUTS.put(Evenement.REJET, new String[]{"Trousse rejetée — {{reference}}",

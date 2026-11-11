@@ -17,7 +17,7 @@ profil voit et peut faire. La validation de l'isolation est rapportée dans
 | Module explicitement retiré | `redaction` — socle de rédaction contractuelle (dossiers, documents, clauses, gabarits, circuits, assistant, pilotage) |
 | Autres modules | `formulaire`, `regle`, `saisie`, `processus`, `notification`, `rapport`, `interop`, `document`, `application`, `securite_avancee`, `rh`, `paie` : inactifs (valeur par défaut du catalogue) |
 | Amorçage | [`data/tenants-demo.json`](../../../backend/src/main/resources/data/tenants-demo.json), lu par `TenantsDemoSeeder` après le catalogue des modules |
-| Activation de l'amorçage | `app.amorcage.tenants-demo` : vrai en développement et en test, faux en production (variable `APP_TENANTS_DEMO`) |
+| Activation de l'amorçage | `app.amorcage.tenants-demo` : vrai en développement, en test et dans le `docker-compose.yml` de démonstration, faux en production (variable `APP_TENANTS_DEMO`) |
 
 L'amorçage est idempotent : les modules ne sont appliqués qu'à la création du tenant (le superadmin a pu les changer
 depuis) et un compte existant n'est jamais modifié.
@@ -39,6 +39,40 @@ pied de page « Rôles » des maquettes UI-01 à UI-24.
 
 Mot de passe de démonstration : `Passw0rd!` (même convention que les comptes de Lévis). Ces comptes n'existent pas en
 production.
+
+### 2.1 Se connecter au tenant IQ
+
+| Environnement | Adresse | Amorçage des comptes |
+|---|---|---|
+| Docker (`docker compose up -d`) | <http://localhost:8082/login> | `APP_TENANTS_DEMO` vaut `true` par défaut dans [`docker-compose.yml`](../../../docker-compose.yml) |
+| Développement (backend `:8085`, Vite) | <http://localhost:5173/login> | Actif par défaut (profil hors `prod`) |
+| Production | `https://iq.<domaine>/login` | Aucun compte de démonstration (`APP_TENANTS_DEMO=false`) |
+
+1. Ouvrir la page de connexion, saisir le **courriel** d'un compte du tableau ci-dessus et le mot de passe `Passw0rd!`.
+2. Aucun second facteur n'est demandé aux comptes de démonstration.
+3. Le compte arrive directement sur le **Tableau de bord des contrats** (`/clm`). Les écrans d'approvisionnement ne sont
+   pas proposés : le tenant exploite IQ seul ([ADR-010](../../adr/ADR-010-exclusivite-produits-approvisionnement-iq.md)).
+
+Par l'API (champ `motDePasse`, et non `password`) :
+
+```bash
+curl -c iq.jar -X POST http://localhost:8082/api/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"admin.ti@iq.example","motDePasse":"Passw0rd!"}'
+```
+
+**Dépannage — « courriel ou mot de passe invalide » sur Docker.** Le conteneur backend tourne en profil `prod`, qui
+n'amorce pas les organisations de démonstration. Si les comptes manquent, vérifier que la variable est bien passée et
+recréer le conteneur, sans reconstruire l'image :
+
+```bash
+docker inspect contrat-backend --format '{{range .Config.Env}}{{println .}}{{end}}' | grep APP_TENANTS_DEMO
+docker compose up -d --no-build backend
+docker logs contrat-backend 2>&1 | grep "démonstration"   # 1 organisation + 7 comptes créés
+```
+
+L'amorçage est idempotent : un redémarrage ne recrée ni ne modifie un compte existant. Un mot de passe changé depuis
+l'application reste donc changé.
 
 Acteurs du § 3 sans compte dans le tenant :
 
@@ -102,6 +136,8 @@ Pages transverses servies dans l'espace du module :
 
 - **Superadmin VINA** (`/superadmin`, « Modules par tenant », organisation « Investissement Québec (iq) ») : activer ou
   désactiver `clm`, `clm_ia` et `redaction` ; activer `clm_ia` réactive `clm`, désactiver `clm` retire `clm_ia`.
+  Activer `clm` désactive les modules d'approvisionnement de l'organisation, et inversement
+  ([ADR-010](../../adr/ADR-010-exclusivite-produits-approvisionnement-iq.md)).
 - **Administrateur IQ** (`/clm/admin/utilisateurs`) : créer un compte, attribuer un rôle (dont `AUDITEUR`), retirer
   l'accès ; brancher l'annuaire d'IQ (`/clm/admin/sso`).
 
@@ -120,5 +156,5 @@ Pages transverses servies dans l'espace du module :
 |---|---|---|
 | Administrateur d'affaires et administrateur technique partagent le rôle `ADMIN` | Séparation fine non portée par le RBAC | Rôles `ADMIN_AFFAIRES` et `ADMIN_TI` si IQ l'exige |
 | Gestionnaire d'unité (maquettes UI-01, UI-02, UI-18, UI-24) | Pas de rôle dédié | Groupes d'unité (module Sécurité avancée) ou rôle de consultation par unité |
-| Journal des changements de comptes et de rôles (UI-20, zone 05) | Les changements faits dans l'administration des comptes ne sont pas consignés au journal d'audit | Journaliser création, modification de rôles, désactivation et suppression d'un compte |
+| Journal des changements de comptes et de rôles (UI-20, zone 05) | Fait le 2026-11-08 : création, rôles (avant → après), désactivation, réactivation, mot de passe réinitialisé et suppression au journal d'audit | — |
 | Signataire interne | `LECTEUR` : consulte aussi le catalogue des modèles publiés | Acceptable (lecture seule) ; rôle `SIGNATAIRE` dédié si IQ le demande |

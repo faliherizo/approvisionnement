@@ -42,6 +42,9 @@ services:
       OLLAMA_BASE_URL: http://ollama:11434
       OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.1}
       JWT_SECRET: ${JWT_SECRET:-changez-moi-cette-cle-secrete-de-256-bits-minimum-pour-la-ville-de-levis}
+      # Environnement de démonstration : crée le tenant IQ et un compte par profil (data/tenants-demo.json), que le
+      # profil prod n'amorce pas seul. Une vraie production lance le compose avec APP_TENANTS_DEMO=false.
+      APP_TENANTS_DEMO: ${APP_TENANTS_DEMO:-true}
     ports:
       - "8080:8085"
     restart: unless-stopped

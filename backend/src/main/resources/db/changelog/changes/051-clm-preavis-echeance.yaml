@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 051-1-clm-preavis-echeance
+      author: levis
+      comment: "CLM (F-07) : alerte d'échéance imminente — préavis réglé par l'organisation (UI-22) et alerte unique par activation d'étape."
+      changes:
+        - addColumn:
+            tableName: clm_parametres
+            columns:
+              - column: { name: preavis_echeance_jours, type: INT, defaultValueNumeric: 1, constraints: { nullable: false } }
+        - addColumn:
+            tableName: clm_etape
+            columns:
+              - column: { name: echeance_proche_signalee, type: BOOLEAN, defaultValueBoolean: false, constraints: { nullable: false } }

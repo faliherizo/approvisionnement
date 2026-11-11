@@ -1,0 +1,100 @@
+databaseChangeLog:
+  - changeSet:
+      id: 052-1-clm-client-integration
+      author: levis
+      comment: "CLM (addenda 1, TI-22 Workday, AF-47 lots) : systèmes externes autorisés à déclencher des signatures par l'API."
+      changes:
+        - createTable:
+            tableName: clm_client_integration
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: nom, type: VARCHAR(120), constraints: { nullable: false } }
+              - column: { name: systeme, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: client_id, type: VARCHAR(60), constraints: { nullable: false, unique: true, uniqueConstraintName: uk_clm_client_id } }
+              - column: { name: secret_empreinte, type: VARCHAR(64), constraints: { nullable: false } }
+              - column: { name: url_rappel, type: VARCHAR(500) }
+              - column: { name: cle_rappel_chiffree, type: VARCHAR(500), constraints: { nullable: false } }
+              - column: { name: actif, type: BOOLEAN, constraints: { nullable: false } }
+              - column: { name: cree_par, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: revoque_le, type: TIMESTAMP }
+        - createIndex:
+            tableName: clm_client_integration
+            indexName: ix_clm_client_tenant
+            columns:
+              - column: { name: tenant_id }
+  - changeSet:
+      id: 052-2-clm-lot
+      author: levis
+      comment: "CLM (addenda 1, AF-47) : signature en lot et ses éléments."
+      changes:
+        - createTable:
+            tableName: clm_lot
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: libelle, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: modele_id, type: BIGINT }
+              - column: { name: client_integration_id, type: BIGINT }
+              - column: { name: cree_par, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: total, type: INT, constraints: { nullable: false } }
+              - column: { name: reussis, type: INT, constraints: { nullable: false } }
+              - column: { name: echecs, type: INT, constraints: { nullable: false } }
+              - column: { name: lancer, type: BOOLEAN, constraints: { nullable: false } }
+              - column: { name: statut, type: VARCHAR(24), constraints: { nullable: false } }
+        - createIndex:
+            tableName: clm_lot
+            indexName: ix_clm_lot_tenant
+            columns:
+              - column: { name: tenant_id }
+        - createTable:
+            tableName: clm_lot_element
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: lot_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: rang, type: INT, constraints: { nullable: false } }
+              - column: { name: reference_externe, type: VARCHAR(120) }
+              - column: { name: trousse_id, type: BIGINT }
+              - column: { name: statut, type: VARCHAR(12), constraints: { nullable: false } }
+              - column: { name: erreur, type: VARCHAR(500) }
+        - createIndex:
+            tableName: clm_lot_element
+            indexName: ix_clm_lot_element_lot
+            columns:
+              - column: { name: lot_id }
+  - changeSet:
+      id: 052-3-clm-trousse-externe
+      author: levis
+      comment: "CLM (addenda 1) : trousse rattachée au système externe qui l'a demandée, et rappels de statut signés vers lui."
+      changes:
+        - addColumn:
+            tableName: clm_trousse
+            columns:
+              - column: { name: client_integration_id, type: BIGINT }
+              - column: { name: reference_externe, type: VARCHAR(120) }
+              - column: { name: lot_id, type: BIGINT }
+        - createTable:
+            tableName: clm_rappel_sortant
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: client_integration_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: trousse_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: evenement, type: VARCHAR(40), constraints: { nullable: false } }
+              - column: { name: cle_idempotence, type: VARCHAR(160), constraints: { nullable: false, unique: true, uniqueConstraintName: ix_clm_rappel_cle } }
+              - column: { name: payload_json, type: TEXT, constraints: { nullable: false } }
+              - column: { name: statut, type: VARCHAR(12), constraints: { nullable: false } }
+              - column: { name: tentatives, type: INT, constraints: { nullable: false } }
+              - column: { name: prochain_essai, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: derniere_erreur, type: VARCHAR(1000) }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: envoye_le, type: TIMESTAMP }
+        - createIndex:
+            tableName: clm_rappel_sortant
+            indexName: ix_clm_rappel_statut
+            columns:
+              - column: { name: statut }
+              - column: { name: prochain_essai }

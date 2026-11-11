@@ -55,6 +55,9 @@ public class ParametresClm {
     @Column(name = "rappels_max", nullable = false)
     private int rappelsMax;
 
+    @Column(name = "preavis_echeance_jours", nullable = false)
+    private int preavisEcheanceJours = Relances.PREAVIS_PAR_DEFAUT_JOURS;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "externe_faible", nullable = false, length = 20)
     private Identite.Niveau externeFaible;
@@ -112,6 +115,7 @@ public class ParametresClm {
         prefixeReference = r.prefixeReference();
         rappelFrequenceJours = r.rappelFrequenceJours();
         rappelsMax = r.rappelsMax();
+        preavisEcheanceJours = r.preavisEcheanceJours();
         Identite.Politique p = r.identite();
         externeFaible = p.minimumRequis(Identite.Risque.FAIBLE, true);
         externeMoyen = p.minimumRequis(Identite.Risque.MOYEN, true);
@@ -132,7 +136,7 @@ public class ParametresClm {
                 Map.of(Identite.Risque.FAIBLE, interneFaible, Identite.Risque.MOYEN, interneMoyen, Identite.Risque.ELEVE, interneEleve),
                 tentativesIdentite, codeValiditeMinutes);
         return new Reglages(tailleMaxOctets, invitationValiditeJours, portailUrl, prefixeReference, rappelFrequenceJours, rappelsMax,
-                identite, champMontant);
+                preavisEcheanceJours, identite, champMontant);
     }
 
     public Long getTenantId() { return tenantId; }
@@ -141,7 +145,8 @@ public class ParametresClm {
 
     /** Valeurs d'un jeu de paramètres, qu'il vienne de la plateforme ou d'une organisation. */
     public record Reglages(long tailleMaxOctets, int invitationValiditeJours, String portailUrl, String prefixeReference,
-                           int rappelFrequenceJours, int rappelsMax, Identite.Politique identite, String champMontant) {
+                           int rappelFrequenceJours, int rappelsMax, int preavisEcheanceJours, Identite.Politique identite,
+                           String champMontant) {
 
         /** Bornes de chaque paramètre ; {@code plafondOctets} : taille qu'accepte le transport des fichiers de la plateforme. */
         public List<String> erreurs(long plafondOctets) {
@@ -163,6 +168,9 @@ public class ParametresClm {
             }
             if (rappelsMax < 0 || rappelsMax > Relances.RAPPELS_PLAFOND) {
                 erreurs.add("Nombre de rappels par défaut : entre 0 et " + Relances.RAPPELS_PLAFOND + ".");
+            }
+            if (preavisEcheanceJours < 0 || preavisEcheanceJours > Relances.PREAVIS_MAX_JOURS) {
+                erreurs.add("Préavis d'échéance : entre 0 (aucune alerte) et " + Relances.PREAVIS_MAX_JOURS + " jours.");
             }
             erreurs.addAll(identite == null ? List.of("Politique d'identité requise.") : identite.erreurs());
             if (champMontant == null || !champMontant.matches("[A-Za-z]\\w{0,63}")) {

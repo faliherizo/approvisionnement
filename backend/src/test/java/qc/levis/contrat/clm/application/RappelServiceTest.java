@@ -28,6 +28,8 @@ import qc.levis.contrat.clm.domain.Invitation;
 import qc.levis.contrat.clm.domain.ModeleMessage;
 import qc.levis.contrat.clm.domain.Parcours;
 import qc.levis.contrat.clm.domain.Trousse;
+import qc.levis.contrat.clm.domain.Relances;
+import qc.levis.contrat.clm.domain.ParametresClm;
 
 /** Rappels de non-réponse et retards (ST-11), avec une horloge fixe trois jours après l'activation. */
 @ExtendWith(MockitoExtension.class)
@@ -42,6 +44,7 @@ class RappelServiceTest {
     @Mock ParcoursService parcours;
     @Mock JournalClm journal;
     @Mock PerimetreUtilisateur perimetre;
+    @Mock ParametresClmService parametres;
     final PorteeTenantMemoire portee = new PorteeTenantMemoire();
     RappelService service;
     Trousse trousse;
@@ -50,10 +53,16 @@ class RappelServiceTest {
     void preparer() {
         ContexteClm ctx = new ContexteClm(perimetre, portee, new ObjectMapper(), Clock.fixed(ACTIVATION.plusSeconds(3 * 86_400), ZoneOffset.UTC));
         lenient().doCallRealMethod().when(decisions).duCycleEnCours(any());
-        service = new RappelService(etapes, decisions, trousses, invitations, parcours, journal, ctx);
+        lenient().when(parametres.reglages(1L)).thenReturn(reglages(Relances.PREAVIS_PAR_DEFAUT_JOURS));
+        service = new RappelService(etapes, decisions, trousses, invitations, parcours, journal, ctx, parametres);
         trousse = new Trousse(1L, "TR-1", "T", "init@x.ca", ACTIVATION);
         ReflectionTestUtils.setField(trousse, "id", 10L);
         when(trousses.findByIdAndTenantId(10L, 1L)).thenReturn(Optional.of(trousse));
+    }
+
+    private static ParametresClm.Reglages reglages(int preavisJours) {
+        return new ParametresClm.Reglages(ParametresClm.UN_MO, 14, "https://iq.example/portail", "IQ", 2, 3, preavisJours,
+                Identite.Politique.DEFAUT, "montant");
     }
 
     private EtapeTrousse etape(Parcours.TypeEtape type, String affectationsJson, Integer delai) {
@@ -117,5 +126,41 @@ class RappelServiceTest {
         when(trousses.findByIdAndTenantId(10L, 1L)).thenReturn(Optional.empty());
         assertEquals(0, service.executer());
         verifyNoInteractions(parcours, journal);
+    }
+
+    @Test
+    void echeance_proche_alerte_une_fois_ceux_qui_n_ont_pas_repondu() {
+        EtapeTrousse e = etape(Parcours.TypeEtape.VALIDATION,
+                "[{\"type\":\"UTILISATEUR\",\"valeur\":\"a@x.ca\"},{\"type\":\"UTILISATEUR\",\"valeur\":\"b@x.ca\"}]", 4);
+        when(etapes.findByStatut(Parcours.StatutEtape.ACTIVE)).thenReturn(List.of(e));
+        when(decisions.findByTenantIdAndEtapeIdOrderByDecideLeAsc(1L, 20L)).thenReturn(List.of(
+                new DecisionEtape(1L, 10L, 20L, "b@x.ca", DecisionEtape.Nature.APPROUVE, null, ACTIVATION.plusSeconds(60))));
+
+        service.executer();
+        service.executer();
+
+        verify(parcours, times(1)).notifierTache(trousse, e, new Parcours.Affectation(Parcours.TypeAffecte.UTILISATEUR, "a@x.ca"),
+                ModeleMessage.Evenement.ECHEANCE);
+        verify(parcours, never()).notifierTache(any(), any(), eq(new Parcours.Affectation(Parcours.TypeAffecte.UTILISATEUR, "b@x.ca")),
+                eq(ModeleMessage.Evenement.ECHEANCE));
+        verify(journal, times(1)).consigner(trousse, "ECHEANCE_PROCHE", "systeme", "Étape · 1 destinataire(s)");
+        assertTrue(e.isEcheanceProcheSignalee());
+        verify(parcours, never()).notifierProprietaire(any(), eq(ModeleMessage.Evenement.RETARD), any());
+    }
+
+    @Test
+    void sans_preavis_ou_hors_preavis_aucune_alerte_d_echeance() {
+        EtapeTrousse proche = etape(Parcours.TypeEtape.VALIDATION, "[{\"type\":\"GROUPE\",\"valeur\":\"G\"}]", 4);
+        when(etapes.findByStatut(Parcours.StatutEtape.ACTIVE)).thenReturn(List.of(proche));
+        when(parametres.reglages(1L)).thenReturn(reglages(0));
+        service.executer();
+        assertFalse(proche.isEcheanceProcheSignalee(), "préavis nul : l'organisation a désactivé l'alerte");
+
+        EtapeTrousse lointaine = etape(Parcours.TypeEtape.VALIDATION, "[{\"type\":\"GROUPE\",\"valeur\":\"G\"}]", 10);
+        when(etapes.findByStatut(Parcours.StatutEtape.ACTIVE)).thenReturn(List.of(lointaine));
+        when(parametres.reglages(1L)).thenReturn(reglages(2));
+        service.executer();
+        assertFalse(lointaine.isEcheanceProcheSignalee(), "échéance dans 7 jours, préavis de 2 jours");
+        verify(parcours, never()).notifierTache(any(), any(), any(), eq(ModeleMessage.Evenement.ECHEANCE));
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import qc.levis.contrat.clm.application.ClmProprietes;
 import qc.levis.contrat.clm.application.RappelService;
+import qc.levis.contrat.clm.application.RappelsExternesService;
 import qc.levis.contrat.clm.application.SalesforceService;
 import qc.levis.contrat.clm.application.port.AlertesExploitation;
 
@@ -42,11 +43,14 @@ public class ClmConfiguration {
 
         private final RappelService rappels;
         private final SalesforceService salesforce;
+        private final RappelsExternesService rappelsExternes;
         private final AlertesExploitation alertes;
 
-        public Planificateur(RappelService rappels, SalesforceService salesforce, AlertesExploitation alertes) {
+        public Planificateur(RappelService rappels, SalesforceService salesforce, RappelsExternesService rappelsExternes,
+                             AlertesExploitation alertes) {
             this.rappels = rappels;
             this.salesforce = salesforce;
+            this.rappelsExternes = rappelsExternes;
             this.alertes = alertes;
         }
 
@@ -55,6 +59,7 @@ public class ClmConfiguration {
         public void executer() {
             executer("rappels et échéances", rappels::executer);
             executer("relais Salesforce", salesforce::relayer);
+            executer("rappels aux systèmes externes", rappelsExternes::relayer);
         }
 
         private void executer(String tache, Runnable travail) {

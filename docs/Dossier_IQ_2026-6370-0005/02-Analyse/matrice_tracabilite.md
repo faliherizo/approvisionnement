@@ -23,7 +23,10 @@
 | NF-07 | 25 Mo minimum | ST-04 | Test upload 25 Mo+ |
 | NF-13 | Portabilité | ST-10 | Export / import de contrôle |
 
-## Validation de l'implémentation (2026-11-03)
+## Validation de l'implémentation (2026-11-03, mise à jour le 2026-11-08)
+
+Détail par sous-exigence, marche à suivre depuis l'interface et tests de bout en bout par exigence :
+[validation_exigences_fonctionnelles.md](validation_exigences_fonctionnelles.md).
 
 État vérifié dans le code, l'interface et les tests du module CLM (`backend/…/clm`, `frontend/src/pages/clm`).
 ✅ implémentée et testée · ✅🔌 implémentée, recette sur le système réel d'IQ en attente · 🟡 partielle · ⏳ décision IQ.
@@ -33,14 +36,14 @@
 | F-01 | `TrousseService`, `DocumentClmService` | UI-02 à UI-05 | `ClmIntegrationTest`, e2e `clm.view` | ✅ | — |
 | F-02 | `SalesforceRest`, `Preremplissage`, `RenduDocuments` | UI-03, UI-10 | `ClmIntegrationTest`, `SalesforceRestTest` | ✅🔌 | Recette sur le bac à sable Salesforce d'IQ |
 | F-03 | `ModeleService`, `Modele` (versions, partage, publication) | UI-07 à UI-09 | `ClmIntegrationTest`, `DomaineClmTest` | ✅ | — |
-| F-04 | `Modele.Champ`, `ReglesClm`, saisie des valeurs, étapes conditionnelles | UI-09 à UI-11 | `ClmIntegrationTest`, `CasLimitesDomaineClmTest` | ✅ | — |
+| F-04 | `Modele.Champ`, `ReglesClm`, saisie des valeurs, étapes conditionnelles, saisie assistée (`Suggestions`) | UI-09 à UI-11 | `ClmIntegrationTest`, `CasLimitesDomaineClmTest`, `SuggestionsSaisieIntegrationTest`, e2e `clm.exigences` | ✅ | — |
 | F-05 | `Parcours`, `ParcoursService` (séquentiel, parallèle, mixte, quorum, délégation) | UI-11 à UI-14 | `ClmIntegrationTest`, `DomaineClmTest` | ✅ | — |
 | F-06 | `PortailService`, `Identite`, port `FournisseurSignature` | UI-15, UI-16 | `ClmIntegrationTest`, e2e portail | 🟡 | Fournisseur certifié et horodatage qualifié (ST-09) |
-| F-07 | `RappelService`, `MessagerieClm` | UI-17 | `RappelServiceTest`, `ClmIntegrationTest` | ✅ | — |
+| F-07 | `RappelService` (rappels, alerte avant échéance, retard), `MessagerieClm` | UI-17, UI-22 | `RappelServiceTest`, `ClmIntegrationTest`, e2e `clm.exigences` | ✅ | — |
 | F-08 | `SuiviService` (périmètre, exceptions, export) | UI-01, UI-18 | `ClmIntegrationTest` | ✅ | — |
 | F-09 | Versions, `ChaineScellee`, `PreuveService` | UI-06, UI-19, UI-23 | `ClmIntegrationTest`, `DomaineClmTest` | 🟡 | Conservation et destruction selon la politique d'IQ |
 | F-10 | `SalesforceService` (boîte d'envoi, idempotence, reprises), API REST `/api/clm` | UI-21 | `ClmIntegrationTest`, `SalesforceServiceAlerteTest` | ✅🔌 | Recette Salesforce d'IQ |
-| F-11 | OIDC/SAML/MFA, `Habilitations`, rôle `AUDITEUR`, garde de module (ADR-009) | UI-20, UI-22, UI-23, `/clm/admin/sso` | `ArchitectureClmTest`, `ArchitectureModulesTest`, `IsolationTenantIqTest` | 🟡 | IdP d'IQ (ST-01), domaines d'affaires, rôles d'administration distincts, journal des changements de rôles |
+| F-11 | OIDC/SAML/MFA, `Habilitations`, rôle `AUDITEUR`, garde de module (ADR-009) | UI-20, UI-22, UI-23, `/clm/admin/sso` | `ArchitectureClmTest`, `ArchitectureModulesTest`, `IsolationTenantIqTest` | 🟡 | IdP d'IQ (ST-01), domaines d'affaires, rôles d'administration distincts (journal des changements de comptes et de rôles : fait le 2026-11-08) |
 | F-12 | Identité de l'organisation sur le portail (`IdentiteOrganisation`) | UI-01 à UI-24, portail à 44 px, français et anglais | e2e aux 4 largeurs, axe-core | ✅ | — |
 | F-13 | `AnalyseService`, module `clm_ia` | UI-24 | `ClmIntegrationTest`, `DomaineClmTest` | ✅ | — |
 | NF-01 | Terraform Azure (`infra/terraform/azure`, région Canada) | — | `terraform validate` | ⏳ | Québec ou Canada (RST-18) |

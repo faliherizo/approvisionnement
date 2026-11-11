@@ -33,9 +33,11 @@ public class RappelService {
     private final ParcoursService parcours;
     private final JournalClm journal;
     private final ContexteClm ctx;
+    private final ParametresClmService parametres;
 
     public RappelService(EtapeTrousseRepository etapes, DecisionEtapeRepository decisions, TrousseRepository trousses,
-                         InvitationRepository invitations, ParcoursService parcours, JournalClm journal, ContexteClm ctx) {
+                         InvitationRepository invitations, ParcoursService parcours, JournalClm journal, ContexteClm ctx,
+                         ParametresClmService parametres) {
         this.etapes = etapes;
         this.decisions = decisions;
         this.trousses = trousses;
@@ -43,6 +45,7 @@ public class RappelService {
         this.parcours = parcours;
         this.journal = journal;
         this.ctx = ctx;
+        this.parametres = parametres;
     }
 
     /** Retourne le nombre de rappels envoyés. */
@@ -62,6 +65,7 @@ public class RappelService {
     }
 
     private int traiter(Trousse t, EtapeTrousse e, Instant maintenant) {
+        alerterEcheanceProche(t, e, maintenant);
         if (Relances.enRetard(e.getEcheance(), maintenant) && !e.isRetardSignale()) {
             e.signalerRetard();
             etapes.save(e);
@@ -78,6 +82,19 @@ public class RappelService {
         etapes.save(e);
         journal.consigner(t, "RAPPEL_ENVOYE", "systeme", e.getLibelle() + " · " + enAttente.size() + " destinataire(s)");
         return enAttente.size();
+    }
+
+    /** Une seule alerte par activation de l'étape, adressée à qui n'a pas encore répondu (F-07, alertes d'échéances). */
+    private void alerterEcheanceProche(Trousse t, EtapeTrousse e, Instant maintenant) {
+        if (e.isEcheanceProcheSignalee()
+                || !Relances.echeanceProche(e.getEcheance(), maintenant, parametres.reglages(t.getTenantId()).preavisEcheanceJours())) {
+            return;
+        }
+        List<Parcours.Affectation> enAttente = enAttente(t, e);
+        enAttente.forEach(a -> parcours.notifierTache(t, e, a, Evenement.ECHEANCE));
+        e.signalerEcheanceProche();
+        etapes.save(e);
+        journal.consigner(t, "ECHEANCE_PROCHE", "systeme", e.getLibelle() + " · " + enAttente.size() + " destinataire(s)");
     }
 
     /** Ne relance que ceux qui n'ont pas encore répondu ; pour une signature, les invitations encore ouvertes. */

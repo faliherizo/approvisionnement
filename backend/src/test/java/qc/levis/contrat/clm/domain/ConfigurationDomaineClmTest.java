@@ -22,7 +22,8 @@ class ConfigurationDomaineClmTest {
 
     private static ParametresClm.Reglages reglages(long taille, int validite, String portail, String prefixe, int frequence, int rappels,
                                                    Identite.Politique identite, String champ) {
-        return new ParametresClm.Reglages(taille, validite, portail, prefixe, frequence, rappels, identite, champ);
+        return new ParametresClm.Reglages(taille, validite, portail, prefixe, frequence, rappels, Relances.PREAVIS_PAR_DEFAUT_JOURS,
+                identite, champ);
     }
 
     private static ParametresClm.Reglages valides() {
@@ -57,6 +58,20 @@ class ConfigurationDomaineClmTest {
         List<String> peu = reglages(ParametresClm.TAILLE_MIN_OCTETS - 1, 0, null, null, 0, -1,
                 new Identite.Politique(Map.of(), Map.of(), 5, 10), null).erreurs(PLAFOND);
         assertEquals(9, peu.size(), peu.toString());
+    }
+
+    @Test
+    void le_preavis_d_echeance_va_de_zero_aucune_alerte_a_trente_jours() {
+        ParametresClm.Reglages v = valides();
+        for (int admis : new int[]{0, Relances.PREAVIS_MAX_JOURS}) {
+            assertTrue(new ParametresClm.Reglages(v.tailleMaxOctets(), v.invitationValiditeJours(), v.portailUrl(), v.prefixeReference(),
+                    v.rappelFrequenceJours(), v.rappelsMax(), admis, v.identite(), v.champMontant()).erreurs(PLAFOND).isEmpty());
+        }
+        for (int refuse : new int[]{-1, Relances.PREAVIS_MAX_JOURS + 1}) {
+            assertEquals(List.of("Préavis d'échéance : entre 0 (aucune alerte) et 30 jours."),
+                    new ParametresClm.Reglages(v.tailleMaxOctets(), v.invitationValiditeJours(), v.portailUrl(), v.prefixeReference(),
+                            v.rappelFrequenceJours(), v.rappelsMax(), refuse, v.identite(), v.champMontant()).erreurs(PLAFOND));
+        }
     }
 
     @ParameterizedTest

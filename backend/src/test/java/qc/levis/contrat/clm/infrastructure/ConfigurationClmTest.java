@@ -20,6 +20,7 @@ import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import qc.levis.contrat.clm.application.JournalClm;
 import qc.levis.contrat.clm.application.RappelService;
+import qc.levis.contrat.clm.application.RappelsExternesService;
 import qc.levis.contrat.clm.application.SalesforceService;
 import qc.levis.contrat.clm.application.port.AlertesExploitation;
 import qc.levis.contrat.clm.application.port.PortSalesforce;
@@ -37,15 +38,17 @@ class ConfigurationClmTest {
     }
 
     @Test
-    void le_planificateur_envoie_les_rappels_avant_de_relayer_les_statuts_salesforce() {
+    void le_planificateur_envoie_les_rappels_avant_de_relayer_les_statuts_puis_les_rappels_externes() {
         RappelService rappels = mock(RappelService.class);
         SalesforceService salesforce = mock(SalesforceService.class);
+        RappelsExternesService externes = mock(RappelsExternesService.class);
 
-        new ClmConfiguration.Planificateur(rappels, salesforce, mock(AlertesExploitation.class)).executer();
+        new ClmConfiguration.Planificateur(rappels, salesforce, externes, mock(AlertesExploitation.class)).executer();
 
-        InOrder ordre = inOrder(rappels, salesforce);
+        InOrder ordre = inOrder(rappels, salesforce, externes);
         ordre.verify(rappels).executer();
         ordre.verify(salesforce).relayer();
+        ordre.verify(externes).relayer();
     }
 
     @Test
@@ -55,9 +58,11 @@ class ConfigurationClmTest {
         AlertesExploitation alertes = mock(AlertesExploitation.class);
         when(rappels.executer()).thenThrow(new IllegalStateException("base indisponible"));
 
-        new ClmConfiguration.Planificateur(rappels, salesforce, alertes).executer();
+        RappelsExternesService externes = mock(RappelsExternesService.class);
+        new ClmConfiguration.Planificateur(rappels, salesforce, externes, alertes).executer();
 
         verify(salesforce).relayer();
+        verify(externes).relayer();
         verify(alertes).signaler(AlertesExploitation.Code.PLANIFICATEUR_ECHEC, null, "rappels et échéances", "IllegalStateException");
     }
 

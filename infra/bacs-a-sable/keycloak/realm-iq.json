@@ -1,0 +1,375 @@
+{
+  "realm": "iq",
+  "displayName": "Investissement Québec — bac à sable",
+  "enabled": true,
+  "internationalizationEnabled": true,
+  "supportedLocales": [
+    "fr",
+    "en"
+  ],
+  "defaultLocale": "fr",
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "bruteForceProtected": true,
+  "passwordPolicy": "length(8)",
+  "roles": {
+    "realm": [
+      {
+        "name": "clm-admin-affaires",
+        "description": "Rôle CLM proposé, à faire correspondre aux groupes de l'annuaire d'IQ"
+      },
+      {
+        "name": "clm-admin-ti",
+        "description": "Rôle CLM proposé, à faire correspondre aux groupes de l'annuaire d'IQ"
+      },
+      {
+        "name": "clm-approbateur",
+        "description": "Rôle CLM proposé, à faire correspondre aux groupes de l'annuaire d'IQ"
+      },
+      {
+        "name": "clm-auditeur",
+        "description": "Rôle CLM proposé, à faire correspondre aux groupes de l'annuaire d'IQ"
+      },
+      {
+        "name": "clm-initiateur",
+        "description": "Rôle CLM proposé, à faire correspondre aux groupes de l'annuaire d'IQ"
+      },
+      {
+        "name": "clm-signataire",
+        "description": "Rôle CLM proposé, à faire correspondre aux groupes de l'annuaire d'IQ"
+      },
+      {
+        "name": "clm-validateur",
+        "description": "Rôle CLM proposé, à faire correspondre aux groupes de l'annuaire d'IQ"
+      }
+    ]
+  },
+  "groups": [
+    {
+      "name": "domaines-affaires",
+      "subGroups": [
+        {
+          "name": "Affaires juridiques"
+        },
+        {
+          "name": "Conformité et audit interne"
+        },
+        {
+          "name": "Direction générale"
+        },
+        {
+          "name": "Financement des entreprises"
+        },
+        {
+          "name": "Gestion contractuelle"
+        },
+        {
+          "name": "Technologies de l'information"
+        },
+        {
+          "name": "Vice-présidence Financement"
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "initiateur@iq.example",
+      "email": "initiateur@iq.example",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Camille",
+      "lastName": "Tremblay",
+      "attributes": {
+        "direction": [
+          "Financement des entreprises"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Passw0rd!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "clm-initiateur"
+      ],
+      "groups": [
+        "/domaines-affaires/Financement des entreprises"
+      ]
+    },
+    {
+      "username": "validateur@iq.example",
+      "email": "validateur@iq.example",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Louis",
+      "lastName": "Gagnon",
+      "attributes": {
+        "direction": [
+          "Affaires juridiques"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Passw0rd!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "clm-validateur"
+      ],
+      "groups": [
+        "/domaines-affaires/Affaires juridiques"
+      ]
+    },
+    {
+      "username": "approbateur@iq.example",
+      "email": "approbateur@iq.example",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Sophie",
+      "lastName": "Roy",
+      "attributes": {
+        "direction": [
+          "Vice-présidence Financement"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Passw0rd!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "clm-approbateur"
+      ],
+      "groups": [
+        "/domaines-affaires/Vice-présidence Financement"
+      ]
+    },
+    {
+      "username": "signataire@iq.example",
+      "email": "signataire@iq.example",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Étienne",
+      "lastName": "Côté",
+      "attributes": {
+        "direction": [
+          "Direction générale"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Passw0rd!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "clm-signataire"
+      ],
+      "groups": [
+        "/domaines-affaires/Direction générale"
+      ]
+    },
+    {
+      "username": "admin.affaires@iq.example",
+      "email": "admin.affaires@iq.example",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Julie",
+      "lastName": "Bouchard",
+      "attributes": {
+        "direction": [
+          "Gestion contractuelle"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Passw0rd!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "clm-admin-affaires"
+      ],
+      "groups": [
+        "/domaines-affaires/Gestion contractuelle"
+      ]
+    },
+    {
+      "username": "admin.ti@iq.example",
+      "email": "admin.ti@iq.example",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Patrick",
+      "lastName": "Morin",
+      "attributes": {
+        "direction": [
+          "Technologies de l'information"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Passw0rd!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "clm-admin-ti"
+      ],
+      "groups": [
+        "/domaines-affaires/Technologies de l'information"
+      ]
+    },
+    {
+      "username": "auditeur@iq.example",
+      "email": "auditeur@iq.example",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Nadia",
+      "lastName": "Lavoie",
+      "attributes": {
+        "direction": [
+          "Conformité et audit interne"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Passw0rd!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "clm-auditeur"
+      ],
+      "groups": [
+        "/domaines-affaires/Conformité et audit interne"
+      ]
+    },
+    {
+      "username": "nouvel.employe@iq.example",
+      "email": "nouvel.employe@iq.example",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Alex",
+      "lastName": "Nouveau",
+      "attributes": {
+        "direction": [
+          "Financement des entreprises"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Passw0rd!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "clm-initiateur"
+      ],
+      "groups": [
+        "/domaines-affaires/Financement des entreprises"
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "clm-iq",
+      "name": "Plateforme CLM (OIDC)",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "bac-a-sable-oidc-seulement",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost:8082/api/auth/oidc/callback",
+        "http://localhost:5173/api/auth/oidc/callback",
+        "http://localhost:5175/api/auth/oidc/callback",
+        "http://localhost:8092/api/auth/oidc/callback"
+      ],
+      "webOrigins": [
+        "+"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "+"
+      },
+      "protocolMappers": [
+        {
+          "name": "groupes",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "config": {
+            "claim.name": "groups",
+            "full.path": "false",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "name": "roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "config": {
+            "claim.name": "roles",
+            "multivalued": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "clm-iq-saml",
+      "name": "Plateforme CLM (SAML 2.0)",
+      "enabled": true,
+      "protocol": "saml",
+      "redirectUris": [
+        "http://localhost:8082/api/auth/saml/callback",
+        "http://localhost:5173/api/auth/saml/callback",
+        "http://localhost:5175/api/auth/saml/callback",
+        "http://localhost:8092/api/auth/saml/callback"
+      ],
+      "attributes": {
+        "saml.authnstatement": "true",
+        "saml.server.signature": "true",
+        "saml.assertion.signature": "true",
+        "saml.client.signature": "false",
+        "saml.force.post.binding": "true",
+        "saml_name_id_format": "email",
+        "saml.signature.algorithm": "RSA_SHA256",
+        "saml_assertion_consumer_url_post": "http://localhost:8082/api/auth/saml/callback"
+      },
+      "protocolMappers": [
+        {
+          "name": "email",
+          "protocol": "saml",
+          "protocolMapper": "saml-user-property-mapper",
+          "config": {
+            "user.attribute": "email",
+            "attribute.name": "email",
+            "attribute.nameformat": "Basic",
+            "friendly.name": "email"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -11,6 +11,9 @@ public interface TrousseRepository extends JpaRepository<Trousse, Long> {
 
     List<Trousse> findByTenantIdOrderByMajLeDesc(Long tenantId);
 
+    /** Trousses récentes d'un initiateur : source des suggestions de saisie, jamais celles d'autrui. */
+    List<Trousse> findTop200ByTenantIdAndProprietaireIgnoreCaseOrderByMajLeDesc(Long tenantId, String proprietaire);
+
     boolean existsByTenantIdAndReference(Long tenantId, String reference);
 
     long countByTenantIdAndStatut(Long tenantId, StatutTrousse statut);

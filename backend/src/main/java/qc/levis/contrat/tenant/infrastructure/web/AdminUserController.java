@@ -3,6 +3,7 @@ package qc.levis.contrat.tenant.infrastructure.web;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import qc.levis.contrat.auth.domain.User;
 import qc.levis.contrat.tenant.application.AdminUserService;
@@ -33,17 +34,17 @@ public class AdminUserController {
     public List<String> roles() { return service.rolesAssignables(); }
 
     @PostMapping
-    public User creer(@Valid @RequestBody AdminUserRequest req) {
-        return service.creer(req);
+    public User creer(@Valid @RequestBody AdminUserRequest req, Authentication auth) {
+        return service.creer(req, auth.getName());
     }
 
     @PutMapping("/{id}")
-    public User modifier(@PathVariable Long id, @Valid @RequestBody AdminUserRequest req) {
-        return service.modifier(id, req);
+    public User modifier(@PathVariable Long id, @Valid @RequestBody AdminUserRequest req, Authentication auth) {
+        return service.modifier(id, req, auth.getName());
     }
 
     @DeleteMapping("/{id}")
-    public void supprimer(@PathVariable Long id) {
-        service.supprimer(id);
+    public void supprimer(@PathVariable Long id, Authentication auth) {
+        service.supprimer(id, auth.getName());
     }
 }

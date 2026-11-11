@@ -79,6 +79,11 @@ public class TrousseController {
         return trousses.saisirValeurs(id, req, acteurs.de(auth));
     }
 
+    @GetMapping("/{id}/suggestions/{cle}")
+    public List<String> suggestions(@PathVariable Long id, @PathVariable String cle, Authentication auth) {
+        return trousses.suggestions(id, cle, acteurs.de(auth));
+    }
+
     @PostMapping("/{id}/participants")
     public ClmDto.ParticipantVue ajouterParticipant(@PathVariable Long id, @RequestBody ClmDto.ParticipantRequest req, Authentication auth) {
         return trousses.ajouterParticipant(id, req, acteurs.de(auth));

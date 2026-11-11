@@ -17,6 +17,9 @@ public final class Relances {
     /** Rappels d'une nouvelle trousse, tant que l'organisation n'en fixe pas d'autres (UI-22). */
     public static final int FREQUENCE_PAR_DEFAUT_JOURS = 2;
     public static final int RAPPELS_PAR_DEFAUT = 3;
+    /** Préavis d'une échéance imminente (F-07, alertes d'échéances), tant que l'organisation n'en fixe pas d'autre ; 0 = aucun. */
+    public static final int PREAVIS_PAR_DEFAUT_JOURS = 1;
+    public static final int PREAVIS_MAX_JOURS = 30;
     private static final Duration DELAI_INITIAL = Duration.ofMinutes(1);
     private static final Duration DELAI_PLAFOND = Duration.ofHours(1);
 
@@ -35,6 +38,12 @@ public final class Relances {
 
     public static boolean enRetard(Instant echeance, Instant maintenant) {
         return echeance != null && maintenant.isAfter(echeance);
+    }
+
+    /** L'échéance approche : elle tombe dans le préavis et n'est pas encore dépassée. Un préavis nul n'alerte jamais. */
+    public static boolean echeanceProche(Instant echeance, Instant maintenant, int preavisJours) {
+        return echeance != null && preavisJours > 0 && !maintenant.isAfter(echeance)
+                && !maintenant.isBefore(echeance.minus(Duration.ofDays(preavisJours)));
     }
 
     public static Instant echeance(Instant activeeLe, Integer delaiJours) {

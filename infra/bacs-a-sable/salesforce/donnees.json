@@ -1,0 +1,25 @@
+{
+  "_description": "Demandes d'aide fictives au format de l'objet standard FundingRequest de Salesforce Grantmaking (Public Sector Solutions). Champs standards : Name, Status, RequestedAmount, AwardedAmount, ApplicationDate. Champs personnalisés (…__c) : ceux qu'IQ devra créer ou confirmer (questions_client.md, § B).",
+  "versionApi": "v60.0",
+  "objets": {
+    "FundingRequest": {
+      "champsModifiables": ["CLM_Statut__c", "CLM_Reference__c", "CLM_Correlation__c"],
+      "enregistrements": [
+        {
+          "Id": "0iTbac000000001AAA", "Name": "DEM-2026-0101", "Status": "Approved", "ApplicationDate": "2026-09-14",
+          "RequestedAmount": 250000.00, "AwardedAmount": 225000.00,
+          "Demandeur__c": "Coopérative Agri-Nord inc.", "Programme__c": "ESSOR", "Entite__c": "Coopérative Agri-Nord",
+          "CourrielDemandeur__c": "direction@agri-nord.example", "TelephoneDemandeur__c": "+15145550123",
+          "CLM_Statut__c": null, "CLM_Reference__c": null, "CLM_Correlation__c": null
+        },
+        {
+          "Id": "0iTbac000000002AAA", "Name": "DEM-2026-0102", "Status": "In Review", "ApplicationDate": "2026-10-02",
+          "RequestedAmount": 1200000.00, "AwardedAmount": null,
+          "Demandeur__c": "Fabrication Boréal ltée", "Programme__c": "IMPULSION", "Entite__c": "Fabrication Boréal",
+          "CourrielDemandeur__c": "finances@boreal.example", "TelephoneDemandeur__c": "+14185550188",
+          "CLM_Statut__c": null, "CLM_Reference__c": null, "CLM_Correlation__c": null
+        }
+      ]
+    }
+  }
+}

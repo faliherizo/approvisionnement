@@ -8,6 +8,7 @@
 - `02-Analyse/analyse_besoins_exigences.md`
 - `02-Analyse/ecarts_entre_documents.md`
 - `02-Analyse/matrice_tracabilite.md`
+- `02-Analyse/validation_exigences_fonctionnelles.md`
 - `02-Analyse/ecarts_solution_vs_exigences.md` — écarts fonctionnels **notre solution vs exigences IQ** (F/NF, 15 stories)
 
 ## 03-Fournisseurs
@@ -54,3 +55,6 @@
 
 ## 09-Questions
 - `09-Questions/questions_a_clarifier_IQ.md`
+
+## 12-Bacs-a-sable
+- `12-Bacs-a-sable/guide_bacs_a_sable.md`

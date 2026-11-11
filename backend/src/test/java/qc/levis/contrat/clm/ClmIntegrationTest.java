@@ -415,7 +415,7 @@ class ClmIntegrationTest {
         assertTrue(appel(get("/api/clm/taches?filtre=terminees", juriste), status().isOk()).isArray());
         assertTrue(appel(get("/api/clm/taches?filtre=en_retard", juriste), status().isOk()).isArray());
         JsonNode msgs = appel(get("/api/clm/admin/messages", admin), status().isOk());
-        assertEquals(21, msgs.size(), "7 événements × 3 canaux");
+        assertEquals(24, msgs.size(), "8 événements × 3 canaux");
         appel(post("/api/clm/admin/integrations/salesforce/tester", admin, "{}"), status().isOk());
         appel(post("/api/clm/admin/integrations/salesforce/evenements/999999/relancer", admin, "{}"), status().isNotFound());
     }

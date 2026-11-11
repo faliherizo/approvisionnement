@@ -30,6 +30,7 @@ import qc.levis.contrat.clm.domain.Habilitations;
 import qc.levis.contrat.clm.domain.Identite;
 import qc.levis.contrat.clm.domain.Invitation;
 import qc.levis.contrat.clm.domain.Modele;
+import qc.levis.contrat.clm.domain.Suggestions;
 import qc.levis.contrat.clm.domain.ModeleContrat;
 import qc.levis.contrat.clm.domain.ParametresClm;
 import qc.levis.contrat.clm.domain.Parcours;
@@ -59,6 +60,7 @@ public class TrousseService {
     private final ModeleContratRepository modeles;
     private final ParcoursService parcours;
     private final SalesforceService salesforce;
+    private final DiffusionStatut diffusion;
     private final JournalClm journal;
     private final LectureTrousse lecture;
     private final ParametresClmService parametres;
@@ -67,7 +69,7 @@ public class TrousseService {
 
     public TrousseService(TrousseRepository trousses, ParticipantRepository participants, EtapeTrousseRepository etapes,
                           DocumentTrousseRepository documents, InvitationRepository invitations, EvenementTrousseRepository evenements,
-                          ModeleContratRepository modeles, ParcoursService parcours, SalesforceService salesforce, JournalClm journal,
+                          ModeleContratRepository modeles, ParcoursService parcours, SalesforceService salesforce, DiffusionStatut diffusion, JournalClm journal,
                           LectureTrousse lecture, ParametresClmService parametres, ListesClm listes, ContexteClm ctx) {
         this.trousses = trousses;
         this.participants = participants;
@@ -78,6 +80,7 @@ public class TrousseService {
         this.modeles = modeles;
         this.parcours = parcours;
         this.salesforce = salesforce;
+        this.diffusion = diffusion;
         this.journal = journal;
         this.lecture = lecture;
         this.parametres = parametres;
@@ -306,6 +309,24 @@ public class TrousseService {
                 .map(m -> ctx.lire(m.getChampsJson(), CHAMPS, List.<Modele.Champ>of())).orElse(List.of());
     }
 
+    /**
+     * Saisie assistée d'un champ texte (F-04) : valeurs que l'acteur a déjà retenues pour ce champ dans ses propres
+     * trousses. Les trousses d'autrui ne sont jamais lues, afin qu'aucune donnée hors périmètre ne soit révélée.
+     */
+    public List<String> suggestions(Long id, String cle, Habilitations.Acteur acteur) {
+        Trousse t = lecture.exigerGestion(id, acteur);
+        Modele.Champ champ = champsDuModele(t).stream().filter(c -> c.cle().equals(cle)).findFirst()
+                .orElseThrow(() -> new java.util.NoSuchElementException("Champ inconnu dans le modèle de la trousse : " + cle));
+        if (champ.type() != Modele.TypeChamp.TEXTE) {
+            return List.of();
+        }
+        Preremplissage.Valeur actuelle = valeurs(t).get(cle);
+        List<Map<String, Preremplissage.Valeur>> jeux = trousses
+                .findTop200ByTenantIdAndProprietaireIgnoreCaseOrderByMajLeDesc(t.getTenantId(), acteur.id()).stream()
+                .filter(autre -> !autre.getId().equals(t.getId())).map(this::valeurs).toList();
+        return Suggestions.pour(cle, jeux, actuelle == null || actuelle.valeur() == null ? null : String.valueOf(actuelle.valeur()));
+    }
+
     Map<String, Preremplissage.Valeur> valeurs(Trousse t) {
         return ctx.lire(t.getValeursJson(), VALEURS, Map.of());
     }
@@ -516,7 +537,7 @@ public class TrousseService {
         t.changerStatut(StatutTrousse.EN_TRAITEMENT, ctx.maintenant());
         trousses.save(t);
         long seq = journal.consigner(t, "TROUSSE_LANCEE", acteur.id(), courants.size() + " document(s)").getSequence();
-        salesforce.enfiler(t, "LANCEE", seq, Map.of());
+        diffusion.enfiler(t, "LANCEE", seq, Map.of());
         parcours.demarrer(t, acteur.id());
         return detail(t, acteur);
     }
@@ -532,7 +553,7 @@ public class TrousseService {
         trousses.save(t);
         parcours.annulerInvitations(t);
         long seq = journal.consigner(t, "TROUSSE_ANNULEE", acteur.id(), motif).getSequence();
-        salesforce.enfiler(t, "ANNULEE", seq, Map.of("motif", motif == null ? "" : motif));
+        diffusion.enfiler(t, "ANNULEE", seq, Map.of("motif", motif == null ? "" : motif));
         return detail(t, acteur);
     }
 

@@ -56,23 +56,30 @@ public class SalesforceRest implements PortSalesforce {
         this.horloge = horloge;
     }
 
+    /**
+     * Lecture par identifiant ; à défaut, recherche par numéro (SOQL) puis relecture par identifiant. La relecture rend tous
+     * les champs, personnalisés compris (« …__c ») : {@code FIELDS(STANDARD)} les omettrait et le préremplissage les perdrait.
+     */
     @Override
     public Optional<Dossier> lireDossier(String identifiantOuNumero) {
         ConnexionsSalesforce.Connexion c = connexions.get();
-        String base = base(c) + "/sobjects/" + c.objet() + "/";
-        HttpResponse<String> r = appeler(c, HttpRequest.newBuilder(URI.create(base + encoder(identifiantOuNumero))).GET(), null);
-        if (r.statusCode() == 404) {
-            String soql = "SELECT FIELDS(STANDARD) FROM " + c.objet() + " WHERE Name = '" + identifiantOuNumero.replace("\\", "\\\\").replace("'", "\\'") + "' LIMIT 1";
-            r = appeler(c, HttpRequest.newBuilder(URI.create(base(c) + "/query?q=" + encoder(soql))).GET(), null);
-            List<?> enregistrements = (List<?>) lire(r).getOrDefault("records", List.of());
-            if (enregistrements.isEmpty()) {
-                return Optional.empty();
-            }
-            @SuppressWarnings("unchecked")
-            Map<String, Object> m = new LinkedHashMap<>((Map<String, Object>) enregistrements.get(0));
-            return Optional.of(dossier(m));
+        Optional<Dossier> parId = parIdentifiant(c, identifiantOuNumero);
+        if (parId.isPresent()) {
+            return parId;
         }
-        return Optional.of(dossier(lire(r)));
+        String soql = "SELECT Id FROM " + c.objet() + " WHERE Name = '" + identifiantOuNumero.replace("\\", "\\\\").replace("'", "\\'") + "' LIMIT 1";
+        HttpResponse<String> r = appeler(c, HttpRequest.newBuilder(URI.create(base(c) + "/query?q=" + encoder(soql))).GET(), null);
+        List<?> enregistrements = (List<?>) lire(r).getOrDefault("records", List.of());
+        if (enregistrements.isEmpty()) {
+            return Optional.empty();
+        }
+        return parIdentifiant(c, String.valueOf(((Map<?, ?>) enregistrements.get(0)).get("Id")));
+    }
+
+    private Optional<Dossier> parIdentifiant(ConnexionsSalesforce.Connexion c, String identifiant) {
+        String url = base(c) + "/sobjects/" + c.objet() + "/" + encoder(identifiant);
+        HttpResponse<String> r = appeler(c, HttpRequest.newBuilder(URI.create(url)).GET(), null);
+        return r.statusCode() == 404 ? Optional.empty() : Optional.of(dossier(new LinkedHashMap<>(lire(r))));
     }
 
     private Dossier dossier(Map<String, Object> m) {

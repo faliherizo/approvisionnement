@@ -56,7 +56,8 @@ class SalesforceRestTest {
         serveur.createContext("/services/data/v60.0/query", ex -> {
             String q = ex.getRequestURI().getQuery();
             appels.add(q);
-            repondre(ex, 200, q.contains("DEM-2") ? "{\"records\":[{\"attributes\":{},\"Id\":\"a02\",\"Name\":\"DEM-2\"}]}" : "{\"records\":[]}");
+            repondre(ex, 200, q.contains("DEM-2") ? "{\"records\":[{\"attributes\":{},\"Id\":\"a01\"}]}"
+                    : q.contains("SUPPRIME") ? "{\"records\":[{\"attributes\":{},\"Id\":\"INCONNU\"}]}" : "{\"records\":[]}");
         });
         serveur.createContext("/services/data/v60.0/limits", ex -> repondre(ex, statutLimites, "{}"));
         serveur.start();
@@ -95,9 +96,12 @@ class SalesforceRestTest {
         assertEquals("DEM-1", d.numero());
         assertFalse(d.champs().containsKey("attributes"));
         assertTrue(appels.get(0).contains("Bearer jeton-test"));
-        assertEquals("a02", sf.lireDossier("DEM-2").orElseThrow().id());
+        PortSalesforce.Dossier parNumero = sf.lireDossier("DEM-2").orElseThrow();
+        assertEquals("a01", parNumero.id());
+        assertEquals(100, parNumero.champs().get("Montant"), "relu par identifiant : tous les champs, personnalisés compris");
         assertTrue(sf.lireDossier("INCONNU").isEmpty());
-        assertTrue(appels.stream().anyMatch(a -> a.replace('+', ' ').contains("Name = 'DEM-2'")), appels.toString());
+        assertTrue(sf.lireDossier("SUPPRIME").isEmpty(), "trouvé par numéro puis disparu avant la relecture");
+        assertTrue(appels.stream().anyMatch(a -> a.replace('+', ' ').contains("SELECT Id FROM FundingRequest WHERE Name = 'DEM-2'")), appels.toString());
     }
 
     @Test

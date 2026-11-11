@@ -1,0 +1,164 @@
+{
+  "_description": "Données des tests e2e des exigences fonctionnelles IQ F-01 à F-13 (views/clm.exigences.spec.ts). Tenant iq, comptes de data/users.json.",
+  "salesforce": {
+    "dossier": "DEM-2026-0001",
+    "demandeur": "Coopérative Agri-Nord",
+    "montant": "250000.00"
+  },
+  "modele": {
+    "nom": "Convention d'aide financière (exigences)",
+    "categorie": "GARANTIE",
+    "corps": "Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $ au titre du programme {{programme}}, à compter du {{debut}}.\n{{clauses}}",
+    "champs": [
+      {
+        "cle": "demandeur",
+        "libelle": "Demandeur",
+        "type": "TEXTE",
+        "obligatoire": true,
+        "source": "Demandeur"
+      },
+      {
+        "cle": "montant",
+        "libelle": "Montant",
+        "type": "TEXTE",
+        "obligatoire": true,
+        "source": "Montant",
+        "format": "\\d+(\\.\\d{2})?"
+      },
+      {
+        "cle": "programme",
+        "libelle": "Programme",
+        "type": "LISTE",
+        "options": [
+          "ESSOR",
+          "IMPULSION"
+        ]
+      },
+      {
+        "cle": "debut",
+        "libelle": "Date de début",
+        "type": "DATE"
+      },
+      {
+        "cle": "garantie",
+        "libelle": "Garantie exigée",
+        "type": "CASE"
+      },
+      {
+        "cle": "signature1",
+        "libelle": "Signature du bénéficiaire",
+        "type": "SIGNATURE",
+        "roleDestinataire": "SIGNATAIRE_1",
+        "position": {
+          "page": 1,
+          "x": 10,
+          "y": 75,
+          "largeur": 40,
+          "hauteur": 10
+        }
+      }
+    ],
+    "clauses": [
+      {
+        "cle": "garantie",
+        "titre": "Garantie",
+        "texte": "Le bénéficiaire fournit une garantie de prêt.",
+        "combinateur": "ET",
+        "conditions": [
+          {
+            "champ": "garantie",
+            "operateur": "EGAL",
+            "valeur": "true"
+          }
+        ]
+      }
+    ],
+    "parcours": []
+  },
+  "suggestions": {
+    "champ": "demandeur",
+    "valeursPrecedentes": [
+      "Acme inc.",
+      "Boréal ltée",
+      "Acme inc."
+    ],
+    "attendues": [
+      "Acme inc.",
+      "Boréal ltée"
+    ]
+  },
+  "trousse": {
+    "titre": "Convention Agri-Nord",
+    "unite": "FINANCEMENT_ENTREPRISES",
+    "risque": "FAIBLE",
+    "echeance": "2027-03-31",
+    "uniteLibelle": "Financement des entreprises"
+  },
+  "parcoursMixte": [
+    {
+      "cle": "v1",
+      "libelle": "Validation juridique",
+      "phase": 1,
+      "type": "VALIDATION",
+      "affectations": [
+        {
+          "type": "UTILISATEUR",
+          "valeur": "validateur@iq.example"
+        }
+      ],
+      "delaiJours": 5
+    },
+    {
+      "cle": "a1",
+      "libelle": "Approbation financière",
+      "phase": 2,
+      "type": "APPROBATION",
+      "affectations": [
+        {
+          "type": "UTILISATEUR",
+          "valeur": "approbateur@iq.example"
+        },
+        {
+          "type": "ROLE",
+          "valeur": "ADMIN"
+        }
+      ],
+      "quorum": 1,
+      "politique": "UN_REFUS",
+      "delaiJours": 3
+    },
+    {
+      "cle": "s1",
+      "libelle": "Signature de la direction",
+      "phase": 3,
+      "type": "SIGNATURE",
+      "affectations": []
+    }
+  ],
+  "signataireInterne": {
+    "nom": "Étienne Côté",
+    "courriel": "signataire@iq.example",
+    "roleContrat": "SIGNATAIRE_1",
+    "externe": false,
+    "niveauIdentite": "QUESTION",
+    "question": "Ville du siège social ?",
+    "reponse": "Montréal"
+  },
+  "decision": {
+    "commentaire": "Clause 4 à préciser avant approbation.",
+    "motifRetour": "Ajouter l'annexe financière.",
+    "delegation": "admin.affaires@iq.example"
+  },
+  "notification": {
+    "evenement": "Échéance proche",
+    "canal": "Courriel",
+    "sujet": "Échéance imminente : {{etape}} ({{reference}})",
+    "preavisJours": 2
+  },
+  "compte": {
+    "email": "conformite.e2e@iq.example",
+    "nom": "Compte Conformité E2E",
+    "role": "Auditeur"
+  },
+  "organisation": "Investissement Québec"
+}

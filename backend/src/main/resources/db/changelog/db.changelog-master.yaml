@@ -99,3 +99,7 @@ databaseChangeLog:
       file: db/changelog/changes/049-references-parametres-clm.yaml
   - include:
       file: db/changelog/changes/050-clm-tache-assignee.yaml
+  - include:
+      file: db/changelog/changes/051-clm-preavis-echeance.yaml
+  - include:
+      file: db/changelog/changes/052-clm-integration-entrante.yaml

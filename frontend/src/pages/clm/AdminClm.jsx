@@ -286,6 +286,7 @@ function FormulaireParametres({ module, onEnregistrer, onAnnuler, onRetablir }) 
   const initial = enMo(module.tailleMaxOctets)
   const [f, setF] = useState(() => ({ tailleMo: initial, invitationValiditeJours: module.invitationValiditeJours, portailUrl: module.portailUrl,
     prefixeReference: module.prefixeReference, rappelFrequenceJours: module.rappelFrequenceJours, rappelsMax: module.rappelsMax,
+    preavisEcheanceJours: module.preavisEcheanceJours,
     identiteExterne: { ...module.identiteExterne }, identiteInterne: { ...module.identiteInterne }, tentativesIdentite: module.tentativesIdentite,
     codeValiditeMinutes: module.codeValiditeMinutes, champMontant: module.champMontant }))
   useEffect(() => { premier.current?.focus() }, [])
@@ -317,6 +318,8 @@ function FormulaireParametres({ module, onEnregistrer, onAnnuler, onRetablir }) 
             <input value={f.prefixeReference} onChange={(e) => setF({ ...f, prefixeReference: e.target.value.toUpperCase() })} maxLength={10} required /></label>
           <label>{t('clm.champ.frequence')}<input type="number" min={1} max={30} value={f.rappelFrequenceJours} onChange={maj('rappelFrequenceJours')} required /></label>
           <label>{t('clm.champ.rappelsMax')}<input type="number" min={0} max={10} value={f.rappelsMax} onChange={maj('rappelsMax')} required /></label>
+          <label>{t('clm.ad.pm.preavis')} <span className="muted">{t('clm.ad.pm.preavisAide')}</span>
+            <input type="number" min={0} max={30} value={f.preavisEcheanceJours} onChange={maj('preavisEcheanceJours')} required /></label>
         </div>
       </fieldset>
       <fieldset className="form-fieldset">
@@ -411,6 +414,7 @@ function Parametres() {
             <div><dt>{t('clm.ad.pm.portail')}</dt><dd className="clm-casse">{m.portailUrl}</dd></div>
             <div><dt>{t('clm.ad.pm.prefixe')}</dt><dd><code>{m.prefixeReference}</code></dd></div>
             <div><dt>{t('clm.ad.pm.rappels')}</dt><dd>{t('clm.ad.pm.rappelsValeur', { j: m.rappelFrequenceJours, n: m.rappelsMax })}</dd></div>
+            <div><dt>{t('clm.ad.pm.preavis')}</dt><dd>{m.preavisEcheanceJours > 0 ? t('clm.ad.pm.preavisValeur', { n: m.preavisEcheanceJours }) : t('clm.ad.pm.preavisAucun')}</dd></div>
             <div><dt>{t('clm.ad.pm.externes')}</dt><dd>{niveaux('identiteExterne')}</dd></div>
             <div><dt>{t('clm.ad.pm.internes')}</dt><dd>{niveaux('identiteInterne')}</dd></div>
             <div><dt>{t('clm.ad.pm.tentatives')}</dt><dd>{m.tentativesIdentite}</dd></div>

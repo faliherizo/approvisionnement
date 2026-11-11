@@ -240,7 +240,7 @@ public final class ClmDto {
 
     /** Paramètres effectifs du module ; {@code personnalise} faux : l'organisation suit ceux de la plateforme. */
     public record ParametresModule(long tailleMaxOctets, long plafondOctets, int invitationValiditeJours, String portailUrl,
-                                   String prefixeReference, int rappelFrequenceJours, int rappelsMax,
+                                   String prefixeReference, int rappelFrequenceJours, int rappelsMax, int preavisEcheanceJours,
                                    NiveauxIdentite identiteExterne, NiveauxIdentite identiteInterne, int tentativesIdentite,
                                    int codeValiditeMinutes, String champMontant, boolean personnalise, String modifiePar,
                                    Instant modifieLe) {
@@ -249,7 +249,7 @@ public final class ClmDto {
     /** Modification partielle : un paramètre absent garde sa valeur effective. */
     public record ParametresModuleRequest(Long tailleMaxOctets, Integer invitationValiditeJours, String portailUrl,
                                           String prefixeReference, Integer rappelFrequenceJours, Integer rappelsMax,
-                                          NiveauxIdentite identiteExterne, NiveauxIdentite identiteInterne,
+                                          Integer preavisEcheanceJours, NiveauxIdentite identiteExterne, NiveauxIdentite identiteInterne,
                                           Integer tentativesIdentite, Integer codeValiditeMinutes, String champMontant) {
     }
 
@@ -261,5 +261,49 @@ public final class ClmDto {
     /** Ligne du journal d'audit CLM (UI-23) ; {@code systeme} distingue les événements automatiques des actions métier. */
     public record JournalLigne(Long trousseId, String reference, long sequence, String type, String acteur, Instant horodatage,
                                String detail, boolean systeme, String empreinte) {
+    }
+
+    // --- Intégration entrante : Salesforce, Workday, autres systèmes (addenda 1 : TI-22, AF-47) ---
+    public record ClientIntegrationRequest(String nom, String systeme, String urlRappel) {
+    }
+
+    public record ClientIntegrationVue(Long id, String nom, String systeme, String clientId, String urlRappel, boolean actif,
+                                       String creePar, Instant creeLe, Instant revoqueLe) {
+    }
+
+    /** Secrets montrés une seule fois, à la création : la plateforme n'en garde que l'empreinte ou la forme chiffrée. */
+    public record ClientIntegrationCree(ClientIntegrationVue client, String secret, String cleRappel) {
+    }
+
+    /** Réponse OAuth 2.0 (RFC 6749, § 5.1) : les noms de champs suivent la norme, pas la convention Java. */
+    public record JetonAcces(String access_token, String token_type, long expires_in) {
+    }
+
+    public record DocumentJoint(String nom, String contenuBase64) {
+    }
+
+    /** Trousse demandée par un système externe ; valeurs, documents et signataires sont facultatifs avec un modèle. */
+    public record DemandeTrousse(String titre, String referenceExterne, Long modeleId, String sfDossierId, String initiateur,
+                                 String unite, String risque, LocalDate echeance, Map<String, Object> valeurs,
+                                 List<DocumentJoint> documents, List<ParticipantRequest> signataires, Boolean lancer) {
+    }
+
+    /** Lot : les valeurs du lot (modèle, initiateur, lancement) valent pour chaque élément qui ne les précise pas. */
+    public record DemandeLot(String libelle, Long modeleId, String initiateur, Boolean lancer, List<DemandeTrousse> elements) {
+    }
+
+    public record TrousseExterneVue(Long id, String reference, String statut, String source, String referenceExterne,
+                                    String sfDossierId, Long lotId, List<DocumentVue> documents) {
+    }
+
+    public record ElementLotVue(int rang, String referenceExterne, Long trousseId, String reference, String statut, String erreur) {
+    }
+
+    public record LotVue(Long id, String libelle, Long modeleId, String origine, String statut, int total, int reussis,
+                         int echecs, boolean lancer, String creePar, Instant creeLe, List<ElementLotVue> elements) {
+    }
+
+    public record RappelVue(Long id, String client, Long trousseId, String evenement, String statut, int tentatives,
+                            String derniereErreur, Instant creeLe, Instant envoyeLe) {
     }
 }

@@ -5,7 +5,7 @@ import { Message, dateHeure, useErreur } from './commun.jsx'
 import { Bloc, Blocs } from './gabarit.jsx'
 
 /** Saisie selon le type du champ : liste et case par choix fermé, date au calendrier, texte libre au format du modèle. */
-function SaisieValeur({ champ, valeur, onChange, champRef }) {
+function SaisieValeur({ champ, valeur, onChange, champRef, suggestions = [] }) {
   const { t } = useI18n()
   const maj = (e) => onChange(e.target.value)
   if (champ.type === 'LISTE' || champ.type === 'CASE') {
@@ -17,7 +17,14 @@ function SaisieValeur({ champ, valeur, onChange, champRef }) {
       </select>
     )
   }
-  return <input ref={champRef} type={champ.type === 'DATE' ? 'date' : 'text'} value={valeur} onChange={maj} autoComplete="off" />
+  const liste = `clm-suggestions-${champ.cle}`
+  return (
+    <>
+      <input ref={champRef} type={champ.type === 'DATE' ? 'date' : 'text'} value={valeur} onChange={maj} autoComplete="off"
+        list={suggestions.length ? liste : undefined} />
+      {suggestions.length > 0 && <datalist id={liste}>{suggestions.map((s) => <option key={s} value={s} />)}</datalist>}
+    </>
+  )
 }
 
 /**
@@ -30,12 +37,24 @@ export default function ValeursTrousse({ trousse, conflits, modifiable, onChange
   const [edition, setEdition] = useState(null)
   const [erreur, setErreur] = useState(null)
   const [info, setInfo] = useState('')
+  const [suggestions, setSuggestions] = useState([])
   const champRef = useRef(null)
   const champs = trousse.champs || []
   const libelle = (cle) => champs.find((c) => c.cle === cle)?.libelle || cle
   const enCours = edition && champs.find((c) => c.cle === edition.cle)
 
   useEffect(() => { if (edition) champRef.current?.focus() }, [edition?.cle]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Saisie assistée (F-04) : valeurs déjà retenues par l'initiateur pour ce champ texte ; leur absence n'empêche pas la saisie.
+  useEffect(() => {
+    setSuggestions([])
+    if (!enCours || enCours.type !== 'TEXTE') return undefined
+    let actif = true
+    api.get(`/clm/trousses/${trousse.resume.id}/suggestions/${encodeURIComponent(enCours.cle)}`)
+      .then(({ data }) => { if (actif) setSuggestions(data) })
+      .catch(() => {})
+    return () => { actif = false }
+  }, [enCours?.cle, enCours?.type, trousse.resume.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function enregistrer(e) {
     e.preventDefault()
@@ -106,8 +125,10 @@ export default function ValeursTrousse({ trousse, conflits, modifiable, onChange
                   <legend>{t('clm.va.corriger', { champ: enCours.libelle })}</legend>
                   <label>{t('clm.va.nouvelle', { champ: enCours.libelle })}
                     {enCours.format && <span className="muted"> {t('clm.va.formatAttendu', { format: enCours.format })}</span>}
-                    <SaisieValeur champ={enCours} valeur={edition.valeur} champRef={champRef} onChange={(valeur) => setEdition({ ...edition, valeur })} />
+                    <SaisieValeur champ={enCours} valeur={edition.valeur} champRef={champRef} suggestions={suggestions}
+                      onChange={(valeur) => setEdition({ ...edition, valeur })} />
                   </label>
+                  {suggestions.length > 0 && <p className="muted" role="status">{t('clm.va.suggestions', { n: suggestions.length })}</p>}
                   <p className="muted">{t('clm.va.aide')}</p>
                   <div className="cmp-row">
                     <button type="submit">{t('clm.enregistrer')}</button>

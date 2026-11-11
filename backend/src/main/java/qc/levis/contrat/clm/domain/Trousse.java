@@ -22,7 +22,7 @@ import jakarta.persistence.Version;
 @Table(name = "clm_trousse", uniqueConstraints = @UniqueConstraint(name = "uk_clm_trousse_ref", columnNames = {"tenant_id", "reference"}))
 public class Trousse {
 
-    public enum Source { MANUELLE, SALESFORCE }
+    public enum Source { MANUELLE, SALESFORCE, WORKDAY, INTEGRATION }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +49,17 @@ public class Trousse {
 
     @Column(name = "sf_dossier_id", length = 80)
     private String sfDossierId;
+
+    /** Système externe qui a créé la trousse (addenda 1) : il reçoit les rappels de statut ; null si créée à l'écran. */
+    @Column(name = "client_integration_id")
+    private Long clientIntegrationId;
+
+    /** Identifiant de l'objet d'origine chez l'appelant (ex. événement Workday), renvoyé dans chaque rappel. */
+    @Column(name = "reference_externe", length = 120)
+    private String referenceExterne;
+
+    @Column(name = "lot_id")
+    private Long lotId;
 
     @Column(name = "sf_recupere_le")
     private Instant sfRecupereLe;
@@ -128,6 +139,22 @@ public class Trousse {
     public void setUnite(String unite) { this.unite = unite; }
     public Source getSource() { return source; }
     public void setSource(Source source) { this.source = source; }
+    /** Rattache la trousse au système externe qui l'a demandée, seul destinataire de ses rappels. */
+    public void rattacherExterne(Source origine, Long clientIntegrationId, String referenceExterne, Long lotId) {
+        if (referenceExterne != null && referenceExterne.strip().length() > 120) {
+            throw new IllegalArgumentException("Référence externe : 120 caractères au plus.");
+        }
+        if (source == Source.MANUELLE) {
+            this.source = origine;
+        }
+        this.clientIntegrationId = clientIntegrationId;
+        this.referenceExterne = referenceExterne == null || referenceExterne.isBlank() ? null : referenceExterne.strip();
+        this.lotId = lotId;
+    }
+
+    public Long getClientIntegrationId() { return clientIntegrationId; }
+    public String getReferenceExterne() { return referenceExterne; }
+    public Long getLotId() { return lotId; }
     public String getSfDossierId() { return sfDossierId; }
     public void setSfDossierId(String sfDossierId) { this.sfDossierId = sfDossierId; }
     public Instant getSfRecupereLe() { return sfRecupereLe; }

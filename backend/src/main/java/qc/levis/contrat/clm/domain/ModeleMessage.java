@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 @Table(name = "clm_modele_message", uniqueConstraints = @UniqueConstraint(name = "uk_clm_msg", columnNames = {"tenant_id", "evenement", "canal"}))
 public class ModeleMessage {
 
-    public enum Evenement { INVITATION, TACHE, RAPPEL, RETARD, REJET, TERMINEE, CODE }
+    public enum Evenement { INVITATION, TACHE, RAPPEL, ECHEANCE, RETARD, REJET, TERMINEE, CODE }
 
     public static final java.util.Set<String> VARIABLES = java.util.Set.of(
             "reference", "titre", "etape", "destinataire", "lien", "echeance", "code", "motif");

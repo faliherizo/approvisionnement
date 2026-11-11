@@ -44,7 +44,7 @@ lang: fr-CA
 
 ## 1. Sommaire exécutif
 
-VINA IT Solutions inc. propose **VINA — Solution de rédaction contractuelle**, une plateforme
+VINA IT Solutions inc. propose **VINA — VINA Doc**, une plateforme
 infonuagique **clé en main**, **déployée et éprouvée** (<https://contrat.vinaitsolution.com>), conçue
 spécifiquement pour le contexte des **marchés publics québécois** (LCOP, LCV, Code municipal) et le
 **cadre normatif du Secrétariat du Conseil du trésor (SCT)**. La solution couvre l'**ensemble** des
@@ -242,7 +242,7 @@ fournies sur demande.)*
 
 > Ces mandats démontrent notre **expérience auprès d'organismes publics** (Revenu Québec, Santé Québec,
 > Sécurité publique, INSPQ, secteur scolaire) et notre capacité à livrer des solutions robustes et
-> conformes. Une **démonstration** de la solution de rédaction contractuelle est accessible en ligne
+> conformes. Une **démonstration** de la VINA Doc est accessible en ligne
 > (voir en-tête) et peut être présentée en rencontre individuelle (art. 4.4).
 
 **Réalisations antérieures** (projets archivés, non accessibles en ligne) : `cotransportage.fr`,
