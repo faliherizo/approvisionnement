@@ -8,6 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 import qc.levis.contrat.clm.application.ClientsIntegrationService;
 import qc.levis.contrat.clm.application.DemandesSignatureService;
 import qc.levis.contrat.clm.application.DocumentClmService;
+import qc.levis.contrat.clm.application.ModeleService;
 import qc.levis.contrat.clm.application.PreuveService;
 import qc.levis.contrat.clm.application.dto.ClmDto;
 import qc.levis.contrat.clm.domain.ClientIntegration;
@@ -28,14 +29,23 @@ public class IntegrationEntranteController {
     private final DocumentClmService documents;
     private final PreuveService preuves;
     private final ModuleService modules;
+    private final ModeleService modeles;
 
     public IntegrationEntranteController(ClientsIntegrationService clients, DemandesSignatureService demandes,
-                                         DocumentClmService documents, PreuveService preuves, ModuleService modules) {
+                                         DocumentClmService documents, PreuveService preuves, ModuleService modules, ModeleService modeles) {
         this.clients = clients;
         this.demandes = demandes;
         this.documents = documents;
         this.preuves = preuves;
         this.modules = modules;
+        this.modeles = modeles;
+    }
+
+    /** Modèles publiés et leurs champs (DAO § 3.3.5) : le système externe y choisit le {@code modeleId} et les clés de valeurs. */
+    @GetMapping("/v1/modeles")
+    public java.util.List<ClmDto.ModeleVue> modeles(@RequestHeader(value = "Authorization", required = false) String authz) {
+        ClientIntegration c = client(authz);
+        return demandes.dansOrganisation(c, () -> modeles.lister(demandes.acteurCatalogue(c), "PUBLIE"));
     }
 
     @PostMapping(value = "/oauth/token", consumes = "application/x-www-form-urlencoded")

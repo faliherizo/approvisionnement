@@ -22,7 +22,7 @@ import jakarta.persistence.Table;
         @Index(name = "ix_clm_inv_trousse", columnList = "tenant_id,trousse_id")})
 public class Invitation {
 
-    public enum Statut { ENVOYEE, VERIFIEE, SIGNEE, REFUSEE, ANNULEE, BLOQUEE }
+    public enum Statut { ENVOYEE, VERIFIEE, SIGNEE, REFUSEE, ANNULEE, BLOQUEE, INVALIDEE }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -171,6 +171,18 @@ public class Invitation {
         this.signeeLe = maintenant;
     }
 
+    /**
+     * Nouveau cycle après une modification en cours de parcours (scénario 5) : une signature déjà donnée portait sur
+     * l'ancienne version ; elle reste au journal mais n'entre plus dans la preuve. Une invitation ouverte est annulée.
+     */
+    public void invalider() {
+        if (statut == Statut.SIGNEE) {
+            this.statut = Statut.INVALIDEE;
+        } else {
+            annuler();
+        }
+    }
+
     public void annuler() {
         if (statut != Statut.SIGNEE && statut != Statut.REFUSEE) {
             this.statut = Statut.ANNULEE;
@@ -195,4 +207,13 @@ public class Invitation {
     public String getIp() { return ip; }
     public String getAttestationJson() { return attestationJson; }
     public String getMotif() { return motif; }
+
+    /** Destruction à l'échéance de conservation : nom saisi, adresse IP, navigateur et valeurs signées sont effacés. */
+    public void anonymiser() {
+        this.nomSigne = null;
+        this.ip = null;
+        this.agent = null;
+        this.champsJson = null;
+        this.motif = null;
+    }
 }

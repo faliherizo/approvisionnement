@@ -90,4 +90,13 @@ public class Participant {
     public Identite.Niveau getNiveauIdentite() { return niveauIdentite; }
     public String getQuestionIdentite() { return questionIdentite; }
     public String getReponseIdentiteHash() { return reponseIdentiteHash; }
+
+    /** Destruction à l'échéance de conservation : les coordonnées du participant sont effacées. */
+    public void anonymiser() {
+        this.nom = "Participant anonymisé";
+        this.courriel = "anonyme-" + id + "@supprime.invalid";
+        this.telephone = null;
+        this.questionIdentite = null;
+        this.reponseIdentiteHash = null;
+    }
 }

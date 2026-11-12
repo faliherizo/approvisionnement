@@ -205,5 +205,62 @@
         "lancer": true
       }
     }
+  },
+  "conformite": {
+    "_source": "docs/Dossier_IQ_2026-6370-0005/02-Analyse/conformite_exigences_fonctionnelles.md",
+    "groupe": {
+      "unite": "Financement des entreprises",
+      "code": "FINANCEMENT_ENTREPRISES",
+      "membre": "validateur@iq.example"
+    },
+    "retour": {
+      "parcours": [
+        {
+          "cle": "v1",
+          "libelle": "Validation juridique",
+          "phase": 1,
+          "type": "VALIDATION",
+          "affectations": [
+            {
+              "type": "UTILISATEUR",
+              "valeur": "validateur@iq.example"
+            }
+          ]
+        },
+        {
+          "cle": "a1",
+          "libelle": "Approbation financière",
+          "phase": 2,
+          "type": "APPROBATION",
+          "affectations": [
+            {
+              "type": "UTILISATEUR",
+              "valeur": "approbateur@iq.example"
+            }
+          ]
+        }
+      ],
+      "motif": "Clause 4 à revalider par les affaires juridiques"
+    },
+    "ajoutEnCours": {
+      "premier": {
+        "nom": "Alice Externe",
+        "courriel": "alice.externe@exemple.ca",
+        "telephone": "+15145550155",
+        "roleContrat": "SIGNATAIRE_1",
+        "externe": true
+      },
+      "nouveau": {
+        "nom": "Bruno Remplaçant",
+        "courriel": "bruno.remplacant@exemple.ca",
+        "telephone": "+15145550166",
+        "role": "Deuxième signataire"
+      }
+    },
+    "conservation": {
+      "dureeAns": 7,
+      "sort": "Destruction",
+      "motifGel": "Litige 2026-17"
+    }
   }
 }

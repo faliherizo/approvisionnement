@@ -19,6 +19,7 @@ function Decision({ tache, onDecide, onRetour }) {
   const [motif, setMotif] = useState('')
   const [note, setNote] = useState('')
   const [delegation, setDelegation] = useState({ vers: '', motif: '' })
+  const [retourVers, setRetourVers] = useState('')
   const [erreur, setErreur] = useState(null)
   const [info, setInfo] = useState('')
   const [vu, setVu] = useState(null)
@@ -31,11 +32,13 @@ function Decision({ tache, onDecide, onRetour }) {
   const commentaires = (historique.donnees || []).filter((e) => e.type === 'COMMENTAIRE')
   const versions = docVu ? (d?.documents || []).filter((x) => x.cleDocument === docVu.cleDocument) : []
   const approbation = tache.type === 'APPROBATION'
+  // Retour à l'étape appropriée (scénario 9) : une étape d'une phase antérieure, ou l'initiateur par défaut.
+  const anterieures = (d?.etapes || []).filter((e) => etape && e.phase < etape.phase && e.statut !== 'NON_REQUISE')
 
   async function decider(decision) {
     setErreur(null)
     if (decision !== 'APPROUVE' && !motif.trim()) { setErreur(t('clm.ta.motifObligatoire')); focaliser('clm-motif'); return }
-    try { await api.post(`/clm/etapes/${tache.etapeId}/decider`, { decision, commentaire: motif.trim() || null }); onDecide(t(`clm.ta.ok.${decision}`)) } catch (e) { setErreur(versErreur(e)) }
+    try { await api.post(`/clm/etapes/${tache.etapeId}/decider`, { decision, commentaire: motif.trim() || null, retourVers: decision === 'RETOUR' && retourVers ? retourVers : null }); onDecide(t(`clm.ta.ok.${decision}`)) } catch (e) { setErreur(versErreur(e)) }
   }
   async function commenter() {
     setErreur(null)
@@ -130,6 +133,14 @@ function Decision({ tache, onDecide, onRetour }) {
         <>
           <label>{t('clm.ta.commentaire')} <span className="muted">{t('clm.ta.commentaireAide')}</span>
             <textarea id="clm-motif" rows={3} value={motif} onChange={(e) => setMotif(e.target.value)} /></label>
+          {anterieures.length > 0 && (
+            <label>{t('clm.ta.retourVers')} <span className="muted">{t('clm.ta.retourVersAide')}</span>
+              <select value={retourVers} onChange={(e) => setRetourVers(e.target.value)}>
+                <option value="">{t('clm.ta.retourInitiateur')}</option>
+                {anterieures.map((e) => <option key={e.cle} value={e.cle}>{e.libelle}</option>)}
+              </select>
+            </label>
+          )}
           <form className="form clm-sousform" onSubmit={deleguer}>
             <h3>{t('clm.ta.deleguer')}</h3>
             <p className="muted">{t('clm.ta.delegationAide')}</p>

@@ -31,7 +31,8 @@ public final class ClmDto {
                                Integer quorum, String politique, Integer delaiJours, List<Modele.Condition> conditions) {
     }
 
-    public record DecisionRequest(String decision, String commentaire) {
+    /** {@code retourVers} : clé d'une étape antérieure où renvoyer le document ; absente, le retour va à l'initiateur. */
+    public record DecisionRequest(String decision, String commentaire, String retourVers) {
     }
 
     public record AffectationsRequest(List<AffectationDto> affectations, Integer quorum, String motif) {
@@ -305,5 +306,31 @@ public final class ClmDto {
 
     public record RappelVue(Long id, String client, Long trousseId, String evenement, String statut, int tentatives,
                             String derniereErreur, Instant creeLe, Instant envoyeLe) {
+    }
+
+    // --- Groupes du module (Cahier § 1.4.7, § 1.4.12) ---
+    public record GroupeRequest(String code, String libelle) {
+    }
+
+    public record MembreRequest(String courriel) {
+    }
+
+    public record GroupeVue(Long id, String code, String libelle, List<String> membres, boolean unite) {
+    }
+
+    // --- Conservation et destruction (Cahier § 1.4.11, § 1.4.12) ---
+    public record RegleConservationRequest(String typeContrat, Integer dureeAns, String sortFinal) {
+    }
+
+    public record RegleConservationVue(Long id, String typeContrat, int dureeAns, String sortFinal, String modifiePar, Instant modifieLe) {
+    }
+
+    /** Trousse close suivie par le calendrier ; {@code echeance} null : aucune règle ou conservation permanente. */
+    public record ConservationVue(Long trousseId, String reference, String titre, String typeContrat, String statut, Instant clotureLe,
+                                  LocalDate echeance, String sortFinal, boolean echue, boolean gelLegal, String gelMotif,
+                                  Instant verseeLe) {
+    }
+
+    public record GelRequest(String motif) {
     }
 }

@@ -482,3 +482,113 @@ test.describe('Addenda 1 — intégrations et signature en lot', () => {
   })
 })
 
+test.describe('Conformité — écarts comblés (matrice conformite_exigences_fonctionnelles.md)', () => {
+  const c = donnees.conformite
+
+  test('§ 1.4.12 — groupe créé depuis une unité, membre ajouté puis retiré', async ({ page }) => {
+    await session(page, users.iqAdminTi)
+    await page.goto('/clm/admin/utilisateurs')
+    await page.getByRole('link', { name: 'Créer un groupe' }).click()
+    const formulaire = page.getByRole('form', { name: 'Nouveau groupe' })
+    await formulaire.getByRole('combobox', { name: /^À partir d’une unité/ }).selectOption({ label: c.groupe.unite })
+    await expect(formulaire.getByLabel(/^Code/)).toHaveValue(c.groupe.code)
+    await controler(page)
+    await auditerAxe(page)
+    await formulaire.getByRole('button', { name: 'Créer le groupe' }).click()
+    await expect(page.getByText(`Groupe ${c.groupe.code} créé.`)).toBeVisible()
+    const ajout = page.getByRole('form', { name: `Ajouter un membre au groupe ${c.groupe.code}` })
+    await ajout.getByRole('combobox', { name: /^Membre/ }).selectOption({ value: c.groupe.membre })
+    await ajout.getByRole('button', { name: 'Ajouter' }).click()
+    await expect(page.getByRole('list', { name: `Membres du groupe ${c.groupe.code}` })).toContainText(c.groupe.membre)
+    await controler(page)
+    await auditerAxe(page)
+    await page.getByRole('button', { name: `Retirer ${c.groupe.membre} du groupe ${c.groupe.code}` }).click()
+    await expect(page.getByText(`${c.groupe.membre} retiré.`)).toBeVisible()
+    page.once('dialog', (d) => d.accept())
+    await page.getByRole('button', { name: `Supprimer le groupe ${c.groupe.code}` }).click()
+    await expect(page.getByText(`Groupe ${c.groupe.code} supprimé.`)).toBeVisible()
+  })
+
+  test('Scénario 9 — l’approbatrice retourne le document à l’étape de validation, sans brouillon', async ({ page, playwright, baseURL }) => {
+    const initiateur = await api(playwright, baseURL, users.iqInitiateur)
+    const t = (await ok(initiateur.post('/api/clm/trousses', { data: { titre: `Retour à l’étape ${unique()}`, risque: 'FAIBLE' } }))).resume
+    await deposerPdf(initiateur, t.id)
+    await ok(initiateur.put(`/api/clm/trousses/${t.id}/parcours`, { data: c.retour.parcours }))
+    await ok(initiateur.post(`/api/clm/trousses/${t.id}/lancer`, { data: {} }))
+    const v1 = (await ok(initiateur.get(`/api/clm/trousses/${t.id}`))).etapes[0].id
+    const validateur = await api(playwright, baseURL, users.iqValidateur)
+    await ok(validateur.post(`/api/clm/etapes/${v1}/decider`, { data: { decision: 'APPROUVE' } }))
+
+    await session(page, users.iqApprobateur)
+    await page.goto('/clm/taches')
+    await page.getByRole('button', { name: new RegExp(`Traiter — ${t.reference} Approbation financière`) }).click()
+    await page.getByRole('textbox', { name: /^Commentaire/ }).fill(c.retour.motif)
+    await page.getByRole('combobox', { name: /^Retourner à/ }).selectOption({ label: 'Validation juridique' })
+    await controler(page)
+    await auditerAxe(page)
+    await page.getByRole('button', { name: 'Demander une correction' }).click()
+    await expect.poll(async () => (await ok(initiateur.get(`/api/clm/trousses/${t.id}`))).etapes.map((e: { statut: string }) => e.statut))
+      .toEqual(['ACTIVE', 'EN_ATTENTE'])
+    expect((await ok(initiateur.get(`/api/clm/trousses/${t.id}`))).resume.statut).toBe('EN_TRAITEMENT')
+    await Promise.all([initiateur.dispose(), validateur.dispose()])
+    await session(page, users.iqInitiateur)
+    await page.goto(`/clm/trousses/${t.id}?onglet=historique`)
+    await expect(page.getByRole('tabpanel')).toContainText('Retour à une étape antérieure')
+  })
+
+  test('§ 1.4.7 / scénario 5 — signataire ajouté en cours de parcours ; une modification de document annonce un nouveau cycle', async ({ page, playwright, baseURL }) => {
+    const initiateur = await api(playwright, baseURL, users.iqInitiateur)
+    const t = (await ok(initiateur.post('/api/clm/trousses', { data: { titre: `Ajout en cours ${unique()}`, risque: 'MOYEN' } }))).resume
+    await deposerPdf(initiateur, t.id)
+    const premier = await ok(initiateur.post(`/api/clm/trousses/${t.id}/participants`, { data: c.ajoutEnCours.premier }))
+    await ok(initiateur.put(`/api/clm/trousses/${t.id}/parcours`, { data: [{ cle: 's1', libelle: 'Signature', phase: 1, type: 'SIGNATURE',
+      affectations: [{ type: 'PARTICIPANT', valeur: String(premier.id) }] }] }))
+    await ok(initiateur.post(`/api/clm/trousses/${t.id}/lancer`, { data: {} }))
+    await initiateur.dispose()
+
+    await session(page, users.iqInitiateur)
+    await page.goto(`/clm/trousses/${t.id}?onglet=participants`)
+    const n = c.ajoutEnCours.nouveau
+    await page.getByLabel(/^Nom/).fill(n.nom)
+    await page.getByLabel(/^Courriel/).fill(n.courriel)
+    await page.getByLabel(/^Téléphone/).fill(n.telephone)
+    await page.getByRole('combobox', { name: /^Rôle dans le contrat/ }).selectOption({ label: n.role })
+    await page.getByRole('checkbox', { name: 'Externe' }).check()
+    await page.locator('form').filter({ has: page.getByRole('heading', { name: 'Ajouter un signataire' }) })
+      .getByRole('button', { name: 'Ajouter un signataire' }).click()
+    await expect(page.getByRole('row').filter({ hasText: n.nom })).toBeVisible()
+    await controler(page)
+    await auditerAxe(page)
+    await page.getByRole('tab', { name: /^Documents/ }).click()
+    await expect(page.getByRole('note').filter({ hasText: 'ouvre un nouveau cycle' })).toBeVisible()
+    await page.getByRole('tab', { name: /^Historique/ }).click()
+    await expect(page.getByRole('tabpanel')).toContainText('ajouté en cours de parcours')
+  })
+
+  test('§ 1.4.11 / § 1.4.12 — calendrier de conservation, échéance d’une trousse close, gel légal', async ({ page, playwright, baseURL }) => {
+    const initiateur = await api(playwright, baseURL, users.iqInitiateur)
+    const t = (await ok(initiateur.post('/api/clm/trousses', { data: { titre: `Conservation ${unique()}` } }))).resume
+    await ok(initiateur.post(`/api/clm/trousses/${t.id}/annuler`, { data: { motif: 'Abandon' } }))
+    await initiateur.dispose()
+
+    await session(page, users.iqAdminTi)
+    await page.getByRole('link', { name: 'Conservation et destruction' }).click()
+    const regle = page.getByRole('form', { name: 'Enregistrer la règle' })
+    await regle.getByLabel(/^Durée après la clôture/).fill(String(c.conservation.dureeAns))
+    await regle.getByLabel('Sort final').selectOption({ label: c.conservation.sort })
+    await regle.getByRole('button', { name: 'Enregistrer la règle' }).click()
+    await expect(page.getByText('Règle enregistrée.')).toBeVisible()
+    const ligne = page.getByRole('row').filter({ hasText: t.reference })
+    await expect(ligne).toContainText(String(new Date().getFullYear() + c.conservation.dureeAns))
+    await expect(ligne).toContainText(c.conservation.sort)
+    await controler(page)
+    await auditerAxe(page)
+    page.once('dialog', (d) => d.accept(c.conservation.motifGel))
+    await ligne.getByRole('button', { name: `Geler — ${t.reference}` }).click()
+    await expect(ligne).toContainText(`Gel légal : ${c.conservation.motifGel}`)
+    await ligne.getByRole('button', { name: `Lever le gel — ${t.reference}` }).click()
+    await expect(page.getByText(`Gel levé sur ${t.reference}.`)).toBeVisible()
+    await expect(ligne.getByRole('button', { name: `Détruire — ${t.reference}` })).toHaveCount(0)
+  })
+})
+

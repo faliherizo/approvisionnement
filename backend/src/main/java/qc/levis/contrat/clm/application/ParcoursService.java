@@ -95,9 +95,22 @@ public class ParcoursService {
     // --- Moteur ---
     /** Une étape dont la règle d'affaires n'est pas satisfaite par les valeurs de la trousse est écartée (F-05). */
     void demarrer(Trousse t, String acteur) {
+        reinitialiserDepuis(t, Integer.MIN_VALUE);
+        avancer(t, acteur);
+    }
+
+    /** Remet en attente les étapes à partir d'une phase, en réappliquant leurs règles d'affaires aux valeurs actuelles. */
+    private void reinitialiserDepuis(Trousse t, int phase) {
         Map<String, Object> valeurs = ctx.valeursBrutes(t.getValeursJson());
         Instant maintenant = ctx.maintenant();
         for (EtapeTrousse e : etapesDe(t)) {
+            if (e.getPhase() < phase) {
+                continue;
+            }
+            for (Invitation i : invitations.findByTenantIdAndEtapeId(t.getTenantId(), e.getId())) {
+                i.invalider();
+                invitations.save(i);
+            }
             e.reinitialiser();
             List<Modele.Condition> regle = ctx.conditions(e.getConditionsJson());
             if (!regle.isEmpty() && !ReglesClm.satisfaites(regle, valeurs)) {
@@ -106,6 +119,19 @@ public class ParcoursService {
             }
             etapes.save(e);
         }
+    }
+
+    /**
+     * Modification d'un document en cours de parcours (scénario 5) : les décisions et signatures déjà recueillies portaient
+     * sur l'ancienne version. Un nouveau cycle repart de la première phase ; l'historique du cycle précédent reste au journal.
+     */
+    void nouveauCycle(Trousse t, String acteur, String motif) {
+        if (!t.enTraitement()) {
+            return;
+        }
+        reinitialiserDepuis(t, Integer.MIN_VALUE);
+        journal.consigner(t, "NOUVEAU_CYCLE", acteur, motif);
+        notifierProprietaire(t, Evenement.REJET, "Nouveau cycle : " + motif);
         avancer(t, acteur);
     }
 
@@ -199,7 +225,9 @@ public class ParcoursService {
         decisions.save(new DecisionEtape(t.getTenantId(), t.getId(), e.getId(), acteur.id(), nature, req.commentaire(), maintenant));
         journal.consigner(t, "DECISION_" + nature.name(), acteur.id(), e.getLibelle()
                 + (req.commentaire() == null ? "" : " · " + req.commentaire()));
-        if (nature == DecisionEtape.Nature.RETOUR) {
+        if (nature == DecisionEtape.Nature.RETOUR && req.retourVers() != null && !req.retourVers().isBlank()) {
+            retournerAEtape(t, e, req.retourVers().trim(), acteur.id(), req.commentaire());
+        } else if (nature == DecisionEtape.Nature.RETOUR) {
             e.terminer(Parcours.StatutEtape.REJETEE, maintenant);
             etapes.save(e);
             retourner(t, acteur.id(), req.commentaire());
@@ -207,6 +235,22 @@ public class ParcoursService {
             recalculer(t, e, acteur.id());
         }
         return lecture.etape(e, maintenant);
+    }
+
+    /**
+     * Retour à l'étape appropriée (scénario 9) : le document revient à une étape antérieure désignée ; le parcours reprend
+     * depuis sa phase, sans repasser par le brouillon, et les décisions du cycle précédent restent à l'historique.
+     */
+    private void retournerAEtape(Trousse t, EtapeTrousse courante, String cle, String acteur, String motif) {
+        EtapeTrousse cible = etapesDe(t).stream().filter(x -> x.getCle().equals(cle)).findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Étape de retour inconnue : " + cle));
+        if (cible.getPhase() >= courante.getPhase()) {
+            throw new IllegalArgumentException("Le retour se fait vers une étape antérieure à « " + courante.getLibelle() + " ».");
+        }
+        reinitialiserDepuis(t, cible.getPhase());
+        journal.consigner(t, "RETOUR_ETAPE", acteur, courante.getLibelle() + " → " + cible.getLibelle() + " · " + motif);
+        notifierProprietaire(t, Evenement.REJET, "Retour à l'étape « " + cible.getLibelle() + " » : " + motif);
+        avancer(t, acteur);
     }
 
     void exigerDecidable(Trousse t, EtapeTrousse e, Habilitations.Acteur acteur) {

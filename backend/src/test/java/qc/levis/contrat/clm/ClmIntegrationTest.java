@@ -490,9 +490,14 @@ class ClmIntegrationTest {
         byte[] certificat = mvc.perform(MockMvcRequestBuilders.get("/api/clm/trousses/" + id + "/preuve/certificat").cookie(redacteur))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsByteArray();
         assertEquals("%PDF", new String(certificat, 0, 4));
+        try (org.apache.pdfbox.pdmodel.PDDocument pdf = org.apache.pdfbox.pdmodel.PDDocument.load(certificat)) {
+            assertEquals(1, pdf.getSignatureDictionaries().size(), "certificat scellé en PAdES (§ 1.4.11)");
+        }
         byte[] zip = mvc.perform(MockMvcRequestBuilders.get("/api/clm/trousses/" + id + "/preuve/export").cookie(redacteur))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsByteArray();
         assertTrue(entrees(zip).contains("certificat.pdf"));
+        assertTrue(entrees(zip).stream().anyMatch(n -> n.contains("-signe-") && n.endsWith(".p7s")),
+                "signature CMS détachée du document final : " + entrees(zip));
 
         assertTrue(appel(get("/api/clm/tableau-de-bord?statut=TERMINEE&unite=Achats&du=2020-01-01&au=2099-12-31", redacteur), status().isOk())
                 .at("/indicateurs/terminees").asLong() >= 1);

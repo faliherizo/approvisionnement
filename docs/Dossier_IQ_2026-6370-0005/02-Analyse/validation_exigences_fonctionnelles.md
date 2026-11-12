@@ -51,6 +51,13 @@ dépendent plus du code : ils attendent un choix d'IQ ou un contrat avec un four
 Chaque test de bout en bout contrôle aussi l'écran parcouru : aucun débordement ni chevauchement, cibles ≥ 24 px, contrôles
 nommés, zéro violation axe-core (WCAG 2.2 AA).
 
+### Conformité exhaustive aux sources (2026-11-12)
+
+Matrice de toutes les exigences fonctionnelles des sources (Cahier, DAO, scénarios de démonstration, addenda), avec leur
+caractère obligatoire ou non : [conformite_exigences_fonctionnelles.md](conformite_exigences_fonctionnelles.md).
+107 exigences obligatoires, toutes conformes ; 7 écarts comblés (signataire en cours de parcours, nouveau cycle, retour
+à l'étape appropriée, groupes du module, conservation et destruction, cachet CAdES/PAdES, catalogue des modèles).
+
 ### Exigences ajoutées ou précisées par l'addenda 1 (2026-11-11)
 
 Analyse complète : [impact_addenda_1.md](impact_addenda_1.md).

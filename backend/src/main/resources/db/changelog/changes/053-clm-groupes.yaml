@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: 053-1-clm-groupes
+      author: levis
+      comment: "CLM (Cahier § 1.4.7, § 1.4.12) : groupes d'utilisateurs administrés dans l'espace du module (partage, affectation, unités)."
+      changes:
+        - createTable:
+            tableName: clm_groupe
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: code, type: VARCHAR(60), constraints: { nullable: false } }
+              - column: { name: libelle, type: VARCHAR(120), constraints: { nullable: false } }
+              - column: { name: cree_par, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - addUniqueConstraint:
+            tableName: clm_groupe
+            columnNames: tenant_id, code
+            constraintName: uk_clm_groupe_code
+        - createTable:
+            tableName: clm_groupe_membre
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: groupe_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: groupe_code, type: VARCHAR(60), constraints: { nullable: false } }
+              - column: { name: courriel, type: VARCHAR(200), constraints: { nullable: false } }
+        - addUniqueConstraint:
+            tableName: clm_groupe_membre
+            columnNames: groupe_id, courriel
+            constraintName: uk_clm_groupe_membre
+        - createIndex:
+            tableName: clm_groupe_membre
+            indexName: ix_clm_groupe_membre_courriel
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: courriel }

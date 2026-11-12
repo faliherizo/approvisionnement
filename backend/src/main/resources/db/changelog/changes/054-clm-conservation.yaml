@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 054-1-clm-conservation
+      author: levis
+      comment: "CLM (Cahier § 1.4.11, § 1.4.12, Loi sur les archives) : calendrier de conservation, gel légal, versement et destruction."
+      changes:
+        - createTable:
+            tableName: clm_regle_conservation
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: type_contrat, type: VARCHAR(80) }
+              - column: { name: duree_ans, type: INT, constraints: { nullable: false } }
+              - column: { name: sort_final, type: VARCHAR(12), constraints: { nullable: false } }
+              - column: { name: modifie_par, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: modifie_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - createIndex:
+            tableName: clm_regle_conservation
+            indexName: ix_clm_regle_conservation_tenant
+            columns:
+              - column: { name: tenant_id }
+        - addColumn:
+            tableName: clm_trousse
+            columns:
+              - column: { name: cloture_le, type: TIMESTAMP }
+              - column: { name: gel_legal, type: BOOLEAN, defaultValueBoolean: false, constraints: { nullable: false } }
+              - column: { name: gel_motif, type: VARCHAR(500) }
+              - column: { name: versee_le, type: TIMESTAMP }
+              - column: { name: detruite_le, type: TIMESTAMP }

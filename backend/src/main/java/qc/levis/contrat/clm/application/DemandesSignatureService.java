@@ -83,6 +83,11 @@ public class DemandesSignatureService {
         return ctx.dansTenant(client.getTenantId(), () -> vue(trousseDuClientInterne(client, id)));
     }
 
+    /** Acteur technique d'un client pour une lecture du catalogue : il voit ce que voit l'administration de l'organisation. */
+    public Habilitations.Acteur acteurCatalogue(ClientIntegration client) {
+        return new Habilitations.Acteur("integration:" + client.getClientId(), Set.of("ADMIN"), Set.of());
+    }
+
     /** Exécute une lecture pour un client dans le contexte de son organisation. */
     public <T> T dansOrganisation(ClientIntegration client, java.util.function.Supplier<T> lecture) {
         return ctx.dansTenant(client.getTenantId(), lecture);

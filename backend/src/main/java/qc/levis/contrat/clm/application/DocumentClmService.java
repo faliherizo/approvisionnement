@@ -40,11 +40,12 @@ public class DocumentClmService {
     private final LectureTrousse lecture;
     private final JournalClm journal;
     private final ParametresClmService parametres;
+    private final ParcoursService parcours;
     private final ContexteClm ctx;
 
     public DocumentClmService(DocumentTrousseRepository documents, ModeleContratRepository modeles, AnalyseAntivirus antivirus,
                               RenduDocuments rendu, SourceAleatoire alea, TrousseService trousses, LectureTrousse lecture,
-                              JournalClm journal, ParametresClmService parametres, ContexteClm ctx) {
+                              JournalClm journal, ParametresClmService parametres, ParcoursService parcours, ContexteClm ctx) {
         this.documents = documents;
         this.modeles = modeles;
         this.antivirus = antivirus;
@@ -54,21 +55,24 @@ public class DocumentClmService {
         this.lecture = lecture;
         this.journal = journal;
         this.parametres = parametres;
+        this.parcours = parcours;
         this.ctx = ctx;
     }
 
     @Transactional
     public ClmDto.DocumentVue televerser(Long trousseId, String nomFichier, byte[] contenu, Habilitations.Acteur acteur) {
         Trousse t = lecture.exigerGestion(trousseId, acteur);
-        t.exigerModifiable();
-        return enregistrer(t, alea.uuid(), 1, nomFichier, contenu, acteur.id(), "Téléversement initial");
+        t.exigerOuverte();
+        ClmDto.DocumentVue vue = enregistrer(t, alea.uuid(), 1, nomFichier, contenu, acteur.id(), "Téléversement initial");
+        parcours.nouveauCycle(t, acteur.id(), "Document ajouté en cours de parcours : " + vue.nom());
+        return vue;
     }
 
     @Transactional
     public ClmDto.DocumentVue nouvelleVersion(Long trousseId, String cleDocument, String nomFichier, byte[] contenu, String motif,
                                               Habilitations.Acteur acteur) {
         Trousse t = lecture.exigerGestion(trousseId, acteur);
-        t.exigerModifiable();
+        t.exigerOuverte();
         if (motif == null || motif.isBlank()) {
             throw new IllegalArgumentException("Motif de la nouvelle version requis.");
         }
@@ -79,6 +83,7 @@ public class DocumentClmService {
         ClmDto.DocumentVue vue = enregistrer(t, cleDocument, versions.get(0).getVersion() + 1, nomFichier, contenu, acteur.id(), motif.trim());
         courante.setStatut(DocumentTrousse.Statut.REMPLACE);
         documents.save(courante);
+        parcours.nouveauCycle(t, acteur.id(), "Nouvelle version de « " + vue.nom() + " » : " + motif.trim());
         return vue;
     }
 
@@ -87,6 +92,13 @@ public class DocumentClmService {
         DocumentTrousse d = new DocumentTrousse(t.getTenantId(), t.getId(), cle, version, FormatDocument.nomSur(nomFichier), type,
                 contenu, auteur, motif, ctx.maintenant());
         d.setAnalyse(antivirus.estSain(contenu) ? DocumentTrousse.Analyse.PROPRE : DocumentTrousse.Analyse.INFECTE);
+        if (t.enTraitement()) {
+            // En cours de parcours, le document part aussitôt aux intervenants : un fichier non sain est refusé d'emblée.
+            if (d.getAnalyse() != DocumentTrousse.Analyse.PROPRE) {
+                throw new IllegalStateException("Analyse antivirus en échec : document refusé en cours de parcours.");
+            }
+            d.setStatut(DocumentTrousse.Statut.ENVOYE);
+        }
         d = documents.save(d);
         journal.consigner(t, version == 1 ? "DOCUMENT_AJOUTE" : "DOCUMENT_VERSION", auteur,
                 d.getNom() + " v" + version + " · " + d.getEmpreinte().substring(0, 16) + " · " + d.getAnalyse());
@@ -99,12 +111,16 @@ public class DocumentClmService {
     @Transactional
     public void retirer(Long trousseId, Long documentId, Habilitations.Acteur acteur) {
         Trousse t = lecture.exigerGestion(trousseId, acteur);
-        t.exigerModifiable();
+        t.exigerOuverte();
         DocumentTrousse d = exiger(t, documentId);
         d.exigerNonVerrouille();
+        if (t.enTraitement() && trousses.documentsCourants(t).size() <= 1) {
+            throw new IllegalStateException("Une trousse en cours de parcours garde au moins un document.");
+        }
         d.setStatut(DocumentTrousse.Statut.RETIRE);
         documents.save(d);
         journal.consigner(t, "DOCUMENT_RETIRE", acteur.id(), d.getNom() + " v" + d.getVersion());
+        parcours.nouveauCycle(t, acteur.id(), "Document retiré en cours de parcours : " + d.getNom());
     }
 
     @Transactional
@@ -140,7 +156,7 @@ public class DocumentClmService {
     @Transactional
     public ClmDto.DocumentVue generer(Long trousseId, Habilitations.Acteur acteur) {
         Trousse t = lecture.exigerGestion(trousseId, acteur);
-        t.exigerModifiable();
+        t.exigerOuverte();
         if (t.getModeleId() == null) {
             throw new IllegalStateException("Aucun modèle associé à la trousse.");
         }
@@ -156,8 +172,10 @@ public class DocumentClmService {
             p.setStatut(DocumentTrousse.Statut.REMPLACE);
             documents.save(p);
         });
-        return enregistrer(t, CLE_GENERE, version, t.getReference() + ".pdf", pdf, acteur.id(),
+        ClmDto.DocumentVue vue = enregistrer(t, CLE_GENERE, version, t.getReference() + ".pdf", pdf, acteur.id(),
                 "Généré depuis « " + m.getNom() + " » v" + m.getNumero());
+        parcours.nouveauCycle(t, acteur.id(), "Contrat régénéré en cours de parcours (v" + version + ")");
+        return vue;
     }
 
     /** Clauses conditionnelles évaluées par le moteur de règles partagé (VISIBILITE), puis assemblage du texte. */

@@ -61,6 +61,22 @@ public class Trousse {
     @Column(name = "lot_id")
     private Long lotId;
 
+    /** Conservation (Cahier § 1.4.11, § 1.4.12 ; Loi sur les archives) : la durée court à partir de la clôture. */
+    @Column(name = "cloture_le")
+    private Instant clotureLe;
+
+    @Column(name = "gel_legal", nullable = false)
+    private boolean gelLegal;
+
+    @Column(name = "gel_motif", length = 500)
+    private String gelMotif;
+
+    @Column(name = "versee_le")
+    private Instant verseeLe;
+
+    @Column(name = "detruite_le")
+    private Instant detruiteLe;
+
     @Column(name = "sf_recupere_le")
     private Instant sfRecupereLe;
 
@@ -116,6 +132,78 @@ public class Trousse {
     public void changerStatut(StatutTrousse cible, Instant maintenant) {
         this.statut = statut.vers(cible);
         this.majLe = maintenant;
+        if (cible.estFinal()) {
+            this.clotureLe = maintenant;
+        }
+    }
+
+    /** Gel légal : aucune destruction tant qu'il n'est pas levé, quelle que soit l'échéance. */
+    public void geler(String motif) {
+        if (motif == null || motif.isBlank() || motif.strip().length() > 500) {
+            throw new IllegalArgumentException("Motif du gel légal : 1 à 500 caractères.");
+        }
+        exigerNonDetruite();
+        this.gelLegal = true;
+        this.gelMotif = motif.strip();
+    }
+
+    public void leverGel() {
+        if (!gelLegal) {
+            throw new IllegalStateException("Aucun gel légal sur cette trousse.");
+        }
+        this.gelLegal = false;
+        this.gelMotif = null;
+    }
+
+    public void marquerVersee(Instant le) {
+        exigerDestructible();
+        this.verseeLe = le;
+    }
+
+    /**
+     * Destruction à l'échéance : le titre et les valeurs, qui peuvent porter des renseignements personnels, sont effacés ;
+     * la référence et le journal scellé demeurent, comme bordereau de destruction.
+     */
+    public void detruire(Instant le) {
+        exigerDestructible();
+        this.titre = "Trousse détruite — " + reference;
+        this.valeursJson = "{}";
+        this.copies = null;
+        this.detruiteLe = le;
+    }
+
+    private void exigerDestructible() {
+        exigerNonDetruite();
+        // Une trousse close (terminée ou annulée) porte toujours sa date de clôture : changerStatut la fixe.
+        if (!statut.estFinal()) {
+            throw new IllegalStateException("Seule une trousse close (terminée ou annulée) suit le calendrier de conservation.");
+        }
+        if (gelLegal) {
+            throw new IllegalStateException("Gel légal en vigueur : " + gelMotif);
+        }
+    }
+
+    private void exigerNonDetruite() {
+        if (detruiteLe != null) {
+            throw new IllegalStateException("Trousse déjà détruite.");
+        }
+    }
+
+    public Instant getClotureLe() { return clotureLe; }
+    public boolean isGelLegal() { return gelLegal; }
+    public String getGelMotif() { return gelMotif; }
+    public Instant getVerseeLe() { return verseeLe; }
+    public Instant getDetruiteLe() { return detruiteLe; }
+
+    /** Brouillon ou parcours en cours : on peut encore ajouter un signataire ou modifier un document (nouveau cycle). */
+    public void exigerOuverte() {
+        if (statut != StatutTrousse.BROUILLON && statut != StatutTrousse.EN_TRAITEMENT) {
+            throw new IllegalStateException("La trousse est close (statut " + statut + ").");
+        }
+    }
+
+    public boolean enTraitement() {
+        return statut == StatutTrousse.EN_TRAITEMENT;
     }
 
     public void exigerModifiable() {

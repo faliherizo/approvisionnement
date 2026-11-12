@@ -60,7 +60,8 @@ export default function OngletParticipants({ trousse, peutGerer, onChange, onOrd
       onChange()
     } catch (e) { setErreur(versErreur(e)) }
   }
-  const zonesAttribuables = peutGerer && trousse.participants.length > 0
+  // Une zone ne se réattribue qu'au brouillon : en cours de parcours, on remplace le signataire de l'étape (Parcours).
+  const zonesAttribuables = peutGerer && trousse.resume.statut === 'BROUILLON' && trousse.participants.length > 0
 
   return (
     <div data-maquette="UI-15">

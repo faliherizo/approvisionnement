@@ -145,6 +145,7 @@ class IntegrationEntranteIntegrationTest {
                 + "{\"sfDossierId\":\"DEM-2026-0001\",\"documents\":[{\"nom\":\"c1.pdf\",\"contenuBase64\":\"" + PDF + "\"}],\"signataires\":[" + signataire + "]},"
                 + "{\"referenceExterne\":\"SANS-DOCUMENT\",\"signataires\":[" + signataire + "]}]}";
 
+        assertTrue(corps(api("GET", "/api/clm/integration/v1/modeles", jeton, null), 200).isArray(), "catalogue des modèles publiés");
         JsonNode l = corps(api("POST", "/api/clm/integration/v1/lots", jeton, lot), 201);
         assertEquals("TERMINE_AVEC_ECHECS", l.get("statut").asText());
         assertEquals(1, l.get("reussis").asInt());

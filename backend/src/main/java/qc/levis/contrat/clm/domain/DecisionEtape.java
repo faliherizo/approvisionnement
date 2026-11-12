@@ -63,4 +63,9 @@ public class DecisionEtape {
     public Nature getNature() { return nature; }
     public String getCommentaire() { return commentaire; }
     public Instant getDecideLe() { return decideLe; }
+
+    /** Destruction à l'échéance de conservation : le commentaire, texte libre, est effacé ; la décision demeure. */
+    public void effacerCommentaire() {
+        this.commentaire = null;
+    }
 }

@@ -76,6 +76,7 @@ export default function OngletDocuments({ trousse, peutGerer, peutGenerer, iaAct
       <Message erreur={erreur} info={info} />
       <Blocs>
         <Bloc zone="01" titre={t('clm.doc.blocDepot')}>
+          {peutGerer && trousse.resume.statut === 'EN_TRAITEMENT' && <p className="clm-info-statique" role="note">{t('clm.doc.nouveauCycle')}</p>}
           {peutGerer ? (
             <div className={`clm-depose ${survol ? 'is-survol' : ''}`} onDragOver={(e) => { e.preventDefault(); setSurvol(true) }}
               onDragLeave={() => setSurvol(false)} onDrop={deposer}>

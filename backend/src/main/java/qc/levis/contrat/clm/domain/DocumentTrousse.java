@@ -120,5 +120,10 @@ public class DocumentTrousse {
     public String getAuteur() { return auteur; }
     public String getMotif() { return motif; }
     public byte[] getContenu() { return contenu; }
+
+    /** Destruction à l'échéance de conservation : le contenu disparaît, l'empreinte demeure comme preuve de ce qui fut. */
+    public void effacerContenu() {
+        this.contenu = new byte[0];
+    }
     public Instant getCreeLe() { return creeLe; }
 }

@@ -90,6 +90,12 @@ app:
     preuve:
       # Clé de scellement des dossiers de preuve et de l'horodatage local. OBLIGATOIRE en production.
       cle: ${CLM_PREUVE_CLE:changez-moi-cle-de-scellement-des-preuves}
+    # Cachet électronique X.509 (CAdES/PAdES) des preuves : magasin PKCS#12 d'une autorité reconnue en production ;
+    # vide → certificat de démonstration autosigné. Horodatage RFC 3161 si une autorité est désignée.
+    cachet:
+      magasin: ${CLM_CACHET_MAGASIN:}
+      mot-de-passe: ${CLM_CACHET_MOT_DE_PASSE:}
+      tsa-url: ${CLM_CACHET_TSA_URL:}
     planificateur:
       actif: ${CLM_PLANIFICATEUR_ACTIF:true}
       delai-ms: ${CLM_PLANIFICATEUR_DELAI_MS:60000}

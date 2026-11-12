@@ -210,7 +210,7 @@ public class TrousseService {
     @Transactional
     public ClmDto.PreremplissageVue preremplir(Long id, ClmDto.PreremplissageRequest req, Habilitations.Acteur acteur) {
         Trousse t = lecture.exigerGestion(id, acteur);
-        t.exigerModifiable();
+        t.exigerOuverte();
         String sfId = req.sfDossierId() == null || req.sfDossierId().isBlank() ? t.getSfDossierId() : req.sfDossierId();
         return preremplir(t, sfId, req.valeursManuelles() == null ? Map.of() : req.valeursManuelles(), acteur.id());
     }
@@ -255,7 +255,7 @@ public class TrousseService {
     @Transactional
     public ClmDto.PreremplissageVue saisirValeurs(Long id, ClmDto.ValeursRequest req, Habilitations.Acteur acteur) {
         Trousse t = lecture.exigerGestion(id, acteur);
-        t.exigerModifiable();
+        t.exigerOuverte();
         List<Modele.Champ> champs = champsDuModele(t);
         if (champs.isEmpty()) {
             throw new IllegalStateException("Aucun modèle associé : la trousse n'a pas de champ à compléter.");
@@ -335,7 +335,7 @@ public class TrousseService {
     @Transactional
     public ClmDto.ParticipantVue ajouterParticipant(Long id, ClmDto.ParticipantRequest req, Habilitations.Acteur acteur) {
         Trousse t = lecture.exigerGestion(id, acteur);
-        t.exigerModifiable();
+        t.exigerOuverte();
         String nom = exiger(req.nom(), "Nom du participant requis.");
         String courriel = req.courriel() == null ? null : req.courriel().trim().toLowerCase(Locale.ROOT);
         String role = listes.exiger(ListesClm.Liste.ROLE_CONTRAT, exiger(req.roleContrat(), "Rôle dans le contrat requis."))
@@ -356,14 +356,15 @@ public class TrousseService {
         }
         p = participants.save(p);
         resoudreRole(t, p);
-        journal.consigner(t, "PARTICIPANT_AJOUTE", acteur.id(), nom + " · " + role + " · " + niveau);
+        journal.consigner(t, "PARTICIPANT_AJOUTE", acteur.id(), nom + " · " + role + " · " + niveau
+                + (t.enTraitement() ? " · ajouté en cours de parcours" : ""));
         return LectureTrousse.participant(p);
     }
 
     @Transactional
     public void retirerParticipant(Long id, Long participantId, Habilitations.Acteur acteur) {
         Trousse t = lecture.exigerGestion(id, acteur);
-        t.exigerModifiable();
+        t.exigerOuverte();
         Participant p = participants.findByIdAndTenantId(participantId, t.getTenantId())
                 .filter(x -> x.getTrousseId().equals(t.getId()))
                 .orElseThrow(() -> new NoSuchElementException("Participant introuvable : " + participantId));
@@ -661,7 +662,8 @@ public class TrousseService {
         }
         switch (t.getStatut()) {
             case BROUILLON -> a.addAll(List.of("MODIFIER", "AJOUTER_DOCUMENT", "PARTICIPANTS", "PARCOURS", "PREREMPLIR", "GENERER", "LANCER", "ANNULER"));
-            case EN_TRAITEMENT -> a.addAll(List.of("REASSIGNER", "ANNULER"));
+            // En cours de parcours : ajouter un signataire, corriger une donnée ; un document modifié ouvre un nouveau cycle.
+            case EN_TRAITEMENT -> a.addAll(List.of("REASSIGNER", "PARTICIPANTS", "AJOUTER_DOCUMENT", "GENERER", "PREREMPLIR", "ANNULER"));
             case REJETEE -> a.addAll(List.of("REPRENDRE", "ANNULER"));
             default -> {
             }

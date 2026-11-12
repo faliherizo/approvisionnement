@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import qc.levis.contrat.clm.application.dto.ClmDto;
 import qc.levis.contrat.clm.application.port.AlertesExploitation;
+import qc.levis.contrat.clm.application.port.CachetElectronique;
 import qc.levis.contrat.clm.application.port.FournisseurSignature;
 import qc.levis.contrat.clm.application.port.RenduDocuments;
 import qc.levis.contrat.clm.application.port.Scelleur;
@@ -48,10 +49,12 @@ public class PreuveService {
     private final JournalClm journal;
     private final ContexteClm ctx;
     private final AlertesExploitation alertes;
+    private final CachetElectronique cachet;
 
     public PreuveService(DocumentTrousseRepository documents, InvitationRepository invitations, ParticipantRepository participants,
                          EvenementTrousseRepository evenements, FournisseurSignature fournisseur, Scelleur scelleur,
-                         RenduDocuments rendu, LectureTrousse lecture, JournalClm journal, ContexteClm ctx, AlertesExploitation alertes) {
+                         RenduDocuments rendu, LectureTrousse lecture, JournalClm journal, ContexteClm ctx, AlertesExploitation alertes,
+                         CachetElectronique cachet) {
         this.documents = documents;
         this.invitations = invitations;
         this.participants = participants;
@@ -63,6 +66,7 @@ public class PreuveService {
         this.journal = journal;
         this.ctx = ctx;
         this.alertes = alertes;
+        this.cachet = cachet;
     }
 
     public ClmDto.PreuveVue dossier(Long trousseId, Habilitations.Acteur acteur) {
@@ -149,14 +153,21 @@ public class PreuveService {
         Map<String, byte[]> fichiers = new LinkedHashMap<>();
         for (DocumentTrousse d : documents.findByTenantIdAndTrousseIdOrderByCleDocumentAscVersionDesc(t.getTenantId(), t.getId())) {
             if (d.getStatut() != DocumentTrousse.Statut.RETIRE) {
-                fichiers.put("documents/" + d.getCleDocument() + "/v" + d.getVersion() + "-" + d.getStatut().name().toLowerCase()
-                        + "-" + d.getNom(), d.getContenu());
+                String chemin = "documents/" + d.getCleDocument() + "/v" + d.getVersion() + "-" + d.getStatut().name().toLowerCase()
+                        + "-" + d.getNom();
+                fichiers.put(chemin, d.getContenu());
+                if (d.getStatut() == DocumentTrousse.Statut.SIGNE) {
+                    // Signature CMS détachée (CAdES) du document final : vérifiable sans la plateforme.
+                    fichiers.put(chemin + ".p7s", cachet.signerDetache(d.getContenu()));
+                }
             }
         }
         ClmDto.PreuveVue dossier = dossier(trousseId, acteur);
-        fichiers.put("certificat.pdf", rendu.genererPdf("Certificat de signature — " + t.getReference(), texteCertificat(t, dossier)));
+        fichiers.put("certificat.pdf", certificatScelle(t, dossier));
         fichiers.put("certificat.json", json(Map.of("trousse", dossier.trousse(), "documents", dossier.documentsFinaux(),
-                "signatures", dossier.signatures(), "integrite", dossier.integrite(), "genereLe", ctx.maintenant().toString())));
+                "signatures", dossier.signatures(), "integrite", dossier.integrite(), "genereLe", ctx.maintenant().toString(),
+                "cachet", Map.of("titulaire", cachet.titulaire(), "normes", "CAdES (RFC 5652) · PAdES · RFC 3161 si configuré",
+                        "demonstration", cachet.demonstration()))));
         fichiers.put("journal.json", json(dossier.evenements()));
         fichiers.put("LISEZMOI.txt", lisezMoi(t).getBytes(StandardCharsets.UTF_8));
         Map<String, String> manifeste = new LinkedHashMap<>();
@@ -174,9 +185,16 @@ public class PreuveService {
     @Transactional
     public byte[] certificat(Long trousseId, Habilitations.Acteur acteur) {
         Trousse t = lecture.exigerVisible(trousseId, acteur);
-        byte[] pdf = rendu.genererPdf("Certificat de signature — " + t.getReference(), texteCertificat(t, dossier(trousseId, acteur)));
+        byte[] pdf = certificatScelle(t, dossier(trousseId, acteur));
         journal.consigner(t, "CERTIFICAT_TELECHARGE", acteur.id(), null);
         return pdf;
+    }
+
+    /** Certificat PDF signé en PAdES par le cachet de l'organisation : toute altération invalide la signature. */
+    private byte[] certificatScelle(Trousse t, ClmDto.PreuveVue dossier) {
+        String texte = texteCertificat(t, dossier) + "\nCachet électronique : " + cachet.titulaire()
+                + (cachet.demonstration() ? " (certificat de démonstration)" : "") + " — signature PAdES de ce document.\n";
+        return cachet.scellerPdf(rendu.genererPdf("Certificat de signature — " + t.getReference(), texte), "Certificat de signature " + t.getReference());
     }
 
     static String texteCertificat(Trousse t, ClmDto.PreuveVue d) {
@@ -208,7 +226,10 @@ public class PreuveService {
                 + "   via l'API /api/clm/trousses/{id}/preuve/integrite ou par l'organisme.\n"
                 + "3. journal.json est une chaîne d'empreintes : chaque événement contient l'empreinte du précédent.\n"
                 + "4. certificat.json décrit signataires, niveaux d'identité, consentements et horodatages ;\n"
-                + "   certificat.pdf en est la version lisible et durable.\n";
+                + "   certificat.pdf en est la version lisible et durable, signée en PAdES (vérifiable dans tout lecteur PDF).\n"
+                + "5. Chaque document signé est accompagné de sa signature CMS détachée (.p7s, CAdES) :\n"
+                + "   openssl cms -verify -inform DER -binary -in <document>.p7s -content <document> -noverify\n"
+                + "   (-noverify omet la chaîne de confiance ; avec le certificat de l'autorité, utiliser -CAfile).\n";
     }
 
     private Map<Long, Participant> participantsParId(Trousse t) {

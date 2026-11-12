@@ -63,6 +63,11 @@ public class ContexteClm {
         return java.time.LocalDate.now(horloge);
     }
 
+    /** Fuseau de l'organisation : les échéances en jours (conservation) se calculent dans ce fuseau. */
+    public java.time.ZoneId fuseau() {
+        return horloge.getZone();
+    }
+
     /** Millisecondes seulement : l'horodatage relu de la base doit redonner exactement l'empreinte scellée. */
     public Instant maintenant() {
         return Instant.now(horloge).truncatedTo(ChronoUnit.MILLIS);

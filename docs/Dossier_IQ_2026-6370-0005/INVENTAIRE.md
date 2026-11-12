@@ -10,6 +10,7 @@
 - `02-Analyse/matrice_tracabilite.md`
 - `02-Analyse/validation_exigences_fonctionnelles.md`
 - `02-Analyse/impact_addenda_1.md`
+- `02-Analyse/conformite_exigences_fonctionnelles.md`
 - `02-Analyse/ecarts_solution_vs_exigences.md` — écarts fonctionnels **notre solution vs exigences IQ** (F/NF, 15 stories)
 
 ## 03-Fournisseurs

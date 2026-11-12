@@ -103,3 +103,7 @@ databaseChangeLog:
       file: db/changelog/changes/051-clm-preavis-echeance.yaml
   - include:
       file: db/changelog/changes/052-clm-integration-entrante.yaml
+  - include:
+      file: db/changelog/changes/053-clm-groupes.yaml
+  - include:
+      file: db/changelog/changes/054-clm-conservation.yaml

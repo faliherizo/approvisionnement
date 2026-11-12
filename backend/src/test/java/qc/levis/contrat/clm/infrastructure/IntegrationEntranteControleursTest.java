@@ -26,7 +26,7 @@ class IntegrationEntranteControleursTest {
     private final DemandesSignatureService demandes = mock(DemandesSignatureService.class);
     private final ModuleService modules = mock(ModuleService.class);
     private final IntegrationEntranteController api = new IntegrationEntranteController(clients, demandes, mock(DocumentClmService.class),
-            mock(PreuveService.class), modules);
+            mock(PreuveService.class), modules, mock(qc.levis.contrat.clm.application.ModeleService.class));
     private final ClientIntegration client = ClientIntegration.creer(7L, "Workday", ClientIntegration.Systeme.WORKDAY, null, "clm-1", "e", "k",
             "admin", Instant.EPOCH);
 
@@ -62,5 +62,30 @@ class IntegrationEntranteControleursTest {
         ClmDto.RappelVue vue = new ClmDto.RappelVue(5L, "Workday", 1L, "LANCEE", "EN_ATTENTE", 0, null, Instant.EPOCH, null);
         when(rappels.relancer(5L)).thenReturn(vue);
         assertSame(vue, new IntegrationsEntrantesAdminController(clients, rappels).relancer(5L));
+    }
+
+    @Test
+    void la_conservation_delegue_versement_et_destruction() {
+        qc.levis.contrat.clm.application.ConservationService conservation = mock(qc.levis.contrat.clm.application.ConservationService.class);
+        org.springframework.security.core.Authentication auth = mock(org.springframework.security.core.Authentication.class);
+        when(auth.getName()).thenReturn("admin.ti@iq.example");
+        ClmDto.ConservationVue vue = new ClmDto.ConservationVue(1L, "TR-1", "T", null, "ANNULEE", Instant.EPOCH, null, "VERSER", true, false, null, Instant.EPOCH);
+        when(conservation.marquerVersee(1L, "admin.ti@iq.example")).thenReturn(vue);
+        qc.levis.contrat.clm.infrastructure.web.ConservationController web = new qc.levis.contrat.clm.infrastructure.web.ConservationController(conservation);
+        assertSame(vue, web.versee(1L, auth));
+        web.detruire(1L, auth);
+        verify(conservation).detruire(1L, "admin.ti@iq.example");
+    }
+
+    @Test
+    void le_perimetre_reunit_les_groupes_de_la_securite_et_ceux_du_module() {
+        qc.levis.contrat.securite.application.SecuriteService securite = mock(qc.levis.contrat.securite.application.SecuriteService.class);
+        qc.levis.contrat.clm.application.GroupesClmService groupes = mock(qc.levis.contrat.clm.application.GroupesClmService.class);
+        when(securite.groupesDe(7L, "v@iq.example")).thenReturn(java.util.Set.of("RBAC_FIN"));
+        when(groupes.codesDe(7L, "v@iq.example")).thenReturn(java.util.Set.of("FINANCEMENT_ENTREPRISES"));
+        AdaptateursClm.PerimetreSecurite perimetre = new AdaptateursClm.PerimetreSecurite(securite, groupes);
+        assertEquals(java.util.Set.of("RBAC_FIN", "FINANCEMENT_ENTREPRISES"), perimetre.groupes(7L, "v@iq.example"));
+        assertTrue(perimetre.groupes(null, "v@iq.example").isEmpty());
+        assertTrue(perimetre.groupes(7L, null).isEmpty());
     }
 }

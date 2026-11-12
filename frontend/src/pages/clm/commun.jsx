@@ -18,7 +18,7 @@ const ICONES = {
   APPROUVEE: '✔', ENVOYEE: '✉', VERIFIEE: '☑', SIGNEE: '✍', REFUSEE: '✖', BLOQUEE: '⛔', EXPIREE: '⌛', ENVOYE: '➜',
   SIGNE: '🔒', REMPLACE: '↺', RETIRE: '⊘', EN_REVISION: '◐', PUBLIE: '✔', ECHEC: '⚠', A_REVISER: '◐', VALIDEE: '✔',
   PROPRE: '✔', INFECTE: '⚠', NON_REQUISE: '⤳', A_FAIRE: '○', EN_COURS: '◑',
-  TERMINE: '✔', TERMINE_AVEC_ECHECS: '⚠', CREEE: '✎', LANCEE: '⟳',
+  TERMINE: '✔', TERMINE_AVEC_ECHECS: '⚠', CREEE: '✎', LANCEE: '⟳', INVALIDEE: '⊘',
 }
 const TONS = { TERMINEE: 'ok', TERMINE: 'ok', TERMINE_AVEC_ECHECS: 'ko', LANCEE: 'info', CREEE: 'attente', APPROUVEE: 'ok', SIGNEE: 'ok', SIGNE: 'ok', PUBLIE: 'ok', VALIDEE: 'ok', PROPRE: 'ok', ENVOYE: 'ok',
   REJETEE: 'ko', REFUSEE: 'ko', BLOQUEE: 'ko', ECHEC: 'ko', INFECTE: 'ko', EXPIREE: 'ko',

@@ -20,6 +20,7 @@ import qc.levis.contrat.clm.application.port.AnalyseAntivirus;
 import qc.levis.contrat.clm.application.port.AnnuaireOrganisation;
 import qc.levis.contrat.clm.application.port.IdentiteOrganisation;
 import qc.levis.contrat.clm.application.port.NotificateurClm;
+import qc.levis.contrat.clm.application.GroupesClmService;
 import qc.levis.contrat.clm.application.port.PerimetreUtilisateur;
 import qc.levis.contrat.clm.application.port.PorteeTenant;
 import qc.levis.contrat.clm.application.port.ReferencesClm;
@@ -185,17 +186,25 @@ public final class AdaptateursClm {
         }
     }
 
+    /** Groupes de la sécurité avancée, s'il y en a, et groupes administrés dans l'espace du module (Cahier § 1.4.12). */
     @Component
     public static class PerimetreSecurite implements PerimetreUtilisateur {
         private final SecuriteService securite;
+        private final GroupesClmService groupesClm;
 
-        public PerimetreSecurite(SecuriteService securite) {
+        public PerimetreSecurite(SecuriteService securite, @org.springframework.context.annotation.Lazy GroupesClmService groupesClm) {
             this.securite = securite;
+            this.groupesClm = groupesClm;
         }
 
         @Override
         public Set<String> groupes(Long tenantId, String utilisateur) {
-            return tenantId == null || utilisateur == null ? Set.of() : securite.groupesDe(tenantId, utilisateur);
+            if (tenantId == null || utilisateur == null) {
+                return Set.of();
+            }
+            Set<String> tous = new java.util.HashSet<>(securite.groupesDe(tenantId, utilisateur));
+            tous.addAll(groupesClm.codesDe(tenantId, utilisateur));
+            return Set.copyOf(tous);
         }
     }
 
