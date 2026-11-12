@@ -10,6 +10,25 @@ Documents liés : [validation des exigences](../02-Analyse/validation_exigences_
 [bacs à sable](../12-Bacs-a-sable/guide_bacs_a_sable.md) ·
 [profils et rôles du tenant IQ](../11-Tenant-IQ/tenant_iq_profils_et_roles.md).
 
+## Réponses reçues — addenda 1 (9 novembre 2026)
+
+L'[addenda 1](reponses/addenda-1.md) répond en tout ou en partie aux questions ci-dessous ; impact détaillé :
+[impact_addenda_1.md](../02-Analyse/impact_addenda_1.md).
+
+| # | Réponse d'IQ | Suite |
+|---|---|---|
+| A1, A2 | Besoin principal : signature, génération documentaire et orchestration ; le CLM avancé est optionnel, sauf exigence expressément obligatoire (Q1, § 4.3) | ✔ Répondu : offre de base et options distinctes |
+| A5 | 1 300 signataires, 20 administrateurs d'affaires, 3 administrateurs techniques principaux, 15 administrateurs techniques utilisateurs ; 70 à 100 utilisateurs CLM inclus dans ce total (Q2, Q5) | ✔ Répondu |
+| C4 | Standard : lien sécurisé par courriel, compte ou SSO ; renforcée : SMS à usage unique, multifacteur ou vérification d'identité (Q4) | ✔ Répondu ; décrire nos méthodes, leur niveau d'assurance et leurs coûts |
+| D1 | Microsoft Entra ID nommé parmi les intégrations (Q3) | ◐ Protocole (OIDC ou SAML) encore à confirmer |
+| D6 | Saviynt ou SCIM nommé parmi les intégrations (Q3) | ◐ Voir P1 à P4 |
+| G1, F (processus) | Nombre de modèles et de processus fixé en ateliers ; indiquer le nombre inclus et l'effort unitaire (Q7, Q9) ; environ 30 champs Salesforce par modèle (Q8) | ◐ Hypothèse de prix à arrêter |
+| K1 | Mise en œuvre initiale détaillée, stabilisation de 30 jours ouvrables (Q6) | ◐ Échéancier encore à convenir |
+| L1, L3 | CLM avancé et CLM/IA tarifés à part, aux lignes prévues (Q2) | ✔ Répondu |
+| — | Aucun éditeur visé ; solutions équivalentes admises (Q11) | ✔ Pris en compte |
+| — | Nouvelle exigence obligatoire TI-22 : intégration Workday (§ 4.4) | Réalisée ; questions W1 à W6 |
+| — | Signature en lot depuis Salesforce et depuis la plateforme (Q10) | Réalisée ; questions V1 à V3 |
+
 ## Questions prioritaires
 
 À poser dès la première rencontre : sans réponse, une réalisation ou une recette reste bloquée.
@@ -20,7 +39,8 @@ Documents liés : [validation des exigences](../02-Analyse/validation_exigences_
 | C1, C3 | Fournisseur de signature et autorité d'horodatage | Valeur probante qualifiée (ST-09) |
 | D1, D3, D4 | Annuaire, correspondance groupes → rôles, domaines d'affaires | Authentification unique et droits par unité |
 | E3, E4, E5 | Calendrier de conservation, gel légal, sort final | Conservation et destruction (F-09) |
-| A1, A2 | Périmètre CLM de base ou optionnel | Prix et contenu de la première livraison |
+| W1, W2 | Processus RH Workday visés et mécanisme côté Workday | Réalisation de TI-22 (obligatoire) côté Workday |
+| P1 | Saviynt ou SCIM : lequel, et pour quels comptes | Provisionnement des comptes |
 | E1 | Localisation : Québec ou Canada | Région d'hébergement |
 
 ## A. Périmètre et priorités
@@ -178,3 +198,39 @@ Documents liés : [validation des exigences](../02-Analyse/validation_exigences_
 | M1 | Quel niveau d'accessibilité est exigé, et quels navigateurs et appareils doivent être pris en charge ? | SGQRI 008 3.0 / WCAG 2.2 AA ; navigateurs récents, téléphone, tablette, poste |
 | M2 | L'anglais est-il requis, pour les employés ou seulement pour les signataires externes ? | Interface en français et en anglais |
 | M3 | Quelle image de marque : logo, couleurs, sous-domaine `iq.<domaine>` ? | Nom et logo de l'organisation sur le portail du signataire |
+
+## W. Workday (exigence TI-22, addenda 1)
+
+| # | Question | Hypothèse actuelle |
+|---|---|---|
+| W1 ★ | Quels processus métier RH déclenchent une signature (offre d'emploi, contrat, avenant, politique à attester) et avec quel volume ? | Tout processus capable d'appeler l'API d'intégration |
+| W2 ★ | Côté Workday, quel mécanisme IQ privilégie-t-il : Workday Studio, Orchestrate, Workday Extend ou un intergiciel existant ? | API REST de la plateforme appelée par le mécanisme choisi par IQ |
+| W3 | Le document à signer est-il produit par Workday, ou généré par un modèle de la plateforme à partir de données Workday ? | Les deux possibles |
+| W4 | Le document signé doit-il revenir dans le dossier de l'employé (pièce jointe) ou seulement sa référence et son statut ? | Rappel de statut ; document et preuve récupérables par l'API |
+| W5 | Le candidat ou l'employé signe-t-il comme externe (lien) ou interne (SSO) ? | Externe pour un candidat, interne pour un employé |
+| W6 | IQ fournira-t-il un locataire Workday de test et un compte d'intégration ? | Non obtenu |
+
+## P. Provisionnement des comptes (Saviynt / SCIM)
+
+| # | Question | Hypothèse actuelle |
+|---|---|---|
+| P1 ★ | Saviynt pousse-t-il les comptes par SCIM 2.0, ou par un autre connecteur ? | Point SCIM 2.0 à réaliser |
+| P2 | Quels attributs et quels groupes sont transmis (rôle, unité, direction, statut) ? | Courriel, nom, actif, groupes |
+| P3 | Un départ doit-il désactiver le compte immédiatement, et ses trousses être réaffectées ? | Désactivation ; réaffectation manuelle |
+| P4 | Les comptes créés par SCIM doivent-ils aussi se connecter par SSO uniquement ? | Oui |
+
+## O. Microsoft 365
+
+| # | Question | Hypothèse actuelle |
+|---|---|---|
+| O1 | Quels usages de Microsoft 365 sont attendus : dépôt du document signé dans SharePoint, avis dans Teams, ouverture depuis Outlook ? | Dépôt SharePoint et avis Teams, à réaliser pour le module |
+| O2 | Quelle bibliothèque SharePoint et quelle nomenclature de dossiers pour les documents signés ? | Non connue |
+
+## V. Signature en lot (AF-47)
+
+| # | Question | Hypothèse actuelle |
+|---|---|---|
+| V1 | Quelle taille de lot maximale et quelle fréquence ? | 500 dossiers par lot, traitement synchrone |
+| V2 | Dans un lot, le document est-il le même pour tous (entente type) ou propre à chaque dossier ? | Propre à chaque dossier, généré par le même modèle |
+| V3 | Un lot doit-il pouvoir être approuvé globalement avant l'envoi en signature ? | Chaque trousse suit son parcours |
+

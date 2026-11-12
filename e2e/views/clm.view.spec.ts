@@ -13,6 +13,7 @@ const ECRANS: { nom: string; chemin: string; titre: RegExp; maquette?: string }[
   { nom: 'UI-01 tableau de bord', chemin: '/clm', titre: /Tableau de bord des contrats/, maquette: 'UI-01' },
   { nom: 'UI-02 trousses', chemin: '/clm/trousses', titre: /Trousses/, maquette: 'UI-02' },
   { nom: 'UI-03 créer une trousse', chemin: '/clm/trousses/nouvelle', titre: /Créer une trousse/, maquette: 'UI-03' },
+  { nom: 'signature en lot (addenda 1, AF-47)', chemin: '/clm/lots', titre: /Signature en lot/ },
   { nom: 'UI-07 modèles', chemin: '/clm/modeles', titre: /Catalogue des modèles/, maquette: 'UI-07' },
   { nom: 'UI-12 tâches', chemin: '/clm/taches', titre: /Boîte de tâches/, maquette: 'UI-12' },
   { nom: 'UI-18 suivi', chemin: '/clm/suivi', titre: /Suivi centralisé/, maquette: 'UI-18' },

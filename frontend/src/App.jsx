@@ -53,6 +53,7 @@ import ClmTableauBord from './pages/clm/ClmTableauBord.jsx'
 import Trousses from './pages/clm/Trousses.jsx'
 import TrousseCreer from './pages/clm/TrousseCreer.jsx'
 import TrousseDetail from './pages/clm/TrousseDetail.jsx'
+import Lots from './pages/clm/Lots.jsx'
 import Modeles from './pages/clm/Modeles.jsx'
 import ModeleEditeur from './pages/clm/ModeleEditeur.jsx'
 import TachesClm from './pages/clm/TachesClm.jsx'
@@ -239,6 +240,7 @@ export default function App() {
             <Route path="/clm/trousses" element={<Trousses />} />
             <Route path="/clm/trousses/nouvelle" element={<TrousseCreer />} />
             <Route path="/clm/trousses/:id" element={<TrousseDetail />} />
+            <Route path="/clm/lots" element={<Lots />} />
             <Route path="/clm/taches" element={<TachesClm />} />
             <Route path="/clm/suivi" element={<SuiviClm />} />
             <Route path="/clm/modeles" element={<Modeles />} />

@@ -38,15 +38,19 @@ class ArchitectureClmTest {
     private static final String DEPOTS = "qc.levis.contrat.clm.application.repository";
 
     /** Seules requêtes non bornées au tenant, chacune motivée ; toute nouvelle exception doit être ajoutée ici et justifiée. */
-    private static final Map<String, String> HORS_TENANT = Map.of(
-            "InvitationRepository.findByJetonHash",
-            "le jeton est la capacité du portail public ; le tenant se lit ensuite sur l'invitation trouvée",
-            "MessageSortantRepository.existsByCleIdempotence",
-            "la clé d'idempotence contient déjà le tenant",
-            "MessageSortantRepository.findTop50ByStatutAndProchainEssaiLessThanEqualOrderByProchainEssaiAsc",
-            "relais planifié tous tenants ; chaque message est ensuite publié dans son propre tenant",
-            "EtapeTrousseRepository.findByStatut",
-            "rappels planifiés tous tenants ; chaque étape est ensuite traitée dans son propre tenant");
+    private static final Map<String, String> HORS_TENANT = Map.ofEntries(
+            Map.entry("InvitationRepository.findByJetonHash",
+                    "le jeton est la capacité du portail public ; le tenant se lit ensuite sur l'invitation trouvée"),
+            Map.entry("MessageSortantRepository.existsByCleIdempotence", "la clé d'idempotence contient déjà le tenant"),
+            Map.entry("MessageSortantRepository.findTop50ByStatutAndProchainEssaiLessThanEqualOrderByProchainEssaiAsc",
+                    "relais planifié tous tenants ; chaque message est ensuite publié dans son propre tenant"),
+            Map.entry("EtapeTrousseRepository.findByStatut",
+                    "rappels planifiés tous tenants ; chaque étape est ensuite traitée dans son propre tenant"),
+            Map.entry("ClientIntegrationRepository.findByClientId",
+                    "identifiant client unique sur la plateforme : le tenant se lit sur le client authentifié (API d'intégration)"),
+            Map.entry("RappelSortantRepository.existsByCleIdempotence", "la clé d'idempotence contient déjà le tenant"),
+            Map.entry("RappelSortantRepository.findTop50ByStatutAndProchainEssaiLessThanEqualOrderByProchainEssaiAsc",
+                    "relais planifié tous tenants ; chaque rappel est ensuite livré dans son propre tenant"));
 
     private static final JavaClasses CODE = new ClassFileImporter()
             .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
@@ -101,6 +105,8 @@ class ArchitectureClmTest {
     void chaque_api_hors_portail_public_exige_une_autorisation_serveur() {
         classes().that().resideInAPackage(INFRASTRUCTURE).and().areAnnotatedWith(RestController.class)
                 .and().doNotHaveSimpleName("PortailController")
+                // API d'intégration : jeton client credentials vérifié par le contrôleur, module contrôlé pour le tenant du client.
+                .and().doNotHaveSimpleName("IntegrationEntranteController")
                 .should().beAnnotatedWith(PreAuthorize.class)
                 .because("refus par défaut : masquer un bouton dans l'interface n'est pas un contrôle d'accès (ST-02)")
                 .check(CODE);

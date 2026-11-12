@@ -400,3 +400,85 @@ test.describe('Exigences fonctionnelles IQ F-01 à F-13 — depuis l’interface
     await auditerAxe(page)
   })
 })
+
+test.describe('Addenda 1 — intégrations et signature en lot', () => {
+  const a = donnees.addenda1
+
+  test('AF-47 — signature en lot depuis la plateforme : une trousse par dossier, chaque échec isolé', async ({ page, playwright, baseURL }) => {
+    const redacteur = await api(playwright, baseURL, users.iqInitiateur)
+    const admin = await api(playwright, baseURL, users.iqAdminAffaires)
+    const nomModele = `${a.modeleLot.nom} ${unique()}`
+    const m = await ok(redacteur.post('/api/clm/modeles', { data: { ...a.modeleLot, nom: nomModele } }))
+    await ok(redacteur.post(`/api/clm/modeles/${m.id}/soumettre`, { data: {} }))
+    await ok(admin.post(`/api/clm/modeles/${m.id}/publier`, { data: {} }))
+    await Promise.all([redacteur.dispose(), admin.dispose()])
+
+    await session(page, users.iqInitiateur)
+    await page.getByRole('link', { name: 'Signature en lot' }).click()
+    await expect(page.getByRole('heading', { level: 1, name: 'Signature en lot' })).toBeVisible()
+    const libelle = `${a.lot.libelle} ${unique()}`
+    const formulaire = page.getByRole('form', { name: 'Nouveau lot' })
+    await formulaire.getByLabel('Libellé du lot').fill(libelle)
+    const modele = formulaire.getByRole('combobox', { name: /^Modèle de contrat/ })
+    await modele.selectOption(await modele.locator('option', { hasText: nomModele }).getAttribute('value'))
+    await formulaire.getByLabel(/^Dossiers, un par ligne/).fill(a.lot.lignes.join('\n'))
+    await expect(formulaire.getByRole('status').filter({ hasText: 'dossier(s) dans le lot.' })).toHaveText(`${a.lot.lignes.length} dossier(s) dans le lot.`)
+    await controler(page)
+    await auditerAxe(page)
+    await formulaire.getByRole('button', { name: 'Créer le lot' }).click()
+
+    await expect(page.getByText(`Lot « ${libelle} » : ${a.lot.reussis} trousse(s) créée(s), ${a.lot.echecs} échec(s).`)).toBeVisible()
+    const detail = page.getByRole('table', { name: `Dossiers du lot « ${libelle} »` })
+    await expect(detail.getByRole('row').filter({ hasText: 'Lancée' })).toHaveCount(a.lot.reussis)
+    await expect(detail.getByRole('row').filter({ hasText: 'En échec' })).toContainText('Entente sans courriel valide')
+    await controler(page)
+    await auditerAxe(page)
+    await detail.getByRole('link').first().click()
+    await expect(page.getByRole('heading', { level: 1, name: 'Entente Agri-Nord' })).toBeVisible()
+    await expect(page.getByRole('main')).toContainText('En traitement')
+  })
+
+  test('TI-22 — client Workday : secrets remis une fois, trousse créée par l’API, origine suivie, puis révocation', async ({ page, playwright, baseURL }) => {
+    await session(page, users.iqAdminTi)
+    await page.goto('/clm/admin/integrations')
+    const formulaire = page.getByRole('form', { name: 'Nouveau client d’intégration' })
+    const nom = `${a.workday.nom} ${unique()}`
+    await formulaire.getByLabel('Nom', { exact: true }).fill(nom)
+    await formulaire.getByLabel('Système').selectOption('WORKDAY')
+    await formulaire.getByLabel(/^Adresse de rappel/).fill(a.workday.urlRappel)
+    await controler(page)
+    await auditerAxe(page)
+    await formulaire.getByRole('button', { name: 'Créer le client' }).click()
+
+    const remis = page.getByRole('status').filter({ hasText: 'ne seront plus jamais affichées' })
+    await expect(remis).toBeVisible()
+    const valeurs = await remis.locator('dd code').allTextContents()
+    const [clientId, secret] = valeurs
+    expect(clientId).toMatch(/^clm-/)
+    await controler(page)
+    await auditerAxe(page)
+    await remis.getByRole('button', { name: 'J’ai copié les valeurs' }).click()
+    await expect(page.getByText(secret)).toHaveCount(0)
+
+    const systeme = await playwright.request.newContext({ baseURL })
+    const jeton = await ok(systeme.post('/api/clm/integration/oauth/token', { form: { grant_type: 'client_credentials', client_id: clientId, client_secret: secret } }))
+    const auth = { Authorization: `Bearer ${jeton.access_token}` }
+    const t = await ok(systeme.post('/api/clm/integration/v1/trousses', { headers: auth, data: { ...a.workday.demande,
+      documents: [{ nom: 'offre.pdf', contenuBase64: Buffer.from(PDF, 'latin1').toString('base64') }] } }))
+    expect(t.source).toBe('WORKDAY')
+
+    await page.goto('/clm/suivi')
+    const filtres = page.getByRole('main').getByRole('form')
+    await filtres.getByLabel('Source').selectOption('WORKDAY')
+    await filtres.getByRole('button', { name: 'Rechercher', exact: true }).click()
+    await expect(page.getByRole('row').filter({ hasText: t.reference })).toBeVisible()
+
+    await page.goto('/clm/admin/integrations')
+    page.once('dialog', (d) => d.accept())
+    await page.getByRole('button', { name: `Révoquer — ${nom}` }).click()
+    await expect(page.getByText(`Client « ${nom} » révoqué.`)).toBeVisible()
+    expect((await systeme.get(`/api/clm/integration/v1/trousses/${t.id}`, { headers: auth })).status()).toBe(401)
+    await systeme.dispose()
+  })
+})
+

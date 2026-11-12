@@ -71,7 +71,9 @@ test.describe('Tenant IQ — chaque profil n’a que l’espace du module CLM', 
   for (const p of PROFILS) {
     test(`${p.profil} : menus, pages et API du seul module CLM`, async ({ page }) => {
       await ouvrirSession(page, p.compte)
-      await expect(page.locator('#clm-navigation').getByRole('link')).toHaveText([...PRINCIPAUX, ...p.administration])
+      // « Signature en lot » (addenda 1, AF-47) n'est offerte qu'aux profils qui créent des trousses.
+      const principaux = p.initie ? [PRINCIPAUX[0], PRINCIPAUX[1], 'Signature en lot', ...PRINCIPAUX.slice(2)] : PRINCIPAUX
+      await expect(page.locator('#clm-navigation').getByRole('link')).toHaveText([...principaux, ...p.administration])
       await expect(page.locator('header.topbar'), 'aucun gabarit de la plateforme').toHaveCount(0)
       await expect(page.getByRole('link', { name: 'Retour à la plateforme' })).toHaveCount(0)
       await expect(page.getByRole('link', { name: 'Mon profil' })).toBeVisible()

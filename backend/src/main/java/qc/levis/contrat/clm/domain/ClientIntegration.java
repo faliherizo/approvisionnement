@@ -13,13 +13,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
-import java.util.HexFormat;
 
 /**
  * Système externe autorisé à déclencher des signatures (Salesforce Grantmaking, Workday — addenda 1, TI-22 et AF-47).
- * Le secret n'est conservé que sous forme d'empreinte ; la clé qui signe les rappels est chiffrée par l'application.
+ * Le secret n'est conservé que sous forme d'empreinte à clé (calculée par l'application avec la clé serveur : une base
+ * divulguée ne permet pas d'éprouver des secrets) ; la clé qui signe les rappels est chiffrée par l'application.
  */
 @Entity
 @Table(name = "clm_client_integration", uniqueConstraints = @UniqueConstraint(name = "uk_clm_client_id", columnNames = "client_id"))
@@ -47,7 +46,7 @@ public class ClientIntegration {
     @Column(name = "client_id", nullable = false, length = 60)
     private String clientId;
 
-    @Column(name = "secret_empreinte", nullable = false, length = 64)
+    @Column(name = "secret_empreinte", nullable = false, length = 128)
     private String secretEmpreinte;
 
     @Column(name = "url_rappel", length = 500)
@@ -71,9 +70,9 @@ public class ClientIntegration {
     protected ClientIntegration() {
     }
 
-    /** {@code secret} et {@code cleRappelChiffree} viennent de l'application : aléa et chiffrement lui sont injectés. */
+    /** Empreinte du secret et clé chiffrée viennent de l'application : aléa, sceau et chiffrement lui sont injectés. */
     public static ClientIntegration creer(Long tenantId, String nom, Systeme systeme, String urlRappel, String clientId,
-                                          String secret, String cleRappelChiffree, String par, Instant le) {
+                                          String secretEmpreinte, String cleRappelChiffree, String par, Instant le) {
         String n = nom == null ? "" : nom.strip();
         if (n.isEmpty() || n.length() > NOM_MAX) {
             throw new IllegalArgumentException("Nom du client d'intégration : 1 à " + NOM_MAX + " caractères.");
@@ -87,17 +86,17 @@ public class ClientIntegration {
         c.systeme = systeme;
         c.urlRappel = urlRappelValide(urlRappel);
         c.clientId = clientId;
-        c.secretEmpreinte = empreinte(secret);
+        c.secretEmpreinte = secretEmpreinte;
         c.cleRappelChiffree = cleRappelChiffree;
         c.creePar = par;
         c.creeLe = le;
         return c;
     }
 
-    /** Comparaison à temps constant de l'empreinte : un client révoqué n'est jamais authentifié. */
-    public boolean authentifie(String secret) {
-        return actif && secret != null && MessageDigest.isEqual(
-                secretEmpreinte.getBytes(StandardCharsets.US_ASCII), empreinte(secret).getBytes(StandardCharsets.US_ASCII));
+    /** Comparaison à temps constant de l'empreinte du secret présenté : un client révoqué n'est jamais authentifié. */
+    public boolean authentifie(String empreintePresentee) {
+        return actif && empreintePresentee != null && MessageDigest.isEqual(
+                secretEmpreinte.getBytes(StandardCharsets.UTF_8), empreintePresentee.getBytes(StandardCharsets.UTF_8));
     }
 
     public void revoquer(Instant le) {
@@ -126,15 +125,6 @@ public class ClientIntegration {
             return u.toString();
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Adresse de rappel : URL https complète requise.", e);
-        }
-    }
-
-    static String empreinte(String secret) {
-        try {
-            byte[] h = MessageDigest.getInstance("SHA-256").digest(String.valueOf(secret).getBytes(StandardCharsets.UTF_8));
-            return HexFormat.of().formatHex(h);
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("SHA-256 indisponible.", e);
         }
     }
 

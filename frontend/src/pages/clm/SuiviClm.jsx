@@ -47,7 +47,7 @@ function Contenu() {
             <label>{t('clm.champ.unite')}<ChoixListe liste={unites} value={form.unite} vide={t('clm.liste.toutes')}
               onChange={(v) => setForm({ ...form, unite: v })} /></label>
             <label>{t('clm.col.responsable')}<input value={form.responsable} onChange={maj('responsable')} /></label>
-            <label>{t('clm.col.source')}<select value={form.source} onChange={maj('source')}><option value="">{t('clm.su.toutesSources')}</option><option value="MANUELLE">{t('clm.source.MANUELLE')}</option><option value="SALESFORCE">{t('clm.source.SALESFORCE')}</option></select></label>
+            <label>{t('clm.col.source')}<select value={form.source} onChange={maj('source')}><option value="">{t('clm.su.toutesSources')}</option>{SOURCES.map((x) => <option key={x} value={x}>{t(`clm.source.${x}`)}</option>)}</select></label>
             <label>{t('clm.su.du')}<input type="date" value={form.du} onChange={maj('du')} /></label>
             <label>{t('clm.su.au')}<input type="date" value={form.au} onChange={maj('au')} /></label>
             <label className="check-row"><input type="checkbox" checked={form.exceptions} onChange={maj('exceptions')} />{t('clm.su.exceptions')}</label>
@@ -101,6 +101,9 @@ function Contenu() {
     </EcranClm>
   )
 }
+
+/** Origines d'une trousse : écran, Salesforce, Workday ou autre système par l'API d'intégration (addenda 1). */
+const SOURCES = ['MANUELLE', 'SALESFORCE', 'WORKDAY', 'INTEGRATION']
 
 export default function SuiviClm() {
   return <GardeModule><Contenu /></GardeModule>

@@ -11,6 +11,8 @@ const STATUTS = {
   VALIDEE: ['Validée', 'Validated'], PROPRE: ['Analyse antivirus réussie', 'Virus scan passed'], INFECTE: ['Menace détectée', 'Threat detected'],
   NON_REQUISE: ['Non requise (règle d’affaires)', 'Not required (business rule)'],
   A_FAIRE: ['À faire', 'To do'], EN_COURS: ['En cours', 'In progress'],
+  TERMINE: ['Terminé', 'Completed'], TERMINE_AVEC_ECHECS: ['Terminé avec échecs', 'Completed with failures'],
+  CREEE: ['Créée', 'Created'], LANCEE: ['Lancée', 'Launched'],
 }
 
 const EVENEMENTS = {
@@ -47,7 +49,7 @@ const LIBELLES = {
   // Navigation et commun
   'clm.nav.groupe': ['Contrats & signature', 'Contracts & signature'], 'clm.nav.tableau': ['Tableau de bord CLM', 'CLM dashboard'],
   'clm.nav.trousses': ['Trousses', 'Packages'], 'clm.nav.nouvelle': ['Créer une trousse', 'Create a package'], 'clm.nav.taches': ['Mes tâches', 'My tasks'],
-  'clm.nav.suivi': ['Suivi centralisé', 'Central tracking'], 'clm.nav.modeles': ['Modèles', 'Templates'], 'clm.nav.admin': ['Administration CLM', 'CLM administration'],
+  'clm.nav.suivi': ['Suivi centralisé', 'Central tracking'], 'clm.nav.lots': ['Signature en lot', 'Bulk signing'], 'clm.nav.modeles': ['Modèles', 'Templates'], 'clm.nav.admin': ['Administration CLM', 'CLM administration'],
   'clm.chargement': ['Chargement…', 'Loading…'], 'clm.moduleInactif': ['Le module Contrats & signature n’est pas activé pour votre organisation.', 'The Contracts & signature module is not enabled for your organization.'],
   'clm.erreur': ['Une erreur est survenue. Réessayez ou contactez le soutien.', 'An error occurred. Try again or contact support.'],
   'clm.reessayer': ['Réessayer', 'Retry'], 'clm.enregistrer': ['Enregistrer', 'Save'], 'clm.annuler': ['Annuler', 'Cancel'], 'clm.continuer': ['Continuer', 'Continue'],
@@ -55,6 +57,7 @@ const LIBELLES = {
   'clm.fermer': ['Fermer', 'Close'], 'clm.modifier': ['Modifier', 'Edit'], 'clm.retirer': ['Retirer', 'Remove'], 'clm.reinitialiser': ['Réinitialiser', 'Reset'],
   'clm.precedent': ['Précédent', 'Previous'], 'clm.suivant': ['Suivant', 'Next'], 'clm.pagination': ['Pagination', 'Pagination'], 'clm.pageSur': ['Page {p} sur {n}', 'Page {p} of {n}'],
   'clm.source.MANUELLE': ['Saisie manuelle', 'Manual'], 'clm.source.SALESFORCE': ['Salesforce', 'Salesforce'],
+  'clm.source.WORKDAY': ['Workday', 'Workday'], 'clm.source.INTEGRATION': ['Intégration API', 'API integration'],
   'clm.type.VALIDATION': ['Validation', 'Review'], 'clm.type.APPROBATION': ['Approbation', 'Approval'], 'clm.type.SIGNATURE': ['Signature', 'Signature'],
   'clm.affecte.UTILISATEUR': ['Utilisateur', 'User'], 'clm.affecte.GROUPE': ['Groupe', 'Group'], 'clm.affecte.ROLE': ['Rôle', 'Role'], 'clm.affecte.PARTICIPANT': ['Participant', 'Participant'],
   'clm.risque.FAIBLE': ['Faible', 'Low'], 'clm.risque.MOYEN': ['Moyen', 'Medium'], 'clm.risque.ELEVE': ['Élevé', 'High'],
@@ -591,6 +594,40 @@ const LIBELLES = {
   'clm.ad.pm.enregistres': ['Paramètres enregistrés.', 'Settings saved.'], 'clm.ad.pm.retablis': ['Paramètres de la plateforme rétablis.', 'Platform settings restored.'],
   'clm.ad.pm.propres': ['Paramètres propres à l’organisation, modifiés par {par} le {le}.', 'Organization settings, changed by {par} on {le}.'],
   'clm.ad.pm.plateforme': ['Paramètres de la plateforme : l’organisation n’en a personnalisé aucun.', 'Platform settings: the organization has customized none.'],
+
+  // Signature en lot (addenda 1, AF-47)
+  'clm.lot.titre': ['Signature en lot', 'Bulk signing'],
+  'clm.lot.objectif': ['Lancer un même modèle et un même parcours pour plusieurs dossiers : une trousse par dossier, chaque échec reste isolé.', 'Apply one template and workflow to many records: one package per record, each failure stays isolated.'],
+  'clm.lot.nouveau': ['Nouveau lot', 'New batch'], 'clm.lot.libelle': ['Libellé du lot', 'Batch label'],
+  'clm.lot.choisirModele': ['— Choisir un modèle publié —', '— Choose a published template —'],
+  'clm.lot.colonne': ['Première colonne', 'First column'], 'clm.lot.colonne.TITRE': ['Titre de la trousse', 'Package title'],
+  'clm.lot.colonne.SALESFORCE': ['Numéro de dossier Salesforce', 'Salesforce record number'],
+  'clm.lot.lignes': ['Dossiers, un par ligne', 'Records, one per line'],
+  'clm.lot.lignesAide': ['(titre ou dossier ; nom du signataire ; courriel ; téléphone)', '(title or record; signer name; email; phone)'],
+  'clm.lot.lancer': ['Lancer les parcours dès la création', 'Launch workflows on creation'],
+  'clm.lot.compte': ['{n} dossier(s) dans le lot.', '{n} record(s) in the batch.'], 'clm.lot.creer': ['Créer le lot', 'Create batch'],
+  'clm.lot.cree': ['Lot « {libelle} » : {r} trousse(s) créée(s), {e} échec(s).', 'Batch “{libelle}”: {r} package(s) created, {e} failure(s).'],
+  'clm.lot.recents': ['Lots récents', 'Recent batches'], 'clm.lot.aucun': ['Aucun lot pour l’instant.', 'No batch yet.'],
+  'clm.lot.origine': ['Origine', 'Origin'], 'clm.lot.resultat': ['Résultat', 'Result'],
+  'clm.lot.resultatValeur': ['{r} / {t} créées, {e} échec(s)', '{r} / {t} created, {e} failure(s)'],
+  'clm.lot.voir': ['Voir le détail', 'View details'], 'clm.lot.elementsDe': ['Dossiers du lot « {libelle} »', 'Records of batch “{libelle}”'],
+  'clm.lot.reference': ['Dossier', 'Record'], 'clm.lot.trousse': ['Trousse', 'Package'],
+  // Clients d'intégration entrants (addenda 1, TI-22 Workday, AF-47)
+  'clm.ci.titre': ['Clients d’intégration entrants (Workday, Salesforce…)', 'Inbound integration clients (Workday, Salesforce…)'],
+  'clm.ci.aide': ['Un système autorisé obtient un jeton OAuth 2.0 (client credentials) sur /api/clm/integration/oauth/token, crée des trousses ou des lots, puis reçoit les changements de statut à son adresse de rappel, signés HMAC-SHA256.', 'An authorized system obtains an OAuth 2.0 token (client credentials) at /api/clm/integration/oauth/token, creates packages or batches, then receives status changes at its callback URL, HMAC-SHA256 signed.'],
+  'clm.ci.nouveau': ['Nouveau client d’intégration', 'New integration client'], 'clm.ci.creer': ['Créer le client', 'Create client'],
+  'clm.ci.systeme': ['Système', 'System'], 'clm.ci.systeme.WORKDAY': ['Workday', 'Workday'], 'clm.ci.systeme.SALESFORCE': ['Salesforce', 'Salesforce'],
+  'clm.ci.systeme.AUTRE': ['Autre système', 'Other system'],
+  'clm.ci.urlRappel': ['Adresse de rappel', 'Callback URL'], 'clm.ci.urlRappelAide': ['(https ; facultative)', '(https; optional)'],
+  'clm.ci.clientId': ['Identifiant client', 'Client ID'], 'clm.ci.secret': ['Secret client', 'Client secret'],
+  'clm.ci.cleRappel': ['Clé de signature des rappels', 'Callback signing key'],
+  'clm.ci.remis': ['Client « {nom} » créé. Copiez ces valeurs maintenant : elles ne seront plus jamais affichées.', 'Client “{nom}” created. Copy these values now: they will never be shown again.'],
+  'clm.ci.copies': ['J’ai copié les valeurs', 'I copied the values'],
+  'clm.ci.actif': ['Actif', 'Active'], 'clm.ci.revoqueLe': ['Révoqué le {d}', 'Revoked on {d}'], 'clm.ci.revoquer': ['Révoquer', 'Revoke'],
+  'clm.ci.confirmerRevocation': ['Révoquer « {nom} » ? Ses jetons seront refusés immédiatement.', 'Revoke “{nom}”? Its tokens will be refused immediately.'],
+  'clm.ci.revoque': ['Client « {nom} » révoqué.', 'Client “{nom}” revoked.'],
+  'clm.ci.rappels': ['Rappels aux systèmes externes', 'Callbacks to external systems'], 'clm.ci.aucunRappel': ['Aucun rappel envoyé.', 'No callback sent.'],
+  'clm.ci.client': ['Client', 'Client'], 'clm.ci.rappel': ['rappel', 'callback'],
 }
 
 const messages = {}

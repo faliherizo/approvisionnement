@@ -61,7 +61,7 @@ public class ClientsIntegrationService {
         String secret = alea.jeton();
         String cleRappel = alea.jeton();
         ClientIntegration c = clients.save(ClientIntegration.creer(ctx.tenant(), req.nom(), systeme(req.systeme()), req.urlRappel(),
-                "clm-" + alea.uuid(), secret, chiffrement.chiffrer(cleRappel), acteur, ctx.maintenant()));
+                "clm-" + alea.uuid(), empreinte(secret), chiffrement.chiffrer(cleRappel), acteur, ctx.maintenant()));
         journal.configuration(acteur, "CLIENT_INTEGRATION", "créé : " + c.getNom() + " (" + c.getSysteme() + ", " + c.getClientId() + ")");
         return new ClmDto.ClientIntegrationCree(vue(c), secret, cleRappel);
     }
@@ -78,7 +78,7 @@ public class ClientsIntegrationService {
     /** Échange client credentials → jeton d'accès d'une heure. */
     public ClmDto.JetonAcces emettreJeton(String clientId, String secret) {
         ClientIntegration c = Optional.ofNullable(clientId).flatMap(clients::findByClientId)
-                .filter(x -> x.authentifie(secret)).orElseThrow(AccesRefuse::new);
+                .filter(x -> secret != null && x.authentifie(empreinte(secret))).orElseThrow(AccesRefuse::new);
         String charge = c.getClientId() + SEPARATEUR + ctx.maintenant().plus(DUREE_JETON).getEpochSecond();
         String jeton = Base64.getUrlEncoder().withoutPadding().encodeToString(charge.getBytes(StandardCharsets.UTF_8))
                 + "." + scelleur.sceller(charge.getBytes(StandardCharsets.UTF_8));
@@ -105,6 +105,11 @@ public class ClientsIntegrationService {
             throw new AccesRefuse();
         }
         return clients.findByClientId(champs[0]).filter(ClientIntegration::isActif).orElseThrow(AccesRefuse::new);
+    }
+
+    /** Empreinte à clé du secret : sceau HMAC du serveur, jamais le secret lui-même. */
+    private String empreinte(String secret) {
+        return scelleur.sceller(("client-integration:" + secret).getBytes(StandardCharsets.UTF_8));
     }
 
     /** Clé qui signe les rappels de ce client, déchiffrée pour l'envoi seulement. */

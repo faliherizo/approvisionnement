@@ -9,12 +9,14 @@
 - `02-Analyse/ecarts_entre_documents.md`
 - `02-Analyse/matrice_tracabilite.md`
 - `02-Analyse/validation_exigences_fonctionnelles.md`
+- `02-Analyse/impact_addenda_1.md`
 - `02-Analyse/ecarts_solution_vs_exigences.md` — écarts fonctionnels **notre solution vs exigences IQ** (F/NF, 15 stories)
 
 ## 03-Fournisseurs
 - `03-Fournisseurs/exigences_soumissionnaire_adjudicataire.md`
 
 ## 04-Architecture
+- `04-Architecture/api_integration_entrante.md`
 - `04-Architecture/architecture_solution_logicielle.md`
 - `04-Architecture/guide_implementation_java_spring_react.md`
 
@@ -55,6 +57,7 @@
 
 ## 09-Questions
 - `09-Questions/questions_a_clarifier_IQ.md`
+- `09-Questions/reponses/addenda-1.md` (et le PDF de l'addenda 1)
 
 ## 12-Bacs-a-sable
 - `12-Bacs-a-sable/guide_bacs_a_sable.md`

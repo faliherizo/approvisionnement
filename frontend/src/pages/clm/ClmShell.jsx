@@ -7,10 +7,13 @@ import { useI18n } from '../../i18n/I18nContext'
 import { chargerTheme } from '../../theme.js'
 import LangSwitcher from '../../components/LangSwitcher.jsx'
 import './clm.css'
+import { usePeutInitier } from './commun.jsx'
 
+/** Entrées principales ; la quatrième valeur réserve l'entrée aux profils qui créent des trousses. */
 const PRINCIPAUX = [
   ['/clm', 'clm.nav.tableauBord', true],
   ['/clm/trousses', 'clm.nav.mesTrousses'],
+  ['/clm/lots', 'clm.nav.lots', false, true],
   ['/clm/taches', 'clm.nav.taches'],
   ['/clm/modeles', 'clm.nav.modeles'],
   ['/clm/suivi', 'clm.nav.suivi'],
@@ -39,6 +42,7 @@ export default function ClmShell({ children }) {
   const [q, setQ] = useState('')
   const { modules, chargement } = useModules()
   const admin = hasRole('ADMIN') || hasRole('SUPERADMIN')
+  const peutInitier = usePeutInitier()
   const administration = ADMINISTRATION.filter(([, , aussi]) => admin || (aussi && hasRole(aussi)))
   // Une organisation qui ne souscrit que le CLM n'a pas d'autre espace vers lequel revenir.
   const autreEspace = !chargement && !espaceClmSeul(modules)
@@ -79,7 +83,8 @@ export default function ClmShell({ children }) {
       <div className="clm-shell__corps">
         <nav id="clm-navigation" className={`clm-shell__nav ${menuOuvert ? 'is-ouvert' : ''}`} aria-label={t('clm.gab.navigation')}>
           <ul>
-            {PRINCIPAUX.map(([chemin, cle, fin]) => <li key={chemin}><NavLink to={chemin} end={fin}>{t(cle)}</NavLink></li>)}
+            {PRINCIPAUX.filter(([, , , initiateurs]) => !initiateurs || peutInitier)
+              .map(([chemin, cle, fin]) => <li key={chemin}><NavLink to={chemin} end={fin}>{t(cle)}</NavLink></li>)}
           </ul>
           {administration.length > 0 && (
             <>

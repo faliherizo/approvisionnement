@@ -160,5 +160,50 @@
     "nom": "Compte Conformité E2E",
     "role": "Auditeur"
   },
-  "organisation": "Investissement Québec"
+  "organisation": "Investissement Québec",
+  "addenda1": {
+    "_source": "docs/Dossier_IQ_2026-6370-0005/09-Questions/reponses/addenda-1.md",
+    "modeleLot": {
+      "nom": "Entente de confidentialité (lot)",
+      "corps": "Entente de confidentialité entre Investissement Québec et {{partie}}.",
+      "champs": [
+        {
+          "cle": "partie",
+          "libelle": "Partie",
+          "type": "TEXTE"
+        }
+      ],
+      "clauses": [],
+      "parcours": []
+    },
+    "lot": {
+      "libelle": "Ententes de confidentialité — novembre",
+      "lignes": [
+        "Entente Agri-Nord;Marie Agri-Nord;marie@agri-nord.example;+15145550111",
+        "Entente Boréal;Luc Boréal;luc@boreal.example;+14185550122",
+        "Entente sans courriel valide;Paul Erreur;pas-un-courriel;+15145550133"
+      ],
+      "reussis": 2,
+      "echecs": 1
+    },
+    "workday": {
+      "nom": "Workday RH (e2e)",
+      "urlRappel": "https://workday.iq.example/clm/rappels",
+      "demande": {
+        "titre": "Lettre d'offre — poste 4471",
+        "referenceExterne": "WD-BP-2026-4471",
+        "initiateur": "initiateur@iq.example",
+        "signataires": [
+          {
+            "nom": "Alex Candidat",
+            "courriel": "alex.candidat@exemple.ca",
+            "telephone": "+15145550144",
+            "roleContrat": "SIGNATAIRE_1",
+            "externe": true
+          }
+        ],
+        "lancer": true
+      }
+    }
+  }
 }

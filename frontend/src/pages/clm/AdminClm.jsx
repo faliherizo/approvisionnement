@@ -147,6 +147,123 @@ function FormulaireConnexion({ config, secretRef, onEnregistrer, onAnnuler, onRe
 }
 
 /** UI-21 — Intégrations API (Salesforce) : connexion, identifiants masqués, journal avec corrélation, erreurs et reprises, version. */
+const SYSTEMES = ['WORKDAY', 'SALESFORCE', 'AUTRE']
+
+/**
+ * Clients d'intégration entrants (addenda 1 : Workday TI-22, lots Salesforce AF-47) : identifiant et secret remis une
+ * seule fois, clé de signature des rappels, révocation ; puis les rappels de statut envoyés à ces systèmes.
+ */
+function ClientsIntegration() {
+  const { t } = useI18n()
+  const versErreur = useErreur()
+  const { donnees: clients, recharger } = useRessource('/clm/admin/clients-integration')
+  const { donnees: rappels, recharger: rechargerRappels } = useRessource('/clm/admin/rappels')
+  const [f, setF] = useState({ nom: '', systeme: 'WORKDAY', urlRappel: '' })
+  const [remis, setRemis] = useState(null)
+  const [erreur, setErreur] = useState(null)
+  const [info, setInfo] = useState('')
+  const maj = (k) => (e) => setF({ ...f, [k]: e.target.value })
+
+  async function creer(e) {
+    e.preventDefault()
+    setErreur(null)
+    try {
+      const { data } = await api.post('/clm/admin/clients-integration', { ...f, urlRappel: f.urlRappel.trim() || null })
+      setRemis(data)
+      setF({ nom: '', systeme: 'WORKDAY', urlRappel: '' })
+      recharger()
+    } catch (x) { setErreur(versErreur(x)) }
+  }
+  async function revoquer(c) {
+    if (!window.confirm(t('clm.ci.confirmerRevocation', { nom: c.nom }))) return
+    setErreur(null)
+    try { await api.post(`/clm/admin/clients-integration/${c.id}/revoquer`); setInfo(t('clm.ci.revoque', { nom: c.nom })); recharger() } catch (x) { setErreur(versErreur(x)) }
+  }
+  async function relancer(r) {
+    setErreur(null)
+    try { await api.post(`/clm/admin/rappels/${r.id}/relancer`); setInfo(t('clm.ad.relance')); rechargerRappels() } catch (x) { setErreur(versErreur(x)) }
+  }
+
+  return (
+    <>
+      <Bloc zone="06" titre={t('clm.ci.titre')} large>
+        <Message erreur={erreur} info={info} />
+        <p className="muted">{t('clm.ci.aide')}</p>
+        {remis && (
+          <div className="clm-info-statique" role="status">
+            <p><strong>{t('clm.ci.remis', { nom: remis.client.nom })}</strong></p>
+            <dl className="clm-dl">
+              <div><dt>{t('clm.ci.clientId')}</dt><dd><code className="clm-casse">{remis.client.clientId}</code></dd></div>
+              <div><dt>{t('clm.ci.secret')}</dt><dd><code className="clm-casse">{remis.secret}</code></dd></div>
+              <div><dt>{t('clm.ci.cleRappel')}</dt><dd><code className="clm-casse">{remis.cleRappel}</code></dd></div>
+            </dl>
+            <button type="button" className="secondary" onClick={() => setRemis(null)}>{t('clm.ci.copies')}</button>
+          </div>
+        )}
+        {clients && clients.length > 0 && (
+          <div className="table-scroll">
+            <table className="table clm-table">
+              <caption className="sr-only">{t('clm.ci.titre')}</caption>
+              <thead><tr><th scope="col">{t('clm.col.nom')}</th><th scope="col">{t('clm.ci.systeme')}</th><th scope="col">{t('clm.ci.clientId')}</th>
+                <th scope="col">{t('clm.ci.urlRappel')}</th><th scope="col">{t('clm.col.statut')}</th><th scope="col">{t('clm.col.actions')}</th></tr></thead>
+              <tbody>
+                {clients.map((c) => (
+                  <tr key={c.id}>
+                    <td data-label={t('clm.col.nom')}>{c.nom}</td>
+                    <td data-label={t('clm.ci.systeme')}>{t(`clm.ci.systeme.${c.systeme}`)}</td>
+                    <td data-label={t('clm.ci.clientId')}><code className="clm-casse">{c.clientId}</code></td>
+                    <td data-label={t('clm.ci.urlRappel')} className="clm-casse">{c.urlRappel || '—'}</td>
+                    <td data-label={t('clm.col.statut')}>{c.actif ? t('clm.ci.actif') : t('clm.ci.revoqueLe', { d: dateHeure(c.revoqueLe) })}</td>
+                    <td data-label={t('clm.col.actions')}>
+                      {c.actif && <button type="button" className="lien danger" aria-label={`${t('clm.ci.revoquer')} — ${c.nom}`} onClick={() => revoquer(c)}>{t('clm.ci.revoquer')}</button>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <form className="form clm-sousform" onSubmit={creer} aria-label={t('clm.ci.nouveau')}>
+          <div className="form-grid">
+            <label>{t('clm.col.nom')}<input value={f.nom} onChange={maj('nom')} maxLength={120} required /></label>
+            <label>{t('clm.ci.systeme')}
+              <select value={f.systeme} onChange={maj('systeme')}>{SYSTEMES.map((x) => <option key={x} value={x}>{t(`clm.ci.systeme.${x}`)}</option>)}</select>
+            </label>
+            <label className="col-2">{t('clm.ci.urlRappel')} <span className="muted">{t('clm.ci.urlRappelAide')}</span>
+              <input type="url" value={f.urlRappel} onChange={maj('urlRappel')} /></label>
+          </div>
+          <div className="cmp-row"><button type="submit">{t('clm.ci.creer')}</button></div>
+        </form>
+      </Bloc>
+      <Bloc zone="07" titre={t('clm.ci.rappels')} large>
+        {!rappels || rappels.length === 0 ? <p className="muted">{t('clm.ci.aucunRappel')}</p> : (
+          <div className="table-scroll">
+            <table className="table clm-table">
+              <caption className="sr-only">{t('clm.ci.rappels')}</caption>
+              <thead><tr><th scope="col">{t('clm.col.date')}</th><th scope="col">{t('clm.ci.client')}</th><th scope="col">{t('clm.col.evenement')}</th>
+                <th scope="col">{t('clm.col.statut')}</th><th scope="col">{t('clm.col.tentatives')}</th><th scope="col">{t('clm.col.actions')}</th></tr></thead>
+              <tbody>
+                {rappels.map((r) => (
+                  <tr key={r.id}>
+                    <td data-label={t('clm.col.date')}>{dateHeure(r.creeLe)}</td>
+                    <td data-label={t('clm.ci.client')}>{r.client}</td>
+                    <td data-label={t('clm.col.evenement')}>{r.evenement} · <Link to={`/clm/trousses/${r.trousseId}`}>#{r.trousseId}</Link>{r.derniereErreur && <><br /><span className="muted">{r.derniereErreur}</span></>}</td>
+                    <td data-label={t('clm.col.statut')}><Statut valeur={r.statut} /></td>
+                    <td data-label={t('clm.col.tentatives')}>{r.tentatives}</td>
+                    <td data-label={t('clm.col.actions')}>
+                      {r.statut !== 'ENVOYE' && <button type="button" className="lien" aria-label={`${t('clm.ad.relancer')} — ${t('clm.ci.rappel')} #${r.id}`} onClick={() => relancer(r)}>{t('clm.ad.relancer')}</button>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Bloc>
+    </>
+  )
+}
+
 function Integrations() {
   const { t } = useI18n()
   const versErreur = useErreur()
@@ -264,6 +381,7 @@ function Integrations() {
             <div><dt>{t('clm.ad.environnement')}</dt><dd>{p?.environnement || '—'}</dd></div>
           </dl>
         </Bloc>
+        <ClientsIntegration />
       </Blocs>
     </EcranClm>
   )

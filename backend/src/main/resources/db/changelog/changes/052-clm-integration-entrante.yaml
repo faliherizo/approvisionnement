@@ -12,7 +12,7 @@ databaseChangeLog:
               - column: { name: nom, type: VARCHAR(120), constraints: { nullable: false } }
               - column: { name: systeme, type: VARCHAR(20), constraints: { nullable: false } }
               - column: { name: client_id, type: VARCHAR(60), constraints: { nullable: false, unique: true, uniqueConstraintName: uk_clm_client_id } }
-              - column: { name: secret_empreinte, type: VARCHAR(64), constraints: { nullable: false } }
+              - column: { name: secret_empreinte, type: VARCHAR(128), constraints: { nullable: false } }
               - column: { name: url_rappel, type: VARCHAR(500) }
               - column: { name: cle_rappel_chiffree, type: VARCHAR(500), constraints: { nullable: false } }
               - column: { name: actif, type: BOOLEAN, constraints: { nullable: false } }

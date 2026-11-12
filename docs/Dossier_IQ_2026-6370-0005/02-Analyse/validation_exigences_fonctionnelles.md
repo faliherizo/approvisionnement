@@ -51,6 +51,16 @@ dépendent plus du code : ils attendent un choix d'IQ ou un contrat avec un four
 Chaque test de bout en bout contrôle aussi l'écran parcouru : aucun débordement ni chevauchement, cibles ≥ 24 px, contrôles
 nommés, zéro violation axe-core (WCAG 2.2 AA).
 
+### Exigences ajoutées ou précisées par l'addenda 1 (2026-11-11)
+
+Analyse complète : [impact_addenda_1.md](impact_addenda_1.md).
+
+| Exigence | État | Depuis l'interface (profil) | Tests |
+|---|---|---|---|
+| TI-22 Workday (obligatoire) | ✅ 🆕 | *Administrateur technique* : **Intégrations API** → « Clients d'intégration entrants » → système **Workday**, adresse de rappel → **Créer le client** (secret et clé remis une fois) ; le système appelle l'API ([guide](../04-Architecture/api_integration_entrante.md)) ; **Suivi centralisé** → Source **Workday** ; **Révoquer — {client}** | `IntegrationEntranteIntegrationTest`, e2e `TI-22 — client Workday…` |
+| AF-47 Signature en lot | ✅ 🆕 | *Initiateur* : **Signature en lot** → modèle publié, un dossier par ligne (titre ou dossier Salesforce ; nom ; courriel ; téléphone) → **Créer le lot** → **Voir le détail** ; depuis Salesforce : `POST /api/clm/integration/v1/lots` | `IntegrationEntranteIntegrationTest`, e2e `AF-47 — signature en lot…` |
+| Rappels aux systèmes externes | ✅ 🆕 | *Administrateur* : **Intégrations API** → « Rappels aux systèmes externes » → **Relancer — rappel #n** | `IntegrationEntranteServicesTest`, `RappelHttpTest` |
+
 ## 3. Détail par exigence — comment le tester depuis l'interface
 
 ### F-01 — Création et gestion des trousses

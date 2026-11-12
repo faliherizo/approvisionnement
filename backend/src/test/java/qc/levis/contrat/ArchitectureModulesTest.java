@@ -51,7 +51,8 @@ class ArchitectureModulesTest {
             entry("ReferenceController", "listes de référence de tous les modules : le service refuse celle d'un module non souscrit"),
             entry("AdminReferenceController", "listes de référence de tous les modules : le service refuse celle d'un module non souscrit"),
             entry("InteropPublicController", "jeton d'API : le tenant n'est connu qu'après le jeton ; le contrôleur vérifie alors le module"),
-            entry("PortailController", "portail public du signataire : le tenant n'est connu qu'à la lecture du jeton d'invitation"));
+            entry("PortailController", "portail public du signataire : le tenant n'est connu qu'à la lecture du jeton d'invitation"),
+            entry("IntegrationEntranteController", "jeton d'un client d'intégration (Workday, Salesforce) : le tenant n'est connu qu'après le jeton ; le contrôleur vérifie alors le module"));
 
     private static final JavaClasses CODE = new ClassFileImporter()
             .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
