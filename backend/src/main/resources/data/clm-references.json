@@ -54,6 +54,20 @@
     ]
   },
   {
+    "code": "CLM_STATUT_SALESFORCE",
+    "module": "clm",
+    "libelle": "Statuts retournés à Salesforce",
+    "aide": "Valeur écrite dans le champ de statut de la demande Salesforce pour chaque événement du CLM (addenda 2, Q14). Le code est l'événement ; le libellé, la valeur transmise.",
+    "ordre": 132,
+    "valeurs": [
+      { "code": "LANCEE", "libelle": "Lancée" },
+      { "code": "RETOURNEE", "libelle": "Retournée" },
+      { "code": "REJETEE", "libelle": "Rejetée" },
+      { "code": "ANNULEE", "libelle": "Annulée" },
+      { "code": "SIGNATURE_TERMINEE", "libelle": "Terminée" }
+    ]
+  },
+  {
     "code": "CLM_PRIORITE_TACHE",
     "module": "clm",
     "libelle": "Priorités des tâches assignées",

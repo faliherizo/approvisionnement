@@ -1,11 +1,15 @@
 package qc.levis.contrat.clm.infrastructure.web;
 
+import java.time.LocalDate;
 import java.util.List;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import qc.levis.contrat.clm.application.ConservationService;
+import qc.levis.contrat.clm.application.ExportationReferentielService;
 import qc.levis.contrat.clm.application.dto.ClmDto;
 
 /** Calendrier de conservation, gel légal, versement et destruction (Cahier § 1.4.11, § 1.4.12) : administrateur seulement. */
@@ -15,9 +19,21 @@ import qc.levis.contrat.clm.application.dto.ClmDto;
 public class ConservationController {
 
     private final ConservationService conservation;
+    private final ExportationReferentielService exportation;
+    private final WebClm.Acteurs acteurs;
 
-    public ConservationController(ConservationService conservation) {
+    public ConservationController(ConservationService conservation, ExportationReferentielService exportation, WebClm.Acteurs acteurs) {
         this.conservation = conservation;
+        this.exportation = exportation;
+        this.acteurs = acteurs;
+    }
+
+    /** Lot de trousses closes pour le référentiel désigné par IQ (addenda 2, Q13). */
+    @GetMapping("/exportation")
+    public ResponseEntity<byte[]> exporter(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate du,
+                                           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate au, Authentication auth) {
+        return TrousseController.fichier(exportation.exporter(acteurs.de(auth), du, au), "application/zip",
+                "exportation-clm-" + du + "-" + au + ".zip");
     }
 
     @GetMapping("/regles")

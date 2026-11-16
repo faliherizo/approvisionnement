@@ -262,5 +262,41 @@
       "sort": "Destruction",
       "motifGel": "Litige 2026-17"
     }
+  },
+  "addenda2": {
+    "_source": "docs/Dossier_IQ_2026-6370-0005/09-Questions/reponses/addenda-2.md",
+    "jwt": {
+      "instanceUrl": "https://iq-sandbox.my.salesforce.com",
+      "tokenUrl": "https://test.salesforce.com/services/oauth2/token",
+      "clientId": "3MVG9-iq-sandbox",
+      "utilisateur": "integration.clm@iq.example.sandbox",
+      "erreur": "Clé privée requise en JWT Bearer."
+    },
+    "statuts": {
+      "dossier": "DEM-2026-0001",
+      "titre": "Convention Agri-Nord",
+      "retourVers": "v1",
+      "motif": "Annexe B à revalider",
+      "attendus": {
+        "LANCEE": "Lancée",
+        "RETOURNEE": "Retournée"
+      }
+    },
+    "minimisation": {
+      "dossier": "DEM-2026-0002",
+      "nonDeclare": "NotesInternes__c",
+      "declare": "Montant"
+    },
+    "exportation": {
+      "titre": "Convention exportée",
+      "motif": "Abandon du projet"
+    },
+    "langue": {
+      "nom": "Jane Smith",
+      "courriel": "jane.smith@example.com",
+      "telephone": "+15145550177",
+      "role": "Premier signataire",
+      "langue": "Anglais"
+    }
   }
 }

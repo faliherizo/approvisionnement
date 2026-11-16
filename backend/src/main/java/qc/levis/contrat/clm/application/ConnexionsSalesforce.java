@@ -27,13 +27,23 @@ public class ConnexionsSalesforce {
     /** Connexion effective ; {@code proprietaire} nul : celle de la plateforme, partagée par les organisations sans la leur. */
     public record Connexion(Long proprietaire, ConnexionSalesforce.Mode mode, String instanceUrl, String tokenUrl, String clientId,
                             String clientSecret, String objet, String versionApi, ConnexionSalesforce.ChampsRetour champs,
-                            int reprisesMax) {
+                            int reprisesMax, ConnexionSalesforce.Authentification authentification, String utilisateur) {
+
+        public Connexion {
+            authentification = authentification == null ? ConnexionSalesforce.Authentification.CLIENT_CREDENTIALS : authentification;
+        }
+
+        /** Connexion par client credentials, la méthode par défaut. */
+        public Connexion(Long proprietaire, ConnexionSalesforce.Mode mode, String instanceUrl, String tokenUrl, String clientId,
+                         String clientSecret, String objet, String versionApi, ConnexionSalesforce.ChampsRetour champs, int reprisesMax) {
+            this(proprietaire, mode, instanceUrl, tokenUrl, clientId, clientSecret, objet, versionApi, champs, reprisesMax, null, null);
+        }
 
         /** Jamais le secret dans un journal ni une trace d'erreur. */
         @Override
         public String toString() {
             return "Connexion[" + (proprietaire == null ? "plateforme" : "organisation " + proprietaire) + ", " + mode + ", "
-                    + instanceUrl + ", " + objet + ", " + versionApi + "]";
+                    + instanceUrl + ", " + objet + ", " + versionApi + ", " + authentification + "]";
         }
     }
 
@@ -74,7 +84,7 @@ public class ConnexionsSalesforce {
         ConnexionSalesforce.Reglages r = c.reglages();
         return new Connexion(c.getTenantId(), r.mode(), r.instanceUrl(), r.tokenUrl(), r.clientId(),
                 c.secretConfigure() ? chiffrement.dechiffrer(c.getSecretChiffre()) : null, r.objet(), r.versionApi(), r.champs(),
-                r.reprisesMax());
+                r.reprisesMax(), r.authentification(), r.utilisateur());
     }
 
     /** Mode saisi (casse indifférente) ; nul s'il n'est ni SIMULATION ni REST. */
@@ -125,7 +135,7 @@ public class ConnexionsSalesforce {
         connexions.save(c);
         journal.configuration(acteur, "SALESFORCE", r.mode() + " · " + (r.instanceUrl() == null ? "-" : r.instanceUrl()) + " · "
                 + r.objet() + " " + r.versionApi() + " · retours " + r.champs().statut() + "/" + r.champs().reference() + "/"
-                + r.champs().correlation() + " · reprises " + r.reprisesMax() + (secret == null ? "" : " · secret remplacé"));
+                + r.champs().correlation() + " · reprises " + r.reprisesMax() + " · " + r.authentification() + (secret == null ? "" : " · secret remplacé"));
         return configuration();
     }
 
@@ -145,7 +155,14 @@ public class ConnexionsSalesforce {
         return new ConnexionSalesforce.Reglages(mode(req.mode()), nettoye(req.instanceUrl()), nettoye(req.tokenUrl()),
                 clientId == null ? clientIdEnPlace : clientId, nettoye(req.objet()), nettoye(req.versionApi()),
                 new ConnexionSalesforce.ChampsRetour(nettoye(req.champStatut()), nettoye(req.champReference()), nettoye(req.champCorrelation())),
-                req.reprisesMax() == null ? Relances.REPRISES_PAR_DEFAUT : req.reprisesMax());
+                req.reprisesMax() == null ? Relances.REPRISES_PAR_DEFAUT : req.reprisesMax(), authentification(req.authentification()),
+                nettoye(req.utilisateur()));
+    }
+
+    /** Méthode saisie (casse indifférente) ; client credentials par défaut. */
+    static ConnexionSalesforce.Authentification authentification(String saisie) {
+        return "JWT_BEARER".equalsIgnoreCase(saisie == null ? "" : saisie.trim()) ? ConnexionSalesforce.Authentification.JWT_BEARER
+                : ConnexionSalesforce.Authentification.CLIENT_CREDENTIALS;
     }
 
     private static String nettoye(String s) {
@@ -156,7 +173,7 @@ public class ConnexionsSalesforce {
                                          boolean personnalisee) {
         return new ClmDto.ConfigIntegration(r.mode().name(), r.instanceUrl(), r.tokenUrl(), r.objet(), r.versionApi(), masque(r.clientId()),
                 secretConfigure, r.champs().statut(), r.champs().reference(), r.champs().correlation(), r.reprisesMax(), personnalisee,
-                modifiePar, modifieLe, proprietes.salesforce().hotesAutorises());
+                modifiePar, modifieLe, proprietes.salesforce().hotesAutorises(), r.authentification().name(), r.utilisateur());
     }
 
     static String masque(String id) {

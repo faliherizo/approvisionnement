@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import qc.levis.contrat.clm.application.ConnexionsSalesforce;
 import qc.levis.contrat.clm.application.port.PortSalesforce;
@@ -30,11 +31,11 @@ class SalesforceParOrganisationTest {
         mode(ConnexionSalesforce.Mode.REST);
         PortSalesforce.EtatConnexion etat = new PortSalesforce.EtatConnexion(true, "rest", "ok");
         when(rest.tester()).thenReturn(etat);
-        when(rest.lireDossier("a01")).thenReturn(Optional.empty());
+        when(rest.lireDossier("a01", Set.of())).thenReturn(Optional.empty());
         PortSalesforce.Statut statut = new PortSalesforce.Statut("a01", "LANCEE", "c", "k", java.util.Map.of());
 
         assertEquals(etat, port.tester());
-        assertEquals(Optional.empty(), port.lireDossier("a01"));
+        assertEquals(Optional.empty(), port.lireDossier("a01", Set.of()));
         port.publierStatut(statut);
 
         verify(rest).publierStatut(statut);
@@ -47,11 +48,11 @@ class SalesforceParOrganisationTest {
         PortSalesforce.Statut statut = new PortSalesforce.Statut("a01", "LANCEE", "c", "k", java.util.Map.of());
 
         port.tester();
-        port.lireDossier("DEM-1");
+        port.lireDossier("DEM-1", Set.of());
         port.publierStatut(statut);
 
         verify(simulation).tester();
-        verify(simulation).lireDossier("DEM-1");
+        verify(simulation).lireDossier("DEM-1", Set.of());
         verify(simulation).publierStatut(statut);
         verifyNoInteractions(rest);
     }

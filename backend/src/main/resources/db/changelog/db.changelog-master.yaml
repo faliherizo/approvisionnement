@@ -107,3 +107,7 @@ databaseChangeLog:
       file: db/changelog/changes/053-clm-groupes.yaml
   - include:
       file: db/changelog/changes/054-clm-conservation.yaml
+  - include:
+      file: db/changelog/changes/055-clm-salesforce-jwt.yaml
+  - include:
+      file: db/changelog/changes/056-clm-participant-langue.yaml

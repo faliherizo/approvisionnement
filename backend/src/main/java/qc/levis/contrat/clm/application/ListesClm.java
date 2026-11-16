@@ -20,6 +20,7 @@ public class ListesClm {
         ROLE_CONTRAT("CLM_ROLE_CONTRAT", "Rôle dans le contrat"),
         CLAUSE_ATTENDUE("CLM_CLAUSE_ATTENDUE", "Clause attendue"),
         CHAMP_SALESFORCE("CLM_CHAMP_SALESFORCE", "Champ Salesforce"),
+        STATUT_SALESFORCE("CLM_STATUT_SALESFORCE", "Statut retourné à Salesforce"),
         PRIORITE_TACHE("CLM_PRIORITE_TACHE", "Priorité de tâche");
 
         private final String code;
@@ -65,6 +66,12 @@ public class ListesClm {
         return valeurs.stream().map(ReferencesClm.Valeur::code).filter(c -> c.equalsIgnoreCase(valeur)).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(
                         "« " + valeur + " » ne figure pas dans la liste « " + liste.libelle() + " » de l'organisation."));
+    }
+
+    /** Libellé de {@code code} dans la liste de l'organisation ; à défaut, le code lui-même. */
+    public String libelle(Liste liste, String code) {
+        return valeurs(liste).stream().filter(v -> v.code().equals(code)).map(ReferencesClm.Valeur::libelle)
+                .filter(l -> l != null && !l.isBlank()).findFirst().orElse(code);
     }
 
     /** Mots-clés par code (option IA) : le détail de chaque valeur. */

@@ -1,0 +1,69 @@
+2026-6370-0005
+1
+ADDENDA No 2
+SOLUTION DE SIGNATURE ÉLECTRONIQUE ET DE GÉNÉRATION DE CONTRATS
+Dossier : 2026-6370-0005
+Le présent addenda fait partie intégrante du document d’appel d’offres mentionné ci-dessus. Il vise à modifier, compléter ou clarifier certaines sections du dossier initial, et à répondre officiellement aux questions soulevées par les fournisseurs. Les soumissionnaires doivent impérativement tenir compte des informations contenues dans cet addenda pour la préparation de leur proposition. Toute soumission qui ne respecte pas les précisions apportées pourrait être jugée non conforme.
+ MODIFICATIONS AUX DOCUMENTS D’APPEL D’OFFRES
+ RÉPONSES AUX QUESTIONS DES SOUMISSIONNAIRES
+1. DISPOSITIONS GÉNÉRALES
+Investissement Québec (« IQ ») apporte les précisions et modifications suivantes aux Documents d’appel d’offres. Le présent addenda constitue le deuxième addenda publié pour le dossier et fait partie intégrante des Documents d’appel d’offres. En cas de divergence, le présent addenda prévaut à l’égard des éléments qu’il modifie ou précise.
+Les questions ont été reproduites dans leur langue d’origine. Les réponses d’IQ sont formulées en français et s’appliquent à l’ensemble des soumissionnaires.
+2. RÉPONSES AUX QUESTIONS DES SOUMISSIONNAIRES
+Q1 : Le périmètre de base se limite-t-il à la génération documentaire ciblée et à la signature, ou un CLM complet est-il attendu dès la première livraison?
+Réponse : Le périmètre de base comprend la récupération des données requises, l’alimentation de modèles approuvés, la génération de documents, les parcours de validation et d’approbation, la signature électronique ainsi que le retour des statuts et des références vers les systèmes concernés. Les fonctionnalités CLM avancées ou comportant des fonctions d’intelligence artificielle peuvent être proposées à titre d’options distinctes. IQ ne recherche pas obligatoirement le déploiement d’un CLM complet dans le périmètre de base.
+Q2 : Le scénario 10 de démonstration évoque un CLM de bout en bout. Quelles capacités CLM sont obligatoires, optionnelles ou hors périmètre?
+Réponse : Le scénario 10 vise à permettre à IQ d’évaluer la capacité globale de la Solution proposée et ne doit pas être interprété comme rendant obligatoires toutes les fonctionnalités d’un CLM avancé. Les fonctionnalités expressément identifiées comme obligatoires dans les Documents d’appel d’offres doivent être incluses dans la proposition de base. Les fonctionnalités CLM identifiées comme optionnelles doivent être présentées et tarifées séparément, conformément au Bordereau de prix.
+Q3 : Quels processus contractuels seront déployés en priorité?
+2026-6370-0005
+2
+Réponse : Le premier périmètre d’implantation vise principalement la génération et le traitement des conventions d’aide financière à partir de Salesforce Public Sector Solutions / Grantmaking. D’autres types de contrats, d’ententes, de lettres et de documents pourront être intégrés progressivement pendant la durée du contrat.
+Q4 : Quels volumes mensuels et quels pics sont prévus, au-delà de 55 000 à 65 000 documents par année?
+Réponse : La volumétrie estimée se situe entre 55 000 et 65 000 documents par année. Les volumes mensuels et les périodes de pointe ne sont pas connus avec précision au moment de la publication du présent addenda. Le soumissionnaire doit démontrer que sa Solution peut soutenir cette volumétrie ainsi que des variations raisonnables de la demande, sans interruption ni dégradation importante du service.
+Q5 : Combien d’utilisateurs internes actifs sont prévus par profil, notamment les initiateurs, validateurs, approbateurs et administrateurs?
+Réponse : IQ compte environ 1 300 employés susceptibles d’utiliser la Solution, selon leurs fonctions et les processus applicables. La répartition définitive entre les profils sera précisée pendant la phase de conception. Les quantités inscrites au Bordereau de prix demeurent celles devant être utilisées pour la préparation et l’évaluation de la soumission.
+Q6 : Les unités ou filiales d’IQ partageront-elles une seule organisation dans la plateforme, ou des organisations séparées seront-elles requises?
+Réponse : Une organisation principale est envisagée pour IQ. La Solution doit toutefois permettre une gestion appropriée des unités administratives, des rôles, des accès, des modèles et des données. Le soumissionnaire doit préciser toute limitation ainsi que tout coût additionnel associé à la création de groupes, d’unités organisationnelles ou d’environnements distincts.
+Q7 : L’intégration avec Salesforce Grantmaking doit-elle être native, notamment au moyen d’une application AppExchange, ou peut-elle être réalisée au moyen d’API? Quels objets ou quelles données seront utilisés pour générer les contrats?
+Réponse : IQ n’impose pas l’utilisation d’une application native AppExchange. L’intégration peut être réalisée au moyen d’API, de connecteurs standards ou de toute autre méthode reconnue répondant aux exigences fonctionnelles, technologiques et de sécurité. L’objet principal envisagé est FundingRequest. La Solution devra notamment permettre la lecture de cet objet au moyen de son identifiant ou de son numéro, soit le champ « Name ». La correspondance entre les champs Salesforce et les champs documentaires devra pouvoir être configurée selon les modèles. Le soumissionnaire doit décrire la méthode proposée, les prérequis, les limitations, les responsabilités des parties ainsi que les mécanismes de gestion des erreurs et de reprise.
+Q8 : IQ accepte-t-il la création de champs de retour dans Salesforce? Dans l’affirmative, quels champs sont prévus?
+Réponse : Sous réserve de la validation effectuée pendant la phase de conception, les champs de retour suivants sont envisagés : CLM_Statut__c, CLM_Reference__c et CLM_Correlation__c. Leur dénomination définitive, leur format et leur utilisation seront confirmés pendant les travaux d’intégration. Le soumissionnaire doit indiquer les champs et mécanismes requis par sa Solution.
+2026-6370-0005
+3
+Q9 : Quelle version de Salesforce Public Sector Solutions / Grantmaking et quelle version d’API sont utilisées?
+Réponse : L’intégration peut être conçue sur la base de l’API Salesforce, version 60.0. Cette version pourra être ajustée pendant la phase de conception afin d’assurer sa compatibilité avec l’environnement Salesforce d’IQ. La Solution devra demeurer compatible avec les versions supportées des plateformes et services utilisés par IQ.
+Q10 : Quels mécanismes d’intégration sont autorisés, notamment REST, Platform Events, Change Data Capture, webhooks ou intergiciel?
+Réponse : Le mécanisme actuellement envisagé est une intégration REST permettant la lecture des données à la demande, la création ou la mise à jour des statuts, le retour des références et métadonnées nécessaires ainsi que la gestion des erreurs et des reprises. Aucun événement entrant de type Platform Event ou Change Data Capture n’est imposé dans le périmètre initial. Le soumissionnaire peut proposer un mécanisme équivalent ou complémentaire, à condition d’en démontrer la conformité aux exigences d’IQ.
+Q11 : Le flux OAuth « client credentials », utilisant un compte d’exécution dédié, est-il permis par IQ?
+Réponse : L’utilisation d’un compte technique ou d’un utilisateur d’exécution dédié peut être envisagée, sous réserve de l’évaluation et de l’approbation des équipes de sécurité d’IQ. Le soumissionnaire doit également décrire une méthode d’authentification de remplacement, notamment un flux JWT Bearer, si celle-ci est requise à la suite de l’analyse de sécurité.
+Q12 : Quel système sera maître du statut contractuel, du document signé et des métadonnées?
+Réponse : Salesforce Grantmaking demeure le système maître pour le dossier d’aide financière et les données qui y sont associées. La Solution proposée doit assurer la gestion du processus documentaire et de signature, incluant le document signé, la preuve de signature, la piste d’audit et les métadonnées connexes. Les statuts et références nécessaires doivent être retournés à Salesforce.
+Q13 : Les documents signés doivent-ils être déposés dans Salesforce, conservés dans la plateforme ou transférés dans un référentiel tiers, tel que SharePoint?
+Réponse : Dans le périmètre initial, les documents signés, les preuves de signature et les pistes d’audit peuvent être conservés dans la Solution proposée. Une référence au document ainsi que les statuts pertinents doivent être retournés à Salesforce. La Solution doit également permettre l’exportation ou le transfert des documents et métadonnées vers un référentiel désigné par IQ, lorsque requis.
+Q14 : Quels statuts devront être retournés à Salesforce et à quel moment?
+Réponse : La Solution doit notamment permettre le retour des statuts suivants : lancée, retournée, rejetée, annulée et terminée. La terminologie définitive, les événements déclencheurs et la correspondance entre les statuts seront déterminés pendant la phase de conception.
+2026-6370-0005
+4
+Q15 : Quelles données personnelles seront transférées de Salesforce vers la Solution, et l’évaluation des facteurs relatifs à la vie privée les couvre-t-elle?
+Réponse : Seules les données nécessaires à la génération, à la validation, à l’approbation et à la signature du document concerné devront être transférées. Les champs varieront selon le modèle documentaire et devront respecter les principes de nécessité et de limitation de la collecte ainsi que les exigences de sécurité et de protection des renseignements personnels prévues aux Documents d’appel d’offres. Toute évaluation additionnelle requise sera réalisée conformément aux processus applicables d’IQ.
+Q16 : Quels environnements Salesforce, comptes techniques et jeux de données seront fournis, et à quelle date?
+Réponse : Les environnements, comptes techniques, accès, jeux de données et échéances applicables seront précisés avec l’adjudicataire pendant la phase de démarrage et de conception. Les essais devront être réalisés dans un environnement contrôlé. Les données utilisées devront être fictives, anonymisées ou autrement protégées conformément aux exigences de sécurité et de protection des renseignements personnels d’IQ.
+Q17 : Quelles limites d’API et quels mécanismes de reprise devront être appliqués?
+Réponse : La Solution doit respecter les limites d’utilisation de Salesforce et mettre en oeuvre des mécanismes appropriés de surveillance, de journalisation et de reprise. À titre de paramètre de conception initial, un maximum de huit tentatives de reprise peut être envisagé, selon des intervalles progressifs plafonnés à une heure. Les paramètres définitifs seront confirmés pendant la phase de conception.
+Q18 : Toutes les données, les preuves de signature et les pistes d’audit doivent-elles être hébergées au Canada ou exclusivement au Québec?
+Réponse : L’hébergement n’est pas limité exclusivement au Québec. L’hébergement, le traitement, les communications, la relève et la redondance de la Solution peuvent être réalisés au Québec ou dans une autre province canadienne. Un autre territoire pourrait uniquement être considéré si son cadre juridique offre une protection des renseignements personnels équivalente ou supérieure à celle applicable au Québec, sous réserve de l’évaluation et de l’approbation préalables d’IQ. Le soumissionnaire doit préciser tous les lieux où les données, documents, preuves de signature, pistes d’audit, journaux, sauvegardes et métadonnées peuvent être hébergés, traités, consultés ou transiter.
+Q19 : Les interfaces destinées aux utilisateurs internes et aux signataires externes doivent-elles être disponibles en français, en anglais ou dans les deux langues?
+Réponse : Les interfaces destinées aux utilisateurs d’IQ et aux signataires externes doivent obligatoirement être disponibles en français. Elles doivent également pouvoir être offertes en anglais lorsqu’IQ le requiert. La langue officielle d’exécution du contrat est le français. Les formations, guides d’utilisation, livrables et documents produits spécifiquement pour IQ doivent également être fournis en français, sous réserve des exceptions prévues aux Documents d’appel d’offres pour certaines documentations techniques standards.
+2026-6370-0005
+5
+Q20 : Un éditeur de logiciel peut-il présenter seul une soumission, ou doit-il obligatoirement s’associer à un intégrateur établi au Québec?
+Réponse : Un éditeur de logiciel peut présenter seul une soumission. Il n’est pas obligatoire de s’associer à un intégrateur établi au Québec. Le soumissionnaire peut être l’éditeur de la Solution, un intégrateur, un revendeur ou un partenaire autorisé, à condition qu’il puisse assumer l’ensemble des obligations prévues aux Documents d’appel d’offres et au contrat. Les exigences relatives à la place d’affaires et aux autres conditions d’admissibilité demeurent celles prévues aux Documents d’appel d’offres.
+Avis important aux soumissionnaires
+Les soumissionnaires doivent prendre en considération le présent addenda dans la préparation de leur soumission. Toute proposition qui ne tient pas compte des précisions ou corrections apportées pourrait être déclarée non conforme.
+Toute modification apportée au dossier d’appel d’offres avant la date limite de réception des plaintes et ayant pour effet de repousser la date de dépôt des soumissions entraîne automatiquement un report de la date limite de réception des plaintes, conformément aux règles applicables et aux modalités du système électronique d’appel d’offres.
+Émis à Montréal, le 14 novembre 2026
+Par Investissement Québec
+_____________________________________________
+ERNST CLERVEAU
+Conseiller principal, Approvisionnement et gestion de catégorie
+Direction principale, Approvisionnement et gestion des contrats

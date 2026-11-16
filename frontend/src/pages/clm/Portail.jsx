@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import axios from 'axios'
 import { useI18n } from '../../i18n/I18nContext'
 import LangSwitcher from '../../components/LangSwitcher.jsx'
@@ -14,7 +14,11 @@ const portail = axios.create({ baseURL: '/api/clm/portail' })
  */
 export default function Portail() {
   const { jeton } = useParams()
-  const { t } = useI18n()
+  const { t, setLocale } = useI18n()
+  const [params] = useSearchParams()
+  // Addenda 2, Q19 : le lien d'invitation porte la langue du signataire ; il garde le sélecteur pour en changer.
+  const langueInvitation = params.get('lang')
+  useEffect(() => { if (langueInvitation === 'en' || langueInvitation === 'fr') setLocale(langueInvitation === 'en' ? 'en' : 'fr-CA') }, [langueInvitation, setLocale])
   const [vue, setVue] = useState(null)
   const [erreur, setErreur] = useState(null)
   const [info, setInfo] = useState('')

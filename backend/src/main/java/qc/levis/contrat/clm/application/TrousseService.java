@@ -28,6 +28,7 @@ import qc.levis.contrat.clm.domain.DocumentTrousse;
 import qc.levis.contrat.clm.domain.EtapeTrousse;
 import qc.levis.contrat.clm.domain.Habilitations;
 import qc.levis.contrat.clm.domain.Identite;
+import qc.levis.contrat.clm.domain.Langue;
 import qc.levis.contrat.clm.domain.Invitation;
 import qc.levis.contrat.clm.domain.Modele;
 import qc.levis.contrat.clm.domain.Suggestions;
@@ -216,8 +217,8 @@ public class TrousseService {
     }
 
     private ClmDto.PreremplissageVue preremplir(Trousse t, String sfId, Map<String, Object> manuelles, String acteur) {
-        PortSalesforce.Dossier dossier = salesforce.lireDossier(sfId);
         List<Modele.Champ> champs = champsDuModele(t);
+        PortSalesforce.Dossier dossier = salesforce.lireDossier(sfId, champs);
         Preremplissage.Resultat r = Preremplissage.appliquer(champs, dossier.champs(), dossier.recupereLe(), manuelles);
         t.setSource(Trousse.Source.SALESFORCE);
         t.setSfDossierId(dossier.id());
@@ -344,12 +345,14 @@ public class TrousseService {
                 : Identite.Niveau.valueOf(req.niveauIdentite().trim().toUpperCase());
         Identite.Niveau niveau = parametres.reglages(t.getTenantId()).identite().niveauApplique(t.getRisque(), req.externe(), demande);
         Identite.verifierCoordonnees(niveau, courriel, req.telephone(), req.question(), req.reponse());
+        Langue langue = Langue.de(req.langue());
         boolean doublon = participants.findByTenantIdAndTrousseIdOrderByIdAsc(t.getTenantId(), t.getId()).stream()
                 .anyMatch(p -> p.getCourriel().equalsIgnoreCase(courriel) || p.getRoleContrat().equals(role));
         if (doublon) {
             throw new IllegalStateException("Signataire en doublon (courriel ou rôle déjà présent).");
         }
         Participant p = new Participant(t.getTenantId(), t.getId(), nom, courriel, vide(req.telephone()), role, req.externe(), niveau);
+        p.choisirLangue(langue);
         if (niveau == Identite.Niveau.QUESTION) {
             p.definirQuestion(req.question().trim(), ChaineScellee.sha256(Identite.normaliserReponse(req.reponse())
                     .getBytes(java.nio.charset.StandardCharsets.UTF_8)));
@@ -357,7 +360,7 @@ public class TrousseService {
         p = participants.save(p);
         resoudreRole(t, p);
         journal.consigner(t, "PARTICIPANT_AJOUTE", acteur.id(), nom + " · " + role + " · " + niveau
-                + (t.enTraitement() ? " · ajouté en cours de parcours" : ""));
+                + (langue == Langue.FR ? "" : " · " + langue) + (t.enTraitement() ? " · ajouté en cours de parcours" : ""));
         return LectureTrousse.participant(p);
     }
 

@@ -16,16 +16,20 @@ import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import qc.levis.contrat.clm.application.ConnexionsSalesforce;
 import qc.levis.contrat.clm.application.port.PortSalesforce;
+import qc.levis.contrat.clm.domain.ConnexionSalesforce;
 
 /**
- * Adaptateur Salesforce REST (OAuth 2.0 client credentials). Lecture d'une demande par Id ou par numéro (SOQL),
+ * Adaptateur Salesforce REST (OAuth 2.0 client credentials, ou JWT Bearer si la sécurité d'IQ l'exige — addenda 2, Q11). Lecture d'une demande par Id ou par numéro (SOQL),
  * retour de statut par PATCH idempotent ; l'identifiant de corrélation accompagne chaque appel. Chaque appel emploie la
  * connexion de l'organisation en cours ; un jeton ne sert qu'à la connexion exacte qui l'a obtenu.
  */
@@ -35,6 +39,8 @@ public class SalesforceRest implements PortSalesforce {
     private static final TypeReference<Map<String, Object>> OBJET = new TypeReference<>() {
     };
     private static final Duration DUREE_JETON = Duration.ofMinutes(30);
+    private static final String JWT_BEARER = "urn:ietf:params:oauth:grant-type:jwt-bearer";
+    private static final Pattern NOM_API = Pattern.compile("[A-Za-z]\\w{0,79}");
 
     private record Jeton(ConnexionsSalesforce.Connexion connexion, String valeur, Instant expireLe) {
     }
@@ -57,13 +63,14 @@ public class SalesforceRest implements PortSalesforce {
     }
 
     /**
-     * Lecture par identifiant ; à défaut, recherche par numéro (SOQL) puis relecture par identifiant. La relecture rend tous
-     * les champs, personnalisés compris (« …__c ») : {@code FIELDS(STANDARD)} les omettrait et le préremplissage les perdrait.
+     * Lecture par identifiant ; à défaut, recherche par numéro (SOQL) puis relecture par identifiant. La relecture demande
+     * nommément les champs requis ({@code fields=}) : personnalisés compris (« …__c »), et rien de plus (addenda 2, Q15).
      */
     @Override
-    public Optional<Dossier> lireDossier(String identifiantOuNumero) {
+    public Optional<Dossier> lireDossier(String identifiantOuNumero, Set<String> champs) {
         ConnexionsSalesforce.Connexion c = connexions.get();
-        Optional<Dossier> parId = parIdentifiant(c, identifiantOuNumero);
+        String liste = liste(champs);
+        Optional<Dossier> parId = parIdentifiant(c, identifiantOuNumero, liste);
         if (parId.isPresent()) {
             return parId;
         }
@@ -73,17 +80,33 @@ public class SalesforceRest implements PortSalesforce {
         if (enregistrements.isEmpty()) {
             return Optional.empty();
         }
-        return parIdentifiant(c, String.valueOf(((Map<?, ?>) enregistrements.get(0)).get("Id")));
+        return parIdentifiant(c, String.valueOf(((Map<?, ?>) enregistrements.get(0)).get("Id")), liste);
     }
 
-    private Optional<Dossier> parIdentifiant(ConnexionsSalesforce.Connexion c, String identifiant) {
-        String url = base(c) + "/sobjects/" + c.objet() + "/" + encoder(identifiant);
+    /** Identifiant et numéro d'abord ; un nom qui n'a pas la forme d'un nom d'API n'est jamais transmis. */
+    private static String liste(Set<String> champs) {
+        Set<String> noms = new LinkedHashSet<>(List.of("Id", "Name"));
+        champs.stream().filter(n -> n != null && NOM_API.matcher(n).matches()).sorted().forEach(noms::add);
+        return String.join(",", noms);
+    }
+
+    private Optional<Dossier> parIdentifiant(ConnexionsSalesforce.Connexion c, String identifiant, String liste) {
+        String url = base(c) + "/sobjects/" + c.objet() + "/" + encoder(identifiant) + "?fields=" + encoder(liste);
         HttpResponse<String> r = appeler(c, HttpRequest.newBuilder(URI.create(url)).GET(), null);
-        return r.statusCode() == 404 ? Optional.empty() : Optional.of(dossier(new LinkedHashMap<>(lire(r))));
+        if (r.statusCode() == 404) {
+            return Optional.empty();
+        }
+        if (r.statusCode() == 400) {
+            // Champ déclaré (liste de l'organisation ou source d'un modèle) absent de l'objet : la configuration est à corriger.
+            throw new IllegalArgumentException("Champ refusé par Salesforce (" + motif(r) + ") : corriger la liste « Champs Salesforce » "
+                    + "ou la source du champ dans le modèle.");
+        }
+        Map<String, Object> m = new LinkedHashMap<>(lire(r));
+        m.keySet().retainAll(Set.of(liste.split(",")));
+        return Optional.of(dossier(m));
     }
 
     private Dossier dossier(Map<String, Object> m) {
-        m.remove("attributes");
         return new Dossier(String.valueOf(m.get("Id")), String.valueOf(m.getOrDefault("Name", m.get("Id"))), m,
                 Instant.now(horloge).truncatedTo(ChronoUnit.MILLIS));
     }
@@ -92,7 +115,7 @@ public class SalesforceRest implements PortSalesforce {
     public void publierStatut(Statut s) {
         ConnexionsSalesforce.Connexion c = connexions.get();
         Map<String, Object> corps = new LinkedHashMap<>();
-        corps.put(c.champs().statut(), s.evenement());
+        corps.put(c.champs().statut(), s.donnees().getOrDefault("valeurStatut", s.evenement()));
         corps.put(c.champs().reference(), s.donnees().get("reference"));
         corps.put(c.champs().correlation(), s.correlationId());
         String url = base(c) + "/sobjects/" + c.objet() + "/" + encoder(s.sfDossierId());
@@ -143,7 +166,9 @@ public class SalesforceRest implements PortSalesforce {
         if (j != null && j.connexion().equals(c) && Instant.now(horloge).isBefore(j.expireLe())) {
             return j.valeur();
         }
-        String corps = "grant_type=client_credentials&client_id=" + encoder(c.clientId()) + "&client_secret=" + encoder(c.clientSecret());
+        String corps = c.authentification() == ConnexionSalesforce.Authentification.JWT_BEARER
+                ? "grant_type=" + encoder(JWT_BEARER) + "&assertion=" + encoder(AssertionJwt.signer(c, Instant.now(horloge)))
+                : "grant_type=client_credentials&client_id=" + encoder(c.clientId()) + "&client_secret=" + encoder(c.clientSecret());
         try {
             HttpResponse<String> r = http.send(HttpRequest.newBuilder(URI.create(c.tokenUrl()))
                     .header("Content-Type", "application/x-www-form-urlencoded")
@@ -168,6 +193,18 @@ public class SalesforceRest implements PortSalesforce {
 
     private static String base(ConnexionsSalesforce.Connexion c) {
         return c.instanceUrl() + "/services/data/" + c.versionApi();
+    }
+
+    /** Message d'erreur de Salesforce ([{"errorCode","message"}]), borné ; jamais de donnée de la demande. */
+    private String motif(HttpResponse<String> r) {
+        try {
+            List<Map<String, Object>> erreurs = json.readValue(r.body(), new TypeReference<>() {
+            });
+            String m = erreurs.isEmpty() ? "" : String.valueOf(erreurs.get(0).get("message"));
+            return m.length() > 200 ? m.substring(0, 200) : m;
+        } catch (IOException e) {
+            return "HTTP 400";
+        }
     }
 
     private Map<String, Object> lire(HttpResponse<String> r) {

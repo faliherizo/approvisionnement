@@ -3,6 +3,7 @@ package qc.levis.contrat.clm.application.port;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /** Port vers Salesforce Grantmaking (ST-06 lecture, ST-12 retour de statuts). */
 public interface PortSalesforce {
@@ -27,7 +28,11 @@ public interface PortSalesforce {
         }
     }
 
-    Optional<Dossier> lireDossier(String identifiantOuNumero);
+    /**
+     * Lecture limitée aux champs nécessaires (addenda 2, Q15 : nécessité et limitation de la collecte) : l'identifiant et
+     * le numéro, plus {@code champs} ; aucun autre champ de la demande n'entre dans la solution.
+     */
+    Optional<Dossier> lireDossier(String identifiantOuNumero, Set<String> champs);
 
     void publierStatut(Statut statut);
 

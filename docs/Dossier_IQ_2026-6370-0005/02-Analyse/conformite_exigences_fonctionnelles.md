@@ -27,8 +27,8 @@ Légende : ✅ conforme · ✅🆕 conforme depuis cette analyse (écart comblé
 
 | | Obligatoires | Non obligatoires (optionnelles, facultés, préférences, conditionnelles) |
 |---|---|---|
-| Exigences fonctionnelles relevées | **107** | **12** |
-| Conformes | **107 (100 %)**, dont 13 rendues conformes par les 7 écarts comblés ci-dessous | 10 |
+| Exigences fonctionnelles relevées | **115** (107 + 8 de l'addenda 2) | **12** |
+| Conformes | **115 (100 %)**, dont 13 rendues conformes par les 7 écarts comblés ci-dessous et 6 par les ajustements de l'addenda 2 ([impact_addenda_2.md](impact_addenda_2.md)) | 10 |
 | Non réalisées | 0 | 1 : Saviynt / SCIM (A-08), criticité inconnue tant que l'Annexe 10 n'est pas fournie |
 | Sans objet | — | 1 : connecteur MCP, non exigé (A-09) |
 
@@ -178,6 +178,14 @@ versement à l'échéance), `ConformiteDomaineTest`, `CachetX509Test` (CAdES, PA
 | A-07 | Add. Q3 | Intégrations Microsoft 365, Workday, Entra ID | Selon l'Annexe 10 | ✅ | C-69, A-01, C-60 |
 | A-08 | Add. Q3 | Intégration Saviynt ou SCIM (provisionnement des comptes) | **Criticité inconnue** (Annexe 10 non fournie) | ⚠ | Non réalisé : point SCIM 2.0 proposé ; à confirmer avec IQ (question P1) |
 | A-09 | Add. Q3 | Connecteur MCP | Non exigé | — | — |
+| A-10 | Add. 2 Q11 | Authentification Salesforce de remplacement (JWT Bearer) décrite | Obligatoire (« doit également décrire ») | ✅ | RST-23 ; [impact_addenda_2.md](impact_addenda_2.md) |
+| A-11 | Add. 2 Q13 | Exportation ou transfert des documents et métadonnées vers un référentiel désigné par IQ | Obligatoire (« doit également permettre ») | ✅ | RST-24 : exportation en lot ZIP + index |
+| A-12 | Add. 2 Q14 | Retour des statuts lancée, retournée, rejetée, annulée, terminée | Obligatoire (« doit notamment permettre ») | ✅ | RST-20 (retour d'étape), RST-21 (correspondance configurable) |
+| A-13 | Add. 2 Q15 | Seules les données nécessaires transférées depuis Salesforce | Obligatoire (« devront ») | ✅ | RST-22 : lecture `fields=` limitée |
+| A-14 | Add. 2 Q17 | Limites d'API, surveillance, journalisation, reprise (8 tentatives, plafond 1 h) | Obligatoire (« doit ») | ✅ | Boîte d'envoi, `Relances`, alertes |
+| A-15 | Add. 2 Q19 | Interfaces internes et externes en français, en anglais sur demande d'IQ | Obligatoire (« doivent obligatoirement ») | ✅ | Interfaces FR/EN, RST-25 (langue du signataire) |
+| A-16 | Add. 2 Q4 | Démontrer la volumétrie (55 000 à 65 000 documents par an) et des variations raisonnables | Obligatoire (« doit démontrer ») | ✅ | Plan JMeter `perf/clm-trousses-load.jmx` |
+| A-17 | Add. 2 Q7 | `FundingRequest` lu par Id ou `Name`, correspondance configurable par modèle | Obligatoire (« devra ») | ✅ | C-08, C-09 |
 
 ## 5. Engagements du fournisseur et exigences non fonctionnelles (hors matrice)
 

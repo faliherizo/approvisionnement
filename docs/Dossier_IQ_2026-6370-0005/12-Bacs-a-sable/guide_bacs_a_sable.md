@@ -60,6 +60,24 @@ Parcours vérifié (compte `initiateur@iq.example`, puis `admin.ti@iq.example`) 
 Le bac à sable refuse un `PATCH` vers un champ inexistant (`INVALID_FIELD`), comme Salesforce : une correspondance de
 champs erronée se voit avant la recette chez IQ.
 
+**Lecture limitée (addenda 2, Q15).** La plateforme ne demande que `Id`, `Name`, les champs de la liste **Champs
+Salesforce** et les sources des champs du modèle (`?fields=`). Le bac à sable refuse lui aussi un champ inconnu
+(`INVALID_FIELD`) : avant l'essai, remplacer dans **Administration → Listes de référence → Champs Salesforce** les noms
+de démonstration (`Demandeur`, `Montant`…) par ceux de `donnees.json` (`Demandeur__c`, `RequestedAmount`…).
+
+**JWT Bearer (addenda 2, Q11).** Générer une paire de clés de test hors du dépôt, puis démarrer le bac à sable avec la
+clé publique :
+
+```bash
+openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out /tmp/cle-sf.pem
+openssl pkey -in /tmp/cle-sf.pem -pubout -out /tmp/cle-sf.pub.pem
+SF_JWT_CERTIFICAT=/tmp/cle-sf.pub.pem node infra/bacs-a-sable/salesforce/serveur.mjs
+```
+
+Dans Intégrations API → **Configurer la connexion** : mode REST, authentification **JWT Bearer**, identifiant client
+`clm-bac-a-sable`, un utilisateur d'exécution quelconque, et le contenu de `/tmp/cle-sf.pem` comme clé privée. Le bac à
+sable vérifie la signature RS256, l'émetteur et l'expiration ; une assertion falsifiée reçoit `invalid_grant`.
+
 **Correctif issu de cet essai.** La recherche par numéro lisait l'enregistrement avec `SELECT FIELDS(STANDARD)`, qui
 omet les champs personnalisés : un champ `…__c` d'IQ aurait été perdu au préremplissage. L'adaptateur recherche désormais
 l'identifiant, puis relit l'enregistrement complet (`SalesforceRestTest`).

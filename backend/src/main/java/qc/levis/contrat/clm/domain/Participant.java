@@ -52,6 +52,10 @@ public class Participant {
     @Column(name = "reponse_identite_hash", length = 64)
     private String reponseIdentiteHash;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 2)
+    private Langue langue = Langue.FR;
+
     protected Participant() {
     }
 
@@ -65,6 +69,11 @@ public class Participant {
         this.roleContrat = roleContrat;
         this.externe = externe;
         this.niveauIdentite = niveauIdentite;
+    }
+
+    /** Langue des messages et du portail du participant ; nulle : français (addenda 2, Q19). */
+    public void choisirLangue(Langue langue) {
+        this.langue = langue == null ? Langue.FR : langue;
     }
 
     public void definirQuestion(String question, String reponseHash) {
@@ -90,6 +99,7 @@ public class Participant {
     public Identite.Niveau getNiveauIdentite() { return niveauIdentite; }
     public String getQuestionIdentite() { return questionIdentite; }
     public String getReponseIdentiteHash() { return reponseIdentiteHash; }
+    public Langue getLangue() { return langue; }
 
     /** Destruction à l'échéance de conservation : les coordonnées du participant sont effacées. */
     public void anonymiser() {

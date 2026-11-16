@@ -29,6 +29,33 @@ L'[addenda 1](reponses/addenda-1.md) répond en tout ou en partie aux questions 
 | — | Nouvelle exigence obligatoire TI-22 : intégration Workday (§ 4.4) | Réalisée ; questions W1 à W6 |
 | — | Signature en lot depuis Salesforce et depuis la plateforme (Q10) | Réalisée ; questions V1 à V3 |
 
+## Réponses reçues — addenda 2 (14 novembre 2026)
+
+L'[addenda 2](reponses/addenda-2.md) répond aux questions ci-dessous ; impact et ajustements :
+[impact_addenda_2.md](../02-Analyse/impact_addenda_2.md).
+
+| # | Réponse d'IQ | Suite |
+|---|---|---|
+| A1, A2 | CLM avancé et IA en options distinctes ; le scénario 10 ne rend pas le CLM avancé obligatoire (Q1, Q2) | ✔ Répondu |
+| A3 | Premier périmètre : conventions d'aide financière issues de Grantmaking (Q3) | ✔ Conforme à l'hypothèse |
+| A4 | 55 000 à 65 000 documents par an ; pics inconnus ; démontrer la volumétrie (Q4) | Plan de charge CLM ajouté ; pics à recalibrer |
+| A5 | Environ 1 300 employés ; répartition en conception (Q5) | ✔ Répondu |
+| A6 | Une organisation principale ; préciser limites et coûts des groupes et environnements (Q6) | ✔ Aucune limite ni coût pour les groupes |
+| B1 | Objet `FundingRequest`, lu par Id ou `Name` ; correspondance par modèle (Q7) | ✔ Conforme |
+| B2 | `CLM_Statut__c`, `CLM_Reference__c`, `CLM_Correlation__c` envisagés (Q8) | ✔ Conforme |
+| B3 | API v60.0, ajustable (Q9) | ✔ Conforme |
+| B4 | REST ; aucun Platform Event ni CDC imposé (Q10) | ✔ Conforme |
+| B5 | Compte d'exécution possible ; décrire JWT Bearer en remplacement (Q11) | Réalisé : JWT Bearer (RST-23) |
+| B6 | Salesforce maître du dossier ; la solution gère le document signé et la preuve (Q12) | ✔ Conforme |
+| B7 | Conservation dans la solution ; export ou transfert vers un référentiel d'IQ (Q13) | Réalisé : exportation en lot (RST-24) |
+| B8 | Lancée, retournée, rejetée, annulée, terminée ; correspondance en conception (Q14) | Réalisé : retour d'étape transmis (RST-20), correspondance configurable (RST-21) |
+| B9 | Seules les données nécessaires (Q15) | Réalisé : lecture limitée aux champs déclarés (RST-22) |
+| B10 | Environnements et comptes fixés au démarrage ; données fictives (Q16) | ◐ Date encore inconnue |
+| B11 | 8 reprises au plus, intervalles plafonnés à 1 h (Q17) | ✔ Conforme |
+| E1 | Québec ou Canada ; autre territoire sous conditions ; lister tous les lieux (Q18) | ◐ Tableau des lieux à produire ; fournisseurs courriel, SMS et horodatage à désigner |
+| — | Interfaces en français obligatoires, anglais sur demande (Q19) | Réalisé : langue de communication du signataire (RST-25) |
+| — | Un éditeur peut soumissionner seul (Q20) | ✔ Répondu |
+
 ## Questions prioritaires
 
 À poser dès la première rencontre : sans réponse, une réalisation ou une recette reste bloquée.

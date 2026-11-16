@@ -6,7 +6,7 @@ import { BarreActions, Bloc, Blocs } from './gabarit.jsx'
 import { libelleAffectation, modeParcours } from './OngletParcours.jsx'
 
 const NIVEAUX = ['', 'COURRIEL', 'CODE_SMS', 'QUESTION', 'FORTE']
-const VIDE = { nom: '', courriel: '', telephone: '', roleContrat: '', externe: true, niveauIdentite: '', question: '', reponse: '' }
+const VIDE = { nom: '', courriel: '', telephone: '', roleContrat: '', externe: true, niveauIdentite: '', question: '', reponse: '', langue: 'FR' }
 
 /** Premier rôle de la liste de l'organisation qu'aucun participant ne tient encore. */
 const roleLibre = (roles, participants) => roles.valeurs.map((r) => r.code).find((c) => !participants.some((p) => p.roleContrat === c)) || ''
@@ -92,7 +92,7 @@ export default function OngletParticipants({ trousse, peutGerer, onChange, onOrd
                     const inv = [...trousse.invitations].reverse().find((i) => i.participantId === p.id)
                     return (
                       <tr key={p.id}>
-                        <td data-label={t('clm.col.nom')}>{p.nom} <span className="muted">#{p.id} · {p.externe ? t('clm.part.externe') : t('clm.part.interne')}</span></td>
+                        <td data-label={t('clm.col.nom')}>{p.nom} <span className="muted">#{p.id} · {p.externe ? t('clm.part.externe') : t('clm.part.interne')}{p.langue === 'EN' ? ` · ${t('clm.part.langue.EN')}` : ''}</span></td>
                         <td data-label={t('clm.part.role')}>{roles.libelle(p.roleContrat)}</td>
                         <td data-label={t('clm.part.coordonnees')}>{p.courriel}{p.telephone ? <><br />{p.telephone}</> : null}</td>
                         <td data-label={t('clm.part.invitation')}>{inv ? <><Statut valeur={inv.statut} /><br /><span className="muted">{inv.signeeLe ? dateHeure(inv.signeeLe) : t('clm.part.expire', { d: dateHeure(inv.expireLe) })}</span></> : '—'}</td>
@@ -114,6 +114,11 @@ export default function OngletParticipants({ trousse, peutGerer, onChange, onOrd
                 <label>{t('clm.part.role')} <span className="muted">{t('clm.part.roleAide')}</span>
                   <ChoixListe liste={roles} value={form.roleContrat} onChange={(v) => setForm({ ...form, roleContrat: v })} required aria-required="true" /></label>
                 <label className="check-row"><input type="checkbox" checked={form.externe} onChange={maj('externe')} />{t('clm.part.externe')}</label>
+                <label>{t('clm.part.langue')} <span className="muted">{t('clm.part.langueAide')}</span>
+                  <select value={form.langue} onChange={maj('langue')}>
+                    {['FR', 'EN'].map((l) => <option key={l} value={l}>{t(`clm.part.langue.${l}`)}</option>)}
+                  </select>
+                </label>
                 <label>{t('clm.part.niveau')} <span className="muted">{t('clm.part.niveauAide', { risque: t(`clm.risque.${trousse.risque}`) })}</span>
                   <select value={form.niveauIdentite} onChange={maj('niveauIdentite')}>
                     {NIVEAUX.map((n) => <option key={n} value={n}>{n ? t(`clm.niveau.${n}`) : t('clm.part.niveauAuto')}</option>)}

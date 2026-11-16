@@ -14,6 +14,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Optional;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -123,11 +124,11 @@ class AdaptateursClmTest {
     @Test
     void salesforce_simule_lecture_publication_idempotente_et_panne() {
         SalesforceSimulation sf = new SalesforceSimulation(Clock.fixed(T0, ZoneOffset.UTC));
-        PortSalesforce.Dossier d = sf.lireDossier("dem-2026-0001").orElseThrow();
+        PortSalesforce.Dossier d = sf.lireDossier("dem-2026-0001", Set.of("Montant")).orElseThrow();
         assertEquals("a0B5e00000GRT001", d.id());
         assertEquals("250000.00", d.champs().get("Montant"));
-        assertTrue(sf.lireDossier("a0B5e00000GRT002").isPresent());
-        assertTrue(sf.lireDossier("inconnu").isEmpty());
+        assertTrue(sf.lireDossier("a0B5e00000GRT002", Set.of("Montant")).isPresent());
+        assertTrue(sf.lireDossier("inconnu", Set.of("Montant")).isEmpty());
 
         PortSalesforce.Statut s = new PortSalesforce.Statut(d.id(), "LANCEE", "c", "k1", Map.of());
         sf.publierStatut(s);
@@ -137,7 +138,7 @@ class AdaptateursClmTest {
 
         sf.simulerPanne(true);
         assertFalse(sf.tester().disponible());
-        assertThrows(PortSalesforce.Indisponible.class, () -> sf.lireDossier("DEM-2026-0001"));
+        assertThrows(PortSalesforce.Indisponible.class, () -> sf.lireDossier("DEM-2026-0001", Set.of("Montant")));
         sf.simulerPanne(false);
         assertTrue(sf.tester().disponible());
     }

@@ -20,3 +20,8 @@
 - ✅ [ST-15 — Capacités CLM avancées et IA (option)](ST-15/ST-15_capacit_s_clm_avanc_es_et_ia_option.md)
 
 Stories issues des écarts (sans fiche) : ✅ RST-16 · ✅ RST-17 · ⏳ RST-18 · ✅ RST-19.
+
+Stories issues de l'addenda 2 (2026-11-16, détail : [impact_addenda_2.md](../02-Analyse/impact_addenda_2.md) § 2) :
+✅ RST-20 « retournée » transmise lors d'un retour d'étape · ✅ RST-21 correspondance des statuts Salesforce ·
+✅ RST-22 lecture Salesforce limitée aux champs nécessaires · ✅🔌 RST-23 authentification JWT Bearer ·
+✅ RST-24 exportation en lot vers un référentiel · ✅ RST-25 langue de communication du signataire.

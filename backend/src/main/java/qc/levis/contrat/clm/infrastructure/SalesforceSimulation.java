@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
 import qc.levis.contrat.clm.application.port.PortSalesforce;
@@ -49,17 +50,30 @@ public class SalesforceSimulation implements PortSalesforce {
         m.put("TelephoneDemandeur", telephone);
         m.put("Responsable", "charge.projet@iq.example");
         m.put("DateDebut", "2026-12-01");
+        // Champ que l'organisation ne déclare pas : la lecture limitée (addenda 2, Q15) ne doit jamais le rapporter.
+        m.put("NotesInternes__c", "Analyse de risque interne");
         dossiers.put(id, m);
     }
 
     @Override
-    public Optional<Dossier> lireDossier(String identifiantOuNumero) {
+    public Optional<Dossier> lireDossier(String identifiantOuNumero, Set<String> champs) {
         exigerDisponible();
         return dossiers.values().stream()
                 .filter(m -> identifiantOuNumero.equalsIgnoreCase(String.valueOf(m.get("Id"))) || identifiantOuNumero.equalsIgnoreCase(String.valueOf(m.get("Name"))))
                 .findFirst()
-                .map(m -> new Dossier(String.valueOf(m.get("Id")), String.valueOf(m.get("Name")), new LinkedHashMap<>(m),
+                .map(m -> new Dossier(String.valueOf(m.get("Id")), String.valueOf(m.get("Name")), restreindre(m, champs),
                         Instant.now(horloge).truncatedTo(ChronoUnit.MILLIS)));
+    }
+
+    /** Comme l'API réelle interrogée avec {@code fields=} : seuls l'identifiant, le numéro et les champs demandés. */
+    private static Map<String, Object> restreindre(Map<String, Object> m, Set<String> champs) {
+        Map<String, Object> r = new LinkedHashMap<>();
+        m.forEach((k, v) -> {
+            if ("Id".equals(k) || "Name".equals(k) || champs.contains(k)) {
+                r.put(k, v);
+            }
+        });
+        return r;
     }
 
     @Override

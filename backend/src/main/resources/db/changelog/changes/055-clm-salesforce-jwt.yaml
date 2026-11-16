@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 055-1-clm-salesforce-jwt
+      author: levis
+      comment: "CLM (addenda 2, Q11) : authentification Salesforce par JWT Bearer, en remplacement du flux client credentials. La clé privée PEM, chiffrée, dépasse l'ancienne taille du secret."
+      changes:
+        - addColumn:
+            tableName: clm_connexion_salesforce
+            columns:
+              - column: { name: authentification, type: VARCHAR(20), defaultValue: CLIENT_CREDENTIALS, constraints: { nullable: false } }
+              - column: { name: utilisateur_execution, type: VARCHAR(255) }
+        - modifyDataType:
+            tableName: clm_connexion_salesforce
+            columnName: secret_chiffre
+            newDataType: VARCHAR(8000)

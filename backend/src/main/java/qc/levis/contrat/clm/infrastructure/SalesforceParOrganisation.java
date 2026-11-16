@@ -1,6 +1,7 @@
 package qc.levis.contrat.clm.infrastructure;
 
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import qc.levis.contrat.clm.application.ConnexionsSalesforce;
@@ -30,8 +31,8 @@ public class SalesforceParOrganisation implements PortSalesforce {
     }
 
     @Override
-    public Optional<Dossier> lireDossier(String identifiantOuNumero) {
-        return adaptateur().lireDossier(identifiantOuNumero);
+    public Optional<Dossier> lireDossier(String identifiantOuNumero, Set<String> champs) {
+        return adaptateur().lireDossier(identifiantOuNumero, champs);
     }
 
     @Override

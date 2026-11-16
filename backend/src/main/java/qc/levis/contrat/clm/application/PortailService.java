@@ -108,7 +108,7 @@ public class PortailService {
             String canal = canaux.get(i);
             String destinataire = "SMS".equals(canal) ? s.participant().getTelephone() : s.participant().getCourriel();
             Map<String, Object> vars = new HashMap<>(Map.of("reference", s.trousse().getReference(), "code", partie));
-            messagerie.envoyer(s.trousse().getTenantId(), Evenement.CODE, canal, destinataire, vars, List.of());
+            messagerie.envoyer(s.trousse().getTenantId(), Evenement.CODE, canal, destinataire, vars, List.of(), s.participant().getLangue());
         }
     }
 

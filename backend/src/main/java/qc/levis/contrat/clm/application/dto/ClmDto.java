@@ -20,8 +20,9 @@ public final class ClmDto {
                                  Integer rappelsMax, String copies) {
     }
 
+    /** {@code langue} : FR (défaut) ou EN, langue des messages et du portail du participant (addenda 2, Q19). */
     public record ParticipantRequest(String nom, String courriel, String telephone, String roleContrat, boolean externe,
-                                     String niveauIdentite, String question, String reponse) {
+                                     String niveauIdentite, String question, String reponse, String langue) {
     }
 
     public record AffectationDto(String type, String valeur) {
@@ -100,7 +101,7 @@ public final class ClmDto {
     }
 
     public record ParticipantVue(Long id, String nom, String courriel, String telephone, String roleContrat, boolean externe,
-                                 String niveauIdentite, boolean questionDefinie) {
+                                 String niveauIdentite, boolean questionDefinie, String langue) {
     }
 
     public record DecisionVue(String acteur, String nature, String commentaire, Instant decideLe) {
@@ -183,13 +184,19 @@ public final class ClmDto {
     public record ConfigIntegration(String mode, String instanceUrl, String tokenUrl, String objet, String versionApi,
                                     String clientIdMasque, boolean secretConfigure, String champStatut, String champReference,
                                     String champCorrelation, int reprisesMax, boolean personnalisee, String modifiePar,
-                                    Instant modifieLe, List<String> hotesAutorises) {
+                                    Instant modifieLe, List<String> hotesAutorises, String authentification, String utilisateur) {
     }
 
     /** Connexion propre à l'organisation ; un secret vide conserve celui en place, un secret saisi le remplace (rotation). */
     public record ConnexionRequest(String mode, String instanceUrl, String tokenUrl, String clientId, String clientSecret,
                                    String objet, String versionApi, String champStatut, String champReference,
-                                   String champCorrelation, Integer reprisesMax) {
+                                   String champCorrelation, Integer reprisesMax, String authentification, String utilisateur) {
+
+        public ConnexionRequest(String mode, String instanceUrl, String tokenUrl, String clientId, String clientSecret, String objet,
+                                String versionApi, String champStatut, String champReference, String champCorrelation, Integer reprisesMax) {
+            this(mode, instanceUrl, tokenUrl, clientId, clientSecret, objet, versionApi, champStatut, champReference, champCorrelation,
+                    reprisesMax, null, null);
+        }
     }
 
     public record PortSalesforceEtat(boolean disponible, String mode, String detail, Instant testeLe) {

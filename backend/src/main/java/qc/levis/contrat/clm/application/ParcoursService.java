@@ -32,6 +32,7 @@ import qc.levis.contrat.clm.domain.EtapeTrousse;
 import qc.levis.contrat.clm.domain.FormatDocument;
 import qc.levis.contrat.clm.domain.Habilitations;
 import qc.levis.contrat.clm.domain.Invitation;
+import qc.levis.contrat.clm.domain.Langue;
 import qc.levis.contrat.clm.domain.Modele;
 import qc.levis.contrat.clm.domain.ModeleMessage.Evenement;
 import qc.levis.contrat.clm.domain.ParametresClm;
@@ -179,7 +180,7 @@ public class ParcoursService {
             case GROUPE, ROLE -> messagerie.envoyer(t.getTenantId(), evenement, "INTERNE",
                     a.type().name().toLowerCase() + ":" + a.valeur(), vars, List.of());
             case PARTICIPANT -> participants.findByIdAndTenantId(Habilitations.parseId(a.valeur()), t.getTenantId())
-                    .ifPresent(p -> messagerie.envoyer(t.getTenantId(), evenement, "COURRIEL", p.getCourriel(), vars, List.of()));
+                    .ifPresent(p -> messagerie.envoyer(t.getTenantId(), evenement, "COURRIEL", p.getCourriel(), vars, List.of(), p.getLangue()));
         }
     }
 
@@ -201,9 +202,9 @@ public class ParcoursService {
                 java.nio.charset.StandardCharsets.UTF_8)), expire, p.getNiveauIdentite()));
         Map<String, Object> vars = variables(t, e);
         vars.put("destinataire", p.getNom());
-        vars.put("lien", lienPortail(reglages, jeton));
+        vars.put("lien", lienPortail(reglages, jeton, p.getLangue()));
         vars.put("echeance", expire.toString().substring(0, 10));
-        messagerie.envoyer(t.getTenantId(), Evenement.INVITATION, "COURRIEL", p.getCourriel(), vars, List.of());
+        messagerie.envoyer(t.getTenantId(), Evenement.INVITATION, "COURRIEL", p.getCourriel(), vars, List.of(), p.getLangue());
         journal.consigner(t, "INVITATION_ENVOYEE", "systeme", p.getNom() + " · " + p.getNiveauIdentite());
         return jeton;
     }
@@ -248,8 +249,11 @@ public class ParcoursService {
             throw new IllegalArgumentException("Le retour se fait vers une étape antérieure à « " + courante.getLibelle() + " ».");
         }
         reinitialiserDepuis(t, cible.getPhase());
-        journal.consigner(t, "RETOUR_ETAPE", acteur, courante.getLibelle() + " → " + cible.getLibelle() + " · " + motif);
+        long seq = journal.consigner(t, "RETOUR_ETAPE", acteur, courante.getLibelle() + " → " + cible.getLibelle() + " · " + motif)
+                .getSequence();
         notifierProprietaire(t, Evenement.REJET, "Retour à l'étape « " + cible.getLibelle() + " » : " + motif);
+        // Addenda 2, Q14 : « retournée » est un statut que Salesforce doit recevoir, quelle que soit l'étape visée.
+        diffusion.enfiler(t, "RETOURNEE", seq, Map.of("motif", motif, "etape", cible.getCle()));
         avancer(t, acteur);
     }
 
@@ -639,12 +643,13 @@ public class ParcoursService {
                 invitations.save(i);
             }
         }
-        return lienPortail(parametres.reglages(t.getTenantId()), inviter(t, e, moi));
+        return lienPortail(parametres.reglages(t.getTenantId()), inviter(t, e, moi), moi.getLangue());
     }
 
-    private static String lienPortail(ParametresClm.Reglages reglages, String jeton) {
+    /** Le portail s'ouvre dans la langue du participant ; le français reste celui par défaut (addenda 2, Q19). */
+    static String lienPortail(ParametresClm.Reglages reglages, String jeton, Langue langue) {
         String portail = reglages.portailUrl();
-        return (portail.endsWith("/") ? portail : portail + "/") + jeton;
+        return (portail.endsWith("/") ? portail : portail + "/") + jeton + (langue == Langue.EN ? "?lang=en" : "");
     }
 
     EtapeTrousse exigerEtape(Long id) {

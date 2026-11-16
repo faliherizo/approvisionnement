@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
@@ -19,6 +22,7 @@ import qc.levis.contrat.clm.application.port.PortSalesforce;
 import qc.levis.contrat.clm.application.port.SourceAleatoire;
 import qc.levis.contrat.clm.application.repository.MessageSortantRepository;
 import qc.levis.contrat.clm.domain.MessageSortant;
+import qc.levis.contrat.clm.domain.Modele;
 import qc.levis.contrat.clm.domain.Trousse;
 
 /**
@@ -36,24 +40,38 @@ public class SalesforceService {
     private final ConnexionsSalesforce connexions;
     private final ContexteClm ctx;
     private final AlertesExploitation alertes;
+    private final ListesClm listes;
     /** Dernier test de connexion de chaque organisation : le résultat de l'une n'apparaît jamais chez une autre. */
     private final Map<Long, ClmDto.PortSalesforceEtat> derniersTests = new ConcurrentHashMap<>();
 
     public SalesforceService(PortSalesforce salesforce, MessageSortantRepository sorties, SourceAleatoire alea,
-                             ConnexionsSalesforce connexions, ContexteClm ctx, AlertesExploitation alertes) {
+                             ConnexionsSalesforce connexions, ContexteClm ctx, AlertesExploitation alertes, ListesClm listes) {
         this.salesforce = salesforce;
         this.sorties = sorties;
         this.alea = alea;
         this.connexions = connexions;
         this.ctx = ctx;
         this.alertes = alertes;
+        this.listes = listes;
     }
 
+    /** Consultation d'une demande : seuls les champs que l'organisation a déclarés utilisables sont lus. */
     public PortSalesforce.Dossier lireDossier(String identifiant) {
+        return lireDossier(identifiant, List.of());
+    }
+
+    /**
+     * Lecture pour un modèle : champs déclarés par l'organisation et sources des champs du modèle, rien d'autre (addenda 2,
+     * Q15 : seules les données nécessaires à la génération, à la validation et à la signature entrent dans la solution).
+     */
+    public PortSalesforce.Dossier lireDossier(String identifiant, List<Modele.Champ> modele) {
         if (identifiant == null || identifiant.isBlank()) {
             throw new IllegalArgumentException("Identifiant de demande ou numéro de dossier requis.");
         }
-        return salesforce.lireDossier(identifiant.trim())
+        Set<String> champs = new LinkedHashSet<>();
+        listes.valeurs(ListesClm.Liste.CHAMP_SALESFORCE).forEach(v -> champs.add(v.code()));
+        modele.stream().map(Modele.Champ::source).filter(Objects::nonNull).forEach(champs::add);
+        return salesforce.lireDossier(identifiant.trim(), champs)
                 .orElseThrow(() -> new NoSuchElementException("Dossier Salesforce introuvable : " + identifiant));
     }
 
@@ -72,6 +90,8 @@ public class SalesforceService {
         Map<String, Object> payload = new LinkedHashMap<>(donnees);
         payload.put("reference", t.getReference());
         payload.put("statut", t.getStatut().name());
+        // Addenda 2, Q14 : la valeur transmise suit la correspondance de l'organisation, figée au moment de l'événement.
+        payload.put("valeurStatut", listes.libelle(ListesClm.Liste.STATUT_SALESFORCE, evenement));
         sorties.save(new MessageSortant(t.getTenantId(), t.getId(), t.getSfDossierId(), evenement, cle, alea.uuid(),
                 ctx.ecrire(payload), ctx.maintenant()));
     }

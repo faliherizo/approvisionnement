@@ -111,7 +111,9 @@ function FormulaireConnexion({ config, secretRef, onEnregistrer, onAnnuler, onRe
   const { t } = useI18n()
   const [f, setF] = useState(() => ({ mode: config.mode, instanceUrl: config.instanceUrl || '', tokenUrl: config.tokenUrl || '',
     clientId: '', clientSecret: '', objet: config.objet, versionApi: config.versionApi, champStatut: config.champStatut,
-    champReference: config.champReference, champCorrelation: config.champCorrelation, reprisesMax: config.reprisesMax }))
+    champReference: config.champReference, champCorrelation: config.champCorrelation, reprisesMax: config.reprisesMax,
+    authentification: config.authentification || 'CLIENT_CREDENTIALS', utilisateur: config.utilisateur || '' }))
+  const jwt = f.authentification === 'JWT_BEARER'
   const maj = (k) => (e) => setF({ ...f, [k]: e.target.type === 'number' ? Number(e.target.value) : e.target.value })
   const domaines = config.hotesAutorises.join(', ')
   return (
@@ -129,8 +131,17 @@ function FormulaireConnexion({ config, secretRef, onEnregistrer, onAnnuler, onRe
         <label className="col-2">{t('clm.ad.serveurJetons')}<input type="url" value={f.tokenUrl} onChange={maj('tokenUrl')} placeholder="https://" /></label>
         <label>{t('clm.ad.clientId')} <span className="muted">{config.clientIdMasque ? t('clm.ad.conserverSiVide', { v: config.clientIdMasque }) : ''}</span>
           <input value={f.clientId} onChange={maj('clientId')} autoComplete="off" /></label>
-        <label>{t('clm.ad.secret')} <span className="muted">{config.secretConfigure ? t('clm.ad.secretConserve') : ''}</span>
-          <input ref={secretRef} type="password" value={f.clientSecret} onChange={maj('clientSecret')} autoComplete="new-password" /></label>
+        <label>{t('clm.ad.authentification')}
+          <select value={f.authentification} onChange={maj('authentification')}>
+            {['CLIENT_CREDENTIALS', 'JWT_BEARER'].map((m) => <option key={m} value={m}>{t(`clm.ad.auth.${m}`)}</option>)}
+          </select>
+        </label>
+        {jwt && <label>{t('clm.ad.utilisateur')}<input value={f.utilisateur} onChange={maj('utilisateur')} autoComplete="off" required /></label>}
+        <label className={jwt ? 'col-2' : undefined}>{t(jwt ? 'clm.ad.clePrivee' : 'clm.ad.secret')} <span className="muted">{config.secretConfigure ? t('clm.ad.secretConserve') : ''}</span>
+          {jwt
+            ? <textarea ref={secretRef} rows={4} value={f.clientSecret} onChange={maj('clientSecret')} autoComplete="off" spellCheck={false}
+                placeholder="-----BEGIN PRIVATE KEY-----" />
+            : <input ref={secretRef} type="password" value={f.clientSecret} onChange={maj('clientSecret')} autoComplete="new-password" />}</label>
         <label>{t('clm.ad.objet')}<input value={f.objet} onChange={maj('objet')} required /></label>
         <label>{t('clm.ad.versionApi')}<input value={f.versionApi} onChange={maj('versionApi')} required /></label>
         <label>{t('clm.ad.champStatut')}<input value={f.champStatut} onChange={maj('champStatut')} required /></label>
@@ -321,6 +332,7 @@ function Integrations() {
             <div><dt>{t('clm.ad.instance')}</dt><dd className="clm-casse">{e.config.instanceUrl || '—'}</dd></div>
             <div><dt>{t('clm.ad.serveurJetons')}</dt><dd className="clm-casse">{e.config.tokenUrl || '—'}</dd></div>
             <div><dt>{t('clm.ad.clientId')}</dt><dd><code>{e.config.clientIdMasque || '—'}</code></dd></div>
+            <div><dt>{t('clm.ad.authentification')}</dt><dd>{t(`clm.ad.auth.${e.config.authentification || 'CLIENT_CREDENTIALS'}`)}{e.config.utilisateur ? ` · ${e.config.utilisateur}` : ''}</dd></div>
             <div><dt>{t('clm.ad.secret')}</dt><dd>{e.config.secretConfigure ? t('clm.ad.secretConfigure') : t('clm.ad.secretAbsent')}</dd></div>
             <div><dt>{t('clm.ad.champsRetour')}</dt><dd><code>{e.config.champStatut}</code>, <code>{e.config.champReference}</code>, <code>{e.config.champCorrelation}</code></dd></div>
             <div><dt>{t('clm.ad.reprisesMax')}</dt><dd>{e.config.reprisesMax}</dd></div>

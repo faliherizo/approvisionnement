@@ -592,3 +592,90 @@ test.describe('Conformité — écarts comblés (matrice conformite_exigences_fo
   })
 })
 
+
+test.describe('Addenda 2 — réponses d’IQ du 14 novembre 2026 (addenda-2.md)', () => {
+  const a = donnees.addenda2
+
+  test('Q11 — la connexion Salesforce offre le JWT Bearer et en exige la clé privée', async ({ page }) => {
+    await session(page, users.iqAdminTi)
+    await page.goto('/clm/admin/integrations')
+    await page.getByRole('button', { name: 'Configurer la connexion' }).click()
+    const formulaire = page.getByRole('form', { name: 'Configurer la connexion' })
+    await formulaire.getByRole('combobox', { name: /^Mode/ }).selectOption('REST')
+    await formulaire.getByRole('combobox', { name: /^Authentification/ }).selectOption('JWT_BEARER')
+    await formulaire.getByLabel(/^Instance/).fill(a.jwt.instanceUrl)
+    await formulaire.getByLabel(/^Serveur de jetons/).fill(a.jwt.tokenUrl)
+    await formulaire.getByLabel(/^Identifiant client/).fill(a.jwt.clientId)
+    await formulaire.getByLabel(/^Utilisateur d’exécution/).fill(a.jwt.utilisateur)
+    await expect(formulaire.getByLabel(/^Clé privée/)).toBeVisible()
+    await controler(page)
+    await auditerAxe(page)
+    await formulaire.getByRole('button', { name: 'Enregistrer' }).click()
+    await expect(page.getByText(a.jwt.erreur)).toBeVisible()
+    await controler(page)
+    await auditerAxe(page)
+  })
+
+  test('Q14 — le retour à une étape antérieure est transmis à Salesforce comme « retournée »', async ({ playwright, baseURL }) => {
+    const initiateur = await api(playwright, baseURL, users.iqInitiateur)
+    const t = (await ok(initiateur.post('/api/clm/trousses', { data: { titre: `${a.statuts.titre} ${unique()}`, risque: 'FAIBLE',
+      source: 'SALESFORCE', sfDossierId: a.statuts.dossier } }))).resume
+    await deposerPdf(initiateur, t.id)
+    await ok(initiateur.put(`/api/clm/trousses/${t.id}/parcours`, { data: donnees.conformite.retour.parcours }))
+    await ok(initiateur.post(`/api/clm/trousses/${t.id}/lancer`, { data: {} }))
+    const etapes = (await ok(initiateur.get(`/api/clm/trousses/${t.id}`))).etapes
+    const validateur = await api(playwright, baseURL, users.iqValidateur)
+    await ok(validateur.post(`/api/clm/etapes/${etapes[0].id}/decider`, { data: { decision: 'APPROUVE' } }))
+    const approbateur = await api(playwright, baseURL, users.iqApprobateur)
+    await ok(approbateur.post(`/api/clm/etapes/${etapes[1].id}/decider`, { data: { decision: 'RETOUR', commentaire: a.statuts.motif,
+      retourVers: a.statuts.retourVers } }))
+    const admin = await api(playwright, baseURL, users.iqAdminTi)
+    const journal = (await ok(admin.get('/api/clm/admin/integrations/salesforce'))).journal
+      .filter((m: { trousseId: number }) => m.trousseId === t.id).map((m: { evenement: string }) => m.evenement)
+    expect(journal).toEqual(expect.arrayContaining(Object.keys(a.statuts.attendus)))
+    await Promise.all([initiateur.dispose(), validateur.dispose(), approbateur.dispose(), admin.dispose()])
+  })
+
+  test('Q15 — la consultation d’une demande ne lit que les champs déclarés par l’organisation', async ({ playwright, baseURL }) => {
+    const initiateur = await api(playwright, baseURL, users.iqInitiateur)
+    const dossier = await ok(initiateur.get(`/api/clm/salesforce/dossiers/${a.minimisation.dossier}`))
+    expect(Object.keys(dossier.champs)).toContain(a.minimisation.declare)
+    expect(Object.keys(dossier.champs)).not.toContain(a.minimisation.nonDeclare)
+    await initiateur.dispose()
+  })
+
+  test('Q13 — un lot de trousses closes se télécharge pour le référentiel désigné', async ({ page, playwright, baseURL }) => {
+    const initiateur = await api(playwright, baseURL, users.iqInitiateur)
+    const t = (await ok(initiateur.post('/api/clm/trousses', { data: { titre: `${a.exportation.titre} ${unique()}` } }))).resume
+    await ok(initiateur.post(`/api/clm/trousses/${t.id}/annuler`, { data: { motif: a.exportation.motif } }))
+    await initiateur.dispose()
+    await session(page, users.iqAdminTi)
+    await page.goto('/clm/admin/conservation')
+    const formulaire = page.getByRole('form', { name: 'Exportation vers un référentiel' })
+    await expect(formulaire).toBeVisible()
+    await controler(page)
+    await auditerAxe(page)
+    const [telechargement] = await Promise.all([page.waitForEvent('download'), formulaire.getByRole('button', { name: 'Télécharger le lot' }).click()])
+    expect(telechargement.suggestedFilename()).toMatch(/^exportation-clm-\d{4}-\d{2}-\d{2}-\d{4}-\d{2}-\d{2}\.zip$/)
+    await expect(page.getByText(/^Lot du .* téléchargé\.$/)).toBeVisible()
+  })
+
+  test('Q19 — un signataire externe reçoit ses communications en anglais à la demande d’IQ', async ({ page, playwright, baseURL }) => {
+    const initiateur = await api(playwright, baseURL, users.iqInitiateur)
+    const t = (await ok(initiateur.post('/api/clm/trousses', { data: { titre: `Signataire anglophone ${unique()}`, risque: 'FAIBLE' } }))).resume
+    await initiateur.dispose()
+    await session(page, users.iqInitiateur)
+    await page.goto(`/clm/trousses/${t.id}?onglet=participants`)
+    const n = a.langue
+    await page.getByLabel(/^Nom/).fill(n.nom)
+    await page.getByLabel(/^Courriel/).fill(n.courriel)
+    await page.getByLabel(/^Téléphone/).fill(n.telephone)
+    await page.getByRole('combobox', { name: /^Rôle dans le contrat/ }).selectOption({ label: n.role })
+    await page.getByRole('combobox', { name: /^Langue de communication/ }).selectOption({ label: n.langue })
+    await controler(page)
+    await auditerAxe(page)
+    await page.locator('form').filter({ has: page.getByRole('heading', { name: 'Ajouter un signataire' }) })
+      .getByRole('button', { name: 'Ajouter un signataire' }).click()
+    await expect(page.getByRole('row').filter({ hasText: n.nom })).toContainText(n.langue)
+  })
+})

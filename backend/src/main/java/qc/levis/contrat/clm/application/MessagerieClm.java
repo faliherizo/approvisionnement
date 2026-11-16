@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import qc.levis.contrat.clm.application.dto.ClmDto;
 import qc.levis.contrat.clm.application.port.NotificateurClm;
 import qc.levis.contrat.clm.application.repository.ModeleMessageRepository;
+import qc.levis.contrat.clm.domain.Langue;
 import qc.levis.contrat.clm.domain.ModeleMessage;
 import qc.levis.contrat.clm.domain.ModeleMessage.Evenement;
 
@@ -24,6 +25,8 @@ public class MessagerieClm {
     public static final List<String> CANAUX = List.of("COURRIEL", "SMS", "INTERNE");
     private static final Pattern VARIABLE = Pattern.compile("\\{\\{\\s*([\\w.-]+)\\s*}}");
     private static final Map<Evenement, String[]> DEFAUTS = new EnumMap<>(Evenement.class);
+    /** Messages destinés aux signataires externes qui communiquent en anglais (addenda 2, Q19). */
+    private static final Map<Evenement, String[]> DEFAUTS_EN = new EnumMap<>(Evenement.class);
 
     static {
         DEFAUTS.put(Evenement.INVITATION, new String[]{"Document à signer : {{titre}}",
@@ -42,6 +45,18 @@ public class MessagerieClm {
                 "Toutes les signatures de « {{titre}} » ({{reference}}) sont recueillies. Le dossier de preuve est disponible."});
         DEFAUTS.put(Evenement.CODE, new String[]{"Code de vérification",
                 "Votre code de vérification pour {{reference}} : {{code}}. Il expire dans 10 minutes."});
+        DEFAUTS_EN.put(Evenement.INVITATION, new String[]{"Document to sign: {{titre}}",
+                "Hello {{destinataire}},\nYou are invited to sign \"{{titre}}\" ({{reference}}).\nSecure link: {{lien}}\nThis link expires on {{echeance}}."});
+        DEFAUTS_EN.put(Evenement.RAPPEL, new String[]{"Reminder: {{etape}} — {{reference}}",
+                "Reminder: the \"{{etape}}\" step of package {{reference}} is still awaiting your response. Due date: {{echeance}}."});
+        DEFAUTS_EN.put(Evenement.ECHEANCE, new String[]{"Due date approaching: {{etape}} — {{reference}}",
+                "The \"{{etape}}\" step of package {{reference}} is due on {{echeance}}. Please respond before that date."});
+        DEFAUTS_EN.put(Evenement.RETARD, new String[]{"Overdue — {{reference}}",
+                "The \"{{etape}}\" step of package {{reference}} is past its due date ({{echeance}})."});
+        DEFAUTS_EN.put(Evenement.TACHE, new String[]{"Action required: {{etape}} — {{reference}}",
+                "An action is assigned to you on package \"{{titre}}\" ({{reference}}): {{etape}}. Due date: {{echeance}}."});
+        DEFAUTS_EN.put(Evenement.CODE, new String[]{"Verification code",
+                "Your verification code for {{reference}}: {{code}}. It expires in 10 minutes."});
     }
 
     private final ModeleMessageRepository modeles;
@@ -57,7 +72,19 @@ public class MessagerieClm {
     /** Envoie l'événement sur le canal demandé, puis à chaque adresse en copie. Retourne le statut du premier envoi. */
     public String envoyer(Long tenantId, Evenement evenement, String canal, String destinataire, Map<String, Object> variables,
                           List<String> copies) {
+        return envoyer(tenantId, evenement, canal, destinataire, variables, copies, Langue.FR);
+    }
+
+    /**
+     * Envoi dans la langue du destinataire. Le message personnalisé par l'organisation est rédigé en français : en anglais,
+     * le texte de la plateforme le remplace, mais un message désactivé par l'organisation reste désactivé.
+     */
+    public String envoyer(Long tenantId, Evenement evenement, String canal, String destinataire, Map<String, Object> variables,
+                          List<String> copies, Langue langue) {
         String[] texte = gabarit(tenantId, evenement, canal);
+        if (texte != null && langue == Langue.EN && DEFAUTS_EN.containsKey(evenement)) {
+            texte = DEFAUTS_EN.get(evenement);
+        }
         if (texte == null) {
             return "DESACTIVE";
         }

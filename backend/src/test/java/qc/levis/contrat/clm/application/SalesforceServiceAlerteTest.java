@@ -38,7 +38,7 @@ class SalesforceServiceAlerteTest {
     private final ConnexionsSalesforce connexions = mock(ConnexionsSalesforce.class);
     private final ContexteClm ctx = new ContexteClm(mock(PerimetreUtilisateur.class), new PorteeTenantMemoire(), new ObjectMapper(),
             Clock.fixed(T0, ZoneOffset.UTC));
-    private final SalesforceService service = new SalesforceService(port, sorties, mock(SourceAleatoire.class), connexions, ctx, alertes);
+    private final SalesforceService service = new SalesforceService(port, sorties, mock(SourceAleatoire.class), connexions, ctx, alertes, mock(ListesClm.class));
 
     private MessageSortant enAttente(int echecsPrecedents) {
         when(connexions.courante()).thenReturn(new ConnexionsSalesforce.Connexion(7L, ConnexionSalesforce.Mode.SIMULATION, null, null,

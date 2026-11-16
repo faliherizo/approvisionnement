@@ -10,6 +10,8 @@ définis dans [SLI-SLO-SLA.md](SLI-SLO-SLA.md).
 | `contrat-dossiers-load.jmx` | Plan JMeter : login → liste → création → rapport, avec assertions |
 | `data/users.csv` | Jeux d'utilisateurs (email, mot de passe) — pilote le login |
 | `data/dossiers.csv` | Jeux de dossiers (titre, n° AO, type, mode) — pilote la création |
+| `clm-trousses-load.jmx` | Plan CLM (IQ, addenda 2 Q4) : login → trousse → document → signataire → parcours → lancement → détail → suivi |
+| `data/clm-initiateurs.csv`, `data/clm-trousses.csv`, `data/convention.pdf` | Données du plan CLM (comptes, trousses, document déposé) |
 | `run.sh` | Exécute en mode non-graphique, produit le rapport HTML et gate sur les SLO |
 | `SLI-SLO-SLA.md` | Indicateurs, objectifs internes et engagement contractuel |
 
@@ -37,6 +39,17 @@ BASE_PORT=8100 ./run.sh                   # backend natif sur port isolé
 `run.sh` sort avec un **code non nul** si un SLO (P95/P99 lecture ou écriture, taux d'erreur) est
 dépassé → utilisable comme porte de performance en CI. Le rapport HTML détaillé est dans
 `results/rapport/index.html`.
+
+## Volumétrie CLM d'IQ (addenda 2, Q4)
+
+IQ prévoit 55 000 à 65 000 documents par an, pics inconnus. 65 000 ÷ 250 jours ouvrables ≈ 260 trousses par jour ;
+une heure de pointe portant 20 % de la journée et multipliée par 5 donne ≈ 260 trousses par heure, soit moins d'une
+trousse toutes les 10 secondes. La charge nominale du plan (20 initiateurs, 5 boucles) dépasse ce rythme : elle vérifie
+les SLO avec une marge, et se recalibre (`THREADS`, `LOOPS`) dès que IQ fournit ses volumes mensuels.
+
+```bash
+PLAN=clm-trousses-load.jmx BASE_PORT=8100 ./run.sh
+```
 
 ## Surcharge des seuils
 

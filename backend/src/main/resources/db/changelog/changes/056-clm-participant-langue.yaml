@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 056-1-clm-participant-langue
+      author: levis
+      comment: "CLM (addenda 2, Q19) : langue de communication du participant ; le français est obligatoire et vaut par défaut, l'anglais est offert sur demande d'IQ."
+      changes:
+        - addColumn:
+            tableName: clm_participant
+            columns:
+              - column: { name: langue, type: VARCHAR(2), defaultValue: FR, constraints: { nullable: false } }

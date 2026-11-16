@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../../api'
 import { useI18n } from '../../i18n/I18nContext'
-import { ChoixListe, GardeModule, Message, Statut, dateHeure, useErreur, useListe, useRessource } from './commun.jsx'
+import { ChoixListe, GardeModule, Message, Statut, dateHeure, telecharger, useErreur, useListe, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 
 const SORTS = ['DETRUIRE', 'VERSER', 'CONSERVER']
@@ -21,6 +21,8 @@ function EcranConservation() {
   const [f, setF] = useState({ typeContrat: '', dureeAns: 7, sortFinal: 'DETRUIRE' })
   const [erreur, setErreur] = useState(null)
   const [info, setInfo] = useState('')
+  const aujourdhui = new Date().toISOString().slice(0, 10)
+  const [periode, setPeriode] = useState({ du: `${aujourdhui.slice(0, 4)}-01-01`, au: aujourdhui })
 
   async function faire(fn, ok) {
     setErreur(null)
@@ -38,6 +40,15 @@ function EcranConservation() {
     if (window.confirm(t('clm.co.confirmerDestruction', { ref: l.reference }))) {
       faire(() => api.post(`/clm/admin/conservation/trousses/${l.trousseId}/detruire`), t('clm.co.detruite', { ref: l.reference }))
     }
+  }
+  /** Addenda 2, Q13 : lot de trousses closes pour le référentiel désigné par IQ (dossiers de preuve + index). */
+  const exporter = async (e) => {
+    e.preventDefault()
+    setErreur(null)
+    try {
+      await telecharger(`/clm/admin/conservation/exportation?du=${periode.du}&au=${periode.au}`, `exportation-clm-${periode.du}-${periode.au}.zip`)
+      setInfo(t('clm.co.exportee', { du: periode.du, au: periode.au }))
+    } catch (x) { setErreur(versErreur(x)) }
   }
   const libelleType = (c) => (c ? types.libelle(c) : t('clm.co.defaut'))
 
@@ -81,6 +92,16 @@ function EcranConservation() {
               </label>
             </div>
             <div className="cmp-row"><button type="submit">{t('clm.co.definir')}</button></div>
+          </form>
+        </Bloc>
+        <Bloc titre={t('clm.co.exportation')} large>
+          <p className="muted">{t('clm.co.exportationAide')}</p>
+          <form className="form clm-sousform" onSubmit={exporter} aria-label={t('clm.co.exportation')}>
+            <div className="form-grid">
+              <label>{t('clm.co.du')}<input type="date" value={periode.du} onChange={(e) => setPeriode({ ...periode, du: e.target.value })} required /></label>
+              <label>{t('clm.co.au')}<input type="date" value={periode.au} onChange={(e) => setPeriode({ ...periode, au: e.target.value })} required /></label>
+            </div>
+            <div className="cmp-row"><button type="submit">{t('clm.co.exporter')}</button></div>
           </form>
         </Bloc>
         <Bloc titre={t('clm.co.closes')} large>

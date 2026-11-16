@@ -28,6 +28,12 @@ public class ConnexionSalesforce {
 
     public enum Mode { SIMULATION, REST }
 
+    /**
+     * Méthode d'authentification (addenda 2, Q11) : compte d'exécution dédié par client credentials, ou JWT Bearer si
+     * l'analyse de sécurité d'IQ l'exige. En JWT Bearer, le secret conservé est la clé privée de l'application connectée.
+     */
+    public enum Authentification { CLIENT_CREDENTIALS, JWT_BEARER }
+
     public static final int REPRISES_PLAFOND = 20;
     private static final Pattern NOM_API = Pattern.compile("[A-Za-z]\\w{0,79}");
     private static final Pattern VERSION_API = Pattern.compile("v\\d{1,3}\\.\\d");
@@ -52,8 +58,15 @@ public class ConnexionSalesforce {
     @Column(name = "client_id", length = 255)
     private String clientId;
 
-    @Column(name = "secret_chiffre", length = 1000)
+    @Column(name = "secret_chiffre", length = 8000)
     private String secretChiffre;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Authentification authentification = Authentification.CLIENT_CREDENTIALS;
+
+    @Column(name = "utilisateur_execution", length = 255)
+    private String utilisateur;
 
     @Column(nullable = false, length = 80)
     private String objet;
@@ -95,6 +108,8 @@ public class ConnexionSalesforce {
         instanceUrl = r.instanceUrl();
         tokenUrl = r.tokenUrl();
         clientId = r.clientId();
+        authentification = r.authentification();
+        utilisateur = r.utilisateur();
         if (nouveauSecretChiffre != null) {
             secretChiffre = nouveauSecretChiffre;
         }
@@ -110,7 +125,7 @@ public class ConnexionSalesforce {
 
     public Reglages reglages() {
         return new Reglages(mode, instanceUrl, tokenUrl, clientId, objet, versionApi,
-                new ChampsRetour(champStatut, champReference, champCorrelation), reprisesMax);
+                new ChampsRetour(champStatut, champReference, champCorrelation), reprisesMax, authentification, utilisateur);
     }
 
     public boolean secretConfigure() {
@@ -127,7 +142,17 @@ public class ConnexionSalesforce {
     }
 
     public record Reglages(Mode mode, String instanceUrl, String tokenUrl, String clientId, String objet, String versionApi,
-                           ChampsRetour champs, int reprisesMax) {
+                           ChampsRetour champs, int reprisesMax, Authentification authentification, String utilisateur) {
+
+        public Reglages {
+            authentification = authentification == null ? Authentification.CLIENT_CREDENTIALS : authentification;
+        }
+
+        /** Réglages par client credentials, la méthode par défaut. */
+        public Reglages(Mode mode, String instanceUrl, String tokenUrl, String clientId, String objet, String versionApi,
+                        ChampsRetour champs, int reprisesMax) {
+            this(mode, instanceUrl, tokenUrl, clientId, objet, versionApi, champs, reprisesMax, Authentification.CLIENT_CREDENTIALS, null);
+        }
 
         /**
          * @param hotesAutorises domaines que la plateforme permet de joindre (protection contre la falsification de requêtes
@@ -166,7 +191,11 @@ public class ConnexionSalesforce {
                     erreurs.add("Identifiant client requis (255 caractères au plus).");
                 }
                 if (!secretDisponible) {
-                    erreurs.add("Secret client requis en mode REST.");
+                    erreurs.add(authentification == Authentification.JWT_BEARER ? "Clé privée requise en JWT Bearer."
+                            : "Secret client requis en mode REST.");
+                }
+                if (authentification == Authentification.JWT_BEARER && (utilisateur == null || utilisateur.isBlank() || utilisateur.length() > 255)) {
+                    erreurs.add("Utilisateur d'exécution requis en JWT Bearer (255 caractères au plus).");
                 }
             }
             return erreurs;

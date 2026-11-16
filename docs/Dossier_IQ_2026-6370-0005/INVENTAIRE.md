@@ -10,6 +10,7 @@
 - `02-Analyse/matrice_tracabilite.md`
 - `02-Analyse/validation_exigences_fonctionnelles.md`
 - `02-Analyse/impact_addenda_1.md`
+- `02-Analyse/impact_addenda_2.md` — réponses d'IQ du 14 novembre 2026, ajustements RST-20 à RST-25
 - `02-Analyse/conformite_exigences_fonctionnelles.md`
 - `02-Analyse/ecarts_solution_vs_exigences.md` — écarts fonctionnels **notre solution vs exigences IQ** (F/NF, 15 stories)
 
@@ -59,6 +60,7 @@
 ## 09-Questions
 - `09-Questions/questions_a_clarifier_IQ.md`
 - `09-Questions/reponses/addenda-1.md` (et le PDF de l'addenda 1)
+- `09-Questions/reponses/addenda-2.md` (et le PDF de l'addenda 2)
 
 ## 12-Bacs-a-sable
 - `12-Bacs-a-sable/guide_bacs_a_sable.md`

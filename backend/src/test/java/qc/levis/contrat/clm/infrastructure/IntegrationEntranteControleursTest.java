@@ -71,7 +71,8 @@ class IntegrationEntranteControleursTest {
         when(auth.getName()).thenReturn("admin.ti@iq.example");
         ClmDto.ConservationVue vue = new ClmDto.ConservationVue(1L, "TR-1", "T", null, "ANNULEE", Instant.EPOCH, null, "VERSER", true, false, null, Instant.EPOCH);
         when(conservation.marquerVersee(1L, "admin.ti@iq.example")).thenReturn(vue);
-        qc.levis.contrat.clm.infrastructure.web.ConservationController web = new qc.levis.contrat.clm.infrastructure.web.ConservationController(conservation);
+        qc.levis.contrat.clm.infrastructure.web.ConservationController web = new qc.levis.contrat.clm.infrastructure.web.ConservationController(conservation,
+                mock(qc.levis.contrat.clm.application.ExportationReferentielService.class), mock(qc.levis.contrat.clm.infrastructure.web.WebClm.Acteurs.class));
         assertSame(vue, web.versee(1L, auth));
         web.detruire(1L, auth);
         verify(conservation).detruire(1L, "admin.ti@iq.example");

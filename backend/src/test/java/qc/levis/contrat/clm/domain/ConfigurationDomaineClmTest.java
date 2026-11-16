@@ -117,6 +117,28 @@ class ConfigurationDomaineClmTest {
     }
 
     @Test
+    void le_jwt_bearer_exige_un_utilisateur_d_execution_et_une_cle_privee() {
+        ConnexionSalesforce.ChampsRetour champs = new ConnexionSalesforce.ChampsRetour("A", "B", "C");
+        java.util.function.BiFunction<String, Boolean, List<String>> erreurs = (utilisateur, cle) -> new ConnexionSalesforce.Reglages(
+                ConnexionSalesforce.Mode.REST, "https://iq.my.salesforce.com", "https://login.salesforce.com/services/oauth2/token", "client",
+                "FundingRequest", "v60.0", champs, 8, ConnexionSalesforce.Authentification.JWT_BEARER, utilisateur).erreurs(HOTES, cle);
+        assertTrue(erreurs.apply("integration@iq.example", true).isEmpty());
+        assertEquals(List.of("Clé privée requise en JWT Bearer.", "Utilisateur d'exécution requis en JWT Bearer (255 caractères au plus)."),
+                erreurs.apply(null, false));
+        assertEquals(1, erreurs.apply(" ", true).size());
+        assertEquals(1, erreurs.apply("u".repeat(256), true).size());
+        assertEquals(ConnexionSalesforce.Authentification.CLIENT_CREDENTIALS, new ConnexionSalesforce.Reglages(ConnexionSalesforce.Mode.REST,
+                null, null, null, "FundingRequest", "v60.0", champs, 8, null, null).authentification(), "méthode par défaut");
+
+        ConnexionSalesforce c = new ConnexionSalesforce(9L);
+        ConnexionSalesforce.Reglages jwt = new ConnexionSalesforce.Reglages(ConnexionSalesforce.Mode.REST, "https://iq.my.salesforce.com",
+                "https://login.salesforce.com/services/oauth2/token", "client", "FundingRequest", "v60.0", champs, 8,
+                ConnexionSalesforce.Authentification.JWT_BEARER, "integration@iq.example");
+        c.appliquer(jwt, "cle-chiffree", "admin@iq.example", T0);
+        assertEquals(jwt, c.reglages(), "méthode et utilisateur conservés");
+    }
+
+    @Test
     void le_mode_rest_exige_des_hotes_autorises_un_client_et_un_secret() {
         ConnexionSalesforce.ChampsRetour champs = new ConnexionSalesforce.ChampsRetour("A", "B", "C");
         List<String> erreurs = new ConnexionSalesforce.Reglages(ConnexionSalesforce.Mode.REST, "http://iq.my.salesforce.com", null, " ",
