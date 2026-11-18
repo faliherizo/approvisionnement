@@ -101,6 +101,14 @@ class ConservationServiceTest {
         verify(analyses).deleteAll(any());
         verify(journal).consigner(eq(trousse), eq("TROUSSE_DETRUITE"), eq("admin.ti@iq.example"),
                 argThat(s -> s.contains("GARANTIE 7 an(s) DETRUIRE") && s.contains("entente.pdf v1") && !s.contains("Alice")));
+        String bordereau = trousse.getBordereauDestruction();
+        assertTrue(bordereau.contains("\"resultat\":\"DETRUIT\"") && bordereau.contains("Entente Agri-Nord")
+                && bordereau.contains("admin.ti@iq.example") && bordereau.contains("entente.pdf") && !bordereau.contains("Alice"), bordereau);
+        assertThrows(IllegalStateException.class, () -> trousse.consignerBordereau("{}"), "un seul bordereau");
+        when(trousses.findByTenantIdAndDetruiteLeIsNotNullOrderByDetruiteLeDesc(IQ)).thenReturn(List.of(trousse));
+        ClmDto.DestructionVue detruite = portee.executerDans(IQ, () -> service.detruites()).get(0);
+        assertEquals("DETRUIT", detruite.resultat());
+        assertEquals("TR-2018-00042", detruite.reference());
     }
 
     @Test

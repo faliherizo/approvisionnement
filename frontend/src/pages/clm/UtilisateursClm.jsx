@@ -5,6 +5,7 @@ import { useI18n } from '../../i18n/I18nContext'
 import { useModules } from '../../hooks/useModules.js'
 import IntegrationOidcManager from '../../components/IntegrationOidcManager.jsx'
 import IntegrationSamlManager from '../../components/IntegrationSamlManager.jsx'
+import AnnuaireManager from '../../components/AnnuaireManager.jsx'
 import Users from '../Users.jsx'
 import { ChoixListe, GardeModule, Message, useErreur, useListe, useRessource } from './commun.jsx'
 import { BarreActions, Bloc, Blocs, EcranClm } from './gabarit.jsx'
@@ -127,6 +128,7 @@ function Sso() {
     <EcranClm maquette="UI-20" titre={t('clm.ut.titreSso')} objectif={t('clm.ut.ssoObjectif')}>
       <IntegrationOidcManager />
       <IntegrationSamlManager />
+      <AnnuaireManager />
       <Link to="/clm/admin/utilisateurs">{t('clm.retour')}</Link>
     </EcranClm>
   )

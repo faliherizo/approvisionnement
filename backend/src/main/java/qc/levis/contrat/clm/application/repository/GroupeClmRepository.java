@@ -11,4 +11,6 @@ public interface GroupeClmRepository extends JpaRepository<GroupeClm, Long> {
     Optional<GroupeClm> findByIdAndTenantId(Long id, Long tenantId);
 
     boolean existsByTenantIdAndCode(Long tenantId, String code);
+
+    Optional<GroupeClm> findByTenantIdAndCode(Long tenantId, String code);
 }

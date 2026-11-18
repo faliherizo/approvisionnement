@@ -12,6 +12,8 @@ export default defineConfig({
     strictPort: Boolean(process.env.VITE_PORT),
     proxy: {
       '/api': backend,
+      // Provisionnement SCIM 2.0 (Saviynt, Entra ID).
+      '/scim': backend,
       // Flux SSO OIDC (Entra ID) servi par le backend.
       '/oauth2': backend,
       '/login/oauth2': backend,

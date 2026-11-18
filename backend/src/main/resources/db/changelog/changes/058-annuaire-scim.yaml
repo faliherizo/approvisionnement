@@ -1,0 +1,74 @@
+databaseChangeLog:
+  - changeSet:
+      id: 058-1-annuaire-scim
+      author: levis
+      comment: "Annuaire d'entreprise (addenda 3, Q43, Q44, Q51) : correspondances groupes et attributs → rôles et domaines d'affaires, faits d'annuaire par compte, groupes et jeton SCIM 2.0."
+      changes:
+        - createTable:
+            tableName: annuaire_correspondance
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: source, type: VARCHAR(10), constraints: { nullable: false } }
+              - column: { name: attribut, type: VARCHAR(200) }
+              - column: { name: valeur, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: role, type: VARCHAR(30) }
+              - column: { name: groupe, type: VARCHAR(60) }
+              - column: { name: modifie_par, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: modifie_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - createIndex:
+            tableName: annuaire_correspondance
+            indexName: ix_annuaire_correspondance_tenant
+            columns:
+              - column: { name: tenant_id }
+        - createTable:
+            tableName: annuaire_appartenance
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: courriel, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: origine, type: VARCHAR(6), constraints: { nullable: false } }
+              - column: { name: source, type: VARCHAR(10), constraints: { nullable: false } }
+              - column: { name: attribut, type: VARCHAR(200) }
+              - column: { name: valeur, type: VARCHAR(255), constraints: { nullable: false } }
+        - createIndex:
+            tableName: annuaire_appartenance
+            indexName: ix_annuaire_appartenance_compte
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: courriel }
+        - createTable:
+            tableName: annuaire_groupe_scim
+            columns:
+              - column: { name: id, type: VARCHAR(36), constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: nom, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: id_externe, type: VARCHAR(255) }
+        - addUniqueConstraint:
+            tableName: annuaire_groupe_scim
+            columnNames: tenant_id, nom
+            constraintName: uk_groupe_scim_nom
+        - createTable:
+            tableName: annuaire_membre_scim
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: groupe_id, type: VARCHAR(36), constraints: { nullable: false } }
+              - column: { name: utilisateur_id, type: BIGINT, constraints: { nullable: false } }
+        - addUniqueConstraint:
+            tableName: annuaire_membre_scim
+            columnNames: groupe_id, utilisateur_id
+            constraintName: uk_membre_scim
+        - createTable:
+            tableName: annuaire_jeton_scim
+            columns:
+              - column: { name: tenant_id, type: BIGINT, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: empreinte, type: VARCHAR(64), constraints: { nullable: false } }
+              - column: { name: cree_par, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - createIndex:
+            tableName: annuaire_jeton_scim
+            indexName: ix_annuaire_jeton_scim_empreinte
+            unique: true
+            columns:
+              - column: { name: empreinte }

@@ -62,6 +62,23 @@ public class RenduDocumentsPdf implements RenduDocuments {
     }
 
     @Override
+    public byte[] genererDocx(String titre, String texte) {
+        try (XWPFDocument doc = new XWPFDocument(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            org.apache.poi.xwpf.usermodel.XWPFRun t = doc.createParagraph().createRun();
+            t.setBold(true);
+            t.setFontSize(16);
+            t.setText(titre == null ? "" : titre);
+            for (String ligne : (texte == null ? "" : texte).split("\n", -1)) {
+                doc.createParagraph().createRun().setText(ligne);
+            }
+            doc.write(out);
+            return out.toByteArray();
+        } catch (IOException e) {
+            throw new IllegalStateException("Génération Word impossible.", e);
+        }
+    }
+
+    @Override
     public byte[] apposer(byte[] pdf, List<Apposition> appositions) {
         try (PDDocument doc = PDDocument.load(pdf); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             List<Apposition> sansZone = new ArrayList<>();

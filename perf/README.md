@@ -51,6 +51,28 @@ les SLO avec une marge, et se recalibre (`THREADS`, `LOOPS`) dès que IQ fournit
 PLAN=clm-trousses-load.jmx BASE_PORT=8100 ./run.sh
 ```
 
+## Q38 — 500 utilisateurs concurrents (addenda 3)
+
+Essai du 2026-11-17, poste de développement, base H2 en mémoire, plan `clm-trousses-load.jmx`, 500 utilisateurs
+virtuels montés en 60 s, un cycle complet chacun, après préchargement de 1 000 trousses.
+
+```bash
+PLAN=clm-trousses-load.jmx BASE_PORT=8100 THREADS=50 RAMPUP=10 LOOPS=20 ./run.sh    # préchargement
+PLAN=clm-trousses-load.jmx BASE_PORT=8100 THREADS=500 RAMPUP=60 LOOPS=1 ./run.sh    # 500 concurrents
+```
+
+**Résultat : objectif non atteint à ce jour.** Les SLO sont respectés à 20 utilisateurs (§ précédent), pas à 500.
+
+| Constat | Cause | Suite |
+|---|---|---|
+| Références de trousse en double sous concurrence (409, puis 403 vides) | Numérotation par comptage de toutes les trousses, sans verrou | **Corrigé** : compteur verrouillé par organisation et année (changelog 059) |
+| Erreurs serveur affichées comme 403 vides | Renvoi interne vers `/error` refusé par Spring Security | **Corrigé** : renvoi `ERROR` permis |
+| Connexions refusées en pointe (500 à la connexion) | Pool de 10 connexions | **Corrigé** : pool réglable, 30 par défaut (`DB_POOL_MAX`) |
+| Suivi centralisé à 24 s puis 40 s (P95), qui entraîne tout le reste | Suivi qui relit toutes les trousses et 4 requêtes par ligne | **En partie corrigé** : lecture par tranches, 500 lignes au plus. **Reste à faire** : pagination de l'API et de l'écran (50 lignes par page) et requêtes groupées par page |
+
+Après correction du suivi, l'essai est à refaire ici puis sur l'infrastructure cible (PostgreSQL, Azure Canada).
+C'est là que la mesure engage la soumission ; IQ peut en exiger une autre avant l'acceptation finale.
+
 ## Surcharge des seuils
 
 Tous les seuils sont surchargeables : `SLO_READ_P95`, `SLO_READ_P99`, `SLO_WRITE_P95`,

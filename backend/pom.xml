@@ -193,6 +193,35 @@
                             </rules>
                         </configuration>
                     </execution>
+                    <!-- Porte de l'annuaire d'entreprise et de SCIM (addenda 3, Q43, Q44, Q51) : classes nommées une à une, pour
+                         que la porte couvre ce code neuf sans s'étendre au reste du module d'authentification, sous le seuil. -->
+                    <execution>
+                        <id>check-annuaire</id>
+                        <goals><goal>check</goal></goals>
+                        <configuration>
+                            <includes>
+                                <include>qc/levis/contrat/auth/domain/FaitAnnuaire*</include>
+                                <include>qc/levis/contrat/auth/domain/CorrespondanceAnnuaire*</include>
+                                <include>qc/levis/contrat/auth/domain/ReglesAnnuaire*</include>
+                                <include>qc/levis/contrat/auth/domain/AppartenanceAnnuaire*</include>
+                                <include>qc/levis/contrat/auth/domain/GroupeScim*</include>
+                                <include>qc/levis/contrat/auth/domain/MembreGroupeScim*</include>
+                                <include>qc/levis/contrat/auth/domain/JetonScim*</include>
+                                <include>qc/levis/contrat/auth/application/AnnuaireService*</include>
+                                <include>qc/levis/contrat/auth/application/ScimService*</include>
+                                <include>qc/levis/contrat/auth/infrastructure/web/ScimController*</include>
+                                <include>qc/levis/contrat/auth/infrastructure/web/AnnuaireController*</include>
+                            </includes>
+                            <rules>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <limits>
+                                        <limit><counter>LINE</counter><value>COVEREDRATIO</value><minimum>0.96</minimum></limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

@@ -111,7 +111,7 @@ public class OidcController {
                     .orElseThrow(() -> new OidcException("Découverte OIDC impossible."));
             Identite id = client.echangerEtValider(d, cfg, code, etat.redirectUri(),
                     etat.codeVerifier(), etat.nonce());
-            String token = sessions.etablirSession(cfg, id.courriel(), id.nom());
+            String token = sessions.etablirSession(cfg, id.courriel(), id.nom(), id.faits());
             return ResponseEntity.status(302).location(URI.create("/"))
                     .header(HttpHeaders.SET_COOKIE, cookieSession(token, expirationMs).toString())
                     .header(HttpHeaders.SET_COOKIE, cookieFlux("", 0).toString())

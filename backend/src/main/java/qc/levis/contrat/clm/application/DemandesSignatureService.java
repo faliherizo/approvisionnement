@@ -190,7 +190,7 @@ public class DemandesSignatureService {
             documents.televerser(id, j.nom(), contenu, acteur);
         }
         if (joints.isEmpty() && d.modeleId() != null) {
-            documents.generer(id, acteur);
+            documents.generer(id, acteur, qc.levis.contrat.clm.domain.FormatDocument.Type.PDF);
         }
     }
 

@@ -1,5 +1,7 @@
 package qc.levis.contrat.clm.infrastructure.web;
 
+import qc.levis.contrat.clm.domain.FormatDocument;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -160,9 +162,10 @@ public class TrousseController {
         return documents.apercuTexte(id, documentId, acteurs.de(auth));
     }
 
+    /** {@code format} : PDF (défaut) ou DOCX, Word modifiable avant l'approbation finale (addenda 3, Q26). */
     @PostMapping("/{id}/generer")
-    public ClmDto.DocumentVue generer(@PathVariable Long id, Authentication auth) {
-        return documents.generer(id, acteurs.de(auth));
+    public ClmDto.DocumentVue generer(@PathVariable Long id, @RequestParam(defaultValue = "PDF") String format, Authentication auth) {
+        return documents.generer(id, acteurs.de(auth), FormatDocument.Type.valueOf(format.strip().toUpperCase(java.util.Locale.ROOT)));
     }
 
     // --- Preuve (UI-19) ---

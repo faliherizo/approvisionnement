@@ -17,6 +17,7 @@ function EcranConservation() {
   const types = useListe('CLM_TYPE_CONTRAT')
   const { donnees: regles, recharger: rechargerRegles } = useRessource('/clm/admin/conservation/regles')
   const [echues, setEchues] = useState(false)
+  const { donnees: detruites, recharger: rechargerDetruites } = useRessource('/clm/admin/conservation/detruites')
   const { donnees: suivi, recharger } = useRessource(`/clm/admin/conservation/trousses?echues=${echues}`)
   const [f, setF] = useState({ typeContrat: '', dureeAns: 7, sortFinal: 'DETRUIRE' })
   const [erreur, setErreur] = useState(null)
@@ -26,7 +27,7 @@ function EcranConservation() {
 
   async function faire(fn, ok) {
     setErreur(null)
-    try { await fn(); setInfo(ok); recharger(); rechargerRegles(); return true } catch (x) { setErreur(versErreur(x)); return false }
+    try { await fn(); setInfo(ok); recharger(); rechargerRegles(); rechargerDetruites(); return true } catch (x) { setErreur(versErreur(x)); return false }
   }
   const definir = (e) => {
     e.preventDefault()
@@ -48,6 +49,13 @@ function EcranConservation() {
     try {
       await telecharger(`/clm/admin/conservation/exportation?du=${periode.du}&au=${periode.au}`, `exportation-clm-${periode.du}-${periode.au}.zip`)
       setInfo(t('clm.co.exportee', { du: periode.du, au: periode.au }))
+    } catch (x) { setErreur(versErreur(x)) }
+  }
+  const certificat = async (d) => {
+    setErreur(null)
+    try {
+      await telecharger(`/clm/admin/conservation/trousses/${d.trousseId}/certificat-destruction`, `certificat-destruction-${d.reference}.pdf`)
+      setInfo(t('clm.co.certificatTelecharge', { ref: d.reference }))
     } catch (x) { setErreur(versErreur(x)) }
   }
   const libelleType = (c) => (c ? types.libelle(c) : t('clm.co.defaut'))
@@ -103,6 +111,29 @@ function EcranConservation() {
             </div>
             <div className="cmp-row"><button type="submit">{t('clm.co.exporter')}</button></div>
           </form>
+        </Bloc>
+        <Bloc titre={t('clm.co.destructions')} large>
+          {!detruites ? <p role="status">{t('clm.chargement')}</p> : detruites.length === 0 ? <p className="muted">{t('clm.co.aucuneDestruction')}</p> : (
+            <div className="table-scroll">
+              <table className="table clm-table">
+                <caption className="sr-only">{t('clm.co.destructions')}</caption>
+                <thead><tr><th scope="col">{t('clm.col.reference')}</th><th scope="col">{t('clm.co.detruiteLe')}</th>
+                  <th scope="col">{t('clm.co.resultat')}</th><th scope="col">{t('clm.col.actions')}</th></tr></thead>
+                <tbody>
+                  {detruites.map((d) => (
+                    <tr key={d.trousseId}>
+                      <td data-label={t('clm.col.reference')}>{d.reference}</td>
+                      <td data-label={t('clm.co.detruiteLe')}>{dateHeure(d.detruiteLe)}</td>
+                      <td data-label={t('clm.co.resultat')}>{t(`clm.co.resultat.${d.resultat}`)}</td>
+                      <td data-label={t('clm.col.actions')}>
+                        <button type="button" className="lien" aria-label={`${t('clm.co.certificat')} — ${d.reference}`} onClick={() => certificat(d)}>{t('clm.co.certificat')}</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </Bloc>
         <Bloc titre={t('clm.co.closes')} large>
           <label className="check-row"><input type="checkbox" checked={echues} onChange={(e) => setEchues(e.target.checked)} />{t('clm.co.echuesSeulement')}</label>

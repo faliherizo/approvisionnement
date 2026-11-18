@@ -11,6 +11,7 @@
 - `02-Analyse/validation_exigences_fonctionnelles.md`
 - `02-Analyse/impact_addenda_1.md`
 - `02-Analyse/impact_addenda_2.md` — réponses d'IQ du 14 novembre 2026, ajustements RST-20 à RST-25
+- `02-Analyse/impact_addenda_3.md` — réponses d'IQ du 17 novembre 2026 (dépôt reporté au 4 décembre), ajustements RST-26 à RST-30
 - `02-Analyse/conformite_exigences_fonctionnelles.md`
 - `02-Analyse/ecarts_solution_vs_exigences.md` — écarts fonctionnels **notre solution vs exigences IQ** (F/NF, 15 stories)
 
@@ -19,6 +20,9 @@
 
 ## 04-Architecture
 - `04-Architecture/api_integration_entrante.md`
+- `04-Architecture/solutions_proposees_reponses_IQ.md` — solutions proposées en réponse aux addenda 1 à 3, prêtes pour la soumission
+- `04-Architecture/guide_annuaire_scim.md` — exploitation : correspondances d'annuaire, Entra ID, provisionnement SCIM 2.0
+- `../adr/ADR-014-annuaire-entreprise-et-scim.md`, `ADR-015-mesure-par-enveloppe.md`, `ADR-016-integration-salesforce-addenda.md` (ADR-012 révisé : certificat de destruction)
 - `04-Architecture/architecture_solution_logicielle.md`
 - `04-Architecture/guide_implementation_java_spring_react.md`
 
@@ -61,6 +65,8 @@
 - `09-Questions/questions_a_clarifier_IQ.md`
 - `09-Questions/reponses/addenda-1.md` (et le PDF de l'addenda 1)
 - `09-Questions/reponses/addenda-2.md` (et le PDF de l'addenda 2)
+- `09-Questions/reponses/ADDENDA_3_2026-6370-0005_FINAL_REV1.md`
+- `09-Questions/questions_sans_reponse_IQ.md` — questions encore ouvertes après les trois addenda, avec l'hypothèse retenue
 
 ## 12-Bacs-a-sable
 - `12-Bacs-a-sable/guide_bacs_a_sable.md`

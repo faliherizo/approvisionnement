@@ -15,6 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByTenantIdAndActifTrueOrderByNomAsc(Long tenantId);
 
+    List<User> findByTenantIdOrderByEmailAsc(Long tenantId);
+
     /**
      * Recherche paginée des utilisateurs d'un tenant (le superadmin, dont tenantId
      * est null, est automatiquement exclu). Recherche avancée sur courriel et nom.

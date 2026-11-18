@@ -32,6 +32,16 @@ signataires étaient gardés indéfiniment. Le calendrier de conservation d'IQ n
   et valeurs saisies sont effacés ; les empreintes et le **journal scellé** demeurent : le bordereau de destruction
   (règle, échéance, empreintes) y est consigné. La chaîne de journal reste vérifiable.
 
+## Révision du 2026-11-17 — certificat de destruction (addenda 3, Q46 à Q48)
+
+- La destruction consigne aussi, avec la trousse, un **bordereau structuré** (changelog `057`) : éléments détruits
+  (documents, versions, empreintes SHA-256), date, autorité (acteur, rôle), méthode, résultat, décompte des données
+  anonymisées. Il ne se consigne qu'une fois.
+- Le **certificat de destruction** est ce bordereau rendu en PDF et scellé par le cachet électronique (PAdES, ADR-013),
+  téléchargeable depuis le bloc « Destructions effectuées » (`CertificatDestructionService`).
+- Les trois sorts finaux exigés (détruire, transférer vers un dépôt désigné, conserver) sont couverts : le transfert
+  s'appuie sur l'exportation en lot (addenda 2, Q13) puis la confirmation du versement.
+
 ## Conséquences
 
 - Les durées et sorts finaux restent à saisir selon le calendrier d'IQ (approuvé par BAnQ si applicable).

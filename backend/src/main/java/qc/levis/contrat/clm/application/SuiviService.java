@@ -60,19 +60,42 @@ public class SuiviService {
         this.ctx = ctx;
     }
 
+    /** Lignes affichées au plus : au-delà, l'écran invite à affiner les filtres (65 000 trousses par an chez IQ). */
+    public static final int LIMITE_SUIVI = 500;
+    /** Lignes exportées au plus en CSV. */
+    public static final int LIMITE_EXPORT = 10_000;
+    private static final int TRANCHE = 200;
+
     public List<ClmDto.SuiviLigne> suivi(Habilitations.Acteur acteur, Filtre f) {
+        return suivi(acteur, f, LIMITE_SUIVI);
+    }
+
+    /**
+     * Trousses les plus récentes d'abord, lues par tranches : le calcul d'une ligne (étapes, invitations, envois) ne porte que
+     * sur les trousses retenues, et la lecture s'arrête à {@code limite} lignes au lieu de parcourir toute l'organisation.
+     */
+    List<ClmDto.SuiviLigne> suivi(Habilitations.Acteur acteur, Filtre f, int limite) {
         Instant maintenant = ctx.maintenant();
         List<ClmDto.SuiviLigne> res = new ArrayList<>();
-        for (Trousse t : visibles(acteur)) {
-            if (!retenue(t, f)) {
-                continue;
+        for (int page = 0; ; page++) {
+            org.springframework.data.domain.Slice<Trousse> tranche = trousses.findByTenantIdOrderByMajLeDescIdDesc(ctx.tenant(),
+                    org.springframework.data.domain.PageRequest.of(page, TRANCHE));
+            for (Trousse t : tranche) {
+                if (!retenue(t, f) || !lecture.visible(t, acteur)) {
+                    continue;
+                }
+                ClmDto.SuiviLigne l = ligne(t, maintenant);
+                if (!f.exceptionsSeulement() || !l.exceptions().isEmpty()) {
+                    res.add(l);
+                }
+                if (res.size() >= limite) {
+                    return res;
+                }
             }
-            ClmDto.SuiviLigne l = ligne(t, maintenant);
-            if (!f.exceptionsSeulement() || !l.exceptions().isEmpty()) {
-                res.add(l);
+            if (!tranche.hasNext()) {
+                return res;
             }
         }
-        return res;
     }
 
     private boolean retenue(Trousse t, Filtre f) {
@@ -117,7 +140,7 @@ public class SuiviService {
     /** Export CSV (UI-18) ; les cellules commençant par un caractère de formule sont neutralisées. */
     public String exporterCsv(Habilitations.Acteur acteur, Filtre f) {
         StringBuilder sb = new StringBuilder("reference;titre;statut;source;unite;responsable;etapes_actives;echeance;exceptions\n");
-        for (ClmDto.SuiviLigne l : suivi(acteur, f)) {
+        for (ClmDto.SuiviLigne l : suivi(acteur, f, LIMITE_EXPORT)) {
             sb.append(String.join(";", cellule(l.reference()), cellule(l.titre()), l.statut(), l.source(), cellule(l.unite()),
                     cellule(l.proprietaire()), cellule(String.join(" | ", l.etapesActives())),
                     l.echeance() == null ? "" : l.echeance().toString(), String.join(" | ", l.exceptions()))).append('\n');

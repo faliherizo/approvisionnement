@@ -33,6 +33,14 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
+    # Provisionnement SCIM 2.0 (Saviynt, Entra ID) : jeton porteur vérifié par le backend
+    location /scim/ {
+        proxy_pass ${BACKEND_URL};
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
     # SSO OIDC (Entra ID) et documentation OpenAPI / Swagger, servis par le backend
     location /oauth2/       { proxy_pass ${BACKEND_URL}; }
     location /login/oauth2/ { proxy_pass ${BACKEND_URL}; }

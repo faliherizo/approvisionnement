@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import qc.levis.contrat.clm.application.CertificatDestructionService;
 import qc.levis.contrat.clm.application.ConservationService;
 import qc.levis.contrat.clm.application.ExportationReferentielService;
 import qc.levis.contrat.clm.application.dto.ClmDto;
@@ -20,12 +21,26 @@ public class ConservationController {
 
     private final ConservationService conservation;
     private final ExportationReferentielService exportation;
+    private final CertificatDestructionService certificats;
     private final WebClm.Acteurs acteurs;
 
-    public ConservationController(ConservationService conservation, ExportationReferentielService exportation, WebClm.Acteurs acteurs) {
+    public ConservationController(ConservationService conservation, ExportationReferentielService exportation,
+                                  CertificatDestructionService certificats, WebClm.Acteurs acteurs) {
         this.conservation = conservation;
         this.exportation = exportation;
+        this.certificats = certificats;
         this.acteurs = acteurs;
+    }
+
+    @GetMapping("/detruites")
+    public List<ClmDto.DestructionVue> detruites() {
+        return conservation.detruites();
+    }
+
+    /** Certificat de destruction scellé (addenda 3, Q48). */
+    @GetMapping("/trousses/{id}/certificat-destruction")
+    public ResponseEntity<byte[]> certificatDestruction(@PathVariable Long id) {
+        return TrousseController.fichier(certificats.certificat(id), "application/pdf", "certificat-destruction-" + id + ".pdf");
     }
 
     /** Lot de trousses closes pour le référentiel désigné par IQ (addenda 2, Q13). */

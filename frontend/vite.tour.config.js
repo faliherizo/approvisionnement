@@ -10,6 +10,7 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       '/api': 'http://localhost:8100',
+      '/scim': 'http://localhost:8100',
       '/oauth2': 'http://localhost:8100',
       '/login/oauth2': 'http://localhost:8100',
       '/swagger-ui': 'http://localhost:8100',

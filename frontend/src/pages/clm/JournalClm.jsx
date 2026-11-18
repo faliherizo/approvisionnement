@@ -8,6 +8,34 @@ import { BarreActions, Bloc, Blocs, EcranClm } from './gabarit.jsx'
 const VIDE = { du: '', au: '', acteur: '', action: '', trousse: '', texte: '' }
 const cle = (l) => `${l.trousseId}-${l.sequence}`
 
+/** Relevé d'utilisation par enveloppe envoyée (addenda 3, Q39), pour valider une facture. */
+function Utilisation() {
+  const { t } = useI18n()
+  const aujourdhui = new Date().toISOString().slice(0, 10)
+  const [periode, setPeriode] = useState({ du: `${aujourdhui.slice(0, 7)}-01`, au: aujourdhui })
+  const [demande, setDemande] = useState(periode)
+  const { donnees: r, erreur } = useRessource(`/clm/admin/utilisation?du=${demande.du}&au=${demande.au}`)
+  const lignes = r ? [['envoyees', r.envoyees], ['renvois', r.renvois], ['terminees', r.terminees], ['rejetees', r.rejetees],
+    ['annuleesApresEnvoi', r.annuleesApresEnvoi], ['annuleesAvantEnvoi', r.annuleesAvantEnvoi], ['echeancesDepassees', r.echeancesDepassees]] : []
+  return (
+    <>
+      <p className="muted">{t('clm.ut.utilisationAide')}</p>
+      <form className="form-grid form-grid--4" aria-label={t('clm.ut.utilisation')} onSubmit={(e) => { e.preventDefault(); setDemande(periode) }}>
+        <label>{t('clm.su.du')}<input type="date" value={periode.du} onChange={(e) => setPeriode({ ...periode, du: e.target.value })} required /></label>
+        <label>{t('clm.su.au')}<input type="date" value={periode.au} onChange={(e) => setPeriode({ ...periode, au: e.target.value })} required /></label>
+        <div className="cmp-row"><button type="submit">{t('clm.ut.calculer')}</button></div>
+      </form>
+      <Message erreur={erreur} />
+      {r && (
+        <dl className="clm-dl">
+          {lignes.map(([k, v]) => <div key={k}><dt>{t(`clm.ut.${k}`)}</dt><dd>{v}</dd></div>)}
+          {Object.entries(r.parMois).map(([mois, n]) => <div key={mois}><dt>{t('clm.ut.mois', { mois })}</dt><dd>{n}</dd></div>)}
+        </dl>
+      )}
+    </>
+  )
+}
+
 /** UI-23 — Journal d'audit : filtres, journal chronologique horodaté, détail et origine, export selon droits, système vs métier. */
 function Contenu() {
   const { t } = useI18n()
@@ -100,6 +128,9 @@ function Contenu() {
         </Bloc>
         <Bloc zone="04" titre={t('clm.jo.blocExport')} large>
           <p>{t('clm.jo.exportAide')}</p>
+        </Bloc>
+        <Bloc titre={t('clm.ut.utilisation')} large>
+          <Utilisation />
         </Bloc>
       </Blocs>
       <BarreActions>

@@ -1,6 +1,9 @@
 package qc.levis.contrat.clm.application;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
@@ -92,6 +95,14 @@ public class ConservationService {
                 .toList();
     }
 
+    /** Trousses détruites, la plus récente d'abord ; chacune a son certificat de destruction. */
+    public List<ClmDto.DestructionVue> detruites() {
+        return trousses.findByTenantIdAndDetruiteLeIsNotNullOrderByDetruiteLeDesc(ctx.tenant()).stream()
+                .map(t -> new ClmDto.DestructionVue(t.getId(), t.getReference(), t.getDetruiteLe(),
+                        String.valueOf(ctx.lireObjet(t.getBordereauDestruction()).getOrDefault("resultat", "—"))))
+                .toList();
+    }
+
     @Transactional
     public ClmDto.ConservationVue geler(Long trousseId, String motif, String acteur) {
         Trousse t = exiger(trousseId);
@@ -137,28 +148,60 @@ public class ConservationService {
         }
         List<DocumentTrousse> docs = documents.findByTenantIdAndTrousseIdOrderByCleDocumentAscVersionDesc(t.getTenantId(), t.getId());
         String empreintes = String.join(", ", docs.stream().map(d -> d.getNom() + " v" + d.getVersion() + " " + d.getEmpreinte().substring(0, 16)).toList());
+        List<Map<String, Object>> elements = new ArrayList<>();
+        docs.forEach(d -> elements.add(Map.of("type", "DOCUMENT", "nom", d.getNom(), "version", d.getVersion(), "sha256", d.getEmpreinte())));
+        String titre = t.getTitre();
         docs.forEach(d -> {
             d.effacerContenu();
             documents.save(d);
         });
-        participants.findByTenantIdAndTrousseIdOrderByIdAsc(t.getTenantId(), t.getId()).forEach(p -> {
+        var parts = participants.findByTenantIdAndTrousseIdOrderByIdAsc(t.getTenantId(), t.getId());
+        parts.forEach(p -> {
             p.anonymiser();
             participants.save(p);
         });
-        invitations.findByTenantIdAndTrousseIdOrderByIdAsc(t.getTenantId(), t.getId()).forEach(i -> {
+        var invs = invitations.findByTenantIdAndTrousseIdOrderByIdAsc(t.getTenantId(), t.getId());
+        invs.forEach(i -> {
             i.anonymiser();
             invitations.save(i);
         });
-        decisions.findByTenantIdAndTrousseIdOrderByDecideLeAsc(t.getTenantId(), t.getId()).forEach(d -> {
+        var decs = decisions.findByTenantIdAndTrousseIdOrderByDecideLeAsc(t.getTenantId(), t.getId());
+        decs.forEach(d -> {
             d.effacerCommentaire();
             decisions.save(d);
         });
-        analyses.deleteAll(analyses.findByTenantIdAndTrousseIdOrderByCreeLeDesc(t.getTenantId(), t.getId()));
+        var ias = analyses.findByTenantIdAndTrousseIdOrderByCreeLeDesc(t.getTenantId(), t.getId());
+        analyses.deleteAll(ias);
         LocalDate echeance = r.echeance(t.getClotureLe(), ctx.fuseau());
         t.detruire(ctx.maintenant());
+        t.consignerBordereau(ctx.ecrire(bordereau(t, titre, r, echeance, acteur, elements,
+                Map.of("participants", parts.size(), "invitations", invs.size(), "decisions", decs.size(), "analyses", ias.size()),
+                docs.stream().allMatch(d -> d.getContenu().length == 0))));
         trousses.save(t);
         journal.consigner(t, "TROUSSE_DETRUITE", acteur, "règle " + libelle(r) + " · échéance " + echeance + " · " + docs.size()
                 + " version(s) : " + empreintes);
+    }
+
+    /**
+     * Bordereau de destruction (addenda 3, Q48) : éléments détruits, date, autorité, méthode et résultat. Les empreintes
+     * restent : elles prouvent quels contenus ont existé sans en conserver aucun.
+     */
+    private Map<String, Object> bordereau(Trousse t, String titre, RegleConservation r, LocalDate echeance, String acteur,
+                                          List<Map<String, Object>> elements, Map<String, Integer> anonymises, boolean contenusEffaces) {
+        Map<String, Object> b = new LinkedHashMap<>();
+        b.put("reference", t.getReference());
+        b.put("titre", titre);
+        b.put("typeContrat", t.getTypeContrat());
+        b.put("regle", libelle(r));
+        b.put("echeance", String.valueOf(echeance));
+        b.put("date", t.getDetruiteLe().toString());
+        b.put("autorite", Map.of("acteur", acteur, "role", "Administration de l'organisation"));
+        b.put("methode", "Effacement en base des contenus des documents, des coordonnées des participants, des données de "
+                + "signature, des commentaires et des analyses ; empreintes SHA-256 conservées au journal scellé.");
+        b.put("elements", elements);
+        b.put("anonymises", anonymises);
+        b.put("resultat", contenusEffaces ? "DETRUIT" : "ECHEC");
+        return b;
     }
 
     private RegleConservation exigerEchue(Trousse t) {

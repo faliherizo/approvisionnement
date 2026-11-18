@@ -89,6 +89,30 @@ public class GroupesClmService {
         return vue(g, unites());
     }
 
+    /**
+     * Domaines d'affaires tirés de l'annuaire (addenda 3, Q44) : pour chaque groupe piloté par une correspondance, le compte
+     * y est ajouté ou retiré selon ses faits d'annuaire ; un groupe piloté absent est créé. Les groupes manuels ne bougent pas.
+     */
+    @Transactional
+    public void synchroniserAnnuaire(Long tenantId, String courriel, Set<String> groupesDuCompte, Set<String> groupesGeres) {
+        String c = courriel.strip().toLowerCase(Locale.ROOT);
+        for (String code : groupesGeres) {
+            GroupeClm g = groupes.findByTenantIdAndCode(tenantId, code).orElseGet(() -> {
+                GroupeClm cree = groupes.save(GroupeClm.creer(tenantId, code, code, "annuaire", ctx.maintenant()));
+                journal.configuration("annuaire", "GROUPE", "créé depuis l'annuaire : " + code);
+                return cree;
+            });
+            boolean membre = membres.existsByTenantIdAndGroupeIdAndCourrielIgnoreCase(tenantId, g.getId(), c);
+            if (groupesDuCompte.contains(code) && !membre) {
+                membres.save(new MembreGroupeClm(g, c));
+                journal.configuration("annuaire", "GROUPE", code + " : membre ajouté " + c);
+            } else if (!groupesDuCompte.contains(code) && membre) {
+                membres.deleteByTenantIdAndGroupeIdAndCourrielIgnoreCase(tenantId, g.getId(), c);
+                journal.configuration("annuaire", "GROUPE", code + " : membre retiré " + c);
+            }
+        }
+    }
+
     /** Codes des groupes d'un compte : lus à chaque requête pour composer son périmètre. */
     public Set<String> codesDe(Long tenantId, String courriel) {
         return membres.findByTenantIdAndCourrielIgnoreCase(tenantId, courriel).stream()

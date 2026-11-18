@@ -39,12 +39,16 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsSource()))
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                // Le renvoi interne vers /error ne doit pas exiger d'authentification : sinon une erreur serveur
+                // levée après le contrôleur (ex. à la validation de la transaction) apparaît comme un 403 vide.
+                .dispatcherTypeMatchers(jakarta.servlet.DispatcherType.ERROR).permitAll()
                 .requestMatchers("/api/auth/login", "/api/auth/logout", "/api/auth/config").permitAll()
                 .requestMatchers("/api/auth/oidc/**").permitAll() // flux OIDC (authorization code + PKCE)
                 .requestMatchers("/api/auth/saml/**").permitAll() // flux SAML 2.0 SP-initiated
                 .requestMatchers("/api/signature/**").permitAll() // signature externe par jeton
                 .requestMatchers("/api/clm/portail/**").permitAll() // portail CLM du signataire (jeton + vérification d'identité)
                 .requestMatchers("/api/clm/integration/**").permitAll() // API d'intégration : jeton client credentials vérifié par le contrôleur
+                .requestMatchers("/scim/v2/**").permitAll() // SCIM 2.0 (addenda 3, Q51) : jeton porteur de l'organisation vérifié par le contrôleur
                 .requestMatchers(HttpMethod.GET, "/api/tenants", "/api/tenants/*/public").permitAll() // sélecteur & titre de connexion
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/health").permitAll()

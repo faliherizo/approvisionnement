@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 057-1-clm-bordereau-destruction
+      author: levis
+      comment: "CLM (addenda 3, Q48) : bordereau de destruction conservé avec la trousse détruite — éléments, date, autorité, méthode, résultat."
+      changes:
+        - addColumn:
+            tableName: clm_trousse
+            columns:
+              - column: { name: bordereau_destruction, type: VARCHAR(20000) }

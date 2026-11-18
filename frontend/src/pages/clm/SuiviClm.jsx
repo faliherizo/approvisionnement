@@ -6,6 +6,9 @@ import { useI18n } from '../../i18n/I18nContext'
 import { ChoixListe, GardeModule, Message, Statut, dateHeure, telecharger, useErreur, useListe, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 
+/** Lignes renvoyées au plus par le serveur (SuiviService.LIMITE_SUIVI) : au-delà, affiner les filtres. */
+const LIMITE_SUIVI = 500
+
 const STATUTS = ['BROUILLON', 'EN_TRAITEMENT', 'TERMINEE', 'REJETEE', 'ANNULEE']
 const EXCEPTIONS = ['BLOCAGE', 'ERREUR_SALESFORCE', 'SIGNATURE_EXPIREE']
 const VIDE = { q: '', statut: '', unite: '', responsable: '', source: '', du: '', au: '', exceptions: false }
@@ -58,6 +61,7 @@ function Contenu() {
       <Message erreur={erreur || errChargement} info={chargement ? t('clm.chargement') : info || t('clm.tr.resultats', { n: lignes.length })} onReessayer={recharger} />
       <Blocs>
         <Bloc zone="01" titre={t('clm.su.blocTable')} large>
+          {lignes.length >= LIMITE_SUIVI && <p className="clm-info-statique" role="note">{t('clm.su.limite', { n: LIMITE_SUIVI })}</p>}
           {donnees && lignes.length === 0 ? <p className="muted">{t('clm.aucun')}</p> : (
             <div className="table-scroll">
               <table className="table clm-table" data-zone="03">

@@ -152,9 +152,13 @@ public class DocumentClmService {
         return rendu.texte(d.getType(), d.getContenu());
     }
 
-    /** Génère le contrat depuis le modèle publié et les valeurs préremplies ; remplace la génération précédente. */
+    /**
+     * Génère le contrat depuis le modèle publié et les valeurs préremplies ; remplace la génération précédente. En Word
+     * (addenda 3, Q26), le document reste modifiable jusqu'à l'approbation finale : il se corrige puis se redépose comme
+     * nouvelle version, ce qui ouvre un nouveau cycle si le parcours est engagé.
+     */
     @Transactional
-    public ClmDto.DocumentVue generer(Long trousseId, Habilitations.Acteur acteur) {
+    public ClmDto.DocumentVue generer(Long trousseId, Habilitations.Acteur acteur, FormatDocument.Type format) {
         Trousse t = lecture.exigerGestion(trousseId, acteur);
         t.exigerOuverte();
         if (t.getModeleId() == null) {
@@ -165,14 +169,15 @@ public class DocumentClmService {
         Map<String, Object> valeurs = new HashMap<>();
         trousses.valeurs(t).forEach((k, v) -> valeurs.put(k, v.valeur()));
         String texte = assembler(m, valeurs, ctx).texte();
-        byte[] pdf = rendu.genererPdf(t.getTitre(), texte);
+        boolean word = format == FormatDocument.Type.DOCX;
+        byte[] contenu = word ? rendu.genererDocx(t.getTitre(), texte) : rendu.genererPdf(t.getTitre(), texte);
         List<DocumentTrousse> precedentes = documents.findByTenantIdAndTrousseIdAndCleDocumentOrderByVersionDesc(t.getTenantId(), t.getId(), CLE_GENERE);
         int version = precedentes.isEmpty() ? 1 : precedentes.get(0).getVersion() + 1;
         precedentes.stream().filter(DocumentTrousse::estCourant).forEach(p -> {
             p.setStatut(DocumentTrousse.Statut.REMPLACE);
             documents.save(p);
         });
-        ClmDto.DocumentVue vue = enregistrer(t, CLE_GENERE, version, t.getReference() + ".pdf", pdf, acteur.id(),
+        ClmDto.DocumentVue vue = enregistrer(t, CLE_GENERE, version, t.getReference() + (word ? ".docx" : ".pdf"), contenu, acteur.id(),
                 "Généré depuis « " + m.getNom() + " » v" + m.getNumero());
         parcours.nouveauCycle(t, acteur.id(), "Contrat régénéré en cours de parcours (v" + version + ")");
         return vue;

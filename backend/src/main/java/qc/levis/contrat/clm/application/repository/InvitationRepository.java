@@ -11,5 +11,8 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
 
     List<Invitation> findByTenantIdAndTrousseIdOrderByIdAsc(Long tenantId, Long trousseId);
 
+    /** Invitations d'une page du suivi, en une requête. */
+    List<Invitation> findByTenantIdAndTrousseIdIn(Long tenantId, java.util.Collection<Long> trousseIds);
+
     List<Invitation> findByTenantIdAndEtapeId(Long tenantId, Long etapeId);
 }

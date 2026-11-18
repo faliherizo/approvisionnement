@@ -77,6 +77,10 @@ public class Trousse {
     @Column(name = "detruite_le")
     private Instant detruiteLe;
 
+    /** Bordereau de destruction (JSON) : éléments, date, autorité, méthode, résultat (addenda 3, Q48). */
+    @Column(name = "bordereau_destruction", length = 20_000)
+    private String bordereauDestruction;
+
     @Column(name = "sf_recupere_le")
     private Instant sfRecupereLe;
 
@@ -172,6 +176,14 @@ public class Trousse {
         this.detruiteLe = le;
     }
 
+    /** Le bordereau accompagne la destruction : il ne se consigne qu'une fois, sur une trousse détruite. */
+    public void consignerBordereau(String bordereau) {
+        if (detruiteLe == null || bordereauDestruction != null) {
+            throw new IllegalStateException("Bordereau de destruction : trousse non détruite ou bordereau déjà consigné.");
+        }
+        this.bordereauDestruction = bordereau;
+    }
+
     private void exigerDestructible() {
         exigerNonDetruite();
         // Une trousse close (terminée ou annulée) porte toujours sa date de clôture : changerStatut la fixe.
@@ -194,6 +206,7 @@ public class Trousse {
     public String getGelMotif() { return gelMotif; }
     public Instant getVerseeLe() { return verseeLe; }
     public Instant getDetruiteLe() { return detruiteLe; }
+    public String getBordereauDestruction() { return bordereauDestruction; }
 
     /** Brouillon ou parcours en cours : on peut encore ajouter un signataire ou modifier un document (nouveau cycle). */
     public void exigerOuverte() {

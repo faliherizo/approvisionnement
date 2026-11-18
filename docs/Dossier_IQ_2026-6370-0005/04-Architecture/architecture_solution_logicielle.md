@@ -127,7 +127,7 @@ Le découpage est un monolithe modulaire Spring Boot au départ, avec extraction
 - SSO pour personnel IQ; accès signataires externes via liens à durée limitée et authentification renforcée selon risque.
 - WAF, limitation de débit, validation des entrées, protection API, gestion secrets, MFA administrateurs.
 - Supervision disponibilité, latence, files d'attente, échecs d'intégration, erreurs de génération, anomalies de workflow.
-- Plan de continuité et reprise avec RTO/RPO à négocier et tester; les valeurs ne sont pas déterminées dans les extraits analysés.
+- Plan de continuité et reprise : exigence RTO 8 h et RPO 4 h en heures écoulées (addenda 3, Q35) ; reprise inter-région Canada Central → Canada Est conçue pour RPO ≤ 15 min et RTO ≤ 4 h (`infra/dr`).
 
 ## 5. Intégration Salesforce Grantmaking
 ### Flux entrant
@@ -174,7 +174,7 @@ Le DAO décrit les capacités de signature et de preuve, sans préciser si la so
 | Disponibilité | 99,5 % au Cahier; vérifier cohérence avec DAO et SLA contractuels |
 | Volume | 55–65k documents/an; environ 1 300 employés potentiels |
 | Taille téléversement | 25 Mo minimum |
-| RTO / RPO | À confirmer contractuellement |
+| RTO / RPO | Exigé : RTO 8 h, RPO 4 h en heures écoulées (addenda 3, Q35) ; proposé : RTO ≤ 4 h, RPO ≤ 15 min |
 | Temps de génération | À définir par type de document et volumétrie |
 | Latence API | À définir avec IQ / Salesforce |
 | Rétention / archivage | À confirmer avec calendrier de conservation |

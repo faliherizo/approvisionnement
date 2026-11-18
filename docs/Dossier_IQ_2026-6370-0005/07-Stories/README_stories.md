@@ -25,3 +25,7 @@ Stories issues de l'addenda 2 (2026-11-16, détail : [impact_addenda_2.md](../02
 ✅ RST-20 « retournée » transmise lors d'un retour d'étape · ✅ RST-21 correspondance des statuts Salesforce ·
 ✅ RST-22 lecture Salesforce limitée aux champs nécessaires · ✅🔌 RST-23 authentification JWT Bearer ·
 ✅ RST-24 exportation en lot vers un référentiel · ✅ RST-25 langue de communication du signataire.
+
+Stories issues de l'addenda 3 (2026-11-17, détail : [impact_addenda_3.md](../02-Analyse/impact_addenda_3.md) § 3) :
+✅🔌 RST-26 provisionnement SCIM 2.0 · ✅🔌 RST-27 correspondances d'annuaire vers rôles et domaines d'affaires ·
+✅ RST-28 génération Word modifiable · ✅ RST-29 certificat de destruction · ✅ RST-30 relevé d'utilisation par enveloppe.

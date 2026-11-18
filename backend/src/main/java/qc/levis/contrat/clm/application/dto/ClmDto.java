@@ -329,6 +329,16 @@ public final class ClmDto {
     public record RegleConservationRequest(String typeContrat, Integer dureeAns, String sortFinal) {
     }
 
+    /** Utilisation par enveloppe envoyée sur une période (addenda 3, Q39) ; {@code parMois} : « AAAA-MM » → enveloppes. */
+    public record UtilisationVue(java.time.LocalDate du, java.time.LocalDate au, int envoyees, int terminees, int rejetees,
+                                 int annuleesApresEnvoi, int annuleesAvantEnvoi, int echeancesDepassees, int renvois,
+                                 Map<String, Integer> parMois) {
+    }
+
+    /** Trousse détruite et résultat de son bordereau (addenda 3, Q48). */
+    public record DestructionVue(Long trousseId, String reference, Instant detruiteLe, String resultat) {
+    }
+
     public record RegleConservationVue(Long id, String typeContrat, int dureeAns, String sortFinal, String modifiePar, Instant modifieLe) {
     }
 

@@ -51,6 +51,8 @@ class ArchitectureModulesTest {
             entry("ReferenceController", "listes de référence de tous les modules : le service refuse celle d'un module non souscrit"),
             entry("AdminReferenceController", "listes de référence de tous les modules : le service refuse celle d'un module non souscrit"),
             entry("InteropPublicController", "jeton d'API : le tenant n'est connu qu'après le jeton ; le contrôleur vérifie alors le module"),
+            entry("AnnuaireController", "correspondances d'annuaire et jeton SCIM : comptes et rôles du tenant"),
+            entry("ScimController", "provisionnement SCIM 2.0 : le tenant n'est connu qu'après le jeton porteur, propre au tenant"),
             entry("PortailController", "portail public du signataire : le tenant n'est connu qu'à la lecture du jeton d'invitation"),
             entry("IntegrationEntranteController", "jeton d'un client d'intégration (Workday, Salesforce) : le tenant n'est connu qu'après le jeton ; le contrôleur vérifie alors le module"));
 

@@ -51,7 +51,17 @@ public class SamlClient {
     private final SecureRandom random = new SecureRandom();
 
     /** Identité extraite d'une assertion SAML validée. */
-    public record Identite(String courriel, String nom) {}
+    /** {@code faits} : groupes et attributs de l'assertion, pour les correspondances d'annuaire (addenda 3, Q43). */
+    public record Identite(String courriel, String nom, java.util.List<qc.levis.contrat.auth.domain.FaitAnnuaire> faits) {
+        public Identite(String courriel, String nom) {
+            this(courriel, nom, java.util.List.of());
+        }
+    }
+
+    /** Noms d'attribut qui portent des groupes : Microsoft Entra ID, ADFS, attributs usuels. */
+    private static final java.util.Set<String> ATTRIBUTS_GROUPES = java.util.Set.of(
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/groups",
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "groups", "memberOf", "Group", "Role");
 
     /**
      * Construit l'URL de redirection vers le SSO de l'IdP (binding HTTP-Redirect) : l'{@code AuthnRequest}
@@ -111,7 +121,7 @@ public class SamlClient {
                 throw new SamlException("L'assertion ne contient pas le courriel (NameID ou attribut « "
                         + cfg.claimCourriel() + " »).");
             }
-            return new Identite(courriel, extraireNom(assertion));
+            return new Identite(courriel, extraireNom(assertion), faits(assertion));
         } catch (SamlException e) {
             throw e;
         } catch (Exception e) {
@@ -233,6 +243,26 @@ public class SamlClient {
             if (v != null && !v.isBlank()) return v.trim();
         }
         return null;
+    }
+
+    /** Chaque valeur de chaque attribut de l'assertion, comme fait de groupe ou d'attribut. */
+    private java.util.List<qc.levis.contrat.auth.domain.FaitAnnuaire> faits(Element assertion) {
+        java.util.List<qc.levis.contrat.auth.domain.FaitAnnuaire> faits = new java.util.ArrayList<>();
+        NodeList attributs = assertion.getElementsByTagNameNS(NS_ASSERTION, "Attribute");
+        for (int i = 0; i < attributs.getLength(); i++) {
+            Element a = (Element) attributs.item(i);
+            String nom = a.getAttribute("Name");
+            boolean groupe = ATTRIBUTS_GROUPES.contains(nom) || ATTRIBUTS_GROUPES.contains(a.getAttribute("FriendlyName"));
+            NodeList valeurs = a.getElementsByTagNameNS(NS_ASSERTION, "AttributeValue");
+            for (int j = 0; j < valeurs.getLength(); j++) {
+                String v = valeurs.item(j).getTextContent();
+                if (v != null && !v.isBlank()) {
+                    faits.add(groupe ? qc.levis.contrat.auth.domain.FaitAnnuaire.groupe(v)
+                            : qc.levis.contrat.auth.domain.FaitAnnuaire.attribut(nom, v));
+                }
+            }
+        }
+        return faits;
     }
 
     /** Première valeur d'un attribut SAML dont le {@code Name} ou {@code FriendlyName} correspond. */

@@ -85,6 +85,7 @@ export default function OngletDocuments({ trousse, peutGerer, peutGenerer, iaAct
                 <input type="file" accept={ACCEPT} disabled={enCours} onChange={(e) => { envoyer(e.target.files[0], `/clm/trousses/${id}/documents`); e.target.value = '' }} />
               </label>
               {peutGenerer && <button type="button" className="secondary" onClick={() => executer(() => api.post(`/clm/trousses/${id}/generer`), t('clm.doc.genere'))}>{t('clm.doc.generer')}</button>}
+              {peutGenerer && <button type="button" className="secondary" onClick={() => executer(() => api.post(`/clm/trousses/${id}/generer?format=DOCX`), t('clm.doc.genereWord'))}>{t('clm.doc.genererWord')}</button>}
             </div>
           ) : <p className="muted">{t('clm.doc.depotFerme')}</p>}
         </Bloc>

@@ -30,23 +30,39 @@ public class OidcSessionService {
     private final PasswordEncoder encoder;
     private final JwtService jwt;
     private final AuditService audit;
+    private final AnnuaireService annuaire;
 
     public OidcSessionService(UserRepository users, PasswordEncoder encoder, JwtService jwt,
-                              AuditService audit) {
+                              AuditService audit,
+                              AnnuaireService annuaire) {
         this.users = users;
         this.encoder = encoder;
         this.jwt = jwt;
         this.audit = audit;
+        this.annuaire = annuaire;
     }
 
     /** Résout (ou crée) l'utilisateur du tenant et renvoie le jeton de session. */
     @Transactional
     public String etablirSession(ConfigOidc cfg, String courriel, String nom) {
+        return etablirSession(cfg, courriel, nom, java.util.List.of());
+    }
+
+    /**
+     * Avec les faits d'annuaire de l'assertion : rôles et domaines d'affaires suivent les correspondances de l'organisation
+     * (addenda 3, Q43-Q44). Un compte désactivé (départ, déprovisionnement SCIM) ne se connecte plus.
+     */
+    @Transactional
+    public String etablirSession(ConfigOidc cfg, String courriel, String nom, java.util.List<qc.levis.contrat.auth.domain.FaitAnnuaire> faits) {
         String email = courriel.trim().toLowerCase();
         User user = users.findByEmail(email).map(u -> verifierTenant(u, cfg)).orElse(null);
         if (user == null) {
             user = provisionner(cfg, email, nom);
         }
+        if (!user.isActif()) {
+            throw new OidcException("Compte désactivé.");
+        }
+        annuaire.synchroniser(user, qc.levis.contrat.auth.domain.AppartenanceAnnuaire.Origine.SSO, faits, cfg.roleParDefaut());
         List<String> roles = user.getRoles().stream().map(Enum::name).toList();
         String token = jwt.genererToken(user.getEmail(), roles, user.getTenantId());
         audit.log(user.getTenantId(), user.getEmail(), "LOGIN_OIDC", "User", user.getId(), null);

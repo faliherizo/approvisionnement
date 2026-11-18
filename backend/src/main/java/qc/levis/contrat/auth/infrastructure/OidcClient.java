@@ -45,7 +45,12 @@ public class OidcClient {
                              String jwksUri) {}
 
     /** Résultat de la découverte + validation d'un jeton d'identité. */
-    public record Identite(String courriel, String nom) {}
+    /** {@code faits} : groupes, rôles d'application et attributs du jeton, pour les correspondances d'annuaire (addenda 3, Q43). */
+    public record Identite(String courriel, String nom, java.util.List<qc.levis.contrat.auth.domain.FaitAnnuaire> faits) {
+        public Identite(String courriel, String nom) {
+            this(courriel, nom, java.util.List.of());
+        }
+    }
 
     private String wellKnown(String issuer) {
         String base = issuer.endsWith("/") ? issuer.substring(0, issuer.length() - 1) : issuer;
@@ -98,7 +103,27 @@ public class OidcClient {
             throw new OidcException("Le jeton d'identité ne contient pas le claim « " + cfg.claimCourriel() + " ».");
         }
         String nom = texteClaim(claims, "name");
-        return new Identite(courriel, nom);
+        return new Identite(courriel, nom, faits(claims));
+    }
+
+    /**
+     * Groupes (« groups ») et rôles d'application (« roles ») de Microsoft Entra ID comme faits de groupe ; les autres
+     * claims textuels comme attributs. Seuls ceux qu'une correspondance cite seront conservés.
+     */
+    static java.util.List<qc.levis.contrat.auth.domain.FaitAnnuaire> faits(java.util.Map<String, Object> claims) {
+        java.util.List<qc.levis.contrat.auth.domain.FaitAnnuaire> faits = new java.util.ArrayList<>();
+        claims.forEach((nom, valeur) -> {
+            boolean groupe = "groups".equals(nom) || "roles".equals(nom);
+            if (valeur instanceof java.util.Collection<?> liste) {
+                liste.stream().filter(v -> v != null && !String.valueOf(v).isBlank()).forEach(v -> faits.add(groupe
+                        ? qc.levis.contrat.auth.domain.FaitAnnuaire.groupe(String.valueOf(v))
+                        : qc.levis.contrat.auth.domain.FaitAnnuaire.attribut(nom, String.valueOf(v))));
+            } else if (valeur instanceof String texte && !texte.isBlank()) {
+                faits.add(groupe ? qc.levis.contrat.auth.domain.FaitAnnuaire.groupe(texte)
+                        : qc.levis.contrat.auth.domain.FaitAnnuaire.attribut(nom, texte));
+            }
+        });
+        return faits;
     }
 
     private String echangerCode(Decouverte d, ConfigOidc cfg, String code, String redirectUri,

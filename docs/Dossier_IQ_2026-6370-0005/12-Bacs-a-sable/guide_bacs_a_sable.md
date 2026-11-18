@@ -209,6 +209,14 @@ Si IQ utilise Entra ID (à confirmer, D1), un locataire Entra de test reproduit 
 `/api/auth/saml/callback` ; groupes de sécurité pour les domaines d'affaires ; revendication `groups` dans le jeton. Le
 secret client se saisit dans l'écran SSO ou passe par variable d'environnement, **jamais dans un fichier du dépôt**.
 
+## 4bis. Provisionnement SCIM 2.0 (addenda 3, Q51)
+
+Aucun bac à sable externe n'est nécessaire : le point `/scim/v2` de la plateforme se teste avec `curl` ou avec l'outil
+de provisionnement d'une organisation Entra ID de développement (*Enterprise application* → *Provisioning* → mode
+automatique, URL du locataire et jeton secret). Procédure, opérations prises en charge et cycle de vie des comptes :
+[guide_annuaire_scim.md](../04-Architecture/guide_annuaire_scim.md). Pour Saviynt, une instance d'essai de l'éditeur ou
+celle d'IQ est requise (question D2).
+
 ## 5. Fichiers
 
 | Fichier | Rôle |

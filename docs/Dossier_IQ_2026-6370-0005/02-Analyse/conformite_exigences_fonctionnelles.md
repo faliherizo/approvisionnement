@@ -27,9 +27,9 @@ Légende : ✅ conforme · ✅🆕 conforme depuis cette analyse (écart comblé
 
 | | Obligatoires | Non obligatoires (optionnelles, facultés, préférences, conditionnelles) |
 |---|---|---|
-| Exigences fonctionnelles relevées | **115** (107 + 8 de l'addenda 2) | **12** |
-| Conformes | **115 (100 %)**, dont 13 rendues conformes par les 7 écarts comblés ci-dessous et 6 par les ajustements de l'addenda 2 ([impact_addenda_2.md](impact_addenda_2.md)) | 10 |
-| Non réalisées | 0 | 1 : Saviynt / SCIM (A-08), criticité inconnue tant que l'Annexe 10 n'est pas fournie |
+| Exigences fonctionnelles relevées | **121** (107 + 8 de l'addenda 2 + 6 de l'addenda 3, dont A-08 devenue obligatoire) | **11** |
+| Conformes | **121 (100 %)**, dont 13 rendues conformes par les 7 écarts comblés ci-dessous, 6 par l'addenda 2 ([impact_addenda_2.md](impact_addenda_2.md)) et 6 par l'addenda 3 ([impact_addenda_3.md](impact_addenda_3.md)) | 10 |
+| Non réalisées | 0 | 0 |
 | Sans objet | — | 1 : connecteur MCP, non exigé (A-09) |
 
 ### Écarts trouvés et comblés
@@ -176,7 +176,7 @@ versement à l'échéance), `ConformiteDomaineTest`, `CachetX509Test` (CAdES, PA
 | A-05 | Add. Q1 | CLM optionnel intégrable à Salesforce lorsqu'il est proposé | Conditionnelle | ✅ | API et préremplissage Salesforce |
 | A-06 | Add. Q8 | Environ 30 champs Salesforce préremplis par modèle | Obligatoire (capacité) | ✅ | Correspondance par champ, sans plafond ; champs personnalisés lus |
 | A-07 | Add. Q3 | Intégrations Microsoft 365, Workday, Entra ID | Selon l'Annexe 10 | ✅ | C-69, A-01, C-60 |
-| A-08 | Add. Q3 | Intégration Saviynt ou SCIM (provisionnement des comptes) | **Criticité inconnue** (Annexe 10 non fournie) | ⚠ | Non réalisé : point SCIM 2.0 proposé ; à confirmer avec IQ (question P1) |
+| A-08 | Add. Q3, add. 3 Q51 | Provisionnement et déprovisionnement SCIM 2.0 (Saviynt) | **Obligatoire** (add. 3 : « doit prendre en charge ») | ✅ | RST-26 : point `/scim/v2` ; [impact_addenda_3.md](impact_addenda_3.md) |
 | A-09 | Add. Q3 | Connecteur MCP | Non exigé | — | — |
 | A-10 | Add. 2 Q11 | Authentification Salesforce de remplacement (JWT Bearer) décrite | Obligatoire (« doit également décrire ») | ✅ | RST-23 ; [impact_addenda_2.md](impact_addenda_2.md) |
 | A-11 | Add. 2 Q13 | Exportation ou transfert des documents et métadonnées vers un référentiel désigné par IQ | Obligatoire (« doit également permettre ») | ✅ | RST-24 : exportation en lot ZIP + index |
@@ -185,6 +185,11 @@ versement à l'échéance), `ConformiteDomaineTest`, `CachetX509Test` (CAdES, PA
 | A-14 | Add. 2 Q17 | Limites d'API, surveillance, journalisation, reprise (8 tentatives, plafond 1 h) | Obligatoire (« doit ») | ✅ | Boîte d'envoi, `Relances`, alertes |
 | A-15 | Add. 2 Q19 | Interfaces internes et externes en français, en anglais sur demande d'IQ | Obligatoire (« doivent obligatoirement ») | ✅ | Interfaces FR/EN, RST-25 (langue du signataire) |
 | A-16 | Add. 2 Q4 | Démontrer la volumétrie (55 000 à 65 000 documents par an) et des variations raisonnables | Obligatoire (« doit démontrer ») | ✅ | Plan JMeter `perf/clm-trousses-load.jmx` |
+| A-18 | Add. 3 Q26 | Génération Word modifiable avant l'approbation finale ; nouvelle version et reprise des validations ; document à signer figé | Obligatoire (« doit pouvoir ») | ✅ | RST-28 ; nouveau cycle |
+| A-19 | Add. 3 Q43 | Mappage configurable des groupes et attributs Entra ID vers les rôles, moindre privilège, traçabilité | Obligatoire (« doit permettre ») | ✅ | RST-27 |
+| A-20 | Add. 3 Q44 | Domaine d'affaires alimenté par un groupe ou un attribut d'annuaire, séparation logique | Obligatoire (« doit permettre ») | ✅ | RST-27, groupes du module |
+| A-21 | Add. 3 Q46-Q48 | Conservation par catégorie, gel légal, trois sorts finaux, bordereau ou certificat de destruction | Obligatoire (« doit ») | ✅ | ADR-012, RST-29 |
+| A-22 | Add. 3 Q39 | Mesure de l'utilisation par enveloppe envoyée, sans double comptage | Obligatoire (« doit être ») | ✅ | RST-30 |
 | A-17 | Add. 2 Q7 | `FundingRequest` lu par Id ou `Name`, correspondance configurable par modèle | Obligatoire (« devra ») | ✅ | C-08, C-09 |
 
 ## 5. Engagements du fournisseur et exigences non fonctionnelles (hors matrice)

@@ -82,7 +82,7 @@ public class SamlController {
         if (cfg == null) return redirection("/login?saml=indisponible");
         try {
             Identite id = client.validerReponse(cfg, samlResponse);
-            String token = sessions.etablirSession(cfg, id.courriel(), id.nom());
+            String token = sessions.etablirSession(cfg, id.courriel(), id.nom(), id.faits());
             return ResponseEntity.status(302).location(URI.create("/"))
                     .header(HttpHeaders.SET_COOKIE, cookieSession(token, expirationMs).toString())
                     .build();

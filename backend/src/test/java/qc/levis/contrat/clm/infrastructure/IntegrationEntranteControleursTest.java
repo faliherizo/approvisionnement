@@ -71,9 +71,18 @@ class IntegrationEntranteControleursTest {
         when(auth.getName()).thenReturn("admin.ti@iq.example");
         ClmDto.ConservationVue vue = new ClmDto.ConservationVue(1L, "TR-1", "T", null, "ANNULEE", Instant.EPOCH, null, "VERSER", true, false, null, Instant.EPOCH);
         when(conservation.marquerVersee(1L, "admin.ti@iq.example")).thenReturn(vue);
+        qc.levis.contrat.clm.application.CertificatDestructionService certificats = mock(qc.levis.contrat.clm.application.CertificatDestructionService.class);
+        when(certificats.certificat(1L)).thenReturn(new byte[]{9});
+        ClmDto.DestructionVue detruite = new ClmDto.DestructionVue(1L, "TR-1", Instant.EPOCH, "DETRUIT");
+        when(conservation.detruites()).thenReturn(java.util.List.of(detruite));
         qc.levis.contrat.clm.infrastructure.web.ConservationController web = new qc.levis.contrat.clm.infrastructure.web.ConservationController(conservation,
-                mock(qc.levis.contrat.clm.application.ExportationReferentielService.class), mock(qc.levis.contrat.clm.infrastructure.web.WebClm.Acteurs.class));
+                mock(qc.levis.contrat.clm.application.ExportationReferentielService.class),
+                certificats, mock(qc.levis.contrat.clm.infrastructure.web.WebClm.Acteurs.class));
         assertSame(vue, web.versee(1L, auth));
+        assertEquals(java.util.List.of(detruite), web.detruites());
+        org.springframework.http.ResponseEntity<byte[]> pdf = web.certificatDestruction(1L);
+        assertArrayEquals(new byte[]{9}, pdf.getBody());
+        assertEquals("application/pdf", pdf.getHeaders().getContentType().toString());
         web.detruire(1L, auth);
         verify(conservation).detruire(1L, "admin.ti@iq.example");
     }

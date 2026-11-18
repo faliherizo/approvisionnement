@@ -56,6 +56,47 @@ L'[addenda 2](reponses/addenda-2.md) répond aux questions ci-dessous ; impact e
 | — | Interfaces en français obligatoires, anglais sur demande (Q19) | Réalisé : langue de communication du signataire (RST-25) |
 | — | Un éditeur peut soumissionner seul (Q20) | ✔ Répondu |
 
+## Réponses reçues — addenda 3 (17 novembre 2026)
+
+L'[addenda 3](reponses/ADDENDA_3_2026-6370-0005_FINAL_REV1.md) reporte le dépôt au **4 décembre 2026, 11 h**, et répond
+aux questions ci-dessous. Impact et ajustements : [impact_addenda_3.md](../02-Analyse/impact_addenda_3.md). Les
+questions encore ouvertes sont regroupées dans [questions_sans_reponse_IQ.md](questions_sans_reponse_IQ.md).
+
+| # | Réponse d'IQ | Suite |
+|---|---|---|
+| A1, A2 | Options (IA, clauses, négociation) présentées à part, jamais implicites dans le prix de base ; la démonstration ne valide que ce qui est déclaré (Q1, Q2) | ✔ Répondu |
+| A3 | Conventions d'aide financière Grantmaking en premier (Q3) | ✔ Confirmé |
+| A4 | Volumétrie annuelle du bordereau ; pointes absorbées ; seuils fixés en conception (Q4) | ✔ Répondu |
+| A5 | 1 300 signataires ou initiateurs, 20 administrateurs d'affaires, 18 administrateurs techniques (Q5) | ✔ Répondu |
+| A6 | Une organisation ; séparation logique ; organisation additionnelle déclarée et tarifée (Q6) | ✔ Répondu |
+| B1, B2 | `FundingRequest` maître ; trois champs de retour ou équivalents ; aucun champ de plus sans approbation (Q7, Q8) | ✔ Conforme |
+| B3, B4 | Grantmaking, REST v60.0, `PATCH` ; tout autre mécanisme approuvé (Q9, Q10, Q24) | ✔ Conforme |
+| B5 | Client credentials sous réserve ; sinon JWT Bearer ou autre OAuth 2.0 (Q11) | ✔ Réalisé (RST-23) |
+| B6, B7 | Plateforme maître du signé et de la preuve ; SharePoint = intégration distincte (Q12, Q13) | ✔ Conforme |
+| B8 | Statuts minimaux ; décrire correspondance, moment, erreurs (Q14) | ✔ Réalisé (RST-21) ; à décrire |
+| B9 | Minimisation ; information pour l'ÉFVP (Q15) | ✔ Réalisé (RST-22) |
+| B10 | Accès au démarrage ; bac à sable et données fictives (Q16, Q24) | ✔ Répondu |
+| B11 | 8 reprises plafonnées à 1 h ; alertes en conception (Q17) | ✔ Conforme |
+| C1 | Aucun fournisseur imposé ; preuve, certificat et piste d'audit scellée ; tiers inclus au prix (Q40) | ✔ Conforme (ADR-013) |
+| C3 | Horodatage RFC 3161 reconnu, décrit et approuvé (Q41) | ✔ Configurable ; autorité à proposer |
+| C4 | Renforcée = facteur en plus ; SMS acceptable selon le risque (Q23) | ✔ Conforme |
+| D1 | Entra ID, OIDC ou SAML 2.0 (Q42) | ✔ Conforme |
+| D3 | Mappage configurable groupes et attributs → rôles, moindre privilège, traçabilité (Q43) | Réalisé (RST-27) |
+| D4 | Domaine d'affaires = unité ; alimenté par groupe ou attribut (Q44) | Réalisé (RST-27) |
+| D6, P1 | SCIM 2.0 ou équivalent, provisionnement et déprovisionnement (Q51) | Réalisé (RST-26) |
+| E1 | Canada ; tout hors Canada déclaré et autorisé par écrit (Q28, Q45) | ◐ Tableau des lieux à produire |
+| E3, E4, E5 | Périodes par catégorie, gel légal, trois sorts finaux, certificat de destruction (Q46, Q47, Q48) | Réalisé (ADR-012, RST-29) |
+| E8 | RTO 8 h, RPO 4 h en heures écoulées (Q35) | ◐ Sauvegardes à préciser |
+| G4 | Word modifiable avant l'approbation finale ; document à signer figé (Q26) | Réalisé (RST-28) |
+| J5 | DEV, ACC, PRD réellement séparés (Q34) | ✔ Répondu |
+| L1 | Unité : l'enveloppe envoyée (Q39) | Réalisé : relevé d'utilisation (RST-30) |
+| L3 | Options distinctes (Q1) | ✔ Répondu |
+| L5 | Tiers (signature, horodatage) déclarés et inclus au prix (Q40, Q41) | ✔ Répondu |
+| L6 | Prix fermes 3 ans ; années 4 et 5 inscrites au dépôt (Q21) | ✔ Répondu |
+| L8 | Sous-traitants déclarés ; le soumissionnaire en répond (Q28, Q32) | ✔ Répondu |
+| M2 | Interfaces en français ; composante anglaise seulement = écart à déclarer (Q27) | ✔ Conforme |
+| W1, W2 | Processus RH visés ; mécanisme Workday proposé et inclus au prix par le fournisseur (Q49, Q50) | ◐ Côté Workday à chiffrer |
+
 ## Questions prioritaires
 
 À poser dès la première rencontre : sans réponse, une réalisation ou une recette reste bloquée.

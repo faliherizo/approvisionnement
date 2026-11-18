@@ -15,6 +15,11 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password: ""
+    # Pool dimensionné pour la charge visée (addenda 3, Q38 : 500 utilisateurs concurrents) ; 10 connexions par défaut
+    # épuisaient le pool lors des pointes. Hérité par les profils prod et azure.
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX:30}
+      connection-timeout: ${DB_POOL_TIMEOUT_MS:10000}
   jpa:
     hibernate:
       # Le schéma est géré par Liquibase, pas par Hibernate.

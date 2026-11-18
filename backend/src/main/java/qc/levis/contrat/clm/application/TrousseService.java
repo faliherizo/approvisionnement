@@ -67,11 +67,14 @@ public class TrousseService {
     private final ParametresClmService parametres;
     private final ListesClm listes;
     private final ContexteClm ctx;
+    private final NumerotationReferences numerotation;
 
     public TrousseService(TrousseRepository trousses, ParticipantRepository participants, EtapeTrousseRepository etapes,
                           DocumentTrousseRepository documents, InvitationRepository invitations, EvenementTrousseRepository evenements,
                           ModeleContratRepository modeles, ParcoursService parcours, SalesforceService salesforce, DiffusionStatut diffusion, JournalClm journal,
-                          LectureTrousse lecture, ParametresClmService parametres, ListesClm listes, ContexteClm ctx) {
+                          LectureTrousse lecture, ParametresClmService parametres, ListesClm listes, ContexteClm ctx,
+                          NumerotationReferences numerotation) {
+        this.numerotation = numerotation;
         this.trousses = trousses;
         this.participants = participants;
         this.etapes = etapes;
@@ -140,12 +143,7 @@ public class TrousseService {
     /** Référence attribuée : préfixe de l'organisation, année et rang (ex. TR-2026-00001). */
     private String prochaineReference(Long tenant, String prefixe) {
         int annee = ctx.maintenant().atZone(java.time.ZoneOffset.UTC).getYear();
-        long n = trousses.findByTenantIdOrderByMajLeDesc(tenant).size() + 1L;
-        String ref = String.format("%s-%d-%05d", prefixe, annee, n);
-        while (trousses.existsByTenantIdAndReference(tenant, ref)) {
-            ref = String.format("%s-%d-%05d", prefixe, annee, ++n);
-        }
-        return ref;
+        return numerotation.suivante(tenant, prefixe, annee);
     }
 
     /** Type et unité viennent des listes de l'organisation ; une valeur inchangée reste admise même retirée depuis. */

@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 059-1-clm-compteur-reference
+      author: levis
+      comment: "CLM (addenda 3, Q38 — essai de 500 utilisateurs concurrents) : compteur de références verrouillé, par organisation, préfixe et année ; remplace le comptage de toutes les trousses, qui produisait des doublons sous concurrence."
+      changes:
+        - createTable:
+            tableName: clm_compteur_reference
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: prefixe, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: annee, type: INT, constraints: { nullable: false } }
+              - column: { name: dernier, type: BIGINT, constraints: { nullable: false } }
+        - addUniqueConstraint:
+            tableName: clm_compteur_reference
+            columnNames: tenant_id, prefixe, annee
+            constraintName: uk_clm_compteur_reference
