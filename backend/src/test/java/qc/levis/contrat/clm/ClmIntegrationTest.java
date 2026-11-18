@@ -405,8 +405,9 @@ class ClmIntegrationTest {
         assertEquals(0, appel(get("/api/clm/trousses?statut=TERMINEE&q=cyc-1", redacteur), status().isOk()).size());
         appel(post("/api/clm/trousses/" + id + "/reprendre", redacteur, "{}"), status().isConflict());
         JsonNode suivi = appel(get("/api/clm/suivi?unite=Finances&source=MANUELLE&responsable=redacteur@levis.qc.ca&du=2020-01-01&au=2099-01-01", redacteur), status().isOk());
-        assertTrue(suivi.size() >= 1);
-        assertTrue(appel(get("/api/clm/suivi?exceptions=true&q=cyc-1", redacteur), status().isOk()).isEmpty());
+        assertTrue(suivi.get("lignes").size() >= 1);
+        assertEquals(0, suivi.get("page").asInt());
+        assertTrue(appel(get("/api/clm/suivi?exceptions=true&q=cyc-1", redacteur), status().isOk()).get("lignes").isEmpty());
         JsonNode annulee = appel(post("/api/clm/trousses/" + id + "/annuler", redacteur, "{\"motif\":\"Abandon\"}"), status().isOk());
         assertEquals("ANNULEE", annulee.at("/resume/statut").asText());
         appel(post("/api/clm/trousses/" + id + "/annuler", redacteur, "{}"), status().isConflict());

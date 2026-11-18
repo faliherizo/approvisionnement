@@ -81,14 +81,17 @@ public class ParcoursController {
         return suivi.tableauBord(acteurs.de(auth), new SuiviService.Filtre(null, statut, unite, null, null, du, au, false));
     }
 
+    /** Suivi paginé (UI-18) : {@code taille} 50 par défaut, 200 au plus. */
     @GetMapping("/suivi")
-    public List<ClmDto.SuiviLigne> suivi(@RequestParam(required = false) String q, @RequestParam(required = false) String statut,
-                                         @RequestParam(required = false) String unite, @RequestParam(required = false) String responsable,
-                                         @RequestParam(required = false) String source,
-                                         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate du,
-                                         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate au,
-                                         @RequestParam(defaultValue = "false") boolean exceptions, Authentication auth) {
-        return suivi.suivi(acteurs.de(auth), new SuiviService.Filtre(q, statut, unite, responsable, source, du, au, exceptions));
+    public ClmDto.SuiviPage suivi(@RequestParam(required = false) String q, @RequestParam(required = false) String statut,
+                                  @RequestParam(required = false) String unite, @RequestParam(required = false) String responsable,
+                                  @RequestParam(required = false) String source,
+                                  @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate du,
+                                  @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate au,
+                                  @RequestParam(defaultValue = "false") boolean exceptions,
+                                  @RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "" + SuiviService.TAILLE_DEFAUT) int taille, Authentication auth) {
+        return suivi.page(acteurs.de(auth), new SuiviService.Filtre(q, statut, unite, responsable, source, du, au, exceptions), page, taille);
     }
 
     @GetMapping("/suivi/export")

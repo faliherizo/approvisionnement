@@ -19,7 +19,7 @@ L'addenda 3 transforme plusieurs hypothèses en exigences fermes (« doit ») :
 | Q26 | Génération **Word modifiable** avant l'approbation finale ; modification substantielle → nouvelle version et reprise des validations ; document à signer figé | ⚠ PDF seulement | 🆕 génération Word (RST-28) ; nouveau cycle ✅ |
 | Q48 | **Bordereau ou certificat de destruction** : éléments, date, autorité, méthode, résultat | ◐ trace au journal | 🆕 certificat scellé (RST-29) |
 | Q39 | Unité de mesure : **l'enveloppe envoyée** ; annulée avant envoi non comptée ; pas de double facturation | — | 🆕 relevé d'utilisation (RST-30) |
-| Q38 | Démontrer **500 utilisateurs concurrents** (essais documentés) | — | ⚠ essai réalisé, objectif non atteint (§ 4) |
+| Q38 | Démontrer **500 utilisateurs concurrents** (essais documentés) | — | ◐ 0 erreur à 500 en développement ; essai cible à faire (§ 4) |
 | Q35 | RTO 8 h et RPO 4 h en **heures écoulées** | « valeurs à convenir » | 📝 plan de relève à ajuster |
 
 ## 2. Synthèse par question
@@ -60,7 +60,7 @@ L'addenda 3 transforme plusieurs hypothèses en exigences fermes (« doit ») :
 | Q35 | RTO 8 h, RPO 4 h en heures écoulées | Plan de relève | 📝 |
 | Q36 | Acheminement conditionnel via Salesforce Flow accepté s'il est de bout en bout | Règles conditionnelles dans la plateforme | ✅ |
 | Q37 | Modalités de protection des données d'IQ prévalent (Loi 25) | Contrat | 📝 |
-| Q38 | 500 utilisateurs concurrents démontrés de façon vérifiable | Essai réalisé ; 3 défauts corrigés ; suivi à paginer (§ 4) | ⚠ |
+| Q38 | 500 utilisateurs concurrents démontrés de façon vérifiable | Essai : 0 erreur, suivi paginé ; essai cible à faire (§ 4) | ◐ |
 | Q39 | Facturation à l'enveloppe envoyée | **RST-30** | 🆕 📝 |
 | Q40 | Aucun fournisseur imposé ; preuve, certificat, piste d'audit scellée ; tiers déclaré et inclus au prix | Cachet CAdES/PAdES (ADR-013) | ✅ 📝 |
 | Q41 | Horodatage RFC 3161 reconnu ; autorité, lieux, coûts, validation à long terme décrits | RFC 3161 configurable | ✅ 📝 |
@@ -162,7 +162,7 @@ Le relevé distingue aussi les enveloppes terminées, rejetées et échues.
 
 **Vérification :** `Addenda3DomaineTest.une_enveloppe_se_compte_une_fois…`, `Addenda3IntegrationTest` ; e2e « Q39 / Q48 ».
 
-## 4. Q38 — 500 utilisateurs concurrents ⚠
+## 4. Q38 — 500 utilisateurs concurrents ◐
 
 Essai réalisé le 2026-11-17 ([perf/README.md](../../../perf/README.md), section « Q38 ») : **objectif non atteint à ce
 jour**. L'essai a révélé trois défauts de concurrence, corrigés :
@@ -171,9 +171,16 @@ jour**. L'essai a révélé trois défauts de concurrence, corrigés :
 - erreurs serveur masquées en 403 ;
 - pool de connexions trop petit.
 
-Il a aussi révélé une limite de capacité, seulement en partie corrigée : le suivi centralisé relit trop de trousses.
-Reste à faire : paginer l'API et l'écran du suivi, et grouper ses requêtes ; puis refaire l'essai sur l'infrastructure
-cible.
+Il a aussi révélé une limite de capacité, corrigée depuis : le suivi centralisé est désormais paginé (API et écran,
+50 lignes par page) et calcule ses lignes en requêtes groupées.
+
+**Dernier essai** (poste de développement, 1 500 trousses en base) : 500 utilisateurs concurrents, 8 000 requêtes,
+**0 erreur**, suivi P95 130 ms, écritures P95 42 ms. Un seul objectif est dépassé de 10 ms : lecture P95 à 810 ms pour
+800, à cause de la seule connexion locale (hachage BCrypt). Les employés d'IQ se connecteront par SSO.
+
+Restent à faire :
+- appliquer le même traitement au tableau de bord (UI-01) et à la liste « Mes trousses » (UI-02) ;
+- refaire l'essai sur l'infrastructure cible, seul résultat à présenter dans la soumission.
 
 ## 5. Points restants
 

@@ -742,4 +742,30 @@ test.describe('Addenda 3 — réponses d’IQ du 17 novembre 2026', () => {
     await controler(page)
     await auditerAxe(page)
   })
+
+  test('Q38 — le suivi centralisé se pagine côté serveur (50 lignes par page)', async ({ page, playwright, baseURL }) => {
+    const p = a.pagination
+    const marque = `${p.prefixe} ${unique()}`
+    const initiateur = await api(playwright, baseURL, users.iqInitiateur)
+    for (let i = 0; i < p.nombre; i++) {
+      await ok(initiateur.post('/api/clm/trousses', { data: { titre: `${marque} ${i}`, risque: 'FAIBLE' } }))
+    }
+    await initiateur.dispose()
+    await session(page, users.iqAdminTi)
+    await page.goto('/clm/suivi')
+    const filtres = page.getByRole('main').getByRole('form')
+    await filtres.getByLabel('Rechercher').fill(marque)
+    await filtres.getByRole('button', { name: 'Rechercher', exact: true }).click()
+    await expect(page.getByText(`${p.taille} trousse(s) sur cette page, ${p.nombre} au total (page 1).`)).toBeVisible()
+    await expect(page.getByRole('row').filter({ hasText: marque })).toHaveCount(p.taille)
+    const pages = page.getByRole('navigation', { name: 'Pages du suivi' })
+    await expect(pages.getByRole('button', { name: 'Page précédente' })).toBeDisabled()
+    await controler(page)
+    await auditerAxe(page)
+    await pages.getByRole('button', { name: 'Page suivante' }).click()
+    await expect(page.getByRole('row').filter({ hasText: marque })).toHaveCount(p.nombre - p.taille)
+    await expect(pages.getByRole('button', { name: 'Page suivante' })).toBeDisabled()
+    await controler(page)
+    await auditerAxe(page)
+  })
 })

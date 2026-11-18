@@ -9,6 +9,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import jakarta.persistence.criteria.Predicate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import qc.levis.contrat.clm.application.dto.ClmDto;
 import qc.levis.contrat.clm.application.repository.EtapeTrousseRepository;
@@ -60,62 +67,127 @@ public class SuiviService {
         this.ctx = ctx;
     }
 
-    /** Lignes affichées au plus : au-delà, l'écran invite à affiner les filtres (65 000 trousses par an chez IQ). */
-    public static final int LIMITE_SUIVI = 500;
+    /** Lignes par page au plus (API et écran) ; l'export CSV en prend davantage. */
+    public static final int TAILLE_MAX = 200;
+    public static final int TAILLE_DEFAUT = 50;
     /** Lignes exportées au plus en CSV. */
     public static final int LIMITE_EXPORT = 10_000;
     private static final int TRANCHE = 200;
-
-    public List<ClmDto.SuiviLigne> suivi(Habilitations.Acteur acteur, Filtre f) {
-        return suivi(acteur, f, LIMITE_SUIVI);
-    }
+    private static final Sort TRI = Sort.by(Sort.Order.desc("majLe"), Sort.Order.desc("id"));
 
     /**
-     * Trousses les plus récentes d'abord, lues par tranches : le calcul d'une ligne (étapes, invitations, envois) ne porte que
-     * sur les trousses retenues, et la lecture s'arrête à {@code limite} lignes au lieu de parcourir toute l'organisation.
+     * Une page du suivi (UI-18), les trousses les plus récemment modifiées d'abord. Les filtres s'appliquent en base ; les
+     * lignes d'une page sont calculées en quatre requêtes groupées, quel que soit le nombre de trousses de l'organisation
+     * (65 000 par an chez IQ ; addenda 3, Q38). Administration et audit voient tout : la page vient directement de la base,
+     * avec le total. Pour les autres, la visibilité dépend des affectations et se vérifie trousse par trousse.
      */
-    List<ClmDto.SuiviLigne> suivi(Habilitations.Acteur acteur, Filtre f, int limite) {
-        Instant maintenant = ctx.maintenant();
+    public ClmDto.SuiviPage page(Habilitations.Acteur acteur, Filtre f, int page, int taille) {
+        int n = Math.max(1, Math.min(taille, TAILLE_MAX));
+        int p = Math.max(0, page);
+        Specification<Trousse> spec = specification(ctx.tenant(), f);
+        if ((acteur.estAdmin() || acteur.estAuditeur()) && !f.exceptionsSeulement()) {
+            Page<Trousse> r = trousses.findAll(spec, PageRequest.of(p, n, TRI));
+            return new ClmDto.SuiviPage(lignes(r.getContent()), p, n, r.getTotalElements(), r.hasNext());
+        }
+        List<ClmDto.SuiviLigne> fenetre = parcourir(acteur, f, spec, p * n, n + 1);
+        boolean suivant = fenetre.size() > n;
+        return new ClmDto.SuiviPage(suivant ? fenetre.subList(0, n) : fenetre, p, n, null, suivant);
+    }
+
+    /** Parcourt les trousses retenues par tranches : saute les {@code ignorer} premières lignes, en garde {@code garder}. */
+    private List<ClmDto.SuiviLigne> parcourir(Habilitations.Acteur acteur, Filtre f, Specification<Trousse> spec, int ignorer, int garder) {
         List<ClmDto.SuiviLigne> res = new ArrayList<>();
-        for (int page = 0; ; page++) {
-            org.springframework.data.domain.Slice<Trousse> tranche = trousses.findByTenantIdOrderByMajLeDescIdDesc(ctx.tenant(),
-                    org.springframework.data.domain.PageRequest.of(page, TRANCHE));
-            for (Trousse t : tranche) {
-                if (!retenue(t, f) || !lecture.visible(t, acteur)) {
-                    continue;
-                }
-                ClmDto.SuiviLigne l = ligne(t, maintenant);
-                if (!f.exceptionsSeulement() || !l.exceptions().isEmpty()) {
-                    res.add(l);
-                }
-                if (res.size() >= limite) {
-                    return res;
-                }
+        int[] aIgnorer = {ignorer};
+        for (int k = 0; ; k++) {
+            Page<Trousse> tranche = trousses.findAll(spec, PageRequest.of(k, TRANCHE, TRI));
+            List<Trousse> visibles = tranche.getContent().stream().filter(t -> lecture.visible(t, acteur)).toList();
+            if (f.exceptionsSeulement()) {
+                retenir(lignes(visibles).stream().filter(l -> !l.exceptions().isEmpty()).toList(), aIgnorer, garder, res);
+            } else {
+                int saut = Math.min(aIgnorer[0], visibles.size());
+                aIgnorer[0] -= saut;
+                List<Trousse> reste = visibles.subList(saut, visibles.size());
+                res.addAll(lignes(reste.subList(0, Math.min(reste.size(), garder - res.size()))));
             }
-            if (!tranche.hasNext()) {
+            if (res.size() >= garder || !tranche.hasNext()) {
                 return res;
             }
         }
     }
 
-    private boolean retenue(Trousse t, Filtre f) {
-        LocalDate maj = LocalDate.ofInstant(t.getMajLe(), ZoneOffset.UTC);
-        return (vide(f.statut()) || t.getStatut().name().equals(f.statut()))
-                && (vide(f.unite()) || f.unite().equals(t.getUnite()))
-                && (vide(f.responsable()) || t.getProprietaire().equalsIgnoreCase(f.responsable()))
-                && (vide(f.source()) || t.getSource().name().equals(f.source()))
-                && (f.du() == null || !maj.isBefore(f.du()))
-                && (f.au() == null || !maj.isAfter(f.au()))
-                && (vide(f.q()) || texte(t).contains(f.q().trim().toLowerCase(Locale.ROOT)));
+    private static void retenir(List<ClmDto.SuiviLigne> candidates, int[] aIgnorer, int garder, List<ClmDto.SuiviLigne> res) {
+        for (ClmDto.SuiviLigne l : candidates) {
+            if (aIgnorer[0] > 0) {
+                aIgnorer[0]--;
+            } else if (res.size() < garder) {
+                res.add(l);
+            }
+        }
     }
 
-    private static String texte(Trousse t) {
-        return (t.getReference() + " " + t.getTitre() + " " + (t.getSfDossierId() == null ? "" : t.getSfDossierId()))
-                .toLowerCase(Locale.ROOT);
+    /** Filtres du suivi traduits en critères : l'organisation, puis chaque filtre renseigné. Un code inconnu ne retient rien. */
+    static Specification<Trousse> specification(Long tenant, Filtre f) {
+        return (r, q, cb) -> {
+            List<Predicate> p = new ArrayList<>();
+            p.add(cb.equal(r.get("tenantId"), tenant));
+            if (!vide(f.statut())) {
+                p.add(enumere(StatutTrousse.class, f.statut()).map(v -> cb.equal(r.get("statut"), v)).orElseGet(cb::disjunction));
+            }
+            if (!vide(f.source())) {
+                p.add(enumere(Trousse.Source.class, f.source()).map(v -> cb.equal(r.get("source"), v)).orElseGet(cb::disjunction));
+            }
+            if (!vide(f.unite())) {
+                p.add(cb.equal(r.get("unite"), f.unite()));
+            }
+            if (!vide(f.responsable())) {
+                p.add(cb.equal(cb.lower(r.get("proprietaire")), f.responsable().trim().toLowerCase(Locale.ROOT)));
+            }
+            if (f.du() != null) {
+                p.add(cb.greaterThanOrEqualTo(r.get("majLe"), f.du().atStartOfDay(ZoneOffset.UTC).toInstant()));
+            }
+            if (f.au() != null) {
+                p.add(cb.lessThan(r.get("majLe"), f.au().plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant()));
+            }
+            if (!vide(f.q())) {
+                String motif = "%" + f.q().trim().toLowerCase(Locale.ROOT).replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%";
+                p.add(cb.or(cb.like(cb.lower(r.get("reference")), motif, '\\'), cb.like(cb.lower(r.get("titre")), motif, '\\'),
+                        cb.like(cb.lower(cb.coalesce(r.get("sfDossierId"), "")), motif, '\\')));
+            }
+            return cb.and(p.toArray(Predicate[]::new));
+        };
     }
 
-    ClmDto.SuiviLigne ligne(Trousse t, Instant maintenant) {
-        List<EtapeTrousse> actives = parcours.etapesDe(t).stream().filter(e -> e.getStatut() == Parcours.StatutEtape.ACTIVE).toList();
+    private static <E extends Enum<E>> java.util.Optional<E> enumere(Class<E> type, String code) {
+        try {
+            return java.util.Optional.of(Enum.valueOf(type, code.trim()));
+        } catch (IllegalArgumentException e) {
+            return java.util.Optional.empty();
+        }
+    }
+
+    /** Lignes d'un lot de trousses : étapes actives, envois en échec, invitations et dernier événement en une requête chacun. */
+    List<ClmDto.SuiviLigne> lignes(List<Trousse> lot) {
+        if (lot.isEmpty()) {
+            return List.of();
+        }
+        Instant maintenant = ctx.maintenant();
+        Long tenant = ctx.tenant();
+        List<Long> ids = lot.stream().map(Trousse::getId).toList();
+        Map<Long, List<EtapeTrousse>> actives = etapes.findByTenantIdAndTrousseIdInAndStatut(tenant, ids, Parcours.StatutEtape.ACTIVE).stream()
+                .sorted(Comparator.comparingInt(EtapeTrousse::getPhase).thenComparing(EtapeTrousse::getId))
+                .collect(Collectors.groupingBy(EtapeTrousse::getTrousseId));
+        Set<Long> enEchec = sorties.findByTenantIdAndTrousseIdInAndStatut(tenant, ids, MessageSortant.Statut.ECHEC).stream()
+                .map(MessageSortant::getTrousseId).collect(Collectors.toSet());
+        Map<Long, List<Invitation>> invitationsParTrousse = invitations.findByTenantIdAndTrousseIdIn(tenant, ids).stream()
+                .collect(Collectors.groupingBy(Invitation::getTrousseId));
+        Map<Long, EvenementTrousse> derniers = evenements.derniersParTenantIdEtTrousses(tenant, ids).stream()
+                .collect(Collectors.toMap(EvenementTrousse::getTrousseId, e -> e, (a, b) -> a));
+        return lot.stream().map(t -> ligne(t, actives.getOrDefault(t.getId(), List.of()), enEchec.contains(t.getId()),
+                invitationsParTrousse.getOrDefault(t.getId(), List.of()), derniers.get(t.getId()), maintenant)).toList();
+    }
+
+    private ClmDto.SuiviLigne ligne(Trousse t, List<EtapeTrousse> actives, boolean echecSalesforce, List<Invitation> invs,
+                                    EvenementTrousse dernier, Instant maintenant) {
         List<String> attente = new ArrayList<>();
         actives.forEach(e -> ctx.affectations(e.getAffectationsJson()).forEach(a -> attente.add(a.type().name().toLowerCase() + ":" + a.valeur())));
         Instant echeance = actives.stream().map(EtapeTrousse::getEcheance).filter(java.util.Objects::nonNull).min(Comparator.naturalOrder()).orElse(null);
@@ -123,15 +195,13 @@ public class SuiviService {
         if (actives.stream().anyMatch(e -> Relances.enRetard(e.getEcheance(), maintenant))) {
             exceptions.add(BLOCAGE);
         }
-        if (sorties.findByTenantIdAndTrousseIdInAndStatut(t.getTenantId(), List.of(t.getId()), MessageSortant.Statut.ECHEC).size() > 0) {
+        if (echecSalesforce) {
             exceptions.add(ERREUR_SALESFORCE);
         }
-        boolean expiree = invitations.findByTenantIdAndTrousseIdOrderByIdAsc(t.getTenantId(), t.getId()).stream()
-                .anyMatch(i -> (i.getStatut() == Invitation.Statut.ENVOYEE || i.getStatut() == Invitation.Statut.VERIFIEE) && i.estExpiree(maintenant));
-        if (expiree) {
+        if (invs.stream().anyMatch(i -> (i.getStatut() == Invitation.Statut.ENVOYEE || i.getStatut() == Invitation.Statut.VERIFIEE)
+                && i.estExpiree(maintenant))) {
             exceptions.add(SIGNATURE_EXPIREE);
         }
-        EvenementTrousse dernier = evenements.findTopByTenantIdAndTrousseIdOrderBySequenceDesc(t.getTenantId(), t.getId()).orElse(null);
         return new ClmDto.SuiviLigne(t.getId(), t.getReference(), t.getTitre(), t.getStatut().name(), t.getSource().name(), t.getUnite(),
                 t.getProprietaire(), actives.stream().map(EtapeTrousse::getLibelle).toList(), attente, echeance, exceptions.contains(BLOCAGE),
                 dernier == null ? null : dernier.getType(), dernier == null ? null : dernier.getHorodatage(), exceptions);
@@ -140,7 +210,7 @@ public class SuiviService {
     /** Export CSV (UI-18) ; les cellules commençant par un caractère de formule sont neutralisées. */
     public String exporterCsv(Habilitations.Acteur acteur, Filtre f) {
         StringBuilder sb = new StringBuilder("reference;titre;statut;source;unite;responsable;etapes_actives;echeance;exceptions\n");
-        for (ClmDto.SuiviLigne l : suivi(acteur, f, LIMITE_EXPORT)) {
+        for (ClmDto.SuiviLigne l : parcourir(acteur, f, specification(ctx.tenant(), f), 0, LIMITE_EXPORT)) {
             sb.append(String.join(";", cellule(l.reference()), cellule(l.titre()), l.statut(), l.source(), cellule(l.unite()),
                     cellule(l.proprietaire()), cellule(String.join(" | ", l.etapesActives())),
                     l.echeance() == null ? "" : l.echeance().toString(), String.join(" | ", l.exceptions()))).append('\n');
@@ -161,7 +231,7 @@ public class SuiviService {
 
     public ClmDto.TableauBord tableauBord(Habilitations.Acteur acteur, Filtre f) {
         Instant maintenant = ctx.maintenant();
-        List<Trousse> visibles = visibles(acteur).stream().filter(t -> retenue(t, f)).toList();
+        List<Trousse> visibles = trousses.findAll(specification(ctx.tenant(), f)).stream().filter(t -> lecture.visible(t, acteur)).toList();
         Map<String, Long> ind = new LinkedHashMap<>();
         ind.put("brouillons", visibles.stream().filter(t -> t.getStatut() == StatutTrousse.BROUILLON).count());
         long validation = 0;
@@ -188,9 +258,6 @@ public class SuiviService {
         return new ClmDto.TableauBord(ind, parcours.mesTaches(acteur, "a_traiter"), activite, alertes);
     }
 
-    private List<Trousse> visibles(Habilitations.Acteur acteur) {
-        return trousses.findByTenantIdOrderByMajLeDesc(ctx.tenant()).stream().filter(t -> lecture.visible(t, acteur)).toList();
-    }
 
     // --- Journal d'audit et événements (UI-23) ---
     public record FiltreJournal(LocalDate du, LocalDate au, String acteur, String action, String trousse, String texte) {
@@ -208,11 +275,14 @@ public class SuiviService {
         if (java.time.temporal.ChronoUnit.DAYS.between(du, au) > PERIODE_MAX_JOURS) {
             throw new IllegalArgumentException("Période trop large : " + PERIODE_MAX_JOURS + " jours au plus.");
         }
+        List<EvenementTrousse> periode = evenements.findByTenantIdAndHorodatageBetweenOrderByHorodatageDesc(ctx.tenant(),
+                du.atStartOfDay().toInstant(ZoneOffset.UTC), au.plusDays(1).atStartOfDay().toInstant(ZoneOffset.UTC));
+        // Références des seules trousses présentes dans la période, et non de toutes celles de l'organisation.
         Map<Long, String> references = new java.util.HashMap<>();
-        trousses.findByTenantIdOrderByMajLeDesc(ctx.tenant()).forEach(t -> references.put(t.getId(), t.getReference()));
+        trousses.findByTenantIdAndIdIn(ctx.tenant(), periode.stream().map(EvenementTrousse::getTrousseId).collect(Collectors.toSet()))
+                .forEach(t -> references.put(t.getId(), t.getReference()));
         List<ClmDto.JournalLigne> res = new ArrayList<>();
-        for (EvenementTrousse e : evenements.findByTenantIdAndHorodatageBetweenOrderByHorodatageDesc(ctx.tenant(),
-                du.atStartOfDay().toInstant(ZoneOffset.UTC), au.plusDays(1).atStartOfDay().toInstant(ZoneOffset.UTC))) {
+        for (EvenementTrousse e : periode) {
             String ref = references.getOrDefault(e.getTrousseId(), "#" + e.getTrousseId());
             if (contient(e.getActeur(), f.acteur()) && contient(e.getType(), f.action()) && contient(ref, f.trousse())
                     && (vide(f.texte()) || contient(e.getDetail(), f.texte()) || contient(e.getEmpreinte(), f.texte()))) {

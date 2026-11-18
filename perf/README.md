@@ -61,17 +61,33 @@ PLAN=clm-trousses-load.jmx BASE_PORT=8100 THREADS=50 RAMPUP=10 LOOPS=20 ./run.sh
 PLAN=clm-trousses-load.jmx BASE_PORT=8100 THREADS=500 RAMPUP=60 LOOPS=1 ./run.sh    # 500 concurrents
 ```
 
-**Résultat : objectif non atteint à ce jour.** Les SLO sont respectés à 20 utilisateurs (§ précédent), pas à 500.
+**Résultat après corrections (dernier essai) : 500 utilisateurs concurrents, 1 500 trousses en base, 8 000 requêtes,
+0 erreur.**
+
+| Requête | P95 |
+|---|---|
+| Connexion (`POST /api/auth/login`) | 946 ms |
+| Suivi centralisé (`GET /api/clm/suivi`, 50 lignes) | 130 ms |
+| Détail d'une trousse | 20 ms |
+| Création, dépôt, signataire, parcours, lancement | 19 à 51 ms |
+
+Écriture P95 42 ms (SLO 1 500 ms). Lecture P95 **810 ms pour un SLO de 800 ms** : seul dépassement, dû uniquement à
+la connexion locale (500 hachages BCrypt en 60 s sur un poste de développement). Hors connexion, toutes les lectures
+restent sous 130 ms. En production, les employés d'IQ se connectent par Entra ID (SSO), sans hachage local.
+
+Constats successifs de l'essai :
 
 | Constat | Cause | Suite |
 |---|---|---|
 | Références de trousse en double sous concurrence (409, puis 403 vides) | Numérotation par comptage de toutes les trousses, sans verrou | **Corrigé** : compteur verrouillé par organisation et année (changelog 059) |
 | Erreurs serveur affichées comme 403 vides | Renvoi interne vers `/error` refusé par Spring Security | **Corrigé** : renvoi `ERROR` permis |
 | Connexions refusées en pointe (500 à la connexion) | Pool de 10 connexions | **Corrigé** : pool réglable, 30 par défaut (`DB_POOL_MAX`) |
-| Suivi centralisé à 24 s puis 40 s (P95), qui entraîne tout le reste | Suivi qui relit toutes les trousses et 4 requêtes par ligne | **En partie corrigé** : lecture par tranches, 500 lignes au plus. **Reste à faire** : pagination de l'API et de l'écran (50 lignes par page) et requêtes groupées par page |
+| Suivi centralisé à 24 s puis 40 s (P95), qui entraîne tout le reste | Suivi qui relit toutes les trousses et 4 requêtes par ligne | **Corrigé** : API et écran paginés (50 lignes par page, 200 au plus), filtres en base, lignes calculées en 4 requêtes groupées par page : 130 ms |
+| Relevé d'utilisation lent à forte volumétrie | Une requête par trousse | **Corrigé** : une requête |
 
-Après correction du suivi, l'essai est à refaire ici puis sur l'infrastructure cible (PostgreSQL, Azure Canada).
-C'est là que la mesure engage la soumission ; IQ peut en exiger une autre avant l'acceptation finale.
+Restent à traiter de la même façon, hors du parcours mesuré ici : le tableau de bord (UI-01) et la liste « Mes trousses »
+(UI-02), qui lisent encore toutes les trousses visibles. L'essai est à refaire sur l'infrastructure cible (PostgreSQL,
+Azure Canada) : c'est là que la mesure engage la soumission, et IQ peut en exiger une autre avant l'acceptation finale.
 
 ## Surcharge des seuils
 

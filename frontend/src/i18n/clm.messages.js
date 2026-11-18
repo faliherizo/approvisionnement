@@ -661,7 +661,11 @@ const LIBELLES = {
   'clm.gr.securiteAvancee': ['Permissions fines (sécurité avancée)', 'Fine-grained permissions (advanced security)'],
   // Conservation et destruction (Cahier § 1.4.11, § 1.4.12)
   'clm.co.titre': ['Conservation et destruction', 'Retention and destruction'],
-  'clm.su.limite': ['Les {n} trousses les plus récentes sont affichées : affinez les filtres (statut, période, unité, recherche) pour voir les autres.', 'The {n} most recent packages are shown: refine the filters (status, period, unit, search) to see the others.'],
+  'clm.su.resultatsTotal': ['{n} trousse(s) sur cette page, {total} au total (page {page}).', '{n} package(s) on this page, {total} in total (page {page}).'],
+  'clm.su.resultatsPage': ['{n} trousse(s) sur cette page (page {page}).', '{n} package(s) on this page (page {page}).'],
+  'clm.su.pagination': ['Pages du suivi', 'Tracking pages'], 'clm.su.page': ['Page {n}', 'Page {n}'],
+  'clm.su.precedente': ['Page précédente', 'Previous page'], 'clm.su.suivante': ['Page suivante', 'Next page'],
+  'clm.su.surLaPage': ['(sur cette page)', '(on this page)'],
   'clm.ut.utilisation': ['Utilisation par enveloppe', 'Usage per envelope'],
   'clm.ut.utilisationAide': ['Une enveloppe est une trousse dont l’invitation à signer est partie, quel que soit le nombre de documents ou de signataires. Elle compte une fois, au mois du premier envoi ; une trousse annulée avant l’envoi ne compte pas ; un renvoi ou une correction ne compte pas de nouveau. Tiré du journal scellé.',
     'An envelope is a package whose signing invitation was sent, whatever the number of documents or signers. It counts once, in the month of the first sending; a package cancelled before sending does not count; a resend or correction does not count again. Drawn from the sealed log.'],

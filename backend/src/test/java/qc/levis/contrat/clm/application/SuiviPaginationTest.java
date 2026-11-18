@@ -2,6 +2,7 @@ package qc.levis.contrat.clm.application;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -13,8 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import qc.levis.contrat.clm.application.dto.ClmDto;
 import qc.levis.contrat.clm.application.port.PerimetreUtilisateur;
 import qc.levis.contrat.clm.application.repository.EtapeTrousseRepository;
 import qc.levis.contrat.clm.application.repository.EvenementTrousseRepository;
@@ -22,24 +26,30 @@ import qc.levis.contrat.clm.application.repository.InvitationRepository;
 import qc.levis.contrat.clm.application.repository.MessageSortantRepository;
 import qc.levis.contrat.clm.application.repository.TrousseRepository;
 import qc.levis.contrat.clm.domain.Habilitations;
+import qc.levis.contrat.clm.domain.Invitation;
+import qc.levis.contrat.clm.domain.MessageSortant;
 import qc.levis.contrat.clm.domain.Trousse;
 
 /**
- * Suivi centralisé à la volumétrie d'IQ (addenda 3, Q38 ; 65 000 trousses par an) : lecture par tranches, arrêt à la
- * limite, aucune ligne calculée pour une trousse invisible ou écartée par les filtres.
+ * Suivi paginé à la volumétrie d'IQ (addenda 3, Q38 ; 65 000 trousses par an) : page tirée de la base pour qui voit tout,
+ * parcours par tranches pour les autres, lignes calculées en requêtes groupées et jamais trousse par trousse.
  */
 class SuiviPaginationTest {
 
     private static final Instant T0 = Instant.parse("2026-11-17T12:00:00Z");
     private final TrousseRepository trousses = mock(TrousseRepository.class);
-    private final ParcoursService parcours = mock(ParcoursService.class);
+    private final EtapeTrousseRepository etapes = mock(EtapeTrousseRepository.class);
+    private final MessageSortantRepository sorties = mock(MessageSortantRepository.class);
+    private final InvitationRepository invitations = mock(InvitationRepository.class);
+    private final EvenementTrousseRepository evenements = mock(EvenementTrousseRepository.class);
     private final LectureTrousse lecture = mock(LectureTrousse.class);
     private final PorteeTenantMemoire portee = new PorteeTenantMemoire();
-    private final SuiviService service = new SuiviService(trousses, mock(EtapeTrousseRepository.class), mock(EvenementTrousseRepository.class),
-            mock(InvitationRepository.class), mock(MessageSortantRepository.class), parcours, lecture,
+    private final SuiviService service = new SuiviService(trousses, etapes, evenements, invitations, sorties, mock(ParcoursService.class), lecture,
             new ContexteClm(mock(PerimetreUtilisateur.class), portee, new ObjectMapper(), Clock.fixed(T0, ZoneOffset.UTC)));
     private final Habilitations.Acteur admin = new Habilitations.Acteur("admin@iq.example", Set.of("ADMIN"), Set.of());
+    private final Habilitations.Acteur initiateur = new Habilitations.Acteur("i@iq.example", Set.of("REDACTEUR"), Set.of());
     private static final SuiviService.Filtre TOUT = new SuiviService.Filtre(null, null, null, null, null, null, null, false);
+    private static final SuiviService.Filtre EXCEPTIONS = new SuiviService.Filtre(null, null, null, null, null, null, null, true);
 
     private static List<Trousse> trousses(int debut, int n) {
         List<Trousse> l = new ArrayList<>();
@@ -51,27 +61,69 @@ class SuiviPaginationTest {
         return l;
     }
 
-    @Test
-    void la_lecture_parcourt_les_tranches_et_s_arrete_a_la_limite() {
-        when(trousses.findByTenantIdOrderByMajLeDescIdDesc(eq(3L), eq(PageRequest.of(0, 200))))
-                .thenReturn(new SliceImpl<>(trousses(0, 200), PageRequest.of(0, 200), true));
-        when(trousses.findByTenantIdOrderByMajLeDescIdDesc(eq(3L), eq(PageRequest.of(1, 200))))
-                .thenReturn(new SliceImpl<>(trousses(200, 200), PageRequest.of(1, 200), true));
-        when(lecture.visible(any(), eq(admin))).thenAnswer(i -> !((Trousse) i.getArgument(0)).getReference().endsWith("7"));
-        List<?> lignes = portee.executerDans(3L, () -> service.suivi(admin, TOUT, 250));
-        assertEquals(250, lignes.size(), "arrêt à la limite, au milieu de la deuxième tranche");
-        verify(trousses, never()).findByTenantIdOrderByMajLeDescIdDesc(eq(3L), eq(PageRequest.of(2, 200)));
-        verify(parcours, times(250)).etapesDe(any());
+    @SuppressWarnings("unchecked")
+    private void tranches(int total) {
+        when(trousses.findAll(any(Specification.class), any(Pageable.class))).thenAnswer(i -> {
+            Pageable p = i.getArgument(1);
+            int debut = (int) p.getOffset();
+            int n = Math.max(0, Math.min(p.getPageSize(), total - debut));
+            return new PageImpl<>(trousses(debut, n), p, total);
+        });
     }
 
     @Test
-    void la_derniere_tranche_termine_la_lecture_et_les_filtres_precedent_le_calcul() {
-        when(trousses.findByTenantIdOrderByMajLeDescIdDesc(eq(3L), any()))
-                .thenReturn(new SliceImpl<>(trousses(0, 3), PageRequest.of(0, 200), false));
+    void l_administration_recoit_une_page_de_la_base_avec_le_total_en_quatre_requetes_groupees() {
+        tranches(1_000);
+        ClmDto.SuiviPage page = portee.executerDans(3L, () -> service.page(admin, TOUT, 2, 50));
+        assertEquals(50, page.lignes().size());
+        assertEquals("TR-2026-100", page.lignes().get(0).reference(), "page 2 de 50 : à partir de la 100e");
+        assertEquals(1_000L, page.total());
+        assertTrue(page.suivant());
+        verify(etapes, times(1)).findByTenantIdAndTrousseIdInAndStatut(eq(3L), anyCollection(), any());
+        verify(invitations, times(1)).findByTenantIdAndTrousseIdIn(eq(3L), anyCollection());
+        verify(evenements, times(1)).derniersParTenantIdEtTrousses(eq(3L), anyCollection());
+        verify(lecture, never()).visible(any(), any());
+        assertEquals(SuiviService.TAILLE_MAX, portee.executerDans(3L, () -> service.page(admin, TOUT, -1, 5_000)).taille(), "taille bornée");
+    }
+
+    @Test
+    void un_initiateur_parcourt_les_tranches_selon_sa_visibilite_sans_total() {
+        tranches(450);
+        when(lecture.visible(any(), eq(initiateur))).thenAnswer(i -> ((Trousse) i.getArgument(0)).getId() % 2 == 0);
+        ClmDto.SuiviPage page = portee.executerDans(3L, () -> service.page(initiateur, TOUT, 2, 100));
+        assertEquals(25, page.lignes().size(), "225 trousses visibles : la page 2 de 100 en garde 25");
+        assertEquals("TR-2026-400", page.lignes().get(0).reference());
+        assertNull(page.total());
+        assertFalse(page.suivant());
+        assertTrue(portee.executerDans(3L, () -> service.page(initiateur, TOUT, 0, 100)).suivant());
+    }
+
+    @Test
+    void le_filtre_des_exceptions_ne_retient_que_les_trousses_en_anomalie() {
+        tranches(10);
         when(lecture.visible(any(), any())).thenReturn(true);
-        SuiviService.Filtre filtre = new SuiviService.Filtre("TR-2026-1", null, null, null, null, null, null, false);
-        assertEquals(1, portee.executerDans(3L, () -> service.suivi(admin, filtre)).size());
-        verify(parcours, times(1)).etapesDe(any());
-        assertEquals(500, SuiviService.LIMITE_SUIVI);
+        MessageSortant echec = mock(MessageSortant.class);
+        when(echec.getTrousseId()).thenReturn(3L);
+        when(sorties.findByTenantIdAndTrousseIdInAndStatut(eq(3L), anyCollection(), eq(MessageSortant.Statut.ECHEC))).thenReturn(List.of(echec));
+        Invitation expiree = mock(Invitation.class);
+        when(expiree.getTrousseId()).thenReturn(5L);
+        when(expiree.getStatut()).thenReturn(Invitation.Statut.ENVOYEE);
+        when(expiree.estExpiree(T0)).thenReturn(true);
+        when(invitations.findByTenantIdAndTrousseIdIn(eq(3L), anyCollection())).thenReturn(List.of(expiree));
+        ClmDto.SuiviPage page = portee.executerDans(3L, () -> service.page(admin, EXCEPTIONS, 0, 1));
+        assertEquals(List.of("TR-2026-3"), page.lignes().stream().map(ClmDto.SuiviLigne::reference).toList());
+        assertEquals(List.of(SuiviService.ERREUR_SALESFORCE), page.lignes().get(0).exceptions());
+        assertTrue(page.suivant(), "la trousse 5 suit");
+        ClmDto.SuiviPage deuxieme = portee.executerDans(3L, () -> service.page(admin, EXCEPTIONS, 1, 1));
+        assertEquals(List.of(SuiviService.SIGNATURE_EXPIREE), deuxieme.lignes().get(0).exceptions());
+        assertFalse(deuxieme.suivant());
+    }
+
+    @Test
+    void l_export_parcourt_toutes_les_tranches() {
+        tranches(450);
+        when(lecture.visible(any(), any())).thenReturn(true);
+        String csv = portee.executerDans(3L, () -> service.exporterCsv(admin, TOUT));
+        assertEquals(451, csv.split("\n").length, "en-tête et 450 lignes");
     }
 }

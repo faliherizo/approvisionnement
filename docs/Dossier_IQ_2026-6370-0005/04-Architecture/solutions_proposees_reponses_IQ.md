@@ -158,7 +158,13 @@ Aucune composante utilisée par IQ n'est uniquement en anglais.
 
 ## 11. Capacité : 500 utilisateurs concurrents (add. 3 Q38)
 
-Méthode, configuration et résultats dans [perf/README.md](../../../perf/README.md), section « Q38 ». **État : objectif
-pas encore démontré.** Le premier essai a fait corriger la numérotation concurrente, le masquage des erreurs et la
-taille du pool. La pagination du suivi centralisé est à livrer avant de refaire l'essai, ici puis sur l'infrastructure
-cible. Ce texte ne doit pas être repris dans la soumission avant un essai réussi.
+Méthode, configuration et résultats dans [perf/README.md](../../../perf/README.md), section « Q38 ». 
+
+Solution :
+- numérotation verrouillée ;
+- pool de connexions dimensionné ;
+- suivi centralisé paginé côté serveur, filtres en base, requêtes groupées par page.
+
+Essai sur poste de développement : 500 utilisateurs concurrents, 1 500 trousses, **0 erreur**, suivi P95 130 ms.
+L'essai qui engage la soumission sera refait sur l'infrastructure cible (PostgreSQL, Azure Canada), avec méthode,
+dates, configuration et limites documentées comme l'exige Q38.

@@ -316,6 +316,11 @@
     },
     "word": {
       "titre": "Convention en Word"
+    },
+    "pagination": {
+      "prefixe": "Pagination suivi",
+      "nombre": 51,
+      "taille": 50
     }
   }
 }

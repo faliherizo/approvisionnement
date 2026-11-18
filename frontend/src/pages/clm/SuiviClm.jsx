@@ -6,8 +6,8 @@ import { useI18n } from '../../i18n/I18nContext'
 import { ChoixListe, GardeModule, Message, Statut, dateHeure, telecharger, useErreur, useListe, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 
-/** Lignes renvoyées au plus par le serveur (SuiviService.LIMITE_SUIVI) : au-delà, affiner les filtres. */
-const LIMITE_SUIVI = 500
+/** Lignes par page (SuiviService.TAILLE_DEFAUT) : le serveur pagine, l'écran ne charge jamais toute l'organisation. */
+const TAILLE = 50
 
 const STATUTS = ['BROUILLON', 'EN_TRAITEMENT', 'TERMINEE', 'REJETEE', 'ANNULEE']
 const EXCEPTIONS = ['BLOCAGE', 'ERREUR_SALESFORCE', 'SIGNATURE_EXPIREE']
@@ -22,12 +22,16 @@ function Contenu() {
   const [filtre, setFiltre] = useState(VIDE)
   const [erreur, setErreur] = useState(null)
   const [info, setInfo] = useState('')
+  const [page, setPage] = useState(0)
   const qs = new URLSearchParams(Object.entries(filtre).filter(([, v]) => v !== '' && v !== false)).toString()
-  const { donnees, erreur: errChargement, chargement, recharger } = useRessource(`/clm/suivi?${qs}`)
+  const { donnees, erreur: errChargement, chargement, recharger } = useRessource(`/clm/suivi?${qs}${qs ? '&' : ''}page=${page}&taille=${TAILLE}`)
+  const filtrer = (f) => { setPage(0); setFiltre(f) }
   const maj = (k) => (e) => setForm({ ...form, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
   const admin = hasRole('ADMIN') || hasRole('SUPERADMIN')
   const unites = useListe('CLM_UNITE')
-  const lignes = donnees || []
+  const lignes = donnees?.lignes || []
+  const resultats = donnees?.total != null ? t('clm.su.resultatsTotal', { n: lignes.length, total: donnees.total, page: page + 1 })
+    : t('clm.su.resultatsPage', { n: lignes.length, page: page + 1 })
   const exporter = () => telecharger(`/clm/suivi/export?${qs}`, 'suivi-clm.csv').catch((e) => setErreur(e.response?.status === 403 ? t('clm.tr.exportRefuse') : versErreur(e)))
 
   async function relancerIntegration(l) {
@@ -44,7 +48,7 @@ function Contenu() {
       actions={<button type="button" className="secondary" onClick={exporter}>{t('clm.exporter')}</button>}>
       <Blocs>
         <Bloc zone="02" titre={t('clm.su.blocFiltres')} large>
-          <form className="form-grid form-grid--4" aria-label={t('clm.su.blocFiltres')} onSubmit={(e) => { e.preventDefault(); setFiltre(form) }}>
+          <form className="form-grid form-grid--4" aria-label={t('clm.su.blocFiltres')} onSubmit={(e) => { e.preventDefault(); filtrer(form) }}>
             <label>{t('clm.rechercher')}<input type="search" value={form.q} onChange={maj('q')} /></label>
             <label>{t('clm.col.statut')}<select value={form.statut} onChange={maj('statut')}><option value="">{t('clm.tr.tousStatuts')}</option>{STATUTS.map((s) => <option key={s} value={s}>{t(`clm.statut.${s}`)}</option>)}</select></label>
             <label>{t('clm.champ.unite')}<ChoixListe liste={unites} value={form.unite} vide={t('clm.liste.toutes')}
@@ -54,14 +58,13 @@ function Contenu() {
             <label>{t('clm.su.du')}<input type="date" value={form.du} onChange={maj('du')} /></label>
             <label>{t('clm.su.au')}<input type="date" value={form.au} onChange={maj('au')} /></label>
             <label className="check-row"><input type="checkbox" checked={form.exceptions} onChange={maj('exceptions')} />{t('clm.su.exceptions')}</label>
-            <div className="col-2 cmp-row"><button type="submit">{t('clm.rechercher')}</button><button type="button" className="secondary" onClick={() => { setForm(VIDE); setFiltre(VIDE) }}>{t('clm.reinitialiser')}</button></div>
+            <div className="col-2 cmp-row"><button type="submit">{t('clm.rechercher')}</button><button type="button" className="secondary" onClick={() => { setForm(VIDE); filtrer(VIDE) }}>{t('clm.reinitialiser')}</button></div>
           </form>
         </Bloc>
       </Blocs>
-      <Message erreur={erreur || errChargement} info={chargement ? t('clm.chargement') : info || t('clm.tr.resultats', { n: lignes.length })} onReessayer={recharger} />
+      <Message erreur={erreur || errChargement} info={chargement ? t('clm.chargement') : info || resultats} onReessayer={recharger} />
       <Blocs>
         <Bloc zone="01" titre={t('clm.su.blocTable')} large>
-          {lignes.length >= LIMITE_SUIVI && <p className="clm-info-statique" role="note">{t('clm.su.limite', { n: LIMITE_SUIVI })}</p>}
           {donnees && lignes.length === 0 ? <p className="muted">{t('clm.aucun')}</p> : (
             <div className="table-scroll">
               <table className="table clm-table" data-zone="03">
@@ -90,12 +93,19 @@ function Contenu() {
               </table>
             </div>
           )}
+          {(page > 0 || donnees?.suivant) && (
+            <nav className="cmp-row" aria-label={t('clm.su.pagination')}>
+              <button type="button" className="secondary" disabled={page === 0} onClick={() => setPage(page - 1)}>{t('clm.su.precedente')}</button>
+              <span aria-live="polite">{t('clm.su.page', { n: page + 1 })}</span>
+              <button type="button" className="secondary" disabled={!donnees?.suivant} onClick={() => setPage(page + 1)}>{t('clm.su.suivante')}</button>
+            </nav>
+          )}
         </Bloc>
         <Bloc zone="04" titre={t('clm.su.blocExceptions')}>
           <ul className="clm-liste">
-            {EXCEPTIONS.map((x) => <li key={x}><span aria-hidden="true">⚠</span> {t(`clm.exception.${x}`)} : <strong>{lignes.filter((l) => l.exceptions.includes(x)).length}</strong></li>)}
+            {EXCEPTIONS.map((x) => <li key={x}><span aria-hidden="true">⚠</span> {t(`clm.exception.${x}`)} {t('clm.su.surLaPage')} : <strong>{lignes.filter((l) => l.exceptions.includes(x)).length}</strong></li>)}
           </ul>
-          <button type="button" className="secondary" onClick={() => { const f = { ...form, exceptions: true }; setForm(f); setFiltre(f) }}>{t('clm.su.voirExceptions')}</button>
+          <button type="button" className="secondary" onClick={() => { const f = { ...form, exceptions: true }; setForm(f); filtrer(f) }}>{t('clm.su.voirExceptions')}</button>
         </Bloc>
         <Bloc zone="05" titre={t('clm.su.blocExport')}>
           <p>{t('clm.su.exportAide')}</p>

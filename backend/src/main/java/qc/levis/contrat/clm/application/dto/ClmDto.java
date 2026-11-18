@@ -165,6 +165,10 @@ public final class ClmDto {
                              boolean enRetard, String dernierEvenement, Instant dernierEvenementLe, List<String> exceptions) {
     }
 
+    /** Page du suivi (UI-18) ; {@code total} est nul quand la visibilité se vérifie trousse par trousse. */
+    public record SuiviPage(List<SuiviLigne> lignes, int page, int taille, Long total, boolean suivant) {
+    }
+
     public record TableauBord(Map<String, Long> indicateurs, List<TacheVue> mesActions, List<EvenementVue> activite,
                               List<SortieVue> alertesSalesforce) {
     }
