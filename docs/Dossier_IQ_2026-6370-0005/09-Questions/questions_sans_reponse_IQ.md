@@ -29,16 +29,16 @@ Les questions qui changent le prix, la portée ou la conformité, à renvoyer av
 |---|---|---|
 | C2 | Niveaux configurables par type de document, processus, règles (Q1) | RST-35 |
 | C5 | Signature externe sans compte permanent (Q3) | ✅ |
-| C6 | Formats PDF, validation à long terme, exports à préciser (Q4) | PAdES/CAdES/RFC 3161 ✅ ; LTV à compléter (RST-37) |
+| C6 | Formats PDF, validation à long terme, exports à préciser (Q4) | PAdES-B-LTA, CAdES, RFC 3161 ✅ (RST-37) ; autorité d'horodatage à désigner |
 | C7 | Signature visible à un emplacement configurable (Q5) | ✅ |
 | C8 | Représentant autorisé, preuve d'autorité et qualité tracées (Q6) | RST-32 |
 | C9 | Papier : pas une exigence (Q7) | — |
 | C10 | Délégation interne configurée par parcours conditionnels (Q8) | RST-36 |
 | D2 | Comptes et environnements de test fixés au démarrage (Q9) | Prérequis déclarés |
 | D5 | Administration d'affaires et technique séparées (Q10) | RST-31, ADR-017 |
-| D8 | Comptes de secours justifiés, approuvés, sans contournement (Q12) | RST-39 proposé |
+| D8 | Comptes de secours justifiés, approuvés, sans contournement (Q12) | ✅ RST-39 : réservation par organisation, second facteur, journal ; approbation des comptes par IQ hors plateforme |
 | E2 | Tout accès administratif ou de soutien déclaré avec son territoire (Q13) | Tableau des lieux |
-| E6 | PDF/PDF-A et export massif (Q14) | Export en lot ✅ ; PDF/A à compléter (RST-37) |
+| E6 | PDF/PDF-A et export massif (Q14) | Export en lot ✅ ; PDF/A-2b des documents produits ✅ (RST-37) ; PDF déposés : conformité selon leur source |
 | E8 | Sauvegardes à décrire, RTO 8 h et RPO 4 h (Q15) | Plan de relève `infra/dr` |
 | E9 | Certifications et attestations à déclarer (Q16) | Soumission |
 | F1 | Quorum configurable (Q17) | ✅ |
@@ -46,7 +46,7 @@ Les questions qui changent le prix, la portée ou la conformité, à renvoyer av
 | F4 | Délais, rappels, expirations, annulations, délégations configurables (Q19) | ✅ |
 | F7 | Parcours selon montant, type, programme, unité, rôle (Q20) | RST-36 |
 | G1 | Nombre de modèles inclus et effort additionnel à préciser (Q21) | Bordereau |
-| G2 | Modèles Word d'IQ, structure et présentation préservées dans la mesure du possible (Q22) | Limite déclarée ; RST-38 proposé |
+| G2 | Modèles Word d'IQ, structure et présentation préservées dans la mesure du possible (Q22) | ✅ RST-38 : gabarit Word d'origine fusionné, PDF par LibreOffice ; fidélité limitée aux fonctions Word non rendues par LibreOffice |
 | G6 | Limites de taille à indiquer, ajustables (Q23) | ✅ |
 | J1, J3 | Pas de réduction des niveaux de service ; recours du contrat (Q24, Q25) | Soumission |
 | L2, L5, L8 | Tous les coûts, tiers et sous-traitants déclarés (Q26 à Q28) | Bordereau |

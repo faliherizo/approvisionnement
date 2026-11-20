@@ -117,6 +117,7 @@ class EntitesClmTest {
         t.exigerModifiable();
         t.changerStatut(StatutTrousse.EN_TRAITEMENT, T0.plusSeconds(5));
         assertEquals(T0.plusSeconds(5), t.getMajLe());
+        assertEquals(T0, t.getCreeLe(), "la création reste datée après les changements de statut");
         assertThrows(IllegalStateException.class, t::exigerModifiable);
 
         ModeleContrat m = new ModeleContrat(1L, "cle", 1, "M", "p", T0);

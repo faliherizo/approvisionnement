@@ -106,7 +106,7 @@ test.describe('Tenant IQ — chaque profil n’a que l’espace du module CLM', 
 
   test('l’auditeur consulte toute l’organisation sans intervenir ; le signataire interne ne voit que ce qui le désigne', async ({ page }) => {
     await ouvrirSession(page, users.iqAuditeur)
-    const toutes = await (await page.request.get('/api/clm/trousses')).json()
+    const toutes = (await (await page.request.get('/api/clm/trousses?taille=200')).json()).lignes
     expect(toutes.map((t: { reference: string }) => t.reference)).toContain(reference)
     expect(toutes.every((t: { proprietaire: string }) => t.proprietaire.endsWith('@iq.example')), 'aucune trousse d’une autre organisation')
       .toBeTruthy()
@@ -119,7 +119,7 @@ test.describe('Tenant IQ — chaque profil n’a que l’espace du module CLM', 
     await auditerAxe(page)
 
     await ouvrirSession(page, users.iqSignataire)
-    const siennes = await (await page.request.get('/api/clm/trousses')).json()
+    const siennes = (await (await page.request.get('/api/clm/trousses?taille=200')).json()).lignes
     expect(siennes.map((t: { reference: string }) => t.reference)).not.toContain(reference)
     expect((await page.request.get('/api/clm/admin/journal')).status()).toBe(403)
   })
@@ -131,7 +131,7 @@ test.describe('Tenant IQ — chaque profil n’a que l’espace du module CLM', 
     await expect(page.getByRole('button', { name: 'Pilotage' })).toBeVisible()
     await expect(page.getByRole('button', { name: 'Contrats & signature' })).toBeVisible()
     expect((await page.request.get('/api/dossiers')).status()).toBe(200)
-    const trousses = await (await page.request.get('/api/clm/trousses')).json()
+    const trousses = (await (await page.request.get('/api/clm/trousses?taille=200')).json()).lignes
     expect(trousses.some((t: { proprietaire: string }) => t.proprietaire.endsWith('@iq.example')), 'aucune trousse IQ').toBeFalsy()
     await page.goto('/clm')
     await expect(page.getByRole('link', { name: 'Retour à la plateforme' })).toBeVisible()

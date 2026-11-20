@@ -10,8 +10,14 @@ public interface CachetElectronique {
     /** Signature CMS détachée, encodée DER (fichier {@code .p7s}). */
     byte[] signerDetache(byte[] contenu);
 
-    /** PDF identique, augmenté d'une signature intégrée qui couvre tout le document. */
+    /**
+     * PDF identique, augmenté d'une signature intégrée qui couvre tout le document, des données de validation (DSS) et,
+     * avec une autorité d'horodatage, d'un horodatage de document : PAdES-B-LTA (addenda 4, Q4).
+     */
     byte[] scellerPdf(byte[] pdf, String motif);
+
+    /** Niveau ETSI atteint par {@link #scellerPdf} : « PAdES-B-LTA » avec une autorité d'horodatage, « PAdES-B-B » sinon. */
+    String niveauPades();
 
     /** Titulaire du certificat de cachet (nom distinctif X.500), cité dans le certificat de signature. */
     String titulaire();

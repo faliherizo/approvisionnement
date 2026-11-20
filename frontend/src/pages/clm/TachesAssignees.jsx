@@ -13,7 +13,7 @@ function NouvelleTache({ membres, onCreee, onFermer }) {
   const { t } = useI18n()
   const versErreur = useErreur()
   const priorites = useListe('CLM_PRIORITE_TACHE')
-  const trousses = useRessource('/clm/trousses')
+  const trousses = useRessource('/clm/trousses?taille=200')
   const [f, setF] = useState(VIDE)
   const [erreur, setErreur] = useState(null)
   const titre = useRef(null)
@@ -31,7 +31,7 @@ function NouvelleTache({ membres, onCreee, onFermer }) {
     } catch (x) { setErreur(versErreur(x)) }
   }
 
-  const listeTrousses = trousses.donnees || []
+  const listeTrousses = trousses.donnees?.lignes || []
   return (
     <form className="form clm-sousform" onSubmit={creer} aria-labelledby="clm-tx-nouvelle">
       <h3 id="clm-tx-nouvelle">{t('clm.tx.nouvelle')}</h3>

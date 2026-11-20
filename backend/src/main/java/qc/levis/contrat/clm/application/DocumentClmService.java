@@ -7,16 +7,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import qc.levis.contrat.clm.application.dto.ClmDto;
 import qc.levis.contrat.clm.application.port.AnalyseAntivirus;
+import qc.levis.contrat.clm.application.port.ConversionPdf;
 import qc.levis.contrat.clm.application.port.RenduDocuments;
 import qc.levis.contrat.clm.application.port.SourceAleatoire;
 import qc.levis.contrat.clm.application.repository.DocumentTrousseRepository;
+import qc.levis.contrat.clm.application.repository.GabaritWordRepository;
 import qc.levis.contrat.clm.application.repository.ModeleContratRepository;
 import qc.levis.contrat.clm.domain.DocumentTrousse;
 import qc.levis.contrat.clm.domain.FormatDocument;
+import qc.levis.contrat.clm.domain.GabaritWord;
 import qc.levis.contrat.clm.domain.Habilitations;
 import qc.levis.contrat.clm.domain.Modele;
 import qc.levis.contrat.clm.domain.ModeleContrat;
@@ -28,6 +33,8 @@ import qc.levis.contrat.regle.domain.RegleDef;
 /** Documents d'une trousse (ST-04, RST-16, UI-05/UI-06) et génération depuis un modèle (ST-05/ST-06). */
 @Service
 public class DocumentClmService {
+
+    private static final Logger log = LoggerFactory.getLogger(DocumentClmService.class);
 
     public static final String CLE_GENERE = "contrat-genere";
 
@@ -42,11 +49,16 @@ public class DocumentClmService {
     private final ParametresClmService parametres;
     private final ParcoursService parcours;
     private final ContexteClm ctx;
+    private final GabaritWordRepository gabarits;
+    private final ConversionPdf conversion;
 
     public DocumentClmService(DocumentTrousseRepository documents, ModeleContratRepository modeles, AnalyseAntivirus antivirus,
                               RenduDocuments rendu, SourceAleatoire alea, TrousseService trousses, LectureTrousse lecture,
-                              JournalClm journal, ParametresClmService parametres, ParcoursService parcours, ContexteClm ctx) {
+                              JournalClm journal, ParametresClmService parametres, ParcoursService parcours, ContexteClm ctx,
+                              GabaritWordRepository gabarits, ConversionPdf conversion) {
         this.documents = documents;
+        this.gabarits = gabarits;
+        this.conversion = conversion;
         this.modeles = modeles;
         this.antivirus = antivirus;
         this.rendu = rendu;
@@ -168,9 +180,11 @@ public class DocumentClmService {
                 .orElseThrow(() -> new NoSuchElementException("Modèle introuvable : " + t.getModeleId()));
         Map<String, Object> valeurs = new HashMap<>();
         trousses.valeurs(t).forEach((k, v) -> valeurs.put(k, v.valeur()));
-        String texte = assembler(m, valeurs, ctx).texte();
         boolean word = format == FormatDocument.Type.DOCX;
-        byte[] contenu = word ? rendu.genererDocx(t.getTitre(), texte) : rendu.genererPdf(t.getTitre(), texte);
+        Production production = gabarits.findByModeleIdAndTenantId(m.getId(), m.getTenantId())
+                .map(g -> depuisGabarit(g, m, valeurs, word, t.getTitre()))
+                .orElseGet(() -> depuisTexte(assembler(m, valeurs, ctx).texte(), word, t.getTitre()));
+        byte[] contenu = production.contenu();
         List<DocumentTrousse> precedentes = documents.findByTenantIdAndTrousseIdAndCleDocumentOrderByVersionDesc(t.getTenantId(), t.getId(), CLE_GENERE);
         int version = precedentes.isEmpty() ? 1 : precedentes.get(0).getVersion() + 1;
         precedentes.stream().filter(DocumentTrousse::estCourant).forEach(p -> {
@@ -178,13 +192,44 @@ public class DocumentClmService {
             documents.save(p);
         });
         ClmDto.DocumentVue vue = enregistrer(t, CLE_GENERE, version, t.getReference() + (word ? ".docx" : ".pdf"), contenu, acteur.id(),
-                "Généré depuis « " + m.getNom() + " » v" + m.getNumero());
+                "Généré depuis « " + m.getNom() + " » v" + m.getNumero() + production.precision());
         parcours.nouveauCycle(t, acteur.id(), "Contrat régénéré en cours de parcours (v" + version + ")");
         return vue;
     }
 
-    /** Clauses conditionnelles évaluées par le moteur de règles partagé (VISIBILITE), puis assemblage du texte. */
-    static ClmDto.ApercuModele assembler(ModeleContrat m, Map<String, Object> valeurs, ContexteClm ctx) {
+    /** Document produit et précision portée au motif de version (gabarit Word, rendu simplifié). */
+    private record Production(byte[] contenu, String precision) {
+    }
+
+    private Production depuisTexte(String texte, boolean word, String titre) {
+        return new Production(word ? rendu.genererDocx(titre, texte) : rendu.genererPdf(titre, texte), "");
+    }
+
+    /**
+     * Gabarit Word de l'organisation (addenda 4, Q22) : la mise en page d'origine est conservée en Word et, en PDF, par
+     * le convertisseur du serveur. Sans convertisseur, le PDF reprend le texte fusionné et le motif de version le dit.
+     */
+    private Production depuisGabarit(GabaritWord g, ModeleContrat m, Map<String, Object> valeurs, boolean word, String titre) {
+        Evaluation e = evaluer(m, valeurs, ctx);
+        List<RenduDocuments.ClauseFusionnee> clauses = e.clauses().stream().filter(c -> !e.clausesExclues().contains(c.cle()))
+                .map(c -> new RenduDocuments.ClauseFusionnee(c.titre(), Modele.fusionner(c.texte(), e.visibles()))).toList();
+        byte[] docx = rendu.fusionnerDocx(g.getContenu(), e.visibles(), clauses);
+        if (word) {
+            return new Production(docx, " — gabarit Word « " + g.getNom() + " »");
+        }
+        if (conversion.disponible()) {
+            return new Production(conversion.versPdf(docx), " — gabarit Word « " + g.getNom() + " », mise en page conservée");
+        }
+        log.warn("Convertisseur Word → PDF indisponible : PDF en mise en page simplifiée pour le modèle {}", m.getId());
+        return new Production(rendu.genererPdf(titre, rendu.texte(FormatDocument.Type.DOCX, docx)),
+                " — mise en page simplifiée : convertisseur PDF indisponible, télécharger la version Word pour la mise en page d'origine");
+    }
+
+    /** Clauses et champs après évaluation des conditions de visibilité ; un champ masqué vaut chaîne vide. */
+    record Evaluation(List<Modele.Clause> clauses, Set<String> clausesExclues, List<String> champsMasques, Map<String, Object> visibles) {
+    }
+
+    static Evaluation evaluer(ModeleContrat m, Map<String, Object> valeurs, ContexteClm ctx) {
         List<Modele.Champ> champs = ctx.lire(m.getChampsJson(), TrousseService.CHAMPS, List.of());
         List<Modele.Clause> clauses = ctx.lire(m.getClausesJson(), ModeleService.CLAUSES, List.of());
         List<RegleDef> regles = new ArrayList<>();
@@ -206,9 +251,15 @@ public class DocumentClmService {
         }
         Map<String, Object> visibles = new HashMap<>(valeurs);
         champsMasques.forEach(c -> visibles.put(c, ""));
-        String texte = Modele.assembler(m.getCorps(), clauses, visibles, clausesExclues);
-        List<String> retenues = clauses.stream().map(Modele.Clause::cle).filter(c -> !clausesExclues.contains(c)).toList();
-        return new ClmDto.ApercuModele(texte, retenues, champsMasques, List.of());
+        return new Evaluation(clauses, clausesExclues, champsMasques, visibles);
+    }
+
+    /** Clauses conditionnelles évaluées par le moteur de règles partagé (VISIBILITE), puis assemblage du texte. */
+    static ClmDto.ApercuModele assembler(ModeleContrat m, Map<String, Object> valeurs, ContexteClm ctx) {
+        Evaluation e = evaluer(m, valeurs, ctx);
+        String texte = Modele.assembler(m.getCorps(), e.clauses(), e.visibles(), e.clausesExclues());
+        List<String> retenues = e.clauses().stream().map(Modele.Clause::cle).filter(c -> !e.clausesExclues().contains(c)).toList();
+        return new ClmDto.ApercuModele(texte, retenues, e.champsMasques(), List.of());
     }
 
     private DocumentTrousse exiger(Trousse t, Long documentId) {

@@ -11,7 +11,7 @@
 - `02-Analyse/validation_exigences_fonctionnelles.md`
 - `02-Analyse/impact_addenda_1.md`
 - `02-Analyse/impact_addenda_2.md` — réponses d'IQ du 14 novembre 2026, ajustements RST-20 à RST-25
-- `02-Analyse/impact_addenda_4.md` — réponses d'IQ du 19 novembre 2026, ajustements RST-31 à RST-36, propositions RST-37 à RST-40
+- `02-Analyse/impact_addenda_4.md` — réponses d'IQ du 19 novembre 2026, ajustements RST-31 à RST-36, RST-37 à RST-40 réalisés (ADR-018)
 - `02-Analyse/impact_addenda_3.md` — réponses d'IQ du 17 novembre 2026 (dépôt reporté au 4 décembre), ajustements RST-26 à RST-30
 - `02-Analyse/conformite_exigences_fonctionnelles.md`
 - `02-Analyse/ecarts_solution_vs_exigences.md` — écarts fonctionnels **notre solution vs exigences IQ** (F/NF, 15 stories)

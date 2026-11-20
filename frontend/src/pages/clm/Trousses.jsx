@@ -21,7 +21,8 @@ function Contenu() {
   const [page, setPage] = useState(0)
   const [erreur, setErreur] = useState(null)
   const qs = new URLSearchParams(Object.entries(filtre).filter(([, v]) => v)).toString()
-  const { donnees, erreur: errChargement, chargement, recharger } = useRessource(`/clm/trousses${qs ? `?${qs}` : ''}`)
+  // Pagination côté serveur (RST-40) : la liste ne charge jamais toutes les trousses de l'organisation.
+  const { donnees, erreur: errChargement, chargement, recharger } = useRessource(`/clm/trousses?${qs ? `${qs}&` : ''}page=${page}&taille=${PAR_PAGE}`)
   const maj = (k) => (e) => setForm({ ...form, [k]: e.target.value })
   const types = useListe('CLM_TYPE_CONTRAT')
   const peutInitier = usePeutInitier()
@@ -35,13 +36,14 @@ function Contenu() {
     setPage(0)
   }, [qUrl])
 
-  const lignes = [...(donnees || [])].sort((a, b) => {
+  const lignes = [...(donnees?.lignes || [])].sort((a, b) => {
     const va = a[tri.col] ?? ''
     const vb = b[tri.col] ?? ''
     return (va < vb ? -1 : va > vb ? 1 : 0) * (tri.asc ? 1 : -1)
   })
-  const pages = Math.max(1, Math.ceil(lignes.length / PAR_PAGE))
-  const visibles = lignes.slice(page * PAR_PAGE, (page + 1) * PAR_PAGE)
+  const total = donnees?.total
+  const pages = total != null ? Math.max(1, Math.ceil(total / PAR_PAGE)) : null
+  const visibles = lignes
   const trier = (col) => setTri((x) => ({ col, asc: x.col === col ? !x.asc : true }))
   const colonnesTriables = { reference: t('clm.col.reference'), titre: t('clm.col.objet'), statut: t('clm.col.statut'),
     echeance: t('clm.col.echeance'), majLe: t('clm.col.maj') }
@@ -96,7 +98,7 @@ function Contenu() {
           </Bloc>
         </Blocs>
       </form>
-      <Message erreur={erreur || errChargement} info={chargement ? t('clm.chargement') : t('clm.tr.resultats', { n: lignes.length })} onReessayer={recharger} />
+      <Message erreur={erreur || errChargement} info={chargement ? t('clm.chargement') : t('clm.tr.resultats', { n: total ?? lignes.length })} onReessayer={recharger} />
       <Blocs>
         <Bloc zone="03" titre={t('clm.tr.blocTable')} large>
           {donnees && lignes.length === 0 ? <p className="muted">{t('clm.aucun')}</p> : (
@@ -136,8 +138,8 @@ function Contenu() {
           <nav className="pagination cmp-row" aria-label={t('clm.pagination')} data-zone="04">
             <span>{t('clm.tr.triePar', { col: colonnesTriables[tri.col], sens: t(tri.asc ? 'clm.tri.croissant' : 'clm.tri.decroissant') })}</span>
             <button type="button" className="secondary" disabled={page === 0} onClick={() => setPage(page - 1)}>{t('clm.precedent')}</button>
-            <span aria-live="polite">{t('clm.pageSur', { p: page + 1, n: pages })}</span>
-            <button type="button" className="secondary" disabled={page >= pages - 1} onClick={() => setPage(page + 1)}>{t('clm.suivant')}</button>
+            <span aria-live="polite">{pages ? t('clm.pageSur', { p: page + 1, n: pages }) : t('clm.su.page', { n: page + 1 })}</span>
+            <button type="button" className="secondary" disabled={!donnees?.suivant} onClick={() => setPage(page + 1)}>{t('clm.suivant')}</button>
           </nav>
         </Bloc>
       </Blocs>

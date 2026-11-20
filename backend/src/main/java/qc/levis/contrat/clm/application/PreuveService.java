@@ -180,7 +180,7 @@ public class PreuveService {
         fichiers.put("certificat.pdf", certificatScelle(t, dossier));
         fichiers.put("certificat.json", json(Map.of("trousse", dossier.trousse(), "documents", dossier.documentsFinaux(),
                 "signatures", dossier.signatures(), "integrite", dossier.integrite(), "genereLe", ctx.maintenant().toString(),
-                "cachet", Map.of("titulaire", cachet.titulaire(), "normes", "CAdES (RFC 5652) · PAdES · RFC 3161 si configuré",
+                "cachet", Map.of("titulaire", cachet.titulaire(), "normes", "CAdES (RFC 5652) · " + cachet.niveauPades() + " · PDF/A-2b · RFC 3161 si configuré",
                         "demonstration", cachet.demonstration()))));
         fichiers.put("journal.json", json(dossier.evenements()));
         fichiers.put("LISEZMOI.txt", lisezMoi(t).getBytes(StandardCharsets.UTF_8));

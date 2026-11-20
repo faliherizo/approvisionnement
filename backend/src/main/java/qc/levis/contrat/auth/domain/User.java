@@ -43,6 +43,10 @@ public class User {
     @Column(name = "mfa_active", nullable = false)
     private boolean mfaActive = false;
 
+    /** Compte local de secours désigné et approuvé (addenda 4, Q12) : seul admis en connexion locale si l'organisation la réserve. */
+    @jakarta.persistence.Column(name = "compte_secours", nullable = false)
+    private boolean compteSecours = false;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "mfa_methode")
     private Enums.MfaMethode mfaMethode = Enums.MfaMethode.NONE;
@@ -71,6 +75,8 @@ public class User {
     public Set<Enums.Role> getRoles() { return roles; }
     public void setRoles(Set<Enums.Role> roles) { this.roles = roles; }
     public boolean isMfaActive() { return mfaActive; }
+    public boolean isCompteSecours() { return compteSecours; }
+    public void setCompteSecours(boolean compteSecours) { this.compteSecours = compteSecours; }
     public void setMfaActive(boolean mfaActive) { this.mfaActive = mfaActive; }
     public Enums.MfaMethode getMfaMethode() { return mfaMethode; }
     public void setMfaMethode(Enums.MfaMethode m) { this.mfaMethode = m; }

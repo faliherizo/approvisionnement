@@ -101,6 +101,10 @@ app:
       magasin: ${CLM_CACHET_MAGASIN:}
       mot-de-passe: ${CLM_CACHET_MOT_DE_PASSE:}
       tsa-url: ${CLM_CACHET_TSA_URL:}
+    # Conversion Word → PDF/A des contrats issus d'un gabarit Word (addenda 4, Q22 ; ADR-018).
+    conversion:
+      soffice: ${CLM_CONVERSION_SOFFICE:soffice}
+      delai-secondes: ${CLM_CONVERSION_DELAI_SECONDES:120}
     planificateur:
       actif: ${CLM_PLANIFICATEUR_ACTIF:true}
       delai-ms: ${CLM_PLANIFICATEUR_DELAI_MS:60000}

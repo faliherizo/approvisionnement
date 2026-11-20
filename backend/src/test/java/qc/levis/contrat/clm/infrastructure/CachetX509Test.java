@@ -104,7 +104,10 @@ class CachetX509Test {
             SignerInformation si = new CMSSignedData(new CMSProcessableByteArray(signe), cms).getSignerInfos().getSigners().iterator().next();
             assertNull(si.getSignedAttributes().get(CMSAttributes.signingTime), "PAdES : l'heure est dans le dictionnaire");
             int[] plage = sig.getByteRange();
-            assertEquals(scelle.length, plage[2] + plage[3], "la plage signée couvre tout le fichier");
+            assertTrue(plage[2] + plage[3] < scelle.length, "le DSS s'ajoute en révision incrémentale après la plage signée");
+            assertNotNull(doc.getDocumentCatalog().getCOSObject().getDictionaryObject(org.apache.pdfbox.cos.COSName.getPDFName("DSS")));
+            assertTrue(new String(scelle, 0, plage[2] + plage[3], java.nio.charset.StandardCharsets.ISO_8859_1).strip().endsWith("%%EOF"),
+                    "la plage signée couvre toute la révision signée");
         }
         assertThrows(IllegalStateException.class, () -> cachet.scellerPdf("pas un pdf".getBytes(), "x"));
     }
@@ -234,6 +237,26 @@ class CachetX509Test {
         assertTrue(assertThrows(IllegalStateException.class, () -> new CachetX509(sansCle.toString(), "secret", "", HORLOGE))
                 .getMessage().contains("sans clé privée"));
         assertThrows(IllegalStateException.class, () -> new CachetX509(sansCle.toString(), null, "", HORLOGE), "mot de passe absent");
+    }
+
+    /** Une clé elliptique ne signe pas en SHA256withRSA : le cachet échoue explicitement, sans document à moitié signé. */
+    @Test
+    void une_cle_incompatible_avec_l_algorithme_du_cachet_fait_echouer_la_signature(@TempDir Path dossier) throws Exception {
+        KeyPairGenerator ec = KeyPairGenerator.getInstance("EC");
+        ec.initialize(256);
+        KeyPair cle = ec.generateKeyPair();
+        X500Name nom = new X500Name("CN=Cachet EC");
+        X509Certificate cert = new JcaX509CertificateConverter().getCertificate(new JcaX509v3CertificateBuilder(nom, BigInteger.ONE,
+                new Date(0), new Date(4102444800000L), nom, cle.getPublic()).build(new JcaContentSignerBuilder("SHA256withECDSA").build(cle.getPrivate())));
+        Path magasin = dossier.resolve("ec.p12");
+        KeyStore ks = KeyStore.getInstance("PKCS12");
+        ks.load(null, null);
+        ks.setKeyEntry("cachet", cle.getPrivate(), "secret".toCharArray(), new X509Certificate[]{cert});
+        try (OutputStream out = Files.newOutputStream(magasin)) {
+            ks.store(out, "secret".toCharArray());
+        }
+        CachetX509 cachet = new CachetX509(magasin.toString(), "secret", "", HORLOGE);
+        assertTrue(assertThrows(IllegalStateException.class, () -> cachet.signerDetache(CONTENU)).getMessage().contains("Signature CMS impossible"));
     }
 
     private static TimeStampTokenGenerator generateur(KeyPair cle, X509Certificate cert) throws Exception {

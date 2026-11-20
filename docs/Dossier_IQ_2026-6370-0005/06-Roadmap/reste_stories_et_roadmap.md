@@ -32,10 +32,10 @@ du § 0 garde l'état des stories d'origine ; les lignes ci-dessous le complète
 | RST-34 Attributs SCIM dans les correspondances | Add. 4 Q31 | ✅ | origine `SCIM_ATTRIBUT` |
 | RST-35 Niveau d'authentification par type de document | Add. 4 Q1 | ✅ | liste `CLM_NIVEAU_PAR_TYPE` |
 | RST-36 Acheminement selon type, unité, risque, origine | Add. 4 Q8, Q20 | ✅ | `trousse.*` dans les règles |
-| RST-37 PDF/A-2b et PAdES-LTA | Add. 4 Q4, Q14 | 📋 proposée | M ; dépend de l'autorité d'horodatage retenue |
-| RST-38 Modèles Word d'IQ avec mise en page préservée | Add. 4 Q22 | 📋 proposée | L ; fusion dans le `.docx` + conversion PDF serveur |
-| RST-39 Comptes locaux de secours restreints | Add. 4 Q12 | 📋 proposée | S ; second facteur obligatoire, journal |
-| RST-40 Tableau de bord et « Mes trousses » paginés | Add. 3 Q38 | 📋 proposée | M ; même traitement que le suivi |
+| RST-37 PDF/A-2b et PAdES-LTA | Add. 4 Q4, Q14 | ✅ 2026-11-20 | PDF/A-2b généré (police intégrée, XMP, sRGB) ; DSS + horodatage de document → B-LTA avec l'autorité retenue ([ADR-018](../../adr/ADR-018-pdfa-pades-lta-et-gabarits-word.md)) ; validation veraPDF en recette |
+| RST-38 Modèles Word d'IQ avec mise en page préservée | Add. 4 Q22 | ✅ 2026-11-20 | Gabarit `.docx` par modèle, fusion POI (runs, tableaux, en-têtes), clauses au marqueur ; PDF/A par LibreOffice dans l'image serveur |
+| RST-39 Comptes locaux de secours restreints | Add. 4 Q12 | ✅ 2026-11-20 | Réservation de la connexion locale par organisation, comptes de secours désignés par l'administration technique, second facteur exigé, journal |
+| RST-40 Tableau de bord et « Mes trousses » paginés | Add. 3 Q38 | ✅ 2026-11-20 | `LecturePaginee` : page en base avec total (admin, audit), sinon tranches de 200 ; tableau de bord par décomptes |
 
 **Avant le dépôt :**
 - retransmettre à IQ les questions du § 0 de `09-Questions/questions_sans_reponse_IQ.md` ;
@@ -64,7 +64,7 @@ Légende : ✅ livrée et testée · ✅🔌 livrée et testée, recette sur le 
 | ST-10 Dossier de preuve & export | ✅ | `PreuveService` : certificat PDF/JSON, manifeste SHA-256, sceau HMAC, archive ZIP portable, vérification qui détecte une altération en base ; UI-19 | — |
 | ST-11 Notifications, rappels, échéances | ✅ | `RappelService` (non-réponse, échéances), `MessagerieClm` (modèle par événement et canal, copies) ; UI-17 | — |
 | ST-12 Statuts vers Salesforce | ✅🔌 | Boîte d'envoi `MessageSortant` : idempotence, reprises, file d'erreur, relance, corrélation ; UI-21 | Recette sur le bac à sable Salesforce d'IQ |
-| ST-13 Suivi centralisé | ✅ | `SuiviService` : filtres en base, pagination serveur (50 lignes), requêtes groupées, exceptions, export CSV ; UI-01/18 | Tableau de bord et « Mes trousses » à paginer (RST-40) |
+| ST-13 Suivi centralisé | ✅ | `SuiviService` : filtres en base, pagination serveur (50 lignes), requêtes groupées, exceptions, export CSV ; UI-01/18 | Tableau de bord et « Mes trousses » paginés (RST-40 ✅) |
 | ST-14 Administration, audit, exploitation | ✅ | Audit lié à la trousse (journal scellé + audit du tenant), configuration UI-17/21/22, journal UI-23 et export CSV ; alertes d'exploitation (`AlertesExploitation` : altération détectée, file d'erreur Salesforce, échec du planificateur) relevées par Azure Monitor (`infra/terraform/azure/monitoring.tf`) ; runbook `04-Architecture/runbook_exploitation_clm.md` | Appliquer le Terraform sur l'abonnement retenu (RST-18) |
 | ST-15 CLM avancé & IA (option) | ✅ | `AnalyseService`/`AnalyseContrat` : métadonnées, classification, anomalies, validation humaine justifiée ; module `clm_ia` activable par le superadmin ; UI-24 | — |
 | RST-16 25 Mo + PDF/Word | ✅ | Taille configurable (`CLM_TAILLE_MAX_OCTETS`, 25 Mo), format vérifié sur les octets, analyse antivirus (port) | — |

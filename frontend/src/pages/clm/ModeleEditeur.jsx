@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import api from '../../api'
 import { useI18n } from '../../i18n/I18nContext'
-import { ChoixListe, EditeurCondition, GardeModule, Message, Statut, dateHeure, useErreur, useListe } from './commun.jsx'
+import { ChoixListe, EditeurCondition, GardeModule, Message, Statut, dateHeure, telecharger, useErreur, useListe } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 import { EditeurParcours, depuisRequete, versRequete } from './OngletParcours.jsx'
 
@@ -12,6 +12,51 @@ const PAS = 1
 
 const nettoyerChamp = (c) => ({ ...c, format: c.format || null, source: c.source || null, valeurDefaut: c.valeurDefaut || null,
   roleDestinataire: c.roleDestinataire || null, options: (c.options || []).filter(Boolean), conditions: (c.conditions || []).filter((x) => x.champ) })
+
+/**
+ * Gabarit Word d'origine (addenda 4, Q22) : le contrat est généré dans ce .docx, mise en page conservée ; ses variables
+ * {{cle}} doivent être des champs du modèle et {{clauses}} marque l'emplacement des clauses retenues.
+ */
+function GabaritWord({ m, modifiable, onNom, onErreur, onInfo }) {
+  const { t } = useI18n()
+  const versErreur = useErreur()
+  const [fichier, setFichier] = useState(null)
+  const [cle, setCle] = useState(0)
+  async function deposer(e) {
+    e.preventDefault()
+    if (!fichier) return
+    const corps = new FormData()
+    corps.append('fichier', fichier)
+    try {
+      const { data } = await api.post(`/clm/modeles/${m.id}/gabarit-word`, corps)
+      onNom(data.gabaritWord); setFichier(null); setCle((k) => k + 1); onInfo(t('clm.gw.depose', { nom: data.gabaritWord }))
+    } catch (x) { onErreur(versErreur(x)) }
+  }
+  async function retirer() {
+    try { await api.delete(`/clm/modeles/${m.id}/gabarit-word`); onNom(null); onInfo(t('clm.gw.retire')) } catch (x) { onErreur(versErreur(x)) }
+  }
+  const charger = () => telecharger(`/clm/modeles/${m.id}/gabarit-word`, m.gabaritWord).catch((x) => onErreur(versErreur(x)))
+  return (
+    <Bloc titre={t('clm.gw.titre')}>
+      <p className="muted">{t('clm.gw.aide')}</p>
+      {m.gabaritWord ? (
+        <div className="cmp-row">
+          <span>{t('clm.gw.actuel', { nom: m.gabaritWord })}</span>
+          <button type="button" className="secondary" onClick={charger}>{t('clm.gw.telecharger')}</button>
+          {modifiable && <button type="button" className="secondary" onClick={retirer}>{t('clm.gw.retirer')}</button>}
+        </div>
+      ) : <p>{t('clm.gw.aucun')}</p>}
+      {modifiable && (
+        <form className="clm-gabarit" onSubmit={deposer}>
+          <label>{t('clm.gw.fichier')}
+            <input key={cle} type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              onChange={(e) => setFichier(e.target.files?.[0] || null)} /></label>
+          <button type="submit" disabled={!fichier}>{t('clm.gw.deposer')}</button>
+        </form>
+      )}
+    </Bloc>
+  )
+}
 
 /** Positionnement visuel (ST-05) : page schématique ; la zone sélectionnée se déplace aux flèches (alternative au glisser, WCAG 2.5.7). */
 function PagePositions({ champs, choisi, onChoisir, onDeplacer }) {
@@ -151,6 +196,8 @@ function Contenu() {
               <label className="col-2">{t('clm.mo.groupes')} <span className="muted">{t('clm.mo.groupesAide')}</span><input value={m.groupes || ''} onChange={(e) => setM({ ...m, groupes: e.target.value })} /></label>
             </div>
           </Bloc>
+          <GabaritWord m={m} modifiable={modifiable} onNom={(nom) => setM((x) => ({ ...x, gabaritWord: nom }))}
+            onErreur={(e) => { setInfo(''); setErreur(e) }} onInfo={(i) => { setErreur(null); setInfo(i) }} />
         </div>
         <div className="clm-editeur__col">
           <Bloc zone="02" titre={t('clm.mo.blocChamps')}>

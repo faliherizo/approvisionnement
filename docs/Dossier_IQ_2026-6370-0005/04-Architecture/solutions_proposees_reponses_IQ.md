@@ -204,8 +204,13 @@ Analyse et vérifications : [impact_addenda_4.md](../02-Analyse/impact_addenda_4
 
 **Horodatage :** RFC 3161 par l'autorité retenue.
 
-**À compléter (RST-37) :** génération en PDF/A-2b, et PAdES à validation longue (LTA : certificats, réponses OCSP ou
-listes de révocation, jeton d'horodatage d'archive). Cette limite est déclarée.
+**PDF/A et validation à long terme (RST-37, [ADR-018](../../adr/ADR-018-pdfa-pades-lta-et-gabarits-word.md)) :**
+
+- documents produits (contrats, certificats de signature et de destruction) en PDF/A-2b : police intégrée,
+  métadonnées XMP, profil sRGB ; l'apposition des signatures préserve la conformité ;
+- scellement PAdES-B-LTA avec l'autorité d'horodatage retenue : signature horodatée, DSS (chaîne de certificats,
+  certificats d'horodatage, listes de révocation), puis horodatage de document couvrant le tout ;
+- PDF déposés par les utilisateurs : conservés tels quels, leur conformité PDF/A dépend de leur source.
 
 ### 12.3 Représentants d'entreprise (Q6)
 
@@ -219,8 +224,9 @@ certificat.
   principale cumulant les deux ([ADR-017](../../adr/ADR-017-separation-des-administrations.md)).
 - **Provisionnement :** SCIM 2.0 avec mappage des groupes et attributs (département, titre, division…), désactivation
   immédiate ([guide](guide_annuaire_scim.md)).
-- **Comptes locaux :** second facteur disponible ; réservation à des comptes de secours désignés et approuvés par IQ
-  à réaliser (RST-39).
+- **Comptes locaux (RST-39) :** l'administration technique désigne les comptes de secours (second facteur exigé) et
+  peut réserver la connexion locale à eux seuls ; toute autre personne passe par l'authentification unique. Chaque
+  connexion de secours et chaque refus sont journalisés. L'approbation des comptes reste une décision d'IQ.
 
 ### 12.5 Parcours (Q8, Q17 à Q20)
 
@@ -235,8 +241,10 @@ certificat.
 - **Modèles :**
   - corps de texte avec variables, clauses conditionnelles, champs positionnés ;
   - génération en PDF ou en Word modifiable ;
-  - un modèle Word d'IQ se reprend aujourd'hui par conversion en modèle à variables : sa mise en page n'est pas
-    conservée (limite déclarée ; RST-38 la lève).
+  - gabarit Word d'IQ (RST-38) : le `.docx` d'origine se dépose sur le modèle ; ses variables `{{cle}}` et le
+    marqueur `{{clauses}}` sont remplacés en conservant styles, tableaux, en-têtes, pieds de page et logos ; le PDF
+    est produit par LibreOffice côté serveur (PDF/A-2). Limite : les fonctions Word que LibreOffice ne rend pas à
+    l'identique (certaines macros, champs dynamiques avancés).
 - **Taille des documents :** 25 Mo par défaut, réglable par l'organisation jusqu'au plafond de la plateforme (30 Mo
   par défaut, configurable au déploiement), sans effet sur la tarification.
 

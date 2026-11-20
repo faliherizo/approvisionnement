@@ -145,7 +145,7 @@ class AdaptateursClmTest {
 
     @Test
     void rendu_genere_lit_et_appose() throws Exception {
-        RenduDocumentsPdf rendu = new RenduDocumentsPdf();
+        RenduDocumentsPdf rendu = new RenduDocumentsPdf(java.time.Clock.fixed(T0, java.time.ZoneOffset.UTC));
         byte[] pdf = rendu.genererPdf("Convention", "Montant : 250 000 $\n\nGarantie");
         assertEquals(FormatDocument.Type.PDF, FormatDocument.verifier("c.pdf", pdf, Long.MAX_VALUE));
         assertTrue(rendu.texte(FormatDocument.Type.PDF, pdf).contains("Garantie"));
@@ -156,8 +156,7 @@ class AdaptateursClmTest {
         try (PDDocument doc = PDDocument.load(signe)) {
             assertEquals(2, doc.getNumberOfPages(), "page de signatures ajoutée pour l'apposition sans zone");
         }
-        assertTrue(rendu.texte(FormatDocument.Type.PDF, signe).contains("Marie ? Tremblay"));
-        assertEquals("é?€", RenduDocumentsPdf.winAnsi("é→€"));
+        assertTrue(rendu.texte(FormatDocument.Type.PDF, signe).contains("Marie → Tremblay"));
         assertThrows(IllegalStateException.class, () -> rendu.texte(FormatDocument.Type.PDF, "pas un pdf".getBytes()));
         assertThrows(IllegalStateException.class, () -> rendu.apposer("pas un pdf".getBytes(), List.of()));
 

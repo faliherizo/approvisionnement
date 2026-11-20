@@ -155,7 +155,7 @@ public final class ClmDto {
     public record ModeleVue(Long id, String cleModele, int numero, String nom, String categorie, String statut,
                             String proprietaire, String groupes, String corps, List<Modele.Champ> champs,
                             List<Modele.Clause> clauses, List<EtapeRequest> parcours, Instant majLe, long verrou,
-                            long trousses) {
+                            long trousses, String gabaritWord) {
     }
 
     public record Validation(boolean valide, List<String> erreurs) {
@@ -167,6 +167,10 @@ public final class ClmDto {
     public record SuiviLigne(Long id, String reference, String titre, String statut, String source, String unite,
                              String proprietaire, List<String> etapesActives, List<String> enAttenteDe, Instant echeance,
                              boolean enRetard, String dernierEvenement, Instant dernierEvenementLe, List<String> exceptions) {
+    }
+
+    /** Page de la liste des trousses (UI-02) ; {@code total} nul quand la visibilité se vérifie trousse par trousse. */
+    public record TroussesPage(List<TrousseResume> lignes, int page, int taille, Long total, boolean suivant) {
     }
 
     /** Page du suivi (UI-18) ; {@code total} est nul quand la visibilité se vérifie trousse par trousse. */

@@ -248,7 +248,8 @@ public final class Modele {
         return marqueur || blocClauses.length() == 0 ? fusion : fusion + "\n\n" + blocClauses.toString().trim();
     }
 
-    static String fusionner(String gabarit, Map<String, Object> valeurs) {
+    /** Variables remplacées ; une variable sans valeur reste visible entre crochets pour la relecture. */
+    public static String fusionner(String gabarit, Map<String, Object> valeurs) {
         if (gabarit == null) {
             return "";
         }

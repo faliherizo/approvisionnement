@@ -45,7 +45,8 @@ class SuiviPaginationTest {
     private final LectureTrousse lecture = mock(LectureTrousse.class);
     private final PorteeTenantMemoire portee = new PorteeTenantMemoire();
     private final SuiviService service = new SuiviService(trousses, etapes, evenements, invitations, sorties, mock(ParcoursService.class), lecture,
-            new ContexteClm(mock(PerimetreUtilisateur.class), portee, new ObjectMapper(), Clock.fixed(T0, ZoneOffset.UTC)));
+            new ContexteClm(mock(PerimetreUtilisateur.class), portee, new ObjectMapper(), Clock.fixed(T0, ZoneOffset.UTC)),
+            new LecturePaginee(trousses, lecture));
     private final Habilitations.Acteur admin = new Habilitations.Acteur("admin@iq.example", Set.of("ADMIN"), Set.of());
     private final Habilitations.Acteur initiateur = new Habilitations.Acteur("i@iq.example", Set.of("REDACTEUR"), Set.of());
     private static final SuiviService.Filtre TOUT = new SuiviService.Filtre(null, null, null, null, null, null, null, false);
@@ -126,4 +127,47 @@ class SuiviPaginationTest {
         String csv = portee.executerDans(3L, () -> service.exporterCsv(admin, TOUT));
         assertEquals(451, csv.split("\n").length, "en-tête et 450 lignes");
     }
+
+    @Test
+    void le_tableau_de_bord_compte_en_base_pour_qui_voit_tout_et_par_tranches_sinon() {
+        tranches(3);
+        when(trousses.count(any(Specification.class))).thenReturn(4L, 9L);
+        qc.levis.contrat.clm.domain.EtapeTrousse validation = mock(qc.levis.contrat.clm.domain.EtapeTrousse.class);
+        when(validation.getTrousseId()).thenReturn(1L);
+        when(validation.getType()).thenReturn(qc.levis.contrat.clm.domain.Parcours.TypeEtape.VALIDATION);
+        when(validation.getEcheance()).thenReturn(T0.minusSeconds(60));
+        qc.levis.contrat.clm.domain.EtapeTrousse signature = mock(qc.levis.contrat.clm.domain.EtapeTrousse.class);
+        when(signature.getTrousseId()).thenReturn(2L);
+        when(signature.getType()).thenReturn(qc.levis.contrat.clm.domain.Parcours.TypeEtape.SIGNATURE);
+        when(etapes.findByTenantIdAndTrousseIdInAndStatut(eq(3L), anyCollection(), any())).thenReturn(List.of(validation, signature));
+        qc.levis.contrat.clm.domain.EvenementTrousse evt = mock(qc.levis.contrat.clm.domain.EvenementTrousse.class);
+        when(evt.getTrousseId()).thenReturn(1L);
+        when(evt.getType()).thenReturn("TROUSSE_LANCEE");
+        when(evenements.findTop30ByTenantIdOrderByHorodatageDesc(3L)).thenReturn(List.of(evt));
+        MessageSortant echec = mock(MessageSortant.class);
+        when(echec.getTrousseId()).thenReturn(2L);
+        when(echec.getStatut()).thenReturn(MessageSortant.Statut.ECHEC);
+        when(sorties.findTop50ByTenantIdAndStatutOrderByCreeLeDesc(3L, MessageSortant.Statut.ECHEC)).thenReturn(List.of(echec));
+        when(trousses.findByTenantIdAndIdIn(eq(3L), anyCollection())).thenReturn(trousses(1, 2));
+        when(lecture.visible(any(), any())).thenReturn(true);
+
+        ClmDto.TableauBord admin = portee.executerDans(3L, () -> service.tableauBord(this.admin, TOUT));
+        assertEquals(java.util.Map.of("brouillons", 4L, "enValidation", 1L, "enSignature", 1L, "enRetard", 1L, "terminees", 9L), admin.indicateurs());
+        assertEquals(1, admin.activite().size());
+        assertEquals(1, admin.alertesSalesforce().size());
+
+        ClmDto.TableauBord perso = portee.executerDans(3L, () -> service.tableauBord(initiateur, TOUT));
+        assertEquals(0L, perso.indicateurs().get("terminees"), "trousses neuves : brouillons seulement");
+        assertEquals(3L, perso.indicateurs().get("brouillons"));
+        assertEquals(0L, perso.indicateurs().get("enValidation"), "aucune trousse en traitement : aucune étape lue");
+    }
+
+    @Test
+    void sans_activite_ni_alerte_aucune_trousse_n_est_relue() {
+        tranches(0);
+        ClmDto.TableauBord vide = portee.executerDans(3L, () -> service.tableauBord(initiateur, TOUT));
+        assertTrue(vide.activite().isEmpty() && vide.alertesSalesforce().isEmpty());
+        verify(trousses, never()).findByTenantIdAndIdIn(any(), anyCollection());
+    }
 }
+

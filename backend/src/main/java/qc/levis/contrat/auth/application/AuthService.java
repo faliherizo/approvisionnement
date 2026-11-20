@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import qc.levis.contrat.audit.application.AuditService;
 import qc.levis.contrat.auth.application.repository.UserRepository;
 import qc.levis.contrat.auth.domain.SecurityQuestion;
+import qc.levis.contrat.auth.application.repository.PolitiqueConnexionRepository;
+import qc.levis.contrat.auth.domain.PolitiqueConnexion;
 import qc.levis.contrat.auth.domain.User;
 import qc.levis.contrat.commun.domain.Enums;
 
@@ -32,14 +34,17 @@ public class AuthService {
     private final JwtService jwt;
     private final TotpService totp;
     private final AuditService audit;
+    private final PolitiqueConnexionRepository politiques;
 
     public AuthService(UserRepository users, PasswordEncoder encoder, JwtService jwt,
-                       TotpService totp, AuditService audit) {
+                       TotpService totp, AuditService audit,
+                       PolitiqueConnexionRepository politiques) {
         this.users = users;
         this.encoder = encoder;
         this.jwt = jwt;
         this.totp = totp;
         this.audit = audit;
+        this.politiques = politiques;
     }
 
     public Outcome authentifier(String email, String motDePasse,
@@ -51,6 +56,10 @@ public class AuthService {
             return new Outcome(Outcome.Status.ECHEC, null, null, null, null, "Identifiants invalides");
         }
 
+        Outcome refus = refusLocal(user, email);
+        if (refus != null) {
+            return refus;
+        }
         if (!user.isMfaActive() || user.getMfaMethode() == Enums.MfaMethode.NONE) {
             return succes(user);
         }
@@ -102,10 +111,29 @@ public class AuthService {
         return encoder.encode(normaliser(valeur));
     }
 
+    /**
+     * Connexion locale réservée aux comptes de secours (addenda 4, Q12) : tout autre compte de l'organisation passe par
+     * l'authentification unique ; un compte de secours sans second facteur est refusé. Chaque refus est journalisé.
+     */
+    private Outcome refusLocal(User user, String email) {
+        PolitiqueConnexion.Refus refus = user.getTenantId() == null ? null : politiques.findById(user.getTenantId())
+                .map(p -> p.refus(user.isCompteSecours(), user.isMfaActive() && user.getMfaMethode() != Enums.MfaMethode.NONE))
+                .orElse(null);
+        if (refus == null) {
+            return null;
+        }
+        String motif = refus == PolitiqueConnexion.Refus.RESERVEE_AUX_SECOURS
+                ? "Connexion locale réservée aux comptes de secours : utilisez l'authentification unique de l'organisation."
+                : "Compte de secours sans second facteur : activez-le avant de vous connecter.";
+        audit.log(user.getTenantId(), email, "CONNEXION_LOCALE_REFUSEE", "User", user.getId(), refus.name());
+        log.warn("Connexion locale refusée pour {} : {}", masquer(email), refus);
+        return new Outcome(Outcome.Status.ECHEC, null, null, null, null, motif);
+    }
+
     private Outcome succes(User user) {
         List<String> roles = user.getRoles().stream().map(Enum::name).toList();
         String token = jwt.genererToken(user.getEmail(), roles, user.getTenantId());
-        audit.log(user.getTenantId(), user.getEmail(), "LOGIN", "User", user.getId(), null);
+        audit.log(user.getTenantId(), user.getEmail(), user.isCompteSecours() ? "CONNEXION_SECOURS" : "LOGIN", "User", user.getId(), null);
         // On journalise l'identifiant technique et les rôles, jamais le jeton ni le mot de passe.
         log.info("Connexion réussie : utilisateur {} (tenant {}, rôles {})",
                 user.getId(), user.getTenantId(), roles);

@@ -1,21 +1,18 @@
 package qc.levis.contrat.clm.infrastructure;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.Font;
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.PageSize;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.pdf.PdfWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.Clock;
+import java.util.Calendar;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -24,9 +21,21 @@ import qc.levis.contrat.clm.application.port.RenduDocuments;
 import qc.levis.contrat.clm.domain.FormatDocument;
 import qc.levis.contrat.clm.domain.Modele;
 
-/** Rendu documentaire : extraction de texte (PDFBox, POI), génération (OpenPDF), apposition des signatures (PDFBox). */
+/** Rendu documentaire : extraction de texte (PDFBox, POI), génération PDF/A-2b et apposition des signatures (PDFBox). */
 @Component
 public class RenduDocumentsPdf implements RenduDocuments {
+
+    private static final float MARGE = 60;
+    private static final float LARGEUR_UTILE = PDRectangle.LETTER.getWidth() - 2 * MARGE;
+    private static final float TAILLE_TITRE = 16;
+    private static final float TAILLE_CORPS = 11;
+    private static final float INTERLIGNE = 1.35f;
+
+    private final Clock horloge;
+
+    public RenduDocumentsPdf(Clock horloge) {
+        this.horloge = horloge;
+    }
 
     @Override
     public String texte(FormatDocument.Type type, byte[] contenu) {
@@ -45,53 +54,135 @@ public class RenduDocumentsPdf implements RenduDocuments {
         }
     }
 
+    /** PDF/A-2b : police intégrée, métadonnées et profil de couleur (addenda 4, Q14). */
     @Override
     public byte[] genererPdf(String titre, String texte) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Document doc = new Document(PageSize.LETTER, 60, 60, 60, 60);
-        PdfWriter.getInstance(doc, out);
-        doc.open();
-        doc.add(new Paragraph(titre == null ? "" : titre, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
-        doc.add(new Paragraph(" "));
-        Font corps = FontFactory.getFont(FontFactory.HELVETICA, 11);
-        for (String ligne : (texte == null ? "" : texte).split("\n", -1)) {
-            doc.add(new Paragraph(ligne.isEmpty() ? " " : ligne, corps));
+        return produire("Génération PDF impossible.", out -> {
+            try (PDDocument doc = new PDDocument()) {
+                PDFont police = ConformitePdfA.police(doc);
+                Mise mise = new Mise(doc, police);
+                mise.paragraphe(titre == null ? "" : titre, TAILLE_TITRE);
+                mise.paragraphe("", TAILLE_CORPS);
+                for (String ligne : (texte == null ? "" : texte).split("\n", -1)) {
+                    mise.paragraphe(ligne, TAILLE_CORPS);
+                }
+                mise.fermer();
+                ConformitePdfA.declarer(doc, titre == null ? "" : titre, maintenant());
+                doc.save(out);
+            }
+        });
+    }
+
+    /** Production en mémoire : les échecs d'écriture, de police ou de métadonnées deviennent une erreur explicite. */
+    @FunctionalInterface
+    private interface Production {
+        void dans(ByteArrayOutputStream out) throws Exception;
+    }
+
+    private static byte[] produire(String echec, Production production) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            production.dans(out);
+            return out.toByteArray();
+        } catch (Exception e) {
+            throw new IllegalStateException(echec, e);
         }
-        doc.close();
-        return out.toByteArray();
+    }
+
+    private Calendar maintenant() {
+        Calendar le = Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC"));
+        le.setTimeInMillis(horloge.millis());
+        return le;
+    }
+
+    /** Mise en page lettre US, marges de 60 points, retour à la ligne au mot et saut de page. */
+    private static final class Mise {
+        private final PDDocument doc;
+        private final PDFont police;
+        private PDPageContentStream cs;
+        private float y;
+
+        Mise(PDDocument doc, PDFont police) {
+            this.doc = doc;
+            this.police = police;
+        }
+
+        void paragraphe(String texte, float taille) throws IOException {
+            for (String ligne : lignes(ConformitePdfA.affichable(police, texte), taille)) {
+                if (cs == null || y < MARGE + taille) {
+                    nouvellePage();
+                }
+                y -= taille * INTERLIGNE;
+                ecrire(cs, MARGE, y, taille, police, ligne);
+            }
+        }
+
+        private List<String> lignes(String texte, float taille) throws IOException {
+            List<String> lignes = new ArrayList<>();
+            StringBuilder courante = new StringBuilder();
+            for (String mot : texte.split(" ", -1)) {
+                String essai = courante.isEmpty() ? mot : courante + " " + mot;
+                if (!courante.isEmpty() && police.getStringWidth(essai) / 1000 * taille > LARGEUR_UTILE) {
+                    lignes.add(courante.toString());
+                    courante = new StringBuilder(mot);
+                } else {
+                    courante = new StringBuilder(essai);
+                }
+            }
+            lignes.add(courante.toString());
+            return lignes;
+        }
+
+        private void nouvellePage() throws IOException {
+            fermer();
+            PDPage page = new PDPage(PDRectangle.LETTER);
+            doc.addPage(page);
+            cs = new PDPageContentStream(doc, page);
+            y = PDRectangle.LETTER.getHeight() - MARGE;
+        }
+
+        void fermer() throws IOException {
+            if (cs != null) {
+                cs.close();
+            }
+        }
+    }
+
+    @Override
+    public byte[] fusionnerDocx(byte[] gabarit, Map<String, Object> valeurs, List<ClauseFusionnee> clauses) {
+        return FusionDocx.fusionner(gabarit, valeurs, clauses);
     }
 
     @Override
     public byte[] genererDocx(String titre, String texte) {
-        try (XWPFDocument doc = new XWPFDocument(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            org.apache.poi.xwpf.usermodel.XWPFRun t = doc.createParagraph().createRun();
-            t.setBold(true);
-            t.setFontSize(16);
-            t.setText(titre == null ? "" : titre);
-            for (String ligne : (texte == null ? "" : texte).split("\n", -1)) {
-                doc.createParagraph().createRun().setText(ligne);
+        return produire("Génération Word impossible.", out -> {
+            try (XWPFDocument doc = new XWPFDocument()) {
+                org.apache.poi.xwpf.usermodel.XWPFRun t = doc.createParagraph().createRun();
+                t.setBold(true);
+                t.setFontSize(16);
+                t.setText(titre == null ? "" : titre);
+                for (String ligne : (texte == null ? "" : texte).split("\n", -1)) {
+                    doc.createParagraph().createRun().setText(ligne);
+                }
+                doc.write(out);
             }
-            doc.write(out);
-            return out.toByteArray();
-        } catch (IOException e) {
-            throw new IllegalStateException("Génération Word impossible.", e);
-        }
+        });
     }
 
     @Override
     public byte[] apposer(byte[] pdf, List<Apposition> appositions) {
         try (PDDocument doc = PDDocument.load(pdf); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            PDFont police = ConformitePdfA.police(doc);
             List<Apposition> sansZone = new ArrayList<>();
             for (Apposition a : appositions) {
                 Modele.Position p = a.position();
                 if (p == null || p.page() > doc.getNumberOfPages()) {
                     sansZone.add(a);
                 } else {
-                    dansZone(doc, doc.getPage(p.page() - 1), a);
+                    dansZone(doc, doc.getPage(p.page() - 1), a, police);
                 }
             }
             if (!sansZone.isEmpty()) {
-                pageDeSignatures(doc, sansZone);
+                pageDeSignatures(doc, sansZone, police);
             }
             doc.save(out);
             return out.toByteArray();
@@ -100,7 +191,7 @@ public class RenduDocumentsPdf implements RenduDocuments {
         }
     }
 
-    private void dansZone(PDDocument doc, PDPage page, Apposition a) throws IOException {
+    private void dansZone(PDDocument doc, PDPage page, Apposition a, PDFont police) throws IOException {
         PDRectangle box = page.getMediaBox();
         Modele.Position p = a.position();
         float x = (float) (box.getWidth() * p.x() / 100);
@@ -111,41 +202,32 @@ public class RenduDocumentsPdf implements RenduDocuments {
             cs.setLineWidth(0.8f);
             cs.addRect(x, yHaut - hauteur, largeur, hauteur);
             cs.stroke();
-            ecrire(cs, x + 4, yHaut - 12, 10, PDType1Font.HELVETICA_BOLD, "Signé : " + a.signataire());
-            ecrire(cs, x + 4, yHaut - 24, 7, PDType1Font.HELVETICA, a.horodatage() + " · " + a.reference());
+            ecrire(cs, x + 4, yHaut - 12, 10, police, "Signé : " + a.signataire());
+            ecrire(cs, x + 4, yHaut - 24, 7, police, a.horodatage() + " · " + a.reference());
         }
     }
 
-    private void pageDeSignatures(PDDocument doc, List<Apposition> appositions) throws IOException {
+    private void pageDeSignatures(PDDocument doc, List<Apposition> appositions, PDFont police) throws IOException {
         PDPage page = new PDPage(PDRectangle.LETTER);
         doc.addPage(page);
         try (PDPageContentStream cs = new PDPageContentStream(doc, page)) {
             float y = page.getMediaBox().getHeight() - 72;
-            ecrire(cs, 60, y, 14, PDType1Font.HELVETICA_BOLD, "Page de signatures électroniques");
+            ecrire(cs, 60, y, 14, police, "Page de signatures électroniques");
             y -= 30;
             for (Apposition a : appositions) {
-                ecrire(cs, 60, y, 11, PDType1Font.HELVETICA_BOLD, "Signé : " + a.signataire());
-                ecrire(cs, 60, y - 14, 9, PDType1Font.HELVETICA, "Le " + a.horodatage() + " · Trousse " + a.reference());
+                ecrire(cs, 60, y, 11, police, "Signé : " + a.signataire());
+                ecrire(cs, 60, y - 14, 9, police, "Le " + a.horodatage() + " · Trousse " + a.reference());
                 y -= 40;
             }
         }
     }
 
-    private static void ecrire(PDPageContentStream cs, float x, float y, float taille, PDType1Font police, String texte) throws IOException {
+    /** Police intégrée (PDF/A) : un document déjà conforme le reste après l'apposition des signatures. */
+    private static void ecrire(PDPageContentStream cs, float x, float y, float taille, PDFont police, String texte) throws IOException {
         cs.beginText();
         cs.setFont(police, taille);
         cs.newLineAtOffset(x, y);
-        cs.showText(winAnsi(texte));
+        cs.showText(ConformitePdfA.affichable(police, texte));
         cs.endText();
-    }
-
-    /** Les polices standard PDF ne couvrent que WinAnsi : tout autre caractère est remplacé plutôt que de faire échouer l'apposition. */
-    static String winAnsi(String s) {
-        StringBuilder sb = new StringBuilder();
-        for (char c : (s == null ? "" : s).toCharArray()) {
-            boolean ok = c >= 0x20 && c <= 0x7E || c >= 0xA0 && c <= 0xFF || "€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ".indexOf(c) >= 0;
-            sb.append(ok ? c : '?');
-        }
-        return sb.toString();
     }
 }

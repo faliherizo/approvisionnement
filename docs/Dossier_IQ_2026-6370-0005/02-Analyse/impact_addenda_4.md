@@ -105,14 +105,14 @@ administrative**, le **niveau de risque** ou l'**origine** de la trousse (`trous
 
 **Vérification :** `Addenda4IntegrationTest.une_etape_s_achemine_selon_le_risque…`.
 
-## 3. Limites à déclarer et suite proposée
+## 3. Limites à déclarer et suite donnée (réalisée le 2026-11-20)
 
 | # | Sujet | État | Proposition |
 |---|---|---|---|
-| RST-37 | PDF/A (Q14) et validation à long terme (Q4) | PDF signé PAdES-B, horodatage RFC 3161 si configuré ; ni PDF/A, ni données de validation (LTV) intégrées | PDF/A-2b à la génération (polices intégrées, métadonnées XMP, profil de couleur) et PAdES-LTA avec l'autorité retenue |
-| RST-38 | Modèles Word d'IQ (Q22) | Modèles à variables en texte ; la mise en page Word n'est pas reprise | Fusion des variables dans le `.docx` d'origine (mise en page préservée), puis conversion PDF côté serveur |
-| RST-39 | Comptes locaux de secours (Q12) | Comptes locaux possibles, second facteur disponible | Par organisation : connexion locale réservée à des comptes de secours désignés, second facteur obligatoire, journalisée |
-| RST-40 | Tableau de bord et « Mes trousses » à la volumétrie d'IQ | Lisent encore toutes les trousses visibles | Même traitement que le suivi : pagination et requêtes groupées |
+| RST-37 | PDF/A (Q14) et validation à long terme (Q4) | PDF signé PAdES-B, horodatage RFC 3161 si configuré ; ni PDF/A, ni données de validation (LTV) intégrées | ✅ PDF/A-2b à la génération et PAdES-B-LTA avec l'autorité retenue (ADR-018) |
+| RST-38 | Modèles Word d'IQ (Q22) | Modèles à variables en texte ; la mise en page Word n'est pas reprise | ✅ Gabarit `.docx` fusionné, mise en page préservée ; PDF/A par LibreOffice côté serveur (ADR-018) |
+| RST-39 | Comptes locaux de secours (Q12) | Comptes locaux possibles, second facteur disponible | ✅ Par organisation : connexion locale réservée aux comptes de secours désignés, second facteur obligatoire, journalisée |
+| RST-40 | Tableau de bord et « Mes trousses » à la volumétrie d'IQ | Lisent encore toutes les trousses visibles | ✅ Pagination serveur et décomptes groupés (`LecturePaginee`) |
 
 ## 4. Liste de vérification avant le dépôt
 

@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import qc.levis.contrat.clm.application.dto.ClmDto;
 import qc.levis.contrat.clm.application.port.ReferencesClm;
 import qc.levis.contrat.clm.application.port.SourceAleatoire;
+import qc.levis.contrat.clm.application.repository.GabaritWordRepository;
 import qc.levis.contrat.clm.application.repository.ModeleContratRepository;
 import qc.levis.contrat.clm.application.repository.TrousseRepository;
 import qc.levis.contrat.clm.domain.Habilitations;
@@ -37,10 +38,12 @@ public class ModeleService {
     private final SourceAleatoire alea;
     private final ListesClm listes;
     private final ContexteClm ctx;
+    private final GabaritWordRepository gabarits;
 
     public ModeleService(ModeleContratRepository modeles, TrousseRepository trousses, SourceAleatoire alea, ListesClm listes,
-                         ContexteClm ctx) {
+                         ContexteClm ctx, GabaritWordRepository gabarits) {
         this.modeles = modeles;
+        this.gabarits = gabarits;
         this.trousses = trousses;
         this.alea = alea;
         this.listes = listes;
@@ -92,6 +95,9 @@ public class ModeleService {
 
     ClmDto.Validation validation(ModeleContrat m) {
         List<String> erreurs = new ArrayList<>(Modele.valider(m.getCorps(), champs(m), clauses(m)));
+        Set<String> cles = champs(m).stream().map(Modele.Champ::cle).collect(Collectors.toSet());
+        gabarits.findByModeleIdAndTenantId(m.getId(), m.getTenantId()).ifPresent(g -> g.inconnues(cles)
+                .forEach(v -> erreurs.add("Variable source inconnue dans le gabarit Word : " + v)));
         erreurs.addAll(rolesHorsListe(champs(m)));
         List<ClmDto.EtapeRequest> parcours = ctx.lire(m.getParcoursJson(), TrousseService.PARCOURS, List.of());
         if (!parcours.isEmpty()) {
@@ -177,7 +183,10 @@ public class ModeleService {
                 source.getNom(), acteur.id(), ctx.maintenant());
         m.modifier(source.getNom(), source.getCategorie(), source.getGroupes(), source.getCorps(),
                 new ModeleContrat.Contenu(source.getChampsJson(), source.getClausesJson(), source.getParcoursJson()), ctx.maintenant());
-        return vue(modeles.save(m));
+        ModeleContrat enregistre = modeles.save(m);
+        gabarits.findByModeleIdAndTenantId(source.getId(), source.getTenantId())
+                .ifPresent(g -> gabarits.save(g.pour(enregistre, ctx.maintenant())));
+        return vue(enregistre);
     }
 
     private boolean visible(ModeleContrat m, Habilitations.Acteur acteur) {
@@ -191,7 +200,7 @@ public class ModeleService {
         return modeles.findByIdAndTenantId(id, ctx.tenant()).orElseThrow(() -> new NoSuchElementException("Modèle introuvable : " + id));
     }
 
-    private ModeleContrat exigerVisible(Long id, Habilitations.Acteur acteur) {
+    ModeleContrat exigerVisible(Long id, Habilitations.Acteur acteur) {
         ModeleContrat m = exiger(id);
         if (!visible(m, acteur)) {
             throw new NoSuchElementException("Modèle introuvable : " + id);
@@ -199,7 +208,7 @@ public class ModeleService {
         return m;
     }
 
-    private ModeleContrat exigerGestion(Long id, Habilitations.Acteur acteur) {
+    ModeleContrat exigerGestion(Long id, Habilitations.Acteur acteur) {
         ModeleContrat m = exigerVisible(id, acteur);
         if (!acteur.estAdmin() && !m.getProprietaire().equalsIgnoreCase(acteur.id())) {
             throw new AccessDeniedException("Droits insuffisants sur ce modèle.");
@@ -226,7 +235,8 @@ public class ModeleService {
         return new ClmDto.ModeleVue(m.getId(), m.getCleModele(), m.getNumero(), m.getNom(), m.getCategorie(), m.getStatut().name(),
                 m.getProprietaire(), m.getGroupes(), m.getCorps(), champs(m), clauses(m),
                 ctx.lire(m.getParcoursJson(), TrousseService.PARCOURS, List.of()), m.getMajLe(), m.getVerrou(),
-                trousses.countByTenantIdAndModeleId(m.getTenantId(), m.getId()));
+                trousses.countByTenantIdAndModeleId(m.getTenantId(), m.getId()),
+                gabarits.nomParModeleIdEtTenantId(m.getId(), m.getTenantId()).orElse(null));
     }
 
     private static String exigerNom(ClmDto.ModeleRequest req) {

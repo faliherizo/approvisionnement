@@ -53,10 +53,12 @@ public class SuiviService {
     private final ParcoursService parcours;
     private final LectureTrousse lecture;
     private final ContexteClm ctx;
+    private final LecturePaginee pagination;
 
     public SuiviService(TrousseRepository trousses, EtapeTrousseRepository etapes, EvenementTrousseRepository evenements,
                         InvitationRepository invitations, MessageSortantRepository sorties, ParcoursService parcours,
-                        LectureTrousse lecture, ContexteClm ctx) {
+                        LectureTrousse lecture, ContexteClm ctx, LecturePaginee pagination) {
+        this.pagination = pagination;
         this.trousses = trousses;
         this.etapes = etapes;
         this.evenements = evenements;
@@ -229,33 +231,70 @@ public class SuiviService {
         return "\"" + s + "\"";
     }
 
+    /**
+     * Tableau de bord (UI-01) à la volumétrie d'IQ (RST-40) : décomptes en base pour qui voit tout, parcours par tranches
+     * sinon ; étapes actives des trousses en cours par lots ; activité et alertes lues au plus récent puis filtrées.
+     */
     public ClmDto.TableauBord tableauBord(Habilitations.Acteur acteur, Filtre f) {
         Instant maintenant = ctx.maintenant();
-        List<Trousse> visibles = trousses.findAll(specification(ctx.tenant(), f)).stream().filter(t -> lecture.visible(t, acteur)).toList();
-        Map<String, Long> ind = new LinkedHashMap<>();
-        ind.put("brouillons", visibles.stream().filter(t -> t.getStatut() == StatutTrousse.BROUILLON).count());
-        long validation = 0;
-        long signature = 0;
-        long retard = 0;
-        List<Long> ids = visibles.stream().map(Trousse::getId).toList();
-        List<EtapeTrousse> actives = ids.isEmpty() ? List.of()
-                : etapes.findByTenantIdAndTrousseIdInAndStatut(ctx.tenant(), ids, Parcours.StatutEtape.ACTIVE);
-        for (Long id : ids) {
-            List<EtapeTrousse> lesActives = actives.stream().filter(e -> e.getTrousseId().equals(id)).toList();
-            if (lesActives.stream().anyMatch(e -> e.getType() != Parcours.TypeEtape.SIGNATURE)) validation++;
-            if (lesActives.stream().anyMatch(e -> e.getType() == Parcours.TypeEtape.SIGNATURE)) signature++;
-            if (lesActives.stream().anyMatch(e -> Relances.enRetard(e.getEcheance(), maintenant))) retard++;
+        Long tenant = ctx.tenant();
+        Specification<Trousse> spec = specification(tenant, f);
+        long[] compte = new long[5];
+        if (LecturePaginee.voitTout(acteur)) {
+            compte[0] = trousses.count(spec.and(avecStatut(StatutTrousse.BROUILLON)));
+            compte[4] = trousses.count(spec.and(avecStatut(StatutTrousse.TERMINEE)));
+            pagination.parcourir(acteur, spec.and(avecStatut(StatutTrousse.EN_TRAITEMENT)), lot -> compterEnCours(lot, compte, maintenant));
+        } else {
+            pagination.parcourir(acteur, spec, lot -> {
+                compte[0] += lot.stream().filter(t -> t.getStatut() == StatutTrousse.BROUILLON).count();
+                compte[4] += lot.stream().filter(t -> t.getStatut() == StatutTrousse.TERMINEE).count();
+                compterEnCours(lot.stream().filter(t -> t.getStatut() == StatutTrousse.EN_TRAITEMENT).toList(), compte, maintenant);
+            });
         }
-        ind.put("enValidation", validation);
-        ind.put("enSignature", signature);
-        ind.put("enRetard", retard);
-        ind.put("terminees", visibles.stream().filter(t -> t.getStatut() == StatutTrousse.TERMINEE).count());
-        List<ClmDto.EvenementVue> activite = evenements.findTop30ByTenantIdOrderByHorodatageDesc(ctx.tenant()).stream()
-                .filter(e -> ids.contains(e.getTrousseId())).limit(10).map(LectureTrousse::evenement).toList();
-        List<ClmDto.SortieVue> alertes = ids.isEmpty() ? List.of()
-                : sorties.findByTenantIdAndTrousseIdInAndStatut(ctx.tenant(), ids, MessageSortant.Statut.ECHEC).stream()
-                .map(SalesforceService::vue).toList();
+        Map<String, Long> ind = new LinkedHashMap<>();
+        ind.put("brouillons", compte[0]);
+        ind.put("enValidation", compte[1]);
+        ind.put("enSignature", compte[2]);
+        ind.put("enRetard", compte[3]);
+        ind.put("terminees", compte[4]);
+        List<EvenementTrousse> recents = evenements.findTop30ByTenantIdOrderByHorodatageDesc(tenant);
+        List<MessageSortant> echecs = sorties.findTop50ByTenantIdAndStatutOrderByCreeLeDesc(tenant, MessageSortant.Statut.ECHEC);
+        Set<Long> visibles = visibles(acteur, tenant, recents.stream().map(EvenementTrousse::getTrousseId).collect(Collectors.toSet()),
+                echecs.stream().map(MessageSortant::getTrousseId).collect(Collectors.toSet()));
+        List<ClmDto.EvenementVue> activite = recents.stream().filter(e -> visibles.contains(e.getTrousseId())).limit(10)
+                .map(LectureTrousse::evenement).toList();
+        List<ClmDto.SortieVue> alertes = echecs.stream().filter(m -> visibles.contains(m.getTrousseId())).map(SalesforceService::vue).toList();
         return new ClmDto.TableauBord(ind, parcours.mesTaches(acteur, "a_traiter"), activite, alertes);
+    }
+
+    private static Specification<Trousse> avecStatut(StatutTrousse statut) {
+        return (r, q, cb) -> cb.equal(r.get("statut"), statut);
+    }
+
+    /** Trousses en cours d'un lot : en validation, en signature, en retard, d'après leurs étapes actives (une requête). */
+    private void compterEnCours(List<Trousse> enCours, long[] compte, Instant maintenant) {
+        if (enCours.isEmpty()) {
+            return;
+        }
+        Map<Long, List<EtapeTrousse>> actives = etapes.findByTenantIdAndTrousseIdInAndStatut(ctx.tenant(),
+                enCours.stream().map(Trousse::getId).toList(), Parcours.StatutEtape.ACTIVE).stream()
+                .collect(Collectors.groupingBy(EtapeTrousse::getTrousseId));
+        for (List<EtapeTrousse> lesActives : actives.values()) {
+            compte[1] += lesActives.stream().anyMatch(e -> e.getType() != Parcours.TypeEtape.SIGNATURE) ? 1 : 0;
+            compte[2] += lesActives.stream().anyMatch(e -> e.getType() == Parcours.TypeEtape.SIGNATURE) ? 1 : 0;
+            compte[3] += lesActives.stream().anyMatch(e -> Relances.enRetard(e.getEcheance(), maintenant)) ? 1 : 0;
+        }
+    }
+
+    /** Parmi les trousses citées par l'activité récente et les alertes, celles que l'acteur voit. */
+    private Set<Long> visibles(Habilitations.Acteur acteur, Long tenant, Set<Long> activite, Set<Long> alertes) {
+        Set<Long> ids = new java.util.HashSet<>(activite);
+        ids.addAll(alertes);
+        if (ids.isEmpty()) {
+            return Set.of();
+        }
+        return trousses.findByTenantIdAndIdIn(tenant, ids).stream().filter(t -> lecture.visible(t, acteur))
+                .map(Trousse::getId).collect(Collectors.toSet());
     }
 
 

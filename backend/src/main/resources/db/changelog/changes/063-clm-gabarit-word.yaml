@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 063-1-clm-gabarit-word
+      author: levis
+      comment: "CLM (addenda 4, Q22) : gabarit Word d'origine d'une version de modèle, fusionné à la génération en conservant sa mise en page."
+      changes:
+        - createTable:
+            tableName: clm_modele_gabarit
+            columns:
+              - column: { name: modele_id, type: BIGINT, constraints: { primaryKey: true, nullable: false, foreignKeyName: fk_clm_gabarit_modele, references: clm_modele(id), deleteCascade: true } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: nom, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: contenu, type: "${blob.type}", constraints: { nullable: false } }
+              - column: { name: variables, type: VARCHAR(4000), constraints: { nullable: false } }
+              - column: { name: depose_par, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: depose_le, type: TIMESTAMP, constraints: { nullable: false } }

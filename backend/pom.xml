@@ -122,6 +122,12 @@
             <artifactId>pdfbox</artifactId>
             <version>2.0.31</version>
         </dependency>
+        <!-- XMPBox : métadonnées XMP des PDF/A-2b produits par la plateforme (addenda 4, Q14). -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>xmpbox</artifactId>
+            <version>2.0.31</version>
+        </dependency>
         <!-- BouncyCastle : cachet électronique normalisé des preuves (CMS/CAdES RFC 5652, PAdES, horodatage RFC 3161). -->
         <dependency>
             <groupId>org.bouncycastle</groupId>
@@ -211,6 +217,9 @@
                                 <include>qc/levis/contrat/auth/application/ScimService*</include>
                                 <include>qc/levis/contrat/auth/infrastructure/web/ScimController*</include>
                                 <include>qc/levis/contrat/auth/infrastructure/web/AnnuaireController*</include>
+                                <include>qc/levis/contrat/auth/domain/PolitiqueConnexion*</include>
+                                <include>qc/levis/contrat/auth/application/PolitiqueConnexionService*</include>
+                                <include>qc/levis/contrat/auth/infrastructure/web/ConnexionLocaleController*</include>
                             </includes>
                             <rules>
                                 <rule>

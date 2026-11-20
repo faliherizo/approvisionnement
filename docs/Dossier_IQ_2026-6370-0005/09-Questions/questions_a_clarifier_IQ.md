@@ -107,7 +107,7 @@ encore ouvertes : [questions_sans_reponse_IQ.md](questions_sans_reponse_IQ.md).
 |---|---|---|
 | C2 | Niveaux configurables selon le type de document, le processus et les règles (Q1) | Réalisé : niveau par type de document (RST-35) |
 | C5 | Signature externe sans compte permanent (Q3) | ✔ Conforme |
-| C6 | PDF, validation à long terme et formats d'export à préciser (Q4) | ◐ LTV et PDF/A à compléter (RST-37) |
+| C6 | PDF, validation à long terme et formats d'export à préciser (Q4) | ✔ PAdES-B-LTA et PDF/A-2b (RST-37) |
 | C7 | Signature visible configurable (Q5) | ✔ Conforme |
 | C8 | Représentant autorisé, preuve d'autorité, qualité tracée (Q6) | Réalisé (RST-32) |
 | C9 | Le papier n'est pas une exigence (Q7) | ✔ Répondu |
@@ -115,9 +115,9 @@ encore ouvertes : [questions_sans_reponse_IQ.md](questions_sans_reponse_IQ.md).
 | D2 | Environnements et comptes au démarrage (Q9) | ✔ Répondu |
 | D5 | Administration d'affaires et technique séparées (Q10) | Réalisé (RST-31, ADR-017) |
 | D6, P1 | SCIM 2.0, désactivation rapide (Q11) | ✔ Conforme (RST-26) |
-| D8 | Comptes de secours justifiés et approuvés (Q12) | ◐ Restriction par organisation proposée (RST-39) |
+| D8 | Comptes de secours justifiés et approuvés (Q12) | ✔ Restriction par organisation (RST-39) |
 | E2 | Accès de soutien déclarés avec leur territoire (Q13) | ✔ Tableau des lieux |
-| E6 | PDF/PDF-A, export massif (Q14) | ◐ Export ✔ ; PDF/A à compléter (RST-37) |
+| E6 | PDF/PDF-A, export massif (Q14) | ✔ Export et PDF/A-2b (RST-37) |
 | E8 | Sauvegardes à décrire (Q15) | ✔ Plan de relève |
 | E9 | Certifications à déclarer (Q16) | ✔ Répondu |
 | F1 | Quorum configurable (Q17) | ✔ Conforme |
@@ -125,7 +125,7 @@ encore ouvertes : [questions_sans_reponse_IQ.md](questions_sans_reponse_IQ.md).
 | F4 | Délais, rappels, expirations, délégations (Q19) | ✔ Conforme |
 | F7 | Parcours selon montant, type, programme, unité, rôle (Q20) | Réalisé (RST-36) |
 | G1 | Modèles inclus et effort additionnel (Q21) | ✔ Bordereau |
-| G2 | Modèles Word d'IQ préservés autant que possible (Q22) | ◐ Limite déclarée ; RST-38 proposé |
+| G2 | Modèles Word d'IQ préservés autant que possible (Q22) | ✔ Gabarit Word d'origine (RST-38) |
 | G6 | Limites de taille à indiquer (Q23) | ✔ Conforme |
 | J1, J3 | Niveaux de service non réduits ; recours du contrat (Q24, Q25) | ✔ Répondu |
 | L2, L5, L8 | Coûts, tiers et sous-traitants déclarés (Q26 à Q28) | ✔ Répondu |

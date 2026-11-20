@@ -14,6 +14,8 @@ public interface MessageSortantRepository extends JpaRepository<MessageSortant, 
 
     List<MessageSortant> findTop100ByTenantIdOrderByCreeLeDesc(Long tenantId);
 
+    List<MessageSortant> findTop50ByTenantIdAndStatutOrderByCreeLeDesc(Long tenantId, MessageSortant.Statut statut);
+
     List<MessageSortant> findByTenantIdAndTrousseIdInAndStatut(Long tenantId, Collection<Long> trousseIds, MessageSortant.Statut statut);
 
     /** Relais tous tenants confondus : réservé au planificateur. */

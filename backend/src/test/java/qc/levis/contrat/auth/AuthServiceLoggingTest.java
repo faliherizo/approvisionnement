@@ -37,7 +37,7 @@ class AuthServiceLoggingTest {
         logger.addAppender(appender);
         users = mock(UserRepository.class);
         service = new AuthService(users, mock(org.springframework.security.crypto.password.PasswordEncoder.class),
-                mock(JwtService.class), mock(TotpService.class), mock(AuditService.class));
+                mock(JwtService.class), mock(TotpService.class), mock(AuditService.class), mock(qc.levis.contrat.auth.application.repository.PolitiqueConnexionRepository.class));
     }
 
     @AfterEach

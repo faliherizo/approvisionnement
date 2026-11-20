@@ -41,13 +41,16 @@ public class TrousseController {
         this.acteurs = acteurs;
     }
 
+    /** Liste paginée (UI-02) : {@code taille} 50 par défaut, 200 au plus (RST-40). */
     @GetMapping
-    public List<ClmDto.TrousseResume> lister(@RequestParam(required = false) String q, @RequestParam(required = false) String statut,
-                                             @RequestParam(required = false) String initiateur, @RequestParam(required = false) String type,
-                                             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate du,
-                                             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate au,
-                                             Authentication auth) {
-        return trousses.lister(acteurs.de(auth), new ClmDto.CritereListe(q, statut, initiateur, type, du, au));
+    public ClmDto.TroussesPage lister(@RequestParam(required = false) String q, @RequestParam(required = false) String statut,
+                                      @RequestParam(required = false) String initiateur, @RequestParam(required = false) String type,
+                                      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate du,
+                                      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate au,
+                                      @RequestParam(defaultValue = "0") int page,
+                                      @RequestParam(defaultValue = "" + qc.levis.contrat.clm.application.SuiviService.TAILLE_DEFAUT) int taille,
+                                      Authentication auth) {
+        return trousses.lister(acteurs.de(auth), new ClmDto.CritereListe(q, statut, initiateur, type, du, au), page, taille);
     }
 
     @PostMapping

@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 062-1-auth-comptes-secours
+      author: levis
+      comment: "Authentification (addenda 4, Q12) : comptes locaux de secours désignés et politique de connexion locale par organisation."
+      changes:
+        - addColumn:
+            tableName: app_user
+            columns:
+              - column: { name: compte_secours, type: BOOLEAN, defaultValueBoolean: false, constraints: { nullable: false } }
+        - createTable:
+            tableName: auth_politique_connexion
+            columns:
+              - column: { name: tenant_id, type: BIGINT, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: locale_reservee, type: BOOLEAN, defaultValueBoolean: false, constraints: { nullable: false } }
+              - column: { name: modifie_par, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: modifie_le, type: TIMESTAMP, constraints: { nullable: false } }

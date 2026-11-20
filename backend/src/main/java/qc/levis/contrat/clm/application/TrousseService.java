@@ -68,13 +68,15 @@ public class TrousseService {
     private final ListesClm listes;
     private final ContexteClm ctx;
     private final NumerotationReferences numerotation;
+    private final LecturePaginee pagination;
 
     public TrousseService(TrousseRepository trousses, ParticipantRepository participants, EtapeTrousseRepository etapes,
                           DocumentTrousseRepository documents, InvitationRepository invitations, EvenementTrousseRepository evenements,
                           ModeleContratRepository modeles, ParcoursService parcours, SalesforceService salesforce, DiffusionStatut diffusion, JournalClm journal,
                           LectureTrousse lecture, ParametresClmService parametres, ListesClm listes, ContexteClm ctx,
-                          NumerotationReferences numerotation) {
+                          NumerotationReferences numerotation, LecturePaginee pagination) {
         this.numerotation = numerotation;
+        this.pagination = pagination;
         this.trousses = trousses;
         this.participants = participants;
         this.etapes = etapes;
@@ -586,41 +588,63 @@ public class TrousseService {
     }
 
     // --- Lecture (UI-02, UI-04) ---
-    public List<ClmDto.TrousseResume> lister(Habilitations.Acteur acteur, ClmDto.CritereListe c) {
+
+    /**
+     * Une page de la liste des trousses (« Mes trousses », UI-02), les plus récemment modifiées d'abord : filtres en base,
+     * étapes actives des trousses de la page en une requête (addenda 3, Q38 ; RST-40).
+     */
+    public ClmDto.TroussesPage lister(Habilitations.Acteur acteur, ClmDto.CritereListe c, int page, int taille) {
+        int n = Math.max(1, Math.min(taille, SuiviService.TAILLE_MAX));
+        int p = Math.max(0, page);
+        LecturePaginee.Fenetre f = pagination.page(acteur, specificationListe(ctx.tenant(), c), p, n);
+        return new ClmDto.TroussesPage(resumes(f.trousses()), p, n, f.total(), f.suivant());
+    }
+
+    private List<ClmDto.TrousseResume> resumes(List<Trousse> lot) {
+        if (lot.isEmpty()) {
+            return List.of();
+        }
         Instant maintenant = ctx.maintenant();
-        String recherche = c.q() == null ? "" : c.q().trim().toLowerCase(Locale.ROOT);
-        List<ClmDto.TrousseResume> res = new ArrayList<>();
-        for (Trousse t : trousses.findByTenantIdOrderByMajLeDesc(ctx.tenant())) {
-            if (!retenue(t, c) || (!recherche.isEmpty() && !correspond(t, recherche))) {
-                continue;
+        Map<Long, List<EtapeTrousse>> actives = etapes.findByTenantIdAndTrousseIdInAndStatut(ctx.tenant(),
+                lot.stream().map(Trousse::getId).toList(), Parcours.StatutEtape.ACTIVE).stream()
+                .collect(java.util.stream.Collectors.groupingBy(EtapeTrousse::getTrousseId));
+        return lot.stream().map(t -> lecture.resume(t, actives.getOrDefault(t.getId(), List.of()), maintenant)).toList();
+    }
+
+    /** Critères de la liste : organisation, statut, initiateur, type, période de création, recherche (y compris participants). */
+    static org.springframework.data.jpa.domain.Specification<Trousse> specificationListe(Long tenant, ClmDto.CritereListe c) {
+        return (r, q, cb) -> {
+            List<jakarta.persistence.criteria.Predicate> p = new ArrayList<>();
+            p.add(cb.equal(r.get("tenantId"), tenant));
+            if (vide(c.statut()) != null) {
+                p.add(cb.equal(r.get("statut").as(String.class), c.statut().trim()));
             }
-            if (lecture.visible(t, acteur)) {
-                res.add(lecture.resume(t, parcours.etapesDe(t), maintenant));
+            if (vide(c.initiateur()) != null) {
+                p.add(cb.equal(cb.lower(r.get("proprietaire")), c.initiateur().trim().toLowerCase(Locale.ROOT)));
             }
-        }
-        return res;
+            if (vide(c.type()) != null) {
+                p.add(cb.equal(cb.lower(r.get("typeContrat")), c.type().trim().toLowerCase(Locale.ROOT)));
+            }
+            if (c.du() != null) {
+                p.add(cb.greaterThanOrEqualTo(r.get("creeLe"), c.du().atStartOfDay(java.time.ZoneOffset.UTC).toInstant()));
+            }
+            if (c.au() != null) {
+                p.add(cb.lessThan(r.get("creeLe"), c.au().plusDays(1).atStartOfDay(java.time.ZoneOffset.UTC).toInstant()));
+            }
+            if (vide(c.q()) != null) {
+                String motif = "%" + c.q().trim().toLowerCase(Locale.ROOT).replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%";
+                jakarta.persistence.criteria.Subquery<Long> sq = q.subquery(Long.class);
+                jakarta.persistence.criteria.Root<Participant> pa = sq.from(Participant.class);
+                sq.select(pa.get("id")).where(cb.equal(pa.get("tenantId"), r.get("tenantId")), cb.equal(pa.get("trousseId"), r.get("id")),
+                        cb.or(cb.like(cb.lower(pa.get("nom")), motif, '\\'), cb.like(cb.lower(pa.get("courriel")), motif, '\\')));
+                p.add(cb.or(cb.like(cb.lower(r.get("reference")), motif, '\\'), cb.like(cb.lower(r.get("titre")), motif, '\\'),
+                        cb.like(cb.lower(cb.coalesce(r.get("sfDossierId"), "")), motif, '\\'),
+                        cb.like(cb.lower(r.get("proprietaire")), motif, '\\'), cb.exists(sq)));
+            }
+            return cb.and(p.toArray(jakarta.persistence.criteria.Predicate[]::new));
+        };
     }
 
-    private static boolean retenue(Trousse t, ClmDto.CritereListe c) {
-        java.time.LocalDate cree = java.time.LocalDate.ofInstant(t.getCreeLe(), java.time.ZoneOffset.UTC);
-        return (vide(c.statut()) == null || t.getStatut().name().equals(c.statut()))
-                && (vide(c.initiateur()) == null || t.getProprietaire().equalsIgnoreCase(c.initiateur().trim()))
-                && (vide(c.type()) == null || c.type().trim().equalsIgnoreCase(t.getTypeContrat()))
-                && (c.du() == null || !cree.isBefore(c.du()))
-                && (c.au() == null || !cree.isAfter(c.au()));
-    }
-
-    private boolean correspond(Trousse t, String q) {
-        if (contient(t.getReference(), q) || contient(t.getTitre(), q) || contient(t.getSfDossierId(), q) || contient(t.getProprietaire(), q)) {
-            return true;
-        }
-        return participants.findByTenantIdAndTrousseIdOrderByIdAsc(t.getTenantId(), t.getId()).stream()
-                .anyMatch(p -> contient(p.getNom(), q) || contient(p.getCourriel(), q));
-    }
-
-    private static boolean contient(String s, String q) {
-        return s != null && s.toLowerCase(Locale.ROOT).contains(q);
-    }
 
     public ClmDto.TrousseDetail detail(Long id, Habilitations.Acteur acteur) {
         return detail(lecture.exigerVisible(id, acteur), acteur);

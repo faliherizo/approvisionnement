@@ -196,8 +196,8 @@ versement à l'échéance), `ConformiteDomaineTest`, `CachetX509Test` (CAdES, PA
 | A-26 | Add. 4 Q10 | Séparation de l'administration d'affaires et de l'administration technique | Obligatoire (« doit permettre ») | ✅ | RST-31, ADR-017 |
 | A-27 | Add. 4 Q31 | Mappage des attributs et groupes SCIM, désactivation rapide | Obligatoire (« doit permettre ») | ✅ | RST-26, RST-34 |
 | A-28 | Add. 4 Q36 | Approbation adaptée au lot, traçabilité par dossier | Obligatoire (« doit permettre ») | ✅ | RST-33 |
-| A-29 | Add. 4 Q14 | Export dans des formats pérennes, PDF/PDF-A **lorsque disponibles**, export massif | Obligatoire (export) ; PDF/A conditionnel | ✅ | Export en lot ; PDF/A déclaré comme limite (RST-37) |
-| A-30 | Add. 4 Q22 | Modèles Word d'IQ, structure et présentation préservées **dans la mesure permise** ; limites déclarées | Obligatoire avec réserve | ✅ | Modèles à variables ; limite déclarée (RST-38) |
+| A-29 | Add. 4 Q14 | Export dans des formats pérennes, PDF/PDF-A **lorsque disponibles**, export massif | Obligatoire (export) ; PDF/A conditionnel | ✅ | Export en lot ; documents produits en PDF/A-2b, scellés PAdES-B-LTA (RST-37, `ConformitePdfATest`, `PadesLtaTest`) |
+| A-30 | Add. 4 Q22 | Modèles Word d'IQ, structure et présentation préservées **dans la mesure permise** ; limites déclarées | Obligatoire avec réserve | ✅ | Gabarit Word d'origine fusionné, mise en page conservée ; PDF par LibreOffice (RST-38, `FusionDocxTest`, `Addenda4IntegrationTest`) |
 | A-17 | Add. 2 Q7 | `FundingRequest` lu par Id ou `Name`, correspondance configurable par modèle | Obligatoire (« devra ») | ✅ | C-08, C-09 |
 
 ## 5. Engagements du fournisseur et exigences non fonctionnelles (hors matrice)

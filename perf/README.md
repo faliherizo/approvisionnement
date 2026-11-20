@@ -85,8 +85,8 @@ Constats successifs de l'essai :
 | Suivi centralisé à 24 s puis 40 s (P95), qui entraîne tout le reste | Suivi qui relit toutes les trousses et 4 requêtes par ligne | **Corrigé** : API et écran paginés (50 lignes par page, 200 au plus), filtres en base, lignes calculées en 4 requêtes groupées par page : 130 ms |
 | Relevé d'utilisation lent à forte volumétrie | Une requête par trousse | **Corrigé** : une requête |
 
-Restent à traiter de la même façon, hors du parcours mesuré ici : le tableau de bord (UI-01) et la liste « Mes trousses »
-(UI-02), qui lisent encore toutes les trousses visibles. L'essai est à refaire sur l'infrastructure cible (PostgreSQL,
+Le tableau de bord (UI-01) et la liste « Mes trousses » (UI-02) ont reçu le même traitement (RST-40, `LecturePaginee`) :
+page tirée de la base avec total pour l'administration et l'audit, tranches de 200 sinon, décomptes groupés. L'essai est à refaire sur l'infrastructure cible (PostgreSQL,
 Azure Canada) : c'est là que la mesure engage la soumission, et IQ peut en exiger une autre avant l'acceptation finale.
 
 ## Surcharge des seuils

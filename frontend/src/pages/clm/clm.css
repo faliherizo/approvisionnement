@@ -82,6 +82,10 @@ h3.clm-bloc__titre { font-size: 16px; }
 .clm-depose p { margin: 0; }
 .clm-depose label { align-self: stretch; min-width: 0; }
 .clm-depose input[type="file"] { width: 100%; min-width: 0; }
+/* Gabarit Word (addenda 4, Q22) : le champ fichier ne déborde jamais d'un écran de téléphone. */
+.clm-gabarit { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end; }
+.clm-gabarit label { flex: 1 1 220px; min-width: 0; }
+.clm-gabarit input[type="file"] { width: 100%; min-width: 0; box-sizing: border-box; }
 
 /* UI-13 : visionneuse PDF / texte. */
 .clm-visionneuse iframe { display: block; width: 100%; height: 70vh; min-height: 360px; border: 1px solid #cbd5e1; border-radius: 6px; }

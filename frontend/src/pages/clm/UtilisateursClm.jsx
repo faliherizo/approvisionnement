@@ -6,6 +6,7 @@ import { useModules } from '../../hooks/useModules.js'
 import IntegrationOidcManager from '../../components/IntegrationOidcManager.jsx'
 import IntegrationSamlManager from '../../components/IntegrationSamlManager.jsx'
 import AnnuaireManager from '../../components/AnnuaireManager.jsx'
+import ConnexionLocaleManager from '../../components/ConnexionLocaleManager.jsx'
 import Users from '../Users.jsx'
 import { ChoixListe, GardeModule, Message, useErreur, useListe, useRessource } from './commun.jsx'
 import { BarreActions, Bloc, Blocs, EcranClm } from './gabarit.jsx'
@@ -129,6 +130,7 @@ function Sso() {
       <IntegrationOidcManager />
       <IntegrationSamlManager />
       <AnnuaireManager />
+      <ConnexionLocaleManager />
       <Link to="/clm/admin/utilisateurs">{t('clm.retour')}</Link>
     </EcranClm>
   )

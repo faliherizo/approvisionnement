@@ -38,6 +38,7 @@ class Addenda4IntegrationTest {
 
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper json;
+    @Autowired qc.levis.contrat.auth.application.repository.UserRepository users;
 
     private Cookie initiateur;
     private Cookie affaires;
@@ -73,6 +74,44 @@ class Addenda4IntegrationTest {
         assertTrue(appel("GET", "/api/clm/trousses/" + trousse, technique, null).getStatus() >= 403, "l'administration technique ne lit aucun contenu");
         assertTrue(corps(appel("GET", "/api/admin/users/roles", principal, null), 200).toString().contains("ADMIN_TECHNIQUE"));
         assertEquals(403, appel("GET", "/api/admin/users/roles", technique, null).getStatus(), "seul ADMIN attribue les rôles");
+    }
+
+    @Test
+    void la_connexion_locale_se_reserve_aux_comptes_de_secours_munis_d_un_second_facteur() throws Exception {
+        String url = "/api/admin/connexion-locale";
+        assertEquals(403, appel("GET", url, affaires, null).getStatus(), "administration technique seulement");
+        JsonNode etat = corps(appel("GET", url, technique, null), 200);
+        assertFalse(etat.get("reservee").asBoolean());
+        assertEquals(409, appel("PUT", url + "?reservee=true", technique, null).getStatus(), "aucun compte de secours : pas de verrouillage");
+        qc.levis.contrat.auth.domain.User secours = users.findByEmail("admin.ti@iq.example").orElseThrow();
+        try {
+            secours.setMfaActive(true);
+            secours.setMfaMethode(qc.levis.contrat.commun.domain.Enums.MfaMethode.TOTP);
+            users.save(secours);
+            JsonNode designe = corps(appel("PUT", url + "/comptes/" + secours.getId() + "?secours=true", technique, null), 200);
+            assertTrue(designe.toString().contains("\"secours\":true"));
+            assertTrue(corps(appel("PUT", url + "?reservee=true", technique, null), 200).get("reservee").asBoolean());
+
+            MockHttpServletResponse refuse = mvc.perform(MockMvcRequestBuilders.post("/api/auth/login").contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"email\":\"initiateur@iq.example\",\"motDePasse\":\"" + PW + "\"}")).andReturn().getResponse();
+            assertTrue(refuse.getContentAsString(StandardCharsets.UTF_8).contains("réservée aux comptes de secours"), "connexion locale refusée");
+            assertNull(refuse.getCookie("ACCESS_TOKEN"));
+            String defi = mvc.perform(MockMvcRequestBuilders.post("/api/auth/login").contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"email\":\"admin.ti@iq.example\",\"motDePasse\":\"" + PW + "\"}")).andReturn().getResponse()
+                    .getContentAsString(StandardCharsets.UTF_8);
+            assertTrue(defi.contains("\"mfaRequired\":true"), "le compte de secours passe au second facteur : " + defi);
+            assertEquals(409, appel("PUT", url + "/comptes/" + secours.getId() + "?secours=false", technique, null).getStatus(),
+                    "dernier compte de secours valide");
+            assertEquals(404, appel("PUT", url + "/comptes/999999?secours=true", technique, null).getStatus());
+        } finally {
+            appel("PUT", url + "?reservee=false", technique, null);
+            appel("PUT", url + "/comptes/" + secours.getId() + "?secours=false", technique, null);
+            qc.levis.contrat.auth.domain.User remis = users.findByEmail("admin.ti@iq.example").orElseThrow();
+            remis.setMfaActive(false);
+            remis.setMfaMethode(qc.levis.contrat.commun.domain.Enums.MfaMethode.NONE);
+            users.save(remis);
+        }
+        assertFalse(corps(appel("GET", url, technique, null), 200).get("reservee").asBoolean());
     }
 
     @Test
@@ -156,6 +195,77 @@ class Addenda4IntegrationTest {
             g.get("membres").forEach(m -> sb.append(g.get("code").asText()).append(':').append(m.asText()).append(' '));
         }
         return sb.toString();
+    }
+
+    /** Gabarit Word d'IQ : titre en gras, variable répartie sur deux runs, tableau, marqueur de clauses. */
+    private static byte[] gabaritWord(String variable) throws Exception {
+        try (org.apache.poi.xwpf.usermodel.XWPFDocument doc = new org.apache.poi.xwpf.usermodel.XWPFDocument();
+             java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream()) {
+            var p = doc.createParagraph();
+            var r = p.createRun();
+            r.setBold(true);
+            r.setText("Convention de financement — {{bene");
+            p.createRun().setText("ficiaire}}");
+            doc.createTable(1, 2).getRow(0).getCell(1).setText("{{" + variable + "}}");
+            doc.createParagraph().createRun().setText("{{clauses}}");
+            doc.write(out);
+            return out.toByteArray();
+        }
+    }
+
+    private MockHttpServletResponse deposer(long modele, Cookie qui, String nom, byte[] contenu) throws Exception {
+        return mvc.perform(MockMvcRequestBuilders.multipart("/api/clm/modeles/" + modele + "/gabarit-word")
+                .file(new org.springframework.mock.web.MockMultipartFile("fichier", nom, "application/octet-stream", contenu)).cookie(qui))
+                .andReturn().getResponse();
+    }
+
+    @Test
+    void le_contrat_se_genere_dans_le_gabarit_word_d_iq_en_conservant_sa_mise_en_page() throws Exception {
+        String champs = "[{\"cle\":\"beneficiaire\",\"libelle\":\"Bénéficiaire\",\"type\":\"TEXTE\",\"obligatoire\":false},"
+                + "{\"cle\":\"montant\",\"libelle\":\"Montant\",\"type\":\"TEXTE\",\"obligatoire\":false}]";
+        String clauses = "[{\"cle\":\"garantie\",\"titre\":\"Garantie\",\"texte\":\"Hypothèque de {{montant}}\",\"combinateur\":\"ET\",\"conditions\":[]}]";
+        long modele = corps(appel("POST", "/api/clm/modeles", initiateur, "{\"nom\":\"Convention Word IQ\",\"corps\":\"{{beneficiaire}}\","
+                + "\"champs\":" + champs + ",\"clauses\":" + clauses + ",\"parcours\":[]}"), 200).get("id").asLong();
+
+        assertTrue(corps(deposer(modele, initiateur, "iq.docx", gabaritWord("inconnue")), 400).toString().contains("inconnue"),
+                "variable absente du modèle refusée");
+        assertEquals(400, deposer(modele, initiateur, "iq.pdf", PDF64.getBytes()).getStatus(), "Word seulement");
+        assertEquals(403, deposer(modele, login("validateur@iq.example"), "iq.docx", gabaritWord("montant")).getStatus());
+        JsonNode vue = corps(deposer(modele, initiateur, "Convention IQ.docx", gabaritWord("montant")), 200);
+        assertEquals("Convention IQ.docx", vue.get("gabaritWord").asText());
+        MockHttpServletResponse fichier = appel("GET", "/api/clm/modeles/" + modele + "/gabarit-word", initiateur, null);
+        assertEquals(200, fichier.getStatus());
+        assertTrue(fichier.getHeader("Content-Disposition").contains("IQ.docx"), fichier.getHeader("Content-Disposition"));
+        assertTrue(corps(appel("GET", "/api/clm/modeles/" + modele + "/validation", initiateur, null), 200).get("valide").asBoolean());
+
+        corps(appel("POST", "/api/clm/modeles/" + modele + "/soumettre", initiateur, "{}"), 200);
+        assertEquals(409, appel("DELETE", "/api/clm/modeles/" + modele + "/gabarit-word", initiateur, null).getStatus(), "modèle hors brouillon");
+        corps(appel("POST", "/api/clm/modeles/" + modele + "/publier", affaires, "{}"), 200);
+        long id = corps(appel("POST", "/api/clm/trousses", initiateur, "{\"titre\":\"Convention Agri-Nord\",\"modeleId\":" + modele
+                + ",\"risque\":\"FAIBLE\"}"), 200).get("resume").get("id").asLong();
+        corps(appel("PUT", "/api/clm/trousses/" + id + "/valeurs", initiateur,
+                "{\"valeurs\":{\"beneficiaire\":\"Agri-Nord inc.\",\"montant\":\"250 000 $\"}}"), 200);
+
+        JsonNode word = corps(appel("POST", "/api/clm/trousses/" + id + "/generer?format=DOCX", initiateur, null), 200);
+        byte[] docx = appel("GET", "/api/clm/trousses/" + id + "/documents/" + word.get("id").asLong() + "/contenu", initiateur, null).getContentAsByteArray();
+        try (var doc = new org.apache.poi.xwpf.usermodel.XWPFDocument(new java.io.ByteArrayInputStream(docx))) {
+            assertEquals("Convention de financement — Agri-Nord inc.", doc.getParagraphs().get(0).getText());
+            assertTrue(doc.getParagraphs().get(0).getRuns().get(0).isBold(), "mise en forme d'origine");
+            assertEquals("250 000 $", doc.getTables().get(0).getRow(0).getCell(1).getText(), "tableau d'origine conservé");
+            assertTrue(doc.getParagraphs().stream().anyMatch(x -> x.getText().equals("Hypothèque de 250 000 $")), "clause insérée au marqueur");
+        }
+        JsonNode pdf = corps(appel("POST", "/api/clm/trousses/" + id + "/generer?format=PDF", initiateur, null), 200);
+        assertEquals("PDF", pdf.get("type").asText());
+        assertTrue(word.get("motif").asText().contains("gabarit Word « Convention IQ.docx »"), word.toString());
+        assertTrue(pdf.get("motif").asText().contains("mise en page simplifiée"), "sans LibreOffice, le motif le dit : " + pdf);
+        assertTrue(appel("GET", "/api/clm/trousses/" + id + "/documents/" + pdf.get("id").asLong() + "/texte", initiateur, null)
+                .getContentAsString(StandardCharsets.UTF_8).contains("Agri-Nord inc."), "PDF issu du gabarit fusionné");
+
+        long version2 = corps(appel("POST", "/api/clm/modeles/" + modele + "/nouvelle-version", initiateur, "{}"), 200).get("id").asLong();
+        assertEquals("Convention IQ.docx", corps(appel("GET", "/api/clm/modeles/" + version2, initiateur, null), 200).get("gabaritWord").asText(),
+                "le gabarit suit la nouvelle version");
+        assertTrue(corps(appel("DELETE", "/api/clm/modeles/" + version2 + "/gabarit-word", initiateur, null), 200).get("gabaritWord").isNull());
+        assertEquals(404, appel("GET", "/api/clm/modeles/" + version2 + "/gabarit-word", initiateur, null).getStatus());
     }
 
     private MockHttpServletResponse scim(String methode, String url, String jeton, String corps) throws Exception {

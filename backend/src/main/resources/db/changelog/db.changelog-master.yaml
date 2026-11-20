@@ -121,3 +121,7 @@ databaseChangeLog:
       file: db/changelog/changes/060-clm-participant-representant.yaml
   - include:
       file: db/changelog/changes/061-annuaire-origine-attribut.yaml
+  - include:
+      file: db/changelog/changes/062-auth-comptes-secours.yaml
+  - include:
+      file: db/changelog/changes/063-clm-gabarit-word.yaml

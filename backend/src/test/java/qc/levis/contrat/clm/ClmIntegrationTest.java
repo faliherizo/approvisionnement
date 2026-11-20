@@ -428,9 +428,9 @@ class ClmIntegrationTest {
                 .andExpect(status().isOk());
         appel(post("/api/clm/trousses/" + id + "/generer", redacteur, "{}"), status().isConflict());
 
-        assertTrue(appel(get("/api/clm/trousses?q=cycle", redacteur), status().isOk()).size() >= 1);
-        assertTrue(appel(get("/api/clm/trousses?q=paul@x.ca&statut=BROUILLON", redacteur), status().isOk()).size() >= 1);
-        assertEquals(0, appel(get("/api/clm/trousses?statut=TERMINEE&q=cyc-1", redacteur), status().isOk()).size());
+        assertTrue(appel(get("/api/clm/trousses?q=cycle", redacteur), status().isOk()).get("lignes").size() >= 1);
+        assertTrue(appel(get("/api/clm/trousses?q=paul@x.ca&statut=BROUILLON", redacteur), status().isOk()).get("lignes").size() >= 1);
+        assertEquals(0, appel(get("/api/clm/trousses?statut=TERMINEE&q=cyc-1", redacteur), status().isOk()).get("lignes").size());
         appel(post("/api/clm/trousses/" + id + "/reprendre", redacteur, "{}"), status().isConflict());
         JsonNode suivi = appel(get("/api/clm/suivi?unite=Finances&source=MANUELLE&responsable=redacteur@levis.qc.ca&du=2020-01-01&au=2099-01-01", redacteur), status().isOk());
         assertTrue(suivi.get("lignes").size() >= 1);
@@ -533,7 +533,7 @@ class ClmIntegrationTest {
         assertEquals(0, appel(get("/api/clm/tableau-de-bord?unite=Inexistante", redacteur), status().isOk()).at("/indicateurs/terminees").asLong());
         assertTrue(appel(get("/api/clm/trousses?initiateur=redacteur@levis.qc.ca&type=services&du=2020-01-01&au=2099-12-31", redacteur), status().isOk())
                 .toString().contains(ref));
-        assertEquals(0, appel(get("/api/clm/trousses?initiateur=autre@x.ca", redacteur), status().isOk()).size());
+        assertEquals(0, appel(get("/api/clm/trousses?initiateur=autre@x.ca", redacteur), status().isOk()).get("lignes").size());
 
         JsonNode journal = appel(get("/api/clm/admin/journal?trousse=" + ref, admin), status().isOk());
         String types = journal.toString();
@@ -817,9 +817,9 @@ class ClmIntegrationTest {
         appel(get("/api/clm/admin/journal", signataire), status().isForbidden());
     }
 
-    private static List<Long> references(JsonNode trousses) {
+    private static List<Long> references(JsonNode page) {
         List<Long> ids = new ArrayList<>();
-        trousses.forEach(t -> ids.add(t.get("id").asLong()));
+        page.get("lignes").forEach(t -> ids.add(t.get("id").asLong()));
         return ids;
     }
 
