@@ -32,6 +32,29 @@ public class SecurityConfig {
         this.jwtFilter = jwtFilter;
     }
 
+    /**
+     * Séparation des administrations (addenda 4, Q10) : {@code ADMIN} cumule l'administration d'affaires et l'administration
+     * technique ; chacune des deux, attribuée seule, n'ouvre que son périmètre (moindre privilège).
+     */
+    @Bean
+    static org.springframework.security.access.hierarchicalroles.RoleHierarchy hierarchieDesRoles() {
+        org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl h =
+                new org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl();
+        h.setHierarchy("ROLE_ADMIN > ROLE_ADMIN_AFFAIRES\nROLE_ADMIN > ROLE_ADMIN_TECHNIQUE");
+        return h;
+    }
+
+    @Bean
+    static org.springframework.security.access.expression.method.MethodSecurityExpressionHandler gestionnaireExpressions(
+            org.springframework.security.access.hierarchicalroles.RoleHierarchy hierarchie,
+            org.springframework.context.ApplicationContext contexte) {
+        org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler g =
+                new org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler();
+        g.setRoleHierarchy(hierarchie);
+        g.setApplicationContext(contexte);
+        return g;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http

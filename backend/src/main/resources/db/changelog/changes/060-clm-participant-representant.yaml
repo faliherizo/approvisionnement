@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 060-1-clm-participant-representant
+      author: levis
+      comment: "CLM (addenda 4, Q6) : qualité du signataire, entreprise représentée et attestation d'autorité exigée."
+      changes:
+        - addColumn:
+            tableName: clm_participant
+            columns:
+              - column: { name: qualite, type: VARCHAR(150) }
+              - column: { name: entreprise_representee, type: VARCHAR(200) }
+              - column: { name: autorite_requise, type: BOOLEAN, defaultValueBoolean: false, constraints: { nullable: false } }

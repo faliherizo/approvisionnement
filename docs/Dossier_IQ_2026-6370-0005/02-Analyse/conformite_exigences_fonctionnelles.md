@@ -27,8 +27,8 @@ Légende : ✅ conforme · ✅🆕 conforme depuis cette analyse (écart comblé
 
 | | Obligatoires | Non obligatoires (optionnelles, facultés, préférences, conditionnelles) |
 |---|---|---|
-| Exigences fonctionnelles relevées | **121** (107 + 8 de l'addenda 2 + 6 de l'addenda 3, dont A-08 devenue obligatoire) | **11** |
-| Conformes | **121 (100 %)**, dont 13 rendues conformes par les 7 écarts comblés ci-dessous, 6 par l'addenda 2 ([impact_addenda_2.md](impact_addenda_2.md)) et 6 par l'addenda 3 ([impact_addenda_3.md](impact_addenda_3.md)) | 10 |
+| Exigences fonctionnelles relevées | **129** (107 + 8 de l'addenda 2 + 6 de l'addenda 3, dont A-08 devenue obligatoire, + 8 de l'addenda 4) | **11** |
+| Conformes | **129 (100 %)**, dont 13 rendues conformes par les 7 écarts comblés ci-dessous, 6 par l'addenda 2 ([impact_addenda_2.md](impact_addenda_2.md)), 6 par l'addenda 3 ([impact_addenda_3.md](impact_addenda_3.md)) et 6 par l'addenda 4 ([impact_addenda_4.md](impact_addenda_4.md)) ; A-29 et A-30 conformes avec des limites déclarées, comme ces exigences le permettent | 10 |
 | Non réalisées | 0 | 0 |
 | Sans objet | — | 1 : connecteur MCP, non exigé (A-09) |
 
@@ -190,6 +190,14 @@ versement à l'échéance), `ConformiteDomaineTest`, `CachetX509Test` (CAdES, PA
 | A-20 | Add. 3 Q44 | Domaine d'affaires alimenté par un groupe ou un attribut d'annuaire, séparation logique | Obligatoire (« doit permettre ») | ✅ | RST-27, groupes du module |
 | A-21 | Add. 3 Q46-Q48 | Conservation par catégorie, gel légal, trois sorts finaux, bordereau ou certificat de destruction | Obligatoire (« doit ») | ✅ | ADR-012, RST-29 |
 | A-22 | Add. 3 Q39 | Mesure de l'utilisation par enveloppe envoyée, sans double comptage | Obligatoire (« doit être ») | ✅ | RST-30 |
+| A-23 | Add. 4 Q1 | Niveaux d'authentification configurables selon le type de document et le processus | Obligatoire (« doit permettre ») | ✅ | RST-35 |
+| A-24 | Add. 4 Q6 | Signature par un représentant autorisé ; preuve d'autorité ; qualité du signataire tracée | Obligatoire (« doit permettre ») | ✅ | RST-32 |
+| A-25 | Add. 4 Q8, Q20 | Parcours conditionnels selon type, unité, rôle, montant | Obligatoire (« doit permettre ») | ✅ | RST-36, règles sur les champs |
+| A-26 | Add. 4 Q10 | Séparation de l'administration d'affaires et de l'administration technique | Obligatoire (« doit permettre ») | ✅ | RST-31, ADR-017 |
+| A-27 | Add. 4 Q31 | Mappage des attributs et groupes SCIM, désactivation rapide | Obligatoire (« doit permettre ») | ✅ | RST-26, RST-34 |
+| A-28 | Add. 4 Q36 | Approbation adaptée au lot, traçabilité par dossier | Obligatoire (« doit permettre ») | ✅ | RST-33 |
+| A-29 | Add. 4 Q14 | Export dans des formats pérennes, PDF/PDF-A **lorsque disponibles**, export massif | Obligatoire (export) ; PDF/A conditionnel | ✅ | Export en lot ; PDF/A déclaré comme limite (RST-37) |
+| A-30 | Add. 4 Q22 | Modèles Word d'IQ, structure et présentation préservées **dans la mesure permise** ; limites déclarées | Obligatoire avec réserve | ✅ | Modèles à variables ; limite déclarée (RST-38) |
 | A-17 | Add. 2 Q7 | `FundingRequest` lu par Id ou `Name`, correspondance configurable par modèle | Obligatoire (« devra ») | ✅ | C-08, C-09 |
 
 ## 5. Engagements du fournisseur et exigences non fonctionnelles (hors matrice)

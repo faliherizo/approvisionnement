@@ -188,7 +188,7 @@ function Contenu() {
             </div>
           </Panneau>
           <Panneau id="preuve" actif={onglet}>
-            <OngletPreuve trousseId={id} resume={r} admin={hasRole('ADMIN') || hasRole('SUPERADMIN')} onHistorique={() => setOnglet('historique')} />
+            <OngletPreuve trousseId={id} resume={r} admin={hasRole('ADMIN_AFFAIRES') || hasRole('SUPERADMIN')} onHistorique={() => setOnglet('historique')} />
           </Panneau>
         </div>
       </Blocs>

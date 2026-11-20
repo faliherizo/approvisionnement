@@ -21,6 +21,7 @@ public class ListesClm {
         CLAUSE_ATTENDUE("CLM_CLAUSE_ATTENDUE", "Clause attendue"),
         CHAMP_SALESFORCE("CLM_CHAMP_SALESFORCE", "Champ Salesforce"),
         STATUT_SALESFORCE("CLM_STATUT_SALESFORCE", "Statut retourné à Salesforce"),
+        NIVEAU_PAR_TYPE("CLM_NIVEAU_PAR_TYPE", "Niveau d'authentification minimum par type de document"),
         PRIORITE_TACHE("CLM_PRIORITE_TACHE", "Priorité de tâche");
 
         private final String code;

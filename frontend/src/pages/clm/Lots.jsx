@@ -105,9 +105,21 @@ function EcranLots() {
     recharger()
   }
   const detail = (lots || []).find((l) => l.id === ouvert)
+  const versErreur = useErreur()
+  const [erreur, setErreur] = useState(null)
+  const approuver = async (l) => {
+    const commentaire = window.prompt(t('clm.lot.commentaireApprobation', { libelle: l.libelle }))
+    if (commentaire === null) return
+    setErreur(null)
+    try {
+      const { data } = await api.post(`/clm/lots/${l.id}/approuver`, { texte: commentaire })
+      setInfo(t('clm.lot.approuve', { libelle: l.libelle, a: data.approuvees, e: data.ecartees }))
+      recharger()
+    } catch (x) { setErreur(versErreur(x)) }
+  }
   return (
     <EcranClm titre={t('clm.lot.titre')} objectif={t('clm.lot.objectif')}>
-      <Message info={info} />
+      <Message erreur={erreur} info={info} />
       <Blocs>
         <Bloc titre={t('clm.lot.nouveau')} large><NouveauLot onCree={cree} /></Bloc>
         <Bloc titre={t('clm.lot.recents')} large>
@@ -128,6 +140,7 @@ function EcranLots() {
                       <td data-label={t('clm.col.actions')}>
                         <button type="button" className="lien" aria-expanded={ouvert === l.id} aria-label={`${t('clm.lot.voir')} — ${l.libelle}`}
                           onClick={() => setOuvert(ouvert === l.id ? null : l.id)}>{t('clm.lot.voir')}</button>
+                        <button type="button" className="lien" aria-label={`${t('clm.lot.approuver')} — ${l.libelle}`} onClick={() => approuver(l)}>{t('clm.lot.approuver')}</button>
                       </td>
                     </tr>
                   ))}

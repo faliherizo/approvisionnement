@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import qc.levis.contrat.clm.application.dto.ClmDto;
 import qc.levis.contrat.clm.application.port.AlertesExploitation;
 import qc.levis.contrat.clm.application.port.NotificateurClm;
 import qc.levis.contrat.clm.application.port.PerimetreUtilisateur;
@@ -114,5 +115,20 @@ class Addenda2ServicesTest {
         assertSame(d, salesforce.lireDossier(" DEM-1 ", List.of(avecSource, sansSource)));
         assertThrows(IllegalArgumentException.class, () -> salesforce.lireDossier(" ", List.of()));
         assertThrows(java.util.NoSuchElementException.class, () -> salesforce.lireDossier("INCONNU"));
+    }
+
+    @Test
+    void le_certificat_mentionne_la_qualite_l_entreprise_et_l_attestation_d_autorite() {
+        java.util.Map<String, Object> rep = new java.util.HashMap<>(Map.of("qualite", "Président", "entreprise", "Agri-Nord",
+                "autoriteAttestee", true, "referenceAutorite", "Résolution 2026-14"));
+        ClmDto.SignatureVue s = new ClmDto.SignatureVue("Marc", "m@x", "SIGNATAIRE_1", "COURRIEL", null, null, null, null, "SIGNEE",
+                Map.of("representation", rep));
+        assertEquals(" · pour Agri-Nord (Président) · autorité attestée, réf. Résolution 2026-14", PreuveService.representation(s));
+        rep.put("referenceAutorite", " ");
+        assertEquals(" · pour Agri-Nord (Président) · autorité attestée", PreuveService.representation(s));
+        rep.remove("autoriteAttestee");
+        assertEquals(" · pour Agri-Nord (Président)", PreuveService.representation(s));
+        assertEquals("", PreuveService.representation(new ClmDto.SignatureVue("A", "a", "R", "N", null, null, null, null, "SIGNEE", Map.of())));
+        assertEquals("", PreuveService.representation(new ClmDto.SignatureVue("A", "a", "R", "N", null, null, null, null, "SIGNEE", null)));
     }
 }

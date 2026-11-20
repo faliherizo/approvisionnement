@@ -45,6 +45,10 @@ public class ScimController {
     private static final String SCHEMA_LISTE = "urn:ietf:params:scim:api:messages:2.0:ListResponse";
     private static final String SCHEMA_ERREUR = "urn:ietf:params:scim:api:messages:2.0:Error";
     private static final Pattern FILTRE = Pattern.compile("^\\s*(userName|displayName)\\s+eq\\s+\"([^\"]*)\"\\s*$", Pattern.CASE_INSENSITIVE);
+    private static final String EXTENSION_ENTREPRISE = "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User";
+    /** Attributs de compte retenus comme faits d'annuaire (addenda 4, Q31) : du schéma de base et de l'extension entreprise. */
+    private static final List<String> ATTRIBUTS_BASE = List.of("title", "userType", "preferredLanguage");
+    private static final List<String> ATTRIBUTS_ENTREPRISE = List.of("department", "division", "organization", "costCenter", "employeeNumber");
     private static final Pattern MEMBRE_CIBLE = Pattern.compile("members\\[\\s*value\\s+eq\\s+\"([^\"]+)\"\\s*]", Pattern.CASE_INSENSITIVE);
 
     /** Jeton absent, inconnu ou révoqué. */
@@ -96,7 +100,8 @@ public class ScimController {
     public ResponseEntity<Map<String, Object>> creerUtilisateur(@RequestHeader(value = "Authorization", required = false) String auth,
                                                                 @RequestBody JsonNode corps) {
         Long tenant = organisation(auth);
-        ScimUtilisateurVue u = scim.creerUtilisateur(tenant, new ScimUtilisateur(texte(corps, "userName"), nom(corps), booleen(corps.get("active"))));
+        ScimUtilisateurVue u = scim.creerUtilisateur(tenant, new ScimUtilisateur(texte(corps, "userName"), nom(corps), booleen(corps.get("active")),
+                attributs(corps)));
         return ResponseEntity.status(HttpStatus.CREATED).body(utilisateur(u));
     }
 
@@ -109,7 +114,8 @@ public class ScimController {
     public Map<String, Object> remplacerUtilisateur(@RequestHeader(value = "Authorization", required = false) String auth,
                                                     @PathVariable String id, @RequestBody JsonNode corps) {
         Long tenant = organisation(auth);
-        return utilisateur(scim.modifierUtilisateur(tenant, id, new ScimUtilisateur(null, nom(corps), booleen(corps.get("active")))));
+        return utilisateur(scim.modifierUtilisateur(tenant, id, new ScimUtilisateur(null, nom(corps), booleen(corps.get("active")),
+                attributs(corps))));
     }
 
     @PatchMapping("/Users/{id}")
@@ -118,19 +124,25 @@ public class ScimController {
         Long tenant = organisation(auth);
         String nom = null;
         Boolean actif = null;
+        Map<String, String> attributs = new LinkedHashMap<>();
         for (JsonNode op : operations(corps)) {
             String chemin = texte(op, "path");
             JsonNode valeur = op.get("value");
+            String attribut = chemin == null ? null : attributCible(chemin);
             if (chemin == null && valeur != null && valeur.isObject()) {
                 actif = valeur.has("active") ? booleen(valeur.get("active")) : actif;
                 nom = nom(valeur) == null ? nom : nom(valeur);
+                java.util.Optional.ofNullable(attributs(valeur)).ifPresent(attributs::putAll);
+            } else if (attribut != null) {
+                attributs.put(attribut, valeur == null || valeur.isNull() || "remove".equalsIgnoreCase(texte(op, "op")) ? "" : valeur.asText());
             } else if ("active".equalsIgnoreCase(chemin)) {
                 actif = booleen(valeur);
             } else if (chemin != null && (chemin.equalsIgnoreCase("displayName") || chemin.equalsIgnoreCase("name.formatted"))) {
                 nom = valeur == null ? null : valeur.asText();
             }
         }
-        return utilisateur(scim.modifierUtilisateur(tenant, id, new ScimUtilisateur(null, nom, actif)));
+        return utilisateur(scim.modifierUtilisateur(tenant, id, new ScimUtilisateur(null, nom, actif,
+                attributs.isEmpty() ? null : fusion(scim.attributs(tenant, id), attributs))));
     }
 
     @DeleteMapping("/Users/{id}")
@@ -318,6 +330,31 @@ public class ScimController {
             valeur.forEach(m -> ids.add(m.isObject() ? m.path("value").asText() : m.asText()));
         }
         return ids;
+    }
+
+    /** Attributs retenus d'une ressource User ; nul si elle n'en porte aucun (rien à changer). */
+    static Map<String, String> attributs(JsonNode corps) {
+        Map<String, String> m = new LinkedHashMap<>();
+        ATTRIBUTS_BASE.stream().filter(a -> corps.hasNonNull(a)).forEach(a -> m.put(a, corps.get(a).asText()));
+        JsonNode ext = corps.get(EXTENSION_ENTREPRISE);
+        if (ext != null && ext.isObject()) {
+            ATTRIBUTS_ENTREPRISE.stream().filter(ext::hasNonNull).forEach(a -> m.put(a, ext.get(a).asText()));
+        }
+        return m.isEmpty() ? null : m;
+    }
+
+    /** Attribut visé par un chemin PATCH : « title », « department » ou « urn:…:enterprise:2.0:User:department ». */
+    static String attributCible(String chemin) {
+        String nom = chemin.startsWith(EXTENSION_ENTREPRISE + ":") ? chemin.substring(EXTENSION_ENTREPRISE.length() + 1) : chemin;
+        return ATTRIBUTS_BASE.contains(nom) || ATTRIBUTS_ENTREPRISE.contains(nom) ? nom : null;
+    }
+
+    /** Un PATCH ne pousse que les attributs modifiés : ils complètent ceux déjà connus ; une valeur vide en retire un. */
+    private static Map<String, String> fusion(Map<String, String> connus, Map<String, String> modifies) {
+        Map<String, String> m = new LinkedHashMap<>(connus);
+        m.putAll(modifies);
+        m.values().removeIf(String::isBlank);
+        return m;
     }
 
     /** Nom complet : name.formatted, sinon prénom et nom, sinon displayName. */

@@ -57,13 +57,16 @@ public class ScimService {
     private final MembreGroupeScimRepository membres;
     private final JetonScimRepository jetons;
     private final AnnuaireService annuaire;
+    private final qc.levis.contrat.auth.application.repository.AppartenanceAnnuaireRepository appartenances;
     private final PasswordEncoder encoder;
     private final AuditService audit;
     private final Clock horloge;
     private final SecureRandom alea = new SecureRandom();
 
     public ScimService(UserRepository users, GroupeScimRepository groupes, MembreGroupeScimRepository membres, JetonScimRepository jetons,
-                       AnnuaireService annuaire, PasswordEncoder encoder, AuditService audit, Clock horloge) {
+                       AnnuaireService annuaire, PasswordEncoder encoder, AuditService audit, Clock horloge,
+                       qc.levis.contrat.auth.application.repository.AppartenanceAnnuaireRepository appartenances) {
+        this.appartenances = appartenances;
         this.users = users;
         this.groupes = groupes;
         this.membres = membres;
@@ -118,6 +121,7 @@ public class ScimService {
         u = users.save(u);
         audit.log(tenant, "scim", "PROVISION_SCIM", "User", u.getId(), courriel);
         annuaire.synchroniser(u, AppartenanceAnnuaire.Origine.SCIM, List.of(), ROLE_INITIAL);
+        attributs(u, in);
         return vue(u);
     }
 
@@ -144,7 +148,9 @@ public class ScimService {
             u.setActif(in.actif());
             audit.log(tenant, "scim", in.actif() ? "REACTIVATION_SCIM" : "DEPROVISION_SCIM", "User", u.getId(), u.getEmail());
         }
-        return vue(users.save(u));
+        User sauve = users.save(u);
+        attributs(sauve, in);
+        return vue(sauve);
     }
 
     /** Déprovisionnement : compte désactivé, appartenances retirées, rôles et domaines recalculés ; rien n'est effacé. */
@@ -156,6 +162,16 @@ public class ScimService {
         membres.findByTenantIdAndUtilisateurId(tenant, u.getId()).forEach(membres::delete);
         audit.log(tenant, "scim", "DEPROVISION_SCIM", "User", u.getId(), u.getEmail());
         annuaire.synchroniser(u, AppartenanceAnnuaire.Origine.SCIM, List.of(), ROLE_INITIAL);
+    }
+
+    /** Attributs SCIM déjà connus d'un compte, pour compléter un PATCH partiel. */
+    public java.util.Map<String, String> attributs(Long tenant, String id) {
+        User u = exigerUtilisateur(tenant, id);
+        java.util.Map<String, String> m = new java.util.LinkedHashMap<>();
+        appartenances.findByTenantIdAndCourriel(tenant, u.getEmail()).stream()
+                .filter(a -> a.getOrigine() == AppartenanceAnnuaire.Origine.SCIM_ATTRIBUT)
+                .map(AppartenanceAnnuaire::fait).forEach(f -> m.put(f.attribut(), f.valeur()));
+        return m;
     }
 
     // --- Groupes ---
@@ -240,6 +256,19 @@ public class ScimService {
             avant.add(u.getId());
         }
         avant.forEach(u -> resynchroniser(g.getTenantId(), u));
+    }
+
+    /**
+     * Attributs poussés (département, titre, division…) : faits d'annuaire de l'origine SCIM_ATTRIBUT, que les
+     * correspondances traduisent en rôles et domaines d'affaires comme les attributs de la connexion unique (addenda 4, Q31).
+     */
+    private void attributs(User u, ScimUtilisateur in) {
+        if (in.attributs() == null) {
+            return;
+        }
+        List<FaitAnnuaire> faits = in.attributs().entrySet().stream().filter(e -> e.getValue() != null && !e.getValue().isBlank())
+                .map(e -> FaitAnnuaire.attribut(e.getKey(), e.getValue())).toList();
+        annuaire.synchroniser(u, AppartenanceAnnuaire.Origine.SCIM_ATTRIBUT, faits, ROLE_INITIAL);
     }
 
     /** Faits SCIM d'un compte : les groupes dont il est membre ; recalcule ses rôles et domaines d'affaires. */

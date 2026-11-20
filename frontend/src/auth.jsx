@@ -47,7 +47,9 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
-  const hasRole = (role) => user?.roles?.includes(role)
+  // ADMIN cumule l'administration d'affaires et l'administration technique (addenda 4, Q10), comme côté serveur.
+  const hasRole = (role) => Boolean(user?.roles?.includes(role)
+    || ((role === 'ADMIN_AFFAIRES' || role === 'ADMIN_TECHNIQUE') && user?.roles?.includes('ADMIN')))
 
   return (
     <AuthContext.Provider value={{ user, chargement, login, logout, hasRole }}>

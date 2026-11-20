@@ -14,7 +14,7 @@ import qc.levis.contrat.clm.application.dto.ClmDto;
 @PreAuthorize("@modules.actif('clm')")
 public class GroupesClmController {
 
-    private static final String ADMIN = "@modules.actif('clm') and hasAnyRole('ADMIN','SUPERADMIN')";
+    private static final String ADMIN = "@modules.actif('clm') and hasAnyRole('ADMIN_AFFAIRES','SUPERADMIN')";
 
     private final GroupesClmService groupes;
 

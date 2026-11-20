@@ -142,6 +142,20 @@ public class PreuveService {
         return res;
     }
 
+    /** Signature au nom d'une entreprise (addenda 4, Q6) : qualité, entreprise et attestation d'autorité, telles que signées. */
+    static String representation(ClmDto.SignatureVue s) {
+        Object r = s.attestation() == null ? null : s.attestation().get("representation");
+        if (!(r instanceof Map<?, ?> m)) {
+            return "";
+        }
+        String texte = " · pour " + m.get("entreprise") + " (" + m.get("qualite") + ")";
+        if (Boolean.TRUE.equals(m.get("autoriteAttestee"))) {
+            Object ref = m.get("referenceAutorite");
+            texte += " · autorité attestée" + (ref == null || String.valueOf(ref).isBlank() ? "" : ", réf. " + ref);
+        }
+        return texte;
+    }
+
     /** Archive portable : documents, certificat, journal, manifeste des empreintes et sceau du manifeste. */
     @Transactional
     public byte[] exporter(Long trousseId, Habilitations.Acteur acteur) {
@@ -211,7 +225,7 @@ public class PreuveService {
                     .append(" · consentement ").append(s.consentementLe()).append(" · signé ").append(s.signeeLe())
                     .append(" · ").append(s.statut());
             Object attestation = s.attestation() == null ? null : s.attestation().get("identifiant");
-            sb.append(attestation == null ? "" : " · attestation " + attestation).append('\n');
+            sb.append(attestation == null ? "" : " · attestation " + attestation).append(representation(s)).append('\n');
         }
         ClmDto.Integrite i = d.integrite();
         sb.append("\nIntégrité : ").append(i.integre() ? "confirmée" : "ALTÉRATION DÉTECTÉE").append(" (journal de ")

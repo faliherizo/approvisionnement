@@ -142,8 +142,13 @@ function EditeurAffectations({ affectations, onChange, participants, legende }) 
  * Concepteur de parcours (UI-11) : l'étape choisie dans le canvas (zone 01) se règle dans les zones de la maquette —
  * type (02), phase et mode (03), responsables et règle d'affaires (04), échéance, quorum et politique de rejet (05).
  */
-export function EditeurParcours({ etapes, onChange, champs = [], participants, aideParticipants, modifiable = true }) {
+/** Attributs de la trousse offerts aux règles d'acheminement (addenda 4, Q8 et Q20), en plus des champs du modèle. */
+export const attributsTrousse = (t) => ['typeContrat', 'unite', 'risque', 'source']
+  .map((a) => ({ cle: `trousse.${a}`, libelle: t(`clm.pc.attribut.${a}`) }))
+
+export function EditeurParcours({ etapes, onChange, champs: champsModele = [], participants, aideParticipants, modifiable = true }) {
   const { t } = useI18n()
+  const champs = [...champsModele, ...attributsTrousse(t)]
   const [choisi, setChoisi] = useState(0)
   const i = Math.min(choisi, Math.max(0, etapes.length - 1))
   const e = etapes[i]

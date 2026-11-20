@@ -16,7 +16,7 @@ import qc.levis.contrat.integration.application.port.PublicationCiblePort.Result
  */
 @RestController
 @RequestMapping("/api/parametres/integration-saml")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('ADMIN_TECHNIQUE')")
 public class IntegrationSamlController {
 
     private final IntegrationSamlService service;

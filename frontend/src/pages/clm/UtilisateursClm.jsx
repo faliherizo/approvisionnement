@@ -11,7 +11,7 @@ import { ChoixListe, GardeModule, Message, useErreur, useListe, useRessource } f
 import { BarreActions, Bloc, Blocs, EcranClm } from './gabarit.jsx'
 
 /** Rôles qui ouvrent un droit dans le module, dans l'ordre du parcours d'un contrat, puis la consultation d'audit. */
-const ROLES_CLM = ['REDACTEUR', 'APPRO', 'JURIDIQUE', 'DIRECTION', 'ADMIN', 'AUDITEUR']
+const ROLES_CLM = ['REDACTEUR', 'APPRO', 'JURIDIQUE', 'DIRECTION', 'ADMIN_AFFAIRES', 'ADMIN_TECHNIQUE', 'ADMIN', 'AUDITEUR']
 
 /** UI-20, zone 02 : ce que chaque rôle permet dans le module ; attribution d'un rôle et retrait de l'accès d'un compte. */
 function RolesEtPermissions({ onChange }) {

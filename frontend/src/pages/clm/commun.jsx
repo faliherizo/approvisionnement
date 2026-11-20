@@ -6,7 +6,7 @@ import { useModules } from '../../hooks/useModules.js'
 import './clm.css'
 
 /** Rôles qui créent une trousse, comme le vérifie le serveur ; l'auditeur et le lecteur consultent seulement. */
-const ROLES_INITIATEURS = ['REDACTEUR', 'APPRO', 'JURIDIQUE', 'DIRECTION', 'ADMIN', 'SUPERADMIN']
+const ROLES_INITIATEURS = ['REDACTEUR', 'APPRO', 'JURIDIQUE', 'DIRECTION', 'ADMIN', 'ADMIN_AFFAIRES', 'SUPERADMIN']
 
 export function usePeutInitier() {
   const { hasRole } = useAuth()

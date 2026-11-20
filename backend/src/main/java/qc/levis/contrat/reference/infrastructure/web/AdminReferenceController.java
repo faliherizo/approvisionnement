@@ -15,7 +15,7 @@ import qc.levis.contrat.reference.application.dto.ValeurReference;
  */
 @RestController
 @RequestMapping("/api/admin/reference")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('ADMIN_AFFAIRES')")
 public class AdminReferenceController {
 
     private final ReferenceService service;

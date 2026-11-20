@@ -27,7 +27,7 @@ import qc.levis.contrat.clm.domain.DocumentTrousse;
 @PreAuthorize("@modules.actif('clm')")
 public class TrousseController {
 
-    private static final String GESTION = "@modules.actif('clm') and hasAnyRole('REDACTEUR','APPRO','JURIDIQUE','DIRECTION','ADMIN','SUPERADMIN')";
+    private static final String GESTION = "@modules.actif('clm') and hasAnyRole('REDACTEUR','APPRO','JURIDIQUE','DIRECTION','ADMIN','ADMIN_AFFAIRES','SUPERADMIN')";
 
     private final TrousseService trousses;
     private final DocumentClmService documents;

@@ -56,6 +56,17 @@ public class Participant {
     @Column(nullable = false, length = 2)
     private Langue langue = Langue.FR;
 
+    /** Qualité du signataire (ex. « Président ») et entreprise qu'il représente (addenda 4, Q6). */
+    @Column(length = 150)
+    private String qualite;
+
+    @Column(name = "entreprise_representee", length = 200)
+    private String entreprise;
+
+    /** IQ exige du représentant une attestation de son autorité avant la signature. */
+    @Column(name = "autorite_requise", nullable = false)
+    private boolean autoriteRequise;
+
     protected Participant() {
     }
 
@@ -69,6 +80,35 @@ public class Participant {
         this.roleContrat = roleContrat;
         this.externe = externe;
         this.niveauIdentite = niveauIdentite;
+    }
+
+    /**
+     * Signature pour une entreprise (addenda 4, Q6) : qualité et entreprise représentée. Exiger une attestation d'autorité
+     * suppose de savoir pour qui et à quel titre le signataire s'engage.
+     */
+    public void representer(String qualite, String entreprise, boolean autoriteRequise) {
+        String q = vide(qualite);
+        String e = vide(entreprise);
+        if (autoriteRequise && (q == null || e == null)) {
+            throw new IllegalArgumentException("Attestation d'autorité : qualité du signataire et entreprise représentée requises.");
+        }
+        if (q != null && q.length() > 150 || e != null && e.length() > 200) {
+            throw new IllegalArgumentException("Qualité : 150 caractères au plus ; entreprise : 200 au plus.");
+        }
+        this.qualite = q;
+        this.entreprise = e;
+        this.autoriteRequise = autoriteRequise;
+    }
+
+    /** Avant de signer : l'attestation d'autorité est donnée si IQ l'exige. */
+    public void exigerAutorite(boolean attestee) {
+        if (autoriteRequise && !attestee) {
+            throw new IllegalArgumentException("Attestez être dûment autorisé à signer pour " + entreprise + " avant de signer.");
+        }
+    }
+
+    private static String vide(String s) {
+        return s == null || s.isBlank() ? null : s.strip();
     }
 
     /** Langue des messages et du portail du participant ; nulle : français (addenda 2, Q19). */
@@ -100,6 +140,9 @@ public class Participant {
     public String getQuestionIdentite() { return questionIdentite; }
     public String getReponseIdentiteHash() { return reponseIdentiteHash; }
     public Langue getLangue() { return langue; }
+    public String getQualite() { return qualite; }
+    public String getEntreprise() { return entreprise; }
+    public boolean isAutoriteRequise() { return autoriteRequise; }
 
     /** Destruction à l'échéance de conservation : les coordonnées du participant sont effacées. */
     public void anonymiser() {

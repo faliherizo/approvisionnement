@@ -769,3 +769,71 @@ test.describe('Addenda 3 — réponses d’IQ du 17 novembre 2026', () => {
     await auditerAxe(page)
   })
 })
+
+test.describe('Addenda 4 — réponses d’IQ du 19 novembre 2026 (addenda-4.md)', () => {
+  const a = donnees.addenda4
+
+  test('Q10 — l’administration d’affaires et l’administration technique voient chacune leur menu', async ({ page }) => {
+    await session(page, users.iqAdminAffaires)
+    await page.goto('/clm/admin/notifications')
+    const nav = page.getByRole('navigation').first()
+    for (const m of a.menus.affaires) await expect(page.getByRole('link', { name: m })).toBeVisible()
+    for (const m of a.menus.technique) await expect(page.getByRole('link', { name: m })).toHaveCount(0)
+    await controler(page)
+    await auditerAxe(page)
+    await session(page, users.iqAdminTechnique)
+    await page.goto('/clm/admin/integrations')
+    for (const m of a.menus.technique) await expect(page.getByRole('link', { name: m })).toBeVisible()
+    for (const m of a.menus.affaires) await expect(page.getByRole('link', { name: m })).toHaveCount(0)
+    expect((await page.request.get('/api/clm/admin/conservation/regles')).status()).toBe(403)
+    await expect(nav).toBeVisible()
+    await controler(page)
+    await auditerAxe(page)
+  })
+
+  test('Q6 — un signataire représente une entreprise, avec sa qualité et l’attestation d’autorité exigée', async ({ page, playwright, baseURL }) => {
+    const initiateur = await api(playwright, baseURL, users.iqInitiateur)
+    const t = (await ok(initiateur.post('/api/clm/trousses', { data: { titre: `Représentant ${unique()}`, risque: 'FAIBLE' } }))).resume
+    await initiateur.dispose()
+    const r = a.representant
+    await session(page, users.iqInitiateur)
+    await page.goto(`/clm/trousses/${t.id}?onglet=participants`)
+    await page.getByLabel(/^Nom/).fill(r.nom)
+    await page.getByLabel(/^Courriel/).fill(r.courriel)
+    await page.getByLabel(/^Téléphone/).fill(r.telephone)
+    await page.getByRole('combobox', { name: /^Rôle dans le contrat/ }).selectOption({ label: r.role })
+    await page.getByLabel(/^Qualité du signataire/).fill(r.qualite)
+    await page.getByLabel(/^Entreprise représentée/).fill(r.entreprise)
+    await page.getByRole('checkbox', { name: /attestation d’autorité/ }).check()
+    await controler(page)
+    await auditerAxe(page)
+    await page.locator('form').filter({ has: page.getByRole('heading', { name: 'Ajouter un signataire' }) })
+      .getByRole('button', { name: 'Ajouter un signataire' }).click()
+    await expect(page.getByRole('row').filter({ hasText: r.nom })).toContainText(`pour ${r.entreprise} (${r.qualite})`)
+  })
+
+  test('Q36 — l’approbateur approuve tout un lot en une action', async ({ page, playwright, baseURL }) => {
+    const l = a.lot
+    const redacteur = await api(playwright, baseURL, users.iqInitiateur)
+    const admin = await api(playwright, baseURL, users.iqAdminAffaires)
+    const m = await ok(redacteur.post('/api/clm/modeles', { data: { nom: `Modèle lot ${unique()}`, corps: l.corps, champs: [], clauses: [], parcours: l.parcours } }))
+    await ok(redacteur.post(`/api/clm/modeles/${m.id}/soumettre`, { data: {} }))
+    await ok(admin.post(`/api/clm/modeles/${m.id}/publier`, { data: {} }))
+    const libelle = `${l.libelle} ${unique()}`
+    const pdf = Buffer.from(PDF, 'latin1').toString('base64')
+    await ok(redacteur.post('/api/clm/lots', { data: { libelle, modeleId: m.id, lancer: true,
+      elements: l.dossiers.map((titre: string) => ({ titre, risque: 'FAIBLE', documents: [{ nom: 'c.pdf', contenuBase64: pdf }] })) } }))
+    await Promise.all([redacteur.dispose(), admin.dispose()])
+
+    await session(page, users.iqApprobateur)
+    await page.goto('/clm/lots')
+    const bouton = page.getByRole('button', { name: `Approuver le lot — ${libelle}` })
+    await expect(bouton).toBeVisible()
+    await controler(page)
+    await auditerAxe(page)
+    page.once('dialog', (d) => d.accept(l.commentaire))
+    await bouton.click()
+    await expect(page.getByText(`Lot « ${libelle} » : ${l.dossiers.length} étape(s) approuvée(s), 0 écartée(s)`, { exact: false })).toBeVisible()
+  })
+})
+

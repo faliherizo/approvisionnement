@@ -1,8 +1,20 @@
 {
-  "redacteur": { "email": "redacteur@levis.qc.ca", "motDePasse": "Passw0rd!" },
-  "admin": { "email": "admin@levis.qc.ca", "motDePasse": "Passw0rd!" },
-  "juriste": { "email": "juriste@levis.qc.ca", "motDePasse": "Passw0rd!" },
-  "direction": { "email": "direction@levis.qc.ca", "motDePasse": "Passw0rd!" },
+  "redacteur": {
+    "email": "redacteur@levis.qc.ca",
+    "motDePasse": "Passw0rd!"
+  },
+  "admin": {
+    "email": "admin@levis.qc.ca",
+    "motDePasse": "Passw0rd!"
+  },
+  "juriste": {
+    "email": "juriste@levis.qc.ca",
+    "motDePasse": "Passw0rd!"
+  },
+  "direction": {
+    "email": "direction@levis.qc.ca",
+    "motDePasse": "Passw0rd!"
+  },
   "question": {
     "email": "question@levis.qc.ca",
     "motDePasse": "Passw0rd!",
@@ -13,12 +25,40 @@
     "motDePasse": "Passw0rd!",
     "totpSecret": "JBSWY3DPEHPK3PXP"
   },
-  "superadmin": { "email": "superadmin@plateforme.ca", "motDePasse": "SuperPassw0rd!" },
-  "iqInitiateur": { "email": "initiateur@iq.example", "motDePasse": "Passw0rd!" },
-  "iqValidateur": { "email": "validateur@iq.example", "motDePasse": "Passw0rd!" },
-  "iqApprobateur": { "email": "approbateur@iq.example", "motDePasse": "Passw0rd!" },
-  "iqSignataire": { "email": "signataire@iq.example", "motDePasse": "Passw0rd!" },
-  "iqAdminAffaires": { "email": "admin.affaires@iq.example", "motDePasse": "Passw0rd!" },
-  "iqAdminTi": { "email": "admin.ti@iq.example", "motDePasse": "Passw0rd!" },
-  "iqAuditeur": { "email": "auditeur@iq.example", "motDePasse": "Passw0rd!" }
+  "superadmin": {
+    "email": "superadmin@plateforme.ca",
+    "motDePasse": "SuperPassw0rd!"
+  },
+  "iqInitiateur": {
+    "email": "initiateur@iq.example",
+    "motDePasse": "Passw0rd!"
+  },
+  "iqValidateur": {
+    "email": "validateur@iq.example",
+    "motDePasse": "Passw0rd!"
+  },
+  "iqApprobateur": {
+    "email": "approbateur@iq.example",
+    "motDePasse": "Passw0rd!"
+  },
+  "iqSignataire": {
+    "email": "signataire@iq.example",
+    "motDePasse": "Passw0rd!"
+  },
+  "iqAdminAffaires": {
+    "email": "admin.affaires@iq.example",
+    "motDePasse": "Passw0rd!"
+  },
+  "iqAdminTi": {
+    "email": "admin.ti@iq.example",
+    "motDePasse": "Passw0rd!"
+  },
+  "iqAuditeur": {
+    "email": "auditeur@iq.example",
+    "motDePasse": "Passw0rd!"
+  },
+  "iqAdminTechnique": {
+    "email": "admin.technique@iq.example",
+    "motDePasse": "Passw0rd!"
+  }
 }

@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 061-1-annuaire-origine-attribut
+      author: levis
+      comment: "Annuaire (addenda 4, Q31) : origine SCIM_ATTRIBUT pour les attributs de compte poussés par SCIM."
+      changes:
+        - modifyDataType:
+            tableName: annuaire_appartenance
+            columnName: origine
+            newDataType: VARCHAR(13)

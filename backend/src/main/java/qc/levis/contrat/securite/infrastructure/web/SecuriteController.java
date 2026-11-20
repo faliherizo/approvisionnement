@@ -12,7 +12,7 @@ import qc.levis.contrat.securite.domain.PermissionAcces;
 /** Gestion de la sécurité fine (permissions granulaires, groupes). Gardé par le module « securite_avancee ». */
 @RestController
 @RequestMapping("/api/securite")
-@PreAuthorize("@modules.actif('securite_avancee') and hasAnyRole('ADMIN','SUPERADMIN')")
+@PreAuthorize("@modules.actif('securite_avancee') and hasAnyRole('ADMIN_TECHNIQUE','SUPERADMIN')")
 public class SecuriteController {
 
     private final SecuriteService service;

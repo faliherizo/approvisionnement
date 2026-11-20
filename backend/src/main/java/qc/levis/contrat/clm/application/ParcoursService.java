@@ -100,9 +100,30 @@ public class ParcoursService {
         avancer(t, acteur);
     }
 
+    /**
+     * Valeurs offertes aux règles d'affaires d'une étape : les champs de la trousse, et ses attributs de processus
+     * (addenda 4, Q8 et Q20) — type de document, unité administrative, niveau de risque et origine — pour acheminer selon
+     * le processus, l'unité ou le montant sans dupliquer ces données dans un champ du modèle.
+     */
+    static final String TYPE = "trousse.typeContrat";
+    static final String UNITE = "trousse.unite";
+    static final String RISQUE = "trousse.risque";
+    static final String SOURCE = "trousse.source";
+    /** Attributs de la trousse admis dans une règle d'étape, en plus des champs du modèle. */
+    static final java.util.Set<String> ATTRIBUTS_TROUSSE = java.util.Set.of(TYPE, UNITE, RISQUE, SOURCE);
+
+    Map<String, Object> valeursDeRegle(Trousse t) {
+        Map<String, Object> valeurs = new HashMap<>(ctx.valeursBrutes(t.getValeursJson()));
+        valeurs.put(TYPE, t.getTypeContrat() == null ? "" : t.getTypeContrat());
+        valeurs.put(UNITE, t.getUnite() == null ? "" : t.getUnite());
+        valeurs.put(RISQUE, t.getRisque().name());
+        valeurs.put(SOURCE, t.getSource().name());
+        return valeurs;
+    }
+
     /** Remet en attente les étapes à partir d'une phase, en réappliquant leurs règles d'affaires aux valeurs actuelles. */
     private void reinitialiserDepuis(Trousse t, int phase) {
-        Map<String, Object> valeurs = ctx.valeursBrutes(t.getValeursJson());
+        Map<String, Object> valeurs = valeursDeRegle(t);
         Instant maintenant = ctx.maintenant();
         for (EtapeTrousse e : etapesDe(t)) {
             if (e.getPhase() < phase) {

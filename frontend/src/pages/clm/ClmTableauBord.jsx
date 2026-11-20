@@ -21,7 +21,7 @@ function Contenu() {
   const maj = (k) => (e) => setForm({ ...form, [k]: e.target.value })
   const unites = useListe('CLM_UNITE')
   const premiere = donnees?.mesActions?.[0]
-  const admin = hasRole('ADMIN') || hasRole('SUPERADMIN')
+  const admin = hasRole('ADMIN_TECHNIQUE') || hasRole('SUPERADMIN')
   const peutInitier = usePeutInitier()
 
   return (

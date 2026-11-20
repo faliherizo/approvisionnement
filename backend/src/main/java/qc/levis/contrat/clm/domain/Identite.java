@@ -16,6 +16,22 @@ public final class Identite {
 
     public enum Niveau { COURRIEL, CODE_SMS, QUESTION, FORTE }
 
+    /**
+     * Niveau minimum fixé pour un type de document (addenda 4, Q1), combiné au niveau de la politique : le plus exigeant
+     * l'emporte. Un code de niveau inconnu ou absent ne change rien.
+     */
+    public static Niveau auMoins(Niveau niveau, String minimumDuType) {
+        if (minimumDuType == null || minimumDuType.isBlank()) {
+            return niveau;
+        }
+        for (Niveau n : Niveau.values()) {
+            if (n.name().equalsIgnoreCase(minimumDuType.strip())) {
+                return n.ordinal() > niveau.ordinal() ? n : niveau;
+            }
+        }
+        return niveau;
+    }
+
     private Identite() {
     }
 

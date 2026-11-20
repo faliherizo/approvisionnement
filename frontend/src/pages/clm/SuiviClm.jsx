@@ -27,7 +27,7 @@ function Contenu() {
   const { donnees, erreur: errChargement, chargement, recharger } = useRessource(`/clm/suivi?${qs}${qs ? '&' : ''}page=${page}&taille=${TAILLE}`)
   const filtrer = (f) => { setPage(0); setFiltre(f) }
   const maj = (k) => (e) => setForm({ ...form, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
-  const admin = hasRole('ADMIN') || hasRole('SUPERADMIN')
+  const admin = hasRole('ADMIN_TECHNIQUE') || hasRole('SUPERADMIN')
   const unites = useListe('CLM_UNITE')
   const lignes = donnees?.lignes || []
   const resultats = donnees?.total != null ? t('clm.su.resultatsTotal', { n: lignes.length, total: donnees.total, page: page + 1 })

@@ -17,7 +17,8 @@ public final class Habilitations {
         }
 
         public boolean estAdmin() {
-            return roles.contains("ADMIN") || roles.contains("SUPERADMIN");
+            // L'administration d'affaires gère les trousses ; l'administration technique n'y a pas accès (addenda 4, Q10).
+            return roles.contains("ADMIN") || roles.contains("SUPERADMIN") || roles.contains("ADMIN_AFFAIRES");
         }
 
         /** Auditeur / conformité : consulte tout le tenant, n'intervient sur rien. */

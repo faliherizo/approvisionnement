@@ -19,8 +19,9 @@ const PROFILS: Profil[] = [
   { profil: 'Validateur', compte: users.iqValidateur, administration: [], initie: true },
   { profil: 'Approbateur', compte: users.iqApprobateur, administration: [], initie: true },
   { profil: 'Signataire interne', compte: users.iqSignataire, administration: [], initie: false },
-  { profil: 'Administrateur d’affaires', compte: users.iqAdminAffaires, administration: ADMINISTRATION, initie: true },
-  { profil: 'Administrateur technique', compte: users.iqAdminTi, administration: ADMINISTRATION, initie: true },
+  // Addenda 4, Q10 (ADR-017) : l'administration d'affaires n'ouvre pas les intégrations ; ADMIN cumule les deux.
+  { profil: 'Administrateur d’affaires', compte: users.iqAdminAffaires, administration: ADMINISTRATION.filter((m) => m !== 'Intégrations API'), initie: true },
+  { profil: 'Administrateur principal', compte: users.iqAdminTi, administration: ADMINISTRATION, initie: true },
   { profil: 'Auditeur / conformité', compte: users.iqAuditeur, administration: ['Journal d’audit'], initie: false },
 ]
 

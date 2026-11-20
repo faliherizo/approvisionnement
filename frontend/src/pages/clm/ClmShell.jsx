@@ -18,16 +18,21 @@ const PRINCIPAUX = [
   ['/clm/modeles', 'clm.nav.modeles'],
   ['/clm/suivi', 'clm.nav.suivi'],
 ]
-/** Entrées d'administration ; le journal d'audit (UI-23) est aussi celui de l'auditeur. */
+/**
+ * Entrées d'administration et rôles qui les ouvrent (addenda 4, Q10) : administration d'affaires, administration
+ * technique, ou les deux ; le journal d'audit (UI-23) est aussi celui de l'auditeur. ADMIN cumule les deux.
+ */
+const AFF = 'ADMIN_AFFAIRES'
+const TEC = 'ADMIN_TECHNIQUE'
 const ADMINISTRATION = [
-  ['/clm/admin/notifications', 'clm.nav.notifications'],
-  ['/clm/admin/integrations', 'clm.nav.integrations'],
-  ['/clm/admin/parametres', 'clm.nav.parametres'],
-  ['/clm/admin/listes', 'clm.nav.listes'],
-  ['/clm/admin/utilisateurs', 'clm.nav.utilisateurs'],
-  ['/clm/admin/conservation', 'clm.nav.conservation'],
-  ['/clm/admin/journal', 'clm.nav.journal', 'AUDITEUR'],
-  ['/clm/options', 'clm.nav.options'],
+  ['/clm/admin/notifications', 'clm.nav.notifications', [AFF]],
+  ['/clm/admin/integrations', 'clm.nav.integrations', [TEC]],
+  ['/clm/admin/parametres', 'clm.nav.parametres', [AFF]],
+  ['/clm/admin/listes', 'clm.nav.listes', [AFF]],
+  ['/clm/admin/utilisateurs', 'clm.nav.utilisateurs', [AFF, TEC]],
+  ['/clm/admin/conservation', 'clm.nav.conservation', [AFF]],
+  ['/clm/admin/journal', 'clm.nav.journal', [AFF, 'AUDITEUR']],
+  ['/clm/options', 'clm.nav.options', [AFF]],
 ]
 
 const initiales = (nom) => (nom || '?').split(/\s+/).filter(Boolean).slice(0, 2).map((m) => m[0].toUpperCase()).join('')
@@ -42,9 +47,9 @@ export default function ClmShell({ children }) {
   const [menuOuvert, setMenuOuvert] = useState(false)
   const [q, setQ] = useState('')
   const { modules, chargement } = useModules()
-  const admin = hasRole('ADMIN') || hasRole('SUPERADMIN')
+  const admin = hasRole('ADMIN_AFFAIRES') || hasRole('SUPERADMIN')
   const peutInitier = usePeutInitier()
-  const administration = ADMINISTRATION.filter(([, , aussi]) => admin || (aussi && hasRole(aussi)))
+  const administration = ADMINISTRATION.filter(([, , roles]) => hasRole('SUPERADMIN') || roles.some((r) => hasRole(r)))
   // Une organisation qui ne souscrit que le CLM n'a pas d'autre espace vers lequel revenir.
   const autreEspace = !chargement && !espaceClmSeul(modules)
 

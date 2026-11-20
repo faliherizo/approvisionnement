@@ -26,6 +26,8 @@ export default function Portail() {
   const [codeEnvoye, setCodeEnvoye] = useState(false)
   const [lus, setLus] = useState({})
   const [consentement, setConsentement] = useState(false)
+  const [autorite, setAutorite] = useState(false)
+  const [referenceAutorite, setReferenceAutorite] = useState('')
   const [nom, setNom] = useState('')
   const [champs, setChamps] = useState({})
   const [motif, setMotif] = useState('')
@@ -66,7 +68,7 @@ export default function Portail() {
   }
   const signer = async (e) => {
     e.preventDefault()
-    const r = await appel(() => portail.post(`${base}/signer`, { nomComplet: nom, consentement, champs }), t('clm.po.signee'))
+    const r = await appel(() => portail.post(`${base}/signer`, { nomComplet: nom, consentement, champs, autoriteAttestee: autorite, referenceAutorite }), t('clm.po.signee'))
     if (r) setRecu(r.data)
   }
   const refuser = async (e) => {
@@ -164,6 +166,17 @@ export default function Portail() {
                   ))}
                 </fieldset>
                 <div className="form" data-zone="04">
+                  {vue.entreprise && <p>{t('clm.po.representation', { entreprise: vue.entreprise, qualite: vue.qualite || '—' })}</p>}
+                  {vue.autoriteRequise && (
+                    <>
+                      <label className="check-row clm-consentement">
+                        <input type="checkbox" checked={autorite} onChange={(e) => setAutorite(e.target.checked)} required />
+                        {t('clm.po.autorite', { entreprise: vue.entreprise })}
+                      </label>
+                      <label>{t('clm.po.referenceAutorite')} <span className="muted">{t('clm.po.referenceAutoriteAide')}</span>
+                        <input value={referenceAutorite} onChange={(e) => setReferenceAutorite(e.target.value)} maxLength={200} /></label>
+                    </>
+                  )}
                   <label>{t('clm.po.nomComplet')}<input value={nom} onChange={(e) => setNom(e.target.value)} required autoComplete="name" /></label>
                   <label className="check-row clm-consentement">
                     <input type="checkbox" checked={consentement} onChange={(e) => setConsentement(e.target.checked)} required />
@@ -171,7 +184,7 @@ export default function Portail() {
                   </label>
                 </div>
                 {!tousLus && <p className="muted">{t('clm.po.lireAvant')}</p>}
-                <button type="submit" disabled={occupe || !consentement || !tousLus}>{t('clm.po.signer')}</button>
+                <button type="submit" disabled={occupe || !consentement || !tousLus || (vue.autoriteRequise && !autorite)}>{t('clm.po.signer')}</button>
               </form>
             )}
 

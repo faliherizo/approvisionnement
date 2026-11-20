@@ -22,7 +22,8 @@ public final class ClmDto {
 
     /** {@code langue} : FR (défaut) ou EN, langue des messages et du portail du participant (addenda 2, Q19). */
     public record ParticipantRequest(String nom, String courriel, String telephone, String roleContrat, boolean externe,
-                                     String niveauIdentite, String question, String reponse, String langue) {
+                                     String niveauIdentite, String question, String reponse, String langue,
+                                     String qualite, String entreprise, Boolean autoriteRequise) {
     }
 
     public record AffectationDto(String type, String valeur) {
@@ -84,7 +85,9 @@ public final class ClmDto {
     public record VerificationRequest(String reponse) {
     }
 
-    public record SignatureRequest(String nomComplet, boolean consentement, Map<String, String> champs) {
+    /** {@code autoriteAttestee}, {@code referenceAutorite} : attestation d'un représentant d'entreprise (addenda 4, Q6). */
+    public record SignatureRequest(String nomComplet, boolean consentement, Map<String, String> champs, Boolean autoriteAttestee,
+                                   String referenceAutorite) {
     }
 
     public record RefusRequest(String motif) {
@@ -101,7 +104,8 @@ public final class ClmDto {
     }
 
     public record ParticipantVue(Long id, String nom, String courriel, String telephone, String roleContrat, boolean externe,
-                                 String niveauIdentite, boolean questionDefinie, String langue) {
+                                 String niveauIdentite, boolean questionDefinie, String langue, String qualite, String entreprise,
+                                 boolean autoriteRequise) {
     }
 
     public record DecisionVue(String acteur, String nature, String commentaire, Instant decideLe) {
@@ -215,7 +219,8 @@ public final class ClmDto {
 
     public record PortailVue(String reference, String titre, String participant, String niveau, String statut,
                              Instant expireLe, boolean verifiee, boolean consentement, String question,
-                             List<DocumentPortail> documents, List<ChampPortail> champs, Recu recu, String organisation, String logo) {
+                             List<DocumentPortail> documents, List<ChampPortail> champs, Recu recu, String organisation, String logo,
+                             String qualite, String entreprise, boolean autoriteRequise) {
     }
 
     public record Recu(String reference, String signataire, Instant signeeLe, String empreinteDocuments, String attestation) {
@@ -309,6 +314,10 @@ public final class ClmDto {
     }
 
     public record ElementLotVue(int rang, String referenceExterne, Long trousseId, String reference, String statut, String erreur) {
+    }
+
+    /** Résultat d'une approbation globale de lot (addenda 4, Q36) : décisions prises et étapes écartées, avec leur motif. */
+    public record ApprobationLotVue(Long lotId, int dossiers, int approuvees, int ecartees, List<String> motifs) {
     }
 
     public record LotVue(Long id, String libelle, Long modeleId, String origine, String statut, int total, int reussis,

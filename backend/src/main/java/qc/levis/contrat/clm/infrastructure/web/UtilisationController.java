@@ -13,7 +13,7 @@ import qc.levis.contrat.clm.application.dto.ClmDto;
 /** Relevé d'utilisation par enveloppe envoyée (addenda 3, Q39) : administration et audit, pour valider les factures. */
 @RestController
 @RequestMapping("/api/clm/admin/utilisation")
-@PreAuthorize("@modules.actif('clm') and hasAnyRole('ADMIN','SUPERADMIN','AUDITEUR')")
+@PreAuthorize("@modules.actif('clm') and hasAnyRole('ADMIN_AFFAIRES','SUPERADMIN','AUDITEUR')")
 public class UtilisationController {
 
     private final UtilisationService utilisation;

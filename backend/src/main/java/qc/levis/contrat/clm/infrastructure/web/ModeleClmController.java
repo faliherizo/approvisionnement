@@ -33,7 +33,7 @@ public class ModeleClmController {
     }
 
     @PostMapping
-    @PreAuthorize("@modules.actif('clm') and hasAnyRole('REDACTEUR','JURIDIQUE','ADMIN','SUPERADMIN')")
+    @PreAuthorize("@modules.actif('clm') and hasAnyRole('REDACTEUR','JURIDIQUE','ADMIN','ADMIN_AFFAIRES','SUPERADMIN')")
     public ClmDto.ModeleVue creer(@RequestBody ClmDto.ModeleRequest req, Authentication auth) {
         return modeles.creer(req, acteurs.de(auth));
     }

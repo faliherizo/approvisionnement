@@ -176,6 +176,7 @@ public class PortailService {
             if (nom.length() < 2) {
                 throw new IllegalArgumentException("Nom complet requis pour signer.");
             }
+            s.participant().exigerAutorite(Boolean.TRUE.equals(req.autoriteAttestee()));
             Map<String, String> champs = validerChamps(s, req.champs() == null ? Map.of() : req.champs());
             inv.consentir(maintenant);
             journal.consigner(s.trousse(), "CONSENTEMENT", s.participant().getCourriel(), "Consentement à signer électroniquement");
@@ -183,9 +184,10 @@ public class PortailService {
             FournisseurSignature.Attestation att = fournisseur.signer(new FournisseurSignature.Demande(empreinte, nom,
                     s.participant().getCourriel(), inv.getNiveau(), maintenant, ip));
             Map<String, Object> attestation = attestation(att, empreinte);
+            representation(s.participant(), req, maintenant).ifPresent(r -> attestation.put("representation", r));
             inv.signer(nom, tronquer(ip, 64), tronquer(agent, 300), ctx.ecrire(champs), ctx.ecrire(attestation), maintenant);
             invitations.save(inv);
-            journal.consigner(s.trousse(), "SIGNATURE", s.participant().getCourriel(), nom + " · " + inv.getNiveau()
+            journal.consigner(s.trousse(), "SIGNATURE", s.participant().getCourriel(), nom + qualiteDe(s.participant()) + " · " + inv.getNiveau()
                     + " · " + empreinte.substring(0, 16) + " · " + att.identifiant());
             EtapeTrousse e = parcours.exigerEtape(inv.getEtapeId());
             parcours.enregistrerSignature(s.trousse(), e, s.participant(), true, null);
@@ -274,6 +276,27 @@ public class PortailService {
         return retenus;
     }
 
+    /** Qualité et entreprise représentée, et attestation d'autorité si elle a été donnée : versées à la preuve (addenda 4, Q6). */
+    private static java.util.Optional<Map<String, Object>> representation(Participant p, ClmDto.SignatureRequest req, Instant le) {
+        if (p.getEntreprise() == null && p.getQualite() == null) {
+            return java.util.Optional.empty();
+        }
+        Map<String, Object> r = new HashMap<>();
+        r.put("qualite", p.getQualite());
+        r.put("entreprise", p.getEntreprise());
+        if (p.isAutoriteRequise()) {
+            r.put("autoriteAttestee", true);
+            r.put("attesteeLe", le.toString());
+            String ref = req.referenceAutorite() == null ? "" : req.referenceAutorite().strip();
+            r.put("referenceAutorite", ref.length() > 200 ? ref.substring(0, 200) : ref);
+        }
+        return java.util.Optional.of(r);
+    }
+
+    private static String qualiteDe(Participant p) {
+        return p.getEntreprise() == null ? "" : " pour " + p.getEntreprise() + (p.getQualite() == null ? "" : " (" + p.getQualite() + ")");
+    }
+
     private static Map<String, Object> attestation(FournisseurSignature.Attestation a, String empreinte) {
         Map<String, Object> m = new HashMap<>();
         m.put("fournisseur", a.fournisseur());
@@ -305,7 +328,8 @@ public class PortailService {
         IdentiteOrganisation.Organisation organisation = identite.de(s.trousse().getTenantId());
         return new ClmDto.PortailVue(s.trousse().getReference(), s.trousse().getTitre(), s.participant().getNom(), inv.getNiveau().name(),
                 statut, inv.getExpireLe(), verifiee, inv.getConsentementLe() != null, question, docs, champs, recu,
-                organisation.nom(), organisation.logo());
+                organisation.nom(), organisation.logo(), s.participant().getQualite(), s.participant().getEntreprise(),
+                s.participant().isAutoriteRequise());
     }
 
     private static String hash(String s) {

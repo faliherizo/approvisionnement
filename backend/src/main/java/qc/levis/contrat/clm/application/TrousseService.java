@@ -341,7 +341,8 @@ public class TrousseService {
                 .toUpperCase(Locale.ROOT);
         Identite.Niveau demande = req.niveauIdentite() == null || req.niveauIdentite().isBlank() ? null
                 : Identite.Niveau.valueOf(req.niveauIdentite().trim().toUpperCase());
-        Identite.Niveau niveau = parametres.reglages(t.getTenantId()).identite().niveauApplique(t.getRisque(), req.externe(), demande);
+        Identite.Niveau niveau = Identite.auMoins(parametres.reglages(t.getTenantId()).identite().niveauApplique(t.getRisque(), req.externe(), demande),
+                t.getTypeContrat() == null ? null : listes.libelle(ListesClm.Liste.NIVEAU_PAR_TYPE, t.getTypeContrat()));
         Identite.verifierCoordonnees(niveau, courriel, req.telephone(), req.question(), req.reponse());
         Langue langue = Langue.de(req.langue());
         boolean doublon = participants.findByTenantIdAndTrousseIdOrderByIdAsc(t.getTenantId(), t.getId()).stream()
@@ -351,6 +352,7 @@ public class TrousseService {
         }
         Participant p = new Participant(t.getTenantId(), t.getId(), nom, courriel, vide(req.telephone()), role, req.externe(), niveau);
         p.choisirLangue(langue);
+        p.representer(req.qualite(), req.entreprise(), Boolean.TRUE.equals(req.autoriteRequise()));
         if (niveau == Identite.Niveau.QUESTION) {
             p.definirQuestion(req.question().trim(), ChaineScellee.sha256(Identite.normaliserReponse(req.reponse())
                     .getBytes(java.nio.charset.StandardCharsets.UTF_8)));
@@ -453,6 +455,7 @@ public class TrousseService {
     static List<String> reglesInconnues(List<Modele.Champ> champs, List<Parcours.DefinitionEtape> defs) {
         Set<String> cles = new HashSet<>();
         champs.stream().filter(Modele.Champ::completeALaGeneration).forEach(c -> cles.add(c.cle()));
+        cles.addAll(ParcoursService.ATTRIBUTS_TROUSSE);
         List<String> erreurs = new ArrayList<>();
         for (Parcours.DefinitionEtape d : defs) {
             for (Modele.Condition c : d.conditions()) {

@@ -19,7 +19,7 @@ function Contenu() {
   const [erreur, setErreur] = useState(null)
   const [info, setInfo] = useState('')
   const { donnees, erreur: errChargement, recharger } = useRessource('/clm/modeles')
-  const admin = hasRole('ADMIN') || hasRole('SUPERADMIN')
+  const admin = hasRole('ADMIN_AFFAIRES') || hasRole('SUPERADMIN')
   const tous = donnees || []
   const types = useListe('CLM_TYPE_CONTRAT')
   // Catégories de la liste de l'organisation, plus celles encore portées par un modèle après leur retrait de la liste.

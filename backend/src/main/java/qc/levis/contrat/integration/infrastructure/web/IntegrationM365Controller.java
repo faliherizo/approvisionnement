@@ -18,7 +18,7 @@ import qc.levis.contrat.integration.application.port.PublicationCiblePort;
 @RestController
 @ModuleRequis("redaction")
 @RequestMapping("/api/parametres/integration-m365")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('ADMIN_TECHNIQUE')")
 public class IntegrationM365Controller {
 
     private final IntegrationM365Service service;

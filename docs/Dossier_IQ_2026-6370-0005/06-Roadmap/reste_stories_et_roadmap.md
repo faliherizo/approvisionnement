@@ -6,6 +6,43 @@
 > `contractuelle_contrat` fournit déjà, plus les stories **net-new** nécessaires. Effort = T-shirt
 > indicatif (S/M/L/XL), à confirmer en ateliers (P0/P1). Priorités MoSCoW du DAO conservées.
 
+## 00. État après les addenda 1 à 4 — à lire en premier (mis à jour le 2026-11-19)
+
+Les quatre addenda d'IQ ont fait réaliser les stories RST-20 à RST-36, et quatre stories restent proposées. Le tableau
+du § 0 garde l'état des stories d'origine ; les lignes ci-dessous le complètent. Dépôt de la soumission :
+**4 décembre 2026, 11 h**.
+
+| Story | Origine | État | Repères |
+|---|---|---|---|
+| RST-20 « Retournée » transmise lors d'un retour d'étape | Add. 2 Q14 | ✅ | `ParcoursService.retournerAEtape` |
+| RST-21 Correspondance des statuts Salesforce | Add. 2 Q14 | ✅ | liste `CLM_STATUT_SALESFORCE` |
+| RST-22 Lecture Salesforce limitée aux champs nécessaires | Add. 2 Q15 | ✅ | `?fields=`, ADR-016 |
+| RST-23 Authentification Salesforce JWT Bearer | Add. 2 Q11 | ✅🔌 | `AssertionJwt`, ADR-016 |
+| RST-24 Exportation en lot vers un référentiel | Add. 2 Q13 | ✅ | `ExportationReferentielService` |
+| RST-25 Langue de communication du signataire | Add. 2 Q19 | ✅ | `Participant.langue` |
+| RST-26 Provisionnement SCIM 2.0 | Add. 3 Q51 | ✅🔌 | `/scim/v2`, ADR-014 |
+| RST-27 Correspondances d'annuaire → rôles et domaines | Add. 3 Q43, Q44 | ✅🔌 | `AnnuaireService`, ADR-014 |
+| RST-28 Génération Word modifiable | Add. 3 Q26 | ✅ | `/generer?format=DOCX` |
+| RST-29 Certificat de destruction | Add. 3 Q48 | ✅ | `CertificatDestructionService`, ADR-012 |
+| RST-30 Relevé d'utilisation par enveloppe | Add. 3 Q39 | ✅ | `Enveloppes`, ADR-015 |
+| — Suivi paginé, numérotation concurrente, pool de connexions | Add. 3 Q38 | ✅ | 0 erreur à 500 utilisateurs en dév ; essai cible à faire |
+| RST-31 Administration d'affaires / technique séparées | Add. 4 Q10 | ✅ | `ADMIN_AFFAIRES`, `ADMIN_TECHNIQUE`, ADR-017 |
+| RST-32 Signataire représentant une entreprise | Add. 4 Q6 | ✅ | qualité, entreprise, attestation d'autorité |
+| RST-33 Approbation globale d'un lot | Add. 4 Q36 | ✅ | `ApprobationLotService` |
+| RST-34 Attributs SCIM dans les correspondances | Add. 4 Q31 | ✅ | origine `SCIM_ATTRIBUT` |
+| RST-35 Niveau d'authentification par type de document | Add. 4 Q1 | ✅ | liste `CLM_NIVEAU_PAR_TYPE` |
+| RST-36 Acheminement selon type, unité, risque, origine | Add. 4 Q8, Q20 | ✅ | `trousse.*` dans les règles |
+| RST-37 PDF/A-2b et PAdES-LTA | Add. 4 Q4, Q14 | 📋 proposée | M ; dépend de l'autorité d'horodatage retenue |
+| RST-38 Modèles Word d'IQ avec mise en page préservée | Add. 4 Q22 | 📋 proposée | L ; fusion dans le `.docx` + conversion PDF serveur |
+| RST-39 Comptes locaux de secours restreints | Add. 4 Q12 | 📋 proposée | S ; second facteur obligatoire, journal |
+| RST-40 Tableau de bord et « Mes trousses » paginés | Add. 3 Q38 | 📋 proposée | M ; même traitement que le suivi |
+
+**Avant le dépôt :**
+- retransmettre à IQ les questions du § 0 de `09-Questions/questions_sans_reponse_IQ.md` ;
+- refaire l'essai de 500 utilisateurs sur l'infrastructure cible ;
+- remplir l'Annexe 2 et l'Annexe 10 en Excel natif ;
+- reprendre `04-Architecture/solutions_proposees_reponses_IQ.md` dans la soumission.
+
 ## 0. État d'avancement — à lire avant toute nouvelle analyse (mis à jour le 2026-11-03)
 
 Le module CLM (`backend/…/clm`, `frontend/src/pages/clm`, maquettes UI-01 à UI-24) implémente les stories ci-dessous.
@@ -15,8 +52,8 @@ Légende : ✅ livrée et testée · ✅🔌 livrée et testée, recette sur le 
 
 | Story | État | Livré (repères code et tests) | Reste |
 |---|---|---|---|
-| ST-01 SSO & sessions | ⏳ | Socle plateforme OIDC/SAML/MFA/JWT ; les signataires externes passent par le portail à jeton, sans compte (RST-17) | Mapper l'IdP d'IQ ; politique de durée de session ; gestion des invités internes |
-| ST-02 Rôles, groupes, périmètres | ✅ | `Habilitations` (périmètre par unité/groupe, séparation initiateur/approbateur, consultation d'audit), rôle `AUDITEUR`, `@PreAuthorize` sur chaque API, garde de module par tenant (ADR-009), refus journalisés `CLM_ACCES_REFUSE`, `ArchitectureClmTest` et `ArchitectureModulesTest` ; organisation IQ et un compte par profil (`11-Tenant-IQ/`) | Charger la liste des unités administratives d'IQ (donnée d'atelier, pas de code) ; rôles d'administration distincts si IQ l'exige |
+| ST-01 SSO & sessions | ✅🔌 | Socle OIDC/SAML/MFA/JWT ; signataires externes sans compte (RST-17) ; correspondances groupes et attributs Entra ID → rôles et domaines (RST-27) ; SCIM 2.0 (RST-26) | Recette avec l'inscription d'application Entra ID d'IQ ; politique de durée de session |
+| ST-02 Rôles, groupes, périmètres | ✅ | `Habilitations` (périmètre par unité/groupe, séparation initiateur/approbateur, consultation d'audit), rôle `AUDITEUR`, `@PreAuthorize` sur chaque API, garde de module par tenant (ADR-009), refus journalisés `CLM_ACCES_REFUSE`, `ArchitectureClmTest` et `ArchitectureModulesTest` ; organisation IQ et un compte par profil (`11-Tenant-IQ/`) | Charger la liste des unités administratives d'IQ (donnée d'atelier, pas de code). Rôles d'administration distincts : faits (RST-31) |
 | ST-03 Dossiers & trousses | ✅ | `Trousse`, `TrousseService`, journal scellé `EvenementTrousse` ; UI-02/03/04 | — |
 | ST-04 Documents & versions | ✅ | `DocumentClmService` (versions, remplacement, verrou après signature), `FormatDocument` ; UI-05/06 | — |
 | ST-05 Modèles & champs | ✅ | `Modele`/`ModeleContrat` : champs positionnés, assignés à un rôle, cycle de vie, versions, partage par groupes, auto-publication refusée ; UI-07/08/09 | — |
@@ -27,7 +64,7 @@ Légende : ✅ livrée et testée · ✅🔌 livrée et testée, recette sur le 
 | ST-10 Dossier de preuve & export | ✅ | `PreuveService` : certificat PDF/JSON, manifeste SHA-256, sceau HMAC, archive ZIP portable, vérification qui détecte une altération en base ; UI-19 | — |
 | ST-11 Notifications, rappels, échéances | ✅ | `RappelService` (non-réponse, échéances), `MessagerieClm` (modèle par événement et canal, copies) ; UI-17 | — |
 | ST-12 Statuts vers Salesforce | ✅🔌 | Boîte d'envoi `MessageSortant` : idempotence, reprises, file d'erreur, relance, corrélation ; UI-21 | Recette sur le bac à sable Salesforce d'IQ |
-| ST-13 Suivi centralisé | ✅ | `SuiviService` : filtres par périmètre, exceptions, export CSV ; UI-01/18 | — |
+| ST-13 Suivi centralisé | ✅ | `SuiviService` : filtres en base, pagination serveur (50 lignes), requêtes groupées, exceptions, export CSV ; UI-01/18 | Tableau de bord et « Mes trousses » à paginer (RST-40) |
 | ST-14 Administration, audit, exploitation | ✅ | Audit lié à la trousse (journal scellé + audit du tenant), configuration UI-17/21/22, journal UI-23 et export CSV ; alertes d'exploitation (`AlertesExploitation` : altération détectée, file d'erreur Salesforce, échec du planificateur) relevées par Azure Monitor (`infra/terraform/azure/monitoring.tf`) ; runbook `04-Architecture/runbook_exploitation_clm.md` | Appliquer le Terraform sur l'abonnement retenu (RST-18) |
 | ST-15 CLM avancé & IA (option) | ✅ | `AnalyseService`/`AnalyseContrat` : métadonnées, classification, anomalies, validation humaine justifiée ; module `clm_ia` activable par le superadmin ; UI-24 | — |
 | RST-16 25 Mo + PDF/Word | ✅ | Taille configurable (`CLM_TAILLE_MAX_OCTETS`, 25 Mo), format vérifié sur les octets, analyse antivirus (port) | — |

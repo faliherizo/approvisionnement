@@ -9,7 +9,11 @@ public final class Enums {
      * en lecture seule (profil « Auditeur / conformité » de l'AO IQ 2026-6370-0005).
      */
     public enum Role {
-        SUPERADMIN, ADMIN, REDACTEUR, JURIDIQUE, APPRO, DIRECTION, LECTEUR, AUDITEUR
+        SUPERADMIN, ADMIN, REDACTEUR, JURIDIQUE, APPRO, DIRECTION, LECTEUR, AUDITEUR,
+        /** Administration d'affaires (addenda 4, Q10) : modèles, parcours, listes, messages, conservation, journal. */
+        ADMIN_AFFAIRES,
+        /** Administration technique (addenda 4, Q10) : intégrations, authentification unique, annuaire, SCIM, sécurité. */
+        ADMIN_TECHNIQUE
     }
 
     /** Catégorie de clause. */

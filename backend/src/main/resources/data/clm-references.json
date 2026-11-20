@@ -68,6 +68,14 @@
     ]
   },
   {
+    "code": "CLM_NIVEAU_PAR_TYPE",
+    "module": "clm",
+    "libelle": "Niveau d'authentification minimum par type de document",
+    "aide": "Addenda 4, Q1 : pour un type de document, niveau minimum exigé des signataires, combiné à la politique par niveau de risque (le plus exigeant l'emporte). Code : type de document ; libellé : COURRIEL, CODE_SMS, QUESTION ou FORTE.",
+    "ordre": 134,
+    "valeurs": []
+  },
+  {
     "code": "CLM_PRIORITE_TACHE",
     "module": "clm",
     "libelle": "Priorités des tâches assignées",

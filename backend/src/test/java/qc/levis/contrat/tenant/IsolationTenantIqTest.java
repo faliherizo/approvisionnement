@@ -45,8 +45,9 @@ class IsolationTenantIqTest {
             "Validateur", new String[]{"validateur@iq.example", "JURIDIQUE"},
             "Approbateur", new String[]{"approbateur@iq.example", "DIRECTION"},
             "Signataire interne", new String[]{"signataire@iq.example", "LECTEUR"},
-            "Administrateur d'affaires", new String[]{"admin.affaires@iq.example", "ADMIN"},
-            "Administrateur technique", new String[]{"admin.ti@iq.example", "ADMIN"},
+            "Administrateur d'affaires", new String[]{"admin.affaires@iq.example", "ADMIN_AFFAIRES"},
+            "Administrateur technique", new String[]{"admin.technique@iq.example", "ADMIN_TECHNIQUE"},
+            "Administrateur principal", new String[]{"admin.ti@iq.example", "ADMIN"},
             "Auditeur / conformité", new String[]{"auditeur@iq.example", "AUDITEUR"});
 
     /** Une lecture représentative par fonctionnalité du socle de rédaction contractuelle (module « redaction »). */

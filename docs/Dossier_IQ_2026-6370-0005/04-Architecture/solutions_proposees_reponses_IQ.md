@@ -168,3 +168,82 @@ Solution :
 Essai sur poste de développement : 500 utilisateurs concurrents, 1 500 trousses, **0 erreur**, suivi P95 130 ms.
 L'essai qui engage la soumission sera refait sur l'infrastructure cible (PostgreSQL, Azure Canada), avec méthode,
 dates, configuration et limites documentées comme l'exige Q38.
+
+## 12. Addenda 4 (19 novembre 2026)
+
+Analyse et vérifications : [impact_addenda_4.md](../02-Analyse/impact_addenda_4.md).
+
+### 12.1 Niveaux de signature et d'authentification (Q1, Q2, Q3)
+
+| Niveau | Signataire externe | Signataire interne |
+|---|---|---|
+| Courriel | Lien sécurisé à usage limité, valide 14 jours (réglable), code à 6 chiffres par courriel | Microsoft Entra ID (OIDC ou SAML 2.0) |
+| Code SMS | Code à usage unique par SMS | Entra ID, second facteur de l'annuaire |
+| Question | Question de vérification convenue d'avance | — |
+| Forte | Deux moitiés du code par deux canaux distincts (courriel et SMS) | — |
+
+- **Choix du niveau :** le plus exigeant entre la politique de l'organisation par niveau de risque, le minimum du type
+  de document (liste « Niveau d'authentification minimum par type de document ») et le niveau demandé pour le
+  signataire.
+- **Comptes :** aucun compte permanent pour un externe.
+- **Protection :** blocage après des essais infructueux (3 à 10, réglable).
+- **Coûts :**
+  - courriel et SMS selon le fournisseur canadien retenu (§ 3) ;
+  - une vérification d'identité par un tiers, si IQ l'exige pour certains processus, s'ajoute par le port prévu à cet
+    effet, déclarée et chiffrée.
+
+### 12.2 Formats de preuve et d'archivage (Q4, Q14)
+
+**Formats produits :**
+- PDF signé et scellé (PAdES), signature CMS détachée de chaque document signé (CAdES, `.p7s`) ;
+- certificat de signature PDF scellé et sa version JSON ;
+- journal des événements chaîné (JSON, CSV) ;
+- dossier de preuve ZIP avec manifeste SHA-256 ;
+- export en lot avec index JSON et CSV ;
+- certificat de destruction PDF scellé.
+
+**Horodatage :** RFC 3161 par l'autorité retenue.
+
+**À compléter (RST-37) :** génération en PDF/A-2b, et PAdES à validation longue (LTA : certificats, réponses OCSP ou
+listes de révocation, jeton d'horodatage d'archive). Cette limite est déclarée.
+
+### 12.3 Représentants d'entreprise (Q6)
+
+Le signataire porte sa qualité et l'entreprise représentée. IQ peut exiger une attestation d'autorité, assortie d'une
+référence (résolution, procuration). Identité, qualité et attestation sont versées à la preuve scellée et au
+certificat.
+
+### 12.4 Administration et accès (Q10, Q11, Q12, Q31)
+
+- **Rôles d'administration :** administration d'affaires et administration technique distinctes, l'administration
+  principale cumulant les deux ([ADR-017](../../adr/ADR-017-separation-des-administrations.md)).
+- **Provisionnement :** SCIM 2.0 avec mappage des groupes et attributs (département, titre, division…), désactivation
+  immédiate ([guide](guide_annuaire_scim.md)).
+- **Comptes locaux :** second facteur disponible ; réservation à des comptes de secours désignés et approuvés par IQ
+  à réaliser (RST-39).
+
+### 12.5 Parcours (Q8, Q17 à Q20)
+
+- **Configurations :** séquentiel, parallèle, conditionnel et mixte, avec quorum et politique de rejet par étape.
+- **Règles d'acheminement :** sur un champ (ex. montant) ou sur le type de document, l'unité, le niveau de risque ou
+  l'origine.
+- **Retour et rejet :** retour à une étape choisie ou fin sur rejet ; toute nouvelle version reprend les validations.
+- **Délais :** rappels, expirations, annulations et délégations configurables.
+
+### 12.6 Modèles et documents (Q21 à Q23)
+
+- **Modèles :**
+  - corps de texte avec variables, clauses conditionnelles, champs positionnés ;
+  - génération en PDF ou en Word modifiable ;
+  - un modèle Word d'IQ se reprend aujourd'hui par conversion en modèle à variables : sa mise en page n'est pas
+    conservée (limite déclarée ; RST-38 la lève).
+- **Taille des documents :** 25 Mo par défaut, réglable par l'organisation jusqu'au plafond de la plateforme (30 Mo
+  par défaut, configurable au déploiement), sans effet sur la tarification.
+
+### 12.7 Signature en lot (Q34 à Q36)
+
+- **Capacité :** jusqu'à 500 dossiers par lot.
+- **Documents :** chaque dossier génère son propre document à partir du même modèle.
+- **Approbation :** individuelle (dossier par dossier) ou **globale** (« Approuver le lot »). Dans les deux cas,
+  chaque décision est tracée au journal de son dossier.
+

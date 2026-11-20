@@ -29,3 +29,9 @@ Stories issues de l'addenda 2 (2026-11-16, détail : [impact_addenda_2.md](../02
 Stories issues de l'addenda 3 (2026-11-17, détail : [impact_addenda_3.md](../02-Analyse/impact_addenda_3.md) § 3) :
 ✅🔌 RST-26 provisionnement SCIM 2.0 · ✅🔌 RST-27 correspondances d'annuaire vers rôles et domaines d'affaires ·
 ✅ RST-28 génération Word modifiable · ✅ RST-29 certificat de destruction · ✅ RST-30 relevé d'utilisation par enveloppe.
+
+Stories issues de l'addenda 4 (2026-11-19, détail : [impact_addenda_4.md](../02-Analyse/impact_addenda_4.md) § 2) :
+✅ RST-31 administration d'affaires et technique séparées · ✅ RST-32 signataire représentant une entreprise ·
+✅ RST-33 approbation globale d'un lot · ✅ RST-34 attributs SCIM · ✅ RST-35 niveau par type de document ·
+✅ RST-36 acheminement selon type, unité, risque. Proposées (§ 3 de l'analyse) : 📋 RST-37 PDF/A et LTV ·
+📋 RST-38 modèles Word d'IQ · 📋 RST-39 comptes de secours · 📋 RST-40 tableau de bord et « Mes trousses » paginés.

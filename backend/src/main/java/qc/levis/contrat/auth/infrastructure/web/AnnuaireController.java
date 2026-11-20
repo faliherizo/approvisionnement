@@ -22,7 +22,7 @@ import qc.levis.contrat.commun.infrastructure.TenantContext;
 /** Correspondances d'annuaire et jeton SCIM de l'organisation (addenda 3, Q43, Q44, Q51) : administration seulement. */
 @RestController
 @RequestMapping("/api/admin/annuaire")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('ADMIN_TECHNIQUE')")
 public class AnnuaireController {
 
     static final String POINT_SCIM = "/scim/v2";

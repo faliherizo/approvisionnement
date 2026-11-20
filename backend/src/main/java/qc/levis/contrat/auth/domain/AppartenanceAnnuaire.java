@@ -19,7 +19,8 @@ import jakarta.persistence.Table;
 @Table(name = "annuaire_appartenance", indexes = @Index(name = "ix_annuaire_appartenance_compte", columnList = "tenant_id,courriel"))
 public class AppartenanceAnnuaire {
 
-    public enum Origine { SSO, SCIM }
+    /** SCIM : appartenances aux groupes poussés ; SCIM_ATTRIBUT : attributs du compte poussés (addenda 4, Q31). */
+    public enum Origine { SSO, SCIM, SCIM_ATTRIBUT }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +33,7 @@ public class AppartenanceAnnuaire {
     private String courriel;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 6)
+    @Column(nullable = false, length = 13)
     private Origine origine;
 
     @Enumerated(EnumType.STRING)

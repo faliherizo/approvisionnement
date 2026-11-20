@@ -97,6 +97,43 @@ questions encore ouvertes sont regroupées dans [questions_sans_reponse_IQ.md](q
 | M2 | Interfaces en français ; composante anglaise seulement = écart à déclarer (Q27) | ✔ Conforme |
 | W1, W2 | Processus RH visés ; mécanisme Workday proposé et inclus au prix par le fournisseur (Q49, Q50) | ◐ Côté Workday à chiffrer |
 
+## Réponses reçues — addenda 4 (19 novembre 2026)
+
+L'[addenda 4](reponses/addenda-4.md) répond aux questions ci-dessous et demande de signaler sans délai toute question
+restée sans réponse. Impact et ajustements : [impact_addenda_4.md](../02-Analyse/impact_addenda_4.md) ; questions
+encore ouvertes : [questions_sans_reponse_IQ.md](questions_sans_reponse_IQ.md).
+
+| # | Réponse d'IQ | Suite |
+|---|---|---|
+| C2 | Niveaux configurables selon le type de document, le processus et les règles (Q1) | Réalisé : niveau par type de document (RST-35) |
+| C5 | Signature externe sans compte permanent (Q3) | ✔ Conforme |
+| C6 | PDF, validation à long terme et formats d'export à préciser (Q4) | ◐ LTV et PDF/A à compléter (RST-37) |
+| C7 | Signature visible configurable (Q5) | ✔ Conforme |
+| C8 | Représentant autorisé, preuve d'autorité, qualité tracée (Q6) | Réalisé (RST-32) |
+| C9 | Le papier n'est pas une exigence (Q7) | ✔ Répondu |
+| C10 | Délégation interne par parcours conditionnels (Q8) | Réalisé : règles sur type, unité, risque (RST-36) |
+| D2 | Environnements et comptes au démarrage (Q9) | ✔ Répondu |
+| D5 | Administration d'affaires et technique séparées (Q10) | Réalisé (RST-31, ADR-017) |
+| D6, P1 | SCIM 2.0, désactivation rapide (Q11) | ✔ Conforme (RST-26) |
+| D8 | Comptes de secours justifiés et approuvés (Q12) | ◐ Restriction par organisation proposée (RST-39) |
+| E2 | Accès de soutien déclarés avec leur territoire (Q13) | ✔ Tableau des lieux |
+| E6 | PDF/PDF-A, export massif (Q14) | ◐ Export ✔ ; PDF/A à compléter (RST-37) |
+| E8 | Sauvegardes à décrire (Q15) | ✔ Plan de relève |
+| E9 | Certifications à déclarer (Q16) | ✔ Répondu |
+| F1 | Quorum configurable (Q17) | ✔ Conforme |
+| F2, F3, F6 | Retour, reprise, rejet ; validations après modification substantielle (Q18) | ✔ Conforme |
+| F4 | Délais, rappels, expirations, délégations (Q19) | ✔ Conforme |
+| F7 | Parcours selon montant, type, programme, unité, rôle (Q20) | Réalisé (RST-36) |
+| G1 | Modèles inclus et effort additionnel (Q21) | ✔ Bordereau |
+| G2 | Modèles Word d'IQ préservés autant que possible (Q22) | ◐ Limite déclarée ; RST-38 proposé |
+| G6 | Limites de taille à indiquer (Q23) | ✔ Conforme |
+| J1, J3 | Niveaux de service non réduits ; recours du contrat (Q24, Q25) | ✔ Répondu |
+| L2, L5, L8 | Coûts, tiers et sous-traitants déclarés (Q26 à Q28) | ✔ Répondu |
+| O1, O2 | Microsoft 365 et SharePoint fixés en conception (Q32, Q33) | ✔ Répondu |
+| P2 | Attributs et groupes SCIM (Q31) | Réalisé : attributs SCIM (RST-34) |
+| V1 à V3 | Capacité de lot ; documents individualisés ; approbation de lot (Q34 à Q36) | Réalisé : approbation globale (RST-33) |
+| W3, W4, W6 | Architecture Workday ; environnement au démarrage (Q29, Q30) | ✔ Répondu |
+
 ## Questions prioritaires
 
 À poser dès la première rencontre : sans réponse, une réalisation ou une recette reste bloquée.

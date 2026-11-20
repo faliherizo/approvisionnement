@@ -27,7 +27,7 @@ function Contenu() {
   const peutInitier = usePeutInitier()
   const { user, hasRole } = useAuth()
   // Même règle que le serveur : l'initiateur et l'administration gèrent une trousse, l'auditeur la consulte.
-  const gere = (tr) => hasRole('ADMIN') || hasRole('SUPERADMIN') || tr.proprietaire?.toLowerCase() === user?.email?.toLowerCase()
+  const gere = (tr) => hasRole('ADMIN_AFFAIRES') || hasRole('SUPERADMIN') || tr.proprietaire?.toLowerCase() === user?.email?.toLowerCase()
 
   useEffect(() => {
     setForm((f) => ({ ...f, q: qUrl }))

@@ -322,5 +322,49 @@
       "nombre": 51,
       "taille": 50
     }
+  },
+  "addenda4": {
+    "_source": "docs/Dossier_IQ_2026-6370-0005/09-Questions/reponses/addenda-4.md",
+    "menus": {
+      "affaires": [
+        "Notifications et rappels",
+        "Paramètres et environnements",
+        "Conservation et destruction"
+      ],
+      "technique": [
+        "Intégrations API"
+      ]
+    },
+    "representant": {
+      "nom": "Marc Lavoie",
+      "courriel": "marc@agrinord.example",
+      "telephone": "+15145550188",
+      "role": "Premier signataire",
+      "qualite": "Président",
+      "entreprise": "Coopérative Agri-Nord inc."
+    },
+    "lot": {
+      "libelle": "Lot approbation globale",
+      "commentaire": "Lot conforme",
+      "dossiers": [
+        "Dossier A",
+        "Dossier B"
+      ],
+      "parcours": [
+        {
+          "cle": "a1",
+          "libelle": "Approbation",
+          "phase": 1,
+          "type": "APPROBATION",
+          "affectations": [
+            {
+              "type": "UTILISATEUR",
+              "valeur": "approbateur@iq.example"
+            }
+          ]
+        }
+      ],
+      "corps": "Convention de lot : conditions communes."
+    }
   }
 }

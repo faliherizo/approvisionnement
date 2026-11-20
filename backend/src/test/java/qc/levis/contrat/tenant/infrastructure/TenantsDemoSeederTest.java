@@ -70,7 +70,7 @@ class TenantsDemoSeederTest {
         assertTrue(tenantsDesListes.stream().allMatch(id -> id == 42L), "chaque valeur est créée dans le contexte de l'organisation");
         assertNull(TenantContext.get(), "le contexte est retiré après l'amorçage");
         ArgumentCaptor<User> comptes = ArgumentCaptor.forClass(User.class);
-        verify(users, times(7)).save(comptes.capture());
+        verify(users, times(8)).save(comptes.capture());
         assertTrue(comptes.getAllValues().stream().allMatch(u -> u.getTenantId() == 42L && "empreinte".equals(u.getMotDePasseHash())));
         Map<String, Set<Role>> roles = comptes.getAllValues().stream().collect(Collectors.toMap(User::getEmail, User::getRoles));
         assertEquals(Set.of(Role.AUDITEUR), roles.get("auditeur@iq.example"));

@@ -91,6 +91,12 @@ function RacineRoute() {
   return actif('redaction') ? <Dashboard /> : <Navigate to={accueilSansSocle(actif)} replace />
 }
 
+/** Entrée de l'administration CLM selon le rôle (addenda 4, Q10) : affaires d'abord, sinon l'administration technique. */
+function AccueilAdminClm() {
+  const { hasRole } = useAuth()
+  return <Navigate to={hasRole('ADMIN_AFFAIRES') ? '/clm/admin/notifications' : '/clm/admin/integrations'} replace />
+}
+
 function Layout({ children }) {
   const { user, logout, hasRole } = useAuth()
   const { t } = useI18n()
@@ -153,7 +159,7 @@ function Layout({ children }) {
                   <NavLink to="/clm/taches">{t('clm.nav.taches')}</NavLink>
                   <NavLink to="/clm/suivi">{t('clm.nav.suivi')}</NavLink>
                   <NavLink to="/clm/modeles">{t('clm.nav.modeles')}</NavLink>
-                  {hasRole('ADMIN') && <NavLink to="/clm/admin">{t('clm.nav.admin')}</NavLink>}
+                  {(hasRole('ADMIN_AFFAIRES') || hasRole('ADMIN_TECHNIQUE')) && <NavLink to="/clm/admin">{t('clm.nav.admin')}</NavLink>}
                 </DropdownMenu>
               )}
               {redaction && (
@@ -246,7 +252,7 @@ export default function App() {
             <Route path="/clm/suivi" element={<SuiviClm />} />
             <Route path="/clm/modeles" element={<Modeles />} />
             <Route path="/clm/modeles/:id" element={<ModeleEditeur />} />
-            <Route path="/clm/admin" element={<Navigate to="/clm/admin/notifications" replace />} />
+            <Route path="/clm/admin" element={<AccueilAdminClm />} />
             <Route path="/clm/admin/notifications" element={<NotificationsClm />} />
             <Route path="/clm/admin/integrations" element={<IntegrationsClm />} />
             <Route path="/clm/admin/parametres" element={<ParametresClm />} />

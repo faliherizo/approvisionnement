@@ -18,7 +18,7 @@ import qc.levis.contrat.integration.infrastructure.SapODataAdapter;
 @RestController
 @ModuleRequis("redaction")
 @RequestMapping("/api/parametres/integration-sap")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('ADMIN_TECHNIQUE')")
 public class IntegrationSapController {
 
     private final IntegrationSapService service;

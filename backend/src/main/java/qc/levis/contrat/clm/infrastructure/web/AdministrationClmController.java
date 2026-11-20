@@ -32,11 +32,16 @@ public final class AdministrationClmController {
 
     @RestController
     @RequestMapping("/api/clm/admin")
-    @PreAuthorize("@modules.actif('clm') and hasAnyRole('ADMIN','SUPERADMIN')")
+    @PreAuthorize("@modules.actif('clm') and hasAnyRole('ADMIN_AFFAIRES','ADMIN_TECHNIQUE','SUPERADMIN')")
     public static class Administration {
 
+        /** Administration d'affaires : messages et paramètres du module (addenda 4, Q10). */
+        private static final String AFFAIRES = "@modules.actif('clm') and hasAnyRole('ADMIN_AFFAIRES','SUPERADMIN')";
+        /** Administration technique : intégrations (addenda 4, Q10). */
+        private static final String TECHNIQUE = "@modules.actif('clm') and hasAnyRole('ADMIN_TECHNIQUE','SUPERADMIN')";
+
         /** UI-23 : auditeur et administrateur ; une annotation de méthode remplace celle de la classe, d'où le module répété. */
-        private static final String JOURNAL = "@modules.actif('clm') and hasAnyRole('ADMIN','SUPERADMIN','AUDITEUR')";
+        private static final String JOURNAL = "@modules.actif('clm') and hasAnyRole('ADMIN_AFFAIRES','SUPERADMIN','AUDITEUR')";
 
         private final MessagerieClm messagerie;
         private final SalesforceService salesforce;
@@ -64,52 +69,62 @@ public final class AdministrationClmController {
         }
 
         @GetMapping("/messages")
+        @PreAuthorize(AFFAIRES)
         public List<ClmDto.MessageVue> messages() {
             return messagerie.lister();
         }
 
         @PutMapping("/messages")
+        @PreAuthorize(AFFAIRES)
         public ClmDto.MessageVue enregistrer(@RequestBody ClmDto.MessageRequest req) {
             return messagerie.enregistrer(req);
         }
 
         @PostMapping("/messages/{evenement}/test")
+        @PreAuthorize(AFFAIRES)
         public Map<String, String> tester(@PathVariable String evenement, @RequestBody ClmDto.TestMessageRequest req) {
             return Map.of("statut", messagerie.tester(evenement, req));
         }
 
         @GetMapping("/integrations/salesforce")
+        @PreAuthorize(TECHNIQUE)
         public ClmDto.IntegrationVue integration() {
             return salesforce.etat();
         }
 
         @PostMapping("/integrations/salesforce/tester")
+        @PreAuthorize(TECHNIQUE)
         public ClmDto.PortSalesforceEtat testerConnexion() {
             return salesforce.tester();
         }
 
         /** UI-21 : connexion propre à l'organisation ; le secret n'est jamais renvoyé. */
         @PutMapping("/integrations/salesforce/configuration")
+        @PreAuthorize(TECHNIQUE)
         public ClmDto.ConfigIntegration configurer(@RequestBody ClmDto.ConnexionRequest req, Authentication auth) {
             return connexions.modifier(req, auth.getName());
         }
 
         @DeleteMapping("/integrations/salesforce/configuration")
+        @PreAuthorize(TECHNIQUE)
         public ClmDto.ConfigIntegration retablirConnexion(Authentication auth) {
             return connexions.retablir(auth.getName());
         }
 
         @PostMapping("/integrations/salesforce/evenements/{id}/relancer")
+        @PreAuthorize(TECHNIQUE)
         public ClmDto.SortieVue relancer(@PathVariable Long id) {
             return salesforce.relancer(id);
         }
 
         @PostMapping("/integrations/salesforce/relayer")
+        @PreAuthorize(TECHNIQUE)
         public Map<String, Integer> relayer() {
             return Map.of("envoyes", salesforce.relayer());
         }
 
         @PostMapping("/integrations/salesforce/trousses/{id}/relancer")
+        @PreAuthorize(TECHNIQUE)
         public Map<String, Integer> relancerTrousse(@PathVariable Long id) {
             return Map.of("relances", salesforce.relancerTrousse(id));
         }
@@ -135,6 +150,7 @@ public final class AdministrationClmController {
 
         /** La panne simulée n'a de sens que pour une organisation reliée à la simulation. */
         @PutMapping("/integrations/salesforce/simulation/panne")
+        @PreAuthorize(TECHNIQUE)
         public ClmDto.PortSalesforceEtat panne(@RequestBody Map<String, Boolean> corps) {
             if (connexions.courante().mode() != ConnexionSalesforce.Mode.SIMULATION) {
                 throw new NoSuchElementException("Mode simulation inactif.");
@@ -145,6 +161,7 @@ public final class AdministrationClmController {
 
         /** UI-22 : réglages de la plateforme en lecture seule et paramètres du module de l'organisation. */
         @GetMapping("/parametres")
+        @PreAuthorize(AFFAIRES)
         public ClmDto.ParametresVue parametres() {
             return new ClmDto.ParametresVue(proprietes.environnement(), connexions.configuration().mode(),
                     proprietes.planificateur().actif(), proprietes.planificateur().delaiMs(), ParametresClmService.formats(),
@@ -153,11 +170,13 @@ public final class AdministrationClmController {
         }
 
         @PutMapping("/parametres")
+        @PreAuthorize(AFFAIRES)
         public ClmDto.ParametresModule modifierParametres(@RequestBody ClmDto.ParametresModuleRequest req, Authentication auth) {
             return parametres.modifier(req, auth.getName());
         }
 
         @DeleteMapping("/parametres")
+        @PreAuthorize(AFFAIRES)
         public ClmDto.ParametresModule retablirParametres(Authentication auth) {
             return parametres.retablir(auth.getName());
         }

@@ -33,8 +33,9 @@ pied de page « Rôles » des maquettes UI-01 à UI-24.
 | Validateur | Consulter, commenter, valider, rejeter ou retourner pour correction | `validateur@iq.example` — Louis Gagnon, Affaires juridiques | `JURIDIQUE` |
 | Approbateur | Approuver, rejeter ou demander correction avant signature | `approbateur@iq.example` — Sophie Roy, Vice-présidence Financement | `DIRECTION` |
 | Signataire interne | Authentifier son identité et signer selon l'ordre défini | `signataire@iq.example` — Étienne Côté, Direction générale | `LECTEUR` |
-| Administrateur d'affaires | Administrer modèles, clauses, workflows, groupes et règles | `admin.affaires@iq.example` — Julie Bouchard, Gestion contractuelle | `ADMIN` |
-| Administrateur technique | Administrer accès, rôles, intégrations, environnements, sécurité, API et journaux | `admin.ti@iq.example` — Patrick Morin, Technologies de l'information | `ADMIN` |
+| Administrateur d'affaires | Administrer modèles, clauses, workflows, groupes, règles, conservation ; gérer les trousses | `admin.affaires@iq.example` — Julie Bouchard, Gestion contractuelle | `ADMIN_AFFAIRES` |
+| Administrateur technique | Administrer intégrations, authentification unique, annuaire et SCIM, sécurité ; aucun accès au contenu des trousses | `admin.technique@iq.example` — Nadia Ouellet, Technologies de l'information | `ADMIN_TECHNIQUE` |
+| Administrateur principal | Cumule les deux administrations ; seul à attribuer les rôles (addenda 4, Q10 ; ADR-017) | `admin.ti@iq.example` — Patrick Morin, Technologies de l'information | `ADMIN` |
 | Auditeur / conformité | Consulter l'historique, les preuves, certificats et événements | `auditeur@iq.example` — Nadia Lavoie, Conformité et audit interne | `AUDITEUR` (nouveau) |
 
 Mot de passe de démonstration : `Passw0rd!` (même convention que les comptes de Lévis). Ces comptes n'existent pas en

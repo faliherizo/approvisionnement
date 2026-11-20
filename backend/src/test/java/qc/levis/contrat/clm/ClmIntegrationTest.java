@@ -99,6 +99,34 @@ class ClmIntegrationTest {
     }
 
     @Test
+    void un_representant_atteste_son_autorite_et_sa_qualite_figure_au_certificat() throws Exception {
+        long id = appel(post("/api/clm/trousses", redacteur, "{\"titre\":\"Entente représentant\",\"risque\":\"FAIBLE\"}"), status().isOk())
+                .at("/resume/id").asLong();
+        televerser(id, "entente.pdf", pdfMinimal(), status().isOk());
+        long p = appel(post("/api/clm/trousses/" + id + "/participants", redacteur, """
+                {"nom":"Marc Lavoie","courriel":"marc@agrinord.example","roleContrat":"SIGNATAIRE_1","externe":true,
+                 "qualite":"Président","entreprise":"Coopérative Agri-Nord inc.","autoriteRequise":true}
+                """), status().isOk()).get("id").asLong();
+        appel(put("/api/clm/trousses/" + id + "/parcours", redacteur, "[{\"cle\":\"s1\",\"libelle\":\"Signature\",\"phase\":1,"
+                + "\"type\":\"SIGNATURE\",\"affectations\":[{\"type\":\"PARTICIPANT\",\"valeur\":\"" + p + "\"}]}]"), status().isOk());
+        appel(post("/api/clm/trousses/" + id + "/lancer", redacteur, "{}"), status().isOk());
+        String jeton = dernier("INVITATION", "COURRIEL", "/portail/([A-Za-z0-9_-]+)");
+        appel(post("/api/clm/portail/" + jeton + "/verification", null, "{}"), status().isOk());
+        String code = dernier("CODE", "COURRIEL", "(\\d{6})");
+        JsonNode vue = appel(post("/api/clm/portail/" + jeton + "/verification/reponse", null, "{\"reponse\":\"" + code + "\"}"), status().isOk());
+        assertEquals("Coopérative Agri-Nord inc.", vue.get("entreprise").asText());
+        assertTrue(vue.get("autoriteRequise").asBoolean());
+        appel(post("/api/clm/portail/" + jeton + "/signer", null, "{\"nomComplet\":\"Marc Lavoie\",\"consentement\":true}"), status().isBadRequest());
+        appel(post("/api/clm/portail/" + jeton + "/signer", null, "{\"nomComplet\":\"Marc Lavoie\",\"consentement\":true,"
+                + "\"autoriteAttestee\":true,\"referenceAutorite\":\"Résolution 2026-14\"}"), status().isOk());
+        String journal = mvc.perform(MockMvcRequestBuilders.get("/api/clm/trousses/" + id + "/historique").cookie(redacteur))
+                .andReturn().getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8);
+        assertTrue(journal.contains("pour Coopérative Agri-Nord inc. (Président)"), journal);
+        JsonNode preuve = appel(get("/api/clm/trousses/" + id + "/preuve", redacteur), status().isOk());
+        assertTrue(preuve.toString().contains("Résolution 2026-14"), "attestation d'autorité versée à la preuve");
+    }
+
+    @Test
     void parcours_complet_du_modele_a_la_preuve() throws Exception {
         long modeleId = modelePublie();
 

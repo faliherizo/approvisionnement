@@ -16,7 +16,7 @@ import qc.levis.contrat.integration.application.port.PublicationCiblePort.Result
  */
 @RestController
 @RequestMapping("/api/parametres/integration-oidc")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('ADMIN_TECHNIQUE')")
 public class IntegrationOidcController {
 
     private final IntegrationOidcService service;

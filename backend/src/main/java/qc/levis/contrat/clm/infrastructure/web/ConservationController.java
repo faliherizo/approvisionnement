@@ -16,7 +16,7 @@ import qc.levis.contrat.clm.application.dto.ClmDto;
 /** Calendrier de conservation, gel légal, versement et destruction (Cahier § 1.4.11, § 1.4.12) : administrateur seulement. */
 @RestController
 @RequestMapping("/api/clm/admin/conservation")
-@PreAuthorize("@modules.actif('clm') and hasAnyRole('ADMIN','SUPERADMIN')")
+@PreAuthorize("@modules.actif('clm') and hasAnyRole('ADMIN_AFFAIRES','SUPERADMIN')")
 public class ConservationController {
 
     private final ConservationService conservation;

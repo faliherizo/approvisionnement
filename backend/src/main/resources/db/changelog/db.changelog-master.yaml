@@ -117,3 +117,7 @@ databaseChangeLog:
       file: db/changelog/changes/058-annuaire-scim.yaml
   - include:
       file: db/changelog/changes/059-clm-compteur-reference.yaml
+  - include:
+      file: db/changelog/changes/060-clm-participant-representant.yaml
+  - include:
+      file: db/changelog/changes/061-annuaire-origine-attribut.yaml
