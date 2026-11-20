@@ -12,7 +12,7 @@ set -eu
 ICI=$(cd "$(dirname "$0")" && pwd)
 API=${API:-http://localhost:8100/api}
 MDP=${MDP_DEMO:-Passw0rd!}
-R="${RESULTATS:-$ICI/resultats}"; rm -rf "$R"; mkdir -p "$R"
+R="${RESULTATS:-$ICI/resultats}/validation"; rm -rf "$R"; mkdir -p "$R"
 curl -sf "$API/health" >/dev/null || { echo "Serveur injoignable : $API"; exit 2; }
 json() { python3 -c "import json,sys; d=json.load(sys.stdin); print($1)"; }
 session() { curl -sf -c "$R/$1.jar" -H 'Content-Type: application/json' -d "{\"email\":\"$2\",\"motDePasse\":\"$MDP\"}" "$API/auth/login" >/dev/null; }

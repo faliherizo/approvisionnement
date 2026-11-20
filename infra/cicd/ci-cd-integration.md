@@ -28,6 +28,7 @@ flowchart LR
     end
     subgraph reuse["Briques réutilisables (workflow_call)"]
         bt["reusable-build-test"]
+        bs["reusable-bacs-a-sable"]
         dk["reusable-docker"]
         tf["reusable-terraform"]
         dp["reusable-deploy-k8s"]
@@ -35,6 +36,7 @@ flowchart LR
     act["action composite<br/>setup-tools (terraform/helm/kubectl)"]
 
     ci --> bt & tf
+    bt --> bs
     cdaws --> bt --> dk --> gate1{{"approbation<br/>prod-aws"}} --> tf --> dp
     cdaz  --> bt
     cdaz  --> dk
@@ -45,10 +47,11 @@ flowchart LR
 
 | Fichier | Type | Rôle |
 |---|---|---|
-| `workflows/ci.yml` | Orchestrateur | Sur **PR** : build/tests + `terraform plan` (AWS & Azure). Aucun déploiement. |
+| `workflows/ci.yml` | Orchestrateur | Sur **PR** : build/tests, bacs à sable + `terraform plan` (AWS & Azure). Aucun déploiement. |
 | `workflows/cd-aws.yml` | Orchestrateur | Sur **push main** : test → images → **approbation** → `apply` → déploiement EKS. |
 | `workflows/cd-azure.yml` | Orchestrateur | Idem pour AKS. |
 | `workflows/reusable-build-test.yml` | Réutilisable | Compile/teste backend (Maven+JaCoCo) et frontend (npm). |
+| `workflows/reusable-bacs-a-sable.yml` | Réutilisable | Démarre les applications externes (ICP, pyHanko, Gotenberg, veraPDF, Mailpit) et le serveur branché dessus ; scénarios e2e BS-01 à BS-08 et scripts de validation (`infra/bacs-a-sable/ci.sh`). |
 | `workflows/reusable-docker.yml` | Réutilisable | Build & push images vers **ECR**/**ACR** (tag = SHA), scan Trivy. |
 | `workflows/reusable-terraform.yml` | Réutilisable | `fmt`/`validate`/**TFLint**/**Checkov**/`plan`\|`apply`. |
 | `workflows/reusable-deploy-k8s.yml` | Réutilisable | `helm upgrade` sur le cluster (rolling update multi-zone). |

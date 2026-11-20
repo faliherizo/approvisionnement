@@ -2,6 +2,8 @@
 project     = "vina-contrat"
 environment = "prod"
 location    = "canadacentral"
+# Hébergement au Québec (ADR-020, option B) : location = "canadaeast" et zones = [] (région sans zones de disponibilité).
+# zones     = ["1", "2", "3"]
 
 kubernetes_version = "1.30"
 aks_node_size      = "Standard_D4s_v5"

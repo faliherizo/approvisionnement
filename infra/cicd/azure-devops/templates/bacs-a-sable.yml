@@ -1,0 +1,32 @@
+# Template de stage : conformité contre les applications externes des bacs à sable (infra/bacs-a-sable/ci.sh).
+parameters:
+  - name: javaVersion
+    default: "17"
+  - name: nodeVersion
+    default: "20"
+
+stages:
+  - stage: BacsASable
+    displayName: Bacs à sable (ICP, Gotenberg, veraPDF, pyHanko, Mailpit)
+    dependsOn: Test
+    jobs:
+      - job: bacs_a_sable
+        timeoutInMinutes: 45
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: JavaToolInstaller@0
+            inputs:
+              versionSpec: ${{ parameters.javaVersion }}
+              jdkArchitectureOption: x64
+              jdkSourceOption: PreInstalled
+          - task: NodeTool@0
+            inputs:
+              versionSpec: ${{ parameters.nodeVersion }}
+          - script: infra/bacs-a-sable/ci.sh
+            displayName: Services, serveur, scénarios e2e BS-01 à BS-08 et validation
+          - task: PublishPipelineArtifact@1
+            condition: always()
+            inputs:
+              targetPath: infra/bacs-a-sable/resultats
+              artifact: bacs-a-sable

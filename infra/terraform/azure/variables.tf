@@ -9,9 +9,20 @@ variable "environment" {
 }
 
 variable "location" {
-  description = "Région Azure (résidence des données au Canada)."
+  description = "Région Azure : canadacentral (Toronto, zones de disponibilité) ou canadaeast (Québec) — ADR-020."
   type        = string
   default     = "canadacentral"
+
+  validation {
+    condition     = contains(["canadacentral", "canadaeast"], var.location)
+    error_message = "Résidence des données au Canada : canadacentral ou canadaeast seulement (Cahier § 1.4.2)."
+  }
+}
+
+variable "zones" {
+  description = "Zones de disponibilité utilisées ; liste vide pour une région sans zones (ex. canadaeast) — ADR-020."
+  type        = list(string)
+  default     = ["1", "2", "3"]
 }
 
 variable "kubernetes_version" {

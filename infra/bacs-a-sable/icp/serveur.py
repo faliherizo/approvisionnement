@@ -11,14 +11,19 @@ Aucune réponse n'est fabriquée à la main : chaque octet sort d'OpenSSL, comme
 import os
 import subprocess
 import tempfile
+import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 CNF = "/icp/openssl.cnf"
 AC = "/etat/ac"
+# Horodatage (numéro de série), listes (numéro de liste) et registre partagent des fichiers d'état : comme dans une
+# autorité réelle, les opérations qui les lisent ou les modifient sont sérialisées.
+ETAT = threading.Lock()
 
 
 def openssl(*args, entree=None):
-    return subprocess.run(["openssl", *args], input=entree, capture_output=True, check=True).stdout
+    with ETAT:
+        return subprocess.run(["openssl", *args], input=entree, capture_output=True, check=True).stdout
 
 
 def serie_cachet():
@@ -27,6 +32,11 @@ def serie_cachet():
 
 def retablir(serie):
     """Levée de suspension : l'entrée du registre redevient valide (statut V, sans date de révocation)."""
+    with ETAT:
+        retablir_dans_le_registre(serie)
+
+
+def retablir_dans_le_registre(serie):
     registre = f"{AC}/index.txt"
     with open(registre) as f:
         lignes = f.read().splitlines()

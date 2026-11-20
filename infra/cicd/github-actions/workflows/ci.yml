@@ -1,4 +1,4 @@
-# Orchestrateur CI — sur chaque Pull Request : qualité + plan Terraform (aucun déploiement).
+# Orchestrateur CI — sur chaque Pull Request : qualité, bacs à sable + plan Terraform (aucun déploiement).
 # Sécurise la branche principale : rien n'est fusionné sans build/tests verts et plan revu.
 name: ci
 
@@ -18,6 +18,11 @@ permissions:
 jobs:
   build-test:
     uses: ./.github/workflows/reusable-build-test.yml
+
+  # Conformité contre les applications externes réelles (PDF/A, PAdES-B-LTA, CAdES, RFC 3161, SMTP, conversion Word).
+  bacs-a-sable:
+    needs: build-test
+    uses: ./.github/workflows/reusable-bacs-a-sable.yml
 
   plan-aws:
     uses: ./.github/workflows/reusable-terraform.yml

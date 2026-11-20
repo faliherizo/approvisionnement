@@ -13,7 +13,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   default_node_pool {
     name                         = "system"
     vm_size                      = "Standard_D2s_v5"
-    zones                        = ["1", "2", "3"]
+    zones                        = length(var.zones) > 0 ? var.zones : null
     auto_scaling_enabled         = true
     min_count                    = 3
     max_count                    = 5
@@ -43,7 +43,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "app" {
   name                  = "app"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.this.id
   vm_size               = var.aks_node_size
-  zones                 = ["1", "2", "3"]
+  zones                 = length(var.zones) > 0 ? var.zones : null
   auto_scaling_enabled  = true
   min_count             = var.aks_node_min
   max_count             = var.aks_node_max

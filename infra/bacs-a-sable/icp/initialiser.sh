@@ -23,5 +23,8 @@ emettre ocsp "/C=CA/O=ICP du bac à sable/CN=Répondeur OCSP du bac à sable" v3
 openssl rand -hex 16 > /etat/mot-de-passe.txt
 openssl pkcs12 -export -inkey /etat/cachet.key -in /etat/cachet.pem -certfile /etat/ac/ac.pem -name cachet \
   -passout file:/etat/mot-de-passe.txt -out /etat/cachet.p12
-chmod 600 /etat/*.key /etat/*/*.key /etat/mot-de-passe.txt
+chmod 600 /etat/*.key /etat/*/*.key
+# Lisibles par le serveur lancé hors du conteneur (sur un runner Linux, le conteneur écrit en root) : magasin et mot de
+# passe propres au bac à sable, jamais des secrets de production.
+chmod 644 /etat/mot-de-passe.txt /etat/cachet.p12
 echo "ICP initialisée : $(openssl x509 -in /etat/cachet.pem -noout -subject)"

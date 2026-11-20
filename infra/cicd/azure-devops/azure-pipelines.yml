@@ -16,6 +16,9 @@ variables:
 stages:
   - template: templates/build-test.yml
 
+  # Conformité contre les applications externes réelles : l'image n'est construite que si elle est verte.
+  - template: templates/bacs-a-sable.yml
+
   - template: templates/docker.yml
     parameters:
       serviceConnection: $(serviceConnection)

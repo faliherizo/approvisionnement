@@ -157,7 +157,7 @@ export CLM_SIGNATURE_FOURNISSEUR=cachet NOTIFICATION_COURRIEL_MODE=smtp MAIL_HOS
 (cd backend && SERVER_PORT=8100 mvn -q -DskipTests spring-boot:run)
 infra/bacs-a-sable/valider.sh              # scénario complet, sortie non nulle au premier écart
 infra/bacs-a-sable/valider-signature.sh    # signature réelle : SMTP, portail, attestation CAdES vérifiée par OpenSSL
-infra/bacs-a-sable/valider-revocation.sh   # contre-épreuve : l'autorité révoque le cachet
+infra/bacs-a-sable/valider-revocation.sh   # contre-épreuve : l'autorité suspend le cachet, puis le rétablit
 ```
 
 Les **scénarios e2e** rattachés aux exigences fonctionnelles (BS-01 à BS-08 : PDF/A, gabarit Word, PAdES-B-LTA,
@@ -180,17 +180,13 @@ Résultat du 2026-11-20 :
 - 2 certificats VALID au profil B-LTA : cachet de confiance, jeton de l'autorité d'horodatage, DSS (certificats,
   liste, OCSP) et horodatage de document.
 
-Après révocation, pyHanko refuse le document scellé ensuite : « The signer's certificate is revoked », sur la foi de la
-réponse OCSP que le serveur a lui-même intégrée.
+Pendant la suspension du cachet, pyHanko refuse le document scellé ensuite : « The signer's certificate is revoked »,
+sur la foi de la réponse OCSP que le serveur a lui-même intégrée. Après le rétablissement, le document est de nouveau
+valide. La contre-épreuve est réversible, donc rejouable.
 
-Pour réinitialiser l'ICP après la contre-épreuve :
-
-```bash
-docker compose -f $B/docker-compose.yml rm -sf icp pyhanko && rm -rf $B/icp/etat
-docker compose -f $B/docker-compose.yml up -d --wait icp pyhanko
-```
-
-Puis redémarrer le serveur, qui lit le nouveau magasin.
+**Intégration continue :** `infra/bacs-a-sable/ci.sh` enchaîne tout (services, serveur, frontend, scénarios e2e
+BS-01 à BS-08, scripts de validation). GitHub Actions (`reusable-bacs-a-sable.yml`) et Azure DevOps
+(`templates/bacs-a-sable.yml`) l'appellent à chaque demande de fusion.
 
 ### 2.4 Comptes développeur des fournisseurs
 
