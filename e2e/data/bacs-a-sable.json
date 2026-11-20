@@ -1,0 +1,56 @@
+{
+  "services": {
+    "icp": "http://localhost:18090",
+    "verapdf": "http://localhost:18092",
+    "validation": "http://localhost:18093",
+    "conversion": "http://localhost:18030",
+    "courriel": "http://localhost:18025/api/v1"
+  },
+  "verapdf": { "profil": "2b" },
+  "pades": { "profil": "pades-lta" },
+  "modeleSimple": {
+    "nom": "Lettre d'entente — bac à sable",
+    "corps": "Lettre d'entente avec {{beneficiaire}} pour un montant de {{montant}}.",
+    "champs": [
+      { "cle": "beneficiaire", "libelle": "Bénéficiaire", "type": "TEXTE", "obligatoire": false },
+      { "cle": "montant", "libelle": "Montant", "type": "TEXTE", "obligatoire": false }
+    ],
+    "clauses": [],
+    "parcours": []
+  },
+  "modeleGabarit": {
+    "nom": "Convention de financement — gabarit Word IQ",
+    "corps": "Convention avec {{beneficiaire}} pour {{montant}}.",
+    "champs": [
+      { "cle": "beneficiaire", "libelle": "Bénéficiaire", "type": "TEXTE", "obligatoire": false },
+      { "cle": "montant", "libelle": "Montant", "type": "TEXTE", "obligatoire": false }
+    ],
+    "clauses": [
+      { "cle": "garantie", "titre": "Garantie", "texte": "Hypothèque mobilière de premier rang de {{montant}}.", "combinateur": "ET", "conditions": [] }
+    ],
+    "parcours": [],
+    "fichierGabarit": "Convention IQ.docx"
+  },
+  "valeurs": { "beneficiaire": "Coopérative Agri-Nord inc.", "montant": "250 000 $" },
+  "attendus": {
+    "word": [
+      "Convention de financement — Coopérative Agri-Nord inc.",
+      "Montant accordé : 250 000 $",
+      "Investissement Québec — dossier Coopérative Agri-Nord inc.",
+      "Hypothèque mobilière de premier rang de 250 000 $."
+    ],
+    "pdf": ["Coopérative Agri-Nord inc.", "250 000 $", "Hypothèque mobilière de premier rang"],
+    "motifConversion": "mise en page conservée",
+    "pyhanko": ["The signer's certificate is trusted.", "This timestamp is backed by a time stamping authority.", "The signature is judged VALID."],
+    "revoque": "revoked"
+  },
+  "signature": {
+    "trousse": "Convention signée au portail — bac à sable",
+    "signataire": { "nom": "Marie Tremblay", "domaine": "agrinord.example", "telephone": "+15145550190", "roleContrat": "SIGNATAIRE_1" },
+    "document": "convention.pdf",
+    "fournisseur": "clm-cachet",
+    "algorithme": "CAdES-SHA256withRSA+RFC3161",
+    "niveauAltere": "FORTE"
+  },
+  "horodatage": { "donnees": "Contrat CLM — empreinte à horodater" }
+}

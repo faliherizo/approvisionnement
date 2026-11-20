@@ -197,6 +197,49 @@ class Addenda4IntegrationTest {
         return sb.toString();
     }
 
+    @Test
+    void au_depart_d_un_employe_ses_trousses_etapes_et_taches_passent_a_une_personne_active() throws Exception {
+        long possedee = corps(appel("POST", "/api/clm/trousses", login("validateur@iq.example"),
+                "{\"titre\":\"Brouillon du partant\",\"risque\":\"FAIBLE\"}"), 200).get("resume").get("id").asLong();
+        long id = corps(appel("POST", "/api/clm/trousses", initiateur, "{\"titre\":\"Dossier où le partant valide\",\"risque\":\"FAIBLE\"}"), 200)
+                .get("resume").get("id").asLong();
+        assertEquals(200, mvc.perform(MockMvcRequestBuilders.multipart("/api/clm/trousses/" + id + "/documents")
+                .file(new org.springframework.mock.web.MockMultipartFile("fichier", "c.pdf", "application/pdf", Base64.getDecoder().decode(PDF64)))
+                .cookie(initiateur)).andReturn().getResponse().getStatus());
+        corps(appel("PUT", "/api/clm/trousses/" + id + "/parcours", initiateur, "[{\"cle\":\"v1\",\"libelle\":\"Validation\",\"phase\":1,"
+                + "\"type\":\"VALIDATION\",\"affectations\":[{\"type\":\"UTILISATEUR\",\"valeur\":\"validateur@iq.example\"},"
+                + "{\"type\":\"UTILISATEUR\",\"valeur\":\"approbateur@iq.example\"}],\"quorum\":2}]"), 200);
+        corps(appel("POST", "/api/clm/trousses/" + id + "/lancer", initiateur, "{}"), 200);
+        corps(appel("POST", "/api/clm/taches-assignees", affaires, "{\"trousseId\":" + id + ",\"titre\":\"Relire l'annexe\","
+                + "\"assigneA\":\"validateur@iq.example\",\"priorite\":\"NORMALE\"}"), 200);
+
+        JsonNode inventaire = corps(appel("GET", "/api/clm/admin/departs?courriel=Validateur@iq.example", affaires, null), 200);
+        assertTrue(inventaire.get("trousses").toString().contains(corps(appel("GET", "/api/clm/trousses/" + possedee, affaires, null), 200)
+                .get("resume").get("reference").asText()), inventaire.toString());
+        assertTrue(inventaire.get("etapes").asInt() >= 1 && inventaire.get("taches").asInt() >= 1, inventaire.toString());
+        assertEquals(403, appel("GET", "/api/clm/admin/departs?courriel=validateur@iq.example", technique, null).getStatus(), "technique : aucun contenu");
+        assertEquals(403, appel("POST", "/api/clm/admin/departs", initiateur, "{\"de\":\"validateur@iq.example\",\"vers\":\"initiateur@iq.example\"}").getStatus());
+        assertEquals(400, appel("POST", "/api/clm/admin/departs", affaires, "{\"de\":\"validateur@iq.example\",\"vers\":\"VALIDATEUR@iq.example\"}").getStatus());
+        assertEquals(400, appel("POST", "/api/clm/admin/departs", affaires, "{\"de\":\"validateur@iq.example\",\"vers\":\"inconnu@iq.example\"}").getStatus());
+        assertEquals(400, appel("POST", "/api/clm/admin/departs", affaires, "{\"de\":\" \",\"vers\":\"approbateur@iq.example\"}").getStatus());
+
+        JsonNode bilan = corps(appel("POST", "/api/clm/admin/departs", affaires,
+                "{\"de\":\"validateur@iq.example\",\"vers\":\"auditeur@iq.example\",\"motif\":\"Départ à la retraite\"}"), 200);
+        assertTrue(bilan.get("trousses").asInt() >= 1 && bilan.get("etapes").asInt() >= 1 && bilan.get("taches").asInt() >= 1, bilan.toString());
+        assertEquals("auditeur@iq.example", corps(appel("GET", "/api/clm/trousses/" + possedee, affaires, null), 200)
+                .get("resume").get("proprietaire").asText(), "propriété transférée");
+        String historique = appel("GET", "/api/clm/trousses/" + id + "/historique", affaires, null).getContentAsString(StandardCharsets.UTF_8);
+        assertTrue(historique.contains("auditeur@iq.example") && historique.contains("Départ à la retraite"), historique);
+        String detail = appel("GET", "/api/clm/trousses/" + id, affaires, null).getContentAsString(StandardCharsets.UTF_8);
+        assertTrue(detail.contains("auditeur@iq.example") && !detail.contains("validateur@iq.example"), "étape active réassignée : " + detail);
+        JsonNode taches = corps(appel("GET", "/api/clm/trousses/" + id + "/taches-assignees", affaires, null), 200);
+        assertEquals("auditeur@iq.example", taches.get(0).get("assigneA").asText(), "tâche ouverte réassignée");
+        JsonNode apres = corps(appel("GET", "/api/clm/admin/departs?courriel=validateur@iq.example", affaires, null), 200);
+        assertEquals(0, apres.get("trousses").size());
+        assertEquals(0, apres.get("etapes").asInt());
+        assertEquals(0, apres.get("taches").asInt());
+    }
+
     /** Gabarit Word d'IQ : titre en gras, variable répartie sur deux runs, tableau, marqueur de clauses. */
     private static byte[] gabaritWord(String variable) throws Exception {
         try (org.apache.poi.xwpf.usermodel.XWPFDocument doc = new org.apache.poi.xwpf.usermodel.XWPFDocument();

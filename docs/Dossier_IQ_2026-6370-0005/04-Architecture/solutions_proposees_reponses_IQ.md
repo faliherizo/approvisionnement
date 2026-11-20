@@ -204,6 +204,13 @@ Analyse et vérifications : [impact_addenda_4.md](../02-Analyse/impact_addenda_4
 
 **Horodatage :** RFC 3161 par l'autorité retenue.
 
+**Attestation de chaque signature (ST-09, [ADR-019](../../adr/ADR-019-attestation-cades-et-courriel-smtp.md)) :** signée
+en CAdES par le cachet X.509 et horodatée. Elle porte l'empreinte des documents, l'identité, le niveau
+d'authentification et le consentement, et se vérifie hors de la plateforme (`openssl cms -verify`).
+
+**Validation par des applications externes ([guide](../12-Bacs-a-sable/guide_bacs_a_sable.md), § 2.3) :** ICP OpenSSL,
+Gotenberg, veraPDF REST, pyHanko et Mailpit, joints par le réseau aux protocoles réels.
+
 **PDF/A et validation à long terme (RST-37, [ADR-018](../../adr/ADR-018-pdfa-pades-lta-et-gabarits-word.md)) :**
 
 - documents produits (contrats, certificats de signature et de destruction) en PDF/A-2b : police intégrée,

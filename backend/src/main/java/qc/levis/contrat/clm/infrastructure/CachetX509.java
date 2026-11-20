@@ -190,6 +190,23 @@ public class CachetX509 implements CachetElectronique {
     }
 
     @Override
+    public boolean reconnait(X509Certificate c) {
+        if (certificat.equals(c)) {
+            return true;
+        }
+        if (chaine.size() < 2 || !c.getSubjectX500Principal().equals(certificat.getSubjectX500Principal())) {
+            return false;
+        }
+        X509Certificate emetteur = chaine.get(1);
+        try {
+            c.verify(emetteur.getPublicKey());
+            return c.getIssuerX500Principal().equals(emetteur.getSubjectX500Principal());
+        } catch (GeneralSecurityException e) {
+            return false;
+        }
+    }
+
+    @Override
     public String titulaire() {
         return certificat.getSubjectX500Principal().getName();
     }

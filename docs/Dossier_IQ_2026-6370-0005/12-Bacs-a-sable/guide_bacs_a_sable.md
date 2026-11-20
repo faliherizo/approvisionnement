@@ -10,14 +10,18 @@ termine sans IQ, mais chacun peut être éprouvé dès maintenant. Ce guide dit 
 | Point | Bac à sable local (livré) | Bac à sable externe (gratuit) | Vérifié le 2026-11-08 | Reste avec IQ |
 |---|---|---|---|---|
 | Salesforce Grantmaking | API REST imitée, `infra/bacs-a-sable/salesforce` | Developer Edition ; essai Public Sector Solutions | Connexion, recherche, préremplissage, retour de statut, panne et relance | Bac à sable Grantmaking d'IQ, objets et champs réels |
-| Signature certifiée | Horodatage RFC 3161 contre une autorité publique | Comptes développeur des fournisseurs | Jeton obtenu, vérifié ; document altéré rejeté | Choix du fournisseur et de l'autorité d'horodatage |
+| Signature certifiée | ICP locale (cachet, RFC 3161) et Mailpit (SMTP) ; horodatage contre une autorité publique | Comptes développeur des fournisseurs | 2026-11-20 : invitation SMTP, signature au portail, attestation CAdES vérifiée par `openssl cms` hors plateforme | Certificat et autorité qualifiés ; relais SMTP du domaine d'IQ |
 | Conservation | Horloge injectable (tests à date fixe) | — | — (rien à tester sans calendrier) | Calendrier de conservation d'IQ |
 | Annuaire (SSO) | Keycloak, royaume `iq`, OIDC et SAML 2.0 | Locataire Microsoft Entra ID | Connexion OIDC et SAML, création automatique d'un compte | IdP d'IQ, correspondance groupes → rôles et domaines |
+| Cachet, horodatage, révocation (Q4) | ICP OpenSSL : RFC 3161, OCSP, liste de révocation | — | 2026-11-20 : PAdES-B-LTA validé par pyHanko ; cachet révoqué refusé | Certificat d'une autorité reconnue et TSA qualifiée |
+| PDF/A (Q14) et modèles Word (Q22) | Gotenberg (LibreOffice), veraPDF REST | — | 2026-11-20 : contrat issu du gabarit Word et certificats conformes PDF/A-2b (144 règles, 0 échec) | Gabarits Word réels d'IQ |
 
 Lancer les bacs à sable locaux (aucune donnée ni aucun secret réels) :
 
 ```bash
-docker compose -f infra/bacs-a-sable/docker-compose.yml up -d     # Keycloak :8180, Salesforce imité :8099
+docker compose -f infra/bacs-a-sable/docker-compose.yml up -d --build --wait
+# Keycloak :8180, Salesforce imité :8099, ICP :18090, pyHanko :18093, conversion (Gotenberg) :18030, veraPDF :18092,
+# courriel (Mailpit) : SMTP :11025, boîte et API :18025
 docker compose -f infra/bacs-a-sable/docker-compose.yml down      # arrêt
 ```
 
@@ -107,9 +111,11 @@ jusqu'au bout (statut `TERMINEE` et document final). Prérequis à obtenir : que
 ### 2.1 Ce que fait la plateforme aujourd'hui
 
 Le port `FournisseurSignature` reçoit l'empreinte des documents, l'identité vérifiée et le consentement, et rend une
-attestation (fournisseur, identifiant, horodatage, jeton). L'adaptateur par défaut, `SignatureProbanteLocale`, scelle par
-HMAC serveur : la preuve est intègre et vérifiable, mais **non qualifiée**. Le fournisseur retenu par IQ remplacera cet
-adaptateur sans changer les cas d'utilisation.
+attestation (fournisseur, identifiant, horodatage, jeton). En production, `SignatureProbanteCachet` la signe en **CAdES**
+par le cachet X.509 de l'organisation, horodatée RFC 3161 : elle se vérifie hors de la plateforme
+([ADR-019](../../adr/ADR-019-attestation-cades-et-courriel-smtp.md)). Sa valeur probante dépend du certificat et de
+l'autorité retenus par IQ. L'adaptateur `SignatureProbanteLocale` (HMAC) ne sert plus qu'aux postes de développement.
+Un prestataire certifié s'ajouterait comme un adaptateur de plus, sans changer les cas d'utilisation.
 
 ### 2.2 Horodatage RFC 3161 : essai livré
 
@@ -125,7 +131,68 @@ Vérifié : jeton « Granted », SHA-256, vérification OK ; le même jeton pré
 (« message imprint mismatch »). Ces autorités publiques servent aux essais seulement : l'autorité qualifiée sera celle
 retenue par IQ ou fournie par le prestataire de signature.
 
-### 2.3 Comptes développeur des fournisseurs
+### 2.3 ICP locale, conversion et conformité (addenda 4, Q4, Q14, Q22)
+
+Quatre applications externes, que le serveur et le scénario de validation joignent **uniquement par le réseau**, aux
+protocoles des services réels. Aucune n'est une imitation : ce sont les logiciels eux-mêmes.
+
+| Service | Application | Protocole | Remplace en production |
+|---|---|---|---|
+| `icp` :18090 | Autorité OpenSSL : registre, numéros de série, `openssl ts`, `openssl ocsp`, `openssl ca -gencrl` | RFC 3161 (`POST /tsa`), RFC 6960 (`POST /ocsp`), RFC 5280 (`GET /crl/ac.crl`), `GET /ac.cer` | Autorité de certification reconnue et TSA qualifiée |
+| `conversion` :18030 | Gotenberg 8.17.3 (LibreOffice) | `POST /forms/libreoffice/convert`, `pdfa=PDF/A-2b` | **La même image**, déployée comme service `conversion` |
+| `verapdf` :18092 | veraPDF REST officiel | `POST /api/validate/2b` | Contrôle de conformité de la recette |
+| `pyhanko` :18093 | pyHanko 0.25 (validation sans logique ajoutée) | `POST /valider?profil=pades-lta` | Validateur indépendant (Adobe, EU DSS) |
+| `courriel` :11025 / :18025 | Mailpit | SMTP ; boîte consultable (`/api/v1`) | Relais SMTP de l'organisation (SPF, DKIM) |
+
+Les certificats de l'ICP publient leurs points d'accès à `http://localhost:18090`, comme une autorité à son adresse
+publique. Le magasin du cachet (PKCS#12) et son mot de passe, propres au bac à sable, sont créés au premier démarrage
+dans `infra/bacs-a-sable/icp/etat` (ignoré par git). Serveur branché sur les bacs à sable, mêmes variables qu'en
+production :
+
+```bash
+B=infra/bacs-a-sable
+export CLM_CACHET_MAGASIN=$PWD/$B/icp/etat/cachet.p12 CLM_CACHET_MOT_DE_PASSE=$(cat $B/icp/etat/mot-de-passe.txt)
+export CLM_CACHET_TSA_URL=http://localhost:18090/tsa CLM_CONVERSION_MODE=service CLM_CONVERSION_URL=http://localhost:18030
+export CLM_SIGNATURE_FOURNISSEUR=cachet NOTIFICATION_COURRIEL_MODE=smtp MAIL_HOST=localhost MAIL_PORT=11025
+(cd backend && SERVER_PORT=8100 mvn -q -DskipTests spring-boot:run)
+infra/bacs-a-sable/valider.sh              # scénario complet, sortie non nulle au premier écart
+infra/bacs-a-sable/valider-signature.sh    # signature réelle : SMTP, portail, attestation CAdES vérifiée par OpenSSL
+infra/bacs-a-sable/valider-revocation.sh   # contre-épreuve : l'autorité révoque le cachet
+```
+
+Les **scénarios e2e** rattachés aux exigences fonctionnelles (BS-01 à BS-08 : PDF/A, gabarit Word, PAdES-B-LTA,
+signature au portail par SMTP, export de la preuve, suspension du cachet, horodatage) sont décrits dans
+[scenarios_e2e_bacs_a_sable.md](scenarios_e2e_bacs_a_sable.md) et implémentés dans
+`e2e/views/clm.bacs-a-sable.spec.ts` (données : `e2e/data/bacs-a-sable.json`). L'ICP y offre aussi la suspension et
+la levée de suspension du cachet (`POST /admin/cachet/suspendre`, `/retablir`), et le service de validation la
+vérification CAdES (`POST /cms`) et RFC 3161 (`POST /horodatage`) par OpenSSL.
+
+`valider.sh` passe par les API ordinaires de la plateforme :
+
+1. Il dépose un gabarit Word (variable répartie sur plusieurs runs, tableau, en-tête, marqueur de clauses), publie le
+   modèle, génère le contrat en Word et en PDF, puis télécharge deux certificats de signature scellés.
+2. Il soumet ensuite les PDF à veraPDF, au profil PDF/A-2b, et les certificats à pyHanko, au profil PAdES-B-LTA avec
+   révocation intégrée exigée. La seule ancre de confiance est la racine de l'ICP.
+
+Résultat du 2026-11-20 :
+
+- 3 PDF conformes PDF/A-2b, avec 144 règles passées et 0 en échec ;
+- 2 certificats VALID au profil B-LTA : cachet de confiance, jeton de l'autorité d'horodatage, DSS (certificats,
+  liste, OCSP) et horodatage de document.
+
+Après révocation, pyHanko refuse le document scellé ensuite : « The signer's certificate is revoked », sur la foi de la
+réponse OCSP que le serveur a lui-même intégrée.
+
+Pour réinitialiser l'ICP après la contre-épreuve :
+
+```bash
+docker compose -f $B/docker-compose.yml rm -sf icp pyhanko && rm -rf $B/icp/etat
+docker compose -f $B/docker-compose.yml up -d --wait icp pyhanko
+```
+
+Puis redémarrer le serveur, qui lit le nouveau magasin.
+
+### 2.4 Comptes développeur des fournisseurs
 
 | Fournisseur | Bac à sable | Intérêt pour IQ |
 |---|---|---|
@@ -221,7 +288,12 @@ celle d'IQ est requise (question D2).
 
 | Fichier | Rôle |
 |---|---|
-| `infra/bacs-a-sable/docker-compose.yml` | Keycloak et Salesforce imité |
+| `infra/bacs-a-sable/docker-compose.yml` | Keycloak, Salesforce imité, ICP, pyHanko, conversion (Gotenberg), veraPDF |
+| `infra/bacs-a-sable/icp/` | Configuration OpenSSL, initialisation, points de publication HTTP, révocation |
+| `infra/bacs-a-sable/validation/serveur.py` | Service pyHanko |
+| `infra/bacs-a-sable/outils/Dockerfile` | Image de l'ICP et de pyHanko |
+| `infra/bacs-a-sable/donnees/fabriquer_gabarit.py` | Gabarit Word de démonstration |
+| `infra/bacs-a-sable/valider.sh`, `valider-signature.sh`, `valider-revocation.sh` | Scénarios de validation et contre-épreuve |
 | `infra/bacs-a-sable/salesforce/serveur.mjs`, `donnees.json` | API REST Salesforce imitée et demandes fictives |
 | `infra/bacs-a-sable/keycloak/realm-iq.json` | Royaume `iq` : comptes, groupes, clients OIDC et SAML |
 | `infra/bacs-a-sable/horodatage/tester-tsa.sh` | Essai d'horodatage RFC 3161 |

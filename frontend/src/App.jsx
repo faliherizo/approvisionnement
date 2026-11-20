@@ -55,6 +55,7 @@ import TrousseCreer from './pages/clm/TrousseCreer.jsx'
 import TrousseDetail from './pages/clm/TrousseDetail.jsx'
 import Lots from './pages/clm/Lots.jsx'
 import ConservationClm from './pages/clm/ConservationClm.jsx'
+import DepartEmploye from './pages/clm/DepartEmploye.jsx'
 import Modeles from './pages/clm/Modeles.jsx'
 import ModeleEditeur from './pages/clm/ModeleEditeur.jsx'
 import TachesClm from './pages/clm/TachesClm.jsx'
@@ -261,6 +262,7 @@ export default function App() {
             <Route path="/clm/admin/groupes" element={<GroupesClm />} />
             <Route path="/clm/admin/journal" element={<JournalClm />} />
             <Route path="/clm/admin/conservation" element={<ConservationClm />} />
+            <Route path="/clm/admin/departs" element={<DepartEmploye />} />
             <Route path="/clm/options" element={<OptionsClm />} />
             <Route path="/clm/profil" element={<Profil />} />
             <Route path="/clm/securite" element={<Securite />} />

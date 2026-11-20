@@ -19,6 +19,13 @@ public interface CachetElectronique {
     /** Niveau ETSI atteint par {@link #scellerPdf} : « PAdES-B-LTA » avec une autorité d'horodatage, « PAdES-B-B » sinon. */
     String niveauPades();
 
+    /**
+     * Vrai pour le certificat de ce cachet, ou pour un certificat renouvelé au même titulaire et émis par la même
+     * autorité (signature vérifiée) : les attestations restent vérifiables après un renouvellement, jamais celles d'un
+     * autre cachet portant le même nom.
+     */
+    boolean reconnait(java.security.cert.X509Certificate certificat);
+
     /** Titulaire du certificat de cachet (nom distinctif X.500), cité dans le certificat de signature. */
     String titulaire();
 

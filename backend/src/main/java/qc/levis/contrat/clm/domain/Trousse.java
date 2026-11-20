@@ -263,6 +263,24 @@ public class Trousse {
     public StatutTrousse getStatut() { return statut; }
     public Identite.Risque getRisque() { return risque; }
     public void setRisque(Identite.Risque risque) { this.risque = risque; }
+    /**
+     * Départ ou changement de responsable (P3) : une trousse ouverte change de propriétaire ; une trousse close garde le
+     * sien, qui fait partie de sa preuve. Retourne l'ancien propriétaire, pour la trace.
+     */
+    public String transfererA(String nouveau, Instant maintenant) {
+        if (statut.estFinal()) {
+            throw new IllegalStateException("Trousse close : son propriétaire ne change plus (" + reference + ").");
+        }
+        String cible = nouveau == null ? "" : nouveau.trim().toLowerCase(java.util.Locale.ROOT);
+        if (cible.isEmpty() || cible.equalsIgnoreCase(proprietaire)) {
+            throw new IllegalArgumentException("Nouveau propriétaire absent ou identique à l'actuel.");
+        }
+        String ancien = proprietaire;
+        proprietaire = cible;
+        majLe = maintenant;
+        return ancien;
+    }
+
     public String getProprietaire() { return proprietaire; }
     public LocalDate getEcheance() { return echeance; }
     public void setEcheance(LocalDate echeance) { this.echeance = echeance; }

@@ -35,6 +35,7 @@ du § 0 garde l'état des stories d'origine ; les lignes ci-dessous le complète
 | RST-37 PDF/A-2b et PAdES-LTA | Add. 4 Q4, Q14 | ✅ 2026-11-20 | PDF/A-2b généré (police intégrée, XMP, sRGB) ; DSS + horodatage de document → B-LTA avec l'autorité retenue ([ADR-018](../../adr/ADR-018-pdfa-pades-lta-et-gabarits-word.md)) ; validation veraPDF en recette |
 | RST-38 Modèles Word d'IQ avec mise en page préservée | Add. 4 Q22 | ✅ 2026-11-20 | Gabarit `.docx` par modèle, fusion POI (runs, tableaux, en-têtes), clauses au marqueur ; PDF/A par LibreOffice dans l'image serveur |
 | RST-39 Comptes locaux de secours restreints | Add. 4 Q12 | ✅ 2026-11-20 | Réservation de la connexion locale par organisation, comptes de secours désignés par l'administration technique, second facteur exigé, journal |
+| RST-41 Départ d'un employé : transfert de ses trousses, étapes et tâches | Question P3 | ✅ 2026-11-20 | Inventaire puis transfert en une opération par l'administration d'affaires (`/clm/admin/departs`), journalisé par trousse ; trousses closes inchangées |
 | RST-40 Tableau de bord et « Mes trousses » paginés | Add. 3 Q38 | ✅ 2026-11-20 | `LecturePaginee` : page en base avec total (admin, audit), sinon tranches de 200 ; tableau de bord par décomptes |
 
 **Avant le dépôt :**
@@ -60,7 +61,7 @@ Légende : ✅ livrée et testée · ✅🔌 livrée et testée, recette sur le 
 | ST-06 Génération depuis Salesforce | ✅🔌 | `SalesforceRest` (OAuth 2.0, lecture par Id ou SOQL), `Preremplissage` (provenance, conflits), clauses conditionnelles via `MoteurRegles` ; UI-10 | Recette sur le bac à sable Salesforce d'IQ (objet et champs à confirmer) |
 | ST-07 Configurer le workflow | ✅ | `Parcours` : séquentiel/parallèle/mixte, quorum, politiques de rejet, affectation utilisateur/groupe/rôle/participant ; UI-11 | — |
 | ST-08 Exécuter validation/approbation | ✅ | `ParcoursService` : décision, retour pour correction, réassignation à chaud, délégation, relance, commentaires ; UI-12/13/14 | — |
-| ST-09 Signature électronique | 🟡 | Identité par risque, consentement, signatures séquentielles/parallèles, port `FournisseurSignature` avec attestation locale (`SignatureProbanteLocale`) ; UI-15/16 | Adaptateur du fournisseur certifié retenu et horodatage qualifié (décision V1) |
+| ST-09 Signature électronique | ✅ 2026-11-20 | Identité par risque, consentement, signatures séquentielles/parallèles, port `FournisseurSignature` avec attestation locale (`SignatureProbanteLocale`) ; UI-15/16 | Attestation CAdES par le cachet X.509, horodatée RFC 3161, vérifiable hors plateforme ([ADR-019](../../adr/ADR-019-attestation-cades-et-courriel-smtp.md)) ; validée en bac à sable (invitation SMTP, portail, `openssl cms`). Reste à IQ : certificat et autorité qualifiés |
 | ST-10 Dossier de preuve & export | ✅ | `PreuveService` : certificat PDF/JSON, manifeste SHA-256, sceau HMAC, archive ZIP portable, vérification qui détecte une altération en base ; UI-19 | — |
 | ST-11 Notifications, rappels, échéances | ✅ | `RappelService` (non-réponse, échéances), `MessagerieClm` (modèle par événement et canal, copies) ; UI-17 | — |
 | ST-12 Statuts vers Salesforce | ✅🔌 | Boîte d'envoi `MessageSortant` : idempotence, reprises, file d'erreur, relance, corrélation ; UI-21 | Recette sur le bac à sable Salesforce d'IQ |

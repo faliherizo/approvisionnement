@@ -26,6 +26,12 @@ services:
       - dbdata:/var/lib/postgresql/data
     restart: unless-stopped
 
+  # --- Conversion Word → PDF/A (LibreOffice isolé du serveur, API Gotenberg ; addenda 4, Q22 ; ADR-018) ---
+  conversion:
+    image: gotenberg/gotenberg:8.17.3
+    container_name: contrat-conversion
+    restart: unless-stopped
+
   # --- Backend Java (Spring Boot, profil prod → PostgreSQL, schéma Liquibase) ---
   backend:
     build: ./backend
@@ -33,6 +39,7 @@ services:
     depends_on:
       - ollama
       - db
+      - conversion
     environment:
       SPRING_PROFILES_ACTIVE: prod
       APP_CORS_ALLOWED_ORIGINS: http://localhost:${FRONTEND_PORT:-8082}
@@ -45,6 +52,13 @@ services:
       # Environnement de démonstration : crée le tenant IQ et un compte par profil (data/tenants-demo.json), que le
       # profil prod n'amorce pas seul. Une vraie production lance le compose avec APP_TENANTS_DEMO=false.
       APP_TENANTS_DEMO: ${APP_TENANTS_DEMO:-true}
+      CLM_CONVERSION_MODE: service
+      CLM_CONVERSION_URL: http://conversion:3000
+      # Attestation de signature CAdES par le cachet X.509 (ST-09 ; ADR-019) : magasin et autorité d'horodatage par
+      # CLM_CACHET_MAGASIN, CLM_CACHET_MOT_DE_PASSE et CLM_CACHET_TSA_URL (secrets hors dépôt).
+      CLM_SIGNATURE_FOURNISSEUR: cachet
+      # Courriel : « smtp » avec MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD du relais de l'organisation.
+      NOTIFICATION_COURRIEL_MODE: ${NOTIFICATION_COURRIEL_MODE:-simulation}
     ports:
       - "8080:8085"
     restart: unless-stopped

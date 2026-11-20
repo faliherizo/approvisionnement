@@ -81,7 +81,7 @@ public class Invitation {
     @Column(name = "agent", length = 300)
     private String agent;
 
-    @Column(name = "attestation_json", length = 10_000)
+    @Column(name = "attestation_json", length = 40_000)
     private String attestationJson;
 
     @Column(name = "champs_json", length = 20_000)

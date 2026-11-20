@@ -83,6 +83,14 @@ class PadesLtaTest {
         serveur = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
         base = "http://127.0.0.1:" + serveur.getAddress().getPort();
         serveur.createContext("/crl", ex -> repondre(ex, crl()));
+        serveur.createContext("/ocsp", ex -> repondre(ex, ocsp(ex.getRequestBody().readAllBytes())));
+        serveur.createContext("/ocsp-refus", ex -> {
+            try {
+                repondre(ex, new org.bouncycastle.cert.ocsp.OCSPRespBuilder().build(org.bouncycastle.cert.ocsp.OCSPRespBuilder.UNAUTHORIZED, null).getEncoded());
+            } catch (org.bouncycastle.cert.ocsp.OCSPException e) {
+                throw new java.io.IOException(e);
+            }
+        });
         KeyPair cleTsa = generateur.generateKeyPair();
         X509Certificate tsa = certificat(new X500Name("CN=Autorité d'horodatage"), cleTsa, new X500Name("CN=AC de test"), cleCa, null, true);
         serveur.createContext("/tsa", ex -> repondre(ex, jeton(ex.getRequestBody().readAllBytes(), cleTsa, tsa)));
@@ -96,7 +104,7 @@ class PadesLtaTest {
 
     @Test
     void avec_autorite_le_pdf_scelle_atteint_pades_b_lta(@TempDir Path dossier) throws Exception {
-        CachetX509 cachet = new CachetX509(magasin(dossier, base + "/crl").toString(), "secret", base + "/tsa", HORLOGE);
+        CachetX509 cachet = new CachetX509(magasin(dossier, base + "/crl", base + "/ocsp").toString(), "secret", base + "/tsa", HORLOGE);
         assertEquals("PAdES-B-LTA", cachet.niveauPades());
         byte[] scelle = cachet.scellerPdf(pdf(), "Certificat de signature IQ-1");
         try (PDDocument doc = PDDocument.load(scelle)) {
@@ -115,6 +123,12 @@ class PadesLtaTest {
             List<String> sujets = sujets((COSArray) dss.getDictionaryObject(COSName.getPDFName("Certs")));
             assertTrue(sujets.containsAll(List.of("CN=Cachet IQ", "CN=AC de test", "CN=Autorité d'horodatage")), sujets.toString());
             assertEquals(1, ((COSArray) dss.getDictionaryObject(COSName.getPDFName("CRLs"))).size(), "liste de révocation de l'émetteur");
+            COSArray ocsp = (COSArray) dss.getDictionaryObject(COSName.getPDFName("OCSPs"));
+            assertEquals(1, ocsp.size(), "réponse OCSP du cachet");
+            try (var in = ((COSStream) ocsp.getObject(0)).createInputStream()) {
+                var reponse = (org.bouncycastle.cert.ocsp.BasicOCSPResp) new org.bouncycastle.cert.ocsp.OCSPResp(in.readAllBytes()).getResponseObject();
+                assertNull(reponse.getResponses()[0].getCertStatus(), "statut « bon »");
+            }
         }
     }
 
@@ -180,6 +194,22 @@ class PadesLtaTest {
         }
     }
 
+    /** Renouvellement : même titulaire, même autorité → reconnu ; même nom émis ailleurs, ou autre titulaire → refusé. */
+    @Test
+    void le_cachet_reconnait_son_certificat_renouvele_mais_pas_un_homonyme(@TempDir Path dossier) throws Exception {
+        CachetX509 cachet = new CachetX509(magasin(dossier, base + "/crl").toString(), "secret", "", HORLOGE);
+        assertTrue(cachet.reconnait(cachet.certificat()));
+        X509Certificate renouvele = certificat(new X500Name("CN=Cachet IQ"), generateur.generateKeyPair(), new X500Name("CN=AC de test"), cleCa, null, false);
+        assertTrue(cachet.reconnait(renouvele), "renouvelé par la même autorité");
+        KeyPair autreAc = generateur.generateKeyPair();
+        X509Certificate homonyme = certificat(new X500Name("CN=Cachet IQ"), generateur.generateKeyPair(), new X500Name("CN=AC de test"), autreAc, null, false);
+        assertFalse(cachet.reconnait(homonyme), "même nom, autre autorité (signature invalide)");
+        X509Certificate autre = certificat(new X500Name("CN=Autre cachet"), generateur.generateKeyPair(), new X500Name("CN=AC de test"), cleCa, null, false);
+        assertFalse(cachet.reconnait(autre), "autre titulaire");
+        CachetX509 demonstration = new CachetX509("", "", "", HORLOGE);
+        assertFalse(demonstration.reconnait(renouvele), "un certificat autosigné ne reconnaît que lui-même");
+    }
+
     @Test
     void sans_magasin_le_cachet_de_demonstration_verse_son_certificat_au_dss() throws Exception {
         CachetX509 cachet = new CachetX509("", "", "", HORLOGE);
@@ -200,10 +230,29 @@ class PadesLtaTest {
     }
 
     private Path magasin(Path dossier, String crl) throws Exception {
+        return magasin(dossier, crl, null);
+    }
+
+    /** Cachet émis par l'AC de test : point de distribution de la liste et, si fourni, répondeur OCSP annoncé. */
+    private Path magasin(Path dossier, String crl, String ocsp) throws Exception {
         KeyPair cle = generateur.generateKeyPair();
         CRLDistPoint cdp = new CRLDistPoint(new DistributionPoint[]{new DistributionPoint(new DistributionPointName(
                 new GeneralNames(new GeneralName(GeneralName.uniformResourceIdentifier, crl))), null, null)});
-        X509Certificate cert = certificat(new X500Name("CN=Cachet IQ"), cle, new X500Name("CN=AC de test"), cleCa, cdp, false);
+        JcaX509v3CertificateBuilder b = new JcaX509v3CertificateBuilder(new X500Name("CN=AC de test"), BigInteger.valueOf(System.nanoTime()),
+                new Date(0), new Date(4102444800000L), new X500Name("CN=Cachet IQ"), cle.getPublic());
+        b.addExtension(Extension.cRLDistributionPoints, false, cdp);
+        if (ocsp != null) {
+            b.addExtension(Extension.authorityInfoAccess, false, new org.bouncycastle.asn1.x509.AuthorityInformationAccess(new org.bouncycastle.asn1.x509.AccessDescription[]{
+                    new org.bouncycastle.asn1.x509.AccessDescription(org.bouncycastle.asn1.x509.AccessDescription.id_ad_caIssuers,
+                            new GeneralName(GeneralName.uniformResourceIdentifier, base + "/ac.cer")),
+                    new org.bouncycastle.asn1.x509.AccessDescription(org.bouncycastle.asn1.x509.AccessDescription.id_ad_ocsp,
+                            new GeneralName(GeneralName.dNSName, "ocsp.example")),
+                    new org.bouncycastle.asn1.x509.AccessDescription(org.bouncycastle.asn1.x509.AccessDescription.id_ad_ocsp,
+                            new GeneralName(GeneralName.uniformResourceIdentifier, "ldap://annuaire/ocsp")),
+                    new org.bouncycastle.asn1.x509.AccessDescription(org.bouncycastle.asn1.x509.AccessDescription.id_ad_ocsp,
+                            new GeneralName(GeneralName.uniformResourceIdentifier, ocsp))}));
+        }
+        X509Certificate cert = new JcaX509CertificateConverter().getCertificate(b.build(new JcaContentSignerBuilder("SHA256withRSA").build(cleCa.getPrivate())));
         Path p = dossier.resolve("cachet.p12");
         KeyStore ks = KeyStore.getInstance("PKCS12");
         ks.load(null, null);
@@ -221,6 +270,57 @@ class PadesLtaTest {
             return new JcaX509CRLConverter().getCRL(b.build(new JcaContentSignerBuilder("SHA256withRSA").build(cleCa.getPrivate()))).getEncoded();
         } catch (Exception e) {
             throw new IllegalStateException(e);
+        }
+    }
+
+    /** Répondeur OCSP de l'AC (RFC 6960) : statut « bon » pour chaque certificat demandé, réponse signée par l'AC. */
+    private byte[] ocsp(byte[] requete) {
+        try {
+            var req = new org.bouncycastle.cert.ocsp.OCSPReq(requete);
+            var b = new org.bouncycastle.cert.ocsp.jcajce.JcaBasicOCSPRespBuilder(ca.getPublicKey(),
+                    new JcaDigestCalculatorProviderBuilder().build().get(org.bouncycastle.cert.ocsp.CertificateID.HASH_SHA1));
+            for (var r : req.getRequestList()) {
+                b.addResponse(r.getCertID(), org.bouncycastle.cert.ocsp.CertificateStatus.GOOD);
+            }
+            var basic = b.build(new JcaContentSignerBuilder("SHA256withRSA").build(cleCa.getPrivate()),
+                    new org.bouncycastle.cert.X509CertificateHolder[]{new org.bouncycastle.cert.jcajce.JcaX509CertificateHolder(ca)}, new Date());
+            return new org.bouncycastle.cert.ocsp.OCSPRespBuilder().build(org.bouncycastle.cert.ocsp.OCSPRespBuilder.SUCCESSFUL, basic).getEncoded();
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Test
+    void un_repondeur_ocsp_qui_refuse_ou_illisible_n_empeche_pas_le_scellement(@TempDir Path dossier) throws Exception {
+        CachetX509 cachet = new CachetX509(magasin(dossier, base + "/crl", base + "/ocsp-refus").toString(), "secret", "", HORLOGE);
+        try (PDDocument doc = PDDocument.load(cachet.scellerPdf(pdf(), "x"))) {
+            COSDictionary dss = doc.getDocumentCatalog().getCOSObject().getCOSDictionary(COSName.getPDFName("DSS"));
+            assertNull(dss.getDictionaryObject(COSName.getPDFName("OCSPs")), "réponse non concluante écartée");
+            assertEquals(1, ((COSArray) dss.getDictionaryObject(COSName.getPDFName("CRLs"))).size(), "la liste reste disponible");
+        }
+        KeyPair cle = generateur.generateKeyPair();
+        JcaX509v3CertificateBuilder b = new JcaX509v3CertificateBuilder(new X500Name("CN=AC de test"), BigInteger.TEN,
+                new Date(0), new Date(4102444800000L), new X500Name("CN=aia"), cle.getPublic());
+        b.addExtension(Extension.authorityInfoAccess, false, new org.bouncycastle.asn1.DERUTF8String("illisible"));
+        X509Certificate illisible = new JcaX509CertificateConverter().getCertificate(b.build(new JcaContentSignerBuilder("SHA256withRSA").build(cleCa.getPrivate())));
+        assertEquals(List.of(), DonneesValidation.repondeurs(illisible));
+        assertEquals(List.of(), DonneesValidation.repondeurs(ca), "sans accès aux informations de l'autorité");
+        assertEquals(List.of(), new DonneesValidation().reponsesOcsp(illisible, List.of(illisible)), "émetteur inconnu : aucune requête");
+    }
+
+    @Test
+    void une_collecte_ocsp_interrompue_est_signalee(@TempDir Path dossier) throws Exception {
+        KeyStore ks = KeyStore.getInstance("PKCS12");
+        try (var in = Files.newInputStream(magasin(dossier, base + "/crl", base + "/ocsp"))) {
+            ks.load(in, "secret".toCharArray());
+        }
+        X509Certificate cachet = (X509Certificate) ks.getCertificate("cachet");
+        Thread.currentThread().interrupt();
+        try {
+            assertTrue(assertThrows(IllegalStateException.class, () -> new DonneesValidation().reponsesOcsp(cachet, List.of(cachet, ca)))
+                    .getMessage().contains("interrompue"));
+        } finally {
+            Thread.interrupted();
         }
     }
 

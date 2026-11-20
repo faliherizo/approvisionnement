@@ -1,0 +1,41 @@
+# Service de conversion Word → PDF/A (Gotenberg, LibreOffice ; addenda 4, Q22 ; ADR-018). Interne au cluster : seul le
+# backend l'appelle. LibreOffice analyse des fichiers de tiers : il tourne isolé, sans compte de service ni secret.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: conversion
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.conversion.replicas }}
+  selector:
+    matchLabels: { app: conversion }
+  template:
+    metadata:
+      labels: { app: conversion }
+    spec:
+      automountServiceAccountToken: false
+      securityContext: { runAsNonRoot: true, runAsUser: 1001 }
+      containers:
+        - name: conversion
+          image: "{{ .Values.conversion.image }}"
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet: { path: /health, port: 3000 }
+            initialDelaySeconds: 10
+          livenessProbe:
+            httpGet: { path: /health, port: 3000 }
+            initialDelaySeconds: 30
+          resources:
+            {{- toYaml .Values.conversion.resources | nindent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: conversion
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector: { app: conversion }
+  ports:
+    - port: 3000
+      targetPort: 3000

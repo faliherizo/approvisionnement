@@ -26,7 +26,17 @@ import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.cos.COSStream;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
+import org.bouncycastle.asn1.x509.AccessDescription;
+import org.bouncycastle.asn1.x509.AuthorityInformationAccess;
 import org.bouncycastle.asn1.x509.CRLDistPoint;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
+import org.bouncycastle.cert.ocsp.BasicOCSPResp;
+import org.bouncycastle.cert.ocsp.CertificateID;
+import org.bouncycastle.cert.ocsp.OCSPException;
+import org.bouncycastle.cert.ocsp.OCSPReqBuilder;
+import org.bouncycastle.cert.ocsp.OCSPResp;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 import org.bouncycastle.asn1.x509.DistributionPoint;
 import org.bouncycastle.asn1.x509.DistributionPointName;
 import org.bouncycastle.asn1.x509.Extension;
@@ -64,13 +74,19 @@ final class DonneesValidation {
                 certificatsDe(s.getContents(pdf)).forEach(c -> certificats.put(c.getSerialNumber() + "|" + c.getIssuerX500Principal(), c));
             }
             List<byte[]> listes = new ArrayList<>();
-            for (X509Certificate c : certificats.values()) {
+            List<byte[]> ocsp = new ArrayList<>();
+            for (X509Certificate c : new ArrayList<>(certificats.values())) {
                 listes.addAll(listesDeRevocation(c));
+                for (OCSPResp r : reponsesOcsp(c, certificats.values())) {
+                    ocsp.add(r.getEncoded());
+                    convertir(((BasicOCSPResp) r.getResponseObject()).getCerts())
+                            .forEach(rc -> certificats.put(rc.getSerialNumber() + "|" + rc.getIssuerX500Principal(), rc));
+                }
             }
-            ecrireDss(doc, certificats.values(), listes);
+            ecrireDss(doc, new ArrayList<>(certificats.values()), listes, ocsp);
             doc.saveIncremental(sortie);
             return sortie.toByteArray();
-        } catch (IOException | CertificateEncodingException e) {
+        } catch (IOException | CertificateException | OCSPException e) {
             throw new IllegalStateException("Données de validation à long terme impossibles : " + e.getMessage(), e);
         }
     }
@@ -94,12 +110,68 @@ final class DonneesValidation {
     }
 
     private static List<X509Certificate> convertir(Store<X509CertificateHolder> magasin) throws CertificateException {
+        return convertir(magasin.getMatches(null).toArray(new X509CertificateHolder[0]));
+    }
+
+    private static List<X509Certificate> convertir(X509CertificateHolder[] titulaires) throws CertificateException {
         JcaX509CertificateConverter conv = new JcaX509CertificateConverter();
         List<X509Certificate> sortie = new ArrayList<>();
-        for (X509CertificateHolder h : magasin.getMatches(null)) {
+        for (X509CertificateHolder h : titulaires) {
             sortie.add(conv.getCertificate(h));
         }
         return sortie;
+    }
+
+    /**
+     * Statut OCSP (RFC 6960) auprès du répondeur annoncé par le certificat (accès aux informations de l'autorité),
+     * lorsque son émetteur figure parmi les certificats connus. Un répondeur injoignable ou une réponse non concluante
+     * est journalisé sans bloquer : la liste de révocation reste disponible.
+     */
+    List<OCSPResp> reponsesOcsp(X509Certificate certificat, Collection<X509Certificate> connus) {
+        X509Certificate emetteur = connus.stream().filter(c -> !c.equals(certificat)
+                && c.getSubjectX500Principal().equals(certificat.getIssuerX500Principal())).findFirst().orElse(null);
+        List<OCSPResp> reponses = new ArrayList<>();
+        for (String adresse : emetteur == null ? List.<String>of() : repondeurs(certificat)) {
+            try {
+                CertificateID id = new CertificateID(new JcaDigestCalculatorProviderBuilder().build().get(CertificateID.HASH_SHA1),
+                        new JcaX509CertificateHolder(emetteur), certificat.getSerialNumber());
+                byte[] requete = new OCSPReqBuilder().addRequest(id).build().getEncoded();
+                HttpResponse<byte[]> r = http.send(HttpRequest.newBuilder(URI.create(adresse)).timeout(Duration.ofSeconds(20))
+                        .header("Content-Type", "application/ocsp-request").POST(HttpRequest.BodyPublishers.ofByteArray(requete)).build(),
+                        HttpResponse.BodyHandlers.ofByteArray());
+                OCSPResp reponse = new OCSPResp(r.body());
+                if (reponse.getStatus() != OCSPResp.SUCCESSFUL) {
+                    throw new OCSPException("statut " + reponse.getStatus());
+                }
+                reponses.add(reponse);
+            } catch (IOException | OCSPException | OperatorCreationException | CertificateEncodingException | RuntimeException e) {
+                log.warn("Réponse OCSP indisponible ({}) : {}", adresse, e.getMessage());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new IllegalStateException("Collecte OCSP interrompue.", e);
+            }
+        }
+        return reponses;
+    }
+
+    static List<String> repondeurs(X509Certificate certificat) {
+        byte[] extension = certificat.getExtensionValue(Extension.authorityInfoAccess.getId());
+        if (extension == null) {
+            return List.of();
+        }
+        try {
+            return java.util.Arrays.stream(AuthorityInformationAccess.getInstance(JcaX509ExtensionUtils.parseExtensionValue(extension))
+                            .getAccessDescriptions())
+                    .filter(d -> d.getAccessMethod().equals(AccessDescription.id_ad_ocsp))
+                    .map(AccessDescription::getAccessLocation)
+                    .filter(g -> g.getTagNo() == GeneralName.uniformResourceIdentifier)
+                    .map(g -> g.getName().toString())
+                    .filter(uri -> uri.startsWith("http"))
+                    .toList();
+        } catch (IOException | IllegalArgumentException e) {
+            log.warn("Accès aux informations de l'autorité illisible : {}", e.getMessage());
+            return List.of();
+        }
     }
 
     /** Listes publiées aux points de distribution HTTP du certificat ; un point injoignable est journalisé, pas bloquant. */
@@ -148,27 +220,34 @@ final class DonneesValidation {
                 .toList();
     }
 
-    private static void ecrireDss(PDDocument doc, Collection<X509Certificate> certificats, List<byte[]> listes)
+    /** Dictionnaire DSS (ETSI EN 319 142-1 § 5.4.2) : certificats, listes de révocation et réponses OCSP en flux. */
+    private static void ecrireDss(PDDocument doc, List<X509Certificate> certificats, List<byte[]> listes, List<byte[]> ocsp)
             throws IOException, CertificateEncodingException {
-        COSArray certs = new COSArray();
+        List<byte[]> encodes = new ArrayList<>();
         for (X509Certificate c : certificats) {
-            certs.add(flux(doc, c.getEncoded()));
-        }
-        COSArray crls = new COSArray();
-        for (byte[] l : listes) {
-            crls.add(flux(doc, l));
+            encodes.add(c.getEncoded());
         }
         COSDictionary dss = new COSDictionary();
-        dss.setItem(COSName.getPDFName("Certs"), certs);
-        if (crls.size() > 0) {
-            dss.setItem(COSName.getPDFName("CRLs"), crls);
+        dss.setItem(COSName.getPDFName("Certs"), tableau(doc, encodes));
+        if (!listes.isEmpty()) {
+            dss.setItem(COSName.getPDFName("CRLs"), tableau(doc, listes));
         }
-        certs.setNeedToBeUpdated(true);
-        crls.setNeedToBeUpdated(true);
+        if (!ocsp.isEmpty()) {
+            dss.setItem(COSName.getPDFName("OCSPs"), tableau(doc, ocsp));
+        }
         dss.setNeedToBeUpdated(true);
         COSDictionary catalogue = doc.getDocumentCatalog().getCOSObject();
         catalogue.setItem(COSName.getPDFName("DSS"), dss);
         catalogue.setNeedToBeUpdated(true);
+    }
+
+    private static COSArray tableau(PDDocument doc, List<byte[]> contenus) throws IOException {
+        COSArray t = new COSArray();
+        for (byte[] c : contenus) {
+            t.add(flux(doc, c));
+        }
+        t.setNeedToBeUpdated(true);
+        return t;
     }
 
     private static COSStream flux(PDDocument doc, byte[] contenu) throws IOException {

@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileSystemUtils;
 import qc.levis.contrat.clm.application.port.ConversionPdf;
@@ -19,6 +20,7 @@ import qc.levis.contrat.clm.application.port.ConversionPdf;
  * aucune conversion ne voit le document d'une autre, et deux conversions simultanées ne se bloquent pas.
  */
 @Component
+@ConditionalOnProperty(name = "app.clm.conversion.mode", havingValue = "soffice", matchIfMissing = true)
 public class ConversionLibreOffice implements ConversionPdf {
 
     private static final Logger log = LoggerFactory.getLogger(ConversionLibreOffice.class);

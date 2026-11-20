@@ -1,4 +1,6 @@
-# Bacs à sable des intégrations d'IQ, à lancer à côté de la plateforme : aucune donnée réelle, aucun secret réel.
+# Bacs à sable des intégrations et des services externes d'IQ, à lancer à côté de la plateforme : aucune donnée
+# réelle, aucun secret réel. Chaque service est une application externe, jointe par le réseau aux protocoles du
+# service réel ; les outils de conformité (veraPDF, pyHanko, LibreOffice) sont les logiciels officiels eux-mêmes.
 #   docker compose -f infra/bacs-a-sable/docker-compose.yml up -d
 # Guide : docs/Dossier_IQ_2026-6370-0005/12-Bacs-a-sable/guide_bacs_a_sable.md
 services:
@@ -29,3 +31,44 @@ services:
       - ./salesforce:/bac:ro
     ports:
       - "8099:8099"
+
+  # ICP : autorité OpenSSL réelle — horodatage RFC 3161 (/tsa), OCSP RFC 6960 (/ocsp), liste RFC 5280 (/crl/ac.crl),
+  # certificat de l'AC (/ac.cer). Ses certificats publient ces points à http://localhost:18090, comme une autorité à
+  # son adresse publique ; état (clés, registre) dans icp/etat, créé au premier démarrage.
+  icp:
+    image: clm-bac-a-sable:1
+    build: ./outils
+    container_name: iq-bac-icp
+    command: ["sh", "/icp/lancer.sh"]
+    volumes: ["./icp:/icp:ro", "./icp/etat:/etat"]
+    ports: ["18090:18090", "18093:18093"]
+    healthcheck: { test: ["CMD", "curl", "-sf", "http://localhost:18090/sante"], interval: 3s, retries: 40 }
+
+  # pyHanko : validation PAdES (B-B à B-LTA) par POST /valider ; partage l'espace réseau de l'ICP pour en joindre les
+  # points de publication à la même adresse que le serveur.
+  pyhanko:
+    image: clm-bac-a-sable:1
+    container_name: iq-bac-pyhanko
+    command: ["python3", "/validation/serveur.py"]
+    network_mode: service:icp
+    volumes: ["./validation:/validation:ro", "./icp/etat/ac:/etat/ac:ro"]
+    depends_on: { icp: { condition: service_healthy } }
+
+  # Conversion Word → PDF/A : Gotenberg 8 (LibreOffice), même image que le service « conversion » de production.
+  conversion:
+    image: gotenberg/gotenberg:8.17.3
+    container_name: iq-bac-conversion
+    ports: ["18030:3000"]
+
+  # veraPDF REST officiel : conformité PDF/A (POST /api/validate/2b).
+  verapdf:
+    image: verapdf/rest:latest
+    container_name: iq-bac-verapdf
+    ports: ["18092:8080"]
+
+  # Courriel : Mailpit, vrai serveur SMTP (:11025) qui garde les messages et les expose par API (:18025, /api/v1).
+  # Le serveur y envoie comme à un relais réel (NOTIFICATION_COURRIEL_MODE=smtp) ; liens d'invitation et codes y arrivent.
+  courriel:
+    image: axllent/mailpit:v1.21.8
+    container_name: iq-bac-courriel
+    ports: ["11025:1025", "18025:8025"]

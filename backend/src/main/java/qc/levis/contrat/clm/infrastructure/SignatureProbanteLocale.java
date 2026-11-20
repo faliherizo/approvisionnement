@@ -2,6 +2,7 @@ package qc.levis.contrat.clm.infrastructure;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import qc.levis.contrat.clm.application.port.FournisseurSignature;
 import qc.levis.contrat.clm.application.port.Scelleur;
@@ -11,6 +12,7 @@ import qc.levis.contrat.clm.application.port.Scelleur;
  * défaut jusqu'à la décision V1 sur le fournisseur de signature à valeur probante et l'autorité d'horodatage.
  */
 @Component
+@ConditionalOnProperty(name = "app.clm.signature.fournisseur", havingValue = "local", matchIfMissing = true)
 public class SignatureProbanteLocale implements FournisseurSignature {
 
     static final String FOURNISSEUR = "clm-local";

@@ -1,0 +1,82 @@
+# ICP locale du bac à sable : une vraie autorité OpenSSL (registre, numéros de série, listes de révocation, OCSP,
+# horodatage RFC 3161), exposée par HTTP aux mêmes adresses de publication qu'une autorité commerciale.
+HOTE = http://localhost:18090
+
+[ ca ]
+default_ca = ac
+
+[ ac ]
+dir             = /etat/ac
+database        = $dir/index.txt
+serial          = $dir/serial
+crlnumber       = $dir/crlnumber
+new_certs_dir   = $dir/emis
+certificate     = $dir/ac.pem
+private_key     = $dir/ac.key
+default_md      = sha256
+default_days    = 825
+default_crl_days = 7
+policy          = politique
+unique_subject  = no
+copy_extensions = none
+
+[ politique ]
+countryName      = optional
+organizationName = optional
+commonName       = supplied
+
+[ req ]
+distinguished_name = dn
+prompt = no
+[ dn ]
+CN = inutilise
+
+[ v3_ac ]
+basicConstraints       = critical,CA:true
+keyUsage               = critical,keyCertSign,cRLSign
+subjectKeyIdentifier   = hash
+
+[ v3_cachet ]
+basicConstraints       = critical,CA:false
+keyUsage               = critical,digitalSignature,nonRepudiation
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid
+crlDistributionPoints  = URI:$HOTE/crl/ac.crl
+authorityInfoAccess    = OCSP;URI:$HOTE/ocsp,caIssuers;URI:$HOTE/ac.cer
+
+[ v3_tsa ]
+basicConstraints       = critical,CA:false
+keyUsage               = critical,digitalSignature,nonRepudiation
+extendedKeyUsage       = critical,timeStamping
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid
+crlDistributionPoints  = URI:$HOTE/crl/ac.crl
+authorityInfoAccess    = OCSP;URI:$HOTE/ocsp,caIssuers;URI:$HOTE/ac.cer
+
+[ v3_ocsp ]
+basicConstraints       = critical,CA:false
+keyUsage               = critical,digitalSignature
+extendedKeyUsage       = critical,OCSPSigning
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid
+noCheck                = ignored
+
+[ tsa ]
+default_tsa = autorite
+
+[ autorite ]
+dir                  = /etat/tsa
+serial               = $dir/serial
+crypto_device        = builtin
+signer_cert          = $dir/tsa.pem
+certs                = /etat/ac/ac.pem
+signer_key           = $dir/tsa.key
+signer_digest        = sha256
+default_policy       = 1.3.6.1.4.1.99999.1.1
+other_policies       = 1.3.6.1.4.1.99999.1.2
+digests              = sha256, sha384, sha512
+accuracy             = secs:1
+ordering             = yes
+tsa_name             = yes
+ess_cert_id_chain    = yes
+ess_cert_id_alg      = sha256

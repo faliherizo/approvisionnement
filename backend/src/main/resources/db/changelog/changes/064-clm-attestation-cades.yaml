@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 064-1-clm-attestation-cades
+      author: levis
+      comment: "CLM (ST-09) : l'attestation CAdES horodatée (signature, certificat du cachet, jeton RFC 3161) dépasse 10 000 caractères."
+      changes:
+        - modifyDataType:
+            tableName: clm_invitation
+            columnName: attestation_json
+            newDataType: VARCHAR(40000)

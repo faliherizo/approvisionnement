@@ -23,6 +23,25 @@ public final class Parcours {
 
     public enum TypeAffecte { UTILISATEUR, GROUPE, ROLE, PARTICIPANT }
 
+    /** Vrai si la personne est désignée nommément (les groupes et rôles se mettent à jour par l'annuaire). */
+    public static boolean designe(List<Affectation> affectations, String courriel) {
+        return affectations.stream().anyMatch(a -> a.type() == TypeAffecte.UTILISATEUR && a.valeur().equalsIgnoreCase(courriel));
+    }
+
+    /** Remplace une personne désignée nommément par une autre, sans doublon si la seconde l'était déjà (départ, P3). */
+    public static List<Affectation> remplacer(List<Affectation> affectations, String de, String vers) {
+        List<Affectation> res = new ArrayList<>();
+        Set<String> vus = new HashSet<>();
+        for (Affectation a : affectations) {
+            boolean visee = a.type() == TypeAffecte.UTILISATEUR && a.valeur().equalsIgnoreCase(de);
+            Affectation b = visee ? new Affectation(TypeAffecte.UTILISATEUR, vers) : a;
+            if (vus.add(b.type() + "|" + b.valeur().toLowerCase(java.util.Locale.ROOT))) {
+                res.add(b);
+            }
+        }
+        return res;
+    }
+
     public record Affectation(TypeAffecte type, String valeur) {
         public Affectation {
             if (type == null || valeur == null || valeur.isBlank()) {

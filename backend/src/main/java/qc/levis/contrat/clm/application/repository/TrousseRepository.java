@@ -20,6 +20,10 @@ public interface TrousseRepository extends JpaRepository<Trousse, Long>,
     /** Trousses récentes d'un initiateur : source des suggestions de saisie, jamais celles d'autrui. */
     List<Trousse> findTop200ByTenantIdAndProprietaireIgnoreCaseOrderByMajLeDesc(Long tenantId, String proprietaire);
 
+    /** Trousses ouvertes d'une personne : celles dont la propriété suit un départ (P3). */
+    List<Trousse> findByTenantIdAndProprietaireIgnoreCaseAndStatutInOrderByIdAsc(Long tenantId, String proprietaire,
+                                                                               java.util.Collection<StatutTrousse> statuts);
+
     /** Trousses closes encore conservées : candidates au calendrier de conservation. */
     List<Trousse> findByTenantIdAndStatutInAndDetruiteLeIsNullOrderByClotureLeAsc(Long tenantId, java.util.Collection<StatutTrousse> statuts);
 

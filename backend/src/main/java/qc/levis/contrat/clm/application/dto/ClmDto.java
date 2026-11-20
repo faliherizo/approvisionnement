@@ -70,6 +70,16 @@ public final class ClmDto {
     public record DelegationRequest(String vers, String motif) {
     }
 
+    /** Départ d'un employé (P3) : ce qu'il détient encore et ce qui lui a été repris. */
+    public record InventaireDepart(String courriel, List<String> trousses, int etapes, int taches) {
+    }
+
+    public record DepartRequest(String de, String vers, String motif) {
+    }
+
+    public record BilanDepart(String de, String vers, int trousses, int etapes, int taches) {
+    }
+
     public record TacheAssigneeRequest(Long trousseId, String titre, String description, String assigneA, String priorite,
                                        LocalDate echeance) {
     }

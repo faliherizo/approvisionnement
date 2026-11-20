@@ -59,7 +59,7 @@ Les questions qui changent le prix, la portée ou la conformité, à renvoyer av
 
 | # | Ce qui reste à préciser | Hypothèse retenue |
 |---|---|---|
-| P3 | Réaffectation des trousses et tâches d'un employé qui part | Désactivation immédiate ; réaffectation par l'administration d'affaires |
+| P3 | Réaffectation des trousses et tâches d'un employé qui part | Désactivation immédiate ; ✅ transfert en une opération par l'administration d'affaires (RST-41) |
 | W5 | Candidat ou employé : signataire externe (lien) ou interne (SSO) ? | Candidat externe, employé par SSO |
 | H1 | Fournisseur de SMS et son lieu de traitement | Fournisseur canadien à désigner |
 

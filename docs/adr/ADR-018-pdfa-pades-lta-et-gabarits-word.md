@@ -1,12 +1,13 @@
-# ADR-018 — PDF/A-2b, PAdES-B-LTA et gabarits Word convertis par LibreOffice
+# ADR-018 — PDF/A-2b, PAdES-B-LTA et gabarits Word convertis par un service LibreOffice
 
 - **Statut** : Accepté
 - **Date** : 2026-11-20
 - **Portée** :
   - `clm.infrastructure.ConformitePdfA`, `RenduDocumentsPdf` (génération et apposition) ;
   - `CachetX509`, `DonneesValidation`, `AutoriteHorodatage` (scellement) ;
-  - `FusionDocx`, `ConversionLibreOffice`, ports `RenduDocuments.fusionnerDocx` et `ConversionPdf` ;
-  - `clm.domain.GabaritWord`, migration 063, `backend/Dockerfile`.
+  - `FusionDocx`, `ConversionServiceHttp`, `ConversionLibreOffice`, ports `RenduDocuments.fusionnerDocx` et `ConversionPdf` ;
+  - `clm.domain.GabaritWord`, migration 063, `docker-compose.yml` et chart Helm (service `conversion`) ;
+  - bacs à sable `infra/bacs-a-sable` (ICP, conversion, veraPDF, pyHanko).
 - **Origine** : addenda 4, Q4 (validation à long terme), Q14 (PDF/A) et Q22 (modèles Word d'IQ, présentation
   préservée dans la mesure du possible).
 
@@ -40,10 +41,14 @@ Avant cette décision :
 1. **docx4j, ou POI avec un moteur FO.** Ces solutions sont fidèles seulement en partie : rendu approximatif des
    tableaux, des sections et des polices.
 2. **Service tiers en ligne.** Des documents confidentiels sortiraient du périmètre hébergé au Québec. Exclu.
-3. **LibreOffice sans interface, dans l'image du serveur (retenue).**
-   - Rendu le plus fidèle disponible en logiciel libre.
-   - Export PDF/A-2 natif.
-   - Chaque conversion s'exécute dans un répertoire et un profil jetables.
+3. **LibreOffice sans interface, dans l'image du serveur.**
+   - Rendu fidèle, export PDF/A-2 natif.
+   - Mais LibreOffice analyse des fichiers fournis par des tiers dans le processus même du serveur, et l'image grossit
+     d'environ 300 Mo. Conservé comme adaptateur de repli (`CLM_CONVERSION_MODE=soffice`).
+4. **Service LibreOffice externe à l'API Gotenberg (retenue).**
+   - Même moteur, isolé dans son conteneur, sans compte de service ni secret.
+   - Mis à l'échelle à part.
+   - La même image sert la production et le bac à sable : le comportement éprouvé est celui qui sera déployé.
 
 ## Décision
 
@@ -55,7 +60,8 @@ Avant cette décision :
   - L'apposition des signatures emploie la même police intégrée, ce qui préserve la conformité.
 - **Scellement :**
   1. Signature CAdES détachée (`ETSI.CAdES.detached`), horodatée si une autorité est configurée.
-  2. DSS : chaîne du cachet, certificats des autorités d'horodatage et listes de révocation.
+  2. DSS : chaîne du cachet, certificats des autorités d'horodatage et des répondeurs, listes de révocation (points de
+     distribution) et réponses OCSP (accès aux informations de l'autorité).
   3. Avec une autorité configurée, horodatage de document `/DocTimeStamp` couvrant le tout.
   - Niveau atteint : **PAdES-B-LTA** avec autorité, PAdES-B-B (avec DSS) sans autorité. `niveauPades()` l'expose, et le
     dossier de preuve le cite.
@@ -66,21 +72,24 @@ Avant cette décision :
     plusieurs runs. Cela couvre le corps, les tableaux (imbriqués compris), les en-têtes et les pieds de page.
   - Les clauses retenues sont insérées au marqueur `{{clauses}}`.
   - En Word, le document fusionné est remis tel quel.
-  - En PDF, il est converti par LibreOffice. Si le convertisseur est absent, le PDF reprend le texte fusionné et le motif
-    de version le dit expressément. Le repli n'est jamais silencieux.
+  - En PDF, il est converti par le service `conversion` (Gotenberg, `pdfa=PDF/A-2b`). Si le service est indisponible, le
+    PDF reprend le texte fusionné et le motif de version le dit expressément. Le repli n'est jamais silencieux.
 
 ## Conséquences
 
-- L'image du serveur grossit de LibreOffice Writer et des polices Liberation et DejaVu (environ 300 Mo).
-- Une conversion prend environ 2 à 5 s. Le délai maximal se règle avec `CLM_CONVERSION_DELAI_SECONDES` (120 s par
-  défaut).
-- **Révocation :** les listes (CRL) sont collectées. OCSP n'est pas interrogé, car les autorités québécoises et
-  canadiennes publient des CRL HTTP. Un point de distribution injoignable est journalisé sans bloquer le scellement : le
-  document reste B-LT incomplet plutôt que non signé.
-- **Renouvellement de l'archive :** un nouvel horodatage de document avant l'expiration du certificat de l'autorité
-  relève de la conservation (ADR-012). Il n'est pas automatisé dans cette version.
-- **Vérifications :** la conformité est vérifiée de façon structurelle par les tests (`ConformitePdfATest`,
-  `PadesLtaTest`). Une validation veraPDF et une ouverture dans Adobe Acrobat sont à faire sur l'environnement de
-  recette, ces outils n'étant pas disponibles sur le poste de construction.
+- **Déploiement :** un service `conversion` de plus (Gotenberg, environ 1,5 Go d'image, 512 Mio à 2 Gio de mémoire),
+  interne au réseau. L'image du serveur ne contient plus LibreOffice. Une conversion prend de 2 à 5 s ; le délai maximal
+  se règle avec `CLM_CONVERSION_DELAI_SECONDES` (120 s par défaut).
+- **Révocation :** les listes (CRL) et les réponses OCSP sont collectées. Un point injoignable est journalisé sans
+  bloquer le scellement : le document reste signé, avec moins de données de validation.
+- **Renouvellement d'archive :** le certificat de signature et les signatures détachées sont produits **à chaque
+  export** avec les certificats et l'horodatage du moment. Aucun document scellé n'est donc conservé au-delà de la
+  validité de l'autorité d'horodatage, et il n'y a pas d'horodatage d'archive à renouveler.
+- **Vérification par des applications externes :** le 2026-11-20, dans les bacs à sable (`infra/bacs-a-sable`) :
+  - veraPDF REST a jugé conformes PDF/A-2b le contrat issu du gabarit Word converti par Gotenberg et les certificats
+    scellés (144 règles, 0 échec) ;
+  - pyHanko a validé les certificats au profil PAdES-B-LTA, révocation intégrée exigée ;
+  - pyHanko a refusé un document scellé après révocation du cachet.
+  La recette avec IQ refait ces contrôles avec l'autorité et le certificat retenus.
 - **PDF déposés par les utilisateurs :** ils ne sont pas convertis. Leur conformité PDF/A dépend de leur source (limite
   déclarée).

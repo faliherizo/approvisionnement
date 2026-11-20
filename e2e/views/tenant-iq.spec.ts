@@ -10,7 +10,7 @@ import { activerModules, auditerAxe, connecter, controler } from './clm.outils'
  */
 const PRINCIPAUX = ['Tableau de bord', 'Mes trousses', 'Mes tâches', 'Modèles', 'Suivi centralisé']
 const ADMINISTRATION = ['Notifications et rappels', 'Intégrations API', 'Paramètres et environnements', 'Listes de référence', 'Utilisateurs et groupes',
-  'Conservation et destruction',
+  'Conservation et destruction', 'Départ d’un employé',
   'Journal d’audit', 'Options CLM et IA']
 
 type Profil = { profil: string; compte: TestUser; administration: string[]; initie: boolean }

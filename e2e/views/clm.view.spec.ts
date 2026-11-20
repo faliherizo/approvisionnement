@@ -25,6 +25,7 @@ const ECRANS: { nom: string; chemin: string; titre: RegExp; maquette?: string }[
   { nom: 'UI-23 journal', chemin: '/clm/admin/journal', titre: /Journal d’audit et événements/, maquette: 'UI-23' },
   { nom: 'groupes du module (§ 1.4.12)', chemin: '/clm/admin/groupes', titre: /Groupes/ },
   { nom: 'conservation et destruction (§ 1.4.11)', chemin: '/clm/admin/conservation', titre: /Conservation et destruction/ },
+  { nom: 'départ d’un employé (P3)', chemin: '/clm/admin/departs', titre: /Départ d’un employé/ },
   { nom: 'UI-24 options', chemin: '/clm/options', titre: /Options CLM et IA/, maquette: 'UI-24' },
   // Fonctions transverses servies dans l'espace du module (un tenant CLM seul n'a pas d'autre espace).
   { nom: 'UI-20 authentification unique', chemin: '/clm/admin/sso', titre: /Authentification unique \(SSO\)/, maquette: 'UI-20' },

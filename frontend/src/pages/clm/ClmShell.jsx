@@ -31,6 +31,7 @@ const ADMINISTRATION = [
   ['/clm/admin/listes', 'clm.nav.listes', [AFF]],
   ['/clm/admin/utilisateurs', 'clm.nav.utilisateurs', [AFF, TEC]],
   ['/clm/admin/conservation', 'clm.nav.conservation', [AFF]],
+  ['/clm/admin/departs', 'clm.nav.departs', [AFF]],
   ['/clm/admin/journal', 'clm.nav.journal', [AFF, 'AUDITEUR']],
   ['/clm/options', 'clm.nav.options', [AFF]],
 ]

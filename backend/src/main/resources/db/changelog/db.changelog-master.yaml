@@ -125,3 +125,5 @@ databaseChangeLog:
       file: db/changelog/changes/062-auth-comptes-secours.yaml
   - include:
       file: db/changelog/changes/063-clm-gabarit-word.yaml
+  - include:
+      file: db/changelog/changes/064-clm-attestation-cades.yaml

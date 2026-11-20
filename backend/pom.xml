@@ -19,6 +19,8 @@
 
     <properties>
         <java.version>17</java.version>
+        <!-- Testcontainers 1.21 : compatible avec l'API Docker 28 (Spring Boot 3.2 fixe 1.19, refusée par Docker récent). -->
+        <testcontainers.version>1.21.3</testcontainers.version>
     </properties>
 
     <dependencies>
@@ -69,6 +71,11 @@
         </dependency>
 
         <!-- Rendu documentaire -->
+        <!-- Courriel SMTP (adaptateur réel du canal COURRIEL ; bac à sable : Mailpit). -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.github.librepdf</groupId>
             <artifactId>openpdf</artifactId>
@@ -110,6 +117,12 @@
             <scope>test</scope>
         </dependency>
         <!-- Règles d'architecture exécutables : dépendances entre couches et entre modules vérifiées à chaque construction. -->
+        <!-- Testcontainers : tests d'intégration contre les vrais services externes (conversion Gotenberg). -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>com.tngtech.archunit</groupId>
             <artifactId>archunit</artifactId>

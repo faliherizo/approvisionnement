@@ -206,7 +206,7 @@ versement à l'échéance), `ConformiteDomaineTest`, `CachetX509Test` (CAdES, PA
 |---|---|---|
 | Hébergement au Québec ou dans une juridiction équivalente, preuves de localisation | Cahier § 1.4.2 | Azure Canada prévu ; clause prévalente à confirmer (E1) |
 | Trois environnements isolés (DEV, préproduction, PRD), données anonymisées | Cahier § 1.8 | Prévus (Terraform) ; à provisionner |
-| Certificat d'une autorité reconnue pour le cachet, autorité d'horodatage qualifiée | Cahier § 1.4.11 | Mécanisme livré ; certificat et autorité à désigner par IQ (C1, C3) : variables `CLM_CACHET_MAGASIN`, `CLM_CACHET_TSA_URL` |
+| Certificat d'une autorité reconnue pour le cachet, autorité d'horodatage qualifiée | Cahier § 1.4.11 | Mécanisme livré et validé le 2026-11-20 contre une ICP réelle en bac à sable (PAdES-B-LTA par pyHanko, attestations CAdES par OpenSSL, révocation détectée) ; certificat et autorité à désigner par IQ (C1, C3) : variables `CLM_CACHET_MAGASIN`, `CLM_CACHET_TSA_URL` |
 | ISO 27001, SOC 2 Type II, CAIQ, audit annuel indépendant | Cahier § 1.4.11, § 1.4.12 | Attestations de l'hébergeur ; audit à planifier |
 | Niveaux de service, disponibilité 99,5 %, rapports | Cahier § 5, DAO § 3.3.10 et suivants | Grille à trancher (J1) |
 | Formation, transfert, stabilisation de 30 jours ouvrables | Cahier § 4, addenda Q6 | Plan de mise en œuvre |

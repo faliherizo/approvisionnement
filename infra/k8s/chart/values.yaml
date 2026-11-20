@@ -13,6 +13,14 @@ backend:
     requests: { cpu: "500m", memory: "1Gi" }
     limits: { cpu: "2", memory: "2Gi" }
 
+# Conversion Word → PDF/A (Gotenberg) : même image que le bac à sable infra/bacs-a-sable.
+conversion:
+  replicas: 2
+  image: gotenberg/gotenberg:8.17.3
+  resources:
+    requests: { cpu: "250m", memory: "512Mi" }
+    limits: { cpu: "2", memory: "2Gi" }
+
 frontend:
   replicas: 3
   port: 80

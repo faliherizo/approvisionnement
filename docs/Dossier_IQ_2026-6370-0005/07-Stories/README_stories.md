@@ -34,4 +34,5 @@ Stories issues de l'addenda 4 (2026-11-19, détail : [impact_addenda_4.md](../02
 ✅ RST-31 administration d'affaires et technique séparées · ✅ RST-32 signataire représentant une entreprise ·
 ✅ RST-33 approbation globale d'un lot · ✅ RST-34 attributs SCIM · ✅ RST-35 niveau par type de document ·
 ✅ RST-36 acheminement selon type, unité, risque. Réalisées le 2026-11-20 (§ 3 de l'analyse) : ✅ RST-37 PDF/A-2b et PAdES-B-LTA ·
-✅ RST-38 gabarits Word d'IQ · ✅ RST-39 comptes de secours · ✅ RST-40 tableau de bord et « Mes trousses » paginés.
+✅ RST-38 gabarits Word d'IQ · ✅ RST-39 comptes de secours · ✅ RST-40 tableau de bord et « Mes trousses » paginés ·
+✅ RST-41 départ d'un employé (question P3). Validés dans les bacs à sable `infra/bacs-a-sable` (ICP, Gotenberg, veraPDF, pyHanko).

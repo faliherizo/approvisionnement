@@ -117,14 +117,20 @@ public class TachesAssigneesService {
         TacheAssignee t = exigerIntervenant(id, acteur);
         String vers = req == null ? null : req.vers();
         exigerMembre(t.getTenantId(), vers);
+        Trousse trousse = transferer(t, vers, acteur, req == null ? null : req.motif());
+        return vue(t, trousse, acteur);
+    }
+
+    /** Réassignation tracée et annoncée à la nouvelle personne ; sert aussi au départ d'un employé (P3). */
+    Trousse transferer(TacheAssignee t, String vers, Habilitations.Acteur acteur, String motif) {
         String precedent = t.getAssigneA();
         t.reassigner(vers, ctx.maintenant());
         taches.save(t);
         Trousse trousse = trousse(t);
-        String motif = req.motif() == null || req.motif().isBlank() ? "" : " · " + req.motif().trim();
-        tracer(trousse, "TACHE_REASSIGNEE", acteur, t.getTitre() + " : " + precedent + " → " + t.getAssigneA() + motif);
+        String suffixe = motif == null || motif.isBlank() ? "" : " · " + motif.trim();
+        tracer(trousse, "TACHE_REASSIGNEE", acteur, t.getTitre() + " : " + precedent + " → " + t.getAssigneA() + suffixe);
         prevenir(t, trousse, acteur);
-        return vue(t, trousse, acteur);
+        return trousse;
     }
 
     private TacheAssignee exigerIntervenant(Long id, Habilitations.Acteur acteur) {

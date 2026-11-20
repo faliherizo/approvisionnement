@@ -329,7 +329,8 @@
       "affaires": [
         "Notifications et rappels",
         "Paramètres et environnements",
-        "Conservation et destruction"
+        "Conservation et destruction",
+        "Départ d’un employé"
       ],
       "technique": [
         "Intégrations API"
