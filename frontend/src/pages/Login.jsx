@@ -129,7 +129,7 @@ export default function Login() {
           </label>
         ))}
 
-        {erreur && <div className="erreur">{erreur}</div>}
+        {erreur && <div className="erreur" role="alert">{erreur}</div>}
 
         <button type="submit" disabled={busy}>
           {busy ? t('login.loading') : mfaMethod ? t('login.mfaSubmit') : t('login.submit')}

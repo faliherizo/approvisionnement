@@ -18,3 +18,6 @@ postgres_allocated_storage = 100
 
 availability_canary_url = "https://contrat.vinaitsolution.com/actuator/health"
 alarm_email             = "faliherizo@vinaitsolution.com"
+
+# Certificat ACM du domaine servi (HTTPS obligatoire).
+certificat_acm_arn = "arn:aws:acm:ca-central-1:123456789012:certificate/remplacer"

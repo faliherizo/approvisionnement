@@ -13,9 +13,9 @@ function normOption(o) {
  * une donnée de référence, la liste des champs vient de la structure.
  *
  * props : structure {pages:[{code,titre,champs:[...]}]}, valeurs (map code→valeur), etat (ResultatEvaluation),
- *         onChange(code, valeur), lectureSeule.
+ *         places (places des choix, CHU 3.06), onChange(code, valeur), lectureSeule.
  */
-export default function FormulaireRenderer({ structure, valeurs = {}, etat = {}, onChange, lectureSeule = false }) {
+export default function FormulaireRenderer({ structure, valeurs = {}, etat = {}, places = [], onChange, lectureSeule = false }) {
   const { t, locale } = useI18n()
   // Libellé multilingue : le concepteur peut fournir champ.libelleI18n = {fr, en, mg} ; fallback sur libelle.
   const lang = (locale || 'fr').startsWith('en') ? 'en' : (locale || 'fr').startsWith('mg') ? 'mg' : 'fr'
@@ -24,6 +24,16 @@ export default function FormulaireRenderer({ structure, valeurs = {}, etat = {},
   const masques = new Set(etat.champsMasques || [])
   const requisDynamiques = new Set(etat.champsObligatoires || [])
   const calculs = etat.calculs || {}
+
+  // Un choix complet reste affiché (on comprend pourquoi il manque) mais n'est plus sélectionnable, sauf s'il est déjà retenu.
+  const place = (c, valeur) => places.find((p) => p.champ === (c.cle ?? c.code) && p.choix === valeur)
+  const indisponible = (c, o, actuelle) => !!place(c, o.valeur)?.complet && String(actuelle) !== String(o.valeur)
+  const libelleOption = (c, o) => {
+    const p = place(c, o.valeur)
+    if (p?.complet) return `${o.libelle} — ${t('rendu.complet')}`
+    if (p?.restantes != null) return `${o.libelle} — ${t('rendu.placesRestantes', { n: p.restantes })}`
+    return o.libelle
+  }
 
   if (pages.length === 0) return <p className="muted">{t('rendu.aucuneStructure')}</p>
 
@@ -51,7 +61,7 @@ export default function FormulaireRenderer({ structure, valeurs = {}, etat = {},
             {options.map((o) => (
               <label key={o.valeur} className="radio-inline">
                 <input type="radio" name={id} value={o.valeur} checked={String(v) === String(o.valeur)}
-                       disabled={lectureSeule} onChange={() => maj(o.valeur)} /> {o.libelle}
+                       disabled={lectureSeule || indisponible(c, o, v)} onChange={() => maj(o.valeur)} /> {libelleOption(c, o)}
               </label>
             ))}
           </div>
@@ -60,7 +70,9 @@ export default function FormulaireRenderer({ structure, valeurs = {}, etat = {},
         return (
           <select {...commun} value={v ?? ''} onChange={(e) => maj(e.target.value)}>
             <option value="">{t('rendu.choisir')}</option>
-            {options.map((o) => <option key={o.valeur} value={o.valeur}>{o.libelle}</option>)}
+            {options.map((o) => (
+              <option key={o.valeur} value={o.valeur} disabled={indisponible(c, o, v)}>{libelleOption(c, o)}</option>
+            ))}
           </select>
         )
       case 'date':

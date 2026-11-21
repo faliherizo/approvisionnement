@@ -79,6 +79,7 @@ public class TenantAdminService {
         User u = new User();
         u.setEmail(email);
         u.setNom(nom);
+        qc.levis.contrat.auth.domain.PolitiqueMotDePasse.exiger(motDePasse);
         u.setMotDePasseHash(encoder.encode(motDePasse));
         u.setRoles(Set.of(Enums.Role.ADMIN));
         u.setTenantId(t.getId()); // rattachement explicite au tenant cible

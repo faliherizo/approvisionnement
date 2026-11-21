@@ -1,5 +1,7 @@
 import { Download, Locator } from '@playwright/test'
 import { BasePage } from './BasePage'
+import { LoginPage } from './LoginPage'
+import { TestUser } from '../models/types'
 
 /** Éditeur d'un document : clauses, assemblage, approbation. */
 export class DocumentEditorPage extends BasePage {
@@ -15,13 +17,24 @@ export class DocumentEditorPage extends BasePage {
     await this.page.getByRole('button', { name: "Démarrer l'approbation" }).click()
   }
 
-  /** Approuve toutes les étapes en attente du circuit (jusqu'à validation complète du document). */
-  async approuverTout(): Promise<void> {
-    const boutons = this.page.getByRole('button', { name: 'Approuver' })
-    for (let i = 0; i < 8 && (await boutons.count()) > 0; i++) {
-      await boutons.first().click()
+  /**
+   * Fait approuver chaque niveau du circuit par la personne de son rôle (séparation des responsabilités) :
+   * approvisionnement, juridique, direction. La session revient ensuite à `retour`.
+   */
+  async approuverParLeCircuit(decideurs: TestUser[], retour: TestUser): Promise<void> {
+    const adresse = this.page.url()
+    for (const decideur of decideurs) {
+      await this.page.context().clearCookies()
+      await new LoginPage(this.page).connecter(decideur)
+      await this.page.waitForURL((url) => !url.pathname.startsWith('/login'))
+      await this.page.goto(adresse)
+      await this.page.getByRole('button', { name: 'Approuver' }).first().click()
       await this.page.waitForTimeout(700) // le document se recharge après chaque décision
     }
+    await this.page.context().clearCookies()
+    await new LoginPage(this.page).connecter(retour)
+    await this.page.waitForURL((url) => !url.pathname.startsWith('/login'))
+    await this.page.goto(adresse)
   }
 
   /** Badge de statut du document dans l'en-tête (ex. « APPROUVE »). */

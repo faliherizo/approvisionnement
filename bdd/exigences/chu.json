@@ -1,0 +1,503 @@
+{
+ "appelOffres": "Santé Québec — CHU, avis d'intention",
+ "titre": "Plateforme de formulaires et processus configurables",
+ "source": "docs/sante-quebec-chu/08-CONFORMITE-AVIS-INTENTION.md",
+ "exigences": [
+  {
+   "id": "CHU-1.01",
+   "source": "Avis d'intention CHU § 1",
+   "libelle": "Infonuagique, environnement dédié, accès en tout temps, sans limite d'utilisateurs",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — multi-tenant ; infra Azure/AWS (docs trois-rivière, DR)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-1.02",
+   "source": "Avis d'intention CHU § 1",
+   "libelle": "Hébergement des RP au Québec",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — Azure Canada / AWS Montréal (docs infra)",
+   "verification": "documentaire",
+   "justification": "Hébergement au Québec : région canadaeast (option B de l'ADR-020).",
+   "reference": "docs/adr/ADR-020-region-hebergement-et-niveaux-de-service.md"
+  },
+  {
+   "id": "CHU-1.03",
+   "source": "Avis d'intention CHU § 1",
+   "libelle": "Cloisonnement données/formulaires entre environnements et clients",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — TenantContext (multi-tenant) + environnement (Application)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-1.04",
+   "source": "Avis d'intention CHU § 1",
+   "libelle": "Environnements PROD / DEV / acceptation (UAT)",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — Application.environnement (DEV/UAT/PROD)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-1.05",
+   "source": "Avis d'intention CHU § 1",
+   "libelle": "Disponibilité 99,8 % en tout temps",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ (contractuel/infra) — plans de reprise RPO/RTO",
+   "verification": "documentaire",
+   "justification": "Engagement d'infrastructure et de service (disponibilité, sauvegardes, exploitation).",
+   "reference": "infra/dr/README.md"
+  },
+  {
+   "id": "CHU-1.06",
+   "source": "Avis d'intention CHU § 1",
+   "libelle": "Sauvegardes redondantes locales+externes quotidiennes",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ (infra) — docs DR",
+   "verification": "documentaire",
+   "justification": "Engagement d'infrastructure et de service (disponibilité, sauvegardes, exploitation).",
+   "reference": "infra/dr/README.md"
+  },
+  {
+   "id": "CHU-1.07",
+   "source": "Avis d'intention CHU § 1",
+   "libelle": "Hébergement, entretien, correctifs, MAJ, migrations",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ (service) — offre de service",
+   "verification": "documentaire",
+   "justification": "Engagement d'infrastructure et de service (disponibilité, sauvegardes, exploitation).",
+   "reference": "infra/dr/README.md"
+  },
+  {
+   "id": "CHU-1.08",
+   "source": "Avis d'intention CHU § 1",
+   "libelle": "Gestion durée des sessions + affichage ordi/tablette/mobile",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "🟡 — sessions JWT ok ; responsive présent, à valider par tests visuels aux largeurs de référence",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-2.01",
+   "source": "Avis d'intention CHU § 2",
+   "libelle": "Interface d'administration FR/EN",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — i18n (FR/EN/MGA, 1500+ clés)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-2.02",
+   "source": "Avis d'intention CHU § 2",
+   "libelle": "Formulaires multilingues (contenu)",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "❌ → 🟡 traité — libellés de champ multilingues ajoutés (voir Traitement G1)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-2.03",
+   "source": "Avis d'intention CHU § 2",
+   "libelle": "Gabarits, images, feuilles de style institutionnels",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — thème par tenant (couleurs, logo)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-2.04",
+   "source": "Avis d'intention CHU § 2",
+   "libelle": "Accessibilité sites Web gouv. QC (SGQRI 008 / WCAG 2.2 AA)",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "🟡 — règles respectées à la conception ; axe-core non câblé en CI (voir questions)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-3.01",
+   "source": "Avis d'intention CHU § 3",
+   "libelle": "Formulaires à une ou plusieurs pages",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — FormulaireBuilder (pages)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-3.02",
+   "source": "Avis d'intention CHU § 3",
+   "libelle": "Tous les types de champs (texte, zone, cases, radio, liste, date, hyperlien, courriel, nombre, décimale, montant, pourcentage, fichier, matrice, valeurs dynamiques, calculées)",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — 16 types en données de référence TYPE_CHAMP",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-3.03",
+   "source": "Avis d'intention CHU § 3",
+   "libelle": "Aperçu des réponses avant soumission",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — FormulaireRenderer / aperçu builder",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-3.04",
+   "source": "Avis d'intention CHU § 3",
+   "libelle": "Sauvegarde automatique + reprise ultérieure",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — autosave + reprise ?saisie=",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-3.05",
+   "source": "Avis d'intention CHU § 3",
+   "libelle": "Activation/désactivation selon date, nb max de répondants, plage réseau",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "🟡 → ✅ traité — date + maxRépondants déjà ; plage réseau (IP) ajoutée (G2)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-3.06",
+   "source": "Avis d'intention CHU § 3",
+   "libelle": "Restriction de choix selon capacité maximale",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "Oui. Places par choix déclarées dans la structure (capacites) ; un choix complet est signalé et désactivé au remplissage, et refusé à la soumission (409) ; les soumissions d'un formulaire sont sérialisées par verrou pour qu'aucune place ne soit prise deux fois.",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-3.07",
+   "source": "Avis d'intention CHU § 3",
+   "libelle": "Mécanisme anti-automatisation (formulaires publics)",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "🟡 — port CaptchaVerifier + simulation ; adaptateur réel (hCaptcha/reCAPTCHA) à activer",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-3.08",
+   "source": "Avis d'intention CHU § 3",
+   "libelle": "Formulaires liés parent-enfant",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — Formulaire.parentId, Saisie.parentSaisieId",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-3.09",
+   "source": "Avis d'intention CHU § 3",
+   "libelle": "Versions, approbation des modifs, retour à une version",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — StatutFormulaire + historique + revenirA + onglet Versions",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-3.10",
+   "source": "Avis d'intention CHU § 3",
+   "libelle": "Duplication / export / réimport de structure",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — dupliquer / exporter / importer",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-4.01",
+   "source": "Avis d'intention CHU § 4",
+   "libelle": "Afficher/masquer/modifier des champs selon les réponses",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — MoteurRegles VISIBILITE",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-4.02",
+   "source": "Avis d'intention CHU § 4",
+   "libelle": "Obligatoire/facultatif selon le contexte",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — OBLIGATION",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-4.03",
+   "source": "Avis d'intention CHU § 4",
+   "libelle": "Validation croisée + format",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — VALIDATION",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-4.04",
+   "source": "Avis d'intention CHU § 4",
+   "libelle": "Calcul automatique (formules)",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — CALCUL (somme/diff/produit/quotient, détection de cycle)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-4.05",
+   "source": "Avis d'intention CHU § 4",
+   "libelle": "Routage des demandes selon règles",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — ROUTAGE + workflow (routage par montant/condition)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-4.06",
+   "source": "Avis d'intention CHU § 4",
+   "libelle": "Déclenchement d'événements selon données / modif de fiche",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — FicheEvent",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-4.07",
+   "source": "Avis d'intention CHU § 4",
+   "libelle": "Processus structurés : tâches, étapes d'approbation, responsabilités",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — contexte processus : Workflow/Tache/Decision, écran Tâches et approbations (/taches)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-4.08",
+   "source": "Avis d'intention CHU § 4",
+   "libelle": "Gestion d'inventaire / capacité (inscriptions à des activités)",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "Oui. Inventaire des inscriptions par choix : places, inscrits, restantes et fiches qui occupent les places ; export CSV protégé contre l'injection de formules ; réservé au personnel qui traite.",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-5.01",
+   "source": "Avis d'intention CHU § 5",
+   "libelle": "Notifications courriel / SMS / interne selon déclencheur",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — contexte notification (3 canaux, simulation ; adaptateurs réels Twilio/ACS à activer)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-5.02",
+   "source": "Avis d'intention CHU § 5",
+   "libelle": "Confirmation à la soumission",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — écran de remplissage",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-5.03",
+   "source": "Avis d'intention CHU § 5",
+   "libelle": "Notification aux administrateurs à la création/modif d'une fiche",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — règles de notification sur événements",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-5.04",
+   "source": "Avis d'intention CHU § 5",
+   "libelle": "Production d'un document à partir des données + transmission",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "Oui. Document PDF/A-2b produit depuis les données d'une fiche (questions et réponses dans l'ordre du formulaire), téléchargeable par le demandeur et le personnel ; transmission par courriel en pièce jointe (relais SMTP de l'organisation), journalisée.",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-5.05",
+   "source": "Avis d'intention CHU § 5",
+   "libelle": "Messagerie interne sécurisée",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "Oui. Messagerie interne entre membres actifs de l'organisation : conversations visibles des seuls participants (404 sinon), messages chiffrés au repos et non modifiables, texte brut (aucun HTML interprété), non-lus par participant, échanges tracés au journal sans leur contenu, effaçables au titre de la Loi 25.",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-6.01",
+   "source": "Avis d'intention CHU § 6",
+   "libelle": "Recherche multicritère + critères sauvegardés",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — contexte rapport (CritereRechercheSauve)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-6.02",
+   "source": "Avis d'intention CHU § 6",
+   "libelle": "Export Excel (toutes/sélection)",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — export POI",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-6.03",
+   "source": "Avis d'intention CHU § 6",
+   "libelle": "Rapports PDF personnalisés",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "Oui. Rapport PDF/A personnalisé sur les fiches d'un formulaire : titre, questions montrées (8 au plus) et statuts retenus au choix, décompte par statut ; paramètres inconnus refusés ; réservé au personnel.",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-6.04",
+   "source": "Avis d'intention CHU § 6",
+   "libelle": "Graphiques + tableaux de bord configurables",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "Oui. Tableaux de bord configurables : compteurs, histogrammes (par statut ou par réponse) et évolutions mensuelles sur les fiches des formulaires de l'organisation ; privés ou partagés, modifiables par le seul propriétaire ; seules des valeurs agrégées sont exposées ; graphiques accessibles avec vue tableau.",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-6.05",
+   "source": "Avis d'intention CHU § 6",
+   "libelle": "Pages listes/dashboards/rapports selon les droits",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "🟡 — listes/rapports ok ; dashboards à construire",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-6.06",
+   "source": "Avis d'intention CHU § 6",
+   "libelle": "Export intégral structuré (réversibilité)",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "🟡 — export structure (JSON) + données (Excel) ; export intégral unifié à formaliser",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-6.07",
+   "source": "Avis d'intention CHU § 6",
+   "libelle": "Durée de conservation des données",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "❌ → ✅ traité — politique de rétention par formulaire ajoutée (G7)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-7.01",
+   "source": "Avis d'intention CHU § 7",
+   "libelle": "SSO identité org + méthodes normalisées",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — connecteurs OIDC/SAML per-tenant",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-7.02",
+   "source": "Avis d'intention CHU § 7",
+   "libelle": "2FA accès admin + politique de mots de passe",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — MFA TOTP / question",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-7.03",
+   "source": "Avis d'intention CHU § 7",
+   "libelle": "Groupes avec droits lecture/modif/suppression",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — securite (Groupe/GroupeMembre/PermissionAcces)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-7.04",
+   "source": "Avis d'intention CHU § 7",
+   "libelle": "Contrôle d'accès par utilisateur/groupe/rôle/formulaire/champ/page/fiche/bouton",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — MoteurAcces (portée champ/fiche/bouton, refus par défaut)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-7.05",
+   "source": "Avis d'intention CHU § 7",
+   "libelle": "Classification public/interne/confidentiel/secret",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — CLASSIFICATION + Masquage",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-7.06",
+   "source": "Avis d'intention CHU § 7",
+   "libelle": "Mesures renforcées (masquage, chiffrement, restriction affichage/export)",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "🟡 — masquage + classification ok ; chiffrement au repos = infra",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-7.07",
+   "source": "Avis d'intention CHU § 7",
+   "libelle": "Traçabilité accès et modifications",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — journal d'audit (Loi 25)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-7.08",
+   "source": "Avis d'intention CHU § 7",
+   "libelle": "Protection DDoS / brute-force / maliciels",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "🟡 — PareFeuFilter (limiteur de débit) + WAF/anti-DDoS = infra",
+   "verification": "documentaire",
+   "justification": "Limiteur de débit applicatif (PareFeuFilter) ; protection DDoS et pare-feu applicatif assurés par l'infrastructure (Front Door, WAF).",
+   "reference": "infra/terraform/azure"
+  },
+  {
+   "id": "CHU-7.09",
+   "source": "Avis d'intention CHU § 7",
+   "libelle": "Config pour obligations Loi 25",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — masquage NAS, courriel masqué en journal",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-8.01",
+   "source": "Avis d'intention CHU § 8",
+   "libelle": "API consulter/récupérer/créer/compléter des fiches",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — interop (/api/public/v1/formulaires/{code}/fiches)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-8.02",
+   "source": "Avis d'intention CHU § 8",
+   "libelle": "Auth API par jeton / OAuth",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — OAuth2 client_credentials (jetons SHA-256)",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-8.03",
+   "source": "Avis d'intention CHU § 8",
+   "libelle": "Échanges formulaires/données/sites/systèmes externes",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "🟡 — API publique ok ; connecteurs M365/SAP existants ; intégrations spécifiques sur demande",
+   "verification": "bdd"
+  },
+  {
+   "id": "CHU-8.04",
+   "source": "Avis d'intention CHU § 8",
+   "libelle": "Maintien des échanges déjà en place",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "n/a — nouvelle implémentation (pas de legacy chez nous)",
+   "verification": "sans-objet",
+   "justification": "n/a — nouvelle implémentation (pas de legacy chez nous)"
+  },
+  {
+   "id": "CHU-9.01",
+   "source": "Avis d'intention CHU § 9",
+   "libelle": "Licences 2 secteurs (RH + Appro) + 4 apps Web",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "✅ — domaines RH/APPROVISIONNEMENT + catalogue d'Application",
+   "verification": "documentaire",
+   "justification": "Licences : modèle commercial (domaines RH et approvisionnement, applications)."
+  },
+  {
+   "id": "CHU-9.02",
+   "source": "Avis d'intention CHU § 9",
+   "libelle": "Soutien 2e ligne L-V 8 h–17 h",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "n/a (service) — offre de service",
+   "verification": "documentaire",
+   "justification": "n/a (service) — offre de service"
+  },
+  {
+   "id": "CHU-9.03",
+   "source": "Avis d'intention CHU § 9",
+   "libelle": "Tests applicatifs lors migrations/MAJ",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "🟡 — e2e Playwright ; à étendre par application",
+   "verification": "documentaire",
+   "justification": "Démontré par cette suite BDD et les e2e Playwright, rejoués à chaque demande de fusion.",
+   "reference": "bdd/ ; e2e/ ; infra/cicd"
+  },
+  {
+   "id": "CHU-9.04",
+   "source": "Avis d'intention CHU § 9",
+   "libelle": "Test d'intrusion du portail RH (firme externe)",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "n/a (service) — à planifier",
+   "verification": "documentaire",
+   "justification": "n/a (service) — à planifier"
+  },
+  {
+   "id": "CHU-9.05",
+   "source": "Avis d'intention CHU § 9",
+   "libelle": "Banque d'heures (analyse/formation/config/prog/rapports)",
+   "caractere": "Besoin exprimé",
+   "conformiteDeclaree": "Oui. Banque d'heures de services professionnels tenue par le fournisseur : achats, consommations par catégorie (analyse, formation, configuration, programmation, rapports) au quart d'heure, corrections tracées ; solde contrôlé (dépassement refusé) ; l'organisation consulte solde, répartition et relevé CSV.",
+   "verification": "bdd"
+  }
+ ]
+}

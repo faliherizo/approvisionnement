@@ -61,6 +61,8 @@ resource "aws_lb" "this" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
   subnets            = module.vpc.public_subnets
+  # Rejette les en-têtes HTTP mal formés (désynchronisation de requêtes, contrebande d'en-têtes).
+  drop_invalid_header_fields = true
 }
 
 resource "aws_lb_target_group" "backend" {
@@ -87,10 +89,28 @@ resource "aws_lb_target_group" "frontend" {
   }
 }
 
+# HTTP ne sert qu'à rediriger vers HTTPS : aucune page ni API en clair (cookie de session « Secure »).
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.this.arn
   port              = 80
   protocol          = "HTTP"
+  default_action {
+    type = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+# HTTPS : TLS 1.2 au minimum (TLS 1.3 de préférence), certificat ACM du domaine de l'organisation.
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.this.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+  certificate_arn   = var.certificat_acm_arn
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.frontend.arn
@@ -98,7 +118,7 @@ resource "aws_lb_listener" "http" {
 }
 
 resource "aws_lb_listener_rule" "api" {
-  listener_arn = aws_lb_listener.http.arn
+  listener_arn = aws_lb_listener.https.arn
   priority     = 10
   action {
     type             = "forward"
@@ -178,7 +198,7 @@ resource "aws_ecs_service" "backend" {
     type  = "spread"
     field = "attribute:ecs.availability-zone"
   }
-  depends_on = [aws_lb_listener.http]
+  depends_on = [aws_lb_listener.https]
 }
 
 resource "aws_ecs_service" "frontend" {
@@ -201,5 +221,5 @@ resource "aws_ecs_service" "frontend" {
     type  = "spread"
     field = "attribute:ecs.availability-zone"
   }
-  depends_on = [aws_lb_listener.http]
+  depends_on = [aws_lb_listener.https]
 }

@@ -14,6 +14,20 @@ function slug(s) {
 }
 
 /** Éditeur de structure (métadonnées) d'un formulaire : pages, champs, règles, cycle de vie, aperçu. */
+/** Places par choix (CHU 3.06), saisies « Atelier=20, Formation=10 » : un choix sans nombre est illimité. */
+export function lireCapacites(texte) {
+  const capacites = {}
+  for (const morceau of texte.split(',')) {
+    const [choix, n] = morceau.split('=').map((x) => x.trim())
+    if (choix && /^\d+$/.test(n ?? '')) capacites[choix] = Number(n)
+  }
+  return capacites
+}
+
+export function capacitesTexte(capacites) {
+  return Object.entries(capacites || {}).map(([choix, n]) => `${choix}=${n}`).join(', ')
+}
+
 export default function FormulaireBuilder({ id, onChange }) {
   const { t } = useI18n()
   const [version, setVersion] = useState(null)
@@ -175,9 +189,16 @@ export default function FormulaireBuilder({ id, onChange }) {
                         </td>
                         <td>
                           {(c.type === 'liste' || c.type === 'radio') ? (
-                            <input value={(c.options || []).join(', ')} disabled={lectureSeule}
-                                   placeholder={t('builder.optionsPlaceholder')}
-                                   onChange={(e) => majChamp(pi, ci, { options: e.target.value.split(',').map((x) => x.trim()).filter(Boolean) })} />
+                            <>
+                              <input value={(c.options || []).join(', ')} disabled={lectureSeule}
+                                     aria-label={t('builder.optionsLabel', { champ: c.libelle })}
+                                     placeholder={t('builder.optionsPlaceholder')}
+                                     onChange={(e) => majChamp(pi, ci, { options: e.target.value.split(',').map((x) => x.trim()).filter(Boolean) })} />
+                              <input value={capacitesTexte(c.capacites)} disabled={lectureSeule}
+                                     aria-label={t('builder.capacitesLabel', { champ: c.libelle })}
+                                     placeholder={t('builder.capacitesPlaceholder')}
+                                     onChange={(e) => majChamp(pi, ci, { capacites: lireCapacites(e.target.value) })} />
+                            </>
                           ) : <span className="muted">—</span>}
                         </td>
                         <td style={{ textAlign: 'center' }}>

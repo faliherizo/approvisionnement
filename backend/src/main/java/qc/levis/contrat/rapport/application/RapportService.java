@@ -41,7 +41,11 @@ public class RapportService {
     }
 
     @Transactional
-    public void supprimerCritere(Long id) { criteres.deleteById(id); }
+    /** Un critère ne se supprime que par son propriétaire, dans son organisation ; sinon il est introuvable. */
+    public void supprimerCritere(Long id, String utilisateur) {
+        criteres.delete(criteres.findByIdAndTenantIdAndUtilisateur(id, TenantContext.get(), utilisateur)
+                .orElseThrow(() -> new java.util.NoSuchElementException("Critère introuvable : " + id)));
+    }
 
     /** Résumé pour tableau de bord : nombre de fiches par statut. */
     public Map<String, Long> resume(Long formulaireId) {

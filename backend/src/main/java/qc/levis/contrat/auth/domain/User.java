@@ -84,4 +84,22 @@ public class User {
     public void setTotpSecret(String totpSecret) { this.totpSecret = totpSecret; }
     public List<SecurityQuestion> getQuestionsSecurite() { return questionsSecurite; }
     public void setQuestionsSecurite(List<SecurityQuestion> q) { this.questionsSecurite = q; }
+
+    /**
+     * Loi 25 : le compte ne désigne plus personne. Il reste en base, désactivé et sans moyen de connexion, pour que les
+     * références vers lui (droits, journaux) restent cohérentes.
+     */
+    public void effacer(String courrielPseudonyme, String empreinteInutilisable) {
+        email = courrielPseudonyme;
+        nom = "Personne effacée";
+        direction = null;
+        motDePasseHash = empreinteInutilisable;
+        actif = false;
+        roles = new HashSet<>();
+        compteSecours = false;
+        mfaActive = false;
+        mfaMethode = Enums.MfaMethode.NONE;
+        totpSecret = null;
+        questionsSecurite = new ArrayList<>();
+    }
 }

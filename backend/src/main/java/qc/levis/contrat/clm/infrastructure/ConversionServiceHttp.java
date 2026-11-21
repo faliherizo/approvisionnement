@@ -54,10 +54,12 @@ public class ConversionServiceHttp implements ConversionPdf {
     public byte[] versPdf(byte[] docx) {
         String frontiere = "----clm" + UUID.randomUUID();
         try {
-            HttpResponse<byte[]> r = http.send(HttpRequest.newBuilder(base.resolve("forms/libreoffice/convert")).timeout(delai)
+            HttpRequest requete = HttpRequest.newBuilder(base.resolve("forms/libreoffice/convert")).timeout(delai)
                     .header("Content-Type", "multipart/form-data; boundary=" + frontiere)
-                    .POST(HttpRequest.BodyPublishers.ofByteArray(formulaire(frontiere, docx))).build(),
-                    HttpResponse.BodyHandlers.ofByteArray());
+                    .POST(HttpRequest.BodyPublishers.ofByteArray(formulaire(frontiere, docx))).build();
+            HttpResponse<byte[]> r = http.send(requete, HttpResponse.BodyHandlers.ofByteArray());
+            // 503 : LibreOffice redémarre ou la file du service est pleine ; l'indisponibilité est passagère, on réessaie une fois.
+            if (r.statusCode() == 503) r = http.send(requete, HttpResponse.BodyHandlers.ofByteArray());
             if (r.statusCode() != 200) {
                 throw new IllegalStateException("Conversion PDF refusée par le service (HTTP " + r.statusCode() + ") : "
                         + new String(r.body(), StandardCharsets.UTF_8).strip());

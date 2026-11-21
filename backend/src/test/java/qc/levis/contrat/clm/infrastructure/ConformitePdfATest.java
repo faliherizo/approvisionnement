@@ -17,6 +17,7 @@ import org.apache.xmpbox.schema.PDFAIdentificationSchema;
 import org.apache.xmpbox.xml.DomXmpParser;
 import org.junit.jupiter.api.Test;
 import qc.levis.contrat.clm.application.port.RenduDocuments;
+import qc.levis.contrat.commun.infrastructure.pdf.ConformitePdfA;
 import qc.levis.contrat.clm.domain.Modele;
 
 /**

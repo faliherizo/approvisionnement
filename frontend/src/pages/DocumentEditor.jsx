@@ -209,6 +209,20 @@ export default function DocumentEditor() {
     }
   }
 
+  /** Fiche des métadonnées SEAO (Lévis C-20) ; un refus (numéro d'appel d'offres absent) est expliqué tel quel. */
+  async function exporterSeao() {
+    try {
+      const { data } = await api.get(`/documents/${id}/export/seao`, { responseType: 'blob' })
+      const url = URL.createObjectURL(data)
+      Object.assign(document.createElement('a'), { href: url, download: `seao-devis-${id}.xml` }).click()
+      URL.revokeObjectURL(url)
+      toast.succes(t('documenteditor.seaoGenere'))
+    } catch (e) {
+      const message = e.response?.data instanceof Blob ? JSON.parse(await e.response.data.text()).message : null
+      toast.erreur(message || t('documenteditor.echecExport'))
+    }
+  }
+
   async function ouvrirApercu() {
     // Aperçu image (PNG) de la première page : se rend dans tous les navigateurs (contrairement au
     // lecteur PDF natif), donc réellement visible à l'écran.
@@ -354,6 +368,7 @@ export default function DocumentEditor() {
                 <button type="button" onClick={() => { fermer(); ouvrirApercu() }}>{t('documenteditor.apercuPdf')}</button>
                 <button type="button" onClick={() => { fermer(); exporter('pdf') }}>{t('documenteditor.exportPdf')}</button>
                 <button type="button" onClick={() => { fermer(); exporter('docx') }}>{t('documenteditor.exportDocx')}</button>
+                <button type="button" onClick={() => { fermer(); exporterSeao() }}>{t('documenteditor.exportSeao')}</button>
               </>
             )}
           </DropdownMenu>
@@ -773,7 +788,7 @@ export default function DocumentEditor() {
               </select>
             </label>
             <label>{t('documenteditor.nouveauTexteClause')}
-              <RichText value={changeAddenda.nouveauTexte}
+              <RichText value={changeAddenda.nouveauTexte} libelle={t('documenteditor.nouveauTexteClause')}
                         onChange={(v) => setChangeAddenda({ ...changeAddenda, nouveauTexte: v })}
                         rows={8} placeholder={t('documenteditor.texteAddendaPlaceholder')} />
             </label>
@@ -801,7 +816,7 @@ export default function DocumentEditor() {
               </label>
             </div>
             <label>{t('documenteditor.contenu')}
-              <RichText value={clauseEdit.texteEffectif}
+              <RichText value={clauseEdit.texteEffectif} libelle={t('documenteditor.contenu')}
                         onChange={(v) => setClauseEdit({ ...clauseEdit, texteEffectif: v })}
                         rows={10} placeholder={t('documenteditor.contenuPlaceholder')} />
             </label>

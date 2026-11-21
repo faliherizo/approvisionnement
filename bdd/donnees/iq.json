@@ -1,0 +1,3764 @@
+{
+  "ecrans": {
+    "IQ — accueil CLM": {
+      "chemin": "/clm",
+      "titre": "Tableau de bord|Accueil"
+    },
+    "IQ — mes trousses": {
+      "chemin": "/clm/trousses",
+      "titre": "Trousses"
+    },
+    "IQ — détail de la trousse": {
+      "chemin": "/clm/trousses/${trousse}",
+      "titre": "${unique}"
+    },
+    "IQ — preuve de la trousse": {
+      "chemin": "/clm/trousses/${trousse}?onglet=preuve",
+      "titre": "${unique}"
+    },
+    "IQ — parcours de la trousse": {
+      "chemin": "/clm/trousses/${trousse}?onglet=parcours",
+      "titre": "${unique}"
+    },
+    "IQ — modèles": {
+      "chemin": "/clm/modeles",
+      "titre": "Modèles"
+    },
+    "IQ — suivi centralisé": {
+      "chemin": "/clm/suivi",
+      "titre": "Suivi"
+    },
+    "IQ — mes tâches": {
+      "chemin": "/clm/taches",
+      "titre": "tâches"
+    },
+    "IQ — signature en lot": {
+      "chemin": "/clm/lots",
+      "titre": "lot"
+    },
+    "IQ — notifications": {
+      "chemin": "/clm/admin/notifications",
+      "titre": "Notifications"
+    },
+    "IQ — conservation": {
+      "chemin": "/clm/admin/conservation",
+      "titre": "Conservation et destruction"
+    },
+    "IQ — intégrations": {
+      "chemin": "/clm/admin/integrations",
+      "titre": "Intégrations"
+    },
+    "IQ — utilisateurs": {
+      "chemin": "/clm/admin/utilisateurs",
+      "titre": "Utilisateurs"
+    },
+    "IQ — authentification unique": {
+      "chemin": "/clm/admin/sso",
+      "titre": "Authentification unique"
+    },
+    "IQ — journal": {
+      "chemin": "/clm/admin/journal",
+      "titre": "Journal"
+    },
+    "IQ — départ d'un employé": {
+      "chemin": "/clm/admin/departs",
+      "titre": "Départ d’un employé"
+    },
+    "IQ — mes trousses (téléphone)": {
+      "chemin": "/clm/trousses",
+      "titre": "Trousses",
+      "largeur": 390
+    },
+    "IQ — mes tâches (téléphone)": {
+      "chemin": "/clm/taches",
+      "titre": "tâches",
+      "largeur": 390
+    }
+  },
+  "cas": {
+    "iq.trousse.creation": {
+      "description": "Création d'une trousse : PDF et Word, versions, participants internes et externes ; historique",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/trousses",
+          "corps": {
+            "titre": "Convention Agri-Nord ${unique}",
+            "risque": "FAIBLE",
+            "unite": "FINANCEMENT_ENTREPRISES",
+            "echeance": "${dansUnMois}",
+            "typeContrat": "GARANTIE",
+            "copies": "copie.${unique}@agrinord.example"
+          },
+          "capturer": {
+            "trousse": "$.resume.id",
+            "trousseRef": "$.resume.reference"
+          },
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents",
+          "multipart": {
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "convention.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "capturer": {
+            "document": "$.id",
+            "documentCle": "$.cleDocument"
+          },
+          "verifier": [
+            {
+              "chemin": "$.analyse",
+              "egal": "PROPRE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents",
+          "multipart": {
+            "fichier": {
+              "fichier": "chemin:../e2e/data/modele-demo.docx",
+              "nom": "annexe.docx",
+              "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            }
+          },
+          "capturer": {
+            "annexe": "$.id",
+            "annexeCle": "$.cleDocument"
+          },
+          "verifier": [
+            {
+              "chemin": "$.analyse",
+              "egal": "PROPRE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents/${documentCle}/versions?motif=Correction%20annexe",
+          "multipart": {
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "convention.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "verifier": [
+            {
+              "chemin": "$.version",
+              "egal": 2
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}/documents/${documentCle}/versions",
+          "verifier": [
+            {
+              "chemin": "$",
+              "longueurMin": 2
+            },
+            {
+              "chemin": "$[*].statut",
+              "inclut": "REMPLACE"
+            },
+            {
+              "chemin": "$[*].motif",
+              "inclut": "Correction annexe"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/participants",
+          "corps": {
+            "nom": "Marie Tremblay",
+            "courriel": "marie.${unique}@agrinord.example",
+            "telephone": "+15145550190",
+            "roleContrat": "SIGNATAIRE_1",
+            "externe": true,
+            "niveauIdentite": "QUESTION",
+            "question": "Ville du siège ?",
+            "reponse": "Québec"
+          },
+          "capturer": {
+            "externe": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/participants",
+          "corps": {
+            "nom": "Étienne Côté",
+            "courriel": "signataire@iq.example",
+            "roleContrat": "SIGNATAIRE_2",
+            "externe": false
+          },
+          "capturer": {
+            "interne": "$.id"
+          }
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}",
+          "verifier": [
+            {
+              "chemin": "$.documents",
+              "longueurMin": 2
+            },
+            {
+              "chemin": "$.documents[*].type",
+              "inclut": "DOCX"
+            },
+            {
+              "chemin": "$.documents[*].type",
+              "inclut": "PDF"
+            },
+            {
+              "chemin": "$.participants",
+              "longueurMin": 2
+            },
+            {
+              "chemin": "$.copies",
+              "contient": "copie."
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}/historique",
+          "verifier": [
+            {
+              "chemin": "$",
+              "longueurMin": 3
+            }
+          ]
+        }
+      ]
+    },
+    "iq.documents.taille": {
+      "description": "Un document de 25 Mo est accepté ; au-delà du plafond configuré, il est refusé",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/trousses",
+          "corps": {
+            "titre": "Gros document ${unique}",
+            "risque": "FAIBLE",
+            "unite": "FINANCEMENT_ENTREPRISES"
+          },
+          "capturer": {
+            "trousse": "$.resume.id",
+            "trousseRef": "$.resume.reference"
+          },
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents",
+          "multipart": {
+            "fichier": {
+              "fichier": "pdf:26200000",
+              "nom": "volumineux.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "verifier": [
+            {
+              "chemin": "$.taille",
+              "egal": 26200000
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents",
+          "multipart": {
+            "fichier": {
+              "fichier": "pdf:31500000",
+              "nom": "trop-gros.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "statut": 413,
+          "verifier": [
+            {
+              "texte": "Fichier trop volumineux"
+            },
+            {
+              "texteAbsent": "Exception"
+            }
+          ]
+        }
+      ]
+    },
+    "iq.modele.cycle": {
+      "description": "Modèle réutilisable : champs typés et positionnés, clause conditionnelle, aperçu, soumission, publication, nouvelle version, retrait ; partage par groupe",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/modeles",
+          "corps": {
+            "nom": "Convention BDD ${unique}",
+            "categorie": "GARANTIE",
+            "corps": "Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $ au titre du programme {{programme}}, à compter du {{debut}}.\n{{clauses}}",
+            "champs": [
+              {
+                "cle": "demandeur",
+                "libelle": "Demandeur",
+                "type": "TEXTE",
+                "obligatoire": true,
+                "source": "Demandeur"
+              },
+              {
+                "cle": "montant",
+                "libelle": "Montant",
+                "type": "TEXTE",
+                "obligatoire": true,
+                "source": "Montant",
+                "format": "\\d+(\\.\\d{2})?"
+              },
+              {
+                "cle": "programme",
+                "libelle": "Programme",
+                "type": "LISTE",
+                "options": [
+                  "ESSOR",
+                  "IMPULSION"
+                ]
+              },
+              {
+                "cle": "debut",
+                "libelle": "Date de début",
+                "type": "DATE"
+              },
+              {
+                "cle": "garantie",
+                "libelle": "Garantie exigée",
+                "type": "CASE"
+              },
+              {
+                "cle": "signature1",
+                "libelle": "Signature du bénéficiaire",
+                "type": "SIGNATURE",
+                "roleDestinataire": "SIGNATAIRE_1",
+                "position": {
+                  "page": 1,
+                  "x": 10,
+                  "y": 75,
+                  "largeur": 40,
+                  "hauteur": 10
+                }
+              }
+            ],
+            "clauses": [
+              {
+                "cle": "garantie",
+                "titre": "Garantie",
+                "texte": "Le bénéficiaire fournit une garantie de prêt.",
+                "combinateur": "ET",
+                "conditions": [
+                  {
+                    "champ": "garantie",
+                    "operateur": "EGAL",
+                    "valeur": "true"
+                  }
+                ]
+              }
+            ],
+            "parcours": [
+              {
+                "cle": "v1",
+                "libelle": "Validation juridique",
+                "phase": 1,
+                "type": "VALIDATION",
+                "affectations": [
+                  {
+                    "type": "UTILISATEUR",
+                    "valeur": "validateur@iq.example"
+                  }
+                ],
+                "delaiJours": 5
+              }
+            ],
+            "groupes": "FINANCEMENT_ENTREPRISES"
+          },
+          "capturer": {
+            "modele": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "BROUILLON"
+            },
+            {
+              "chemin": "$.champs[*].type",
+              "inclut": "SIGNATURE"
+            },
+            {
+              "chemin": "$.champs[*].type",
+              "inclut": "LISTE"
+            },
+            {
+              "chemin": "$.champs[*].type",
+              "inclut": "DATE"
+            },
+            {
+              "chemin": "$.champs[*].type",
+              "inclut": "CASE"
+            },
+            {
+              "chemin": "$.champs[5].position.page",
+              "egal": 1
+            },
+            {
+              "chemin": "$.champs[5].roleDestinataire",
+              "egal": "SIGNATAIRE_1"
+            },
+            {
+              "chemin": "$.groupes",
+              "egal": "FINANCEMENT_ENTREPRISES"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/modeles/${modele}/validation",
+          "verifier": [
+            {
+              "chemin": "$.valide",
+              "egal": true
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/modeles/${modele}/apercu",
+          "corps": {
+            "demandeur": "Coopérative Agri-Nord",
+            "montant": "250000.00",
+            "programme": "ESSOR",
+            "debut": "2026-12-01",
+            "garantie": "true"
+          },
+          "verifier": [
+            {
+              "chemin": "$.texte",
+              "contient": "Coopérative Agri-Nord"
+            },
+            {
+              "chemin": "$.clausesRetenues",
+              "inclut": "garantie"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/modeles/${modele}/apercu",
+          "corps": {
+            "demandeur": "Coopérative Agri-Nord",
+            "montant": "250000.00",
+            "garantie": "false"
+          },
+          "verifier": [
+            {
+              "chemin": "$.clausesRetenues",
+              "exclut": "garantie"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/modeles/${modele}/soumettre",
+          "corps": {},
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "EN_REVISION"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/modeles/${modele}/publier",
+          "corps": {},
+          "statut": 403,
+          "note": "l'initiateur ne publie pas"
+        },
+        {
+          "appel": "POST /api/clm/modeles/${modele}/publier",
+          "profil": "administration d'affaires IQ",
+          "corps": {},
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "PUBLIE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/modeles/${modele}/nouvelle-version",
+          "corps": {},
+          "capturer": {
+            "version2": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.numero",
+              "egal": 2
+            },
+            {
+              "chemin": "$.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/modeles/${modele}/retirer",
+          "profil": "administration d'affaires IQ",
+          "corps": {},
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "RETIRE"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/modeles?statut=PUBLIE",
+          "verifier": [
+            {
+              "chemin": "$[*].id",
+              "exclut": "${modele}"
+            }
+          ]
+        }
+      ]
+    },
+    "iq.generation.salesforce": {
+      "description": "Génération depuis Salesforce : dossier récupéré, modèle prérempli, contrat généré en PDF puis en Word modifiable, parcours du modèle copié",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/modeles",
+          "corps": {
+            "nom": "Convention Salesforce ${unique}",
+            "categorie": "GARANTIE",
+            "corps": "Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $ au titre du programme {{programme}}, à compter du {{debut}}.\n{{clauses}}",
+            "champs": [
+              {
+                "cle": "demandeur",
+                "libelle": "Demandeur",
+                "type": "TEXTE",
+                "obligatoire": true,
+                "source": "Demandeur"
+              },
+              {
+                "cle": "montant",
+                "libelle": "Montant",
+                "type": "TEXTE",
+                "obligatoire": true,
+                "source": "Montant",
+                "format": "\\d+(\\.\\d{2})?"
+              },
+              {
+                "cle": "programme",
+                "libelle": "Programme",
+                "type": "LISTE",
+                "options": [
+                  "ESSOR",
+                  "IMPULSION"
+                ]
+              },
+              {
+                "cle": "debut",
+                "libelle": "Date de début",
+                "type": "DATE"
+              },
+              {
+                "cle": "garantie",
+                "libelle": "Garantie exigée",
+                "type": "CASE"
+              },
+              {
+                "cle": "signature1",
+                "libelle": "Signature du bénéficiaire",
+                "type": "SIGNATURE",
+                "roleDestinataire": "SIGNATAIRE_1",
+                "position": {
+                  "page": 1,
+                  "x": 10,
+                  "y": 75,
+                  "largeur": 40,
+                  "hauteur": 10
+                }
+              }
+            ],
+            "clauses": [
+              {
+                "cle": "garantie",
+                "titre": "Garantie",
+                "texte": "Le bénéficiaire fournit une garantie de prêt.",
+                "combinateur": "ET",
+                "conditions": [
+                  {
+                    "champ": "garantie",
+                    "operateur": "EGAL",
+                    "valeur": "true"
+                  }
+                ]
+              }
+            ],
+            "parcours": [
+              {
+                "cle": "v1",
+                "libelle": "Validation juridique",
+                "phase": 1,
+                "type": "VALIDATION",
+                "affectations": [
+                  {
+                    "type": "UTILISATEUR",
+                    "valeur": "validateur@iq.example"
+                  }
+                ],
+                "delaiJours": 5
+              }
+            ],
+            "groupes": null
+          },
+          "capturer": {
+            "modele": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/modeles/${modele}/soumettre",
+          "corps": {}
+        },
+        {
+          "appel": "POST /api/clm/modeles/${modele}/publier",
+          "profil": "administration d'affaires IQ",
+          "corps": {}
+        },
+        {
+          "appel": "GET /api/clm/salesforce/dossiers/DEM-2026-0001",
+          "verifier": [
+            {
+              "chemin": "$.numero",
+              "egal": "DEM-2026-0001"
+            },
+            {
+              "chemin": "$.champs.Demandeur",
+              "egal": "Coopérative Agri-Nord"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses",
+          "corps": {
+            "titre": "Convention Salesforce ${unique}",
+            "risque": "FAIBLE",
+            "unite": "FINANCEMENT_ENTREPRISES",
+            "modeleId": "${modele}",
+            "sfDossierId": "DEM-2026-0001"
+          },
+          "capturer": {
+            "trousse": "$.resume.id",
+            "trousseRef": "$.resume.reference"
+          },
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/preremplissage",
+          "corps": {
+            "sfDossierId": "DEM-2026-0001",
+            "valeursManuelles": {
+              "programme": "ESSOR",
+              "debut": "2026-12-01",
+              "garantie": "true"
+            }
+          },
+          "verifier": [
+            {
+              "chemin": "$.dossier",
+              "existe": true
+            },
+            {
+              "chemin": "$.correspondances",
+              "longueurMin": 1
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}",
+          "verifier": [
+            {
+              "chemin": "$.valeurs.demandeur.valeur",
+              "egal": "Coopérative Agri-Nord"
+            },
+            {
+              "chemin": "$.valeurs.demandeur.provenance",
+              "egal": "SALESFORCE"
+            },
+            {
+              "chemin": "$.valeurs.montant.valeur",
+              "egal": "250000.00"
+            },
+            {
+              "chemin": "$.valeurs.programme.provenance",
+              "different": "SALESFORCE"
+            },
+            {
+              "chemin": "$.etapes[*].cle",
+              "inclut": "v1"
+            },
+            {
+              "chemin": "$.resume.sfDossierId",
+              "egal": "a0B5e00000GRT001"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/generer?format=PDF",
+          "verifier": [
+            {
+              "chemin": "$.type",
+              "egal": "PDF"
+            }
+          ],
+          "capturer": {
+            "genere": "$.id"
+          }
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}/documents/${genere}/texte",
+          "verifier": [
+            {
+              "texte": "Coopérative Agri-Nord"
+            },
+            {
+              "texte": "Le bénéficiaire fournit une garantie de prêt."
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/generer?format=DOCX",
+          "verifier": [
+            {
+              "chemin": "$.type",
+              "egal": "DOCX"
+            },
+            {
+              "chemin": "$.nom",
+              "contient": ".docx"
+            }
+          ]
+        }
+      ]
+    },
+    "iq.parcours.validation-approbation": {
+      "description": "Validation puis approbation : commentaire, retour à l'étape de validation avec motif, reprise, approbation ; refus d'un tiers ; historique",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/trousses",
+          "corps": {
+            "titre": "Parcours mixte ${unique}",
+            "risque": "FAIBLE",
+            "unite": "FINANCEMENT_ENTREPRISES"
+          },
+          "capturer": {
+            "trousse": "$.resume.id",
+            "trousseRef": "$.resume.reference"
+          },
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents",
+          "multipart": {
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "convention.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "capturer": {
+            "document": "$.id",
+            "documentCle": "$.cleDocument"
+          },
+          "verifier": [
+            {
+              "chemin": "$.analyse",
+              "egal": "PROPRE"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+          "corps": [
+            {
+              "cle": "v1",
+              "libelle": "Validation juridique",
+              "phase": 1,
+              "type": "VALIDATION",
+              "affectations": [
+                {
+                  "type": "UTILISATEUR",
+                  "valeur": "validateur@iq.example"
+                }
+              ],
+              "delaiJours": 5
+            },
+            {
+              "cle": "a1",
+              "libelle": "Approbation financière",
+              "phase": 2,
+              "type": "APPROBATION",
+              "affectations": [
+                {
+                  "type": "UTILISATEUR",
+                  "valeur": "approbateur@iq.example"
+                }
+              ],
+              "quorum": 1,
+              "politique": "UN_REFUS",
+              "delaiJours": 3
+            }
+          ],
+          "capturer": {
+            "e_v1": "$[0].id",
+            "e_a1": "$[1].id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/lancer",
+          "corps": {},
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "EN_TRAITEMENT"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/taches",
+          "profil": "validateur IQ",
+          "verifier": [
+            {
+              "chemin": "$[*].etapeId",
+              "inclut": "${e_v1}"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/etapes/${e_v1}/commentaires",
+          "profil": "validateur IQ",
+          "corps": {
+            "texte": "Clause 4 à préciser ${unique}"
+          }
+        },
+        {
+          "appel": "POST /api/clm/etapes/${e_v1}/decider",
+          "profil": "approbateur IQ",
+          "corps": {
+            "decision": "APPROUVE",
+            "commentaire": "x"
+          },
+          "statut": [
+            403,
+            409
+          ],
+          "note": "un tiers ne décide pas"
+        },
+        {
+          "appel": "POST /api/clm/etapes/${e_v1}/decider",
+          "profil": "validateur IQ",
+          "corps": {
+            "decision": "APPROUVE",
+            "commentaire": "Conforme"
+          }
+        },
+        {
+          "appel": "POST /api/clm/etapes/${e_a1}/decider",
+          "profil": "approbateur IQ",
+          "corps": {
+            "decision": "RETOUR",
+            "commentaire": "Annexe B à revalider",
+            "retourVers": "v1"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}",
+          "verifier": [
+            {
+              "chemin": "$.etapes[0].statut",
+              "egal": "ACTIVE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/etapes/${e_v1}/decider",
+          "profil": "validateur IQ",
+          "corps": {
+            "decision": "APPROUVE",
+            "commentaire": "Annexe revalidée"
+          }
+        },
+        {
+          "appel": "POST /api/clm/etapes/${e_a1}/decider",
+          "profil": "approbateur IQ",
+          "corps": {
+            "decision": "APPROUVE",
+            "commentaire": "Financement approuvé"
+          }
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}",
+          "verifier": [
+            {
+              "chemin": "$.etapes[*].statut",
+              "exclut": "ACTIVE"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}/historique",
+          "verifier": [
+            {
+              "texte": "Clause 4 à préciser ${unique}"
+            },
+            {
+              "texte": "Annexe B à revalider"
+            }
+          ]
+        }
+      ]
+    },
+    "iq.parcours.rejet": {
+      "description": "Rejet avec motif obligatoire : le parcours s'arrête et le rejet est tracé",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/trousses",
+          "corps": {
+            "titre": "Rejet ${unique}",
+            "risque": "FAIBLE",
+            "unite": "FINANCEMENT_ENTREPRISES"
+          },
+          "capturer": {
+            "trousse": "$.resume.id",
+            "trousseRef": "$.resume.reference"
+          },
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents",
+          "multipart": {
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "convention.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "capturer": {
+            "document": "$.id",
+            "documentCle": "$.cleDocument"
+          },
+          "verifier": [
+            {
+              "chemin": "$.analyse",
+              "egal": "PROPRE"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+          "corps": [
+            {
+              "cle": "v1",
+              "libelle": "Validation juridique",
+              "phase": 1,
+              "type": "VALIDATION",
+              "affectations": [
+                {
+                  "type": "UTILISATEUR",
+                  "valeur": "validateur@iq.example"
+                }
+              ],
+              "delaiJours": 5
+            }
+          ],
+          "capturer": {
+            "e_v1": "$[0].id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/lancer",
+          "corps": {},
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "EN_TRAITEMENT"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/etapes/${e_v1}/decider",
+          "profil": "validateur IQ",
+          "corps": {
+            "decision": "REJETE",
+            "commentaire": ""
+          },
+          "statut": 400,
+          "note": "motif exigé"
+        },
+        {
+          "appel": "POST /api/clm/etapes/${e_v1}/decider",
+          "profil": "validateur IQ",
+          "corps": {
+            "decision": "REJETE",
+            "commentaire": "Pièces justificatives absentes"
+          }
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}",
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "REJETEE"
+            }
+          ]
+        }
+      ]
+    },
+    "iq.parcours.parallele-reassignation": {
+      "description": "Deux validations en parallèle, réassignation à chaud d'une étape et délégation, sans relancer le parcours",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/trousses",
+          "corps": {
+            "titre": "Parallèle ${unique}",
+            "risque": "FAIBLE",
+            "unite": "FINANCEMENT_ENTREPRISES"
+          },
+          "capturer": {
+            "trousse": "$.resume.id",
+            "trousseRef": "$.resume.reference"
+          },
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents",
+          "multipart": {
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "convention.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "capturer": {
+            "document": "$.id",
+            "documentCle": "$.cleDocument"
+          },
+          "verifier": [
+            {
+              "chemin": "$.analyse",
+              "egal": "PROPRE"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+          "corps": [
+            {
+              "cle": "v1",
+              "libelle": "Validation juridique",
+              "phase": 1,
+              "type": "VALIDATION",
+              "affectations": [
+                {
+                  "type": "UTILISATEUR",
+                  "valeur": "validateur@iq.example"
+                }
+              ],
+              "delaiJours": 5
+            },
+            {
+              "cle": "v2",
+              "libelle": "Validation conformité",
+              "phase": 1,
+              "type": "VALIDATION",
+              "affectations": [
+                {
+                  "type": "UTILISATEUR",
+                  "valeur": "approbateur@iq.example"
+                }
+              ]
+            },
+            {
+              "cle": "a1",
+              "libelle": "Approbation financière",
+              "phase": 2,
+              "type": "APPROBATION",
+              "affectations": [
+                {
+                  "type": "UTILISATEUR",
+                  "valeur": "approbateur@iq.example"
+                }
+              ],
+              "quorum": 1,
+              "politique": "UN_REFUS",
+              "delaiJours": 3
+            }
+          ],
+          "capturer": {
+            "e_v1": "$[0].id",
+            "e_v2": "$[1].id",
+            "e_a1": "$[2].id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/lancer",
+          "corps": {},
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "EN_TRAITEMENT"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}",
+          "verifier": [
+            {
+              "chemin": "$.etapes[0].statut",
+              "egal": "ACTIVE"
+            },
+            {
+              "chemin": "$.etapes[1].statut",
+              "egal": "ACTIVE"
+            },
+            {
+              "chemin": "$.etapes[2].statut",
+              "egal": "EN_ATTENTE"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/clm/etapes/${e_v2}/affectations",
+          "corps": {
+            "affectations": [
+              {
+                "type": "UTILISATEUR",
+                "valeur": "auditeur@iq.example"
+              },
+              {
+                "type": "UTILISATEUR",
+                "valeur": "validateur@iq.example"
+              }
+            ],
+            "quorum": 1,
+            "motif": "Absence"
+          },
+          "verifier": [
+            {
+              "chemin": "$.affectations[*].valeur",
+              "inclut": "validateur@iq.example"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/etapes/${e_v1}/deleguer",
+          "profil": "validateur IQ",
+          "corps": {
+            "vers": "approbateur@iq.example",
+            "motif": "Vacances"
+          }
+        },
+        {
+          "appel": "POST /api/clm/etapes/${e_v1}/decider",
+          "profil": "approbateur IQ",
+          "corps": {
+            "decision": "APPROUVE",
+            "commentaire": "Validé par délégation"
+          }
+        },
+        {
+          "appel": "POST /api/clm/etapes/${e_v2}/decider",
+          "profil": "validateur IQ",
+          "corps": {
+            "decision": "APPROUVE",
+            "commentaire": "Conformité validée"
+          }
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}",
+          "verifier": [
+            {
+              "chemin": "$.etapes[2].statut",
+              "egal": "ACTIVE"
+            },
+            {
+              "chemin": "$.resume.statut",
+              "egal": "EN_TRAITEMENT"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}/historique",
+          "verifier": [
+            {
+              "texte": "REASSIGNATION"
+            },
+            {
+              "texte": "Vacances"
+            }
+          ]
+        }
+      ]
+    },
+    "iq.parcours.regles": {
+      "description": "Attribution par rôle et groupe ; étape conditionnelle selon le risque et le montant ; simulation du parcours avant lancement",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/trousses",
+          "corps": {
+            "titre": "Règles ${unique}",
+            "risque": "ELEVE",
+            "unite": "FINANCEMENT_ENTREPRISES"
+          },
+          "capturer": {
+            "trousse": "$.resume.id",
+            "trousseRef": "$.resume.reference"
+          },
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents",
+          "multipart": {
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "convention.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "capturer": {
+            "document": "$.id",
+            "documentCle": "$.cleDocument"
+          },
+          "verifier": [
+            {
+              "chemin": "$.analyse",
+              "egal": "PROPRE"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+          "corps": [
+            {
+              "cle": "v1",
+              "libelle": "Validation par rôle",
+              "phase": 1,
+              "type": "VALIDATION",
+              "affectations": [
+                {
+                  "type": "ROLE",
+                  "valeur": "VALIDATEUR"
+                }
+              ]
+            },
+            {
+              "cle": "g1",
+              "libelle": "Validation par groupe",
+              "phase": 1,
+              "type": "VALIDATION",
+              "affectations": [
+                {
+                  "type": "GROUPE",
+                  "valeur": "FINANCEMENT_ENTREPRISES"
+                }
+              ]
+            },
+            {
+              "cle": "c1",
+              "libelle": "Approbation du comité (risque élevé)",
+              "phase": 2,
+              "type": "APPROBATION",
+              "affectations": [
+                {
+                  "type": "UTILISATEUR",
+                  "valeur": "approbateur@iq.example"
+                }
+              ],
+              "conditions": [
+                {
+                  "champ": "trousse.risque",
+                  "operateur": "EGAL",
+                  "valeur": "ELEVE"
+                }
+              ]
+            },
+            {
+              "cle": "c2",
+              "libelle": "Approbation simplifiée (risque faible)",
+              "phase": 2,
+              "type": "APPROBATION",
+              "affectations": [
+                {
+                  "type": "UTILISATEUR",
+                  "valeur": "approbateur@iq.example"
+                }
+              ],
+              "conditions": [
+                {
+                  "champ": "trousse.risque",
+                  "operateur": "EGAL",
+                  "valeur": "FAIBLE"
+                }
+              ]
+            }
+          ],
+          "verifier": [
+            {
+              "chemin": "$[*].affectations[0].type",
+              "inclut": "ROLE"
+            },
+            {
+              "chemin": "$[*].affectations[0].type",
+              "inclut": "GROUPE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/parcours/tester",
+          "corps": [
+            {
+              "cle": "v1",
+              "libelle": "Validation par rôle",
+              "phase": 1,
+              "type": "VALIDATION",
+              "affectations": [
+                {
+                  "type": "ROLE",
+                  "valeur": "VALIDATEUR"
+                }
+              ]
+            },
+            {
+              "cle": "g1",
+              "libelle": "Validation par groupe",
+              "phase": 1,
+              "type": "VALIDATION",
+              "affectations": [
+                {
+                  "type": "GROUPE",
+                  "valeur": "FINANCEMENT_ENTREPRISES"
+                }
+              ]
+            },
+            {
+              "cle": "c1",
+              "libelle": "Approbation du comité (risque élevé)",
+              "phase": 2,
+              "type": "APPROBATION",
+              "affectations": [
+                {
+                  "type": "UTILISATEUR",
+                  "valeur": "approbateur@iq.example"
+                }
+              ],
+              "conditions": [
+                {
+                  "champ": "trousse.risque",
+                  "operateur": "EGAL",
+                  "valeur": "ELEVE"
+                }
+              ]
+            },
+            {
+              "cle": "c2",
+              "libelle": "Approbation simplifiée (risque faible)",
+              "phase": 2,
+              "type": "APPROBATION",
+              "affectations": [
+                {
+                  "type": "UTILISATEUR",
+                  "valeur": "approbateur@iq.example"
+                }
+              ],
+              "conditions": [
+                {
+                  "champ": "trousse.risque",
+                  "operateur": "EGAL",
+                  "valeur": "FAIBLE"
+                }
+              ]
+            }
+          ],
+          "verifier": [
+            {
+              "chemin": "$.valide",
+              "egal": true
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/lancer",
+          "corps": {},
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "EN_TRAITEMENT"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}",
+          "verifier": [
+            {
+              "chemin": "$.etapes[*].statut",
+              "inclut": "NON_REQUISE"
+            }
+          ]
+        }
+      ]
+    },
+    "iq.signataires.en-cours": {
+      "description": "Signataire ajouté puis remplacé en cours de parcours, sans reprendre le processus ; nouvelle version de document : nouveau cycle annoncé",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/trousses",
+          "corps": {
+            "titre": "Signataires en cours ${unique}",
+            "risque": "FAIBLE",
+            "unite": "FINANCEMENT_ENTREPRISES"
+          },
+          "capturer": {
+            "trousse": "$.resume.id",
+            "trousseRef": "$.resume.reference"
+          },
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents",
+          "multipart": {
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "convention.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "capturer": {
+            "document": "$.id",
+            "documentCle": "$.cleDocument"
+          },
+          "verifier": [
+            {
+              "chemin": "$.analyse",
+              "egal": "PROPRE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/participants",
+          "corps": {
+            "nom": "Alice Externe",
+            "courriel": "alice.${unique}@agrinord.example",
+            "telephone": "+15145550190",
+            "roleContrat": "SIGNATAIRE_1",
+            "externe": true,
+            "niveauIdentite": "QUESTION",
+            "question": "Ville du siège ?",
+            "reponse": "Québec"
+          },
+          "capturer": {
+            "alice": "$.id"
+          }
+        },
+        {
+          "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+          "corps": [
+            {
+              "cle": "v1",
+              "libelle": "Validation juridique",
+              "phase": 1,
+              "type": "VALIDATION",
+              "affectations": [
+                {
+                  "type": "UTILISATEUR",
+                  "valeur": "validateur@iq.example"
+                }
+              ],
+              "delaiJours": 5
+            },
+            {
+              "cle": "s1",
+              "libelle": "Signature",
+              "phase": 2,
+              "type": "SIGNATURE",
+              "affectations": [
+                {
+                  "type": "PARTICIPANT",
+                  "valeur": "${alice}"
+                }
+              ]
+            }
+          ],
+          "capturer": {
+            "e_v1": "$[0].id",
+            "e_s1": "$[1].id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/lancer",
+          "corps": {},
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "EN_TRAITEMENT"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/participants",
+          "corps": {
+            "nom": "Bruno Remplaçant",
+            "courriel": "bruno.${unique}@agrinord.example",
+            "telephone": "+15145550190",
+            "roleContrat": "SIGNATAIRE_2",
+            "externe": true,
+            "niveauIdentite": "QUESTION",
+            "question": "Ville du siège ?",
+            "reponse": "Québec"
+          },
+          "capturer": {
+            "bruno": "$.id"
+          }
+        },
+        {
+          "appel": "PUT /api/clm/etapes/${e_s1}/affectations",
+          "corps": {
+            "affectations": [
+              {
+                "type": "PARTICIPANT",
+                "valeur": "${bruno}"
+              }
+            ],
+            "motif": "Remplacement du signataire"
+          },
+          "verifier": [
+            {
+              "chemin": "$.affectations[0].valeur",
+              "egalTexte": "${bruno}"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents/${documentCle}/versions?motif=Montant%20corrig%C3%A9",
+          "multipart": {
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "convention.pdf",
+              "type": "application/pdf"
+            }
+          }
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}/historique",
+          "verifier": [
+            {
+              "texte": "Remplacement du signataire"
+            },
+            {
+              "texte": "Montant corrigé"
+            }
+          ]
+        }
+      ]
+    },
+    "iq.signature.externe": {
+      "description": "Signature externe : invitation reçue par courriel, vérification d'identité, consentement, signature ; attestation CAdES ; trousse terminée et document signé",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/trousses",
+          "corps": {
+            "titre": "Signature externe ${unique}",
+            "risque": "FAIBLE",
+            "unite": "FINANCEMENT_ENTREPRISES"
+          },
+          "capturer": {
+            "trousse": "$.resume.id",
+            "trousseRef": "$.resume.reference"
+          },
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents",
+          "multipart": {
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "convention.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "capturer": {
+            "document": "$.id",
+            "documentCle": "$.cleDocument"
+          },
+          "verifier": [
+            {
+              "chemin": "$.analyse",
+              "egal": "PROPRE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/participants",
+          "corps": {
+            "nom": "Marie Tremblay",
+            "courriel": "marie.${unique}@agrinord.example",
+            "telephone": "+15145550190",
+            "roleContrat": "SIGNATAIRE_1",
+            "externe": true,
+            "niveauIdentite": "QUESTION",
+            "question": "Ville du siège ?",
+            "reponse": "Québec"
+          },
+          "capturer": {
+            "marie": "$.id"
+          }
+        },
+        {
+          "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+          "corps": [
+            {
+              "cle": "s1",
+              "libelle": "Signature",
+              "phase": 1,
+              "type": "SIGNATURE",
+              "affectations": [
+                {
+                  "type": "PARTICIPANT",
+                  "valeur": "${marie}"
+                }
+              ]
+            }
+          ],
+          "capturer": {
+            "e_s1": "$[0].id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/lancer",
+          "corps": {},
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "EN_TRAITEMENT"
+            }
+          ]
+        },
+        {
+          "courriel": {
+            "destinataire": "marie.${unique}@agrinord.example",
+            "motif": "/portail/([A-Za-z0-9_-]+)",
+            "capturer": "jeton"
+          }
+        },
+        {
+          "appel": "GET /api/clm/portail/${jeton}",
+          "anonyme": true,
+          "verifier": [
+            {
+              "chemin": "$.verifiee",
+              "egal": false
+            },
+            {
+              "chemin": "$.niveau",
+              "egal": "QUESTION"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/portail/${jeton}/verification",
+          "anonyme": true
+        },
+        {
+          "appel": "POST /api/clm/portail/${jeton}/verification/reponse",
+          "anonyme": true,
+          "corps": {
+            "reponse": "Paris"
+          },
+          "statut": [
+            400,
+            401,
+            403,
+            409
+          ],
+          "note": "mauvaise réponse refusée"
+        },
+        {
+          "appel": "POST /api/clm/portail/${jeton}/verification/reponse",
+          "anonyme": true,
+          "corps": {
+            "reponse": "Québec"
+          },
+          "verifier": [
+            {
+              "chemin": "$.verifiee",
+              "egal": true
+            },
+            {
+              "chemin": "$.documents",
+              "longueurMin": 1
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/portail/${jeton}/signer",
+          "anonyme": true,
+          "corps": {
+            "nomComplet": "Marie Tremblay",
+            "consentement": false
+          },
+          "statut": [
+            400,
+            409
+          ],
+          "note": "consentement exigé"
+        },
+        {
+          "appel": "POST /api/clm/portail/${jeton}/signer",
+          "anonyme": true,
+          "corps": {
+            "nomComplet": "Marie Tremblay",
+            "consentement": true
+          },
+          "capturer": {
+            "attestation": "$.attestation"
+          },
+          "verifier": [
+            {
+              "chemin": "$.empreinteDocuments",
+              "existe": true
+            },
+            {
+              "chemin": "$.attestation",
+              "contient": "CAC-"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/portail/${jeton}/signer",
+          "anonyme": true,
+          "corps": {
+            "nomComplet": "Marie Tremblay",
+            "consentement": true
+          },
+          "statut": [
+            409,
+            410
+          ],
+          "note": "lien à usage unique"
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}",
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "TERMINEE"
+            },
+            {
+              "chemin": "$.documents[*].statut",
+              "inclut": "SIGNE"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}/preuve",
+          "verifier": [
+            {
+              "chemin": "$.signatures[0].niveau",
+              "egal": "QUESTION"
+            },
+            {
+              "chemin": "$.signatures[0].consentementLe",
+              "existe": true
+            },
+            {
+              "chemin": "$.signatures[0].attestation.fournisseur",
+              "egal": "clm-cachet"
+            },
+            {
+              "chemin": "$.integrite.integre",
+              "egal": true
+            }
+          ]
+        }
+      ]
+    },
+    "iq.signature.sequentielle-parallele": {
+      "description": "Signatures séquentielles puis parallèles (groupe de signataires) : la seconde phase n'est ouverte qu'après la première",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/trousses",
+          "corps": {
+            "titre": "Signatures mixtes ${unique}",
+            "risque": "FAIBLE",
+            "unite": "FINANCEMENT_ENTREPRISES"
+          },
+          "capturer": {
+            "trousse": "$.resume.id",
+            "trousseRef": "$.resume.reference"
+          },
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents",
+          "multipart": {
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "convention.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "capturer": {
+            "document": "$.id",
+            "documentCle": "$.cleDocument"
+          },
+          "verifier": [
+            {
+              "chemin": "$.analyse",
+              "egal": "PROPRE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/participants",
+          "corps": {
+            "nom": "Paul Premier",
+            "courriel": "paul.${unique}@agrinord.example",
+            "telephone": "+15145550190",
+            "roleContrat": "SIGNATAIRE_1",
+            "externe": true,
+            "niveauIdentite": "QUESTION",
+            "question": "Ville du siège ?",
+            "reponse": "Québec"
+          },
+          "capturer": {
+            "paul": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/participants",
+          "corps": {
+            "nom": "Lise Seconde",
+            "courriel": "lise.${unique}@agrinord.example",
+            "telephone": "+15145550190",
+            "roleContrat": "SIGNATAIRE_2",
+            "externe": true,
+            "niveauIdentite": "QUESTION",
+            "question": "Ville du siège ?",
+            "reponse": "Québec"
+          },
+          "capturer": {
+            "lise": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/participants",
+          "corps": {
+            "nom": "Noé Second",
+            "courriel": "noe.${unique}@agrinord.example",
+            "telephone": "+15145550190",
+            "roleContrat": "SIGNATAIRE_3",
+            "externe": true,
+            "niveauIdentite": "QUESTION",
+            "question": "Ville du siège ?",
+            "reponse": "Québec"
+          },
+          "capturer": {
+            "noe": "$.id"
+          }
+        },
+        {
+          "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+          "corps": [
+            {
+              "cle": "s1",
+              "libelle": "Signature du premier",
+              "phase": 1,
+              "type": "SIGNATURE",
+              "affectations": [
+                {
+                  "type": "PARTICIPANT",
+                  "valeur": "${paul}"
+                }
+              ]
+            },
+            {
+              "cle": "s2",
+              "libelle": "Signatures conjointes",
+              "phase": 2,
+              "type": "SIGNATURE",
+              "affectations": [
+                {
+                  "type": "PARTICIPANT",
+                  "valeur": "${lise}"
+                },
+                {
+                  "type": "PARTICIPANT",
+                  "valeur": "${noe}"
+                }
+              ],
+              "quorum": 2
+            }
+          ],
+          "capturer": {
+            "e_s1": "$[0].id",
+            "e_s2": "$[1].id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/lancer",
+          "corps": {},
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "EN_TRAITEMENT"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}",
+          "verifier": [
+            {
+              "chemin": "$.etapes[0].statut",
+              "egal": "ACTIVE"
+            },
+            {
+              "chemin": "$.etapes[1].statut",
+              "egal": "EN_ATTENTE"
+            }
+          ]
+        },
+        {
+          "courriel": {
+            "destinataire": "paul.${unique}@agrinord.example",
+            "motif": "/portail/([A-Za-z0-9_-]+)",
+            "capturer": "jetonPaul"
+          }
+        },
+        {
+          "appel": "GET /api/clm/portail/${jetonPaul}",
+          "anonyme": true,
+          "verifier": [
+            {
+              "chemin": "$.verifiee",
+              "egal": false
+            },
+            {
+              "chemin": "$.niveau",
+              "egal": "QUESTION"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/portail/${jetonPaul}/verification",
+          "anonyme": true
+        },
+        {
+          "appel": "POST /api/clm/portail/${jetonPaul}/verification/reponse",
+          "anonyme": true,
+          "corps": {
+            "reponse": "Paris"
+          },
+          "statut": [
+            400,
+            401,
+            403,
+            409
+          ],
+          "note": "mauvaise réponse refusée"
+        },
+        {
+          "appel": "POST /api/clm/portail/${jetonPaul}/verification/reponse",
+          "anonyme": true,
+          "corps": {
+            "reponse": "Québec"
+          },
+          "verifier": [
+            {
+              "chemin": "$.verifiee",
+              "egal": true
+            },
+            {
+              "chemin": "$.documents",
+              "longueurMin": 1
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/portail/${jetonPaul}/signer",
+          "anonyme": true,
+          "corps": {
+            "nomComplet": "Paul Premier",
+            "consentement": false
+          },
+          "statut": [
+            400,
+            409
+          ],
+          "note": "consentement exigé"
+        },
+        {
+          "appel": "POST /api/clm/portail/${jetonPaul}/signer",
+          "anonyme": true,
+          "corps": {
+            "nomComplet": "Paul Premier",
+            "consentement": true
+          },
+          "capturer": {
+            "attestation": "$.attestation"
+          },
+          "verifier": [
+            {
+              "chemin": "$.empreinteDocuments",
+              "existe": true
+            },
+            {
+              "chemin": "$.attestation",
+              "contient": "CAC-"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/portail/${jetonPaul}/signer",
+          "anonyme": true,
+          "corps": {
+            "nomComplet": "Paul Premier",
+            "consentement": true
+          },
+          "statut": [
+            409,
+            410
+          ],
+          "note": "lien à usage unique"
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}",
+          "verifier": [
+            {
+              "chemin": "$.etapes[1].statut",
+              "egal": "ACTIVE"
+            },
+            {
+              "chemin": "$.invitations",
+              "longueurMin": 3
+            }
+          ]
+        }
+      ]
+    },
+    "iq.signature.representant": {
+      "description": "Signataire représentant une entreprise : qualité tracée, attestation d'autorité exigée avant signature",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/trousses",
+          "corps": {
+            "titre": "Représentant ${unique}",
+            "risque": "FAIBLE",
+            "unite": "FINANCEMENT_ENTREPRISES"
+          },
+          "capturer": {
+            "trousse": "$.resume.id",
+            "trousseRef": "$.resume.reference"
+          },
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents",
+          "multipart": {
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "convention.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "capturer": {
+            "document": "$.id",
+            "documentCle": "$.cleDocument"
+          },
+          "verifier": [
+            {
+              "chemin": "$.analyse",
+              "egal": "PROPRE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/participants",
+          "corps": {
+            "nom": "Marc Lavoie",
+            "courriel": "marc.${unique}@agrinord.example",
+            "telephone": "+15145550190",
+            "roleContrat": "SIGNATAIRE_1",
+            "externe": true,
+            "niveauIdentite": "QUESTION",
+            "question": "Ville du siège ?",
+            "reponse": "Québec",
+            "qualite": "Président",
+            "entreprise": "Coopérative Agri-Nord inc.",
+            "autoriteRequise": true
+          },
+          "capturer": {
+            "marc": "$.id"
+          }
+        },
+        {
+          "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+          "corps": [
+            {
+              "cle": "s1",
+              "libelle": "Signature",
+              "phase": 1,
+              "type": "SIGNATURE",
+              "affectations": [
+                {
+                  "type": "PARTICIPANT",
+                  "valeur": "${marc}"
+                }
+              ]
+            }
+          ],
+          "capturer": {
+            "e_s1": "$[0].id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/lancer",
+          "corps": {},
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "EN_TRAITEMENT"
+            }
+          ]
+        },
+        {
+          "courriel": {
+            "destinataire": "marc.${unique}@agrinord.example",
+            "motif": "/portail/([A-Za-z0-9_-]+)",
+            "capturer": "jeton"
+          }
+        },
+        {
+          "appel": "POST /api/clm/portail/${jeton}/verification",
+          "anonyme": true
+        },
+        {
+          "appel": "POST /api/clm/portail/${jeton}/verification/reponse",
+          "anonyme": true,
+          "corps": {
+            "reponse": "Québec"
+          },
+          "verifier": [
+            {
+              "chemin": "$.entreprise",
+              "egal": "Coopérative Agri-Nord inc."
+            },
+            {
+              "chemin": "$.autoriteRequise",
+              "egal": true
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/portail/${jeton}/signer",
+          "anonyme": true,
+          "corps": {
+            "nomComplet": "Marc Lavoie",
+            "consentement": true
+          },
+          "statut": 400
+        },
+        {
+          "appel": "POST /api/clm/portail/${jeton}/signer",
+          "anonyme": true,
+          "corps": {
+            "nomComplet": "Marc Lavoie",
+            "consentement": true,
+            "autoriteAttestee": true,
+            "referenceAutorite": "Résolution 2026-14"
+          }
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}/historique",
+          "verifier": [
+            {
+              "texte": "pour Coopérative Agri-Nord inc. (Président)"
+            }
+          ]
+        }
+      ]
+    },
+    "iq.identite.par-risque": {
+      "description": "Niveau d'identité configurable : par défaut selon le risque, relevé par type de document ; jamais abaissé",
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "appel": "GET /api/clm/admin/parametres",
+          "verifier": [
+            {
+              "chemin": "$.module.identiteExterne",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/parametres",
+          "profil": "initiateur IQ",
+          "verifier": [
+            {
+              "chemin": "$",
+              "existe": true
+            }
+          ]
+        }
+      ]
+    },
+    "iq.notifications": {
+      "description": "Messages par événement et par canal, désactivables et réactivables ; invitation reçue par courriel ; relance manuelle : nouvelle invitation avec un nouveau lien ; fréquence des rappels",
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "appel": "GET /api/clm/admin/messages",
+          "capturer": {
+            "messages": "$"
+          },
+          "verifier": [
+            {
+              "chemin": "$[*].evenement",
+              "inclut": "INVITATION"
+            },
+            {
+              "chemin": "$[*].canal",
+              "inclut": "COURRIEL"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/clm/admin/messages",
+          "corps": {
+            "evenement": "RAPPEL",
+            "canal": "COURRIEL",
+            "sujet": "Rappel ${unique} : {{titre}}",
+            "corps": "Bonjour {{destinataire}}, {{reference}} attend votre action.",
+            "actif": false
+          },
+          "verifier": [
+            {
+              "chemin": "$.actif",
+              "egal": false
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/clm/admin/messages",
+          "corps": {
+            "evenement": "RAPPEL",
+            "canal": "COURRIEL",
+            "sujet": "Rappel ${unique} : {{titre}}",
+            "corps": "Bonjour {{destinataire}}, {{reference}} attend votre action.",
+            "actif": true
+          },
+          "verifier": [
+            {
+              "chemin": "$.actif",
+              "egal": true
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses",
+          "corps": {
+            "titre": "Rappels ${unique}",
+            "risque": "FAIBLE",
+            "unite": "FINANCEMENT_ENTREPRISES"
+          },
+          "capturer": {
+            "trousse": "$.resume.id",
+            "trousseRef": "$.resume.reference"
+          },
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents",
+          "multipart": {
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "convention.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "capturer": {
+            "document": "$.id",
+            "documentCle": "$.cleDocument"
+          },
+          "verifier": [
+            {
+              "chemin": "$.analyse",
+              "egal": "PROPRE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/participants",
+          "corps": {
+            "nom": "Rémi Rappel",
+            "courriel": "remi.${unique}@agrinord.example",
+            "telephone": "+15145550190",
+            "roleContrat": "SIGNATAIRE_1",
+            "externe": true,
+            "niveauIdentite": "QUESTION",
+            "question": "Ville du siège ?",
+            "reponse": "Québec"
+          },
+          "capturer": {
+            "remi": "$.id"
+          }
+        },
+        {
+          "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+          "corps": [
+            {
+              "cle": "s1",
+              "libelle": "Signature",
+              "phase": 1,
+              "type": "SIGNATURE",
+              "affectations": [
+                {
+                  "type": "PARTICIPANT",
+                  "valeur": "${remi}"
+                }
+              ]
+            }
+          ],
+          "capturer": {
+            "e_s1": "$[0].id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/lancer",
+          "corps": {},
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "EN_TRAITEMENT"
+            }
+          ]
+        },
+        {
+          "courriel": {
+            "destinataire": "remi.${unique}@agrinord.example",
+            "motif": "/portail/([A-Za-z0-9_-]+)",
+            "capturer": "lienInvitation"
+          }
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}",
+          "verifier": [
+            {
+              "chemin": "$.rappelFrequenceJours",
+              "existe": true
+            },
+            {
+              "chemin": "$.rappelsMax",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/etapes/${e_s1}/relancer",
+          "corps": {}
+        },
+        {
+          "courriel": {
+            "destinataire": "remi.${unique}@agrinord.example",
+            "motif": "/portail/([A-Za-z0-9_-]+)",
+            "capturer": "lienRelance",
+            "different": "${lienInvitation}"
+          }
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}/historique",
+          "verifier": [
+            {
+              "texte": "RELANCE_MANUELLE"
+            },
+            {
+              "chemin": "$[*].type",
+              "inclut": "INVITATION_ENVOYEE"
+            }
+          ]
+        }
+      ]
+    },
+    "iq.suivi": {
+      "description": "Suivi centralisé paginé côté serveur : filtres, exceptions, export ; tableau de bord par profil",
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "appel": "GET /api/clm/suivi?page=0&taille=50",
+          "verifier": [
+            {
+              "chemin": "$.lignes",
+              "longueurMin": 1
+            },
+            {
+              "chemin": "$.taille",
+              "egal": 50
+            },
+            {
+              "chemin": "$.total",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/suivi?statut=EN_TRAITEMENT&page=0&taille=10",
+          "verifier": [
+            {
+              "chemin": "$.lignes[*].statut",
+              "exclut": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/suivi?exceptions=true&page=0&taille=10",
+          "verifier": [
+            {
+              "chemin": "$.lignes",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/suivi/export?statut=EN_TRAITEMENT",
+          "verifier": [
+            {
+              "texte": "reference"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/tableau-de-bord",
+          "verifier": [
+            {
+              "chemin": "$.indicateurs.terminees",
+              "existe": true
+            },
+            {
+              "chemin": "$.activite",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses?page=0&taille=20",
+          "profil": "initiateur IQ",
+          "verifier": [
+            {
+              "chemin": "$.lignes",
+              "existe": true
+            }
+          ]
+        }
+      ]
+    },
+    "iq.preuve.export": {
+      "description": "Dossier de preuve d'une trousse signée : consultation, intégrité, certificat PDF, export ZIP (documents, .p7s, journal, manifeste) ; journal d'audit exportable",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "GET /api/clm/trousses/${trousse}/preuve",
+          "verifier": [
+            {
+              "chemin": "$.documentsFinaux",
+              "longueurMin": 1
+            },
+            {
+              "chemin": "$.evenements",
+              "longueurMin": 5
+            },
+            {
+              "chemin": "$.signatures",
+              "longueurMin": 1
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/preuve/integrite",
+          "corps": {},
+          "verifier": [
+            {
+              "chemin": "$.integre",
+              "egal": true
+            },
+            {
+              "chemin": "$.journalIntegre",
+              "egal": true
+            },
+            {
+              "chemin": "$.documentsAlteres",
+              "egal": []
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}/preuve/certificat",
+          "verifier": [
+            {
+              "texte": "%PDF"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}/preuve/export",
+          "verifier": [
+            {
+              "texte": "PK"
+            },
+            {
+              "texte": "certificat.pdf"
+            },
+            {
+              "texte": "manifeste.json"
+            },
+            {
+              "texte": ".p7s"
+            },
+            {
+              "texte": "journal.json"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/admin/journal?trousse=${trousseRef}",
+          "profil": "administration d'affaires IQ",
+          "verifier": [
+            {
+              "texte": "SIGNATURE"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/admin/journal/export?trousse=${trousseRef}",
+          "profil": "auditeur IQ",
+          "verifier": [
+            {
+              "texte": "SIGNATURE"
+            }
+          ]
+        }
+      ]
+    },
+    "iq.conservation": {
+      "description": "Conservation par type de contrat : règle, échéance, gel légal posé puis levé ; exportation en lot ; relevé d'utilisation par enveloppe",
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "appel": "PUT /api/clm/admin/conservation/regles",
+          "corps": {
+            "typeContrat": "GARANTIE",
+            "dureeAns": 7,
+            "sortFinal": "DETRUIRE"
+          },
+          "verifier": [
+            {
+              "chemin": "$.dureeAns",
+              "egal": 7
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/admin/conservation/regles",
+          "verifier": [
+            {
+              "chemin": "$[*].typeContrat",
+              "inclut": "GARANTIE"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/admin/conservation/trousses?echues=false",
+          "verifier": [
+            {
+              "chemin": "$[*].trousseId",
+              "inclut": "${trousse}"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/admin/conservation/trousses/${trousse}/gel",
+          "corps": {
+            "motif": "Litige ${unique}"
+          }
+        },
+        {
+          "appel": "POST /api/clm/admin/conservation/trousses/${trousse}/detruire",
+          "statut": 409,
+          "note": "gelée ou non échue : refus"
+        },
+        {
+          "appel": "DELETE /api/clm/admin/conservation/trousses/${trousse}/gel"
+        },
+        {
+          "appel": "GET /api/clm/admin/conservation/exportation?du=${aujourdhui}&au=${demain}",
+          "verifier": [
+            {
+              "texte": "PK"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/admin/utilisation?du=${aujourdhui}&au=${demain}",
+          "verifier": [
+            {
+              "chemin": "$.envoyees",
+              "existe": true
+            },
+            {
+              "chemin": "$.terminees",
+              "existe": true
+            },
+            {
+              "chemin": "$.renvois",
+              "existe": true
+            }
+          ]
+        }
+      ]
+    },
+    "iq.lots": {
+      "description": "Signature en lot depuis la plateforme : une trousse par dossier, chaque échec isolé ; approbation globale du lot tracée par dossier",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/modeles",
+          "corps": {
+            "nom": "Modèle lot ${unique}",
+            "corps": "Entente avec {{partie}}.",
+            "champs": [
+              {
+                "cle": "partie",
+                "libelle": "Partie",
+                "type": "TEXTE"
+              }
+            ],
+            "clauses": [],
+            "parcours": [
+              {
+                "cle": "a1",
+                "libelle": "Approbation",
+                "phase": 1,
+                "type": "APPROBATION",
+                "affectations": [
+                  {
+                    "type": "UTILISATEUR",
+                    "valeur": "approbateur@iq.example"
+                  }
+                ]
+              }
+            ]
+          },
+          "capturer": {
+            "modele": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/modeles/${modele}/soumettre",
+          "corps": {}
+        },
+        {
+          "appel": "POST /api/clm/modeles/${modele}/publier",
+          "profil": "administration d'affaires IQ",
+          "corps": {}
+        },
+        {
+          "appel": "POST /api/clm/lots",
+          "corps": {
+            "libelle": "Lot ${unique}",
+            "modeleId": "${modele}",
+            "lancer": true,
+            "elements": [
+              {
+                "titre": "Dossier A",
+                "risque": "FAIBLE",
+                "documents": [
+                  {
+                    "nom": "a.pdf",
+                    "contenuBase64": "JVBERi0xLjQKMSAwIG9iajw8L1R5cGUvQ2F0YWxvZy9QYWdlcyAyIDAgUj4+ZW5kb2JqCjIgMCBvYmo8PC9UeXBlL1BhZ2VzL0tpZHNbMyAwIFJdL0NvdW50IDE+PmVuZG9iagozIDAgb2JqPDwvVHlwZS9QYWdlL1BhcmVudCAyIDAgUi9NZWRpYUJveFswIDAgNjEyIDc5Ml0+PmVuZG9iagp0cmFpbGVyPDwvUm9vdCAxIDAgUj4+CiUlRU9GCg=="
+                  }
+                ]
+              },
+              {
+                "titre": "Dossier B",
+                "risque": "FAIBLE",
+                "documents": [
+                  {
+                    "nom": "b.pdf",
+                    "contenuBase64": "JVBERi0xLjQKMSAwIG9iajw8L1R5cGUvQ2F0YWxvZy9QYWdlcyAyIDAgUj4+ZW5kb2JqCjIgMCBvYmo8PC9UeXBlL1BhZ2VzL0tpZHNbMyAwIFJdL0NvdW50IDE+PmVuZG9iagozIDAgb2JqPDwvVHlwZS9QYWdlL1BhcmVudCAyIDAgUi9NZWRpYUJveFswIDAgNjEyIDc5Ml0+PmVuZG9iagp0cmFpbGVyPDwvUm9vdCAxIDAgUj4+CiUlRU9GCg=="
+                  }
+                ]
+              },
+              {
+                "titre": "Dossier invalide",
+                "risque": "FAIBLE",
+                "documents": [
+                  {
+                    "nom": "x.txt",
+                    "contenuBase64": "cGFzIHVuIHBkZg=="
+                  }
+                ]
+              }
+            ]
+          },
+          "statut": [
+            200,
+            201
+          ],
+          "capturer": {
+            "lot": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.elements",
+              "longueurMin": 3
+            },
+            {
+              "chemin": "$.reussis",
+              "egal": 2
+            },
+            {
+              "chemin": "$.echecs",
+              "egal": 1
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/lots/${lot}/approuver",
+          "profil": "approbateur IQ",
+          "corps": {
+            "corps": "Lot conforme ${unique}"
+          },
+          "verifier": [
+            {
+              "chemin": "$.approuvees",
+              "egal": 2
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/lots/${lot}",
+          "verifier": [
+            {
+              "chemin": "$.libelle",
+              "egal": "Lot ${unique}"
+            }
+          ]
+        }
+      ]
+    },
+    "iq.integration.api": {
+      "description": "API d'intégration (Workday, Salesforce) : client créé, secret remis une fois, jeton OAuth, trousse et lot créés par l'API, statut et preuve lus, client révoqué",
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/admin/clients-integration",
+          "corps": {
+            "nom": "Workday ${unique}",
+            "systeme": "WORKDAY",
+            "urlRappel": "https://workday.example/rappels"
+          },
+          "capturer": {
+            "client": "$.client.id",
+            "clientId": "$.client.clientId",
+            "secret": "$.secret"
+          },
+          "verifier": [
+            {
+              "chemin": "$.secret",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/admin/clients-integration",
+          "verifier": [
+            {
+              "texteAbsent": "${secret}"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/integration/oauth/token",
+          "anonyme": true,
+          "capturer": {
+            "jeton": "$.access_token"
+          },
+          "verifier": [
+            {
+              "chemin": "$.token_type",
+              "egal": "Bearer"
+            }
+          ],
+          "formulaire": {
+            "grant_type": "client_credentials",
+            "client_id": "${clientId}",
+            "client_secret": "${secret}"
+          }
+        },
+        {
+          "appel": "GET /api/clm/integration/v1/modeles",
+          "anonyme": true,
+          "entetes": {
+            "Authorization": "Bearer ${jeton}"
+          },
+          "verifier": [
+            {
+              "chemin": "$",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/integration/v1/trousses",
+          "anonyme": true,
+          "entetes": {
+            "Authorization": "Bearer ${jeton}"
+          },
+          "corps": {
+            "titre": "Offre d'emploi ${unique}",
+            "referenceExterne": "WD-${UNIQUE}",
+            "initiateur": "initiateur@iq.example",
+            "risque": "FAIBLE",
+            "documents": [
+              {
+                "nom": "offre.pdf",
+                "contenuBase64": "JVBERi0xLjQKMSAwIG9iajw8L1R5cGUvQ2F0YWxvZy9QYWdlcyAyIDAgUj4+ZW5kb2JqCjIgMCBvYmo8PC9UeXBlL1BhZ2VzL0tpZHNbMyAwIFJdL0NvdW50IDE+PmVuZG9iagozIDAgb2JqPDwvVHlwZS9QYWdlL1BhcmVudCAyIDAgUi9NZWRpYUJveFswIDAgNjEyIDc5Ml0+PmVuZG9iagp0cmFpbGVyPDwvUm9vdCAxIDAgUj4+CiUlRU9GCg=="
+              }
+            ]
+          },
+          "statut": [
+            200,
+            201
+          ],
+          "capturer": {
+            "trousseApi": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.referenceExterne",
+              "egal": "WD-${UNIQUE}"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/integration/v1/trousses/${trousseApi}",
+          "anonyme": true,
+          "entetes": {
+            "Authorization": "Bearer ${jeton}"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousseApi}",
+          "profil": "initiateur IQ",
+          "verifier": [
+            {
+              "chemin": "$.resume.source",
+              "contient": "WORKDAY"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/admin/clients-integration/${client}/revoquer",
+          "corps": {}
+        },
+        {
+          "appel": "GET /api/clm/integration/v1/modeles",
+          "anonyme": true,
+          "entetes": {
+            "Authorization": "Bearer ${jeton}"
+          },
+          "statut": [
+            401,
+            403
+          ]
+        }
+      ]
+    },
+    "iq.salesforce.statuts": {
+      "description": "Retour des statuts vers Salesforce (lancée, retournée), panne simulée puis reprise automatique ; JWT Bearer exige une clé privée",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/trousses",
+          "corps": {
+            "titre": "Statuts Salesforce ${unique}",
+            "risque": "FAIBLE",
+            "unite": "FINANCEMENT_ENTREPRISES",
+            "sfDossierId": "DEM-2026-0001"
+          },
+          "capturer": {
+            "trousse": "$.resume.id",
+            "trousseRef": "$.resume.reference"
+          },
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents",
+          "multipart": {
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "convention.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "capturer": {
+            "document": "$.id",
+            "documentCle": "$.cleDocument"
+          },
+          "verifier": [
+            {
+              "chemin": "$.analyse",
+              "egal": "PROPRE"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+          "corps": [
+            {
+              "cle": "v1",
+              "libelle": "Validation juridique",
+              "phase": 1,
+              "type": "VALIDATION",
+              "affectations": [
+                {
+                  "type": "UTILISATEUR",
+                  "valeur": "validateur@iq.example"
+                }
+              ],
+              "delaiJours": 5
+            },
+            {
+              "cle": "a1",
+              "libelle": "Approbation financière",
+              "phase": 2,
+              "type": "APPROBATION",
+              "affectations": [
+                {
+                  "type": "UTILISATEUR",
+                  "valeur": "approbateur@iq.example"
+                }
+              ],
+              "quorum": 1,
+              "politique": "UN_REFUS",
+              "delaiJours": 3
+            }
+          ],
+          "capturer": {
+            "e_v1": "$[0].id",
+            "e_a1": "$[1].id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/lancer",
+          "corps": {},
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "EN_TRAITEMENT"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/etapes/${e_v1}/decider",
+          "profil": "validateur IQ",
+          "corps": {
+            "decision": "APPROUVE",
+            "commentaire": "Conforme"
+          }
+        },
+        {
+          "appel": "POST /api/clm/etapes/${e_a1}/decider",
+          "profil": "approbateur IQ",
+          "corps": {
+            "decision": "RETOUR",
+            "commentaire": "Annexe B à revalider",
+            "retourVers": "v1"
+          }
+        },
+        {
+          "appel": "POST /api/clm/admin/integrations/salesforce/relayer",
+          "profil": "administration technique IQ",
+          "corps": {}
+        },
+        {
+          "appel": "GET /api/clm/admin/integrations/salesforce",
+          "profil": "administration technique IQ",
+          "verifier": [
+            {
+              "texte": "LANCEE"
+            },
+            {
+              "texte": "RETOURNEE"
+            },
+            {
+              "chemin": "$.config.reprisesMax",
+              "egal": 8
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/clm/admin/integrations/salesforce/simulation/panne",
+          "profil": "administration technique IQ",
+          "corps": {
+            "panne": true
+          }
+        },
+        {
+          "appel": "POST /api/clm/etapes/${e_v1}/decider",
+          "profil": "validateur IQ",
+          "corps": {
+            "decision": "APPROUVE",
+            "commentaire": "Revalidé"
+          }
+        },
+        {
+          "appel": "POST /api/clm/admin/integrations/salesforce/relayer",
+          "profil": "administration technique IQ",
+          "corps": {}
+        },
+        {
+          "appel": "GET /api/clm/admin/integrations/salesforce",
+          "profil": "administration technique IQ",
+          "verifier": [
+            {
+              "chemin": "$.enEchec",
+              "different": -1
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/clm/admin/integrations/salesforce/simulation/panne",
+          "profil": "administration technique IQ",
+          "corps": {
+            "panne": false
+          }
+        },
+        {
+          "appel": "POST /api/clm/admin/integrations/salesforce/trousses/${trousse}/relancer",
+          "profil": "administration technique IQ",
+          "corps": {}
+        },
+        {
+          "appel": "PUT /api/clm/admin/integrations/salesforce/configuration",
+          "profil": "administration technique IQ",
+          "corps": {
+            "mode": "REST",
+            "authentification": "JWT_BEARER",
+            "instanceUrl": "https://iq-sandbox.my.salesforce.com",
+            "tokenUrl": "https://test.salesforce.com/services/oauth2/token",
+            "clientId": "3MVG9-iq-sandbox",
+            "utilisateur": "integration.clm@iq.example.sandbox",
+            "objet": "FundingRequest",
+            "versionApi": "v60.0"
+          },
+          "statut": 400,
+          "verifier": [
+            {
+              "texte": "Clé privée requise"
+            }
+          ]
+        }
+      ]
+    },
+    "iq.salesforce.minimisation": {
+      "description": "Seuls les champs déclarés sont lus dans Salesforce",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "GET /api/clm/salesforce/dossiers/DEM-2026-0002",
+          "verifier": [
+            {
+              "texteAbsent": "NotesInternes__c"
+            },
+            {
+              "chemin": "$.champs.Montant",
+              "existe": true
+            }
+          ]
+        }
+      ]
+    },
+    "iq.acces.administrations": {
+      "description": "Moindre privilège : l'administration technique ne lit aucune trousse ; l'administration d'affaires gère le contenu ; seule l'administration principale attribue les rôles ; l'auditeur consulte sans agir",
+      "etapes": [
+        {
+          "appel": "GET /api/clm/admin/integrations/salesforce",
+          "profil": "administration technique IQ"
+        },
+        {
+          "appel": "GET /api/clm/trousses?page=0&taille=5",
+          "profil": "administration technique IQ",
+          "verifier": [
+            {
+              "chemin": "$.lignes",
+              "egal": []
+            }
+          ],
+          "note": "aucun contenu visible"
+        },
+        {
+          "appel": "GET /api/clm/admin/conservation/regles",
+          "profil": "administration technique IQ",
+          "statut": 403
+        },
+        {
+          "appel": "GET /api/clm/admin/integrations/salesforce",
+          "profil": "administration d'affaires IQ",
+          "statut": 403
+        },
+        {
+          "appel": "GET /api/admin/users/roles",
+          "profil": "administration principale IQ",
+          "verifier": [
+            {
+              "texte": "ADMIN_TECHNIQUE"
+            },
+            {
+              "texte": "ADMIN_AFFAIRES"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/admin/users/roles",
+          "profil": "administration technique IQ",
+          "statut": 403
+        },
+        {
+          "appel": "GET /api/clm/suivi?page=0&taille=5",
+          "profil": "auditeur IQ",
+          "verifier": [
+            {
+              "chemin": "$.lignes",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses",
+          "profil": "auditeur IQ",
+          "corps": {
+            "titre": "Interdit"
+          },
+          "statut": 403
+        },
+        {
+          "appel": "GET /api/documents",
+          "profil": "initiateur IQ",
+          "statut": [
+            403,
+            404
+          ]
+        }
+      ]
+    },
+    "iq.acces.comptes": {
+      "description": "Gestion des comptes : création avec rôle, groupe du module, retrait d'accès tracé ; départ d'un employé",
+      "profil": "administration principale IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/admin/users",
+          "corps": {
+            "email": "bdd.${unique}@iq.example",
+            "nom": "Compte BDD",
+            "motDePasse": "Passw0rd!Bdd-2026",
+            "roles": [
+              "LECTEUR"
+            ],
+            "actif": true
+          },
+          "capturer": {
+            "compte": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/admin/groupes",
+          "profil": "administration d'affaires IQ",
+          "corps": {
+            "code": "BDD_${UNIQUE}",
+            "libelle": "Groupe BDD ${unique}"
+          },
+          "capturer": {
+            "groupe": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/admin/groupes/${groupe}/membres",
+          "profil": "administration d'affaires IQ",
+          "corps": {
+            "courriel": "bdd.${unique}@iq.example"
+          }
+        },
+        {
+          "appel": "GET /api/clm/groupes",
+          "profil": "administration d'affaires IQ",
+          "verifier": [
+            {
+              "texte": "bdd.${unique}@iq.example"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/admin/users/${compte}",
+          "corps": {
+            "email": "bdd.${unique}@iq.example",
+            "nom": "Compte BDD",
+            "roles": [
+              "LECTEUR"
+            ],
+            "actif": false
+          },
+          "verifier": [
+            {
+              "chemin": "$.actif",
+              "egal": false
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/auth/login",
+          "anonyme": true,
+          "corps": {
+            "email": "bdd.${unique}@iq.example",
+            "motDePasse": "Passw0rd!Bdd-2026"
+          },
+          "statut": [
+            401,
+            403
+          ]
+        },
+        {
+          "appel": "GET /api/clm/admin/departs?courriel=validateur@iq.example",
+          "profil": "administration d'affaires IQ",
+          "verifier": [
+            {
+              "chemin": "$.courriel",
+              "egal": "validateur@iq.example"
+            }
+          ]
+        }
+      ]
+    },
+    "iq.annuaire.scim": {
+      "description": "Annuaire : correspondance groupe Entra ID → rôle et domaine ; provisionnement SCIM 2.0 (Saviynt) puis désactivation immédiate",
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/admin/annuaire/correspondances",
+          "corps": {
+            "source": "Groupe",
+            "valeur": "aad-grp-bdd-${unique}",
+            "role": "AUDITEUR",
+            "groupe": "JURIDIQUE_BDD"
+          },
+          "capturer": {
+            "correspondance": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/admin/annuaire/scim/jeton",
+          "corps": {},
+          "capturer": {
+            "jetonScim": "$.jeton"
+          }
+        },
+        {
+          "appel": "GET /scim/v2/ServiceProviderConfig",
+          "anonyme": true,
+          "entetes": {
+            "Authorization": "Bearer ${jetonScim}"
+          },
+          "verifier": [
+            {
+              "texte": "urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig"
+            }
+          ]
+        },
+        {
+          "appel": "POST /scim/v2/Users",
+          "anonyme": true,
+          "entetes": {
+            "Authorization": "Bearer ${jetonScim}",
+            "Content-Type": "application/scim+json"
+          },
+          "corps": {
+            "schemas": [
+              "urn:ietf:params:scim:schemas:core:2.0:User"
+            ],
+            "userName": "scim.${unique}@iq.example",
+            "name": {
+              "givenName": "Sami",
+              "familyName": "Provisionné"
+            },
+            "active": true,
+            "emails": [
+              {
+                "value": "scim.${unique}@iq.example",
+                "primary": true
+              }
+            ],
+            "groups": [
+              {
+                "value": "aad-grp-bdd-${unique}"
+              }
+            ]
+          },
+          "statut": 201,
+          "capturer": {
+            "scimId": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.active",
+              "egal": true
+            }
+          ]
+        },
+        {
+          "appel": "PATCH /scim/v2/Users/${scimId}",
+          "anonyme": true,
+          "entetes": {
+            "Authorization": "Bearer ${jetonScim}",
+            "Content-Type": "application/scim+json"
+          },
+          "corps": {
+            "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+            ],
+            "Operations": [
+              {
+                "op": "replace",
+                "value": {
+                  "active": false
+                }
+              }
+            ]
+          },
+          "verifier": [
+            {
+              "chemin": "$.active",
+              "egal": false
+            }
+          ]
+        },
+        {
+          "appel": "DELETE /api/admin/annuaire/correspondances/${correspondance}",
+          "statut": [
+            200,
+            204
+          ]
+        }
+      ]
+    },
+    "iq.sso.connexion": {
+      "description": "Authentification unique (OIDC, SAML) configurable ; connexion locale réservable aux comptes de secours",
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "appel": "GET /api/auth/config?slug=iq",
+          "anonyme": true,
+          "verifier": [
+            {
+              "chemin": "$",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/admin/connexion-locale",
+          "verifier": [
+            {
+              "chemin": "$.comptes",
+              "longueurMin": 1
+            },
+            {
+              "chemin": "$.reservee",
+              "existe": true
+            }
+          ]
+        }
+      ]
+    },
+    "iq.ia.analyse": {
+      "description": "Analyse automatisée d'un document (catégorie, anomalies) soumise à révision humaine obligatoire",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/trousses",
+          "corps": {
+            "titre": "Analyse IA ${unique}",
+            "risque": "FAIBLE",
+            "unite": "FINANCEMENT_ENTREPRISES"
+          },
+          "capturer": {
+            "trousse": "$.resume.id",
+            "trousseRef": "$.resume.reference"
+          },
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents",
+          "multipart": {
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "convention.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "capturer": {
+            "document": "$.id",
+            "documentCle": "$.cleDocument"
+          },
+          "verifier": [
+            {
+              "chemin": "$.analyse",
+              "egal": "PROPRE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/documents/${document}/analyse",
+          "corps": {},
+          "capturer": {
+            "analyse": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "A_REVISER"
+            },
+            {
+              "chemin": "$.resultat.anomalies",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/analyses/${analyse}/revision",
+          "corps": {
+            "valide": false,
+            "justification": ""
+          },
+          "statut": 400,
+          "note": "justification exigée"
+        },
+        {
+          "appel": "POST /api/clm/analyses/${analyse}/revision",
+          "corps": {
+            "valide": true,
+            "justification": "Anomalies vérifiées ${unique}"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "VALIDEE"
+            },
+            {
+              "chemin": "$.reviseePar",
+              "egal": "initiateur@iq.example"
+            }
+          ]
+        }
+      ]
+    },
+    "iq.suggestions": {
+      "description": "Saisie assistée : les valeurs déjà retenues pour un champ sont proposées",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "GET /api/clm/trousses/${trousse}/suggestions/demandeur",
+          "verifier": [
+            {
+              "chemin": "$",
+              "existe": true
+            }
+          ]
+        }
+      ]
+    },
+    "iq.isolation": {
+      "description": "Protection des données : une trousse d'IQ est introuvable pour une autre organisation",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/trousses",
+          "corps": {
+            "titre": "Confidentielle ${unique}",
+            "risque": "FAIBLE",
+            "unite": "FINANCEMENT_ENTREPRISES"
+          },
+          "capturer": {
+            "trousse": "$.resume.id",
+            "trousseRef": "$.resume.reference"
+          },
+          "verifier": [
+            {
+              "chemin": "$.resume.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}",
+          "profil": "administrateur de Lévis",
+          "statut": [
+            403,
+            404
+          ]
+        }
+      ]
+    },
+    "iq.api.documentee": {
+      "description": "Interfaces standards documentées : OpenAPI publie l'API CLM et l'API d'intégration ; SCIM découvrable",
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "appel": "GET /v3/api-docs",
+          "verifier": [
+            {
+              "chemin": "$.paths./api/clm/integration/v1/trousses",
+              "existe": true
+            },
+            {
+              "chemin": "$.paths./scim/v2/Users",
+              "existe": true
+            }
+          ]
+        }
+      ]
+    },
+    "iq.gabarit.word": {
+      "description": "Gabarit Word d'IQ déposé sur le modèle : le contrat généré en Word et en PDF garde la mise en page (conversion par le service LibreOffice)",
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/modeles",
+          "corps": {
+            "nom": "Convention Word ${unique}",
+            "corps": "Convention avec {{beneficiaire}} pour {{montant}}.",
+            "champs": [
+              {
+                "cle": "beneficiaire",
+                "libelle": "Bénéficiaire",
+                "type": "TEXTE",
+                "obligatoire": false
+              },
+              {
+                "cle": "montant",
+                "libelle": "Montant",
+                "type": "TEXTE",
+                "obligatoire": false
+              }
+            ],
+            "clauses": [
+              {
+                "cle": "garantie",
+                "titre": "Garantie",
+                "texte": "Hypothèque mobilière de premier rang de {{montant}}.",
+                "combinateur": "ET",
+                "conditions": []
+              }
+            ],
+            "parcours": []
+          },
+          "capturer": {
+            "modele": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/modeles/${modele}/gabarit-word",
+          "multipart": {
+            "fichier": {
+              "fichier": "chemin:donnees/fichiers/gabarit-iq.docx",
+              "nom": "Convention IQ.docx",
+              "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            }
+          },
+          "verifier": [
+            {
+              "chemin": "$.gabaritWord",
+              "egal": "Convention IQ.docx"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/modeles/${modele}/soumettre",
+          "corps": {}
+        },
+        {
+          "appel": "POST /api/clm/modeles/${modele}/publier",
+          "profil": "administration d'affaires IQ",
+          "corps": {}
+        },
+        {
+          "appel": "POST /api/clm/trousses",
+          "corps": {
+            "titre": "Convention Word ${unique}",
+            "modeleId": "${modele}",
+            "risque": "FAIBLE"
+          },
+          "capturer": {
+            "trousse": "$.resume.id"
+          }
+        },
+        {
+          "appel": "PUT /api/clm/trousses/${trousse}/valeurs",
+          "corps": {
+            "valeurs": {
+              "beneficiaire": "Coopérative Agri-Nord inc.",
+              "montant": "250 000 $"
+            }
+          }
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/generer?format=DOCX",
+          "capturer": {
+            "word": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.motif",
+              "contient": "gabarit Word"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}/documents/${word}/texte",
+          "verifier": [
+            {
+              "texte": "Convention de financement — Coopérative Agri-Nord inc."
+            },
+            {
+              "texte": "Hypothèque mobilière de premier rang de 250 000 $."
+            },
+            {
+              "texteAbsent": "{{"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/trousses/${trousse}/generer?format=PDF",
+          "capturer": {
+            "pdf": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.motif",
+              "contient": "mise en page conservée"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clm/trousses/${trousse}/documents/${pdf}/texte",
+          "verifier": [
+            {
+              "texte": "Coopérative Agri-Nord inc."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

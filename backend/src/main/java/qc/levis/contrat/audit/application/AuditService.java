@@ -29,6 +29,11 @@ public class AuditService {
      * avant que le {@link TenantContext} ne soit alimenté (connexion) : on rattache alors la trace
      * au tenant du compte concerné afin qu'elle reste consultable par son administrateur (exig. 9).
      */
+    /** Nombre d'événements d'une action pour une personne depuis un instant (ex. échecs de connexion récents). */
+    public long compter(String utilisateur, String action, java.time.Instant depuis) {
+        return repo.countByUtilisateurIgnoreCaseAndActionAndHorodatageAfter(utilisateur, action, depuis);
+    }
+
     public void log(Long tenantId, String utilisateur, String action, String entite, Long id, String details) {
         journaliser(tenantId, utilisateur, action, entite, id, details);
     }

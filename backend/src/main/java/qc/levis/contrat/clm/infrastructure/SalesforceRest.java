@@ -3,7 +3,6 @@ package qc.levis.contrat.clm.infrastructure;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -51,15 +50,23 @@ public class SalesforceRest implements PortSalesforce {
     private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
     private final Map<String, Jeton> jetons = new ConcurrentHashMap<>();
 
+    private final qc.levis.contrat.commun.infrastructure.reseau.GardeSortante garde;
+
+    /** L'instance Salesforce est configurée par l'organisation : chaque appel passe la garde anti-SSRF. */
     @Autowired
-    public SalesforceRest(ConnexionsSalesforce connexions, ObjectMapper json, Clock horloge) {
-        this(connexions::courante, json, horloge);
+    public SalesforceRest(ConnexionsSalesforce connexions, ObjectMapper json, Clock horloge, qc.levis.contrat.commun.infrastructure.reseau.GardeSortante garde) {
+        this(connexions::courante, json, horloge, garde);
     }
 
     SalesforceRest(Supplier<ConnexionsSalesforce.Connexion> connexions, ObjectMapper json, Clock horloge) {
+        this(connexions, json, horloge, qc.levis.contrat.commun.infrastructure.reseau.GardeSortante.aucune());
+    }
+
+    SalesforceRest(Supplier<ConnexionsSalesforce.Connexion> connexions, ObjectMapper json, Clock horloge, qc.levis.contrat.commun.infrastructure.reseau.GardeSortante garde) {
         this.connexions = connexions;
         this.json = json;
         this.horloge = horloge;
+        this.garde = garde;
     }
 
     /**
@@ -75,7 +82,7 @@ public class SalesforceRest implements PortSalesforce {
             return parId;
         }
         String soql = "SELECT Id FROM " + c.objet() + " WHERE Name = '" + identifiantOuNumero.replace("\\", "\\\\").replace("'", "\\'") + "' LIMIT 1";
-        HttpResponse<String> r = appeler(c, HttpRequest.newBuilder(URI.create(base(c) + "/query?q=" + encoder(soql))).GET(), null);
+        HttpResponse<String> r = appeler(c, HttpRequest.newBuilder(garde.exiger(base(c) + "/query?q=" + encoder(soql))).GET(), null);
         List<?> enregistrements = (List<?>) lire(r).getOrDefault("records", List.of());
         if (enregistrements.isEmpty()) {
             return Optional.empty();
@@ -92,7 +99,7 @@ public class SalesforceRest implements PortSalesforce {
 
     private Optional<Dossier> parIdentifiant(ConnexionsSalesforce.Connexion c, String identifiant, String liste) {
         String url = base(c) + "/sobjects/" + c.objet() + "/" + encoder(identifiant) + "?fields=" + encoder(liste);
-        HttpResponse<String> r = appeler(c, HttpRequest.newBuilder(URI.create(url)).GET(), null);
+        HttpResponse<String> r = appeler(c, HttpRequest.newBuilder(garde.exiger(url)).GET(), null);
         if (r.statusCode() == 404) {
             return Optional.empty();
         }
@@ -119,7 +126,7 @@ public class SalesforceRest implements PortSalesforce {
         corps.put(c.champs().reference(), s.donnees().get("reference"));
         corps.put(c.champs().correlation(), s.correlationId());
         String url = base(c) + "/sobjects/" + c.objet() + "/" + encoder(s.sfDossierId());
-        HttpResponse<String> r = appeler(c, HttpRequest.newBuilder(URI.create(url))
+        HttpResponse<String> r = appeler(c, HttpRequest.newBuilder(garde.exiger(url))
                 .method("PATCH", HttpRequest.BodyPublishers.ofString(ecrire(corps))), s.correlationId());
         if (r.statusCode() >= 300) {
             throw new Indisponible("Retour de statut refusé par Salesforce (HTTP " + r.statusCode() + ").");
@@ -130,7 +137,7 @@ public class SalesforceRest implements PortSalesforce {
     public EtatConnexion tester() {
         ConnexionsSalesforce.Connexion c = connexions.get();
         try {
-            appeler(c, HttpRequest.newBuilder(URI.create(base(c) + "/limits")).GET(), null);
+            appeler(c, HttpRequest.newBuilder(garde.exiger(base(c) + "/limits")).GET(), null);
             return new EtatConnexion(true, "rest", "Connexion établie (" + c.versionApi() + ")");
         } catch (Indisponible e) {
             return new EtatConnexion(false, "rest", e.getMessage());
@@ -170,7 +177,7 @@ public class SalesforceRest implements PortSalesforce {
                 ? "grant_type=" + encoder(JWT_BEARER) + "&assertion=" + encoder(AssertionJwt.signer(c, Instant.now(horloge)))
                 : "grant_type=client_credentials&client_id=" + encoder(c.clientId()) + "&client_secret=" + encoder(c.clientSecret());
         try {
-            HttpResponse<String> r = http.send(HttpRequest.newBuilder(URI.create(c.tokenUrl()))
+            HttpResponse<String> r = http.send(HttpRequest.newBuilder(garde.exiger(c.tokenUrl()))
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .POST(HttpRequest.BodyPublishers.ofString(corps)).timeout(Duration.ofSeconds(20)).build(), HttpResponse.BodyHandlers.ofString());
             if (r.statusCode() != 200) {

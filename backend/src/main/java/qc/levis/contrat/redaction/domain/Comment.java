@@ -48,4 +48,10 @@ public class Comment {
     public void setParentId(Long parentId) { this.parentId = parentId; }
     public Instant getCreeLe() { return creeLe; }
     public void setCreeLe(Instant creeLe) { this.creeLe = creeLe; }
+
+    /** Loi 25 : le commentaire garde son texte (il porte sur le contrat), mais plus le nom de la personne. */
+    public void pseudonymiser(String courriel, String pseudonyme) {
+        if (courriel.equalsIgnoreCase(auteur)) auteur = pseudonyme;
+        if (courriel.equalsIgnoreCase(resoluPar)) resoluPar = pseudonyme;
+    }
 }

@@ -13,6 +13,8 @@ spec:
       labels: { app: backend }
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
+      # Compte non privilégié de l'image (10001), profil seccomp par défaut du nœud.
+      securityContext: { runAsNonRoot: true, runAsUser: 10001, runAsGroup: 10001, fsGroup: 10001, seccompProfile: { type: RuntimeDefault } }
       # Répartition des répliques sur les zones de disponibilité = HA multi-zone (SLA 99,99 %).
       topologySpreadConstraints:
         - maxSkew: 1
@@ -37,8 +39,19 @@ spec:
           livenessProbe:
             httpGet: { path: /actuator/health/liveness, port: {{ .Values.backend.port }} }
             initialDelaySeconds: 30
+          # Racine en lecture seule : seuls /tmp et le journal sont inscriptibles.
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL] }
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+            - { name: journal, mountPath: /var/log/contrat }
           resources:
             {{- toYaml .Values.backend.resources | nindent 12 }}
+      volumes:
+        - { name: tmp, emptyDir: {} }
+        - { name: journal, emptyDir: {} }
 ---
 apiVersion: v1
 kind: Service

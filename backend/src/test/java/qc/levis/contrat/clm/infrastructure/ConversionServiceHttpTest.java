@@ -27,6 +27,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 class ConversionServiceHttpTest {
 
     private static final GenericContainer<?> GOTENBERG = new GenericContainer<>("gotenberg/gotenberg:8.17.3")
+            // Même délai qu'en production (docker-compose, chart) : à 30 s par défaut, la conversion échoue en 503 sous charge.
+            .withCommand("gotenberg", "--api-timeout=120s")
             .withExposedPorts(3000).waitingFor(Wait.forHttp("/health").forStatusCode(200)).withStartupTimeout(Duration.ofMinutes(3));
 
     @BeforeAll
@@ -66,6 +68,27 @@ class ConversionServiceHttpTest {
             assertEquals(2, xmp.getPDFIdentificationSchema().getPart());
             assertEquals("B", xmp.getPDFIdentificationSchema().getConformance());
             assertFalse(doc.getDocumentCatalog().getOutputIntents().isEmpty(), "intention de sortie PDF/A");
+        }
+    }
+
+    @Test
+    void une_indisponibilite_passagere_503_est_reessayee_une_fois() throws Exception {
+        java.util.concurrent.atomic.AtomicInteger appels = new java.util.concurrent.atomic.AtomicInteger();
+        HttpServer local = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+        local.createContext("/forms/libreoffice/convert", ex -> {
+            ex.getRequestBody().readAllBytes();
+            byte[] corps = (appels.incrementAndGet() == 1 ? "occupé" : "%PDF-1.7").getBytes(StandardCharsets.UTF_8);
+            ex.sendResponseHeaders(appels.get() == 1 ? 503 : 200, corps.length);
+            ex.getResponseBody().write(corps);
+            ex.close();
+        });
+        local.start();
+        try {
+            ConversionServiceHttp c = new ConversionServiceHttp("http://127.0.0.1:" + local.getAddress().getPort() + "/", 5);
+            assertEquals("%PDF-1.7", new String(c.versPdf(new byte[]{1}), StandardCharsets.UTF_8));
+            assertEquals(2, appels.get());
+        } finally {
+            local.stop(0);
         }
     }
 

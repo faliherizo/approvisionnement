@@ -1,4 +1,4 @@
-package qc.levis.contrat.clm.infrastructure;
+package qc.levis.contrat.commun.infrastructure.pdf;
 
 import java.awt.color.ColorSpace;
 import java.awt.color.ICC_Profile;
@@ -25,7 +25,7 @@ import org.apache.xmpbox.xml.XmpSerializer;
  * métadonnées XMP déclarant la conformité, profil de couleur sRGB en intention de sortie. Le rendu visuel reste
  * reproductible sans ressource externe, condition de la conservation à long terme.
  */
-final class ConformitePdfA {
+public final class ConformitePdfA {
 
     /** Police libre livrée avec PDFBox : intégrée (sous-ensemble), elle couvre le français et l'anglais. */
     private static final String POLICE = "/org/apache/pdfbox/resources/ttf/LiberationSans-Regular.ttf";
@@ -33,14 +33,14 @@ final class ConformitePdfA {
     private ConformitePdfA() {
     }
 
-    static PDFont police(PDDocument doc) throws IOException {
+    public static PDFont police(PDDocument doc) throws IOException {
         try (InputStream in = ConformitePdfA.class.getResourceAsStream(POLICE)) {
             return PDType0Font.load(doc, in, true);
         }
     }
 
     /** Remplace par « ? » les caractères absents de la police plutôt que de faire échouer la génération. */
-    static String affichable(PDFont police, String texte) {
+    public static String affichable(PDFont police, String texte) {
         StringBuilder sb = new StringBuilder();
         (texte == null ? "" : texte).codePoints().forEach(c -> sb.append(encodable(police, c) ? Character.toString(c) : "?"));
         return sb.toString();
@@ -58,7 +58,7 @@ final class ConformitePdfA {
         }
     }
 
-    static void declarer(PDDocument doc, String titre, Calendar le) throws IOException, BadFieldValueException, TransformerException {
+    public static void declarer(PDDocument doc, String titre, Calendar le) throws IOException, BadFieldValueException, TransformerException {
         doc.getDocumentInformation().setTitle(titre);
         doc.getDocumentInformation().setCreationDate(le);
         PDMetadata metadonnees = new PDMetadata(doc);

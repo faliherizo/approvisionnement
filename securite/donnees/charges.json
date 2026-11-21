@@ -1,0 +1,8 @@
+{
+  "injectionSql": ["' OR '1'='1", "'; DROP TABLE clause;--", "1 UNION SELECT email, mot_de_passe_hash FROM app_user--", "%' OR 1=1 --"],
+  "xss": ["<script>alert('xss')</script>", "<img src=x onerror=alert(1)>", "javascript:alert(1)", "\"><svg onload=alert(1)>"],
+  "traversee": ["../../../../etc/passwd", "..%2F..%2F..%2Fetc%2Fpasswd", "....//....//etc/passwd", "/etc/passwd"],
+  "ssrf": ["http://169.254.169.254/latest/meta-data/", "http://localhost:8100/api/admin/users", "file:///etc/passwd", "http://[::1]:22/"],
+  "formulesCsv": ["=HYPERLINK(\"http://pirate.example\",\"clic\")", "+cmd|' /C calc'!A0", "@SUM(1+1)*cmd|' /C calc'!A0"],
+  "secretsInterdits": ["$2a$", "$2b$", "motDePasseHash", "mot_de_passe_hash", "totpSecret", "clientSecret", "BEGIN PRIVATE KEY", "BEGIN RSA PRIVATE KEY"]
+}

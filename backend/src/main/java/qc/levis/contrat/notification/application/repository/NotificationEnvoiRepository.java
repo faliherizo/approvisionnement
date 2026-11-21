@@ -6,4 +6,5 @@ import qc.levis.contrat.notification.domain.NotificationEnvoi;
 
 public interface NotificationEnvoiRepository extends JpaRepository<NotificationEnvoi, Long> {
     List<NotificationEnvoi> findTop100ByTenantIdOrderByEnvoyeLeDesc(Long tenantId);
+    List<NotificationEnvoi> findByTenantIdAndDestinataireIgnoreCase(Long tenantId, String destinataire);
 }

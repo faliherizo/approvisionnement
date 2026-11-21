@@ -1,0 +1,1262 @@
+{
+  "ecrans": {
+    "Lévis — documents contractuels": {
+      "chemin": "/",
+      "titre": "Documents contractuels"
+    },
+    "Lévis — bibliothèque de clauses": {
+      "chemin": "/clauses",
+      "titre": "Bibliothèque de clauses"
+    },
+    "Lévis — éditeur du document": {
+      "chemin": "/documents/${document}",
+      "titre": "Devis BDD"
+    },
+    "Lévis — circuits d'approbation": {
+      "chemin": "/workflows",
+      "titre": "Circuits d’approbation"
+    },
+    "Lévis — journal d'audit": {
+      "chemin": "/audit",
+      "titre": "Journal d’audit"
+    },
+    "Lévis — recherche": {
+      "chemin": "/recherche",
+      "titre": "Recherche enrichie"
+    },
+    "Lévis — assistant guidé": {
+      "chemin": "/assistant",
+      "titre": "Assistant guidé de génération"
+    },
+    "Lévis — utilisateurs": {
+      "chemin": "/utilisateurs",
+      "titre": "Utilisateurs"
+    },
+    "Lévis — sécurité du compte": {
+      "chemin": "/securite",
+      "titre": "Sécurité du compte"
+    },
+    "Lévis — vie privée (Loi 25)": {
+      "chemin": "/vie-privee",
+      "titre": "Loi 25"
+    }
+  },
+  "cas": {
+    "lev.clauses.bibliotheque": {
+      "description": "Bibliothèque centralisée : une clause de chaque catégorie, modifiée puis retrouvée par recherche, puis archivée",
+      "etapes": [
+        {
+          "appel": "POST /api/clauses",
+          "corps": {
+            "code": "STD-${UNIQUE}",
+            "titre": "Délai d'exécution ${unique}",
+            "categorie": "STANDARD",
+            "corps": "Les travaux sont exécutés dans les délais du devis.",
+            "numero": "9.10",
+            "section": "Exécution"
+          },
+          "statut": [
+            200,
+            201
+          ],
+          "capturer": {
+            "standard": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.categorie",
+              "egal": "STANDARD"
+            },
+            {
+              "chemin": "$.version",
+              "egal": 1
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clauses",
+          "corps": {
+            "code": "OPT-${UNIQUE}",
+            "titre": "Garantie prolongée ${unique}",
+            "categorie": "OPTIONNELLE",
+            "corps": "Garantie de 24 mois.",
+            "numero": "9.11",
+            "section": "Garanties"
+          },
+          "statut": [
+            200,
+            201
+          ],
+          "capturer": {
+            "optionnelle": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.categorie",
+              "egal": "OPTIONNELLE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clauses",
+          "corps": {
+            "code": "PER-${UNIQUE}",
+            "titre": "Clause propre au projet ${unique}",
+            "categorie": "PERSONNALISEE",
+            "corps": "Exigence propre au site.",
+            "numero": "9.12",
+            "section": "Particularités"
+          },
+          "statut": [
+            200,
+            201
+          ],
+          "verifier": [
+            {
+              "chemin": "$.categorie",
+              "egal": "PERSONNALISEE"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/clauses/${standard}",
+          "corps": {
+            "code": "STD-${UNIQUE}",
+            "titre": "Délai d'exécution ${unique}",
+            "categorie": "STANDARD",
+            "corps": "Les travaux sont exécutés dans les 60 jours.",
+            "numero": "9.10",
+            "section": "Exécution"
+          },
+          "verifier": [
+            {
+              "chemin": "$.corps",
+              "contient": "60 jours"
+            },
+            {
+              "chemin": "$.version",
+              "egal": 2
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clauses/recherche?q=${unique}&page=0&taille=20",
+          "verifier": [
+            {
+              "chemin": "$.contenu[*].code",
+              "inclut": "STD-${UNIQUE}"
+            },
+            {
+              "chemin": "$.contenu[*].code",
+              "inclut": "OPT-${UNIQUE}"
+            }
+          ]
+        },
+        {
+          "appel": "DELETE /api/clauses/${optionnelle}",
+          "profil": "administrateur de Lévis"
+        },
+        {
+          "appel": "GET /api/clauses",
+          "verifier": [
+            {
+              "chemin": "$[*].code",
+              "exclut": "OPT-${UNIQUE}"
+            },
+            {
+              "chemin": "$[*].code",
+              "inclut": "STD-${UNIQUE}"
+            }
+          ]
+        }
+      ]
+    },
+    "lev.clauses.recherche-multicritere": {
+      "description": "Recherche multicritère : terme, catégorie et type de contrat",
+      "etapes": [
+        {
+          "appel": "GET /api/search?q=contrat&categorie=STANDARD",
+          "verifier": [
+            {
+              "chemin": "$.clauses",
+              "longueurMin": 1
+            },
+            {
+              "chemin": "$.clauses[*].categorie",
+              "exclut": "OPTIONNELLE"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/search?q=Objet&type=APPEL_OFFRES_PUBLIC",
+          "verifier": [
+            {
+              "chemin": "$.terme",
+              "egal": "Objet"
+            }
+          ]
+        }
+      ]
+    },
+    "lev.documents.types": {
+      "description": "Chaque type de document exigé se crée : demande de prix, AOP, gré à gré, bail, prêt à usage, contrat de services, avis d'intention",
+      "etapes": [
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Demande de prix BDD ${unique}",
+            "type": "DEMANDE_PRIX",
+            "modeSollicitation": "DEMANDE_PRIX",
+            "valeurEstimee": 20000
+          },
+          "verifier": [
+            {
+              "chemin": "$.type",
+              "egal": "DEMANDE_PRIX"
+            },
+            {
+              "chemin": "$.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "AOP BDD ${unique}",
+            "type": "APPEL_OFFRES_PUBLIC",
+            "modeSollicitation": "APPEL_OFFRES_PUBLIC",
+            "valeurEstimee": 250000
+          },
+          "verifier": [
+            {
+              "chemin": "$.type",
+              "egal": "APPEL_OFFRES_PUBLIC"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Gré à gré BDD ${unique}",
+            "type": "GRE_A_GRE",
+            "modeSollicitation": "GRE_A_GRE",
+            "valeurEstimee": 15000
+          },
+          "verifier": [
+            {
+              "chemin": "$.type",
+              "egal": "GRE_A_GRE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Bail BDD ${unique}",
+            "type": "BAIL",
+            "modeSollicitation": "GRE_A_GRE",
+            "valeurEstimee": 12000
+          },
+          "verifier": [
+            {
+              "chemin": "$.type",
+              "egal": "BAIL"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Prêt à usage BDD ${unique}",
+            "type": "PRET_A_USAGE",
+            "modeSollicitation": "GRE_A_GRE",
+            "valeurEstimee": 0
+          },
+          "verifier": [
+            {
+              "chemin": "$.type",
+              "egal": "PRET_A_USAGE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Contrat de services BDD ${unique}",
+            "type": "CONTRAT_SERVICES",
+            "modeSollicitation": "GRE_A_GRE",
+            "valeurEstimee": 45000
+          },
+          "verifier": [
+            {
+              "chemin": "$.type",
+              "egal": "CONTRAT_SERVICES"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Avis d'intention BDD ${unique}",
+            "type": "AVIS_INTENTION",
+            "modeSollicitation": "GRE_A_GRE",
+            "valeurEstimee": 80000
+          },
+          "verifier": [
+            {
+              "chemin": "$.type",
+              "egal": "AVIS_INTENTION"
+            }
+          ]
+        }
+      ]
+    },
+    "lev.assemblage.adaptation": {
+      "description": "Adaptation des clauses au type, au mode, à la valeur et au contexte ; assemblage automatique des clauses standards",
+      "etapes": [
+        {
+          "appel": "POST /api/clauses",
+          "corps": {
+            "code": "SEUIL-${UNIQUE}",
+            "titre": "Garantie de soumission ${unique}",
+            "categorie": "OPTIONNELLE",
+            "corps": "Garantie de soumission de 10 %.",
+            "numero": "8.01",
+            "section": "Garanties",
+            "conditions": [
+              {
+                "attribut": "TYPE_CONTRAT",
+                "valeur": "APPEL_OFFRES_PUBLIC"
+              },
+              {
+                "attribut": "MODE_SOLLICITATION",
+                "valeur": "APPEL_OFFRES_PUBLIC"
+              },
+              {
+                "attribut": "VALEUR_MIN",
+                "valeur": "100000"
+              },
+              {
+                "attribut": "CONTEXTE",
+                "valeur": "travaux"
+              }
+            ]
+          },
+          "statut": [
+            200,
+            201
+          ],
+          "capturer": {
+            "clauseSeuil": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Devis BDD ${unique}",
+            "type": "APPEL_OFFRES_PUBLIC",
+            "modeSollicitation": "APPEL_OFFRES_PUBLIC",
+            "valeurEstimee": 150000,
+            "contexte": "travaux"
+          },
+          "capturer": {
+            "document": "$.id"
+          }
+        },
+        {
+          "appel": "GET /api/documents/${document}/clauses-eligibles",
+          "verifier": [
+            {
+              "chemin": "$[*].code",
+              "inclut": "SEUIL-${UNIQUE}"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Petite demande BDD ${unique}",
+            "type": "DEMANDE_PRIX",
+            "modeSollicitation": "DEMANDE_PRIX",
+            "valeurEstimee": 5000,
+            "contexte": "fournitures"
+          },
+          "capturer": {
+            "petit": "$.id"
+          }
+        },
+        {
+          "appel": "GET /api/documents/${petit}/clauses-eligibles",
+          "verifier": [
+            {
+              "chemin": "$[*].code",
+              "exclut": "SEUIL-${UNIQUE}"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents/${document}/assembler",
+          "corps": {
+            "clauseIds": []
+          },
+          "verifier": [
+            {
+              "chemin": "$.clauses",
+              "longueurMin": 1
+            },
+            {
+              "chemin": "$.clauses[*].code",
+              "inclut": "GEN-001"
+            }
+          ]
+        }
+      ]
+    },
+    "lev.assemblage.dependances": {
+      "description": "Une clause entraîne celles qu'elle requiert et écarte celles qu'elle exclut",
+      "etapes": [
+        {
+          "appel": "POST /api/clauses",
+          "corps": {
+            "code": "REQ-${UNIQUE}",
+            "titre": "Assurance responsabilité ${unique}",
+            "categorie": "OPTIONNELLE",
+            "corps": "Assurance de 2 M$.",
+            "numero": "7.01",
+            "section": "Assurances"
+          },
+          "statut": [
+            200,
+            201
+          ]
+        },
+        {
+          "appel": "POST /api/clauses",
+          "corps": {
+            "code": "EXC-${UNIQUE}",
+            "titre": "Dispense d'assurance ${unique}",
+            "categorie": "OPTIONNELLE",
+            "corps": "Aucune assurance exigée.",
+            "numero": "7.02",
+            "section": "Assurances"
+          },
+          "statut": [
+            200,
+            201
+          ],
+          "capturer": {
+            "exclue": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/clauses",
+          "corps": {
+            "code": "PRI-${UNIQUE}",
+            "titre": "Travaux en hauteur ${unique}",
+            "categorie": "OPTIONNELLE",
+            "corps": "Travaux en hauteur encadrés.",
+            "numero": "7.03",
+            "section": "Sécurité",
+            "dependances": [
+              "REQ-${UNIQUE}"
+            ],
+            "exclusions": [
+              "EXC-${UNIQUE}"
+            ]
+          },
+          "statut": [
+            200,
+            201
+          ],
+          "capturer": {
+            "principale": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Devis BDD ${unique}",
+            "type": "CONTRAT_SERVICES",
+            "modeSollicitation": "GRE_A_GRE",
+            "valeurEstimee": 30000
+          },
+          "capturer": {
+            "document": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/documents/${document}/assembler",
+          "corps": {
+            "clauseIds": [
+              "${principale}",
+              "${exclue}"
+            ]
+          },
+          "verifier": [
+            {
+              "chemin": "$.clauses[*].code",
+              "inclut": "PRI-${UNIQUE}"
+            },
+            {
+              "chemin": "$.clauses[*].code",
+              "inclut": "REQ-${UNIQUE}"
+            },
+            {
+              "chemin": "$.clauses[*].code",
+              "exclut": "EXC-${UNIQUE}"
+            }
+          ]
+        }
+      ]
+    },
+    "lev.revision.circuit": {
+      "description": "Révision par plusieurs intervenants : commentaire ancré, résolution, circuit hiérarchisé APPRO → JURIDIQUE → DIRECTION",
+      "etapes": [
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Devis BDD ${unique}",
+            "type": "APPEL_OFFRES_PUBLIC",
+            "modeSollicitation": "APPEL_OFFRES_PUBLIC",
+            "valeurEstimee": 150000,
+            "contexte": "travaux"
+          },
+          "capturer": {
+            "document": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/documents/${document}/assembler",
+          "corps": {
+            "clauseIds": []
+          },
+          "capturer": {
+            "clauseDoc": "$.clauses[0].clauseId"
+          }
+        },
+        {
+          "appel": "POST /api/documents/${document}/commentaires",
+          "profil": "juriste de Lévis",
+          "corps": {
+            "corps": "Préciser le délai de garantie.",
+            "clauseId": "${clauseDoc}"
+          },
+          "capturer": {
+            "commentaire": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.resolu",
+              "egal": false
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents/${document}/commentaires/${commentaire}/resolution",
+          "corps": {
+            "resolu": true
+          },
+          "verifier": [
+            {
+              "chemin": "$.resolu",
+              "egal": true
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents/${document}/approbation",
+          "verifier": [
+            {
+              "chemin": "$[*].roleRequis",
+              "inclut": "APPRO"
+            },
+            {
+              "chemin": "$[*].roleRequis",
+              "inclut": "JURIDIQUE"
+            },
+            {
+              "chemin": "$[*].roleRequis",
+              "inclut": "DIRECTION"
+            }
+          ],
+          "capturer": {
+            "n1": "$[0].id",
+            "n2": "$[1].id",
+            "n3": "$[2].id"
+          }
+        },
+        {
+          "appel": "POST /api/documents/approbation/${n2}/decision",
+          "corps": {
+            "approuve": true,
+            "note": "trop tôt"
+          },
+          "statut": [
+            400,
+            403,
+            409
+          ]
+        },
+        {
+          "appel": "POST /api/documents/approbation/${n1}/decision",
+          "corps": {
+            "approuve": true,
+            "note": "Approvisionnement : conforme"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "APPROUVE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents/approbation/${n2}/decision",
+          "profil": "juriste de Lévis",
+          "corps": {
+            "approuve": true,
+            "note": "Juridique : conforme"
+          },
+          "verifier": [
+            {
+              "chemin": "$.approbateur",
+              "egal": "juriste@levis.qc.ca"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents/approbation/${n3}/decision",
+          "profil": "direction de Lévis",
+          "corps": {
+            "approuve": true,
+            "note": "Direction : approuvé"
+          }
+        },
+        {
+          "appel": "GET /api/documents/${document}/approbation",
+          "verifier": [
+            {
+              "chemin": "$[*].statut",
+              "exclut": "EN_ATTENTE"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/audit?entite=Document",
+          "profil": "administrateur de Lévis",
+          "verifier": [
+            {
+              "chemin": "$[*].action",
+              "inclut": "COMMENTER"
+            }
+          ]
+        }
+      ]
+    },
+    "lev.revision.workflow-configurable": {
+      "description": "Circuit d'approbation configurable par type de document",
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "appel": "POST /api/workflows",
+          "corps": {
+            "nom": "Circuit bail BDD ${unique}",
+            "type": "BAIL",
+            "etapes": [
+              "APPRO",
+              "DIRECTION"
+            ],
+            "actif": true
+          },
+          "capturer": {
+            "workflow": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.etapes",
+              "egal": [
+                "APPRO",
+                "DIRECTION"
+              ]
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/workflows",
+          "verifier": [
+            {
+              "chemin": "$[*].nom",
+              "inclut": "Circuit bail BDD ${unique}"
+            }
+          ]
+        },
+        {
+          "appel": "DELETE /api/workflows/${workflow}"
+        }
+      ]
+    },
+    "lev.addendas.integration": {
+      "description": "Addenda interactif rattaché à une clause, émis puis intégré au document final (PDF et Word)",
+      "etapes": [
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Devis BDD ${unique}",
+            "type": "APPEL_OFFRES_PUBLIC",
+            "modeSollicitation": "APPEL_OFFRES_PUBLIC",
+            "valeurEstimee": 150000
+          },
+          "capturer": {
+            "document": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/documents/${document}/assembler",
+          "corps": {
+            "clauseIds": []
+          },
+          "capturer": {
+            "clauseDoc": "$.clauses[0].clauseId"
+          }
+        },
+        {
+          "appel": "POST /api/documents/${document}/addendas",
+          "corps": {
+            "objet": "Report de la date d'ouverture ${unique}"
+          },
+          "capturer": {
+            "addenda": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "BROUILLON"
+            },
+            {
+              "chemin": "$.numero",
+              "egal": 1
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/addendas/${addenda}/changements",
+          "corps": {
+            "clauseId": "${clauseDoc}",
+            "nouveauTexte": "Texte modifié par l'addenda n° 1 ${unique}."
+          },
+          "verifier": [
+            {
+              "chemin": "$.changements[0].ancienTexte",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/addendas/${addenda}/reintegrer",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "PUBLIE"
+            },
+            {
+              "chemin": "$.emisLe",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/documents/${document}",
+          "verifier": [
+            {
+              "chemin": "$.clauses[*].texteEffectif",
+              "inclut": "Texte modifié par l'addenda n° 1 ${unique}."
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/documents/${document}/export/pdf",
+          "entetes": {
+            "Accept": "application/pdf"
+          },
+          "verifier": [
+            {
+              "texte": "%PDF"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/documents/${document}/export/docx",
+          "verifier": [
+            {
+              "texte": "PK"
+            }
+          ]
+        }
+      ]
+    },
+    "lev.normatif.verrouille": {
+      "description": "Conformité légale : une clause normative (LCV, Charte de la langue française) est fournie et verrouillée",
+      "etapes": [
+        {
+          "appel": "GET /api/clauses",
+          "verifier": [
+            {
+              "chemin": "$[*].normative",
+              "inclut": true
+            },
+            {
+              "chemin": "$[*].code",
+              "inclut": "GEN-002"
+            }
+          ]
+        }
+      ]
+    },
+    "lev.securite.roles": {
+      "description": "Rôles distincts : un rédacteur n'administre ni les utilisateurs ni le journal",
+      "etapes": [
+        {
+          "appel": "GET /api/admin/users",
+          "statut": 403
+        },
+        {
+          "appel": "GET /api/audit",
+          "statut": 403
+        },
+        {
+          "appel": "GET /api/admin/users",
+          "profil": "administrateur de Lévis",
+          "verifier": [
+            {
+              "chemin": "$.contenu[*].email",
+              "inclut": "redacteur@levis.qc.ca"
+            }
+          ]
+        }
+      ]
+    },
+    "lev.securite.mfa": {
+      "description": "Second facteur : question secrète puis TOTP (RFC 6238) exigés et vérifiés",
+      "etapes": [
+        {
+          "appel": "POST /api/auth/login",
+          "corps": {
+            "email": "question@levis.qc.ca",
+            "motDePasse": "Passw0rd!"
+          },
+          "verifier": [
+            {
+              "chemin": "$.mfaRequired",
+              "egal": true
+            },
+            {
+              "chemin": "$.ok",
+              "egal": false
+            }
+          ],
+          "anonyme": true
+        },
+        {
+          "appel": "POST /api/auth/login",
+          "corps": {
+            "email": "totp@levis.qc.ca",
+            "motDePasse": "Passw0rd!"
+          },
+          "verifier": [
+            {
+              "chemin": "$.mfaRequired",
+              "egal": true
+            }
+          ],
+          "anonyme": true
+        },
+        {
+          "appel": "POST /api/auth/login",
+          "corps": {
+            "email": "totp@levis.qc.ca",
+            "motDePasse": "Passw0rd!",
+            "totpCode": "000000"
+          },
+          "statut": [
+            200,
+            401
+          ],
+          "verifier": [
+            {
+              "chemin": "$.ok",
+              "different": true
+            }
+          ],
+          "anonyme": true
+        },
+        {
+          "appel": "POST /api/auth/login",
+          "corps": {
+            "email": "totp@levis.qc.ca",
+            "motDePasse": "Passw0rd!",
+            "totpCode": "${totp:JBSWY3DPEHPK3PXP}"
+          },
+          "verifier": [
+            {
+              "chemin": "$.ok",
+              "egal": true
+            }
+          ],
+          "anonyme": true
+        }
+      ]
+    },
+    "lev.securite.sso": {
+      "description": "Authentification unique Entra ID : connecteurs OIDC et SAML configurables et activables par organisation",
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "appel": "GET /api/parametres/integration-oidc",
+          "verifier": [
+            {
+              "chemin": "$",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/parametres/integration-saml",
+          "verifier": [
+            {
+              "chemin": "$",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/auth/config?slug=levis",
+          "verifier": [
+            {
+              "chemin": "$",
+              "existe": true
+            }
+          ]
+        }
+      ]
+    },
+    "lev.multitenant.isolation": {
+      "description": "Isolation entre organisations : un document de Lévis est introuvable pour une autre organisation",
+      "etapes": [
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Confidentiel Lévis ${unique}",
+            "type": "GRE_A_GRE",
+            "modeSollicitation": "GRE_A_GRE",
+            "valeurEstimee": 1000
+          },
+          "capturer": {
+            "document": "$.id"
+          }
+        },
+        {
+          "appel": "GET /api/documents/${document}",
+          "profil": "administration principale IQ",
+          "statut": [
+            403,
+            404
+          ]
+        }
+      ]
+    },
+    "lev.clauses.historique": {
+      "description": "Historique par clause : chaque version consultable avec auteur, date et motif ; restauration d'une version antérieure, qui devient une nouvelle version",
+      "etapes": [
+        {
+          "appel": "POST /api/clauses",
+          "corps": {
+            "code": "HIS-${UNIQUE}",
+            "titre": "Historisée ${unique}",
+            "categorie": "STANDARD",
+            "corps": "Texte initial ${unique}"
+          },
+          "capturer": {
+            "clause": "$.id"
+          }
+        },
+        {
+          "appel": "PUT /api/clauses/${clause}",
+          "profil": "juriste de Lévis",
+          "corps": {
+            "code": "HIS-${UNIQUE}",
+            "titre": "Historisée ${unique}",
+            "categorie": "STANDARD",
+            "corps": "Texte révisé ${unique}"
+          },
+          "verifier": [
+            {
+              "chemin": "$.version",
+              "egal": 2
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clauses/${clause}/versions",
+          "verifier": [
+            {
+              "chemin": "$",
+              "longueurMin": 2
+            },
+            {
+              "chemin": "$[0].numero",
+              "egal": 2
+            },
+            {
+              "chemin": "$[0].auteur",
+              "egal": "juriste@levis.qc.ca"
+            },
+            {
+              "chemin": "$[0].motif",
+              "egal": "MODIFICATION"
+            },
+            {
+              "chemin": "$[1].auteur",
+              "egal": "redacteur@levis.qc.ca"
+            },
+            {
+              "chemin": "$[1].corps",
+              "egal": "Texte initial ${unique}"
+            },
+            {
+              "chemin": "$[1].creeLe",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clauses/${clause}/versions/1/restaurer",
+          "verifier": [
+            {
+              "chemin": "$.corps",
+              "egal": "Texte initial ${unique}"
+            },
+            {
+              "chemin": "$.version",
+              "egal": 3
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/clauses/${clause}/versions",
+          "verifier": [
+            {
+              "chemin": "$[0].motif",
+              "egal": "RESTAURATION"
+            },
+            {
+              "chemin": "$[0].versionRestauree",
+              "egal": 1
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clauses/${clause}/versions/9/restaurer",
+          "statut": 404,
+          "note": "une version inexistante ne se restaure pas"
+        },
+        {
+          "appel": "GET /api/clauses/${clause}/versions",
+          "profil": "administration d'affaires IQ",
+          "statut": [
+            403,
+            404
+          ],
+          "note": "une autre organisation ne voit pas l'historique"
+        }
+      ]
+    },
+    "lev.loi25.droits": {
+      "description": "Loi 25 : une personne active (compte, journal, clause) obtient tout ce qui est détenu sur elle, puis est effacée ; registre des demandes sous empreinte ; refus de s'effacer soi-même et refus pour un non-administrateur",
+      "etapes": [
+        {
+          "appel": "POST /api/admin/users",
+          "corps": {
+            "email": "marie.${unique}@levis.qc.ca",
+            "nom": "Marie Tremblay ${unique}",
+            "motDePasse": "Passw0rd!2026",
+            "roles": [
+              "REDACTEUR"
+            ],
+            "actif": true
+          }
+        },
+        {
+          "appel": "POST /api/auth/login",
+          "anonyme": true,
+          "corps": {
+            "email": "marie.${unique}@levis.qc.ca",
+            "motDePasse": "Passw0rd!2026"
+          }
+        },
+        {
+          "appel": "POST /api/loi25/acces",
+          "corps": {
+            "courriel": "marie.${unique}@levis.qc.ca"
+          },
+          "verifier": [
+            {
+              "chemin": "$.courriel",
+              "egal": "marie.${unique}@levis.qc.ca"
+            },
+            {
+              "chemin": "$.sources[*].source",
+              "inclut": "Compte"
+            },
+            {
+              "chemin": "$.sources[*].source",
+              "inclut": "Journal d'audit"
+            },
+            {
+              "texte": "Marie Tremblay ${unique}"
+            },
+            {
+              "texteAbsent": "$2a$"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/loi25/effacement",
+          "corps": {
+            "courriel": "marie.${unique}@levis.qc.ca",
+            "motif": "Demande écrite ${unique}"
+          },
+          "verifier": [
+            {
+              "chemin": "$[*].source",
+              "inclut": "Compte"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/auth/login",
+          "anonyme": true,
+          "corps": {
+            "email": "marie.${unique}@levis.qc.ca",
+            "motDePasse": "Passw0rd!2026"
+          },
+          "statut": [
+            400,
+            401,
+            403
+          ],
+          "note": "le compte effacé ne s'ouvre plus"
+        },
+        {
+          "appel": "POST /api/loi25/acces",
+          "corps": {
+            "courriel": "marie.${unique}@levis.qc.ca"
+          },
+          "verifier": [
+            {
+              "texteAbsent": "Marie Tremblay ${unique}"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/loi25/demandes",
+          "verifier": [
+            {
+              "chemin": "$[*].type",
+              "inclut": "EFFACEMENT"
+            },
+            {
+              "chemin": "$[*].motif",
+              "inclut": "Demande écrite ${unique}"
+            },
+            {
+              "texteAbsent": "marie.${unique}@levis.qc.ca"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/loi25/effacement",
+          "corps": {
+            "courriel": "admin@levis.qc.ca",
+            "motif": "essai"
+          },
+          "statut": 409,
+          "note": "on ne s'efface pas soi-même"
+        },
+        {
+          "appel": "POST /api/loi25/acces",
+          "profil": "rédacteur de Lévis",
+          "corps": {
+            "courriel": "admin@levis.qc.ca"
+          },
+          "statut": 403
+        }
+      ]
+    },
+    "lev.seao.export": {
+      "description": "Export SEAO : la fiche XML reprend les métadonnées du devis (échappées), l'export est journalisé ; un devis sans numéro d'appel d'offres est refusé",
+      "etapes": [
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "AOP SEAO ${unique} — déneigement & stationnements",
+            "type": "APPEL_OFFRES_PUBLIC",
+            "modeSollicitation": "APPEL_OFFRES_PUBLIC",
+            "valeurEstimee": 250000,
+            "numeroAO": "AO-${UNIQUE}"
+          },
+          "capturer": {
+            "document": "$.id"
+          }
+        },
+        {
+          "appel": "GET /api/documents/${document}/export/seao",
+          "verifier": [
+            {
+              "texte": "<numero>AO-${UNIQUE}</numero>"
+            },
+            {
+              "texte": "déneigement &amp; stationnements"
+            },
+            {
+              "texte": "<type>Avis d'appel d'offres</type>"
+            },
+            {
+              "texte": "<montantestime>250000"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/audit?action=EXPORT_SEAO",
+          "profil": "administrateur de Lévis",
+          "verifier": [
+            {
+              "texte": "AO-${UNIQUE}"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Sans numéro ${unique}",
+            "type": "APPEL_OFFRES_PUBLIC",
+            "modeSollicitation": "APPEL_OFFRES_PUBLIC"
+          },
+          "capturer": {
+            "sansNumero": "$.id"
+          }
+        },
+        {
+          "appel": "GET /api/documents/${sansNumero}/export/seao",
+          "statut": 409,
+          "verifier": [
+            {
+              "chemin": "$.message",
+              "contient": "numéro d'appel d'offres"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

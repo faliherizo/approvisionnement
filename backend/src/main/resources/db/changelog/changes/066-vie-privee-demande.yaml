@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 066-1-vie-privee-demande
+      author: levis
+      comment: "Loi 25 (Lévis C-15) : registre des demandes d'accès et d'effacement ; la personne n'y figure que par l'empreinte de son courriel."
+      changes:
+        - createTable:
+            tableName: vie_privee_demande
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: type, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: empreinte_courriel, type: VARCHAR(64), constraints: { nullable: false } }
+              - column: { name: traite_par, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: motif, type: VARCHAR(500) }
+              - column: { name: resultat, type: VARCHAR(2000), constraints: { nullable: false } }
+              - column: { name: traitee_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - createIndex:
+            tableName: vie_privee_demande
+            indexName: ix_vie_privee_demande_tenant
+            columns:
+              - column: { name: tenant_id }

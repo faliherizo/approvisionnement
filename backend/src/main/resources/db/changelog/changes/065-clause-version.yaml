@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 065-1-clause-version
+      author: levis
+      comment: "Lévis EF1 (C-03) : historique consultable des versions d'une clause (auteur, date, motif), restauration par version."
+      changes:
+        - createTable:
+            tableName: clause_version
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: clause_id, type: BIGINT, constraints: { nullable: false, foreignKeyName: fk_clause_version_clause, references: clause(id), deleteCascade: true } }
+              - column: { name: tenant_id, type: BIGINT }
+              - column: { name: numero, type: INT, constraints: { nullable: false } }
+              - column: { name: titre, type: VARCHAR(300), constraints: { nullable: false } }
+              - column: { name: categorie, type: VARCHAR(40), constraints: { nullable: false } }
+              - column: { name: corps, type: VARCHAR(20000), constraints: { nullable: false } }
+              - column: { name: article, type: VARCHAR(40) }
+              - column: { name: section, type: VARCHAR(200) }
+              - column: { name: normative, type: BOOLEAN, constraints: { nullable: false } }
+              - column: { name: motif, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: version_restauree, type: INT }
+              - column: { name: auteur, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - createIndex:
+            tableName: clause_version
+            indexName: ix_clause_version_clause
+            columns:
+              - column: { name: clause_id }

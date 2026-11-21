@@ -44,4 +44,10 @@ public class AuditLog {
     public Instant getHorodatage() { return horodatage; }
     public Long getTenantId() { return tenantId; }
     public void setTenantId(Long tenantId) { this.tenantId = tenantId; }
+
+    /** Loi 25 : l'événement reste au journal, mais la personne n'y est plus nommée (auteur et mentions dans le détail). */
+    public void pseudonymiser(String courriel, String pseudonyme) {
+        if (courriel.equalsIgnoreCase(utilisateur)) utilisateur = pseudonyme;
+        if (details != null) details = details.replaceAll("(?i)" + java.util.regex.Pattern.quote(courriel), pseudonyme);
+    }
 }

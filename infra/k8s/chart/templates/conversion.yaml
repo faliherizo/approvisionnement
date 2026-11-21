@@ -14,10 +14,11 @@ spec:
       labels: { app: conversion }
     spec:
       automountServiceAccountToken: false
-      securityContext: { runAsNonRoot: true, runAsUser: 1001 }
+      securityContext: { runAsNonRoot: true, runAsUser: 1001, seccompProfile: { type: RuntimeDefault } }
       containers:
         - name: conversion
           image: "{{ .Values.conversion.image }}"
+          args: ["gotenberg", "--api-timeout={{ .Values.conversion.apiTimeout }}"]
           ports:
             - containerPort: 3000
           readinessProbe:
@@ -26,6 +27,11 @@ spec:
           livenessProbe:
             httpGet: { path: /health, port: 3000 }
             initialDelaySeconds: 30
+          # LibreOffice écrit son profil sous la racine de l'image : celle-ci reste inscriptible, sans privilège ni capacité.
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities: { drop: [ALL] }
           resources:
             {{- toYaml .Values.conversion.resources | nindent 12 }}
 ---

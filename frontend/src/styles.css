@@ -194,12 +194,14 @@ button.link:hover, button.link:focus-visible { background: none; text-decoration
 .reco-list li { margin: .2rem 0; }
 
 /* Commentaires : résolus atténués, réponses indentées (fil de discussion) */
-.comment.resolu { opacity: .7; }
+/* Commentaire résolu : repère par bordure et fond, sans opacité qui ferait chuter le contraste du texte. */
+.comment.resolu { border-left: 4px solid #146536; background: #f1f7f3; }
 .comment.reponse { margin-left: 1.5rem; border-left: 3px solid var(--bordure, #d5dbe3); padding-left: .6rem; }
 
 /* Cases à cocher en ligne (étapes d'un circuit d'approbation) */
 .checkbox-inline { display: flex; align-items: center; gap: .5rem; flex-direction: row; }
-.checkbox-inline input { width: auto; min-height: 0; }
+/* Cible d'au moins 24 px (WCAG 2.2, 2.5.8) : la case seule, sans compter son libellé. */
+.checkbox-inline input { width: 24px; height: 24px; min-height: 24px; flex: none; }
 
 /* =========================================================================
    Site vitrine public (responsive, WCAG 2.2 AA)
@@ -334,7 +336,7 @@ th[scope="col"] { color: var(--bleu-fonce); }
 .badge { padding: 2px 8px; border-radius: 20px; font-size: 12px; font-weight: 600; background: #eef2f7; }
 .s-BROUILLON { background: #eef2f7; }
 .s-EN_APPROBATION, .s-EN_ATTENTE { background: #fff3d6; color: #8a6100; }
-.s-APPROUVE { background: #d9f5e3; color: #1a7a44; }
+.s-APPROUVE { background: #d9f5e3; color: #146536; } /* contraste ≥ 4,5:1 sur les fonds clairs */
 .s-REFUSE { background: #fde8ea; color: var(--accent); }
 .s-PUBLIE { background: #dbeafe; color: var(--bleu-fonce); }
 
@@ -546,7 +548,8 @@ img, svg, canvas { max-width: 100%; height: auto; }
 .rte-toolbar { display: flex; align-items: center; gap: 4px; padding: 6px; background: #f6f9fc;
   border-bottom: 1px solid var(--bord); flex-wrap: wrap; }
 .rte-toolbar button { background: #fff; color: var(--texte); border: 1px solid var(--bord);
-  padding: 4px 9px; font-size: 13px; font-weight: 600; border-radius: 5px; }
+  padding: 4px 9px; font-size: 13px; font-weight: 600; border-radius: 5px;
+  min-width: 28px; min-height: 28px; } /* cible ≥ 24 px (WCAG 2.2, 2.5.8), même pour « I » */
 .rte-toolbar button:hover { background: var(--bleu); color: #fff; }
 .rte-sep { width: 1px; height: 18px; background: var(--bord); margin: 0 4px; }
 .rte-zone { padding: 10px 12px; font-size: 14px; line-height: 1.5; outline: none; }
@@ -644,3 +647,35 @@ a.btn-lien:hover, a.btn-lien:focus-visible { background: #e0e7f1; text-decoratio
 .fiche-details .cmp-row { margin-top: 4px; align-items: baseline; }
 .fiche-details dt { min-width: 160px; font-weight: 600; }
 .fiche-details dd { margin: 0; }
+
+/* Valeurs d'un renseignement (Loi 25) : libellé et valeur sur une ligne, repliés sur téléphone. */
+.dl-compact { margin: 0; display: grid; gap: 2px; }
+.dl-compact > div { display: flex; flex-wrap: wrap; gap: 6px; }
+.dl-compact dt { font-weight: 600; }
+.dl-compact dd { margin: 0; overflow-wrap: anywhere; }
+
+.succes { background: #e7f5ec; color: #146536; padding: 8px 12px; border-radius: 7px; font-size: 14px; }
+
+/* Messagerie (CHU 5.05) : liste et fil côte à côte, empilés sur téléphone. */
+.messagerie { display: grid; grid-template-columns: minmax(220px, 1fr) 2fr; gap: 16px; align-items: start; }
+.messagerie-liste ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.messagerie-item { width: 100%; text-align: left; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; min-height: 44px; }
+.messagerie-item.actif { border-color: var(--accent); }
+.messagerie-messages { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 10px; }
+.messagerie-messages li { border: 1px solid #c3cad3; border-radius: 8px; padding: 8px 12px; }
+.messagerie-messages li.moi { background: #eef4fb; }
+.messagerie-texte { white-space: pre-wrap; overflow-wrap: anywhere; margin: 4px 0 0; }
+@media (max-width: 760px) { .messagerie { grid-template-columns: 1fr; } }
+
+/* Indicateurs des tableaux de bord (CHU 6.04) : une seule teinte (#1f5fa6, contraste ≥ 3:1 sur la surface), texte en encre. */
+.tableaux-bord-grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.indicateur { margin: 0; border: 1px solid #c3cad3; border-radius: 8px; padding: 12px; background: #fff; display: grid; gap: 8px; }
+.indicateur figcaption { font-weight: 600; }
+.indicateur-nombre { font-size: 40px; font-weight: 700; margin: 0; color: #1a1f27; }
+.graphique { width: 100%; height: auto; max-height: 320px; }
+.graphique-barre { fill: #1f5fa6; }
+.graphique-texte { font-size: 12px; fill: #1a1f27; }
+.graphique-axe { stroke: #8a94a3; stroke-width: 1; }
+
+/* Banque d'heures : barre proportionnelle à côté de la valeur écrite (la valeur porte l'information, la barre la situe). */
+.barre-inline { display: inline-block; height: 10px; min-width: 2px; max-width: 60%; background: #1f5fa6; border-radius: 0 4px 4px 0; vertical-align: middle; }

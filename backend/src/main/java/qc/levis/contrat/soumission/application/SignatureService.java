@@ -19,23 +19,26 @@ public class SignatureService {
 
     private final SignataireRepository signataires;
     private final DocumentRepository documents;
+    /** Devis bornés à l'organisation courante (OWASP A01). */
+    private final qc.levis.contrat.redaction.application.DocumentsDuTenant portee;
     private final AuditService audit;
 
     public SignatureService(SignataireRepository signataires, DocumentRepository documents,
                             AuditService audit) {
         this.signataires = signataires;
         this.documents = documents;
+        this.portee = new qc.levis.contrat.redaction.application.DocumentsDuTenant(documents);
         this.audit = audit;
     }
 
     public List<Signataire> lister(Long documentId) {
+        portee.exiger(documentId);
         return signataires.findByDocumentId(documentId);
     }
 
     @Transactional
     public Signataire ajouter(Long documentId, String nom, String courriel, String role, String utilisateur) {
-        Document doc = documents.findById(documentId)
-                .orElseThrow(() -> new NoSuchElementException("Document introuvable: " + documentId));
+        Document doc = portee.exiger(documentId);
         Signataire s = new Signataire();
         s.setDocumentId(doc.getId());
         s.setNom(nom);
@@ -50,8 +53,7 @@ public class SignatureService {
     /** Démarre la cérémonie : le document passe EN_SIGNATURE. */
     @Transactional
     public List<Signataire> demarrer(Long documentId, String utilisateur) {
-        Document doc = documents.findById(documentId)
-                .orElseThrow(() -> new NoSuchElementException("Document introuvable: " + documentId));
+        Document doc = portee.exiger(documentId);
         List<Signataire> liste = signataires.findByDocumentId(documentId);
         if (liste.isEmpty()) {
             throw new IllegalStateException("Aucun signataire défini pour ce document.");

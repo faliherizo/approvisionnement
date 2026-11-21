@@ -31,7 +31,9 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", roles);
         claims.put("tenant", tenantId); // null = superadmin global
+        // Identifiant unique : deux sessions ouvertes dans la même seconde ont des jetons distincts, révocables séparément.
         return Jwts.builder()
+                .setId(java.util.UUID.randomUUID().toString())
                 .setSubject(email)
                 .addClaims(claims)
                 .setIssuedAt(now)

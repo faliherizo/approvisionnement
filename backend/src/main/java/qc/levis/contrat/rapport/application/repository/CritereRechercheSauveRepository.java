@@ -6,4 +6,5 @@ import qc.levis.contrat.rapport.domain.CritereRechercheSauve;
 
 public interface CritereRechercheSauveRepository extends JpaRepository<CritereRechercheSauve, Long> {
     List<CritereRechercheSauve> findByTenantIdAndUtilisateur(Long tenantId, String utilisateur);
+    java.util.Optional<CritereRechercheSauve> findByIdAndTenantIdAndUtilisateur(Long id, Long tenantId, String utilisateur);
 }

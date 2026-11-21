@@ -1,0 +1,45 @@
+{
+  "description": "Opérations de modification qu'un lecteur (rôle le plus faible d'une organisation) exerce légitimement : son propre compte, ses propres demandes, la messagerie dont il est participant. Toute autre modification doit lui être refusée.",
+  "permisAuLecteur": [
+    {
+      "motif": "^(POST|PUT|PATCH|DELETE) /api/(profil|profile|me)",
+      "raison": "Son propre profil."
+    },
+    {
+      "motif": "^(POST|PUT|PATCH|DELETE) /api/auth/",
+      "raison": "Sa session et son second facteur."
+    },
+    {
+      "motif": "^(POST|PUT|DELETE) /api/securite/compte|^(POST|PUT) /api/mfa",
+      "raison": "Son second facteur."
+    },
+    {
+      "motif": "^(POST|PATCH) /api/formulaires/\\{fid\\}/saisies(/\\{id\\})?(/soumettre|/annuler)?$",
+      "raison": "Ses propres demandes (le service vérifie qu'il en est l'auteur)."
+    },
+    {
+      "motif": "^POST /api/messagerie/conversations",
+      "raison": "Messagerie entre membres actifs ; une conversation n'est visible que de ses participants."
+    },
+    {
+      "motif": "^POST /api/rapport/criteres$",
+      "raison": "Ses propres critères de recherche."
+    },
+    {
+      "motif": "^(POST|PUT|DELETE) /api/profil/",
+      "raison": "Ses préférences."
+    },
+    {
+      "motif": "^POST /api/rh/feuilles-temps$",
+      "raison": "Sa propre feuille de temps (le propriétaire est la personne connectée)."
+    },
+    {
+      "motif": "^POST /api/formulaires/\\{id\\}/regles/evaluer$",
+      "raison": "Évaluation des règles pendant le remplissage : calcul sans enregistrement."
+    },
+    {
+      "motif": "^POST /api/assistant/analyser$",
+      "raison": "Suggestion de l'assistant guidé : calcul sans enregistrement."
+    }
+  ]
+}

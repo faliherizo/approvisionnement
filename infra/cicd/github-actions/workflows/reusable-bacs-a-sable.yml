@@ -1,6 +1,6 @@
 # Réutilisable : éprouve la plateforme contre les applications externes des bacs à sable (ICP OpenSSL, pyHanko,
 # Gotenberg, veraPDF, Mailpit), par le réseau et aux protocoles réels : scénarios e2e BS-01 à BS-08 et scripts de
-# validation (infra/bacs-a-sable/ci.sh). Aucun secret : l'ICP et ses clés sont créées à la volée dans le runner.
+# validation, puis scénarios BDD des exigences de tous les appels d'offres (infra/bacs-a-sable/ci.sh). Aucun secret : l'ICP et ses clés sont créées à la volée dans le runner.
 name: reusable-bacs-a-sable
 
 on:
@@ -19,7 +19,7 @@ permissions:
 jobs:
   bacs-a-sable:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -30,7 +30,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node-version }}
-      - name: Bacs à sable — services, serveur, scénarios e2e et validation
+      - name: Bacs à sable — services, serveur, scénarios e2e, validation et BDD
         run: infra/bacs-a-sable/ci.sh
       - name: Rapports (veraPDF, pyHanko, OpenSSL, Playwright, journaux)
         if: always()
@@ -41,4 +41,9 @@ jobs:
             infra/bacs-a-sable/resultats/
             e2e/playwright-report/
             e2e/test-results/
+            bdd/playwright-report/
+            bdd/test-results/
+            docs/scenarios-bdd/
+            securite/resultats/
+            docs/securite/
           if-no-files-found: ignore

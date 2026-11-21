@@ -51,6 +51,9 @@ def retablir_dans_le_registre(serie):
 
 
 class Icp(BaseHTTPRequestHandler):
+    # HTTP/1.1 comme une autorité réelle : longueur de contenu toujours annoncée, connexions persistantes.
+    protocol_version = "HTTP/1.1"
+
     def repondre(self, code, type_, corps=b""):
         self.send_response(code)
         self.send_header("Content-Type", type_)
@@ -59,9 +62,11 @@ class Icp(BaseHTTPRequestHandler):
         self.wfile.write(corps)
 
     def corps(self):
-        return self.rfile.read(int(self.headers.get("Content-Length", "0")))
+        return self._corps
 
     def do_POST(self):
+        # Corps toujours lu, même pour un refus : la connexion persistante reste utilisable.
+        self._corps = self.rfile.read(int(self.headers.get("Content-Length", "0")))
         try:
             if self.path == "/tsa" and self.headers.get("Content-Type") == "application/timestamp-query":
                 with tempfile.TemporaryDirectory() as d:

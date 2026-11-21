@@ -21,27 +21,32 @@ public class AddendaService {
 
     private final AddendaRepository addendas;
     private final DocumentRepository documents;
+    /** Devis bornés à l'organisation courante (OWASP A01). */
+    private final qc.levis.contrat.redaction.application.DocumentsDuTenant portee;
     private final AuditService audit;
 
     public AddendaService(AddendaRepository addendas, DocumentRepository documents, AuditService audit) {
         this.addendas = addendas;
         this.documents = documents;
+        this.portee = new qc.levis.contrat.redaction.application.DocumentsDuTenant(documents);
         this.audit = audit;
     }
 
     public List<Addenda> lister(Long documentId) {
+        portee.exiger(documentId);
         return addendas.findByDocumentParentIdOrderByNumeroAsc(documentId);
     }
 
+    /** Un addenda d'un devis d'une autre organisation est introuvable. */
     public Addenda get(Long id) {
-        return addendas.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Addenda introuvable: " + id));
+        Addenda a = addendas.findById(id).orElseThrow(() -> new NoSuchElementException("Addenda introuvable: " + id));
+        portee.exiger(a.getDocumentParentId());
+        return a;
     }
 
     @Transactional
     public Addenda creer(Long documentId, String objet, String utilisateur) {
-        Document doc = documents.findById(documentId)
-                .orElseThrow(() -> new NoSuchElementException("Document introuvable: " + documentId));
+        Document doc = portee.exiger(documentId);
         int prochainNumero = addendas.findByDocumentParentIdOrderByNumeroAsc(documentId).size() + 1;
         Addenda a = new Addenda();
         a.setDocumentParentId(doc.getId());
@@ -57,7 +62,7 @@ public class AddendaService {
     @Transactional
     public Addenda ajouterChangement(Long addendaId, Long clauseId, String nouveauTexte, String utilisateur) {
         Addenda a = get(addendaId);
-        Document doc = documents.findById(a.getDocumentParentId()).orElseThrow();
+        Document doc = portee.exiger(a.getDocumentParentId());
         DocumentClause cible = doc.getClauses().stream()
                 .filter(dc -> clauseId.equals(dc.getClauseId()))
                 .findFirst()
@@ -81,7 +86,7 @@ public class AddendaService {
     @Transactional
     public Addenda reintegrer(Long addendaId, String utilisateur) {
         Addenda a = get(addendaId);
-        Document doc = documents.findById(a.getDocumentParentId()).orElseThrow();
+        Document doc = portee.exiger(a.getDocumentParentId());
         for (AddendaChange ch : a.getChangements()) {
             doc.getClauses().stream()
                     .filter(dc -> ch.getClauseId().equals(dc.getClauseId()))

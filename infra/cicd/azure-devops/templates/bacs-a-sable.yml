@@ -11,7 +11,7 @@ stages:
     dependsOn: Test
     jobs:
       - job: bacs_a_sable
-        timeoutInMinutes: 45
+        timeoutInMinutes: 120
         pool:
           vmImage: ubuntu-latest
         steps:
@@ -24,9 +24,26 @@ stages:
             inputs:
               versionSpec: ${{ parameters.nodeVersion }}
           - script: infra/bacs-a-sable/ci.sh
-            displayName: Services, serveur, scénarios e2e BS-01 à BS-08 et validation
+            displayName: Services, serveur, scénarios e2e BS-01 à BS-08, validation et scénarios BDD
           - task: PublishPipelineArtifact@1
             condition: always()
             inputs:
               targetPath: infra/bacs-a-sable/resultats
               artifact: bacs-a-sable
+          - task: PublishPipelineArtifact@1
+            displayName: Rapport BDD et matrice exigences → scénarios
+            condition: always()
+            inputs:
+              targetPath: bdd/playwright-report
+              artifact: bdd-rapport
+          - task: PublishPipelineArtifact@1
+            condition: always()
+            inputs:
+              targetPath: docs/scenarios-bdd
+              artifact: scenarios-bdd
+          - task: PublishPipelineArtifact@1
+            displayName: Tests d'intrusion (rapports ZAP, Trivy, rapport de campagne)
+            condition: always()
+            inputs:
+              targetPath: securite/resultats
+              artifact: tests-intrusion

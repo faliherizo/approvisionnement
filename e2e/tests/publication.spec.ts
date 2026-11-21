@@ -12,6 +12,9 @@ test.describe('Publication vers une cible externe (M365/SAP — art. 9)', () => 
     const editeur = new DocumentEditorPage(page)
     await expect(page).toHaveURL(/\/documents\/\d+$/)
     await editeur.assembler()
+    // Publication réservée aux documents validés : chaque niveau est approuvé par son rôle.
+    await editeur.demarrerApprobation()
+    await editeur.approuverParLeCircuit([users.redacteur, users.juriste, users.direction], users.redacteur)
 
     await editeur.publier('SHAREPOINT', 'PDF')
     await expect(editeur.historiquePublications()).toContainText('SHAREPOINT')
@@ -29,7 +32,7 @@ test.describe('Publication vers une cible externe (M365/SAP — art. 9)', () => 
 
     // La publication n'est offerte qu'après validation du document (statut APPROUVE).
     await editeur.demarrerApprobation()
-    await editeur.approuverTout()
+    await editeur.approuverParLeCircuit([users.redacteur, users.juriste, users.direction], users.redacteur)
     await expect(editeur.badgeStatut('APPROUVE')).toBeVisible()
 
     // Chaque cible externe reçoit un dépôt distinct, tracé dans l'historique.

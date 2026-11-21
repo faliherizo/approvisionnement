@@ -55,7 +55,7 @@ export class DonneesIAPage extends BasePage {
 
   async migrationEssai(csv: string): Promise<void> {
     await this.page.getByLabel('Contenu CSV').fill(csv)
-    await this.page.getByRole('button', { name: 'Migration d’essai' }).click()
+    await this.page.getByRole('button', { name: /Migration d['’]essai/ }).click()
   }
 
   rapport(): Locator {
@@ -63,7 +63,7 @@ export class DonneesIAPage extends BasePage {
   }
 
   etatIa(): Locator {
-    return this.page.getByRole('heading', { name: 'Encadrement de l’assistant IA' })
+    return this.page.getByRole('heading', { name: /Encadrement de l['’]assistant IA/ })
       .locator('xpath=following-sibling::p[contains(., "État")]')
   }
 

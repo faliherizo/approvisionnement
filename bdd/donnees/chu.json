@@ -1,0 +1,2192 @@
+{
+  "ecrans": {
+    "CHU — formulaires": {
+      "chemin": "/formulaires",
+      "titre": "Formulaires"
+    },
+    "CHU — mes demandes": {
+      "chemin": "/mes-demandes",
+      "titre": "demandes"
+    },
+    "CHU — approbations": {
+      "chemin": "/approbations",
+      "titre": "Approbation"
+    },
+    "CHU — applications": {
+      "chemin": "/applications",
+      "titre": "Applications"
+    },
+    "CHU — sécurité avancée": {
+      "chemin": "/securite-avancee",
+      "titre": "Sécurité"
+    },
+    "CHU — interopérabilité": {
+      "chemin": "/interop",
+      "titre": "API|Interop"
+    },
+    "CHU — notifications": {
+      "chemin": "/notifications",
+      "titre": "Notifications"
+    },
+    "CHU — formulaires (téléphone)": {
+      "chemin": "/formulaires",
+      "titre": "Formulaires",
+      "largeur": 390
+    },
+    "CHU — formulaires (tablette)": {
+      "chemin": "/formulaires",
+      "titre": "Formulaires",
+      "largeur": 768
+    },
+    "CHU — fiches du formulaire": {
+      "chemin": "/formulaires/${formulaire}/fiches",
+      "titre": "fiches"
+    },
+    "CHU — messagerie": {
+      "chemin": "/messagerie",
+      "titre": "Messagerie interne"
+    },
+    "CHU — tableaux de bord": {
+      "chemin": "/tableaux-de-bord",
+      "titre": "Tableaux de bord"
+    },
+    "CHU — banque d'heures": {
+      "chemin": "/banque-heures",
+      "titre": "Banque d'heures"
+    }
+  },
+  "cas": {
+    "chu.formulaire.conception": {
+      "description": "Formulaire multipage avec tous les types de champs et libellés bilingues ; versions approuvées, retour à une version ; duplication, export et réimport ; conservation ; formulaire enfant",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "INSCR_${UNIQUE}",
+            "nom": "INSCR ${unique}",
+            "domaine": "RH",
+            "conservationJours": 365
+          },
+          "capturer": {
+            "formulaire": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statutCourant",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/formulaires/${formulaire}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"libelleI18n\": {\"fr\": \"Nom\", \"en\": \"Name\"}, \"type\": \"TEXTE\", \"obligatoire\": true}, {\"cle\": \"courriel\", \"libelle\": \"Courriel\", \"type\": \"COURRIEL\"}, {\"cle\": \"naissance\", \"libelle\": \"Date de naissance\", \"type\": \"DATE\"}, {\"cle\": \"site\", \"libelle\": \"Site Web\", \"type\": \"HYPERLIEN\"}, {\"cle\": \"commentaire\", \"libelle\": \"Commentaire\", \"type\": \"ZONE_TEXTE\"}]}, {\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Formation\", \"Atelier\"]}, {\"cle\": \"mode\", \"libelle\": \"Mode\", \"type\": \"RADIO\", \"options\": [\"Présentiel\", \"Virtuel\"]}, {\"cle\": \"accepte\", \"libelle\": \"J'accepte\", \"type\": \"CASE\"}, {\"cle\": \"heures\", \"libelle\": \"Heures\", \"type\": \"NOMBRE\"}, {\"cle\": \"taux\", \"libelle\": \"Taux horaire\", \"type\": \"MONTANT\"}, {\"cle\": \"remise\", \"libelle\": \"Remise\", \"type\": \"POURCENTAGE\"}, {\"cle\": \"poids\", \"libelle\": \"Poids\", \"type\": \"DECIMAL\"}, {\"cle\": \"total\", \"libelle\": \"Total\", \"type\": \"CALCULE\"}, {\"cle\": \"piece\", \"libelle\": \"Pièce justificative\", \"type\": \"FICHIER\"}, {\"cle\": \"grille\", \"libelle\": \"Disponibilités\", \"type\": \"MATRICE\", \"lignes\": [\"Lundi\", \"Mardi\"], \"colonnes\": [\"AM\", \"PM\"]}, {\"cle\": \"service\", \"libelle\": \"Service\", \"type\": \"VALEURS_DYNAMIQUES\", \"source\": \"SERVICES\"}]}], \"regles\": [{\"type\": \"CALCUL\", \"cible\": \"total\", \"valeur\": \"produit:heures,taux\"}, {\"type\": \"VALIDATION\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"60\"}], \"valeur\": \"60 heures au plus\"}, {\"type\": \"VISIBILITE\", \"conditions\": [{\"champ\": \"mode\", \"operateur\": \"EGAL\", \"valeur\": \"Présentiel\"}], \"cible\": \"grille\"}, {\"type\": \"OBLIGATION\", \"conditions\": [{\"champ\": \"activite\", \"operateur\": \"EGAL\", \"valeur\": \"Formation\"}], \"cible\": \"piece\"}, {\"type\": \"ROUTAGE\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"40\"}], \"cible\": \"GESTIONNAIRE\"}]}",
+            "note": "Version initiale"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/soumettre",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "EN_APPROBATION"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/publier",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "PUBLIE"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/formulaires/${formulaire}/version",
+          "verifier": [
+            {
+              "chemin": "$.structureJson",
+              "contient": "MATRICE"
+            },
+            {
+              "chemin": "$.structureJson",
+              "contient": "VALEURS_DYNAMIQUES"
+            },
+            {
+              "chemin": "$.structureJson",
+              "contient": "FICHIER"
+            },
+            {
+              "chemin": "$.structureJson",
+              "contient": "CALCULE"
+            },
+            {
+              "chemin": "$.structureJson",
+              "contient": "Name"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/formulaires/${formulaire}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Identité (v2)\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"libelleI18n\": {\"fr\": \"Nom\", \"en\": \"Name\"}, \"type\": \"TEXTE\", \"obligatoire\": true}, {\"cle\": \"courriel\", \"libelle\": \"Courriel\", \"type\": \"COURRIEL\"}, {\"cle\": \"naissance\", \"libelle\": \"Date de naissance\", \"type\": \"DATE\"}, {\"cle\": \"site\", \"libelle\": \"Site Web\", \"type\": \"HYPERLIEN\"}, {\"cle\": \"commentaire\", \"libelle\": \"Commentaire\", \"type\": \"ZONE_TEXTE\"}]}, {\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Formation\", \"Atelier\"]}, {\"cle\": \"mode\", \"libelle\": \"Mode\", \"type\": \"RADIO\", \"options\": [\"Présentiel\", \"Virtuel\"]}, {\"cle\": \"accepte\", \"libelle\": \"J'accepte\", \"type\": \"CASE\"}, {\"cle\": \"heures\", \"libelle\": \"Heures\", \"type\": \"NOMBRE\"}, {\"cle\": \"taux\", \"libelle\": \"Taux horaire\", \"type\": \"MONTANT\"}, {\"cle\": \"remise\", \"libelle\": \"Remise\", \"type\": \"POURCENTAGE\"}, {\"cle\": \"poids\", \"libelle\": \"Poids\", \"type\": \"DECIMAL\"}, {\"cle\": \"total\", \"libelle\": \"Total\", \"type\": \"CALCULE\"}, {\"cle\": \"piece\", \"libelle\": \"Pièce justificative\", \"type\": \"FICHIER\"}, {\"cle\": \"grille\", \"libelle\": \"Disponibilités\", \"type\": \"MATRICE\", \"lignes\": [\"Lundi\", \"Mardi\"], \"colonnes\": [\"AM\", \"PM\"]}, {\"cle\": \"service\", \"libelle\": \"Service\", \"type\": \"VALEURS_DYNAMIQUES\", \"source\": \"SERVICES\"}]}], \"regles\": [{\"type\": \"CALCUL\", \"cible\": \"total\", \"valeur\": \"produit:heures,taux\"}, {\"type\": \"VALIDATION\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"60\"}], \"valeur\": \"60 heures au plus\"}, {\"type\": \"VISIBILITE\", \"conditions\": [{\"champ\": \"mode\", \"operateur\": \"EGAL\", \"valeur\": \"Présentiel\"}], \"cible\": \"grille\"}, {\"type\": \"OBLIGATION\", \"conditions\": [{\"champ\": \"activite\", \"operateur\": \"EGAL\", \"valeur\": \"Formation\"}], \"cible\": \"piece\"}, {\"type\": \"ROUTAGE\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"40\"}], \"cible\": \"GESTIONNAIRE\"}]}",
+            "note": "Version 2"
+          },
+          "verifier": [
+            {
+              "chemin": "$.numero",
+              "egal": 2
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/revenir/1",
+          "verifier": [
+            {
+              "chemin": "$.structureJson",
+              "contient": "Identité"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/formulaires/${formulaire}/historique",
+          "verifier": [
+            {
+              "chemin": "$",
+              "longueurMin": 2
+            },
+            {
+              "chemin": "$[*].statut",
+              "inclut": "PUBLIE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/dupliquer?code=COPIE_${UNIQUE}&nom=Copie%20${unique}",
+          "verifier": [
+            {
+              "chemin": "$.code",
+              "egal": "COPIE_${UNIQUE}"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/formulaires/${formulaire}/export",
+          "capturer": {
+            "structureExportee": "$"
+          },
+          "verifier": [
+            {
+              "chemin": "$.pages",
+              "longueurMin": 2
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/importer?code=IMPORT_${UNIQUE}&nom=Import%20${unique}",
+          "corps": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"libelleI18n\": {\"fr\": \"Nom\", \"en\": \"Name\"}, \"type\": \"TEXTE\", \"obligatoire\": true}, {\"cle\": \"courriel\", \"libelle\": \"Courriel\", \"type\": \"COURRIEL\"}, {\"cle\": \"naissance\", \"libelle\": \"Date de naissance\", \"type\": \"DATE\"}, {\"cle\": \"site\", \"libelle\": \"Site Web\", \"type\": \"HYPERLIEN\"}, {\"cle\": \"commentaire\", \"libelle\": \"Commentaire\", \"type\": \"ZONE_TEXTE\"}]}, {\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Formation\", \"Atelier\"]}, {\"cle\": \"mode\", \"libelle\": \"Mode\", \"type\": \"RADIO\", \"options\": [\"Présentiel\", \"Virtuel\"]}, {\"cle\": \"accepte\", \"libelle\": \"J'accepte\", \"type\": \"CASE\"}, {\"cle\": \"heures\", \"libelle\": \"Heures\", \"type\": \"NOMBRE\"}, {\"cle\": \"taux\", \"libelle\": \"Taux horaire\", \"type\": \"MONTANT\"}, {\"cle\": \"remise\", \"libelle\": \"Remise\", \"type\": \"POURCENTAGE\"}, {\"cle\": \"poids\", \"libelle\": \"Poids\", \"type\": \"DECIMAL\"}, {\"cle\": \"total\", \"libelle\": \"Total\", \"type\": \"CALCULE\"}, {\"cle\": \"piece\", \"libelle\": \"Pièce justificative\", \"type\": \"FICHIER\"}, {\"cle\": \"grille\", \"libelle\": \"Disponibilités\", \"type\": \"MATRICE\", \"lignes\": [\"Lundi\", \"Mardi\"], \"colonnes\": [\"AM\", \"PM\"]}, {\"cle\": \"service\", \"libelle\": \"Service\", \"type\": \"VALEURS_DYNAMIQUES\", \"source\": \"SERVICES\"}]}], \"regles\": [{\"type\": \"CALCUL\", \"cible\": \"total\", \"valeur\": \"produit:heures,taux\"}, {\"type\": \"VALIDATION\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"60\"}], \"valeur\": \"60 heures au plus\"}, {\"type\": \"VISIBILITE\", \"conditions\": [{\"champ\": \"mode\", \"operateur\": \"EGAL\", \"valeur\": \"Présentiel\"}], \"cible\": \"grille\"}, {\"type\": \"OBLIGATION\", \"conditions\": [{\"champ\": \"activite\", \"operateur\": \"EGAL\", \"valeur\": \"Formation\"}], \"cible\": \"piece\"}, {\"type\": \"ROUTAGE\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"40\"}], \"cible\": \"GESTIONNAIRE\"}]}",
+          "verifier": [
+            {
+              "chemin": "$.code",
+              "egal": "IMPORT_${UNIQUE}"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "ENFANT_${UNIQUE}",
+            "nom": "Suivi ${unique}",
+            "domaine": "RH",
+            "parentId": "${formulaire}"
+          },
+          "verifier": [
+            {
+              "chemin": "$.parentId",
+              "egalTexte": "${formulaire}"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/formulaires",
+          "verifier": [
+            {
+              "chemin": "$[*].conservationJours",
+              "inclut": 365
+            }
+          ]
+        }
+      ]
+    },
+    "chu.saisie.regles": {
+      "description": "Remplissage : sauvegarde automatique et reprise, règles d'affichage, d'obligation, de validation, de calcul et de routage ; refus motivé puis soumission confirmée",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "REGLES_${UNIQUE}",
+            "nom": "REGLES ${unique}",
+            "domaine": "RH",
+            "conservationJours": 365
+          },
+          "capturer": {
+            "formulaire": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statutCourant",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/formulaires/${formulaire}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"libelleI18n\": {\"fr\": \"Nom\", \"en\": \"Name\"}, \"type\": \"TEXTE\", \"obligatoire\": true}, {\"cle\": \"courriel\", \"libelle\": \"Courriel\", \"type\": \"COURRIEL\"}, {\"cle\": \"naissance\", \"libelle\": \"Date de naissance\", \"type\": \"DATE\"}, {\"cle\": \"site\", \"libelle\": \"Site Web\", \"type\": \"HYPERLIEN\"}, {\"cle\": \"commentaire\", \"libelle\": \"Commentaire\", \"type\": \"ZONE_TEXTE\"}]}, {\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Formation\", \"Atelier\"]}, {\"cle\": \"mode\", \"libelle\": \"Mode\", \"type\": \"RADIO\", \"options\": [\"Présentiel\", \"Virtuel\"]}, {\"cle\": \"accepte\", \"libelle\": \"J'accepte\", \"type\": \"CASE\"}, {\"cle\": \"heures\", \"libelle\": \"Heures\", \"type\": \"NOMBRE\"}, {\"cle\": \"taux\", \"libelle\": \"Taux horaire\", \"type\": \"MONTANT\"}, {\"cle\": \"remise\", \"libelle\": \"Remise\", \"type\": \"POURCENTAGE\"}, {\"cle\": \"poids\", \"libelle\": \"Poids\", \"type\": \"DECIMAL\"}, {\"cle\": \"total\", \"libelle\": \"Total\", \"type\": \"CALCULE\"}, {\"cle\": \"piece\", \"libelle\": \"Pièce justificative\", \"type\": \"FICHIER\"}, {\"cle\": \"grille\", \"libelle\": \"Disponibilités\", \"type\": \"MATRICE\", \"lignes\": [\"Lundi\", \"Mardi\"], \"colonnes\": [\"AM\", \"PM\"]}, {\"cle\": \"service\", \"libelle\": \"Service\", \"type\": \"VALEURS_DYNAMIQUES\", \"source\": \"SERVICES\"}]}], \"regles\": [{\"type\": \"CALCUL\", \"cible\": \"total\", \"valeur\": \"produit:heures,taux\"}, {\"type\": \"VALIDATION\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"60\"}], \"valeur\": \"60 heures au plus\"}, {\"type\": \"VISIBILITE\", \"conditions\": [{\"champ\": \"mode\", \"operateur\": \"EGAL\", \"valeur\": \"Présentiel\"}], \"cible\": \"grille\"}, {\"type\": \"OBLIGATION\", \"conditions\": [{\"champ\": \"activite\", \"operateur\": \"EGAL\", \"valeur\": \"Formation\"}], \"cible\": \"piece\"}, {\"type\": \"ROUTAGE\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"40\"}], \"cible\": \"GESTIONNAIRE\"}]}",
+            "note": "Version initiale"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/soumettre",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "EN_APPROBATION"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/publier",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "PUBLIE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies",
+          "capturer": {
+            "fiche": "$.id",
+            "ficheNumero": "$.numero"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "PATCH /api/formulaires/${formulaire}/saisies/${fiche}",
+          "corps": {
+            "nom": "Alice Roy",
+            "heures": "70"
+          },
+          "verifier": [
+            {
+              "chemin": "$.donneesJson",
+              "contient": "Alice Roy"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/formulaires/${formulaire}/saisies/${fiche}",
+          "verifier": [
+            {
+              "chemin": "$.donneesJson",
+              "contient": "70"
+            },
+            {
+              "chemin": "$.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/regles/evaluer",
+          "corps": {
+            "heures": "50",
+            "taux": "20",
+            "mode": "Virtuel",
+            "activite": "Formation"
+          },
+          "verifier": [
+            {
+              "chemin": "$.calculs.total",
+              "egal": 1000
+            },
+            {
+              "chemin": "$.routage",
+              "inclut": "GESTIONNAIRE"
+            },
+            {
+              "chemin": "$.champsMasques",
+              "inclut": "grille"
+            },
+            {
+              "chemin": "$.champsObligatoires",
+              "inclut": "piece"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/regles/evaluer",
+          "corps": {
+            "heures": "70",
+            "mode": "Présentiel"
+          },
+          "verifier": [
+            {
+              "chemin": "$.erreurs",
+              "inclut": "60 heures au plus"
+            },
+            {
+              "chemin": "$.champsMasques",
+              "exclut": "grille"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/soumettre",
+          "corps": {},
+          "statut": 400,
+          "verifier": [
+            {
+              "texte": "60 heures au plus"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Alice Roy\",\"activite\":\"Atelier\",\"mode\":\"Virtuel\",\"heures\":\"30\",\"taux\":\"20\"}"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "SOUMIS"
+            },
+            {
+              "chemin": "$.soumisLe",
+              "existe": true
+            },
+            {
+              "chemin": "$.numero",
+              "contient": "RH-"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/mes-demandes",
+          "verifier": [
+            {
+              "chemin": "$[*].numero",
+              "inclut": "${ficheNumero}"
+            }
+          ]
+        }
+      ]
+    },
+    "chu.activation": {
+      "description": "Ouverture selon la date, le nombre maximal de répondants, la plage réseau et la vérification anti-robot",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "MAX_${UNIQUE}",
+            "nom": "MAX ${unique}",
+            "domaine": "RH",
+            "conservationJours": 365
+          },
+          "capturer": {
+            "fMax": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statutCourant",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/formulaires/${fMax}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"libelleI18n\": {\"fr\": \"Nom\", \"en\": \"Name\"}, \"type\": \"TEXTE\", \"obligatoire\": true}, {\"cle\": \"courriel\", \"libelle\": \"Courriel\", \"type\": \"COURRIEL\"}, {\"cle\": \"naissance\", \"libelle\": \"Date de naissance\", \"type\": \"DATE\"}, {\"cle\": \"site\", \"libelle\": \"Site Web\", \"type\": \"HYPERLIEN\"}, {\"cle\": \"commentaire\", \"libelle\": \"Commentaire\", \"type\": \"ZONE_TEXTE\"}]}, {\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Formation\", \"Atelier\"]}, {\"cle\": \"mode\", \"libelle\": \"Mode\", \"type\": \"RADIO\", \"options\": [\"Présentiel\", \"Virtuel\"]}, {\"cle\": \"accepte\", \"libelle\": \"J'accepte\", \"type\": \"CASE\"}, {\"cle\": \"heures\", \"libelle\": \"Heures\", \"type\": \"NOMBRE\"}, {\"cle\": \"taux\", \"libelle\": \"Taux horaire\", \"type\": \"MONTANT\"}, {\"cle\": \"remise\", \"libelle\": \"Remise\", \"type\": \"POURCENTAGE\"}, {\"cle\": \"poids\", \"libelle\": \"Poids\", \"type\": \"DECIMAL\"}, {\"cle\": \"total\", \"libelle\": \"Total\", \"type\": \"CALCULE\"}, {\"cle\": \"piece\", \"libelle\": \"Pièce justificative\", \"type\": \"FICHIER\"}, {\"cle\": \"grille\", \"libelle\": \"Disponibilités\", \"type\": \"MATRICE\", \"lignes\": [\"Lundi\", \"Mardi\"], \"colonnes\": [\"AM\", \"PM\"]}, {\"cle\": \"service\", \"libelle\": \"Service\", \"type\": \"VALEURS_DYNAMIQUES\", \"source\": \"SERVICES\"}]}], \"regles\": [{\"type\": \"CALCUL\", \"cible\": \"total\", \"valeur\": \"produit:heures,taux\"}, {\"type\": \"VALIDATION\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"60\"}], \"valeur\": \"60 heures au plus\"}, {\"type\": \"VISIBILITE\", \"conditions\": [{\"champ\": \"mode\", \"operateur\": \"EGAL\", \"valeur\": \"Présentiel\"}], \"cible\": \"grille\"}, {\"type\": \"OBLIGATION\", \"conditions\": [{\"champ\": \"activite\", \"operateur\": \"EGAL\", \"valeur\": \"Formation\"}], \"cible\": \"piece\"}, {\"type\": \"ROUTAGE\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"40\"}], \"cible\": \"GESTIONNAIRE\"}], \"activation\": {\"maxRepondants\": 1}}",
+            "note": "Version initiale"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${fMax}/soumettre",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "EN_APPROBATION"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${fMax}/publier",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "PUBLIE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${fMax}/saisies",
+          "capturer": {
+            "f1": "$.id",
+            "f1Numero": "$.numero"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${fMax}/saisies/${f1}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Alice Roy\",\"activite\":\"Atelier\",\"mode\":\"Virtuel\",\"heures\":\"30\",\"taux\":\"20\"}"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${fMax}/saisies",
+          "capturer": {
+            "f2": "$.id",
+            "f2Numero": "$.numero"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${fMax}/saisies/${f2}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Alice Roy\",\"activite\":\"Atelier\",\"mode\":\"Virtuel\",\"heures\":\"30\",\"taux\":\"20\"}"
+          },
+          "statut": 409,
+          "verifier": [
+            {
+              "texte": "capacité maximale est atteinte"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "FERME_${UNIQUE}",
+            "nom": "FERME ${unique}",
+            "domaine": "RH",
+            "conservationJours": 365
+          },
+          "capturer": {
+            "fFerme": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statutCourant",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/formulaires/${fFerme}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"libelleI18n\": {\"fr\": \"Nom\", \"en\": \"Name\"}, \"type\": \"TEXTE\", \"obligatoire\": true}, {\"cle\": \"courriel\", \"libelle\": \"Courriel\", \"type\": \"COURRIEL\"}, {\"cle\": \"naissance\", \"libelle\": \"Date de naissance\", \"type\": \"DATE\"}, {\"cle\": \"site\", \"libelle\": \"Site Web\", \"type\": \"HYPERLIEN\"}, {\"cle\": \"commentaire\", \"libelle\": \"Commentaire\", \"type\": \"ZONE_TEXTE\"}]}, {\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Formation\", \"Atelier\"]}, {\"cle\": \"mode\", \"libelle\": \"Mode\", \"type\": \"RADIO\", \"options\": [\"Présentiel\", \"Virtuel\"]}, {\"cle\": \"accepte\", \"libelle\": \"J'accepte\", \"type\": \"CASE\"}, {\"cle\": \"heures\", \"libelle\": \"Heures\", \"type\": \"NOMBRE\"}, {\"cle\": \"taux\", \"libelle\": \"Taux horaire\", \"type\": \"MONTANT\"}, {\"cle\": \"remise\", \"libelle\": \"Remise\", \"type\": \"POURCENTAGE\"}, {\"cle\": \"poids\", \"libelle\": \"Poids\", \"type\": \"DECIMAL\"}, {\"cle\": \"total\", \"libelle\": \"Total\", \"type\": \"CALCULE\"}, {\"cle\": \"piece\", \"libelle\": \"Pièce justificative\", \"type\": \"FICHIER\"}, {\"cle\": \"grille\", \"libelle\": \"Disponibilités\", \"type\": \"MATRICE\", \"lignes\": [\"Lundi\", \"Mardi\"], \"colonnes\": [\"AM\", \"PM\"]}, {\"cle\": \"service\", \"libelle\": \"Service\", \"type\": \"VALEURS_DYNAMIQUES\", \"source\": \"SERVICES\"}]}], \"regles\": [{\"type\": \"CALCUL\", \"cible\": \"total\", \"valeur\": \"produit:heures,taux\"}, {\"type\": \"VALIDATION\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"60\"}], \"valeur\": \"60 heures au plus\"}, {\"type\": \"VISIBILITE\", \"conditions\": [{\"champ\": \"mode\", \"operateur\": \"EGAL\", \"valeur\": \"Présentiel\"}], \"cible\": \"grille\"}, {\"type\": \"OBLIGATION\", \"conditions\": [{\"champ\": \"activite\", \"operateur\": \"EGAL\", \"valeur\": \"Formation\"}], \"cible\": \"piece\"}, {\"type\": \"ROUTAGE\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"40\"}], \"cible\": \"GESTIONNAIRE\"}], \"activation\": {\"dateFin\": \"2020-01-01T00:00:00Z\"}}",
+            "note": "Version initiale"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${fFerme}/soumettre",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "EN_APPROBATION"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${fFerme}/publier",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "PUBLIE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${fFerme}/saisies",
+          "capturer": {
+            "f3": "$.id",
+            "f3Numero": "$.numero"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${fFerme}/saisies/${f3}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Alice Roy\",\"activite\":\"Atelier\",\"mode\":\"Virtuel\",\"heures\":\"30\",\"taux\":\"20\"}"
+          },
+          "statut": 409,
+          "verifier": [
+            {
+              "texte": "fermé"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "RESEAU_${UNIQUE}",
+            "nom": "RESEAU ${unique}",
+            "domaine": "RH",
+            "conservationJours": 365
+          },
+          "capturer": {
+            "fReseau": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statutCourant",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/formulaires/${fReseau}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"libelleI18n\": {\"fr\": \"Nom\", \"en\": \"Name\"}, \"type\": \"TEXTE\", \"obligatoire\": true}, {\"cle\": \"courriel\", \"libelle\": \"Courriel\", \"type\": \"COURRIEL\"}, {\"cle\": \"naissance\", \"libelle\": \"Date de naissance\", \"type\": \"DATE\"}, {\"cle\": \"site\", \"libelle\": \"Site Web\", \"type\": \"HYPERLIEN\"}, {\"cle\": \"commentaire\", \"libelle\": \"Commentaire\", \"type\": \"ZONE_TEXTE\"}]}, {\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Formation\", \"Atelier\"]}, {\"cle\": \"mode\", \"libelle\": \"Mode\", \"type\": \"RADIO\", \"options\": [\"Présentiel\", \"Virtuel\"]}, {\"cle\": \"accepte\", \"libelle\": \"J'accepte\", \"type\": \"CASE\"}, {\"cle\": \"heures\", \"libelle\": \"Heures\", \"type\": \"NOMBRE\"}, {\"cle\": \"taux\", \"libelle\": \"Taux horaire\", \"type\": \"MONTANT\"}, {\"cle\": \"remise\", \"libelle\": \"Remise\", \"type\": \"POURCENTAGE\"}, {\"cle\": \"poids\", \"libelle\": \"Poids\", \"type\": \"DECIMAL\"}, {\"cle\": \"total\", \"libelle\": \"Total\", \"type\": \"CALCULE\"}, {\"cle\": \"piece\", \"libelle\": \"Pièce justificative\", \"type\": \"FICHIER\"}, {\"cle\": \"grille\", \"libelle\": \"Disponibilités\", \"type\": \"MATRICE\", \"lignes\": [\"Lundi\", \"Mardi\"], \"colonnes\": [\"AM\", \"PM\"]}, {\"cle\": \"service\", \"libelle\": \"Service\", \"type\": \"VALEURS_DYNAMIQUES\", \"source\": \"SERVICES\"}]}], \"regles\": [{\"type\": \"CALCUL\", \"cible\": \"total\", \"valeur\": \"produit:heures,taux\"}, {\"type\": \"VALIDATION\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"60\"}], \"valeur\": \"60 heures au plus\"}, {\"type\": \"VISIBILITE\", \"conditions\": [{\"champ\": \"mode\", \"operateur\": \"EGAL\", \"valeur\": \"Présentiel\"}], \"cible\": \"grille\"}, {\"type\": \"OBLIGATION\", \"conditions\": [{\"champ\": \"activite\", \"operateur\": \"EGAL\", \"valeur\": \"Formation\"}], \"cible\": \"piece\"}, {\"type\": \"ROUTAGE\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"40\"}], \"cible\": \"GESTIONNAIRE\"}], \"activation\": {\"plagesReseau\": [\"10.250.\"]}}",
+            "note": "Version initiale"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${fReseau}/soumettre",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "EN_APPROBATION"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${fReseau}/publier",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "PUBLIE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${fReseau}/saisies",
+          "capturer": {
+            "f4": "$.id",
+            "f4Numero": "$.numero"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${fReseau}/saisies/${f4}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Alice Roy\",\"activite\":\"Atelier\",\"mode\":\"Virtuel\",\"heures\":\"30\",\"taux\":\"20\"}"
+          },
+          "statut": 409,
+          "verifier": [
+            {
+              "texte": "réseau non autorisé"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "ROBOT_${UNIQUE}",
+            "nom": "ROBOT ${unique}",
+            "domaine": "RH",
+            "conservationJours": 365
+          },
+          "capturer": {
+            "fRobot": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statutCourant",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/formulaires/${fRobot}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"libelleI18n\": {\"fr\": \"Nom\", \"en\": \"Name\"}, \"type\": \"TEXTE\", \"obligatoire\": true}, {\"cle\": \"courriel\", \"libelle\": \"Courriel\", \"type\": \"COURRIEL\"}, {\"cle\": \"naissance\", \"libelle\": \"Date de naissance\", \"type\": \"DATE\"}, {\"cle\": \"site\", \"libelle\": \"Site Web\", \"type\": \"HYPERLIEN\"}, {\"cle\": \"commentaire\", \"libelle\": \"Commentaire\", \"type\": \"ZONE_TEXTE\"}]}, {\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Formation\", \"Atelier\"]}, {\"cle\": \"mode\", \"libelle\": \"Mode\", \"type\": \"RADIO\", \"options\": [\"Présentiel\", \"Virtuel\"]}, {\"cle\": \"accepte\", \"libelle\": \"J'accepte\", \"type\": \"CASE\"}, {\"cle\": \"heures\", \"libelle\": \"Heures\", \"type\": \"NOMBRE\"}, {\"cle\": \"taux\", \"libelle\": \"Taux horaire\", \"type\": \"MONTANT\"}, {\"cle\": \"remise\", \"libelle\": \"Remise\", \"type\": \"POURCENTAGE\"}, {\"cle\": \"poids\", \"libelle\": \"Poids\", \"type\": \"DECIMAL\"}, {\"cle\": \"total\", \"libelle\": \"Total\", \"type\": \"CALCULE\"}, {\"cle\": \"piece\", \"libelle\": \"Pièce justificative\", \"type\": \"FICHIER\"}, {\"cle\": \"grille\", \"libelle\": \"Disponibilités\", \"type\": \"MATRICE\", \"lignes\": [\"Lundi\", \"Mardi\"], \"colonnes\": [\"AM\", \"PM\"]}, {\"cle\": \"service\", \"libelle\": \"Service\", \"type\": \"VALEURS_DYNAMIQUES\", \"source\": \"SERVICES\"}]}], \"regles\": [{\"type\": \"CALCUL\", \"cible\": \"total\", \"valeur\": \"produit:heures,taux\"}, {\"type\": \"VALIDATION\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"60\"}], \"valeur\": \"60 heures au plus\"}, {\"type\": \"VISIBILITE\", \"conditions\": [{\"champ\": \"mode\", \"operateur\": \"EGAL\", \"valeur\": \"Présentiel\"}], \"cible\": \"grille\"}, {\"type\": \"OBLIGATION\", \"conditions\": [{\"champ\": \"activite\", \"operateur\": \"EGAL\", \"valeur\": \"Formation\"}], \"cible\": \"piece\"}, {\"type\": \"ROUTAGE\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"40\"}], \"cible\": \"GESTIONNAIRE\"}], \"activation\": {\"captchaRequis\": true}}",
+            "note": "Version initiale"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${fRobot}/soumettre",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "EN_APPROBATION"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${fRobot}/publier",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "PUBLIE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${fRobot}/saisies",
+          "capturer": {
+            "f5": "$.id",
+            "f5Numero": "$.numero"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${fRobot}/saisies/${f5}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Alice Roy\",\"activite\":\"Atelier\",\"mode\":\"Virtuel\",\"heures\":\"30\",\"taux\":\"20\"}"
+          },
+          "statut": 400,
+          "verifier": [
+            {
+              "texte": "anti-robot"
+            }
+          ]
+        }
+      ]
+    },
+    "chu.traitement": {
+      "description": "Traitement d'une fiche : prise en charge, demande de complément, commentaire, pièce jointe classifiée, validation et clôture ; transitions interdites refusées ; tableau de synthèse et export Excel",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "TRAIT_${UNIQUE}",
+            "nom": "TRAIT ${unique}",
+            "domaine": "RH",
+            "conservationJours": 365
+          },
+          "capturer": {
+            "formulaire": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statutCourant",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/formulaires/${formulaire}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"libelleI18n\": {\"fr\": \"Nom\", \"en\": \"Name\"}, \"type\": \"TEXTE\", \"obligatoire\": true}, {\"cle\": \"courriel\", \"libelle\": \"Courriel\", \"type\": \"COURRIEL\"}, {\"cle\": \"naissance\", \"libelle\": \"Date de naissance\", \"type\": \"DATE\"}, {\"cle\": \"site\", \"libelle\": \"Site Web\", \"type\": \"HYPERLIEN\"}, {\"cle\": \"commentaire\", \"libelle\": \"Commentaire\", \"type\": \"ZONE_TEXTE\"}]}, {\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Formation\", \"Atelier\"]}, {\"cle\": \"mode\", \"libelle\": \"Mode\", \"type\": \"RADIO\", \"options\": [\"Présentiel\", \"Virtuel\"]}, {\"cle\": \"accepte\", \"libelle\": \"J'accepte\", \"type\": \"CASE\"}, {\"cle\": \"heures\", \"libelle\": \"Heures\", \"type\": \"NOMBRE\"}, {\"cle\": \"taux\", \"libelle\": \"Taux horaire\", \"type\": \"MONTANT\"}, {\"cle\": \"remise\", \"libelle\": \"Remise\", \"type\": \"POURCENTAGE\"}, {\"cle\": \"poids\", \"libelle\": \"Poids\", \"type\": \"DECIMAL\"}, {\"cle\": \"total\", \"libelle\": \"Total\", \"type\": \"CALCULE\"}, {\"cle\": \"piece\", \"libelle\": \"Pièce justificative\", \"type\": \"FICHIER\"}, {\"cle\": \"grille\", \"libelle\": \"Disponibilités\", \"type\": \"MATRICE\", \"lignes\": [\"Lundi\", \"Mardi\"], \"colonnes\": [\"AM\", \"PM\"]}, {\"cle\": \"service\", \"libelle\": \"Service\", \"type\": \"VALEURS_DYNAMIQUES\", \"source\": \"SERVICES\"}]}], \"regles\": [{\"type\": \"CALCUL\", \"cible\": \"total\", \"valeur\": \"produit:heures,taux\"}, {\"type\": \"VALIDATION\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"60\"}], \"valeur\": \"60 heures au plus\"}, {\"type\": \"VISIBILITE\", \"conditions\": [{\"champ\": \"mode\", \"operateur\": \"EGAL\", \"valeur\": \"Présentiel\"}], \"cible\": \"grille\"}, {\"type\": \"OBLIGATION\", \"conditions\": [{\"champ\": \"activite\", \"operateur\": \"EGAL\", \"valeur\": \"Formation\"}], \"cible\": \"piece\"}, {\"type\": \"ROUTAGE\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"40\"}], \"cible\": \"GESTIONNAIRE\"}]}",
+            "note": "Version initiale"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/soumettre",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "EN_APPROBATION"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/publier",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "PUBLIE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies",
+          "capturer": {
+            "fiche": "$.id",
+            "ficheNumero": "$.numero"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Alice Roy\",\"activite\":\"Atelier\",\"mode\":\"Virtuel\",\"heures\":\"30\",\"taux\":\"20\"}"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/cloturer",
+          "statut": 409,
+          "verifier": [
+            {
+              "texte": "Transition interdite"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/prendre-en-charge",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "EN_TRAITEMENT"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/commentaires",
+          "corps": {
+            "visibilite": "INTERNE",
+            "corps": "Pièce justificative manquante ${unique}"
+          },
+          "verifier": [
+            {
+              "chemin": "$.visibilite",
+              "egal": "INTERNE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/documents?classification=CONFIDENTIEL",
+          "multipart": {
+            "fichiers": {
+              "fichier": "pdf",
+              "nom": "justificatif.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "verifier": [
+            {
+              "chemin": "$[0].classification",
+              "egal": "CONFIDENTIEL"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/complement",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "A_COMPLETER"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Alice Roy\",\"activite\":\"Atelier\",\"mode\":\"Virtuel\",\"heures\":\"30\",\"taux\":\"20\"}"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/prendre-en-charge"
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/valider",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "VALIDE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/cloturer",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "CLOTURE"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/rapport/formulaires/${formulaire}/resume",
+          "verifier": [
+            {
+              "chemin": "$.CLOTURE",
+              "egal": 1
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/rapport/formulaires/${formulaire}/export.xlsx",
+          "verifier": [
+            {
+              "texte": "PK"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/rapport/criteres?formulaireId=${formulaire}&nom=Cl%C3%B4tur%C3%A9es%20${unique}",
+          "corps": {
+            "statut": "CLOTURE"
+          },
+          "verifier": [
+            {
+              "chemin": "$.nom",
+              "egal": "Clôturées ${unique}"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/rapport/criteres",
+          "verifier": [
+            {
+              "chemin": "$[*].nom",
+              "inclut": "Clôturées ${unique}"
+            }
+          ]
+        }
+      ]
+    },
+    "chu.notifications": {
+      "description": "Notification par courriel déclenchée par la soumission d'une fiche (règle de notification), tracée au journal des envois",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "NOTIF_${UNIQUE}",
+            "nom": "NOTIF ${unique}",
+            "domaine": "RH",
+            "conservationJours": 365
+          },
+          "capturer": {
+            "formulaire": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statutCourant",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/formulaires/${formulaire}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"libelleI18n\": {\"fr\": \"Nom\", \"en\": \"Name\"}, \"type\": \"TEXTE\", \"obligatoire\": true}, {\"cle\": \"courriel\", \"libelle\": \"Courriel\", \"type\": \"COURRIEL\"}, {\"cle\": \"naissance\", \"libelle\": \"Date de naissance\", \"type\": \"DATE\"}, {\"cle\": \"site\", \"libelle\": \"Site Web\", \"type\": \"HYPERLIEN\"}, {\"cle\": \"commentaire\", \"libelle\": \"Commentaire\", \"type\": \"ZONE_TEXTE\"}]}, {\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Formation\", \"Atelier\"]}, {\"cle\": \"mode\", \"libelle\": \"Mode\", \"type\": \"RADIO\", \"options\": [\"Présentiel\", \"Virtuel\"]}, {\"cle\": \"accepte\", \"libelle\": \"J'accepte\", \"type\": \"CASE\"}, {\"cle\": \"heures\", \"libelle\": \"Heures\", \"type\": \"NOMBRE\"}, {\"cle\": \"taux\", \"libelle\": \"Taux horaire\", \"type\": \"MONTANT\"}, {\"cle\": \"remise\", \"libelle\": \"Remise\", \"type\": \"POURCENTAGE\"}, {\"cle\": \"poids\", \"libelle\": \"Poids\", \"type\": \"DECIMAL\"}, {\"cle\": \"total\", \"libelle\": \"Total\", \"type\": \"CALCULE\"}, {\"cle\": \"piece\", \"libelle\": \"Pièce justificative\", \"type\": \"FICHIER\"}, {\"cle\": \"grille\", \"libelle\": \"Disponibilités\", \"type\": \"MATRICE\", \"lignes\": [\"Lundi\", \"Mardi\"], \"colonnes\": [\"AM\", \"PM\"]}, {\"cle\": \"service\", \"libelle\": \"Service\", \"type\": \"VALEURS_DYNAMIQUES\", \"source\": \"SERVICES\"}]}], \"regles\": [{\"type\": \"CALCUL\", \"cible\": \"total\", \"valeur\": \"produit:heures,taux\"}, {\"type\": \"VALIDATION\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"60\"}], \"valeur\": \"60 heures au plus\"}, {\"type\": \"VISIBILITE\", \"conditions\": [{\"champ\": \"mode\", \"operateur\": \"EGAL\", \"valeur\": \"Présentiel\"}], \"cible\": \"grille\"}, {\"type\": \"OBLIGATION\", \"conditions\": [{\"champ\": \"activite\", \"operateur\": \"EGAL\", \"valeur\": \"Formation\"}], \"cible\": \"piece\"}, {\"type\": \"ROUTAGE\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"40\"}], \"cible\": \"GESTIONNAIRE\"}]}",
+            "note": "Version initiale"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/soumettre",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "EN_APPROBATION"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/publier",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "PUBLIE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/notification/modeles",
+          "corps": {
+            "code": "CONF_${UNIQUE}",
+            "canal": "COURRIEL",
+            "sujet": "Fiche reçue ${unique} — {{numero}}",
+            "corps": "Bonjour {{nom}}, votre demande a été reçue."
+          }
+        },
+        {
+          "appel": "POST /api/notification/regles",
+          "corps": {
+            "formulaireId": "${formulaire}",
+            "declencheur": "SOUMISSION",
+            "modeleCode": "CONF_${UNIQUE}",
+            "destinataires": "notif.${unique}@chu.example"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies",
+          "capturer": {
+            "fiche": "$.id",
+            "ficheNumero": "$.numero"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Alice Roy\",\"activite\":\"Atelier\",\"mode\":\"Virtuel\",\"heures\":\"30\",\"taux\":\"20\"}"
+          }
+        },
+        {
+          "courriel": {
+            "destinataire": "notif.${unique}@chu.example",
+            "motif": "Bonjour (Alice Roy), votre demande a été reçue\\.",
+            "capturer": "confirmation"
+          }
+        },
+        {
+          "appel": "GET /api/notification/journal",
+          "verifier": [
+            {
+              "chemin": "$[*].sujet",
+              "inclut": "Fiche reçue ${unique} — ${ficheNumero}"
+            },
+            {
+              "chemin": "$[*].statut",
+              "inclut": "ENVOYE"
+            }
+          ]
+        }
+      ]
+    },
+    "chu.interop": {
+      "description": "API publique : client OAuth créé, jeton obtenu, fiche créée par un système externe ; jeton absent refusé",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "API_${UNIQUE}",
+            "nom": "API ${unique}",
+            "domaine": "RH",
+            "conservationJours": 365
+          },
+          "capturer": {
+            "formulaire": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statutCourant",
+              "egal": "BROUILLON"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/formulaires/${formulaire}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"libelleI18n\": {\"fr\": \"Nom\", \"en\": \"Name\"}, \"type\": \"TEXTE\", \"obligatoire\": true}, {\"cle\": \"courriel\", \"libelle\": \"Courriel\", \"type\": \"COURRIEL\"}, {\"cle\": \"naissance\", \"libelle\": \"Date de naissance\", \"type\": \"DATE\"}, {\"cle\": \"site\", \"libelle\": \"Site Web\", \"type\": \"HYPERLIEN\"}, {\"cle\": \"commentaire\", \"libelle\": \"Commentaire\", \"type\": \"ZONE_TEXTE\"}]}, {\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Formation\", \"Atelier\"]}, {\"cle\": \"mode\", \"libelle\": \"Mode\", \"type\": \"RADIO\", \"options\": [\"Présentiel\", \"Virtuel\"]}, {\"cle\": \"accepte\", \"libelle\": \"J'accepte\", \"type\": \"CASE\"}, {\"cle\": \"heures\", \"libelle\": \"Heures\", \"type\": \"NOMBRE\"}, {\"cle\": \"taux\", \"libelle\": \"Taux horaire\", \"type\": \"MONTANT\"}, {\"cle\": \"remise\", \"libelle\": \"Remise\", \"type\": \"POURCENTAGE\"}, {\"cle\": \"poids\", \"libelle\": \"Poids\", \"type\": \"DECIMAL\"}, {\"cle\": \"total\", \"libelle\": \"Total\", \"type\": \"CALCULE\"}, {\"cle\": \"piece\", \"libelle\": \"Pièce justificative\", \"type\": \"FICHIER\"}, {\"cle\": \"grille\", \"libelle\": \"Disponibilités\", \"type\": \"MATRICE\", \"lignes\": [\"Lundi\", \"Mardi\"], \"colonnes\": [\"AM\", \"PM\"]}, {\"cle\": \"service\", \"libelle\": \"Service\", \"type\": \"VALEURS_DYNAMIQUES\", \"source\": \"SERVICES\"}]}], \"regles\": [{\"type\": \"CALCUL\", \"cible\": \"total\", \"valeur\": \"produit:heures,taux\"}, {\"type\": \"VALIDATION\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"60\"}], \"valeur\": \"60 heures au plus\"}, {\"type\": \"VISIBILITE\", \"conditions\": [{\"champ\": \"mode\", \"operateur\": \"EGAL\", \"valeur\": \"Présentiel\"}], \"cible\": \"grille\"}, {\"type\": \"OBLIGATION\", \"conditions\": [{\"champ\": \"activite\", \"operateur\": \"EGAL\", \"valeur\": \"Formation\"}], \"cible\": \"piece\"}, {\"type\": \"ROUTAGE\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"40\"}], \"cible\": \"GESTIONNAIRE\"}]}",
+            "note": "Version initiale"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/soumettre",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "EN_APPROBATION"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/publier",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "PUBLIE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/interop/clients?nom=Portail%20${unique}&scopes=fiches:ecrire",
+          "capturer": {
+            "clientId": "$.clientId",
+            "secret": "$.secret"
+          }
+        },
+        {
+          "appel": "POST /api/public/oauth/token?client_id=${clientId}&client_secret=${secret}",
+          "anonyme": true,
+          "capturer": {
+            "jeton": "$.accessToken"
+          },
+          "verifier": [
+            {
+              "chemin": "$.tokenType",
+              "egal": "Bearer"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/public/v1/formulaires/API_${UNIQUE}/fiches",
+          "anonyme": true,
+          "corps": {
+            "nom": "Carl"
+          },
+          "statut": 401
+        },
+        {
+          "appel": "POST /api/public/v1/formulaires/API_${UNIQUE}/fiches",
+          "anonyme": true,
+          "entetes": {
+            "Authorization": "Bearer ${jeton}"
+          },
+          "corps": {
+            "nom": "Carl Externe",
+            "heures": "5",
+            "taux": "10"
+          },
+          "statut": [
+            200,
+            201
+          ],
+          "verifier": [
+            {
+              "texte": "Carl Externe"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/formulaires/${formulaire}/saisies",
+          "verifier": [
+            {
+              "texte": "Carl Externe"
+            }
+          ]
+        }
+      ]
+    },
+    "chu.securite": {
+      "description": "Groupes et droits fins (portée champ), classification ; masquage du NAS (Loi 25) ; journal des accès ; second facteur et authentification unique",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/securite/groupes",
+          "corps": {
+            "code": "RH_${UNIQUE}",
+            "nom": "Lecteurs RH ${unique}"
+          }
+        },
+        {
+          "appel": "POST /api/securite/groupes/RH_${UNIQUE}/membres?utilisateur=admin.bdd@chu.example"
+        },
+        {
+          "appel": "POST /api/securite/permissions",
+          "corps": {
+            "sujetType": "GROUPE",
+            "sujet": "RH_${UNIQUE}",
+            "portee": "CHAMP",
+            "cible": "INSCR.taux",
+            "action": "LIRE"
+          },
+          "capturer": {
+            "permission": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.portee",
+              "egal": "CHAMP"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/securite/permissions",
+          "verifier": [
+            {
+              "chemin": "$[*].sujet",
+              "inclut": "RH_${UNIQUE}"
+            }
+          ]
+        },
+        {
+          "appel": "DELETE /api/securite/permissions/${permission}"
+        },
+        {
+          "appel": "POST /api/rh/employes",
+          "corps": {
+            "prenom": "Ana",
+            "nom": "Roy ${unique}",
+            "nas": "046454286",
+            "courriel": "ana.${unique}@chu.example",
+            "dateEmbauche": "2026-01-05",
+            "statut": "ACTIF",
+            "poste": "Infirmière",
+            "departement": "Soins",
+            "salaireAnnuel": 70000,
+            "frequence": "AUX_DEUX_SEMAINES",
+            "province": "QC",
+            "typeTravailleur": "SALARIE"
+          },
+          "capturer": {
+            "employe": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.nasMasque",
+              "egal": "***-***-286"
+            },
+            {
+              "texteAbsent": "046454286"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/rh/employes/${employe}",
+          "verifier": [
+            {
+              "texteAbsent": "046454286"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/audit?entite=Employe",
+          "verifier": [
+            {
+              "chemin": "$",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/parametres/integration-oidc",
+          "verifier": [
+            {
+              "chemin": "$",
+              "existe": true
+            }
+          ]
+        }
+      ]
+    },
+    "chu.applications": {
+      "description": "Applications et environnements DEV, UAT et PROD par domaine (RH, approvisionnement), dupliquées ; catalogue",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/applications",
+          "corps": {
+            "code": "PORTAIL_${UNIQUE}",
+            "nom": "Portail RH ${unique}",
+            "domaine": "RH",
+            "environnement": "DEV",
+            "statut": "ACTIF",
+            "proprietaire": "admin.bdd@chu.example"
+          },
+          "capturer": {
+            "application": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.environnement",
+              "egal": "DEV"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/applications/${application}/dupliquer?code=PORTAIL_UAT_${UNIQUE}&nom=Portail%20RH%20UAT",
+          "verifier": [
+            {
+              "chemin": "$.code",
+              "egal": "PORTAIL_UAT_${UNIQUE}"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/applications",
+          "corps": {
+            "code": "APPRO_${UNIQUE}",
+            "nom": "Achats ${unique}",
+            "domaine": "APPROVISIONNEMENT",
+            "environnement": "PROD",
+            "statut": "ACTIF",
+            "proprietaire": "admin.bdd@chu.example"
+          },
+          "verifier": [
+            {
+              "chemin": "$.domaine",
+              "egal": "APPROVISIONNEMENT"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/applications?domaine=RH",
+          "verifier": [
+            {
+              "chemin": "$[*].code",
+              "inclut": "PORTAIL_${UNIQUE}"
+            },
+            {
+              "chemin": "$[*].domaine",
+              "exclut": "APPROVISIONNEMENT"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/catalogue",
+          "verifier": [
+            {
+              "chemin": "$",
+              "existe": true
+            }
+          ]
+        }
+      ]
+    },
+    "chu.cloisonnement": {
+      "description": "Cloisonnement entre clients : un formulaire du CHU est introuvable pour une autre organisation",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "PRIVE_${UNIQUE}",
+            "nom": "Privé ${unique}",
+            "domaine": "RH"
+          },
+          "capturer": {
+            "formulaire": "$.id"
+          }
+        },
+        {
+          "appel": "GET /api/formulaires/${formulaire}/version",
+          "profil": "administrateur de Lévis",
+          "statut": [
+            403,
+            404
+          ]
+        }
+      ]
+    },
+    "chu.processus": {
+      "description": "Processus structurés : circuit d'approbation multi-niveaux par règles (montant), décision par étape, demandes suivies",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/approbations/regles",
+          "corps": {
+            "documentType": "ACHAT_${UNIQUE}",
+            "champ": "montant",
+            "operateur": "gte",
+            "valeur": "1000",
+            "niveau": 1,
+            "approbateurRole": "ADMIN"
+          }
+        },
+        {
+          "appel": "POST /api/approbations/demandes",
+          "corps": {
+            "documentType": "ACHAT_${UNIQUE}",
+            "documentId": "DA-${UNIQUE}",
+            "contexte": {
+              "montant": "5000"
+            }
+          },
+          "capturer": {
+            "demande": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.etapes",
+              "longueurMin": 1
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/approbations/mes-etapes",
+          "capturer": {
+            "etape": "$[0].id"
+          },
+          "verifier": [
+            {
+              "chemin": "$",
+              "longueurMin": 1
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/approbations/etapes/${etape}/decider",
+          "corps": {
+            "decision": "APPROUVE",
+            "commentaire": "Budget disponible"
+          }
+        },
+        {
+          "appel": "GET /api/approbations/demandes/${demande}",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "APPROVED"
+            }
+          ]
+        }
+      ]
+    },
+    "chu.droits": {
+      "description": "Comptes sans limite de nombre, rôles distincts : le lecteur consulte les listes sans pouvoir concevoir ; politique de mot de passe appliquée",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/admin/users",
+          "corps": {
+            "email": "faible.${unique}@chu.example",
+            "nom": "Mot de passe faible",
+            "motDePasse": "abc",
+            "roles": [
+              "LECTEUR"
+            ],
+            "actif": true
+          },
+          "statut": 400
+        },
+        {
+          "appel": "POST /api/admin/users",
+          "corps": {
+            "email": "lecteur.bdd@chu.example",
+            "nom": "Lecteur CHU",
+            "motDePasse": "Passw0rd!Chu2026",
+            "roles": [
+              "LECTEUR"
+            ],
+            "actif": true
+          },
+          "statut": [
+            200,
+            201,
+            400,
+            409
+          ],
+          "note": "idempotent : le compte peut déjà exister"
+        },
+        {
+          "appel": "POST /api/admin/users",
+          "corps": {
+            "email": "agent.${unique}@chu.example",
+            "nom": "Agent ${unique}",
+            "motDePasse": "Passw0rd!Chu2026",
+            "roles": [
+              "LECTEUR"
+            ],
+            "actif": true
+          },
+          "verifier": [
+            {
+              "chemin": "$.roles",
+              "inclut": "LECTEUR"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/catalogue",
+          "profil": "lecteur CHU",
+          "verifier": [
+            {
+              "chemin": "$",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/formulaires",
+          "profil": "lecteur CHU",
+          "statut": 403,
+          "note": "l’atelier de conception est réservé aux rôles ADMIN et REDACTEUR"
+        },
+        {
+          "appel": "POST /api/formulaires",
+          "profil": "lecteur CHU",
+          "corps": {
+            "code": "INTERDIT_${UNIQUE}",
+            "nom": "Interdit",
+            "domaine": "RH"
+          },
+          "statut": 403
+        },
+        {
+          "appel": "GET /api/auth/me",
+          "profil": "lecteur CHU",
+          "verifier": [
+            {
+              "chemin": "$.roles",
+              "inclut": "LECTEUR"
+            }
+          ]
+        }
+      ]
+    },
+    "chu.theme": {
+      "description": "Image institutionnelle : couleurs et logo propres à l'organisation, servis publiquement",
+      "profil": "superadmin",
+      "etapes": [
+        {
+          "appel": "GET /api/superadmin/tenants",
+          "capturer": {
+            "organisation": "$[?slug=chu-bdd].id"
+          }
+        },
+        {
+          "appel": "PUT /api/superadmin/tenants/${organisation}/theme",
+          "corps": {
+            "couleurPrimaire": "#004B8D",
+            "couleurAccent": "#00A3E0",
+            "couleurFond": "#FFFFFF",
+            "couleurTexte": "#1B1B1B",
+            "logoTexte": "CHU ${unique}"
+          }
+        },
+        {
+          "appel": "GET /api/tenants/chu-bdd/public",
+          "anonyme": true,
+          "verifier": [
+            {
+              "chemin": "$.theme.couleurPrimaire",
+              "egal": "#004B8D"
+            },
+            {
+              "chemin": "$.theme.logoTexte",
+              "egal": "CHU ${unique}"
+            }
+          ]
+        }
+      ]
+    },
+    "chu.places.capacite": {
+      "description": "Capacité par choix : la dernière place prise, le choix est signalé complet et une nouvelle inscription y est refusée ; les autres choix restent ouverts",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "PLACES_${UNIQUE}",
+            "nom": "Inscriptions ${unique}",
+            "domaine": "RH"
+          },
+          "capturer": {
+            "formulaire": "$.id"
+          }
+        },
+        {
+          "appel": "PUT /api/formulaires/${formulaire}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"type\": \"TEXTE\"}, {\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Atelier\", \"Formation\"], \"capacites\": {\"Atelier\": 1}}]}]}"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/soumettre"
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/publier"
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies",
+          "capturer": {
+            "fiche1": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche1}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Alice Roy\",\"activite\":\"Atelier\"}"
+          }
+        },
+        {
+          "appel": "GET /api/formulaires/${formulaire}/places",
+          "verifier": [
+            {
+              "chemin": "$[0].choix",
+              "egal": "Atelier"
+            },
+            {
+              "chemin": "$[0].complet",
+              "egal": true
+            },
+            {
+              "chemin": "$[0].restantes",
+              "egal": 0
+            },
+            {
+              "chemin": "$[1].complet",
+              "egal": false
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies",
+          "capturer": {
+            "fiche2": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche2}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Bruno Gagnon\",\"activite\":\"Atelier\"}"
+          },
+          "statut": 409,
+          "verifier": [
+            {
+              "chemin": "$.message",
+              "contient": "complet"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche2}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Bruno Gagnon\",\"activite\":\"Formation\"}"
+          }
+        }
+      ]
+    },
+    "chu.places.inventaire": {
+      "description": "Inventaire : places et inscriptions par choix, export CSV ; le lecteur n'y a pas accès",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/admin/users",
+          "corps": {
+            "email": "lecteur.bdd@chu.example",
+            "nom": "Lecteur CHU",
+            "motDePasse": "Passw0rd!Chu2026",
+            "roles": [
+              "LECTEUR"
+            ],
+            "actif": true
+          },
+          "statut": [
+            200,
+            201,
+            400,
+            409
+          ],
+          "note": "idempotent : le compte peut déjà exister"
+        },
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "PLACES_${UNIQUE}",
+            "nom": "Inscriptions ${unique}",
+            "domaine": "RH"
+          },
+          "capturer": {
+            "formulaire": "$.id"
+          }
+        },
+        {
+          "appel": "PUT /api/formulaires/${formulaire}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"type\": \"TEXTE\"}, {\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Atelier\", \"Formation\"], \"capacites\": {\"Atelier\": 1}}]}]}"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/soumettre"
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/publier"
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies",
+          "capturer": {
+            "fiche1": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche1}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Alice Roy\",\"activite\":\"Atelier\"}"
+          }
+        },
+        {
+          "appel": "GET /api/formulaires/${formulaire}/inventaire",
+          "verifier": [
+            {
+              "chemin": "$[0].place.inscrits",
+              "egal": 1
+            },
+            {
+              "chemin": "$[0].inscriptions[0].statut",
+              "egal": "SOUMIS"
+            },
+            {
+              "chemin": "$[1].place.capacite",
+              "egal": null
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/formulaires/${formulaire}/inventaire.csv",
+          "verifier": [
+            {
+              "texte": "champ;choix;capacite"
+            },
+            {
+              "texte": "\"Atelier\";\"1\";\"1\";\"0\""
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/formulaires/${formulaire}/inventaire",
+          "profil": "lecteur CHU",
+          "statut": 403
+        }
+      ]
+    },
+    "chu.document.fiche": {
+      "description": "Document d'une fiche : PDF/A produit depuis ses données, transmis par courriel en pièce jointe (reçu par le relais SMTP), journalisé ; refusé au lecteur",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/admin/users",
+          "corps": {
+            "email": "lecteur.bdd@chu.example",
+            "nom": "Lecteur CHU",
+            "motDePasse": "Passw0rd!Chu2026",
+            "roles": [
+              "LECTEUR"
+            ],
+            "actif": true
+          },
+          "statut": [
+            200,
+            201,
+            400,
+            409
+          ],
+          "note": "idempotent : le compte peut déjà exister"
+        },
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "DOC_${UNIQUE}",
+            "nom": "Demande de soutien ${unique}",
+            "domaine": "RH"
+          },
+          "capturer": {
+            "formulaire": "$.id"
+          }
+        },
+        {
+          "appel": "PUT /api/formulaires/${formulaire}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom complet\", \"type\": \"TEXTE\"}, {\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Atelier\", \"Formation\"]}]}]}"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/soumettre"
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/publier"
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies",
+          "capturer": {
+            "fiche": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Alice Roy\",\"activite\":\"Atelier\"}"
+          }
+        },
+        {
+          "appel": "GET /api/formulaires/${formulaire}/saisies/${fiche}/document.pdf",
+          "verifier": [
+            {
+              "texte": "%PDF"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/document/transmettre",
+          "corps": {
+            "destinataire": "partenaire.${unique}@chu.example",
+            "message": "Voici la fiche ${unique}."
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "ENVOYE"
+            }
+          ]
+        },
+        {
+          "courriel": {
+            "destinataire": "partenaire.${unique}@chu.example",
+            "motif": "(Voici la fiche ${unique}\\.)",
+            "capturer": "recu"
+          }
+        },
+        {
+          "appel": "GET /api/notification/journal",
+          "verifier": [
+            {
+              "texte": "pièce jointe"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/formulaires/${formulaire}/saisies/${fiche}/document.pdf",
+          "profil": "lecteur CHU",
+          "statut": 404,
+          "note": "la fiche d'un autre demandeur est introuvable (son existence n'est pas révélée)"
+        }
+      ]
+    },
+    "chu.messagerie": {
+      "description": "Messagerie sécurisée : l'administrateur ouvre une conversation avec un intervenant, qui la lit et répond ; une personne hors conversation n'y accède pas ; une adresse hors organisation est refusée",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/admin/users",
+          "corps": {
+            "email": "lecteur.bdd@chu.example",
+            "nom": "Lecteur CHU",
+            "motDePasse": "Passw0rd!Chu2026",
+            "roles": [
+              "LECTEUR"
+            ],
+            "actif": true
+          },
+          "statut": [
+            200,
+            201,
+            400,
+            409
+          ],
+          "note": "idempotent : le compte peut déjà exister"
+        },
+        {
+          "appel": "POST /api/admin/users",
+          "corps": {
+            "email": "agent.msg.${unique}@chu.example",
+            "nom": "Agent ${unique}",
+            "motDePasse": "Passw0rd!Chu2026",
+            "roles": [
+              "LECTEUR"
+            ],
+            "actif": true
+          }
+        },
+        {
+          "appel": "POST /api/messagerie/conversations",
+          "corps": {
+            "sujet": "Dossier ${unique}",
+            "reference": "RH-${UNIQUE}",
+            "participants": [
+              "lecteur.bdd@chu.example"
+            ],
+            "message": "Merci de vérifier la pièce ${unique}."
+          },
+          "capturer": {
+            "conversation": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.messages[0].texte",
+              "egal": "Merci de vérifier la pièce ${unique}."
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/messagerie/conversations",
+          "profil": "lecteur CHU",
+          "verifier": [
+            {
+              "chemin": "$[?sujet=Dossier ${unique}].nonLus",
+              "egal": 1
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/messagerie/conversations/${conversation}/messages",
+          "profil": "lecteur CHU",
+          "corps": {
+            "texte": "Pièce vérifiée."
+          },
+          "verifier": [
+            {
+              "chemin": "$.messages[1].auteur",
+              "egal": "lecteur.bdd@chu.example"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/messagerie/conversations",
+          "corps": {
+            "sujet": "Fuite",
+            "participants": [
+              "redacteur@levis.qc.ca"
+            ],
+            "message": "x"
+          },
+          "statut": 400,
+          "verifier": [
+            {
+              "chemin": "$.message",
+              "contient": "membre actif"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/messagerie/conversations/${conversation}",
+          "profil": "rédacteur de Lévis",
+          "statut": [
+            403,
+            404
+          ],
+          "note": "une autre organisation n'a pas accès"
+        }
+      ]
+    },
+    "chu.rapport.pdf": {
+      "description": "Rapport PDF personnalisé : questions et statuts choisis ; une question inconnue est refusée ; le lecteur n'y a pas accès",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/admin/users",
+          "corps": {
+            "email": "lecteur.bdd@chu.example",
+            "nom": "Lecteur CHU",
+            "motDePasse": "Passw0rd!Chu2026",
+            "roles": [
+              "LECTEUR"
+            ],
+            "actif": true
+          },
+          "statut": [
+            200,
+            201,
+            400,
+            409
+          ],
+          "note": "idempotent : le compte peut déjà exister"
+        },
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "RAP_${UNIQUE}",
+            "nom": "Inscriptions ${unique}",
+            "domaine": "RH"
+          },
+          "capturer": {
+            "formulaire": "$.id"
+          }
+        },
+        {
+          "appel": "PUT /api/formulaires/${formulaire}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom complet\", \"type\": \"TEXTE\"}, {\"cle\": \"activite\", \"libelle\": \"Activité choisie\", \"type\": \"LISTE\", \"options\": [\"Atelier\", \"Formation\"]}]}]}"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/soumettre"
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/publier"
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies",
+          "capturer": {
+            "f1": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${f1}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Alice Roy\",\"activite\":\"Atelier\"}"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies",
+          "capturer": {
+            "f2": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${f2}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Bruno Gagnon\",\"activite\":\"Atelier\"}"
+          }
+        },
+        {
+          "appel": "GET /api/rapport/formulaires/${formulaire}/rapport.pdf?titre=Bilan-${unique}&champs=nom,activite&statuts=SOUMIS",
+          "verifier": [
+            {
+              "texte": "%PDF"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/rapport/formulaires/${formulaire}/rapport.pdf?champs=inexistant",
+          "statut": 400,
+          "verifier": [
+            {
+              "chemin": "$.message",
+              "contient": "Question inconnue"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/rapport/formulaires/${formulaire}/rapport.pdf",
+          "profil": "lecteur CHU",
+          "statut": 403
+        }
+      ]
+    },
+    "chu.tableaux-de-bord": {
+      "description": "Tableau de bord : compteur, histogramme par réponse et évolution mensuelle calculés sur les fiches ; un formulaire d'une autre organisation est refusé",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "RAP_${UNIQUE}",
+            "nom": "Inscriptions ${unique}",
+            "domaine": "RH"
+          },
+          "capturer": {
+            "formulaire": "$.id"
+          }
+        },
+        {
+          "appel": "PUT /api/formulaires/${formulaire}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom complet\", \"type\": \"TEXTE\"}, {\"cle\": \"activite\", \"libelle\": \"Activité choisie\", \"type\": \"LISTE\", \"options\": [\"Atelier\", \"Formation\"]}]}]}"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/soumettre"
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/publier"
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies",
+          "capturer": {
+            "f1": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${f1}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Alice Roy\",\"activite\":\"Atelier\"}"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies",
+          "capturer": {
+            "f2": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${f2}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Bruno Gagnon\",\"activite\":\"Atelier\"}"
+          }
+        },
+        {
+          "appel": "POST /api/rapport/tableaux-de-bord",
+          "corps": {
+            "nom": "Pilotage ${unique}",
+            "partage": true,
+            "indicateurs": [
+              {
+                "titre": "Fiches soumises",
+                "type": "COMPTEUR",
+                "formulaireId": "${formulaire}",
+                "statuts": [
+                  "SOUMIS"
+                ]
+              },
+              {
+                "titre": "Par activité",
+                "type": "BARRES",
+                "formulaireId": "${formulaire}",
+                "regroupement": "CHAMP",
+                "champ": "activite"
+              },
+              {
+                "titre": "Par mois",
+                "type": "EVOLUTION",
+                "formulaireId": "${formulaire}",
+                "regroupement": "MOIS"
+              }
+            ]
+          },
+          "capturer": {
+            "tableau": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.indicateurs[0].points[0].valeur",
+              "egal": 2
+            },
+            {
+              "chemin": "$.indicateurs[1].points[0].etiquette",
+              "egal": "Atelier"
+            },
+            {
+              "chemin": "$.indicateurs[1].points[0].valeur",
+              "egal": 2
+            },
+            {
+              "chemin": "$.indicateurs[2].points",
+              "longueurMin": 1
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/rapport/tableaux-de-bord",
+          "verifier": [
+            {
+              "chemin": "$[*].nom",
+              "inclut": "Pilotage ${unique}"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/rapport/tableaux-de-bord",
+          "corps": {
+            "nom": "Espion",
+            "partage": false,
+            "indicateurs": [
+              {
+                "titre": "Autre",
+                "type": "COMPTEUR",
+                "formulaireId": 999999
+              }
+            ]
+          },
+          "statut": 400
+        }
+      ]
+    },
+    "chu.banque-heures": {
+      "description": "Banque d'heures : le fournisseur l'ouvre et inscrit une consommation ; l'organisation voit son solde et son relevé ; un dépassement est refusé ; l'organisation ne peut pas s'ajouter d'heures",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "GET /api/superadmin/tenants",
+          "profil": "superadmin",
+          "capturer": {
+            "chu": "$[?slug=chu-bdd].id"
+          }
+        },
+        {
+          "appel": "POST /api/superadmin/tenants/${chu}/banques-heures",
+          "profil": "superadmin",
+          "corps": {
+            "nom": "Soutien ${unique}",
+            "debut": "${aujourdhui}",
+            "fin": "${dansUnMois}",
+            "heures": 40
+          },
+          "capturer": {
+            "banque": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/superadmin/tenants/${chu}/banques-heures/${banque}/mouvements",
+          "profil": "superadmin",
+          "corps": {
+            "type": "CONSOMMATION",
+            "categorie": "FORMATION",
+            "heures": 3.5,
+            "date": "${aujourdhui}",
+            "description": "Formation ${unique}",
+            "intervenant": "Julie Côté"
+          },
+          "verifier": [
+            {
+              "chemin": "$.solde.restantes",
+              "egal": 36.5
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/superadmin/tenants/${chu}/banques-heures/${banque}/mouvements",
+          "profil": "superadmin",
+          "corps": {
+            "type": "CONSOMMATION",
+            "categorie": "ANALYSE",
+            "heures": 100,
+            "date": "${aujourdhui}",
+            "description": "Trop",
+            "intervenant": "X"
+          },
+          "statut": 409,
+          "verifier": [
+            {
+              "chemin": "$.message",
+              "contient": "Solde insuffisant"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/soutien/banque-heures/${banque}",
+          "verifier": [
+            {
+              "chemin": "$.solde.parCategorie.FORMATION",
+              "egal": 3.5
+            },
+            {
+              "chemin": "$.mouvements",
+              "longueurMin": 2
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/soutien/banque-heures/${banque}/releve.csv",
+          "verifier": [
+            {
+              "texte": "Formation ${unique}"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/superadmin/tenants/${chu}/banques-heures/${banque}/mouvements",
+          "corps": {
+            "type": "ACHAT",
+            "heures": 100,
+            "date": "${aujourdhui}",
+            "description": "gratuit"
+          },
+          "statut": 403,
+          "note": "l'organisation ne s'ajoute pas d'heures"
+        }
+      ]
+    }
+  }
+}

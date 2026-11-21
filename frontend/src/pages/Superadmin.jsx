@@ -6,6 +6,7 @@ import ModeleDocumentManager from '../components/ModeleDocumentManager.jsx'
 import TarifTenantManager from '../components/TarifTenantManager.jsx'
 import GabaritManager from '../components/GabaritManager.jsx'
 import ModuleManager from '../components/ModuleManager.jsx'
+import BanqueHeuresManager from '../components/BanqueHeuresManager.jsx'
 import Modal from '../components/Modal.jsx'
 import { useI18n } from '../i18n/I18nContext'
 
@@ -198,6 +199,7 @@ export default function Superadmin() {
       <ModuleManager />
 
       <TarifTenantManager />
+      <BanqueHeuresManager tenants={tenants} />
 
       <ModeleDocumentManager portee="superadmin" />
       <GabaritManager />

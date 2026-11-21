@@ -3,6 +3,7 @@ package qc.levis.contrat.redaction.infrastructure.web;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import qc.levis.contrat.commun.infrastructure.TenantContext;
 import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
@@ -10,6 +11,7 @@ import qc.levis.contrat.redaction.application.ClauseService;
 import qc.levis.contrat.redaction.application.dto.ClauseRequest;
 import qc.levis.contrat.redaction.application.repository.ClauseRepository;
 import qc.levis.contrat.redaction.domain.Clause;
+import qc.levis.contrat.redaction.domain.ClauseVersion;
 import qc.levis.contrat.tenant.application.dto.PageResponse;
 
 @RestController
@@ -47,14 +49,26 @@ public class ClauseController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','JURIDIQUE','REDACTEUR')")
-    public Clause creer(@Valid @RequestBody ClauseRequest req) {
-        return service.creer(req);
+    public Clause creer(@Valid @RequestBody ClauseRequest req, Authentication auth) {
+        return service.creer(req, auth.getName());
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','JURIDIQUE','REDACTEUR')")
-    public Clause modifier(@PathVariable Long id, @Valid @RequestBody ClauseRequest req) {
-        return service.modifier(id, req);
+    public Clause modifier(@PathVariable Long id, @Valid @RequestBody ClauseRequest req, Authentication auth) {
+        return service.modifier(id, req, auth.getName());
+    }
+
+    /** Historique consultable (Lévis EF1, C-03) : chaque version avec son auteur, sa date et son motif. */
+    @GetMapping("/{id}/versions")
+    public List<ClauseVersion> versions(@PathVariable Long id) {
+        return service.versions(id);
+    }
+
+    @PostMapping("/{id}/versions/{numero}/restaurer")
+    @PreAuthorize("hasAnyRole('ADMIN','JURIDIQUE','REDACTEUR')")
+    public Clause restaurer(@PathVariable Long id, @PathVariable int numero, Authentication auth) {
+        return service.restaurer(id, numero, auth.getName());
     }
 
     @DeleteMapping("/{id}")

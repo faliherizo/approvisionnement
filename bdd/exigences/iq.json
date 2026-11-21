@@ -1,0 +1,1140 @@
+{
+  "appelOffres": "Investissement Québec — AO 2026-6370-0005",
+  "titre": "Solution de signature électronique et de génération de contrats",
+  "source": "docs/Dossier_IQ_2026-6370-0005/02-Analyse/conformite_exigences_fonctionnelles.md",
+  "exigences": [
+    {
+      "id": "IQ-C-01",
+      "source": "1.3",
+      "libelle": "Gérer le cycle de validation, d'approbation et de signature, orchestration comprise",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-02",
+      "source": "1.3",
+      "libelle": "Contexte multi-juridictionnel, solution conforme, modulaire, évolutive",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "documentaire",
+      "justification": "Principe général (contexte multi-juridictionnel, modularité) : démontré par l'ensemble des scénarios et des modules activables."
+    },
+    {
+      "id": "IQ-C-03",
+      "source": "1.3",
+      "libelle": "Service de signature appelable, distinct de l'orchestration (couplage lâche)",
+      "caractere": "Principe souhaité",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-04",
+      "source": "1.3",
+      "libelle": "Capacités avancées du cycle de vie des contrats",
+      "caractere": "Optionnelle (addenda § 4.3)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-05",
+      "source": "1.4.3",
+      "libelle": "Offerte en infonuagique, connectable aux SaaS",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "documentaire",
+      "justification": "Mode infonuagique : hébergement Azure (infrastructure).",
+      "reference": "docs/adr/ADR-020-region-hebergement-et-niveaux-de-service.md"
+    },
+    {
+      "id": "IQ-C-06",
+      "source": "1.4.3",
+      "libelle": "Connexion aux applications « on premise » par API",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-07",
+      "source": "1.4.3",
+      "libelle": "Protection et confidentialité des données",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-08",
+      "source": "1.4.4",
+      "libelle": "Échange avec les systèmes de référence : préalimenter, retourner les statuts",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-09",
+      "source": "1.4.5",
+      "libelle": "Récupération automatisée des données Salesforce Grantmaking",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-10",
+      "source": "1.4.5",
+      "libelle": "Génération automatisée des contrats depuis les données Salesforce",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-11",
+      "source": "1.4.5",
+      "libelle": "Préremplissage des modèles approuvés",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-12",
+      "source": "1.4.5",
+      "libelle": "Acheminement des documents générés vers validation, approbation, signature",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-13",
+      "source": "1.4.5",
+      "libelle": "Retour vers Salesforce des informations de signature",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-14",
+      "source": "1.4.5",
+      "libelle": "Traçabilité dossier source → document → preuve",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-15",
+      "source": "1.4.5",
+      "libelle": "Erreurs d'intégration, reprises, transactions incomplètes",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-16",
+      "source": "1.4.5",
+      "libelle": "Interfaces standard, documentées et supportées par l'éditeur",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-17",
+      "source": "1.4.6",
+      "libelle": "Flexibilité et agilité tout au long de l'utilisation",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-18",
+      "source": "1.4.7",
+      "libelle": "Circuits de validation et d'approbation séquentiels, parallèles, mixtes",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-19",
+      "source": "1.4.7",
+      "libelle": "Attribution selon rôles, groupes ou règles d'affaires",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅🆕",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-20",
+      "source": "1.4.7",
+      "libelle": "Ajout, retrait, remplacement d'un validateur ou approbateur en cours",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-21",
+      "source": "1.4.7",
+      "libelle": "Réassignation d'une étape sans redémarrage",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-22",
+      "source": "1.4.7",
+      "libelle": "Approuver, rejeter, retourner pour correction",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-23",
+      "source": "1.4.7",
+      "libelle": "Commentaires et historique des validations",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-24",
+      "source": "1.4.7",
+      "libelle": "Notifications et rappels configurables pour validateurs et approbateurs",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-25",
+      "source": "1.4.7",
+      "libelle": "Suivi de l'état des validations en cours",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-26",
+      "source": "1.4.7",
+      "libelle": "Signature séquentielle, parallèle, mixte",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-27",
+      "source": "1.4.7",
+      "libelle": "Groupes de signataires",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-28",
+      "source": "1.4.7",
+      "libelle": "Signature simultanée et consécutive configurable",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-29",
+      "source": "1.4.7",
+      "libelle": "Association automatique des étapes aux signataires",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-30",
+      "source": "1.4.7",
+      "libelle": "Modification et ajout de signataires en cours de processus",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅🆕",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-31",
+      "source": "1.4.7",
+      "libelle": "Réassignation de signataires sans reprise complète",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅🆕",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-32",
+      "source": "1.4.7",
+      "libelle": "Modèles réutilisables",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-33",
+      "source": "1.4.7",
+      "libelle": "Partage des modèles par groupe d'usagers",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅🆕",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-34",
+      "source": "1.4.7",
+      "libelle": "Ancrage précis des champs",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-35",
+      "source": "1.4.7",
+      "libelle": "Types : texte validé, liste, date, case à cocher",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-36",
+      "source": "1.4.7",
+      "libelle": "Distinguer champs de formulaire, de saisie et de signature",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-37",
+      "source": "1.4.7",
+      "libelle": "Attribution des champs à des signataires",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-38",
+      "source": "1.4.7",
+      "libelle": "Règles conditionnelles d'affichage",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-39",
+      "source": "1.4.7",
+      "libelle": "Saisie assistée (suggestions)",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-40",
+      "source": "1.4.7",
+      "libelle": "Notifications activables et désactivables",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-41",
+      "source": "1.4.7",
+      "libelle": "Rappels automatiques de non-réponse",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-42",
+      "source": "1.4.7",
+      "libelle": "Destinataires en copie",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-43",
+      "source": "1.4.7",
+      "libelle": "Vue de suivi centralisée : étapes, attentes, exceptions",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-44",
+      "source": "1.4.7",
+      "libelle": "Plusieurs documents par trousse",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-45",
+      "source": "1.4.7",
+      "libelle": "Dossiers, documents, versions, intervenants",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-46",
+      "source": "1.4.7",
+      "libelle": "PDF et Word",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-47",
+      "source": "1.4.7",
+      "libelle": "Téléversement d'au moins 25 Mo",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-48",
+      "source": "1.4.7",
+      "libelle": "Historique des étapes de validation, d'approbation, de signature",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-49",
+      "source": "1.4.7",
+      "libelle": "Journal d'audit des actions (consultation, validation, signature, rejet, annulation…)",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-50",
+      "source": "1.4.7",
+      "libelle": "État et historique des transactions d'un document",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-51",
+      "source": "1.4.7",
+      "libelle": "Conservation et consultation du dossier de preuve",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-52",
+      "source": "1.4.8",
+      "libelle": "Minimiser le nombre d'étapes",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-53",
+      "source": "1.4.8",
+      "libelle": "Exécution fluide web et mobile",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-54",
+      "source": "1.4.8",
+      "libelle": "Limiter les dépendances entre signataires",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-55",
+      "source": "1.4.8",
+      "libelle": "Flexibilité des workflows en cours de processus",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅🆕",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-56",
+      "source": "1.4.8",
+      "libelle": "Minimiser les interventions manuelles",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-57",
+      "source": "1.4.8",
+      "libelle": "Expérience simple pour initiateurs, signataires internes et externes",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-58",
+      "source": "1.4.8",
+      "libelle": "Personnalisation : image de marque, messages, parcours",
+      "caractere": "Obligatoire (à préciser)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-59",
+      "source": "1.4.9",
+      "libelle": "Automatisation et IA (extraction, classification, anomalies)",
+      "caractere": "Optionnelle",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-60",
+      "source": "1.4.10",
+      "libelle": "Identification et authentification des utilisateurs (SSO)",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-61",
+      "source": "1.4.10",
+      "libelle": "Authentification et vérification d'identité selon profil, document et risque",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-62",
+      "source": "1.4.10",
+      "libelle": "Méthodes internes et externes, authentification renforcée",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-63",
+      "source": "1.4.11",
+      "libelle": "Standards reconnus de signature électronique, validité juridique",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅🆕",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-64",
+      "source": "1.4.11",
+      "libelle": "Piste d'audit complète : événements, authentification, horodatages, consentements, intégrité",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-65",
+      "source": "1.4.11",
+      "libelle": "Conservation, export, portabilité durables pendant la période requise",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅🆕",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-66",
+      "source": "1.4.12",
+      "libelle": "Protection du cycle de vie, dont la destruction au moment opportun (Loi sur les archives)",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅🆕",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-67",
+      "source": "1.4.12",
+      "libelle": "Accès, modèles, workflows, historiques selon rôles, groupes, unités, domaines",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅🆕",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-68",
+      "source": "1.7.1",
+      "libelle": "Compatible postes Windows, mobiles, navigateurs Edge, Chrome, Safari",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "documentaire",
+      "justification": "Compatibilité navigateurs : Chromium éprouvé par la suite ; Edge partage le moteur ; Safari et postes mobiles à confirmer en recette."
+    },
+    {
+      "id": "IQ-C-69",
+      "source": "1.7.1",
+      "libelle": "S'intégrer à Microsoft 365, Salesforce, Workday : API, connecteurs, protocoles",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-C-70",
+      "source": "1.7.1",
+      "libelle": "Compatibilité maintenue avec l'évolution de l'environnement",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "documentaire",
+      "justification": "Compatibilité maintenue avec l'évolution de l'environnement : engagement de maintenance et versions d'API paramétrables."
+    },
+    {
+      "id": "IQ-D-01",
+      "source": "3.1.1",
+      "libelle": "Génération automatisée ou semi-automatisée depuis des modèles approuvés",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-02",
+      "source": "3.1.1",
+      "libelle": "Données des systèmes sources, dont Salesforce",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-03",
+      "source": "3.1.1",
+      "libelle": "Préparation et gestion des documents à valider, approuver, signer",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-04",
+      "source": "3.1.1",
+      "libelle": "Circuits séquentiels, parallèles, mixtes",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-05",
+      "source": "3.1.1",
+      "libelle": "Utilisateurs, signataires, rôles, droits, délégations",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-06",
+      "source": "3.1.1",
+      "libelle": "Modèles et clauses contractuelles",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-07",
+      "source": "3.1.1",
+      "libelle": "Automatisation des notifications, rappels, règles d'affaires",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-08",
+      "source": "3.1.1",
+      "libelle": "Suivi centralisé",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-09",
+      "source": "3.1.1",
+      "libelle": "Versions et historique des actions",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-10",
+      "source": "3.1.1",
+      "libelle": "Piste d'audit complète",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-11",
+      "source": "3.1.1",
+      "libelle": "Conservation et exportation : documents, preuves, pistes, métadonnées",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅🆕",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-12",
+      "source": "3.1.1",
+      "libelle": "Intégration aux systèmes d'IQ",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-13",
+      "source": "3.3.1 A",
+      "libelle": "Accessibilité des interfaces, niveau maintenu aux mises à jour",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-14",
+      "source": "3.3.1 B",
+      "libelle": "PCI DSS si des cartes de paiement sont traitées",
+      "caractere": "Conditionnelle",
+      "conformiteDeclaree": "✅ s.o.",
+      "verification": "sans-objet",
+      "justification": "Aucune carte de paiement n'est traitée par la plateforme."
+    },
+    {
+      "id": "IQ-D-15",
+      "source": "3.3.2",
+      "libelle": "Gestion des rôles et des droits d'accès",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅🆕",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-16",
+      "source": "3.3.2",
+      "libelle": "Principe du moindre privilège",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-17",
+      "source": "3.3.2",
+      "libelle": "Gestion distincte des utilisateurs et des administrateurs",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-18",
+      "source": "3.3.2",
+      "libelle": "Révocation ou modification des accès",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-19",
+      "source": "3.3.2",
+      "libelle": "Journalisation et traçabilité des activités",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-20",
+      "source": "3.3.2",
+      "libelle": "Protection des renseignements et documents",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-21",
+      "source": "3.3.3",
+      "libelle": "Interfaces en français, obligatoirement",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-22",
+      "source": "3.3.3",
+      "libelle": "Offertes en anglais lorsque requis",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-23",
+      "source": "3.3.3",
+      "libelle": "Consoles d'administration en français",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-24",
+      "source": "3.3.4",
+      "libelle": "Mode SaaS principalement",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "documentaire",
+      "justification": "Mode SaaS : modèle de service."
+    },
+    {
+      "id": "IQ-D-25",
+      "source": "3.3.4",
+      "libelle": "Fonctionnalités natives privilégiées, peu de développements spécifiques",
+      "caractere": "Préférence",
+      "conformiteDeclaree": "✅",
+      "verification": "documentaire",
+      "justification": "Préférence pour les fonctionnalités natives : configuration par l'organisation, démontrée par les scénarios de paramétrage."
+    },
+    {
+      "id": "IQ-D-26",
+      "source": "3.3.5",
+      "libelle": "Intégrations avec l'écosystème, dont Salesforce",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-27",
+      "source": "3.3.5",
+      "libelle": "Échanges de données, documents, modèles, statuts, signataires, instructions, preuves",
+      "caractere": "Faculté (« pourront »)",
+      "conformiteDeclaree": "✅🆕",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-28",
+      "source": "3.3.6",
+      "libelle": "API et connecteurs sécurisés, documentés, maintenus",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-D-29",
+      "source": "3.3.8",
+      "libelle": "Interopérabilité permettant l'évolution",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-S-01",
+      "source": "7.3 sc. 1",
+      "libelle": "Création : trousse, documents, participants, positionnement des champs, modèle, configuration",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-S-02",
+      "source": "7.3 sc. 2",
+      "libelle": "Validation : réception, consultation, commentaires, validation, passage à l'étape suivante",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-S-03",
+      "source": "7.3 sc. 3",
+      "libelle": "Approbation, rejet, retour pour correction, historique",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-S-04",
+      "source": "7.3 sc. 4",
+      "libelle": "Signature externe : invitation, authentification, consultation, signature, confirmation",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-S-05",
+      "source": "7.3 sc. 5",
+      "libelle": "Ajout, remplacement, délégation, traçabilité ; mise à jour d'une donnée et son impact",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅🆕",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-S-06",
+      "source": "7.3 sc. 6",
+      "libelle": "Rappels configurés, notifications, rappels manuels, alertes d'échéance, communications personnalisées",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-S-07",
+      "source": "7.3 sc. 7",
+      "libelle": "Journal, horodatages, actions, authentification, dossier de preuve",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-S-08",
+      "source": "7.3 sc. 8",
+      "libelle": "Consultation et décision sur mobile, navigation mobile",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-S-09",
+      "source": "7.3 sc. 9",
+      "libelle": "Refus, commentaires justificatifs, retour à l'étape appropriée, reprise, historique",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅🆕",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-S-10",
+      "source": "7.3 sc. 10",
+      "libelle": "Téléchargement du signé, export du certificat, du journal, des métadonnées ; formats ; portabilité",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-S-10b",
+      "source": "7.3 sc. 10",
+      "libelle": "Gestion de bout en bout d'un CLM",
+      "caractere": "Optionnelle (addenda § 4.3)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-01",
+      "source": "Add. § 4.4",
+      "libelle": "TI-22 : intégration Workday (déclenchement, statuts, document signé)",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-02",
+      "source": "Add. Q10",
+      "libelle": "AF-47 : lot de signatures depuis Salesforce",
+      "caractere": "Obligatoire (« doit »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-03",
+      "source": "Add. Q10",
+      "libelle": "AF-47 : lot depuis la plateforme",
+      "caractere": "Faculté (« peut »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-04",
+      "source": "Add. Q4",
+      "libelle": "SIG-07/08 : méthodes d'authentification standard et renforcée décrites",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅",
+      "verification": "documentaire",
+      "justification": "Méthodes d'authentification décrites dans la soumission ; leur comportement est éprouvé par IQ-C-61 et IQ-C-62.",
+      "reference": "docs/Dossier_IQ_2026-6370-0005/02-Analyse/impact_addenda_1.md"
+    },
+    {
+      "id": "IQ-A-05",
+      "source": "Add. Q1",
+      "libelle": "CLM optionnel intégrable à Salesforce lorsqu'il est proposé",
+      "caractere": "Conditionnelle",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-06",
+      "source": "Add. Q8",
+      "libelle": "Environ 30 champs Salesforce préremplis par modèle",
+      "caractere": "Obligatoire (capacité)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-07",
+      "source": "Add. Q3",
+      "libelle": "Intégrations Microsoft 365, Workday, Entra ID",
+      "caractere": "Selon l'Annexe 10",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-08",
+      "source": "Add. Q3, add. 3 Q51",
+      "libelle": "Provisionnement et déprovisionnement SCIM 2.0 (Saviynt)",
+      "caractere": "Obligatoire (add. 3 : « doit prendre en charge »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-09",
+      "source": "Add. Q3",
+      "libelle": "Connecteur MCP",
+      "caractere": "Non exigé",
+      "conformiteDeclaree": "—",
+      "verification": "sans-objet",
+      "justification": "Connecteur MCP non exigé (addenda 1, Q3)."
+    },
+    {
+      "id": "IQ-A-10",
+      "source": "Add. 2 Q11",
+      "libelle": "Authentification Salesforce de remplacement (JWT Bearer) décrite",
+      "caractere": "Obligatoire (« doit également décrire »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-11",
+      "source": "Add. 2 Q13",
+      "libelle": "Exportation ou transfert des documents et métadonnées vers un référentiel désigné par IQ",
+      "caractere": "Obligatoire (« doit également permettre »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-12",
+      "source": "Add. 2 Q14",
+      "libelle": "Retour des statuts lancée, retournée, rejetée, annulée, terminée",
+      "caractere": "Obligatoire (« doit notamment permettre »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-13",
+      "source": "Add. 2 Q15",
+      "libelle": "Seules les données nécessaires transférées depuis Salesforce",
+      "caractere": "Obligatoire (« devront »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-14",
+      "source": "Add. 2 Q17",
+      "libelle": "Limites d'API, surveillance, journalisation, reprise (8 tentatives, plafond 1 h)",
+      "caractere": "Obligatoire (« doit »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-15",
+      "source": "Add. 2 Q19",
+      "libelle": "Interfaces internes et externes en français, en anglais sur demande d'IQ",
+      "caractere": "Obligatoire (« doivent obligatoirement »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-16",
+      "source": "Add. 2 Q4",
+      "libelle": "Démontrer la volumétrie (55 000 à 65 000 documents par an) et des variations raisonnables",
+      "caractere": "Obligatoire (« doit démontrer »)",
+      "conformiteDeclaree": "✅",
+      "verification": "documentaire",
+      "justification": "Volumétrie démontrée par le harnais de performance JMeter (plans, seuils SLI/SLO).",
+      "reference": "perf/README.md"
+    },
+    {
+      "id": "IQ-A-18",
+      "source": "Add. 3 Q26",
+      "libelle": "Génération Word modifiable avant l'approbation finale ; nouvelle version et reprise des validations ; document à signer figé",
+      "caractere": "Obligatoire (« doit pouvoir »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-19",
+      "source": "Add. 3 Q43",
+      "libelle": "Mappage configurable des groupes et attributs Entra ID vers les rôles, moindre privilège, traçabilité",
+      "caractere": "Obligatoire (« doit permettre »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-20",
+      "source": "Add. 3 Q44",
+      "libelle": "Domaine d'affaires alimenté par un groupe ou un attribut d'annuaire, séparation logique",
+      "caractere": "Obligatoire (« doit permettre »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-21",
+      "source": "Add. 3 Q46-Q48",
+      "libelle": "Conservation par catégorie, gel légal, trois sorts finaux, bordereau ou certificat de destruction",
+      "caractere": "Obligatoire (« doit »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-22",
+      "source": "Add. 3 Q39",
+      "libelle": "Mesure de l'utilisation par enveloppe envoyée, sans double comptage",
+      "caractere": "Obligatoire (« doit être »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-23",
+      "source": "Add. 4 Q1",
+      "libelle": "Niveaux d'authentification configurables selon le type de document et le processus",
+      "caractere": "Obligatoire (« doit permettre »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-24",
+      "source": "Add. 4 Q6",
+      "libelle": "Signature par un représentant autorisé ; preuve d'autorité ; qualité du signataire tracée",
+      "caractere": "Obligatoire (« doit permettre »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-25",
+      "source": "Add. 4 Q8, Q20",
+      "libelle": "Parcours conditionnels selon type, unité, rôle, montant",
+      "caractere": "Obligatoire (« doit permettre »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-26",
+      "source": "Add. 4 Q10",
+      "libelle": "Séparation de l'administration d'affaires et de l'administration technique",
+      "caractere": "Obligatoire (« doit permettre »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-27",
+      "source": "Add. 4 Q31",
+      "libelle": "Mappage des attributs et groupes SCIM, désactivation rapide",
+      "caractere": "Obligatoire (« doit permettre »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-28",
+      "source": "Add. 4 Q36",
+      "libelle": "Approbation adaptée au lot, traçabilité par dossier",
+      "caractere": "Obligatoire (« doit permettre »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-29",
+      "source": "Add. 4 Q14",
+      "libelle": "Export dans des formats pérennes, PDF/PDF-A lorsque disponibles, export massif",
+      "caractere": "Obligatoire (export) ; PDF/A conditionnel",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-30",
+      "source": "Add. 4 Q22",
+      "libelle": "Modèles Word d'IQ, structure et présentation préservées dans la mesure permise ; limites déclarées",
+      "caractere": "Obligatoire avec réserve",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    },
+    {
+      "id": "IQ-A-17",
+      "source": "Add. 2 Q7",
+      "libelle": "FundingRequest lu par Id ou Name, correspondance configurable par modèle",
+      "caractere": "Obligatoire (« devra »)",
+      "conformiteDeclaree": "✅",
+      "verification": "bdd"
+    }
+  ]
+}

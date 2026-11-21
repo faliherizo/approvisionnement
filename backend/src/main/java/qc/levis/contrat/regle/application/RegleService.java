@@ -18,13 +18,19 @@ import qc.levis.contrat.regle.domain.RegleDef;
 public class RegleService {
 
     private final FormulaireVersionRepository versions;
+    private final qc.levis.contrat.formulaire.application.repository.FormulaireRepository formulaires;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public RegleService(FormulaireVersionRepository versions) {
+    public RegleService(FormulaireVersionRepository versions,
+                        qc.levis.contrat.formulaire.application.repository.FormulaireRepository formulaires) {
         this.versions = versions;
+        this.formulaires = formulaires;
     }
 
+    /** Les règles d'un formulaire d'une autre organisation ne s'évaluent pas : il est introuvable (OWASP A01). */
     public ResultatEvaluation evaluer(Long formulaireId, Map<String, Object> valeurs) {
+        formulaires.findByIdAndTenantId(formulaireId, qc.levis.contrat.commun.infrastructure.TenantContext.get())
+                .orElseThrow(() -> new NoSuchElementException("Formulaire introuvable : " + formulaireId));
         var v = versions.findTopByFormulaireIdOrderByNumeroDesc(formulaireId)
                 .orElseThrow(() -> new NoSuchElementException("Aucune version pour le formulaire : " + formulaireId));
         return MoteurRegles.evaluer(extraireRegles(v.getStructureJson()), valeurs == null ? Map.of() : valeurs);

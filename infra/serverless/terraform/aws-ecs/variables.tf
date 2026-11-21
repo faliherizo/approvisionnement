@@ -41,7 +41,7 @@ variable "backend_port" {
 
 variable "frontend_port" {
   type    = number
-  default = 80
+  default = 8080
 }
 
 variable "backend_cpu" {
@@ -124,4 +124,9 @@ variable "tags" {
   description = "Étiquettes additionnelles."
   type        = map(string)
   default     = {}
+}
+
+variable "certificat_acm_arn" {
+  description = "Certificat ACM (TLS) du domaine servi par le répartiteur : l'application n'est servie qu'en HTTPS."
+  type        = string
 }

@@ -1,0 +1,349 @@
+{
+ "appelOffres": "Ville de Lévis — avis d'appel d'intérêt 2026-50-92",
+ "titre": "Solution logicielle de rédaction contractuelle",
+ "source": "docs/Reponse-Avis-interet-2026-50-92.md (art. 2.1) ; docs/analyse-conformite-roadmap.md (cahier EF/ENF)",
+ "exigences": [
+  {
+   "id": "LEV-2.1-1",
+   "source": "Avis 2026-50-92, art. 2.1 n° 1",
+   "libelle": "Rédiger des clauses administratives pour demandes de prix et procédures ouvertes (AOP)",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Bibliothèque de clauses + moteur d'assemblage produisant devis de demande de prix et d'appel d'offres public.",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-2.1-2",
+   "source": "Avis 2026-50-92, art. 2.1 n° 2",
+   "libelle": "Rédiger des contrats de gré à gré personnalisés de toute nature (prêts à usage, baux, contrats de services, etc.)",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Types de contrat paramétrables : demande de prix, AOP, gré à gré, bail, prêt à usage, contrat de services, avis d'intention, addenda.",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-2.1-3",
+   "source": "Avis 2026-50-92, art. 2.1 n° 3",
+   "libelle": "Créer et gérer une bibliothèque centralisée de clauses standards, optionnelles et personnalisées",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Bibliothèque centralisée avec catégories STANDARD / OPTIONNELLE / PERSONNALISÉE, numérotation, sections, versions.",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-2.1-4",
+   "source": "Avis 2026-50-92, art. 2.1 n° 4",
+   "libelle": "Assembler automatiquement des documents contractuels à partir des clauses",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Assemblage en un clic : les clauses STANDARD éligibles sont intégrées automatiquement ; sélection manuelle possible.",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-2.1-5a",
+   "source": "Avis 2026-50-92, art. 2.1 n° 5a",
+   "libelle": "Adapter les clauses selon le type de contrat",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Moteur de règles d'éligibilité par type de contrat.",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-2.1-5b",
+   "source": "Avis 2026-50-92, art. 2.1 n° 5b",
+   "libelle": "…selon le mode de sollicitation",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Règles par mode (demande de prix, AOP, gré à gré).",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-2.1-5c",
+   "source": "Avis 2026-50-92, art. 2.1 n° 5c",
+   "libelle": "…selon la valeur estimée",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Seuils paramétrables (p. ex. seuil d'AOP) déclenchant l'inclusion de clauses.",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-2.1-5d",
+   "source": "Avis 2026-50-92, art. 2.1 n° 5d",
+   "libelle": "…selon le contexte particulier du projet",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Conditions d'éligibilité sur attributs de contexte du dossier.",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-2.1-5e",
+   "source": "Avis 2026-50-92, art. 2.1 n° 5e",
+   "libelle": "…selon les autres clauses sélectionnées",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Gestion des dépendances (auto-inclusion des clauses requises) et exclusions (incompatibilités).",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-2.1-6",
+   "source": "Avis 2026-50-92, art. 2.1 n° 6",
+   "libelle": "Faciliter la révision et la validation par différents intervenants (approvisionnement, juridique, autres)",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Rôles distincts (Rédacteur, Approbateur, Juridique, Administrateur) et circuit d'approbation.",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-2.1-6a",
+   "source": "Avis 2026-50-92, art. 2.1 n° 6a",
+   "libelle": "*(Idéalement)* Commenter directement dans le devis",
+   "caractere": "Souhaitable",
+   "conformiteDeclaree": "Oui. Fil de commentaires par document, visibles des intervenants.",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-2.1-6b",
+   "source": "Avis 2026-50-92, art. 2.1 n° 6b",
+   "libelle": "*(Idéalement)* Gestion de niveaux de hiérarchisation d'approbation",
+   "caractere": "Souhaitable",
+   "conformiteDeclaree": "Oui. Circuit d'approbation hiérarchisé multi-niveaux (N1, N2…) avec décisions (approuvé/refusé) et traçabilité.",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-2.1-7",
+   "source": "Avis 2026-50-92, art. 2.1 n° 7",
+   "libelle": "Rédiger des addendas de manière interactive et en lien avec les clauses du devis",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Création d'addendas, ajout de modifications rattachées à une clause précise du devis, puis émission (réintégration au document).",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-2.1-8",
+   "source": "Avis 2026-50-92, art. 2.1 n° 8",
+   "libelle": "Générer les documents finaux pour la Ville et son cocontractant, intégrant l'ensemble des addendas",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Génération PDF et Word (DOCX) ; les addendas émis sont intégrés au document final et à ses annexes.",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-2.1-9",
+   "source": "Avis 2026-50-92, art. 2.1 n° 9",
+   "libelle": "Solution validée juridiquement selon les lois applicables au Québec",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Contenu aligné sur la LCOP, la LCV, le Code municipal et le cadre normatif SCT (CCAG) ; clauses normatives verrouillées ; assistance juridique offerte (voir §5).",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-2.1-10",
+   "source": "Avis 2026-50-92, art. 2.1 n° 10",
+   "libelle": "Soutien technique complet du prestataire",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Soutien en français, jours ouvrés (voir §5 et §6).",
+   "verification": "documentaire",
+   "justification": "Service (soutien technique) : engagement contractuel, non vérifiable par un test.",
+   "reference": "docs/Reponse-Avis-interet-2026-50-92.md §5-6"
+  },
+  {
+   "id": "LEV-2.1-11",
+   "source": "Avis 2026-50-92, art. 2.1 n° 11",
+   "libelle": "Assistance juridique par un ou des juriste(s)",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Service d'assistance juridique lié à la solution (voir §5).",
+   "verification": "documentaire",
+   "justification": "Service (assistance juridique) : engagement contractuel.",
+   "reference": "docs/Reponse-Avis-interet-2026-50-92.md §5"
+  },
+  {
+   "id": "LEV-2.1-12",
+   "source": "Avis 2026-50-92, art. 2.1 n° 12",
+   "libelle": "Formation en français, documentée, complète et détaillée",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Programme de formation et documentation en français (voir §6).",
+   "verification": "documentaire",
+   "justification": "Service (formation en français) : programme et documentation.",
+   "reference": "docs/Reponse-Avis-interet-2026-50-92.md §6"
+  },
+  {
+   "id": "LEV-2.1-13",
+   "source": "Avis 2026-50-92, art. 2.1 n° 13",
+   "libelle": "Ensemble des fonctionnalités présentes et pleinement fonctionnelles",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Solution en production ; démonstration en ligne disponible (art. 4.4).",
+   "verification": "documentaire",
+   "justification": "Démontré par l'ensemble des scénarios BDD de Lévis (toutes les fonctionnalités exigées s'exécutent).",
+   "reference": "bdd/features/levis/"
+  },
+  {
+   "id": "LEV-C-01",
+   "source": "Cahier 2026-50-92 — EF1",
+   "libelle": "EF1 Bibliothèque : création/modif/archivage standards/optionnelles/perso",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "✅ Clause + catégories, CRUD",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-02",
+   "source": "Cahier 2026-50-92 — EF1",
+   "libelle": "EF1 Recherche multicritère (thématique, portée, type)",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "🟡 Recherche plein texte /search ; manque filtres multicritères",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-03",
+   "source": "Cahier 2026-50-92 — EF1",
+   "libelle": "EF1 Historisation par clause (versions + auteur/date)",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Chaque création, modification ou restauration fige une version consultable (texte, auteur, date, motif) ; toute version antérieure se restaure et la restauration devient une nouvelle version.",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-04",
+   "source": "Cahier 2026-50-92 — EF2",
+   "libelle": "EF2 Génération dynamique par assemblage",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "✅ DocumentService.assembler",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-05",
+   "source": "Cahier 2026-50-92 — EF2",
+   "libelle": "EF2 Adaptation type/mode/valeur/contexte",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "✅ RuleEngine + ClauseCondition",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-06",
+   "source": "Cahier 2026-50-92 — EF2",
+   "libelle": "EF2 Dépendances & exclusions entre clauses",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "🔴→✅ *Implémenté dans cette itération*",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-07",
+   "source": "Cahier 2026-50-92 — EF3",
+   "libelle": "EF3 Demandes de prix / appels d'offres publics",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "✅ Types + assemblage",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-08",
+   "source": "Cahier 2026-50-92 — EF3",
+   "libelle": "EF3 Gré à gré (baux, prêts à usage, services)",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "✅ Types + templates",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-09",
+   "source": "Cahier 2026-50-92 — EF3",
+   "libelle": "EF3 Avis d'intention",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "🔴→✅ Type AVIS_INTENTION *ajouté*",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-10",
+   "source": "Cahier 2026-50-92 — EF3",
+   "libelle": "EF3 Addendas interactifs + consolidation finale",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "✅ Addenda + rendu PDF/DOCX intégrant les addendas",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-11",
+   "source": "Cahier 2026-50-92 — EF4",
+   "libelle": "EF4 Commentaires/annotations dans le devis",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "✅ Comment + WYSIWYG",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-12",
+   "source": "Cahier 2026-50-92 — EF4",
+   "libelle": "EF4 Workflow d'approbation configurable",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "🟡 Circuit APPRO→JURIDIQUE→DIRECTION codé en dur",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-13",
+   "source": "Cahier 2026-50-92 — ENF1",
+   "libelle": "ENF1 Conformité LCOP/LCV (règles en données)",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "✅ Règles = ClauseCondition maintenables",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-14",
+   "source": "Cahier 2026-50-92 — ENF1",
+   "libelle": "ENF1 Loi 25 — chiffrement transit",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "✅ TLS",
+   "verification": "documentaire",
+   "justification": "Chiffrement en transit assuré par l'infrastructure (TLS de l'entrée Kubernetes et de Front Door).",
+   "reference": "infra/k8s/chart/templates/ingress.yaml"
+  },
+  {
+   "id": "LEV-C-15",
+   "source": "Cahier 2026-50-92 — ENF1",
+   "libelle": "ENF1 Loi 25 — chiffrement au repos / *Privacy by Design*",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Droits d'accès et d'effacement (Loi 25, art. 27 à 28.1) : dossier structuré par source (compte, journal, rédaction, fiches, notifications), effacement par pseudonymisation avec motif de conservation, registre des demandes sous empreinte ; chiffrement en transit et au repos assuré par l'infrastructure.",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-16",
+   "source": "Cahier 2026-50-92 — ENF2",
+   "libelle": "ENF2 Auth SSO Azure AD + RBAC + MFA",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "✅ Entra ID (OIDC) + RBAC + TOTP/question",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-17",
+   "source": "Cahier 2026-50-92 — ENF2",
+   "libelle": "ENF2 Journal d'audit",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "✅ AuditLog",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-18",
+   "source": "Cahier 2026-50-92 — ENF4",
+   "libelle": "ENF4 Solution clé en main, conteneurisée",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "✅ Docker (front/back/PG/Ollama)",
+   "verification": "documentaire",
+   "justification": "Livraison conteneurisée (Docker Compose, chart Helm).",
+   "reference": "docker-compose.yml ; infra/k8s/chart"
+  },
+  {
+   "id": "LEV-C-19",
+   "source": "Cahier 2026-50-92 — ENF4",
+   "libelle": "ENF4 Formation FR documentée",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "🟡 Docs techniques ; manque guide utilisateur",
+   "verification": "documentaire",
+   "justification": "Documentation technique en français ; guide utilisateur à produire (écart documentaire).",
+   "reference": "docs/"
+  },
+  {
+   "id": "LEV-C-20",
+   "source": "Cahier 2026-50-92 — DAO",
+   "libelle": "DAO 2.3 Intégration SEAO (format devis)",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "Oui. Fiche XML des métadonnées de l'avis (numéro, organisme, titre, type d'avis, nature, montant estimé, adjudicataire), éléments du jeu de données ouvertes SEAO ; le SEAO n'offrant pas de dépôt par API, la fiche est reprise dans le SEAO et versée au dossier ; export journalisé. Nomenclature des codes à confirmer avec la Ville.",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-21",
+   "source": "Cahier 2026-50-92 — DAO",
+   "libelle": "DAO 2.3 Intégration annuaire d'entreprise",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "✅ Azure Entra ID",
+   "verification": "bdd"
+  },
+  {
+   "id": "LEV-C-22",
+   "source": "Cahier 2026-50-92 — Multi-tenant",
+   "libelle": "Multi-tenant / multilingue (au-delà du cahier)",
+   "caractere": "Obligatoire",
+   "conformiteDeclaree": "✅ Bonus : isolation par tenant, i18n FR/EN/MG",
+   "verification": "bdd"
+  }
+ ]
+}

@@ -9,6 +9,11 @@ resource "azurerm_kubernetes_cluster" "this" {
   sku_tier                  = "Standard" # SLA du plan de contrôle (99,95 % avec zones)
   oidc_issuer_enabled       = true       # Workload Identity (pods → identités Azure)
   workload_identity_enabled = true
+  # Contrôle d'accès Kubernetes (RBAC) et API du plan de contrôle joignable des seules adresses d'administration.
+  role_based_access_control_enabled = true
+  api_server_access_profile {
+    authorized_ip_ranges = var.ip_administration
+  }
 
   default_node_pool {
     name                         = "system"

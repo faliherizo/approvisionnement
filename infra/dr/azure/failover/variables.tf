@@ -56,7 +56,7 @@ variable "backend_port" {
 
 variable "frontend_port" {
   type    = number
-  default = 80
+  default = 8080
 }
 
 variable "backend_cpu" {
@@ -97,4 +97,10 @@ variable "db_name" {
 variable "tags" {
   type    = map(string)
   default = {}
+}
+
+variable "ip_administration" {
+  description = "Adresses (CIDR) d'administration admises sur le coffre de clés et l'API AKS : exécutant Terraform, poste d'exploitation."
+  type        = list(string)
+  default     = []
 }

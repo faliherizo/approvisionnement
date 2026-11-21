@@ -1,0 +1,786 @@
+{
+  "ecrans": {
+    "TR — dossiers d'approvisionnement": {
+      "chemin": "/dossiers",
+      "titre": "Dossiers d’approvisionnement"
+    },
+    "TR — rapports de suivi": {
+      "chemin": "/rapports",
+      "titre": "Rapports de suivi"
+    },
+    "TR — tableau de bord": {
+      "chemin": "/tableau-de-bord",
+      "titre": "Tableau de bord"
+    },
+    "TR — import et migration": {
+      "chemin": "/donnees",
+      "titre": "Import / migration de contenus"
+    },
+    "TR — dépôts Microsoft 365": {
+      "chemin": "/simulateur",
+      "titre": "Dépôts simulés"
+    },
+    "TR — paramètres": {
+      "chemin": "/parametres",
+      "titre": "Paramètres du tenant"
+    },
+    "TR — assistant IA": {
+      "chemin": "/chat-ia",
+      "titre": "Assistant IA"
+    },
+    "TR — journal d'audit": {
+      "chemin": "/audit",
+      "titre": "Journal d’audit"
+    }
+  },
+  "cas": {
+    "tr.document.approuve": {
+      "description": "Préalable : un contrat de services assemblé puis approuvé par l'approvisionnement, le juridique et la direction",
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Contrat TR ${unique}",
+            "type": "CONTRAT_SERVICES",
+            "modeSollicitation": "GRE_A_GRE",
+            "valeurEstimee": 30000
+          },
+          "capturer": {
+            "document": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/documents/${document}/assembler",
+          "corps": {
+            "clauseIds": []
+          }
+        },
+        {
+          "appel": "POST /api/documents/${document}/approbation",
+          "capturer": {
+            "n1": "$[0].id",
+            "n2": "$[1].id",
+            "n3": "$[2].id"
+          }
+        },
+        {
+          "appel": "POST /api/documents/approbation/${n1}/decision",
+          "corps": {
+            "approuve": true,
+            "note": "Approvisionnement"
+          }
+        },
+        {
+          "appel": "POST /api/documents/approbation/${n2}/decision",
+          "profil": "juriste de Lévis",
+          "corps": {
+            "approuve": true,
+            "note": "Juridique"
+          }
+        },
+        {
+          "appel": "POST /api/documents/approbation/${n3}/decision",
+          "profil": "direction de Lévis",
+          "corps": {
+            "approuve": true,
+            "note": "Direction"
+          }
+        },
+        {
+          "appel": "GET /api/documents/${document}",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "APPROUVE"
+            }
+          ]
+        }
+      ]
+    },
+    "tr.word.modifiable": {
+      "description": "Le document se télécharge en Word modifiable (.docx) et en PDF",
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "appel": "GET /api/documents/${document}/export/docx",
+          "verifier": [
+            {
+              "texte": "PK"
+            },
+            {
+              "texte": "word/document.xml"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/documents/${document}/export/pdf",
+          "verifier": [
+            {
+              "texte": "%PDF"
+            }
+          ]
+        }
+      ]
+    },
+    "tr.word.migration": {
+      "description": "Un modèle Word existant s'importe : essai sans écriture, sections détectées, puis import réel",
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "appel": "POST /api/import/word?essai=true&nom=Modele%20TR%20${unique}&type=CONTRAT_SERVICES",
+          "multipart": {
+            "fichier": {
+              "fichier": "chemin:../e2e/data/modele-demo.docx",
+              "nom": "modele-tr.docx",
+              "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            }
+          },
+          "verifier": [
+            {
+              "chemin": "$.essai",
+              "egal": true
+            },
+            {
+              "chemin": "$.sectionsDetectees",
+              "egal": 2
+            },
+            {
+              "chemin": "$.clausesCreees",
+              "egal": 0
+            },
+            {
+              "chemin": "$.erreurs",
+              "egal": []
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/import/word?essai=false&nom=Modele%20TR%20${unique}&type=CONTRAT_SERVICES",
+          "multipart": {
+            "fichier": {
+              "fichier": "chemin:../e2e/data/modele-demo.docx",
+              "nom": "modele-tr.docx",
+              "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            }
+          },
+          "verifier": [
+            {
+              "chemin": "$.essai",
+              "egal": false
+            },
+            {
+              "chemin": "$.templateId",
+              "existe": true
+            }
+          ]
+        }
+      ]
+    },
+    "tr.m365.publication": {
+      "description": "Publication refusée avant validation, puis déposée vers SharePoint, OneDrive, Teams et Outlook, chaque dépôt tracé",
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Brouillon TR ${unique}",
+            "type": "GRE_A_GRE",
+            "modeSollicitation": "GRE_A_GRE",
+            "valeurEstimee": 1000
+          },
+          "capturer": {
+            "brouillon": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/documents/${brouillon}/publications",
+          "corps": {
+            "cible": "SHAREPOINT",
+            "format": "PDF"
+          },
+          "statut": 409,
+          "verifier": [
+            {
+              "texte": "doit d'abord être validé"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents/${document}/publications",
+          "corps": {
+            "cible": "SHAREPOINT",
+            "format": "PDF"
+          },
+          "verifier": [
+            {
+              "chemin": "$.succes",
+              "egal": true
+            },
+            {
+              "chemin": "$.cible",
+              "egal": "SHAREPOINT"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents/${document}/publications",
+          "corps": {
+            "cible": "ONEDRIVE",
+            "format": "DOCX"
+          },
+          "verifier": [
+            {
+              "chemin": "$.succes",
+              "egal": true
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents/${document}/publications",
+          "corps": {
+            "cible": "TEAMS",
+            "format": "PDF"
+          },
+          "verifier": [
+            {
+              "chemin": "$.succes",
+              "egal": true
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents/${document}/publications",
+          "corps": {
+            "cible": "OUTLOOK",
+            "format": "PDF"
+          },
+          "verifier": [
+            {
+              "chemin": "$.succes",
+              "egal": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/documents/${document}/publications",
+          "verifier": [
+            {
+              "chemin": "$[*].cible",
+              "inclut": "SHAREPOINT"
+            },
+            {
+              "chemin": "$[*].cible",
+              "inclut": "ONEDRIVE"
+            },
+            {
+              "chemin": "$[*].cible",
+              "inclut": "TEAMS"
+            },
+            {
+              "chemin": "$[*].cible",
+              "inclut": "OUTLOOK"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/simulateur/depots",
+          "profil": "administrateur de Lévis",
+          "verifier": [
+            {
+              "chemin": "$[*].nomFichier",
+              "inclut": "contrat-${document}.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    "tr.secrets.chiffres": {
+      "description": "Un secret d'intégration n'est jamais restitué : seule sa présence est indiquée",
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "appel": "GET /api/parametres/integration-m365",
+          "capturer": {
+            "m365": "$"
+          }
+        },
+        {
+          "appel": "PUT /api/parametres/integration-m365",
+          "corps": {
+            "actif": false,
+            "msTenantId": "tenant-bdd",
+            "clientId": "client-bdd",
+            "clientSecret": "SecretBdd-${unique}",
+            "dossierRacine": "/Contrats"
+          },
+          "verifier": [
+            {
+              "chemin": "$.secretDefini",
+              "egal": true
+            },
+            {
+              "texteAbsent": "SecretBdd-${unique}"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/parametres/integration-m365",
+          "verifier": [
+            {
+              "chemin": "$.secretDefini",
+              "egal": true
+            },
+            {
+              "texteAbsent": "SecretBdd-${unique}"
+            },
+            {
+              "chemin": "$.clientSecret",
+              "existe": false
+            }
+          ]
+        }
+      ]
+    },
+    "tr.journal.export": {
+      "description": "Journal d'accès et d'activité filtrable et exportable (CSV)",
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "appel": "GET /api/audit?action=APPROUVER",
+          "verifier": [
+            {
+              "chemin": "$",
+              "longueurMin": 1
+            },
+            {
+              "chemin": "$[*].action",
+              "exclut": "COMMENTER"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/audit/export",
+          "verifier": [
+            {
+              "texte": "horodatage,utilisateur,action,entite,entiteId,details"
+            },
+            {
+              "texte": "APPROUVER"
+            }
+          ]
+        }
+      ]
+    },
+    "tr.versions.tracabilite": {
+      "description": "Versions du document conservées et comparables ; historique des validations",
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "appel": "POST /api/documents/${document}/versions",
+          "corps": {
+            "note": "Version approuvée ${unique}"
+          },
+          "capturer": {
+            "v1": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.numeroVersion",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents/${document}/versions",
+          "corps": {
+            "note": "Seconde version ${unique}"
+          },
+          "capturer": {
+            "v2": "$.id"
+          }
+        },
+        {
+          "appel": "GET /api/documents/${document}/versions",
+          "verifier": [
+            {
+              "chemin": "$",
+              "longueurMin": 2
+            },
+            {
+              "chemin": "$[*].note",
+              "inclut": "Version approuvée ${unique}"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/versions/comparer?a=${v1}&b=${v2}",
+          "verifier": [
+            {
+              "chemin": "$[*].changement",
+              "inclut": "INCHANGEE"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/documents/${document}/approbation",
+          "verifier": [
+            {
+              "chemin": "$[*].approbateur",
+              "inclut": "juriste@levis.qc.ca"
+            },
+            {
+              "chemin": "$[*].note",
+              "inclut": "Direction"
+            }
+          ]
+        }
+      ]
+    },
+    "tr.separation.responsabilites": {
+      "description": "Séparation des responsabilités : le rédacteur ne décide pas à la place du juridique",
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Séparation TR ${unique}",
+            "type": "GRE_A_GRE",
+            "modeSollicitation": "GRE_A_GRE",
+            "valeurEstimee": 1000
+          },
+          "capturer": {
+            "doc": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/documents/${doc}/approbation",
+          "capturer": {
+            "a1": "$[0].id",
+            "a2": "$[1].id"
+          }
+        },
+        {
+          "appel": "POST /api/documents/approbation/${a2}/decision",
+          "corps": {
+            "approuve": true,
+            "note": "usurpation"
+          },
+          "statut": 403
+        },
+        {
+          "appel": "POST /api/documents/approbation/${a1}/decision",
+          "corps": {
+            "approuve": true,
+            "note": "ok"
+          }
+        },
+        {
+          "appel": "POST /api/documents/approbation/${a1}/decision",
+          "corps": {
+            "approuve": true,
+            "note": "deux fois"
+          },
+          "statut": 409
+        }
+      ]
+    },
+    "tr.workflow.par-type": {
+      "description": "Étapes de validation propres à un type de document : le bail ne passe que par l'approvisionnement et la direction",
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "appel": "GET /api/workflows",
+          "capturer": {
+            "avant": "$"
+          }
+        },
+        {
+          "appel": "POST /api/workflows",
+          "corps": {
+            "nom": "Bail TR ${unique}",
+            "type": "PRET_A_USAGE",
+            "etapes": [
+              "APPRO",
+              "DIRECTION"
+            ],
+            "actif": true
+          },
+          "capturer": {
+            "workflow": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/documents",
+          "profil": "rédacteur de Lévis",
+          "corps": {
+            "titre": "Prêt TR ${unique}",
+            "type": "PRET_A_USAGE",
+            "modeSollicitation": "GRE_A_GRE",
+            "valeurEstimee": 0
+          },
+          "capturer": {
+            "pret": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/documents/${pret}/approbation",
+          "profil": "rédacteur de Lévis",
+          "verifier": [
+            {
+              "chemin": "$[*].roleRequis",
+              "egal": [
+                "APPRO",
+                "DIRECTION"
+              ]
+            }
+          ]
+        },
+        {
+          "appel": "DELETE /api/workflows/${workflow}"
+        }
+      ]
+    },
+    "tr.ia.encadree": {
+      "description": "L'IA ne fait que proposer : le document reste inchangé tant qu'une personne n'a pas validé ; l'organisation peut la désactiver",
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "appel": "GET /api/documents/${document}",
+          "capturer": {
+            "texteAvant": "$.clauses[0].texteEffectif"
+          }
+        },
+        {
+          "appel": "POST /api/ia/rediger",
+          "corps": {
+            "instruction": "Rédige une clause de confidentialité",
+            "contexte": "services",
+            "texteExistant": "${texteAvant}"
+          },
+          "statut": [
+            200,
+            503
+          ]
+        },
+        {
+          "appel": "GET /api/documents/${document}",
+          "verifier": [
+            {
+              "chemin": "$.clauses[0].texteEffectif",
+              "egal": "${texteAvant}"
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/ia/parametres",
+          "profil": "administrateur de Lévis",
+          "corps": {
+            "activee": false
+          },
+          "verifier": [
+            {
+              "chemin": "$.activee",
+              "egal": false
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/ia/rediger",
+          "corps": {
+            "instruction": "Rédige une clause"
+          },
+          "statut": 409,
+          "verifier": [
+            {
+              "texte": "désactivé"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/ia/chat",
+          "corps": {
+            "question": "Bonjour"
+          },
+          "statut": 409
+        },
+        {
+          "appel": "PUT /api/ia/parametres",
+          "profil": "administrateur de Lévis",
+          "corps": {
+            "activee": true
+          },
+          "verifier": [
+            {
+              "chemin": "$.activee",
+              "egal": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/audit?action=IA_DESACTIVEE",
+          "profil": "administrateur de Lévis",
+          "verifier": [
+            {
+              "chemin": "$",
+              "longueurMin": 1
+            }
+          ]
+        }
+      ]
+    },
+    "tr.export.complet": {
+      "description": "Export complet en fin de contrat : documents, modèles, configuration et manifeste, sans frais",
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "appel": "GET /api/reversibilite/export",
+          "verifier": [
+            {
+              "texte": "PK"
+            },
+            {
+              "texte": "documents.json"
+            },
+            {
+              "texte": "workflows.json"
+            },
+            {
+              "texte": "manifeste.json"
+            }
+          ]
+        }
+      ]
+    },
+    "tr.dossier.approvisionnement": {
+      "description": "Dossier d'approvisionnement : regroupe documents, versions et validations ; rapport consolidé",
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "appel": "POST /api/dossiers",
+          "corps": {
+            "titre": "Dossier TR ${unique}",
+            "numeroAO": "TR-${UNIQUE}",
+            "objet": "Services professionnels",
+            "typeAcquisition": "SERVICES_PROFESSIONNELS",
+            "modeSollicitation": "APPEL_OFFRES_PUBLIC",
+            "responsable": "redacteur@levis.qc.ca"
+          },
+          "capturer": {
+            "dossier": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "OUVERT"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/dossiers/${dossier}/documents/${document}"
+        },
+        {
+          "appel": "GET /api/dossiers/${dossier}/documents",
+          "verifier": [
+            {
+              "chemin": "$[*].id",
+              "inclut": "${document}"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/dossiers/${dossier}/statut",
+          "corps": {
+            "statut": "EN_COURS"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "EN_COURS"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/dossiers/${dossier}/rapport",
+          "verifier": [
+            {
+              "chemin": "$.titre",
+              "egal": "Dossier TR ${unique}"
+            },
+            {
+              "chemin": "$.statut",
+              "egal": "EN_COURS"
+            },
+            {
+              "chemin": "$.nombreDocuments",
+              "egal": 1
+            },
+            {
+              "chemin": "$.documentsApprouves",
+              "egal": 1
+            }
+          ]
+        }
+      ]
+    },
+    "tr.rapports.suivi": {
+      "description": "Rapports de suivi : documents générés par statut et type, validations en attente, dossiers en cours",
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "appel": "GET /api/rapports/suivi",
+          "verifier": [
+            {
+              "chemin": "$.totalDocuments",
+              "existe": true
+            },
+            {
+              "chemin": "$.documentsParStatut",
+              "existe": true
+            },
+            {
+              "chemin": "$.documentsParType",
+              "existe": true
+            },
+            {
+              "chemin": "$.approbationsEnAttente",
+              "existe": true
+            },
+            {
+              "chemin": "$.dossiersActifs",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/stats",
+          "verifier": [
+            {
+              "chemin": "$",
+              "existe": true
+            }
+          ]
+        }
+      ]
+    },
+    "tr.api.openapi": {
+      "description": "API REST documentée : spécification OpenAPI publiée",
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "appel": "GET /v3/api-docs",
+          "verifier": [
+            {
+              "chemin": "$.openapi",
+              "existe": true
+            },
+            {
+              "chemin": "$.paths./api/documents",
+              "existe": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

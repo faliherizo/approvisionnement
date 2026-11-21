@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 070-1-auth-jeton-revoque
+      author: levis
+      comment: "Sécurité (tests d'intrusion INT-05) : jetons de session révoqués à la déconnexion, par empreinte, jusqu'à leur expiration."
+      changes:
+        - createTable:
+            tableName: jeton_revoque
+            columns:
+              - column: { name: empreinte, type: VARCHAR(64), constraints: { primaryKey: true, nullable: false } }
+              - column: { name: expire_le, type: TIMESTAMP, constraints: { nullable: false } }

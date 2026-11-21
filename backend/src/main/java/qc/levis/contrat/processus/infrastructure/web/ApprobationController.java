@@ -35,16 +35,19 @@ public class ApprobationController {
     }
 
     @GetMapping("/demandes")
+    @PreAuthorize("@modules.actif('processus') and hasAnyRole('ADMIN','APPRO','DIRECTION','REDACTEUR','SUPERADMIN')")
     public List<DemandeApproVue> demandes() {
         return service.toutesLesDemandes();
     }
 
     @PostMapping("/demandes")
+    @PreAuthorize("@modules.actif('processus') and hasAnyRole('ADMIN','APPRO','DIRECTION','REDACTEUR','SUPERADMIN')")
     public DemandeApproVue creerDemande(@RequestBody DemandeApproRequest req, Authentication auth) {
         return service.creerDemande(req, auth != null ? auth.getName() : null);
     }
 
     @GetMapping("/demandes/{id}")
+    @PreAuthorize("@modules.actif('processus') and hasAnyRole('ADMIN','APPRO','DIRECTION','REDACTEUR','SUPERADMIN')")
     public DemandeApproVue demande(@PathVariable Long id) {
         return service.demande(id);
     }

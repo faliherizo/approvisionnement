@@ -25,9 +25,31 @@ public class GlobalExceptionHandler {
         return corps(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
+    /**
+     * Fichier au-delà du plafond de transport : 413 et message clair. Tomcat le signale par une IllegalStateException
+     * dont la cause est une FileSizeLimitExceededException ; son message technique n'est jamais renvoyé au client.
+     */
+    @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class)
+    public ResponseEntity<Map<String, String>> tropVolumineux(Exception e) {
+        log.warn("Fichier refusé (413) : {}", e.getMessage());
+        return corps(HttpStatus.PAYLOAD_TOO_LARGE, "Fichier trop volumineux : il dépasse le plafond autorisé par la plateforme.");
+    }
+
+    private static boolean depassementDeTaille(Throwable e) {
+        for (Throwable c = e; c != null; c = c.getCause()) {
+            if (c instanceof org.apache.tomcat.util.http.fileupload.impl.SizeException) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** Règle métier violée (ex. clause normative verrouillée). */
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Map<String, String>> conflit(IllegalStateException e) {
+        if (depassementDeTaille(e)) {
+            return tropVolumineux(e);
+        }
         log.warn("Conflit métier (409) : {}", e.getMessage());
         return corps(HttpStatus.CONFLICT, e.getMessage());
     }
@@ -37,6 +59,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> nonSouscrit(ModuleNonSouscrit e) {
         log.warn("Accès refusé (403) : {}", e.getMessage());
         return corps(HttpStatus.FORBIDDEN, e.getMessage());
+    }
+
+    /** Requête de fichier mal formée (pas multipart, partie manquante) : erreur du client, jamais 500. */
+    @ExceptionHandler({org.springframework.web.multipart.MultipartException.class,
+            org.springframework.web.multipart.support.MissingServletRequestPartException.class})
+    public ResponseEntity<Map<String, String>> requeteFichierInvalide(Exception e) {
+        log.debug("Requête de fichier invalide (400) : {}", e.getMessage());
+        return corps(HttpStatus.BAD_REQUEST, "Requête de fichier invalide : envoyez le fichier en multipart/form-data.");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

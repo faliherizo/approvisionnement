@@ -1,4 +1,7 @@
 import { useEffect, useState, useCallback, Fragment } from 'react'
+import InventairePlaces from '../components/InventairePlaces.jsx'
+import RapportPdfFiches from '../components/RapportPdfFiches.jsx'
+import { BoutonDocumentFiche, TransmettreFiche } from '../components/DocumentFiche.jsx'
 import { useParams, Link } from 'react-router-dom'
 import api from '../api'
 import { useI18n } from '../i18n/I18nContext'
@@ -22,6 +25,8 @@ export default function Saisies() {
   const [resume, setResume] = useState(null)
   const [ouvert, setOuvert] = useState(null)
   const [err, setErr] = useState(null)
+  const [msg, setMsg] = useState(null)
+  const [aTransmettre, setATransmettre] = useState(null)
 
   const peutStatuer = hasRole('ADMIN') || hasRole('APPRO') || hasRole('DIRECTION') || hasRole('SUPERADMIN')
 
@@ -60,6 +65,7 @@ export default function Saisies() {
         <Link className="btn-lien" to="/formulaires">← {t('fiches.retour')}</Link>
         <h1 style={{ marginTop: 8 }}>{t('fiches.titre')}</h1>
         {err && <div className="erreur" role="alert">{err}</div>}
+        {msg && <div className="succes" role="status">{msg}</div>}
       </div>
 
       {resume && (
@@ -74,6 +80,9 @@ export default function Saisies() {
           {actif('rapport') && <button className="secondary" style={{ marginTop: 12 }} onClick={exporter}>⬇ {t('fiches.exportExcel')}</button>}
         </section>
       )}
+
+      {(peutStatuer || hasRole('REDACTEUR')) && <InventairePlaces formulaireId={id} rafraichir={fiches} />}
+      {(peutStatuer || hasRole('REDACTEUR')) && actif('rapport') && <RapportPdfFiches formulaireId={id} />}
 
       <section className="panel">
         <h2>{t('fiches.liste')}</h2>
@@ -98,6 +107,10 @@ export default function Saisies() {
                     <td className="cmp-row">
                       <button className="secondary" onClick={() => setOuvert(ouvert === f.id ? null : f.id)}
                               aria-expanded={ouvert === f.id}>{ouvert === f.id ? t('fiches.masquer') : t('fiches.details')}</button>
+                      {f.statut !== 'BROUILLON' && <BoutonDocumentFiche formulaireId={id} fiche={f} onErreur={setErr} />}
+                      {peutStatuer && f.statut !== 'BROUILLON' && (
+                        <button type="button" className="secondary" onClick={() => setATransmettre(f)}>{t('docfiche.transmettre')}</button>
+                      )}
                       {peutStatuer && f.statut === 'SOUMIS' && <button onClick={() => statuer(f.id, 'valider')}>{t('fiches.valider')}</button>}
                       {peutStatuer && f.statut === 'SOUMIS' && <button className="danger" onClick={() => statuer(f.id, 'rejeter')}>{t('fiches.rejeter')}</button>}
                     </td>
@@ -123,6 +136,9 @@ export default function Saisies() {
           </tbody>
         </table>
       </section>
+      {aTransmettre && (
+        <TransmettreFiche formulaireId={id} fiche={aTransmettre} onFait={setMsg} onClose={() => setATransmettre(null)} />
+      )}
     </div>
   )
 }

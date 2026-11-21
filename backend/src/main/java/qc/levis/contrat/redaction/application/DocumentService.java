@@ -176,15 +176,9 @@ public class DocumentService {
             }
         }
 
-        // 3) Exclusions : on retire toute clause exclue par une clause conservée (priorité à
-        //    la première rencontrée), pour éviter des combinaisons incompatibles.
-        java.util.LinkedHashSet<Clause> finales = new java.util.LinkedHashSet<>();
-        java.util.Set<String> exclus = new java.util.HashSet<>();
-        for (Clause c : retenues) {
-            if (exclus.contains(c.getCode())) continue;
-            finales.add(c);
-            exclus.addAll(c.getExclusions());
-        }
+        // 3) Exclusions : la clause qui déclare l'exclusion prévaut sur celle qu'elle exclut, quel que soit l'ordre de
+        //    création ; entre deux clauses qui s'excluent mutuellement, la première retenue l'emporte.
+        java.util.LinkedHashSet<Clause> finales = exclure(retenues);
 
         // 4) Matérialisation ordonnée.
         int ordre = 1;
@@ -311,9 +305,11 @@ public class DocumentService {
     }
 
     @Transactional
-    public ApprovalStep decider(Long stepId, boolean approuve, String note, String utilisateur) {
+    public ApprovalStep decider(Long stepId, boolean approuve, String note, String utilisateur, java.util.Set<String> roles) {
         ApprovalStep s = approvals.findById(stepId)
                 .orElseThrow(() -> new NoSuchElementException("Étape introuvable: " + stepId));
+        get(s.getDocumentId()); // vérifie l'appartenance au tenant
+        exigerDecidable(s, roles);
         s.setStatut(approuve ? Enums.StatutApprobation.APPROUVE : Enums.StatutApprobation.REFUSE);
         s.setApprobateur(utilisateur);
         s.setNote(note);
@@ -335,6 +331,43 @@ public class DocumentService {
         log.info("Étape {} du document {} {} → statut du document : {}",
                 stepId, s.getDocumentId(), approuve ? "approuvée" : "refusée", d.getStatut());
         return s;
+    }
+
+    /**
+     * Séparation des responsabilités du circuit hiérarchisé : seule une personne qui détient le rôle requis décide
+     * d'une étape, une seule fois, et seulement après l'approbation de tous les niveaux précédents.
+     */
+    private void exigerDecidable(ApprovalStep s, java.util.Set<String> roles) {
+        if (roles == null || !roles.contains(s.getRoleRequis().name())) {
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "Décision réservée au rôle " + s.getRoleRequis() + " (niveau " + s.getNiveau() + ").");
+        }
+        if (s.getStatut() != Enums.StatutApprobation.EN_ATTENTE) {
+            throw new IllegalStateException("Étape déjà décidée : " + s.getStatut() + ".");
+        }
+        boolean precedentsApprouves = approvals.findByDocumentIdOrderByNiveauAsc(s.getDocumentId()).stream()
+                .filter(e -> e.getNiveau() < s.getNiveau())
+                .allMatch(e -> e.getStatut() == Enums.StatutApprobation.APPROUVE);
+        if (!precedentsApprouves) {
+            throw new IllegalStateException("Les niveaux précédents du circuit doivent d'abord être approuvés.");
+        }
+    }
+
+    /** Retire les clauses exclues : celles qui déclarent une exclusion sont traitées d'abord, puis les autres. */
+    static java.util.LinkedHashSet<Clause> exclure(java.util.Collection<Clause> retenues) {
+        java.util.List<Clause> ordre = new java.util.ArrayList<>(retenues);
+        ordre.sort(java.util.Comparator.comparing(c -> c.getExclusions().isEmpty()));
+        java.util.Set<String> exclus = new java.util.HashSet<>();
+        java.util.Set<Clause> gardees = new java.util.HashSet<>();
+        for (Clause c : ordre) {
+            if (!exclus.contains(c.getCode())) {
+                gardees.add(c);
+                exclus.addAll(c.getExclusions());
+            }
+        }
+        java.util.LinkedHashSet<Clause> finales = new java.util.LinkedHashSet<>();
+        retenues.stream().filter(gardees::contains).forEach(finales::add);
+        return finales;
     }
 
     // --- Commentaires ---

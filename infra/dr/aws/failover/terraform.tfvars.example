@@ -14,3 +14,6 @@ frontend_image = "<ACCT>.dkr.ecr.ca-west-1.amazonaws.com/vina-contrat-prod-front
 # Secrets copiés depuis Secrets Manager de la région primaire (ne pas committer) :
 # db_password = "..."
 # jwt_secret  = "..."
+
+# Certificat ACM du domaine servi (HTTPS obligatoire).
+certificat_acm_arn = "arn:aws:acm:ca-central-1:123456789012:certificate/remplacer"

@@ -1,0 +1,19 @@
+{
+  "name": "contrat-bdd",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Tests BDD (Gherkin français) des exigences fonctionnelles de tous les appels d'offres, exécutés de bout en bout par Playwright",
+  "type": "module",
+  "scripts": {
+    "generer": "bddgen",
+    "test": "bddgen && playwright test; node outils/documenter.mjs",
+    "documenter": "node outils/documenter.mjs",
+    "couverture": "node outils/documenter.mjs --verifier",
+    "rapport": "playwright show-report"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.61.1",
+    "playwright-bdd": "9.2.1"
+  }
+}

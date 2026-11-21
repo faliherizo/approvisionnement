@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import api from './api'
+import api, { marquerSession } from './api'
 
 const AuthContext = createContext(null)
 
@@ -10,8 +10,8 @@ export function AuthProvider({ children }) {
   // Restaure la session à partir du cookie httpOnly (via /auth/me).
   useEffect(() => {
     api.get('/auth/me')
-      .then((r) => setUser({ email: r.data.email, nom: r.data.nom, roles: r.data.roles }))
-      .catch(() => setUser(null))
+      .then((r) => { marquerSession(true); setUser({ email: r.data.email, nom: r.data.nom, roles: r.data.roles }) })
+      .catch(() => { marquerSession(false); setUser(null) })
       .finally(() => setChargement(false))
   }, [])
 
@@ -25,6 +25,7 @@ export function AuthProvider({ children }) {
       const { data } = await api.post('/auth/login', { email, motDePasse, ...(second || {}), slug: slug || null })
       if (data.ok) {
         const u = { email: data.email, nom: data.nom, roles: data.roles }
+        marquerSession(true)
         setUser(u)
         return { ok: true }
       }
@@ -43,6 +44,7 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
+    marquerSession(false)
     try { await api.post('/auth/logout') } catch { /* ignore */ }
     setUser(null)
   }

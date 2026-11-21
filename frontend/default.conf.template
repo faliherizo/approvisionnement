@@ -1,8 +1,21 @@
 server {
-    listen 80;
+    listen 8080;
     server_name _;
     root /usr/share/nginx/html;
     index index.html;
+
+    # Version de nginx masquée ; en-têtes de sécurité sur toutes les réponses (OWASP A05). La politique de contenu
+    # n'admet que les ressources de l'application elle-même : aucun script tiers, aucun script en ligne.
+    server_tokens off;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'self'" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header Referrer-Policy "no-referrer" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()" always;
+    add_header Cross-Origin-Opener-Policy "same-origin" always;
+    add_header Cross-Origin-Resource-Policy "same-origin" always;
+    # HSTS : la plateforme n'est servie qu'en HTTPS derrière le répartiteur (Azure Front Door, ingress).
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
     # SPA : toutes les routes non-fichier renvoient index.html
     location / {
@@ -50,6 +63,10 @@ server {
     # Cache des assets statiques
     location /assets/ {
         expires 1y;
+        # Un add_header dans un bloc location remplace ceux du serveur : on les répète ici.
         add_header Cache-Control "public, immutable";
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'self'" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
     }
 }

@@ -93,3 +93,12 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+
+variable "ip_administration" {
+  description = "Adresses (CIDR) d'administration seules admises sur l'API du plan de contrôle et le coffre de secrets : exécutant Terraform, poste d'exploitation."
+  type        = list(string)
+  validation {
+    condition     = length(var.ip_administration) > 0 && !contains(var.ip_administration, "0.0.0.0/0")
+    error_message = "Déclarer au moins une adresse d'administration, et jamais 0.0.0.0/0."
+  }
+}

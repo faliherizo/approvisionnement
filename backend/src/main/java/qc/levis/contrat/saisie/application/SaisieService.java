@@ -38,12 +38,14 @@ public class SaisieService {
     private final RegleService regleService;
     private final CaptchaVerifier captcha;
     private final ApplicationEventPublisher events;
+    private final PlacesService places;
     private final ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
 
     public SaisieService(SaisieRepository repo, FormulaireVersionRepository versions,
                          FormulaireRepository formulaires, RegleService regleService,
-                         CaptchaVerifier captcha, ApplicationEventPublisher events) {
+                         CaptchaVerifier captcha, ApplicationEventPublisher events, PlacesService places) {
         this.repo = repo;
+        this.places = places;
         this.versions = versions;
         this.formulaires = formulaires;
         this.regleService = regleService;
@@ -88,6 +90,7 @@ public class SaisieService {
     @Transactional
     public SaisieVue soumettre(Long id, SoumissionRequest req, String ip) {
         Saisie s = exiger(id);
+        formulaires.verrouiller(s.getFormulaireId(), tenant());
         FormulaireVersion v = versions.findTopByFormulaireIdOrderByNumeroDesc(s.getFormulaireId())
                 .orElseThrow(() -> new NoSuchElementException("Formulaire sans version."));
         Activation.Config cfg = extraireActivation(v.getStructureJson());
@@ -102,12 +105,13 @@ public class SaisieService {
                 regleService.extraireRegles(v.getStructureJson()), parseMap(s.getDonneesJson()));
         if (!res.erreurs().isEmpty())
             throw new IllegalArgumentException("Validation : " + String.join(" ; ", res.erreurs()));
+        places.plan(s.getFormulaireId(), s.getId()).exigerDesPlaces(parseMap(s.getDonneesJson()));
         s.setStatut(StatutSaisie.SOUMIS);
         s.setSoumisLe(Instant.now());
         s.setMajLe(Instant.now());
         Saisie saved = repo.save(s);
         events.publishEvent(new FicheEvent(saved.getTenantId(), saved.getFormulaireId(), saved.getId(),
-                "SOUMISSION", parseMap(saved.getDonneesJson())));
+                "SOUMISSION", valeursNotifiables(saved)));
         return vue(saved);
     }
 
@@ -169,7 +173,7 @@ public class SaisieService {
         s.setMajLe(Instant.now());
         Saisie saved = repo.save(s);
         events.publishEvent(new FicheEvent(saved.getTenantId(), saved.getFormulaireId(), saved.getId(),
-                declencheur, parseMap(saved.getDonneesJson())));
+                declencheur, valeursNotifiables(saved)));
         return vue(saved);
     }
 
@@ -179,6 +183,16 @@ public class SaisieService {
             JsonNode n = mapper.readTree(structureJson).get("activation");
             return n == null ? null : mapper.convertValue(n, Activation.Config.class);
         } catch (Exception e) { return null; }
+    }
+
+    /**
+     * Valeurs fusionnables dans les gabarits de notification : les champs saisis, plus le numéro de la fiche
+     * ({@code {{numero}}}), que le demandeur cite pour suivre sa demande. Un champ du formulaire nommé « numero » prévaut.
+     */
+    private Map<String, Object> valeursNotifiables(Saisie s) {
+        Map<String, Object> valeurs = new LinkedHashMap<>(parseMap(s.getDonneesJson()));
+        if (s.getNumero() != null) valeurs.putIfAbsent("numero", s.getNumero());
+        return valeurs;
     }
 
     private Map<String, Object> parseMap(String donneesJson) {

@@ -325,7 +325,7 @@
     "mg": "Tsy misy hetsika."
   },
   "audit.caption": {
-    "fr": "Événements du journal d'audit",
+    "fr": "Événements du journal d’audit",
     "en": "Audit log events",
     "mg": "Hetsika ao amin'ny diarin'ny fanaraha-maso"
   },
@@ -3344,6 +3344,11 @@
     "fr": "Liste à puces",
     "en": "Bulleted list",
     "mg": "Lisitra misy teboka"
+  },
+  "richtext.zone": {
+    "fr": "Zone de texte enrichi",
+    "en": "Rich text area",
+    "mg": "Faritra soratra voaravaka"
   },
   "richtext.miseEnForme": {
     "fr": "Mise en forme",
@@ -8409,5 +8414,885 @@
     "fr": "Créer le projet",
     "en": "Create project",
     "mg": "Créer le projet"
+  },
+  "clauses.history.open": {
+    "fr": "Historique",
+    "en": "History",
+    "mg": "Tantara"
+  },
+  "clauses.history.openLabel": {
+    "fr": "Historique de la clause {code}",
+    "en": "History of clause {code}",
+    "mg": "Tantaran'ny fehezanteny {code}"
+  },
+  "clauses.history.title": {
+    "fr": "Historique de la clause {code}",
+    "en": "History of clause {code}",
+    "mg": "Tantaran'ny fehezanteny {code}"
+  },
+  "clauses.history.caption": {
+    "fr": "Versions de la clause, de la plus récente à la plus ancienne",
+    "en": "Clause versions, newest first",
+    "mg": "Dikan'ny fehezanteny, ny vaovao indrindra aloha"
+  },
+  "clauses.history.version": {
+    "fr": "Version",
+    "en": "Version",
+    "mg": "Dika"
+  },
+  "clauses.history.date": {
+    "fr": "Date",
+    "en": "Date",
+    "mg": "Daty"
+  },
+  "clauses.history.author": {
+    "fr": "Auteur",
+    "en": "Author",
+    "mg": "Mpanoratra"
+  },
+  "clauses.history.reason": {
+    "fr": "Motif",
+    "en": "Reason",
+    "mg": "Antony"
+  },
+  "clauses.history.actions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Asa"
+  },
+  "clauses.history.view": {
+    "fr": "Voir la version {n}",
+    "en": "View version {n}",
+    "mg": "Jereo ny dika {n}"
+  },
+  "clauses.history.restore": {
+    "fr": "Restaurer la version {n}",
+    "en": "Restore version {n}",
+    "mg": "Avereno ny dika {n}"
+  },
+  "clauses.history.textOf": {
+    "fr": "Texte de la version {n} — {titre}",
+    "en": "Text of version {n} — {titre}",
+    "mg": "Lahatsoratry ny dika {n} — {titre}"
+  },
+  "clauses.history.motif.CREATION": {
+    "fr": "Création",
+    "en": "Creation",
+    "mg": "Famoronana"
+  },
+  "clauses.history.motif.MODIFICATION": {
+    "fr": "Modification",
+    "en": "Change",
+    "mg": "Fanovana"
+  },
+  "clauses.history.motif.RESTAURATION": {
+    "fr": "Restauration de la version {n}",
+    "en": "Restored from version {n}",
+    "mg": "Famerenana ny dika {n}"
+  },
+  "clauses.history.loadError": {
+    "fr": "L'historique de la clause n'a pas pu être chargé.",
+    "en": "The clause history could not be loaded.",
+    "mg": "Tsy voavaky ny tantaran'ny fehezanteny."
+  },
+  "clauses.history.restoreError": {
+    "fr": "La restauration a été refusée.",
+    "en": "The restore was refused.",
+    "mg": "Nolavina ny famerenana."
+  },
+  "nav.viePrivee": {
+    "fr": "Vie privée (Loi 25)",
+    "en": "Privacy (Law 25)",
+    "mg": "Fiainana manokana (Lalàna 25)"
+  },
+  "loi25.titre": {
+    "fr": "Protection des renseignements personnels — Loi 25",
+    "en": "Personal information protection — Law 25",
+    "mg": "Fiarovana ny mombamomba manokana — Lalàna 25"
+  },
+  "loi25.intro": {
+    "fr": "Répondez aux demandes des personnes concernées : communiquez-leur ce que l'organisation détient sur elles, effacez leurs renseignements, et gardez la trace de chaque demande. La réponse est due dans les 30 jours.",
+    "en": "Answer requests from the people concerned: give them what the organization holds about them, erase their information, and keep a record of every request. The answer is due within 30 days.",
+    "mg": "Valio ny fangatahan'ny olona voakasika: omeo azy izay tazonin'ny fikambanana momba azy, fafao ny mombamomba azy, ary tahirizo ny fangatahana tsirairay. Tsy maintsy valiana ao anatin'ny 30 andro."
+  },
+  "loi25.acces": {
+    "fr": "Demande d'accès",
+    "en": "Access request",
+    "mg": "Fangatahana hijery"
+  },
+  "loi25.accesAide": {
+    "fr": "Tous les renseignements détenus, par source, dans un format structuré que la personne peut recevoir (JSON).",
+    "en": "All information held, by source, in a structured format the person can receive (JSON).",
+    "mg": "Ny mombamomba rehetra tazonina, isaky ny loharano, amin'ny endrika voalamina (JSON)."
+  },
+  "loi25.courriel": {
+    "fr": "Courriel de la personne concernée",
+    "en": "Email of the person concerned",
+    "mg": "Mailaky ny olona voakasika"
+  },
+  "loi25.consulter": {
+    "fr": "Rassembler les renseignements",
+    "en": "Gather the information",
+    "mg": "Angony ny mombamomba"
+  },
+  "loi25.resume": {
+    "fr": "{n} renseignement(s) détenu(s) sur {courriel}.",
+    "en": "{n} item(s) of information held about {courriel}.",
+    "mg": "Mombamomba {n} tazonina momba an'i {courriel}."
+  },
+  "loi25.telecharger": {
+    "fr": "Télécharger le dossier (JSON)",
+    "en": "Download the file (JSON)",
+    "mg": "Alaivo ny antontan-taratasy (JSON)"
+  },
+  "loi25.reference": {
+    "fr": "Référence",
+    "en": "Reference",
+    "mg": "Fanondroana"
+  },
+  "loi25.date": {
+    "fr": "Date",
+    "en": "Date",
+    "mg": "Daty"
+  },
+  "loi25.valeurs": {
+    "fr": "Renseignements",
+    "en": "Information",
+    "mg": "Mombamomba"
+  },
+  "loi25.effacement": {
+    "fr": "Demande d'effacement",
+    "en": "Erasure request",
+    "mg": "Fangatahana famafana"
+  },
+  "loi25.effacementAide": {
+    "fr": "Le compte est fermé et ne porte plus d'identité ; l'auteur des actions passées devient un pseudonyme ; les brouillons sont supprimés. Les fiches soumises restent, sous pseudonyme, selon le calendrier de conservation.",
+    "en": "The account is closed and no longer carries an identity; past actions are attributed to a pseudonym; drafts are deleted. Submitted forms remain, under a pseudonym, according to the retention schedule.",
+    "mg": "Hidiana ny kaonty ary tsy misy anarana intsony; anarana solon'anarana no apetraka amin'ny asa taloha; voafafa ny drafitra. Mijanona ny fiche nalefa, amin'ny anarana solon'anarana, araka ny fandaharam-potoana fitahirizana."
+  },
+  "loi25.motif": {
+    "fr": "Motif",
+    "en": "Reason",
+    "mg": "Antony"
+  },
+  "loi25.motifAide": {
+    "fr": "Ex. : demande écrite reçue le 2026-11-20",
+    "en": "E.g. written request received on 2026-11-20",
+    "mg": "Ohatra: fangatahana an-tsoratra noraisina ny 2026-11-20"
+  },
+  "loi25.effacer": {
+    "fr": "Effacer la personne",
+    "en": "Erase the person",
+    "mg": "Fafao ilay olona"
+  },
+  "loi25.bilan": {
+    "fr": "Résultat de l'effacement",
+    "en": "Erasure result",
+    "mg": "Vokatry ny famafana"
+  },
+  "loi25.source": {
+    "fr": "Source",
+    "en": "Source",
+    "mg": "Loharano"
+  },
+  "loi25.effaces": {
+    "fr": "Effacés",
+    "en": "Erased",
+    "mg": "Voafafa"
+  },
+  "loi25.conserves": {
+    "fr": "Conservés",
+    "en": "Kept",
+    "mg": "Notehirizina"
+  },
+  "loi25.motifConservation": {
+    "fr": "Motif de conservation",
+    "en": "Reason for keeping",
+    "mg": "Antony fitahirizana"
+  },
+  "loi25.registre": {
+    "fr": "Registre des demandes",
+    "en": "Request register",
+    "mg": "Firaketana ny fangatahana"
+  },
+  "loi25.registreVide": {
+    "fr": "Aucune demande traitée.",
+    "en": "No request processed.",
+    "mg": "Tsy misy fangatahana voavaly."
+  },
+  "loi25.type": {
+    "fr": "Type",
+    "en": "Type",
+    "mg": "Karazana"
+  },
+  "loi25.type.ACCES": {
+    "fr": "Accès",
+    "en": "Access",
+    "mg": "Fijerena"
+  },
+  "loi25.type.EFFACEMENT": {
+    "fr": "Effacement",
+    "en": "Erasure",
+    "mg": "Famafana"
+  },
+  "loi25.traitePar": {
+    "fr": "Traitée par",
+    "en": "Handled by",
+    "mg": "Nokarakarain'i"
+  },
+  "loi25.resultat": {
+    "fr": "Résultat",
+    "en": "Result",
+    "mg": "Vokatra"
+  },
+  "loi25.confirmerTitre": {
+    "fr": "Effacer cette personne ?",
+    "en": "Erase this person?",
+    "mg": "Hofafana ve ity olona ity?"
+  },
+  "loi25.confirmerMessage": {
+    "fr": "Les renseignements de {courriel} seront effacés ou pseudonymisés. Cette opération est irréversible.",
+    "en": "The information of {courriel} will be erased or pseudonymized. This cannot be undone.",
+    "mg": "Hofafana na hosoloina anarana ny mombamomba an'i {courriel}. Tsy azo averina io."
+  },
+  "loi25.erreur": {
+    "fr": "La demande n'a pas pu être traitée.",
+    "en": "The request could not be processed.",
+    "mg": "Tsy voakarakara ny fangatahana."
+  },
+  "documenteditor.exportSeao": {
+    "fr": "Fiche SEAO (XML)",
+    "en": "SEAO record (XML)",
+    "mg": "Fiche SEAO (XML)"
+  },
+  "documenteditor.seaoGenere": {
+    "fr": "Fiche SEAO générée : reprenez-la dans le SEAO et versez-la au dossier.",
+    "en": "SEAO record generated: enter it in SEAO and file it with the record.",
+    "mg": "Vita ny fiche SEAO: ampidiro ao amin'ny SEAO ary apetraho ao amin'ny antontan-taratasy."
+  },
+  "rendu.complet": {
+    "fr": "complet",
+    "en": "full",
+    "mg": "feno"
+  },
+  "rendu.placesRestantes": {
+    "fr": "{n} place(s) restante(s)",
+    "en": "{n} place(s) left",
+    "mg": "toerana {n} sisa"
+  },
+  "builder.optionsLabel": {
+    "fr": "Choix du champ {champ}",
+    "en": "Choices of field {champ}",
+    "mg": "Safidy amin'ny saha {champ}"
+  },
+  "builder.capacitesLabel": {
+    "fr": "Places par choix du champ {champ}",
+    "en": "Places per choice of field {champ}",
+    "mg": "Toerana isaky ny safidy amin'ny saha {champ}"
+  },
+  "builder.capacitesPlaceholder": {
+    "fr": "Places : Atelier=20, Formation=10",
+    "en": "Places: Workshop=20, Training=10",
+    "mg": "Toerana: Atelier=20, Formation=10"
+  },
+  "inventaire.titre": {
+    "fr": "Inventaire des inscriptions",
+    "en": "Registration inventory",
+    "mg": "Lisitry ny fisoratana anarana"
+  },
+  "inventaire.champ": {
+    "fr": "Champ",
+    "en": "Field",
+    "mg": "Saha"
+  },
+  "inventaire.choix": {
+    "fr": "Choix",
+    "en": "Choice",
+    "mg": "Safidy"
+  },
+  "inventaire.capacite": {
+    "fr": "Places",
+    "en": "Places",
+    "mg": "Toerana"
+  },
+  "inventaire.inscrits": {
+    "fr": "Inscrits",
+    "en": "Registered",
+    "mg": "Voasoratra"
+  },
+  "inventaire.restantes": {
+    "fr": "Restantes",
+    "en": "Left",
+    "mg": "Sisa"
+  },
+  "inventaire.actions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Asa"
+  },
+  "inventaire.illimite": {
+    "fr": "Illimité",
+    "en": "Unlimited",
+    "mg": "Tsy voafetra"
+  },
+  "inventaire.voirInscriptions": {
+    "fr": "Voir les inscriptions — {choix}",
+    "en": "View registrations — {choix}",
+    "mg": "Jereo ny fisoratana — {choix}"
+  },
+  "inventaire.inscriptionsDe": {
+    "fr": "Inscriptions au choix « {choix} »",
+    "en": "Registrations for « {choix} »",
+    "mg": "Fisoratana amin'ny « {choix} »"
+  },
+  "inventaire.demandeur": {
+    "fr": "Demandeur",
+    "en": "Requester",
+    "mg": "Mpangataka"
+  },
+  "inventaire.exportCsv": {
+    "fr": "Exporter l'inventaire (CSV)",
+    "en": "Export the inventory (CSV)",
+    "mg": "Avoahy ny lisitra (CSV)"
+  },
+  "inventaire.erreurExport": {
+    "fr": "L'export de l'inventaire a échoué.",
+    "en": "The inventory export failed.",
+    "mg": "Tsy nahomby ny famoahana ny lisitra."
+  },
+  "docfiche.telecharger": {
+    "fr": "Document PDF",
+    "en": "PDF document",
+    "mg": "Antontan-taratasy PDF"
+  },
+  "docfiche.telechargerLabel": {
+    "fr": "Document PDF de la fiche {numero}",
+    "en": "PDF document of entry {numero}",
+    "mg": "Antontan-taratasy PDF an'ny fiche {numero}"
+  },
+  "docfiche.erreur": {
+    "fr": "Le document n'a pas pu être produit.",
+    "en": "The document could not be produced.",
+    "mg": "Tsy vita ny antontan-taratasy."
+  },
+  "docfiche.transmettre": {
+    "fr": "Transmettre",
+    "en": "Send",
+    "mg": "Alefaso"
+  },
+  "docfiche.transmettreTitre": {
+    "fr": "Transmettre le document de la fiche {numero}",
+    "en": "Send the document of entry {numero}",
+    "mg": "Alefaso ny antontan-taratasin'ny fiche {numero}"
+  },
+  "docfiche.destinataire": {
+    "fr": "Courriel du destinataire",
+    "en": "Recipient email",
+    "mg": "Mailaky ny mpandray"
+  },
+  "docfiche.message": {
+    "fr": "Message",
+    "en": "Message",
+    "mg": "Hafatra"
+  },
+  "docfiche.envoyer": {
+    "fr": "Envoyer le document",
+    "en": "Send the document",
+    "mg": "Alefaso ny antontan-taratasy"
+  },
+  "docfiche.erreurTransmission": {
+    "fr": "La transmission a échoué.",
+    "en": "Sending failed.",
+    "mg": "Tsy nahomby ny fandefasana."
+  },
+  "docfiche.statut.ENVOYE": {
+    "fr": "Document transmis.",
+    "en": "Document sent.",
+    "mg": "Lasa ny antontan-taratasy."
+  },
+  "docfiche.statut.SIMULE": {
+    "fr": "Document transmis (envoi simulé : aucun relais de courriel configuré).",
+    "en": "Document sent (simulated: no mail relay configured).",
+    "mg": "Lasa (fanaovana tsotra: tsy misy relais mailaka)."
+  },
+  "docfiche.statut.ECHEC": {
+    "fr": "Le relais de courriel a refusé le message ; il est inscrit au journal.",
+    "en": "The mail relay refused the message; it is logged.",
+    "mg": "Nolavin'ny relais ny hafatra; voasoratra ao amin'ny diary."
+  },
+  "nav.messagerie": {
+    "fr": "Messagerie",
+    "en": "Messages",
+    "mg": "Hafatra"
+  },
+  "messagerie.titre": {
+    "fr": "Messagerie interne",
+    "en": "Internal messages",
+    "mg": "Hafatra anatiny"
+  },
+  "messagerie.intro": {
+    "fr": "Échanges sécurisés entre intervenants de l'organisation : seuls les participants voient une conversation, et les messages sont chiffrés au repos.",
+    "en": "Secure exchanges between staff of the organization: only participants see a conversation, and messages are encrypted at rest.",
+    "mg": "Fifanakalozana voaaro eo amin'ny mpiasa: ny mpandray anjara ihany no mahita ny resaka, ary voaafina ny hafatra."
+  },
+  "messagerie.nouvelle": {
+    "fr": "Nouvelle conversation",
+    "en": "New conversation",
+    "mg": "Resaka vaovao"
+  },
+  "messagerie.conversations": {
+    "fr": "Conversations",
+    "en": "Conversations",
+    "mg": "Resaka"
+  },
+  "messagerie.aucune": {
+    "fr": "Aucune conversation.",
+    "en": "No conversation.",
+    "mg": "Tsy misy resaka."
+  },
+  "messagerie.nonLus": {
+    "fr": "{n} non lu(s)",
+    "en": "{n} unread",
+    "mg": "{n} tsy voavaky"
+  },
+  "messagerie.sujet": {
+    "fr": "Sujet",
+    "en": "Subject",
+    "mg": "Lohahevitra"
+  },
+  "messagerie.reference": {
+    "fr": "Référence (facultatif)",
+    "en": "Reference (optional)",
+    "mg": "Fanondroana (tsy voatery)"
+  },
+  "messagerie.referenceAide": {
+    "fr": "Ex. : numéro de la fiche",
+    "en": "E.g. entry number",
+    "mg": "Ohatra: laharan'ny fiche"
+  },
+  "messagerie.participants": {
+    "fr": "Participants (courriels)",
+    "en": "Participants (emails)",
+    "mg": "Mpandray anjara (mailaka)"
+  },
+  "messagerie.participantsAide": {
+    "fr": "Séparez les courriels par des virgules",
+    "en": "Separate emails with commas",
+    "mg": "Sarahana amin'ny faingo ny mailaka"
+  },
+  "messagerie.message": {
+    "fr": "Message",
+    "en": "Message",
+    "mg": "Hafatra"
+  },
+  "messagerie.envoyer": {
+    "fr": "Envoyer",
+    "en": "Send",
+    "mg": "Alefaso"
+  },
+  "messagerie.choisir": {
+    "fr": "Choisissez une conversation ou commencez-en une.",
+    "en": "Choose a conversation or start one.",
+    "mg": "Misafidiana resaka na manomboka iray."
+  },
+  "messagerie.avec": {
+    "fr": "Avec : {participants}",
+    "en": "With: {participants}",
+    "mg": "Miaraka amin'i: {participants}"
+  },
+  "messagerie.repondre": {
+    "fr": "Votre réponse",
+    "en": "Your reply",
+    "mg": "Ny valinteninao"
+  },
+  "messagerie.ajouterParticipant": {
+    "fr": "Ajouter un participant (courriel)",
+    "en": "Add a participant (email)",
+    "mg": "Ampio mpandray anjara (mailaka)"
+  },
+  "messagerie.ajouter": {
+    "fr": "Ajouter",
+    "en": "Add",
+    "mg": "Ampio"
+  },
+  "messagerie.erreur": {
+    "fr": "L'action a été refusée.",
+    "en": "The action was refused.",
+    "mg": "Nolavina ny asa."
+  },
+  "rapportPdf.titre": {
+    "fr": "Rapport PDF personnalisé",
+    "en": "Custom PDF report",
+    "mg": "Tatitra PDF namboarina"
+  },
+  "rapportPdf.intitule": {
+    "fr": "Titre du rapport (facultatif)",
+    "en": "Report title (optional)",
+    "mg": "Lohatenin'ny tatitra (tsy voatery)"
+  },
+  "rapportPdf.questions": {
+    "fr": "Questions à montrer ({n} au plus)",
+    "en": "Questions to show (at most {n})",
+    "mg": "Fanontaniana haseho ({n} farafahabetsany)"
+  },
+  "rapportPdf.statuts": {
+    "fr": "Statuts retenus (tous si aucun)",
+    "en": "Statuses included (all if none)",
+    "mg": "Sata raisina (rehetra raha tsy misy)"
+  },
+  "rapportPdf.produire": {
+    "fr": "Produire le rapport PDF",
+    "en": "Produce the PDF report",
+    "mg": "Avoahy ny tatitra PDF"
+  },
+  "rapportPdf.erreur": {
+    "fr": "Le rapport n'a pas pu être produit.",
+    "en": "The report could not be produced.",
+    "mg": "Tsy vita ny tatitra."
+  },
+  "nav.tableauxBord": {
+    "fr": "Tableaux de bord",
+    "en": "Dashboards",
+    "mg": "Takelaka fanaraha-maso"
+  },
+  "tdb.titre": {
+    "fr": "Tableaux de bord",
+    "en": "Dashboards",
+    "mg": "Takelaka fanaraha-maso"
+  },
+  "tdb.intro": {
+    "fr": "Composez vos indicateurs sur les fiches des formulaires publiés ; partagez un tableau pour le rendre visible à l'organisation.",
+    "en": "Compose your indicators on entries of published forms; share a dashboard to make it visible to the organization.",
+    "mg": "Amboary ny famantarana anao; zarao ny takelaka mba ho hitan'ny fikambanana."
+  },
+  "tdb.choisir": {
+    "fr": "Tableau de bord",
+    "en": "Dashboard",
+    "mg": "Takelaka"
+  },
+  "tdb.partage": {
+    "fr": "partagé",
+    "en": "shared",
+    "mg": "zaraina"
+  },
+  "tdb.nouveau": {
+    "fr": "Nouveau tableau de bord",
+    "en": "New dashboard",
+    "mg": "Takelaka vaovao"
+  },
+  "tdb.modifier": {
+    "fr": "Modifier le tableau de bord",
+    "en": "Edit the dashboard",
+    "mg": "Ovay ny takelaka"
+  },
+  "tdb.supprimer": {
+    "fr": "Supprimer le tableau de bord",
+    "en": "Delete the dashboard",
+    "mg": "Fafao ny takelaka"
+  },
+  "tdb.confirmerSuppression": {
+    "fr": "Supprimer « {nom} » ?",
+    "en": "Delete « {nom} »?",
+    "mg": "Hofafana ve « {nom} »?"
+  },
+  "tdb.nom": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Anarana"
+  },
+  "tdb.partager": {
+    "fr": "Partager avec l'organisation",
+    "en": "Share with the organization",
+    "mg": "Zarao amin'ny fikambanana"
+  },
+  "tdb.indicateurN": {
+    "fr": "Indicateur {n}",
+    "en": "Indicator {n}",
+    "mg": "Famantarana {n}"
+  },
+  "tdb.titreIndicateur": {
+    "fr": "Titre de l'indicateur",
+    "en": "Indicator title",
+    "mg": "Lohatenin'ny famantarana"
+  },
+  "tdb.formulaire": {
+    "fr": "Formulaire",
+    "en": "Form",
+    "mg": "Taratasy fenoina"
+  },
+  "tdb.type": {
+    "fr": "Type",
+    "en": "Type",
+    "mg": "Karazana"
+  },
+  "tdb.type.COMPTEUR": {
+    "fr": "Compteur",
+    "en": "Counter",
+    "mg": "Isa"
+  },
+  "tdb.type.BARRES": {
+    "fr": "Histogramme",
+    "en": "Bar chart",
+    "mg": "Sary tsipika"
+  },
+  "tdb.type.EVOLUTION": {
+    "fr": "Évolution mensuelle",
+    "en": "Monthly trend",
+    "mg": "Fivoarana isam-bolana"
+  },
+  "tdb.regroupement": {
+    "fr": "Regrouper",
+    "en": "Group by",
+    "mg": "Vondrona"
+  },
+  "tdb.parStatut": {
+    "fr": "par statut",
+    "en": "by status",
+    "mg": "araka ny sata"
+  },
+  "tdb.parReponse": {
+    "fr": "par réponse à une question",
+    "en": "by answer to a question",
+    "mg": "araka ny valiny"
+  },
+  "tdb.champ": {
+    "fr": "Clé de la question",
+    "en": "Question key",
+    "mg": "Fanalahidin'ny fanontaniana"
+  },
+  "tdb.champAide": {
+    "fr": "Ex. : activite",
+    "en": "E.g. activity",
+    "mg": "Ohatra: activite"
+  },
+  "tdb.statuts": {
+    "fr": "Statuts retenus (tous si aucun)",
+    "en": "Statuses included (all if none)",
+    "mg": "Sata raisina"
+  },
+  "tdb.retirerIndicateur": {
+    "fr": "Retirer l'indicateur {n}",
+    "en": "Remove indicator {n}",
+    "mg": "Esory ny famantarana {n}"
+  },
+  "tdb.ajouterIndicateur": {
+    "fr": "Ajouter un indicateur",
+    "en": "Add an indicator",
+    "mg": "Ampio famantarana"
+  },
+  "tdb.enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save",
+    "mg": "Tehirizo"
+  },
+  "tdb.proprietaire": {
+    "fr": "Propriétaire : {courriel}",
+    "en": "Owner: {courriel}",
+    "mg": "Tompony: {courriel}"
+  },
+  "tdb.aucuneDonnee": {
+    "fr": "Aucune fiche pour cet indicateur.",
+    "en": "No entry for this indicator.",
+    "mg": "Tsy misy fiche."
+  },
+  "tdb.etiquette": {
+    "fr": "Catégorie",
+    "en": "Category",
+    "mg": "Sokajy"
+  },
+  "tdb.valeur": {
+    "fr": "Fiches",
+    "en": "Entries",
+    "mg": "Fiche"
+  },
+  "tdb.voirTableau": {
+    "fr": "Voir en tableau",
+    "en": "Show as table",
+    "mg": "Jereo ho tabilao"
+  },
+  "tdb.voirGraphique": {
+    "fr": "Voir le graphique",
+    "en": "Show the chart",
+    "mg": "Jereo ny sary"
+  },
+  "tdb.erreur": {
+    "fr": "L'action a été refusée.",
+    "en": "The action was refused.",
+    "mg": "Nolavina ny asa."
+  },
+  "nav.banqueHeures": {
+    "fr": "Banque d'heures",
+    "en": "Hours bank",
+    "mg": "Banky ora"
+  },
+  "banque.titre": {
+    "fr": "Banque d'heures de services professionnels",
+    "en": "Professional services hours bank",
+    "mg": "Banky ora serivisy matihanina"
+  },
+  "banque.intro": {
+    "fr": "Heures achetées auprès du fournisseur et leur consommation : analyse, formation, configuration, programmation et rapports.",
+    "en": "Hours purchased from the supplier and their use: analysis, training, configuration, programming and reports.",
+    "mg": "Ora novidiana sy ny fampiasana azy."
+  },
+  "banque.aucune": {
+    "fr": "Aucune banque d'heures ouverte pour l'organisation.",
+    "en": "No hours bank opened for the organization.",
+    "mg": "Tsy misy banky ora."
+  },
+  "banque.choisir": {
+    "fr": "Banque d'heures",
+    "en": "Hours bank",
+    "mg": "Banky ora"
+  },
+  "banque.achetees": {
+    "fr": "Heures achetées",
+    "en": "Hours purchased",
+    "mg": "Ora novidiana"
+  },
+  "banque.consommees": {
+    "fr": "Heures consommées",
+    "en": "Hours used",
+    "mg": "Ora lany"
+  },
+  "banque.restantes": {
+    "fr": "Heures restantes",
+    "en": "Hours left",
+    "mg": "Ora sisa"
+  },
+  "banque.parCategorie": {
+    "fr": "Consommation par catégorie",
+    "en": "Use by category",
+    "mg": "Fampiasana isaky ny sokajy"
+  },
+  "banque.categorie": {
+    "fr": "Catégorie",
+    "en": "Category",
+    "mg": "Sokajy"
+  },
+  "banque.categorie.ANALYSE": {
+    "fr": "Analyse",
+    "en": "Analysis",
+    "mg": "Fandalinana"
+  },
+  "banque.categorie.FORMATION": {
+    "fr": "Formation",
+    "en": "Training",
+    "mg": "Fiofanana"
+  },
+  "banque.categorie.CONFIGURATION": {
+    "fr": "Configuration",
+    "en": "Configuration",
+    "mg": "Fandrindrana"
+  },
+  "banque.categorie.PROGRAMMATION": {
+    "fr": "Programmation",
+    "en": "Programming",
+    "mg": "Fandaharana"
+  },
+  "banque.categorie.RAPPORTS": {
+    "fr": "Rapports",
+    "en": "Reports",
+    "mg": "Tatitra"
+  },
+  "banque.heures": {
+    "fr": "Heures",
+    "en": "Hours",
+    "mg": "Ora"
+  },
+  "banque.releve": {
+    "fr": "Relevé des mouvements",
+    "en": "Statement of movements",
+    "mg": "Lisitry ny fihetsiketsehana"
+  },
+  "banque.date": {
+    "fr": "Date",
+    "en": "Date",
+    "mg": "Daty"
+  },
+  "banque.type": {
+    "fr": "Type",
+    "en": "Type",
+    "mg": "Karazana"
+  },
+  "banque.type.ACHAT": {
+    "fr": "Achat",
+    "en": "Purchase",
+    "mg": "Fividianana"
+  },
+  "banque.type.CONSOMMATION": {
+    "fr": "Consommation",
+    "en": "Use",
+    "mg": "Fampiasana"
+  },
+  "banque.type.CORRECTION": {
+    "fr": "Correction",
+    "en": "Correction",
+    "mg": "Fanitsiana"
+  },
+  "banque.description": {
+    "fr": "Description",
+    "en": "Description",
+    "mg": "Famaritana"
+  },
+  "banque.intervenant": {
+    "fr": "Intervenant",
+    "en": "Consultant",
+    "mg": "Mpiasa"
+  },
+  "banque.telechargerReleve": {
+    "fr": "Télécharger le relevé (CSV)",
+    "en": "Download the statement (CSV)",
+    "mg": "Alaivo ny lisitra (CSV)"
+  },
+  "banque.erreur": {
+    "fr": "L'action a été refusée.",
+    "en": "The action was refused.",
+    "mg": "Nolavina ny asa."
+  },
+  "banque.gestion": {
+    "fr": "Banques d'heures des organisations",
+    "en": "Organizations' hours banks",
+    "mg": "Banky oran'ny fikambanana"
+  },
+  "banque.organisation": {
+    "fr": "Organisation",
+    "en": "Organization",
+    "mg": "Fikambanana"
+  },
+  "banque.resteH": {
+    "fr": "{n} h restantes",
+    "en": "{n} h left",
+    "mg": "{n} ora sisa"
+  },
+  "banque.ouvrir": {
+    "fr": "Ouvrir une banque d'heures",
+    "en": "Open an hours bank",
+    "mg": "Sokafy banky ora"
+  },
+  "banque.nom": {
+    "fr": "Nom",
+    "en": "Name",
+    "mg": "Anarana"
+  },
+  "banque.debut": {
+    "fr": "Début",
+    "en": "Start",
+    "mg": "Fanombohana"
+  },
+  "banque.fin": {
+    "fr": "Fin",
+    "en": "End",
+    "mg": "Fiafarana"
+  },
+  "banque.heuresAchetees": {
+    "fr": "Heures achetées",
+    "en": "Hours purchased",
+    "mg": "Ora novidiana"
+  },
+  "banque.inscrire": {
+    "fr": "Inscrire le mouvement",
+    "en": "Record the movement",
+    "mg": "Soraty ny fihetsiketsehana"
   }
 }

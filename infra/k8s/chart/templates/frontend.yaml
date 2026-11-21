@@ -18,12 +18,26 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels: { app: frontend }
+      automountServiceAccountToken: false
+      # nginx non privilégié (101), profil seccomp par défaut du nœud.
+      securityContext: { runAsNonRoot: true, runAsUser: 101, runAsGroup: 101, fsGroup: 101, seccompProfile: { type: RuntimeDefault } }
       containers:
         - name: frontend
           image: "{{ .Values.image.registry }}/{{ .Values.image.frontend }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.frontend.port }}
+          # Racine en lecture seule : /tmp (pid, tampons) et la configuration générée au démarrage sont inscriptibles.
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL] }
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+            - { name: conf, mountPath: /etc/nginx/conf.d }
+      volumes:
+        - { name: tmp, emptyDir: {} }
+        - { name: conf, emptyDir: {} }
 ---
 apiVersion: v1
 kind: Service

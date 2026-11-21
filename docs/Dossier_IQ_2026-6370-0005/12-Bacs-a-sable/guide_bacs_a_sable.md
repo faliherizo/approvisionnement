@@ -185,7 +185,8 @@ sur la foi de la réponse OCSP que le serveur a lui-même intégrée. Après le 
 valide. La contre-épreuve est réversible, donc rejouable.
 
 **Intégration continue :** `infra/bacs-a-sable/ci.sh` enchaîne tout (services, serveur, frontend, scénarios e2e
-BS-01 à BS-08, scripts de validation). GitHub Actions (`reusable-bacs-a-sable.yml`) et Azure DevOps
+BS-01 à BS-08, scripts de validation, puis les scénarios BDD des exigences de tous les appels d'offres décrits dans
+[`docs/scenarios-bdd/`](../../scenarios-bdd/README.md)). GitHub Actions (`reusable-bacs-a-sable.yml`) et Azure DevOps
 (`templates/bacs-a-sable.yml`) l'appellent à chaque demande de fusion.
 
 ### 2.4 Comptes développeur des fournisseurs

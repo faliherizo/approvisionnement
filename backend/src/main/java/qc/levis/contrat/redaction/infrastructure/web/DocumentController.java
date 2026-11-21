@@ -100,7 +100,9 @@ public class DocumentController {
         return service.commentaires(id);
     }
 
+    /** La révision commente ; un rôle de simple consultation lit sans écrire. */
     @PostMapping("/{id}/commentaires")
+    @PreAuthorize("hasAnyRole('REDACTEUR','JURIDIQUE','APPRO','DIRECTION','ADMIN')")
     public Comment commenter(@PathVariable Long id,
                              @Valid @RequestBody CommentRequest req,
                              Authentication auth) {
@@ -108,6 +110,7 @@ public class DocumentController {
     }
 
     @PostMapping("/{id}/commentaires/{commentaireId}/resolution")
+    @PreAuthorize("hasAnyRole('REDACTEUR','JURIDIQUE','APPRO','DIRECTION','ADMIN')")
     public Comment resoudreCommentaire(@PathVariable Long id, @PathVariable Long commentaireId,
                                        @RequestBody CommentResolutionRequest req, Authentication auth) {
         return service.resoudreCommentaire(id, commentaireId, req.resolu(), utilisateur(auth));
@@ -131,6 +134,8 @@ public class DocumentController {
     public ApprovalStep decider(@PathVariable Long stepId,
                                 @Valid @RequestBody ApprovalDecisionRequest req,
                                 Authentication auth) {
-        return service.decider(stepId, req.approuve(), req.note(), utilisateur(auth));
+        java.util.Set<String> roles = auth.getAuthorities().stream().map(a -> a.getAuthority().replaceFirst("^ROLE_", ""))
+                .collect(java.util.stream.Collectors.toSet());
+        return service.decider(stepId, req.approuve(), req.note(), utilisateur(auth), roles);
     }
 }

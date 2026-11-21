@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import api from '../api'
 import { useAuth } from '../auth.jsx'
 import AiAssistant from '../components/AiAssistant.jsx'
+import ClauseHistorique from '../components/ClauseHistorique.jsx'
 import Modal, { ConfirmModal } from '../components/Modal.jsx'
 import RichText, { RichHtml } from '../components/RichText.jsx'
 import useReference from '../hooks/useReference.js'
@@ -36,6 +37,7 @@ export default function Clauses() {
   const [page, setPage] = useState(0)
   const [edit, setEdit] = useState(null)          // clause en édition (modale)
   const [aSupprimer, setASupprimer] = useState(null)
+  const [historique, setHistorique] = useState(null)  // clause dont l'historique est ouvert
   const [erreur, setErreur] = useState(null)
   const [params, setParams] = useSearchParams()
 
@@ -125,7 +127,7 @@ export default function Clauses() {
         <h1>{t('clauses.libraryTitle', { n: data.total })}</h1>
         {peutEditer && <button onClick={ouvrirCreation}>{t('clauses.newClause')}</button>}
       </div>
-      <input className="search-input" placeholder={t('clauses.searchPlaceholder')} value={q}
+      <input className="search-input" type="search" aria-label={t('clauses.searchPlaceholder')} placeholder={t('clauses.searchPlaceholder')} value={q}
              onChange={(e) => { setPage(0); setQ(e.target.value) }} />
 
       <div className="clause-list">
@@ -150,12 +152,12 @@ export default function Clauses() {
             {c.exclusions?.length > 0 && (
               <div className="conds">{t('clauses.excludes')} {c.exclusions.map((x) => <code key={x}>{x}</code>)}</div>
             )}
-            {(peutEditer || peutSupprimer) && (
-              <div className="row-actions">
+            <div className="row-actions">
+                <button className="secondary" aria-label={t('clauses.history.openLabel', { code: c.code })}
+                        onClick={() => setHistorique(c)}>{t('clauses.history.open')}</button>
                 {peutEditer && <button className="secondary" onClick={() => ouvrirEdition(c)}>{t('clauses.edit')}</button>}
                 {peutSupprimer && <button className="danger" onClick={() => setASupprimer(c)}>{t('clauses.delete')}</button>}
-              </div>
-            )}
+            </div>
           </article>
         ))}
         {data.contenu.length === 0 && <p className="muted">{t('clauses.empty')}</p>}
@@ -200,7 +202,7 @@ export default function Clauses() {
               </label>
             </div>
             <label>{t('clauses.corps')}
-              <RichText value={edit.corps} rows={5}
+              <RichText value={edit.corps} rows={5} libelle={t('clauses.corps')}
                         onChange={(corps) => setEdit((f) => ({ ...f, corps }))} />
             </label>
 
@@ -262,6 +264,12 @@ export default function Clauses() {
             />
           </form>
         </Modal>
+      )}
+
+      {historique && (
+        <ClauseHistorique clause={historique} peutRestaurer={peutEditer}
+                          onRestauree={() => { setHistorique(null); charger() }}
+                          onClose={() => setHistorique(null)} />
       )}
 
       {aSupprimer && (

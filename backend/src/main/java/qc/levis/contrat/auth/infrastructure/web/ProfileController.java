@@ -44,6 +44,11 @@ public class ProfileController {
                 return ResponseEntity.status(400)
                         .body(java.util.Map.of("erreur", "Mot de passe actuel invalide"));
             }
+            try {
+                qc.levis.contrat.auth.domain.PolitiqueMotDePasse.exiger(req.nouveauMotDePasse());
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.status(400).body(java.util.Map.of("erreur", e.getMessage()));
+            }
             u.setMotDePasseHash(encoder.encode(req.nouveauMotDePasse()));
         }
         users.save(u);

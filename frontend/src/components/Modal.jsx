@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import RichText from './RichText.jsx'
 import { useI18n } from '../i18n/I18nContext'
 
@@ -7,7 +8,8 @@ const SELECTEUR_FOCUS = 'a[href], button:not([disabled]), input:not([disabled]),
 
 /**
  * Fenêtre modale accessible : rôle dialog, fermeture par Échap / clic sur l'arrière-plan,
- * focus initial dans la modale, piège de focus (Tab) et restauration du focus à la fermeture.
+ * focus initial dans la modale, piège de focus (Tab) et restauration du focus à la fermeture. Rendue au niveau du
+ * document, elle rend la page dessous inerte (ni focus, ni clic, ni lecture d'écran) le temps de son ouverture.
  */
 export default function Modal({ titre, children, onClose, taille = 'md' }) {
   const { t } = useI18n()
@@ -22,6 +24,9 @@ export default function Modal({ titre, children, onClose, taille = 'md' }) {
   useEffect(() => {
     precedent.current = document.activeElement
     document.body.style.overflow = 'hidden'
+    const racine = document.getElementById('root')
+    const dejaInerte = racine?.inert
+    if (racine) racine.inert = true
     const focusables = () => ref.current?.querySelectorAll(SELECTEUR_FOCUS)
     ;(focusables()?.[0] || ref.current)?.focus()
 
@@ -39,11 +44,12 @@ export default function Modal({ titre, children, onClose, taille = 'md' }) {
     return () => {
       document.removeEventListener('keydown', onKey)
       document.body.style.overflow = ''
+      if (racine) racine.inert = !!dejaInerte
       precedent.current?.focus?.()
     }
   }, [])
 
-  return (
+  return createPortal(
     <div className="modal-overlay" onMouseDown={onClose}>
       <div ref={ref} className={`modal modal-${taille}`} role="dialog" aria-modal="true"
            aria-label={titre} tabIndex={-1} onMouseDown={(e) => e.stopPropagation()}>
@@ -53,7 +59,8 @@ export default function Modal({ titre, children, onClose, taille = 'md' }) {
         </header>
         <div className="modal-body">{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
 

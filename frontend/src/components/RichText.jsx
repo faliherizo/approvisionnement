@@ -33,7 +33,8 @@ export function RichHtml({ html, className }) {
 }
 
 /** Éditeur de texte enrichi (WYSIWYG) minimal, sans dépendance. */
-export default function RichText({ value, onChange, rows = 4, placeholder }) {
+/** `libelle` : nom accessible de la zone (un <label> englobant ne nomme pas un élément modifiable). */
+export default function RichText({ value, onChange, rows = 4, placeholder, libelle }) {
   const { t } = useI18n()
   const ref = useRef(null)
 
@@ -67,6 +68,7 @@ export default function RichText({ value, onChange, rows = 4, placeholder }) {
         contentEditable
         role="textbox"
         aria-multiline="true"
+        aria-label={libelle || placeholder || t('richtext.zone')}
         data-placeholder={placeholder}
         style={{ minHeight: `${rows * 1.6}em` }}
         onInput={(e) => onChange?.(e.currentTarget.innerHTML)}

@@ -50,5 +50,14 @@ public class NotificationEnvoi {
     public String getSujet() { return sujet; }
     public String getCorps() { return corps; }
     public String getStatut() { return statut; }
+
+    /** Loi 25 : l'envoi reste au journal des notifications, sans destinataire ni contenu qui identifie la personne. */
+    public void pseudonymiser(String courrielPseudonyme) {
+        destinataire = courrielPseudonyme;
+        sujet = CONTENU_EFFACE;
+        corps = CONTENU_EFFACE;
+    }
+
+    public static final String CONTENU_EFFACE = "[contenu effacé — Loi 25]";
     public Instant getEnvoyeLe() { return envoyeLe; }
 }

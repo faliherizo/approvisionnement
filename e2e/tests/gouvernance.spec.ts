@@ -26,7 +26,7 @@ test.describe('Gouvernance (P3) : workflow configurable + journal d’audit', ()
     const audit = new AuditPage(page)
     await audit.naviguerVers('Journal d’audit')
     await expect(audit.titre()).toBeVisible()
-    await audit.filtrer('CREER')
+    await audit.filtrer('LOGIN') // la connexion qui précède est toujours journalisée
     await expect(audit.table()).toBeVisible()
     await expect(page.getByRole('button', { name: 'Exporter en CSV' })).toBeVisible()
   })

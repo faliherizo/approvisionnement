@@ -17,13 +17,16 @@ backend:
 conversion:
   replicas: 2
   image: gotenberg/gotenberg:8.17.3
+  # Aligné sur le délai d'attente du serveur (CLM_CONVERSION_DELAI_SECONDES) : sinon Gotenberg répond 503 à 30 s.
+  apiTimeout: 120s
   resources:
     requests: { cpu: "250m", memory: "512Mi" }
     limits: { cpu: "2", memory: "2Gi" }
 
 frontend:
   replicas: 3
-  port: 80
+  # nginx non privilégié : il écoute sur 8080 (un port < 1024 exige root).
+  port: 8080
 
 serviceAccount:
   name: backend

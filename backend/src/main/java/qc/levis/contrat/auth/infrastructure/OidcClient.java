@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import java.math.BigInteger;
-import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -35,9 +34,17 @@ public class OidcClient {
 
     private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15)).build();
     private final ObjectMapper json;
+    private final qc.levis.contrat.commun.infrastructure.reseau.GardeSortante garde;
 
     public OidcClient(ObjectMapper json) {
+        this(json, qc.levis.contrat.commun.infrastructure.reseau.GardeSortante.aucune());
+    }
+
+    /** L'émetteur est saisi par l'organisation : chaque adresse contactée passe la garde anti-SSRF. */
+    @org.springframework.beans.factory.annotation.Autowired
+    public OidcClient(ObjectMapper json, qc.levis.contrat.commun.infrastructure.reseau.GardeSortante garde) {
         this.json = json;
+        this.garde = garde;
     }
 
     /** Métadonnées de découverte utiles au flux authorization code. */
@@ -62,7 +69,7 @@ public class OidcClient {
         if (issuer == null || issuer.isBlank()) return Optional.empty();
         try {
             HttpResponse<String> resp = http.send(
-                    HttpRequest.newBuilder(URI.create(wellKnown(issuer))).GET().build(),
+                    HttpRequest.newBuilder(garde.exiger(wellKnown(issuer))).GET().build(),
                     HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
             if (resp.statusCode() / 100 != 2) return Optional.empty();
             JsonNode n = json.readTree(resp.body());
@@ -80,6 +87,7 @@ public class OidcClient {
 
     /** Test de configuration : la découverte OIDC répond-elle ? Résultat structuré pour l'admin. */
     public ResultatPublication testerDecouverte(String issuer) {
+        if (issuer != null && !issuer.isBlank()) garde.exiger(wellKnown(issuer));
         return decouvrir(issuer)
                 .filter(d -> d.authorizationEndpoint() != null && d.tokenEndpoint() != null)
                 .map(d -> new ResultatPublication(true, d.issuer(),
@@ -137,7 +145,7 @@ public class OidcClient {
                         ? "" : "&client_secret=" + enc(cfg.clientSecret()));
         try {
             HttpResponse<String> resp = http.send(
-                    HttpRequest.newBuilder(URI.create(d.tokenEndpoint()))
+                    HttpRequest.newBuilder(garde.exiger(d.tokenEndpoint()))
                             .header("Content-Type", "application/x-www-form-urlencoded")
                             .header("Accept", "application/json")
                             .POST(HttpRequest.BodyPublishers.ofString(corps, StandardCharsets.UTF_8)).build(),
@@ -184,7 +192,7 @@ public class OidcClient {
     /** Reconstitue la clé publique RSA depuis le JWKS pour le {@code kid} du jeton. */
     private PublicKey clePublique(String jwksUri, String kid) throws Exception {
         HttpResponse<String> resp = http.send(
-                HttpRequest.newBuilder(URI.create(jwksUri)).GET().build(),
+                HttpRequest.newBuilder(garde.exiger(jwksUri)).GET().build(),
                 HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
         if (resp.statusCode() / 100 != 2) throw new OidcException("JWKS inaccessible.");
         JsonNode cles = json.readTree(resp.body()).path("keys");

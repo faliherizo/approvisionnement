@@ -20,16 +20,20 @@ public class ObligationService {
 
     private final ObligationRepository obligations;
     private final DocumentRepository documents;
+    /** Devis bornés à l'organisation courante (OWASP A01). */
+    private final qc.levis.contrat.redaction.application.DocumentsDuTenant portee;
     private final AuditService audit;
 
     public ObligationService(ObligationRepository obligations, DocumentRepository documents,
                              AuditService audit) {
         this.obligations = obligations;
         this.documents = documents;
+        this.portee = new qc.levis.contrat.redaction.application.DocumentsDuTenant(documents);
         this.audit = audit;
     }
 
     public List<Obligation> lister(Long documentId) {
+        portee.exiger(documentId);
         return obligations.findByDocumentIdOrderByDateEcheanceAsc(documentId);
     }
 
@@ -43,8 +47,7 @@ public class ObligationService {
 
     @Transactional
     public Obligation ajouter(Long documentId, ObligationRequest req, String utilisateur) {
-        Document doc = documents.findById(documentId)
-                .orElseThrow(() -> new NoSuchElementException("Document introuvable: " + documentId));
+        Document doc = portee.exiger(documentId);
         Obligation o = new Obligation();
         o.setDocumentId(documentId);
         o.setTitre(req.titre());
@@ -63,6 +66,7 @@ public class ObligationService {
     public Obligation completer(Long id, String utilisateur) {
         Obligation o = obligations.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Obligation introuvable: " + id));
+        portee.exiger(o.getDocumentId());
         o.setStatut(Enums.ObligationStatut.COMPLETE);
         Obligation saved = obligations.save(o);
         audit.log(utilisateur, "COMPLETER_OBLIGATION", "Obligation", id, null);

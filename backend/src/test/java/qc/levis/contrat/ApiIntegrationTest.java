@@ -67,13 +67,86 @@ class ApiIntegrationTest {
         return s.isBlank() ? json.createObjectNode() : json.readTree(s);
     }
 
-    /** Fait passer un document en statut APPROUVE (démarre le circuit puis approuve chaque étape). */
+    /** Fait passer un document en statut APPROUVE : chaque niveau du circuit est décidé par une personne de son rôle. */
     private void validerDocument(Cookie c, long id) throws Exception {
         post("/api/documents/" + id + "/approbation", c, "{}");
         for (JsonNode etape : get("/api/documents/" + id + "/approbation", c)) {
-            post("/api/documents/approbation/" + etape.get("id").asLong() + "/decision", c,
+            post("/api/documents/approbation/" + etape.get("id").asLong() + "/decision", decideur(etape.get("roleRequis").asText()),
                     "{\"approuve\":true,\"note\":\"ok\"}");
         }
+    }
+
+    private Cookie decideur(String role) throws Exception {
+        return switch (role) {
+            case "JURIDIQUE" -> login("juriste@levis.qc.ca", PW);
+            case "DIRECTION" -> login("direction@levis.qc.ca", PW);
+            default -> login("redacteur@levis.qc.ca", PW);
+        };
+    }
+
+    /** La spécification OpenAPI décrit chaque DTO, même quand deux modules emploient le même nom simple. */
+    @Test
+    void openapi_distingue_les_dto_de_meme_nom_simple() throws Exception {
+        JsonNode schemas = json.readTree(mvc.perform(MockMvcRequestBuilders.get("/v3/api-docs")).andReturn().getResponse().getContentAsString())
+                .get("components").get("schemas");
+        java.util.List<String> commentaires = new java.util.ArrayList<>();
+        schemas.fieldNames().forEachRemaining(n -> { if (n.endsWith("CommentaireRequest")) commentaires.add(n); });
+        assertEquals(2, commentaires.size(), commentaires.toString());
+        boolean texte = false, corps = false;
+        for (String n : commentaires) {
+            texte |= schemas.get(n).get("properties").has("texte");
+            corps |= schemas.get(n).get("properties").has("corps");
+        }
+        assertTrue(texte && corps, "les deux schémas sont publiés : " + commentaires);
+    }
+
+    /** Séparation des responsabilités : rôle requis, ordre du circuit, décision unique (avis 2026-50-92, art. 2.1 n° 6b). */
+    @Test
+    void approbation_reservee_au_role_du_niveau_dans_l_ordre_et_une_seule_fois() throws Exception {
+        Cookie redacteur = login("redacteur@levis.qc.ca", PW);
+        long id = post("/api/documents", redacteur, "{\"titre\":\"Circuit\",\"type\":\"GRE_A_GRE\",\"modeSollicitation\":\"GRE_A_GRE\"}").get("id").asLong();
+        JsonNode etapes = post("/api/documents/" + id + "/approbation", redacteur, "{}");
+        long n1 = etapes.get(0).get("id").asLong();
+        long n2 = etapes.get(1).get("id").asLong();
+        String ok = "{\"approuve\":true,\"note\":\"ok\"}";
+        mvc.perform(MockMvcRequestBuilders.post("/api/documents/approbation/" + n2 + "/decision").cookie(redacteur)
+                .contentType(MediaType.APPLICATION_JSON).content(ok)).andExpect(status().isForbidden());
+        mvc.perform(MockMvcRequestBuilders.post("/api/documents/approbation/" + n2 + "/decision").cookie(login("juriste@levis.qc.ca", PW))
+                .contentType(MediaType.APPLICATION_JSON).content(ok)).andExpect(status().isConflict());
+        mvc.perform(MockMvcRequestBuilders.post("/api/documents/approbation/" + n1 + "/decision").cookie(redacteur)
+                .contentType(MediaType.APPLICATION_JSON).content(ok)).andExpect(status().isOk());
+        mvc.perform(MockMvcRequestBuilders.post("/api/documents/approbation/" + n1 + "/decision").cookie(redacteur)
+                .contentType(MediaType.APPLICATION_JSON).content(ok)).andExpect(status().isConflict());
+        mvc.perform(MockMvcRequestBuilders.post("/api/documents/approbation/" + n2 + "/decision").cookie(login("juriste@levis.qc.ca", PW))
+                .contentType(MediaType.APPLICATION_JSON).content(ok)).andExpect(status().isOk());
+    }
+
+    /** La clause qui déclare l'exclusion prévaut, même si la clause exclue a été créée avant elle (cahier EF2). */
+    @Test
+    void ef2_exclusion_independante_de_l_ordre_de_creation() throws Exception {
+        Cookie c = login("redacteur@levis.qc.ca", PW);
+        long exclue = post("/api/clauses", c, "{\"code\":\"ORD-X\",\"titre\":\"X\",\"categorie\":\"OPTIONNELLE\",\"corps\":\"x\"}").get("id").asLong();
+        long requise = post("/api/clauses", c, "{\"code\":\"ORD-R\",\"titre\":\"R\",\"categorie\":\"OPTIONNELLE\",\"corps\":\"r\"}").get("id").asLong();
+        long principale = post("/api/clauses", c, "{\"code\":\"ORD-P\",\"titre\":\"P\",\"categorie\":\"OPTIONNELLE\",\"corps\":\"p\","
+                + "\"dependances\":[\"ORD-R\"],\"exclusions\":[\"ORD-X\"]}").get("id").asLong();
+        long doc = post("/api/documents", c, "{\"titre\":\"Ordre\",\"type\":\"GRE_A_GRE\",\"modeSollicitation\":\"GRE_A_GRE\"}").get("id").asLong();
+        JsonNode ass = post("/api/documents/" + doc + "/assembler", c, "{\"clauseIds\":[" + exclue + "," + principale + "]}");
+        java.util.List<String> codes = new java.util.ArrayList<>();
+        ass.get("clauses").forEach(dc -> codes.add(dc.get("code").asText()));
+        assertTrue(codes.contains("ORD-P") && codes.contains("ORD-R"), codes.toString());
+        assertFalse(codes.contains("ORD-X"), "clause exclue retirée : " + codes);
+        assertTrue(requise > 0);
+    }
+
+    /** Clauses exigées par la loi (Charte de la langue française, AMP) : normatives, donc verrouillées dans les documents. */
+    @Test
+    void les_clauses_legales_de_demonstration_sont_normatives() throws Exception {
+        Cookie c = login("redacteur@levis.qc.ca", PW);
+        java.util.Map<String, Boolean> normatives = new java.util.HashMap<>();
+        get("/api/clauses", c).forEach(cl -> normatives.put(cl.get("code").asText(), cl.get("normative").asBoolean()));
+        assertTrue(normatives.get("GEN-002"), "Charte de la langue française");
+        assertTrue(normatives.get("AOP-020"), "autorisation de l'AMP");
+        assertFalse(normatives.get("GEN-001"));
     }
 
     // --- Santé & authentification ---
@@ -767,9 +840,10 @@ class ApiIntegrationTest {
         Cookie c = login("admin@levis.qc.ca", PW);
         mvc.perform(MockMvcRequestBuilders.post("/api/auth/logout").cookie(c)).andExpect(status().isNoContent());
 
-        // Le journal d'audit contient l'échec et la déconnexion.
-        assertTrue(get("/api/audit?action=CONNEXION_ECHEC", c).size() >= 1);
-        assertTrue(get("/api/audit?action=DECONNEXION", c).size() >= 1);
+        // Le jeton de la session fermée est révoqué ; une nouvelle session lit le journal (échec et déconnexion).
+        Cookie lecture = login("admin@levis.qc.ca", PW);
+        assertTrue(get("/api/audit?action=CONNEXION_ECHEC", lecture).size() >= 1);
+        assertTrue(get("/api/audit?action=DECONNEXION", lecture).size() >= 1);
     }
 
     @Test

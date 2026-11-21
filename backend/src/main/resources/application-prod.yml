@@ -23,6 +23,22 @@ spring:
 app:
   amorcage:
     tenants-demo: ${APP_TENANTS_DEMO:false}
+  # Cookie de session réservé à HTTPS en production.
+  cookie:
+    secure: ${COOKIE_SECURE:true}
+  # Dérogation au seul cookie « Secure », pour une démonstration servie en HTTP sur un poste ; jamais en production réelle.
+  securite:
+    http-local-autorise: ${APP_HTTP_LOCAL_AUTORISE:false}
+    # Aucune adresse interne joignable par les appels sortants vers les fournisseurs des organisations (anti-SSRF).
+    sortant:
+      autorises: ${APP_SORTANT_AUTORISES:}
+
+# Documentation de l'API fermée en production (inventaire de la surface d'attaque) ; ouvrable pour une recette.
+springdoc:
+  api-docs:
+    enabled: ${APP_API_DOCS:false}
+  swagger-ui:
+    enabled: ${APP_API_DOCS:false}
 
 # Journalisation en production : applicatif en INFO (ajustable via LOG_APP_LEVEL), cadriciels en WARN,
 # sortie fichier pour la collecte. Aucune donnée sensible (voir docs/journalisation.md).

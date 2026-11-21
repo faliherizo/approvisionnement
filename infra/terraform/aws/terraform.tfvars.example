@@ -15,3 +15,6 @@ postgres_allocated_storage = 100
 
 availability_canary_url = "https://contrat.vinaitsolution.com/actuator/health"
 alarm_email             = "faliherizo@vinaitsolution.com"
+
+# Adresses (CIDR) d'administration seules admises sur l'API du plan de contrôle et le coffre de secrets (obligatoire).
+ip_administration = ["203.0.113.10/32"]

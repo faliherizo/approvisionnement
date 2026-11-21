@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import qc.levis.contrat.saisie.application.AccesFiches;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import qc.levis.contrat.document.application.DocumentService;
@@ -22,9 +24,15 @@ import qc.levis.contrat.document.application.dto.DocumentVue;
 public class DocumentController {
 
     private final DocumentService service;
+    private final AccesFiches acces;
 
-    public DocumentController(DocumentService service) {
+    public DocumentController(DocumentService service, AccesFiches acces) {
         this.service = service;
+        this.acces = acces;
+    }
+
+    private static AccesFiches.Acteur acteur(Authentication auth) {
+        return new AccesFiches.Acteur(auth.getName(), auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
     }
 
     @PostMapping("/documents")
@@ -32,6 +40,7 @@ public class DocumentController {
                                         @RequestParam("fichiers") MultipartFile[] fichiers,
                                         @RequestParam(required = false) String classification,
                                         Authentication auth) throws IOException {
+        acces.exigerFiche(fid, sid, acteur(auth));
         List<DocumentVue> res = new ArrayList<>();
         for (MultipartFile f : fichiers) {
             res.add(service.ajouter(fid, sid, f.getOriginalFilename(), f.getContentType(),
@@ -41,17 +50,25 @@ public class DocumentController {
     }
 
     @GetMapping("/documents")
-    public List<DocumentVue> lister(@PathVariable Long sid) {
+    public List<DocumentVue> lister(@PathVariable Long fid, @PathVariable Long sid, Authentication auth) {
+        acces.exigerFiche(fid, sid, acteur(auth));
         return service.lister(sid);
     }
 
+    /** Le demandeur n'écrit que des commentaires qui lui sont destinés ; les commentaires internes sont au personnel. */
     @PostMapping("/commentaires")
-    public CommentaireVue commenter(@PathVariable Long sid, @RequestBody CommentaireRequest req, Authentication auth) {
-        return service.ajouterCommentaire(sid, req, auth != null ? auth.getName() : null);
+    public CommentaireVue commenter(@PathVariable Long fid, @PathVariable Long sid, @RequestBody CommentaireRequest req, Authentication auth) {
+        AccesFiches.Acteur a = acteur(auth);
+        acces.exigerFiche(fid, sid, a);
+        CommentaireRequest permis = a.estPersonnel() ? req : new CommentaireRequest("DEMANDEUR", req.corps());
+        return service.ajouterCommentaire(sid, permis, auth.getName());
     }
 
+    /** Le demandeur ne lit pas les commentaires internes du personnel sur sa demande. */
     @GetMapping("/commentaires")
-    public List<CommentaireVue> commentaires(@PathVariable Long sid) {
-        return service.listerCommentaires(sid);
+    public List<CommentaireVue> commentaires(@PathVariable Long fid, @PathVariable Long sid, Authentication auth) {
+        AccesFiches.Acteur a = acteur(auth);
+        acces.exigerFiche(fid, sid, a);
+        return service.listerCommentaires(sid).stream().filter(c -> a.estPersonnel() || "DEMANDEUR".equals(c.visibilite())).toList();
     }
 }

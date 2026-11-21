@@ -27,7 +27,7 @@ public class ReferenceDataSeeder implements CommandLineRunner {
     public record ClauseSeed(String code, String titre, String categorie, String corps,
                              String numero, String section,
                              List<ConditionSeed> conditions,
-                             List<String> dependances, List<String> exclusions) {}
+                             List<String> dependances, List<String> exclusions, Boolean normative) {}
     public record TemplateSeed(String code, String nom, String type, String modeSollicitation,
                                String description, List<String> clauseCodes) {}
 
@@ -73,6 +73,8 @@ public class ReferenceDataSeeder implements CommandLineRunner {
         Clause c = new Clause();
         c.setCode(s.code());
         c.setTitre(s.titre());
+        // Clause exigée par la loi (Charte de la langue française, LCOP) : verrouillée dans les documents.
+        c.setNormative(Boolean.TRUE.equals(s.normative()));
         c.setCategorie(ClauseCategorie.valueOf(s.categorie()));
         c.setCorps(s.corps());
         c.setNumero(s.numero());

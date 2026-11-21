@@ -8,6 +8,16 @@ import org.springframework.data.repository.query.Param;
 import qc.levis.contrat.audit.domain.AuditLog;
 
 public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
+    long countByUtilisateurIgnoreCaseAndActionAndHorodatageAfter(String utilisateur, String action, Instant depuis);
+
+    /** Entrées dont la personne est l'auteur ou que son courriel mentionne. */
+    @Query("""
+            select a from AuditLog a where a.tenantId = :tenantId
+              and (lower(a.utilisateur) = lower(:courriel) or lower(a.details) like lower(concat('%', :courriel, '%')))
+            order by a.horodatage desc
+            """)
+    List<AuditLog> deLaPersonne(@Param("tenantId") Long tenantId, @Param("courriel") String courriel);
+
 
     /**
      * Recherche filtrée du journal, scopée au tenant (art. 18). Chaque filtre est optionnel :

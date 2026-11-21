@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import api from '../api'
+import { BoutonDocumentFiche } from '../components/DocumentFiche.jsx'
 import { useI18n } from '../i18n/I18nContext'
 import { useModules } from '../hooks/useModules.js'
 
@@ -49,7 +50,12 @@ export default function MesDemandes() {
     if (d.statut === 'A_COMPLETER') return (
       <button onClick={() => navigate(`/formulaires/${d.formulaireId}/remplir?saisie=${d.id}`)}>{t('demandes.completer')}</button>
     )
-    return <Link className="btn-lien" to={`/formulaires/${d.formulaireId}/fiches`}>{t('demandes.details')}</Link>
+    return (
+      <>
+        <BoutonDocumentFiche formulaireId={d.formulaireId} fiche={d} />
+        <Link className="btn-lien" to={`/formulaires/${d.formulaireId}/fiches`}>{t('demandes.details')}</Link>
+      </>
+    )
   }
 
   return (

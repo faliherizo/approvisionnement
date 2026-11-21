@@ -10,6 +10,13 @@ resource "azurerm_key_vault" "this" {
   soft_delete_retention_days = 30
   rbac_authorization_enabled = true
   tags                       = local.common_tags
+  # Refus réseau par défaut : seuls les services Azure de confiance et les adresses d'administration déclarées
+  # (exécutant Terraform, poste d'exploitation) atteignent le coffre.
+  network_acls {
+    default_action = "Deny"
+    bypass         = "AzureServices"
+    ip_rules       = var.ip_administration
+  }
 }
 
 # L'exécutant Terraform peut écrire les secrets.

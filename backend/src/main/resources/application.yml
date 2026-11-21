@@ -41,11 +41,15 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yaml
   h2:
     console:
-      enabled: true
+      # Console d'administration de la base en mémoire : fermée par défaut, ouverte à la demande en poste de développement.
+      enabled: ${H2_CONSOLE:false}
       path: /h2-console
 
 # Documentation OpenAPI 3.0 / Swagger UI
 springdoc:
+  # Schémas nommés par leur nom pleinement qualifié : deux DTO de même nom simple dans des modules différents
+  # (ex. ModeleRequest du CLM et des notifications) ne s'écrasent plus dans la spécification publiée.
+  use-fqn: true
   api-docs:
     path: /v3/api-docs
   swagger-ui:
@@ -83,6 +87,14 @@ app:
     simulateur:
       # Emplacement où le mode simulation écrit réellement les fichiers déposés (visualisables).
       repertoire: ${PUBLICATION_SIMULATEUR_REPERTOIRE:data/simulateur}
+  securite:
+    sortant:
+      # Hôtes:ports joignables malgré la garde anti-SSRF (adresses internes) : bacs à sable locaux (Keycloak, Salesforce).
+      autorises: ${APP_SORTANT_AUTORISES:localhost:8180,127.0.0.1:8180,localhost:8099,127.0.0.1:8099}
+    connexion:
+      # Frein à la force brute : au-delà de N échecs pour un même courriel dans la fenêtre, la connexion est suspendue.
+      echecs-max: ${APP_CONNEXION_ECHECS_MAX:10}
+      fenetre-minutes: ${APP_CONNEXION_FENETRE_MINUTES:15}
   crypto:
     # Clé et sel (hex) de chiffrement des secrets stockés en base (ex. secret client M365 par tenant).
     # OBLIGATOIRE en production : fournir via variables d'environnement, jamais en dur.

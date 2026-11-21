@@ -27,7 +27,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
-    public JwtAuthenticationFilter(JwtService jwtService) {
+    private final qc.levis.contrat.auth.application.RevocationJetons revocation;
+
+    public JwtAuthenticationFilter(JwtService jwtService, qc.levis.contrat.auth.application.RevocationJetons revocation) {
+        this.revocation = revocation;
         this.jwtService = jwtService;
     }
 
@@ -54,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String token = extraireToken(request);
-        if (token != null) {
+        if (token != null && !revocation.estRevoque(token)) {
             try {
                 Claims claims = jwtService.parser(token);
                 String email = claims.getSubject();

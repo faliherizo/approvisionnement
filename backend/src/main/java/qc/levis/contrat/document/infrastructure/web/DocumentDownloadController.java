@@ -17,19 +17,34 @@ import qc.levis.contrat.document.domain.DocumentDemande;
 @PreAuthorize("@modules.actif('document')")
 public class DocumentDownloadController {
 
-    private final DocumentService service;
+    /** Types servis tels quels ; tout autre contenu (HTML, script, SVG…) part en flux binaire, jamais interprété. */
+    static final java.util.Set<String> TYPES_SURS = java.util.Set.of("application/pdf", "image/png", "image/jpeg", "text/plain",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
-    public DocumentDownloadController(DocumentService service) {
+    private final DocumentService service;
+    private final qc.levis.contrat.saisie.application.AccesFiches acces;
+
+    public DocumentDownloadController(DocumentService service, qc.levis.contrat.saisie.application.AccesFiches acces) {
         this.service = service;
+        this.acces = acces;
     }
 
+    /** La pièce jointe n'est servie qu'au demandeur de la fiche et au personnel, toujours en pièce jointe. */
     @GetMapping("/{id}/download")
-    public ResponseEntity<byte[]> telecharger(@PathVariable Long id) {
+    public ResponseEntity<byte[]> telecharger(@PathVariable Long id, org.springframework.security.core.Authentication auth) {
         DocumentDemande d = service.telecharger(id);
-        MediaType type = d.getMediaType() != null ? MediaType.parseMediaType(d.getMediaType()) : MediaType.APPLICATION_OCTET_STREAM;
+        acces.exigerFiche(d.getFormulaireId(), d.getSaisieId(), new qc.levis.contrat.saisie.application.AccesFiches.Acteur(auth.getName(),
+                auth.getAuthorities().stream().map(org.springframework.security.core.GrantedAuthority::getAuthority).toList()));
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + d.getNomOriginal() + "\"")
-                .contentType(type)
+                .header(HttpHeaders.CONTENT_DISPOSITION, org.springframework.http.ContentDisposition.attachment()
+                        .filename(d.getNomOriginal() == null ? "piece-jointe" : d.getNomOriginal(), java.nio.charset.StandardCharsets.UTF_8).build().toString())
+                .contentType(typeServi(d.getMediaType()))
                 .body(d.getContenu());
+    }
+
+    static MediaType typeServi(String declare) {
+        String t = declare == null ? "" : declare.toLowerCase(java.util.Locale.ROOT).split(";")[0].strip();
+        return TYPES_SURS.contains(t) ? MediaType.parseMediaType(t) : MediaType.APPLICATION_OCTET_STREAM;
     }
 }

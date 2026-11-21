@@ -55,6 +55,9 @@ class ArchitectureModulesTest {
             entry("AnnuaireController", "correspondances d'annuaire et jeton SCIM : comptes et rôles du tenant"),
             entry("ScimController", "provisionnement SCIM 2.0 : le tenant n'est connu qu'après le jeton porteur, propre au tenant"),
             entry("PortailController", "portail public du signataire : le tenant n'est connu qu'à la lecture du jeton d'invitation"),
+            entry("DroitsVieePriveeController", "droits Loi 25 de toute personne : obligation légale de toute organisation, quels que soient ses modules"),
+            entry("BanqueHeuresController", "banque d'heures de services professionnels : contrat de service avec le fournisseur, hors modules"),
+            entry("SuperadminBanqueHeuresController", "console superadmin, hors tenant"),
             entry("IntegrationEntranteController", "jeton d'un client d'intégration (Workday, Salesforce) : le tenant n'est connu qu'après le jeton ; le contrôleur vérifie alors le module"));
 
     private static final JavaClasses CODE = new ClassFileImporter()

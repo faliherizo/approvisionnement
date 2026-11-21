@@ -155,7 +155,12 @@ class ApiCoverageTest {
         post("/api/documents/" + id + "/assembler", c, "{\"clauseIds\":[]}");
         JsonNode steps = post("/api/documents/" + id + "/approbation", c, "{}");
         for (JsonNode s : steps) {
-            post("/api/documents/approbation/" + s.get("id").asLong() + "/decision", c, "{\"approuve\":true,\"note\":\"ok\"}");
+            Cookie decideur = switch (s.get("roleRequis").asText()) {
+                case "JURIDIQUE" -> login("juriste@levis.qc.ca", "Passw0rd!");
+                case "DIRECTION" -> login("direction@levis.qc.ca", "Passw0rd!");
+                default -> c;
+            };
+            post("/api/documents/approbation/" + s.get("id").asLong() + "/decision", decideur, "{\"approuve\":true,\"note\":\"ok\"}");
         }
         assertEquals("APPROUVE", get("/api/documents/" + id, c).get("statut").asText());
     }

@@ -38,6 +38,8 @@ import qc.levis.contrat.tenant.domain.Tenant;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    private final qc.levis.contrat.auth.application.LimiteurConnexions limiteur;
+    private final qc.levis.contrat.auth.application.RevocationJetons revocation;
     private final AuthService auth;
     private final UserRepository users;
     private final TotpService totp;
@@ -54,7 +56,11 @@ public class AuthController {
     public AuthController(AuthService auth, UserRepository users, TotpService totp,
                           TenantRepository tenants, IntegrationOidcService oidc,
                           IntegrationSamlService saml,
-                          ObjectProvider<ClientRegistrationRepository> clientRegistrations) {
+                          ObjectProvider<ClientRegistrationRepository> clientRegistrations,
+                          qc.levis.contrat.auth.application.LimiteurConnexions limiteur,
+                          qc.levis.contrat.auth.application.RevocationJetons revocation) {
+        this.limiteur = limiteur;
+        this.revocation = revocation;
         this.auth = auth;
         this.users = users;
         this.totp = totp;
@@ -115,6 +121,10 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest req) {
+        if (limiteur.estSuspendu(req.email())) {
+            return ResponseEntity.status(429).header(HttpHeaders.RETRY_AFTER, String.valueOf(limiteur.fenetreMinutes() * 60))
+                    .body(AuthResponse.echec("Trop de tentatives de connexion : réessayez dans " + limiteur.fenetreMinutes() + " minutes."));
+        }
         AuthService.Outcome r = auth.authentifier(
                 req.email(), req.motDePasse(), req.totpCode(), req.securityAnswers());
 
@@ -135,7 +145,9 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(Authentication authentication) {
+    public ResponseEntity<Void> logout(Authentication authentication, jakarta.servlet.http.HttpServletRequest requete) {
+        jakarta.servlet.http.Cookie session = org.springframework.web.util.WebUtils.getCookie(requete, JwtAuthenticationFilter.COOKIE_NAME);
+        if (session != null) revocation.revoquer(session.getValue());
         if (authentication != null) {
             auth.journaliserDeconnexion(authentication.getName());
         }

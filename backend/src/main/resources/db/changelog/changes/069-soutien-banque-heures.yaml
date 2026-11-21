@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: 069-1-soutien-banque-heures
+      author: levis
+      comment: "CHU 9.05 : banque d'heures de services professionnels (achats, consommations par catégorie, corrections)."
+      changes:
+        - createTable:
+            tableName: soutien_banque_heures
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: nom, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: debut, type: DATE, constraints: { nullable: false } }
+              - column: { name: fin, type: DATE, constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - createTable:
+            tableName: soutien_mouvement
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: banque_id, type: BIGINT, constraints: { nullable: false, foreignKeyName: fk_soutien_mouvement_banque, references: soutien_banque_heures(id) } }
+              - column: { name: type, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: categorie, type: VARCHAR(20) }
+              - column: { name: heures, type: "DECIMAL(9,2)", constraints: { nullable: false } }
+              - column: { name: date_mouvement, type: DATE, constraints: { nullable: false } }
+              - column: { name: description, type: VARCHAR(500), constraints: { nullable: false } }
+              - column: { name: intervenant, type: VARCHAR(150) }
+              - column: { name: saisi_par, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: saisi_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - createIndex:
+            tableName: soutien_mouvement
+            indexName: ix_soutien_mouvement_banque
+            columns:
+              - column: { name: banque_id }

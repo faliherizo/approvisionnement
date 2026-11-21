@@ -20,11 +20,24 @@ final class AutoriteHorodatage {
 
     private final URI adresse;
     private final Clock horloge;
-    private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
+    // HTTP/1.1 explicite : les autorités d'horodatage ne prennent pas toutes en charge la montée en HTTP/2 (h2c).
+    private final HttpClient http = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1)
+            .connectTimeout(Duration.ofSeconds(10)).build();
 
     AutoriteHorodatage(String adresse, Clock horloge) {
         this.adresse = URI.create(adresse);
         this.horloge = horloge;
+    }
+
+    /** Une coupure passagère (connexion fermée par l'autorité) est retentée une fois avant d'être signalée. */
+    private HttpResponse<byte[]> envoyer(byte[] requete) throws IOException, InterruptedException {
+        HttpRequest r = HttpRequest.newBuilder(adresse).timeout(Duration.ofSeconds(20))
+                .header("Content-Type", "application/timestamp-query").POST(HttpRequest.BodyPublishers.ofByteArray(requete)).build();
+        try {
+            return http.send(r, HttpResponse.BodyHandlers.ofByteArray());
+        } catch (IOException premiere) {
+            return http.send(r, HttpResponse.BodyHandlers.ofByteArray());
+        }
     }
 
     TimeStampToken jeton(byte[] empreinteSha256) {
@@ -32,9 +45,7 @@ final class AutoriteHorodatage {
         g.setCertReq(true);
         TimeStampRequest requete = g.generate(NISTObjectIdentifiers.id_sha256, empreinteSha256, BigInteger.valueOf(horloge.millis()));
         try {
-            HttpResponse<byte[]> r = http.send(HttpRequest.newBuilder(adresse).timeout(Duration.ofSeconds(20))
-                    .header("Content-Type", "application/timestamp-query")
-                    .POST(HttpRequest.BodyPublishers.ofByteArray(requete.getEncoded())).build(), HttpResponse.BodyHandlers.ofByteArray());
+            HttpResponse<byte[]> r = envoyer(requete.getEncoded());
             if (r.statusCode() != 200) {
                 throw new IllegalStateException("Autorité d'horodatage indisponible : réponse HTTP " + r.statusCode() + ".");
             }

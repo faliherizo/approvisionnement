@@ -1,0 +1,14 @@
+{
+  "name": "contrat-securite",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Tests d'intrusion automatisés : chaque point d'accès de l'API (inventaire OpenAPI) et chaque écran, éprouvés selon l'OWASP Top 10",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test; node outils/rapport.mjs",
+    "rapport": "node outils/rapport.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.1"
+  }
+}

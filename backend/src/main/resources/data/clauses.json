@@ -15,7 +15,8 @@
     "corps": "Conformément à la Charte de la langue française, tous les documents et échanges sont en français.",
     "conditions": [],
     "numero": "1.01",
-    "section": "Dispositions générales"
+    "section": "Dispositions générales",
+    "normative": true
   },
   {
     "code": "AOP-010",
@@ -46,7 +47,8 @@
       "AOP-010"
     ],
     "numero": "2.01",
-    "section": "Appel d'offres public"
+    "section": "Appel d'offres public",
+    "normative": true
   },
   {
     "code": "BAIL-100",

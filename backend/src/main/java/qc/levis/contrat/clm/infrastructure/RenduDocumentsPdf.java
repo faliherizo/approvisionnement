@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.Clock;
+import qc.levis.contrat.commun.infrastructure.pdf.ConformitePdfA;
 import java.util.Calendar;
 import java.util.ArrayList;
 import java.util.List;

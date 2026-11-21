@@ -70,7 +70,7 @@ public class ImportService {
             String corps = (s.corps() != null && !s.corps().isBlank()) ? s.corps() : titre;
             String code = prefixe + "-" + i;
             clauses.creer(new ClauseRequest(code, titre, Enums.ClauseCategorie.PERSONNALISEE,
-                    corps, null, null, false, List.of(), List.of(), List.of()));
+                    corps, null, null, false, List.of(), List.of(), List.of()), utilisateur);
             clauseCodes.add(code);
         }
         DocumentTemplate modele = templates.creer(new TemplateRequest(
@@ -119,7 +119,7 @@ public class ImportService {
             }
             valides++;
             if (!essai) {
-                clauses.creer(req);
+                clauses.creer(req, utilisateur);
                 importes++;
             }
         }

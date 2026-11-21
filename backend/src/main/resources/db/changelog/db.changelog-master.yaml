@@ -127,3 +127,15 @@ databaseChangeLog:
       file: db/changelog/changes/063-clm-gabarit-word.yaml
   - include:
       file: db/changelog/changes/064-clm-attestation-cades.yaml
+  - include:
+      file: db/changelog/changes/065-clause-version.yaml
+  - include:
+      file: db/changelog/changes/066-vie-privee-demande.yaml
+  - include:
+      file: db/changelog/changes/067-messagerie.yaml
+  - include:
+      file: db/changelog/changes/068-rapport-tableau-bord.yaml
+  - include:
+      file: db/changelog/changes/069-soutien-banque-heures.yaml
+  - include:
+      file: db/changelog/changes/070-auth-jeton-revoque.yaml

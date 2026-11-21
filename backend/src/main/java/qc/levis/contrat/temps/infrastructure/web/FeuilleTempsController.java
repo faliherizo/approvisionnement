@@ -34,9 +34,23 @@ public class FeuilleTempsController {
         return service.aApprouver();
     }
 
+    static final java.util.Set<String> APPROBATEURS = java.util.Set.of("ROLE_ADMIN", "ROLE_DIRECTION", "ROLE_APPRO", "ROLE_SUPERADMIN");
+
+    /**
+     * Feuille de la personne (OWASP A01) : la lire est permis au propriétaire et aux approbateurs ; la modifier ou la
+     * soumettre, au seul propriétaire. Hors de ce périmètre, la feuille est introuvable.
+     */
+    private FeuilleTempsVue exiger(Long id, Authentication auth, boolean approbateurPermis) {
+        FeuilleTempsVue f = service.obtenir(id);
+        boolean proprietaire = auth.getName().equalsIgnoreCase(f.proprietaire());
+        boolean approbateur = approbateurPermis && auth.getAuthorities().stream().anyMatch(a -> APPROBATEURS.contains(a.getAuthority()));
+        if (!proprietaire && !approbateur) throw new java.util.NoSuchElementException("Feuille de temps introuvable : " + id);
+        return f;
+    }
+
     @GetMapping("/{id}")
-    public FeuilleTempsVue obtenir(@PathVariable Long id) {
-        return service.obtenir(id);
+    public FeuilleTempsVue obtenir(@PathVariable Long id, Authentication auth) {
+        return exiger(id, auth, true);
     }
 
     @PostMapping
@@ -45,12 +59,14 @@ public class FeuilleTempsController {
     }
 
     @PutMapping("/{id}")
-    public FeuilleTempsVue majLignes(@PathVariable Long id, @RequestBody FeuilleTempsRequest req) {
+    public FeuilleTempsVue majLignes(@PathVariable Long id, @RequestBody FeuilleTempsRequest req, Authentication auth) {
+        exiger(id, auth, false);
         return service.majLignes(id, req);
     }
 
     @PostMapping("/{id}/soumettre")
-    public FeuilleTempsVue soumettre(@PathVariable Long id) {
+    public FeuilleTempsVue soumettre(@PathVariable Long id, Authentication auth) {
+        exiger(id, auth, false);
         return service.soumettre(id);
     }
 

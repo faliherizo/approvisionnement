@@ -6,7 +6,10 @@ module "eks" {
   cluster_name    = "${local.name}-eks"
   cluster_version = var.kubernetes_version
 
-  cluster_endpoint_public_access = true
+  # API du plan de contrôle : accès privé depuis le VPC, public restreint aux seules adresses d'administration.
+  cluster_endpoint_public_access       = true
+  cluster_endpoint_private_access      = true
+  cluster_endpoint_public_access_cidrs = var.ip_administration
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets # noeuds dans les sous-réseaux privés

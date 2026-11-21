@@ -2,7 +2,6 @@ package qc.levis.contrat.integration.infrastructure;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -38,10 +37,19 @@ public class SapODataAdapter implements ReferenceFinancierePort {
     private final IntegrationSapService config;
     private final SimulationSapAdapter simulation;
 
+    private final qc.levis.contrat.commun.infrastructure.reseau.GardeSortante garde;
+
     public SapODataAdapter(ObjectMapper json, IntegrationSapService config, SimulationSapAdapter simulation) {
+        this(json, config, simulation, qc.levis.contrat.commun.infrastructure.reseau.GardeSortante.aucune());
+    }
+
+    /** L'URL SAP est saisie par l'organisation : elle passe la garde anti-SSRF avant tout appel. */
+    @org.springframework.beans.factory.annotation.Autowired
+    public SapODataAdapter(ObjectMapper json, IntegrationSapService config, SimulationSapAdapter simulation, qc.levis.contrat.commun.infrastructure.reseau.GardeSortante garde) {
         this.json = json;
         this.config = config;
         this.simulation = simulation;
+        this.garde = garde;
     }
 
     @Override
@@ -53,7 +61,7 @@ public class SapODataAdapter implements ReferenceFinancierePort {
         String corps = "{\"NumeroAO\":" + s(r.numeroAO()) + ",\"Objet\":" + s(r.objet())
                 + ",\"NombreDocuments\":" + r.nombreDocuments()
                 + ",\"MontantTotal\":" + s(r.montantTotal() == null ? "0" : r.montantTotal().toPlainString()) + "}";
-        HttpRequest.Builder req = HttpRequest.newBuilder(URI.create(cfg.baseUrl() + cfg.servicePath()))
+        HttpRequest.Builder req = HttpRequest.newBuilder(garde.exiger(cfg.baseUrl() + cfg.servicePath()))
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(corps, StandardCharsets.UTF_8));
@@ -86,7 +94,7 @@ public class SapODataAdapter implements ReferenceFinancierePort {
     public ResultatPublication tester(ConfigSap cfg) {
         String sep = cfg.servicePath() != null && cfg.servicePath().contains("?") ? "&" : "?";
         HttpRequest.Builder req = HttpRequest.newBuilder(
-                        URI.create(cfg.baseUrl() + cfg.servicePath() + sep + "$top=1"))
+                        garde.exiger(cfg.baseUrl() + cfg.servicePath() + sep + "$top=1"))
                 .header("Accept", "application/json").GET();
         appliquerAuth(req, cfg);
         try {

@@ -17,18 +17,30 @@ public class WorkflowService {
     private final WorkflowRepository repo;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public WorkflowService(WorkflowRepository repo) {
+    private final qc.levis.contrat.formulaire.application.repository.FormulaireRepository formulaires;
+
+    /** Le circuit d'un formulaire d'une autre organisation est introuvable (OWASP A01). */
+    private void exigerFormulaire(Long formulaireId) {
+        if (formulaires.findByIdAndTenantId(formulaireId, tenant()).isEmpty()) {
+            throw new java.util.NoSuchElementException("Formulaire introuvable : " + formulaireId);
+        }
+    }
+
+    public WorkflowService(WorkflowRepository repo, qc.levis.contrat.formulaire.application.repository.FormulaireRepository formulaires) {
         this.repo = repo;
+        this.formulaires = formulaires;
     }
 
     /** Définition JSON du workflow d'un formulaire (ou structure vide si aucun). */
     public String lire(Long formulaireId) {
+        exigerFormulaire(formulaireId);
         return repo.findByTenantIdAndFormulaireId(tenant(), formulaireId)
                 .map(Workflow::getDefinitionJson).orElse(VIDE);
     }
 
     @Transactional
     public String enregistrer(Long formulaireId, String definitionJson) {
+        exigerFormulaire(formulaireId);
         Workflow w = repo.findByTenantIdAndFormulaireId(tenant(), formulaireId)
                 .orElseGet(() -> new Workflow(tenant(), formulaireId, VIDE));
         w.setDefinitionJson(definitionJson != null ? definitionJson : VIDE);

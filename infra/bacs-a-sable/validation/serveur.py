@@ -18,6 +18,8 @@ PROFILS = {"pades": "pades", "pades-lta": "pades-lta"}
 
 
 class Validation(BaseHTTPRequestHandler):
+    protocol_version = "HTTP/1.1"
+
     def repondre(self, code, donnees):
         corps = json.dumps(donnees, ensure_ascii=False).encode()
         self.send_response(code)
@@ -30,7 +32,7 @@ class Validation(BaseHTTPRequestHandler):
         self.repondre(200 if self.path == "/sante" else 404, {"etat": "ok"} if self.path == "/sante" else {})
 
     def cms(self):
-        d = json.loads(self.rfile.read(int(self.headers.get("Content-Length", "0"))))
+        d = json.loads(self._corps)
         with tempfile.TemporaryDirectory() as rep:
             sig, contenu = os.path.join(rep, "s.p7s"), os.path.join(rep, "c.bin")
             open(sig, "wb").write(base64.b64decode(d["signature"]))
@@ -41,7 +43,7 @@ class Validation(BaseHTTPRequestHandler):
         self.repondre(200, {"valide": r.returncode == 0 and "Verification successful" in rapport, "rapport": rapport})
 
     def horodatage(self):
-        d = json.loads(self.rfile.read(int(self.headers.get("Content-Length", "0"))))
+        d = json.loads(self._corps)
         with tempfile.TemporaryDirectory() as rep:
             tsr, donnees = os.path.join(rep, "r.tsr"), os.path.join(rep, "d.bin")
             open(tsr, "wb").write(base64.b64decode(d["reponse"]))
@@ -54,6 +56,8 @@ class Validation(BaseHTTPRequestHandler):
                             "rapport": texte + rapport})
 
     def do_POST(self):
+        # Corps toujours lu, même pour un refus : la connexion persistante reste utilisable.
+        self._corps = self.rfile.read(int(self.headers.get("Content-Length", "0")))
         url = urlparse(self.path)
         if url.path == "/horodatage" and self.headers.get("Content-Type", "").startswith("application/json"):
             return self.horodatage()
@@ -63,7 +67,7 @@ class Validation(BaseHTTPRequestHandler):
         if url.path != "/valider" or profil is None or self.headers.get("Content-Type") != "application/pdf":
             return self.repondre(400, {"erreur": "POST /valider?profil=pades|pades-lta, corps application/pdf"})
         with tempfile.NamedTemporaryFile(suffix=".pdf") as f:
-            f.write(self.rfile.read(int(self.headers.get("Content-Length", "0"))))
+            f.write(self._corps)
             f.flush()
             r = subprocess.run(["pyhanko", "sign", "validate", "--pretty-print", "--trust", ANCRE, "--ltv-profile", profil,
                                 "--force-revinfo", f.name], capture_output=True, text=True)

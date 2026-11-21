@@ -2,7 +2,9 @@
 # Chaîne d'intégration continue des bacs à sable (GitHub Actions et Azure DevOps l'appellent tels quels) :
 #  1. démarre les applications externes (ICP, pyHanko, Gotenberg, veraPDF, Mailpit) ;
 #  2. démarre le serveur branché dessus, avec les mêmes variables qu'en production, et le frontend de recette ;
-#  3. exécute les scénarios e2e BS-01 à BS-08, puis les scénarios de validation et la contre-épreuve de révocation.
+#  3. exécute les scénarios e2e BS-01 à BS-08, puis les scénarios de validation et la contre-épreuve de révocation ;
+#  4. exécute les scénarios BDD de tous les appels d'offres (bdd/) et vérifie qu'aucune exigence n'est sans scénario ;
+#  5. exécute les tests d'intrusion (securite/) : chaque point d'accès de l'API, OWASP Top 10, ZAP et Trivy.
 # Sortie non nulle au premier écart ; journaux et rapports dans infra/bacs-a-sable/resultats/ et e2e/playwright-report/.
 set -euo pipefail
 RACINE=$(cd "$(dirname "$0")/../.." && pwd)
@@ -53,4 +55,18 @@ echo "== Scénarios de validation"
 "$B/valider.sh"
 "$B/valider-signature.sh"
 "$B/valider-revocation.sh"
-echo "Bacs à sable : tous les contrôles sont conformes."
+
+echo "== Scénarios BDD des exigences (Lévis, Trois-Rivières, IQ, CHU)"
+[[ -d "$RACINE/bdd/node_modules" ]] || { npm --prefix "$RACINE/bdd" ci; (cd "$RACINE/bdd" && npx playwright install --with-deps chromium); }
+export BDD_FRONTEND_URL=http://localhost:5175 BDD_COURRIEL_URL=http://localhost:18025/api/v1
+(cd "$RACINE/bdd" && npm run couverture && npx bddgen)
+# Les résultats sont documentés (docs/scenarios-bdd/) même quand un scénario échoue, avant de rendre le verdict.
+if (cd "$RACINE/bdd" && npx playwright test); then bdd=0; else bdd=$?; fi
+(cd "$RACINE/bdd" && node outils/documenter.mjs)
+[[ $bdd -eq 0 ]] || { echo "Scénarios BDD : écart relevé (bdd/playwright-report/)."; exit "$bdd"; }
+
+echo "== Tests d'intrusion (securite/)"
+# Le rapport docs/securite/rapport-tests-intrusion.md est régénéré même en cas d'écart ; le verdict suit.
+if SECURITE_API_URL=http://localhost:8100 "$RACINE/securite/lancer.sh"; then securite=0; else securite=$?; fi
+[[ $securite -eq 0 ]] || { echo "Tests d'intrusion : écart relevé (docs/securite/rapport-tests-intrusion.md)."; exit "$securite"; }
+echo "Bacs à sable, scénarios BDD et tests d'intrusion : tous les contrôles sont conformes."

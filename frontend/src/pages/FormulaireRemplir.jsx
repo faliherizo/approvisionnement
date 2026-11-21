@@ -22,6 +22,7 @@ export default function FormulaireRemplir() {
   const [msg, setMsg] = useState(null)
   const [err, setErr] = useState(null)
   const [envoye, setEnvoye] = useState(false)
+  const [places, setPlaces] = useState([])  // places des choix (CHU 3.06) : un choix complet n'est plus proposé
   const timers = useRef({})
   // Un seul brouillon par formulaire ouvert : l'effet ci-dessous peut s'exécuter plusieurs fois (mode strict, rechargement
   // des modules, changement de langue) ; chaque exécution réutilise la création en cours au lieu d'en lancer une autre.
@@ -48,8 +49,9 @@ export default function FormulaireRemplir() {
             throw e
           }
         }
+        const p = await api.get(`/formulaires/${id}/places`).catch(() => ({ data: [] }))
         if (annule) return
-        setStructure(parsed); setSaisieId(saisie.id)
+        setStructure(parsed); setSaisieId(saisie.id); setPlaces(p.data || [])
       } catch (e) { if (!annule) setErr(e.response?.data?.message || t('remplir.erreurOuverture')) }
     })()
     return () => { annule = true }
@@ -115,7 +117,7 @@ export default function FormulaireRemplir() {
         {err && <div className="erreur" role="alert">{err}</div>}
       </div>
 
-      {structure && <FormulaireRenderer structure={structure} valeurs={valeurs} etat={etat} onChange={changer} />}
+      {structure && <FormulaireRenderer structure={structure} valeurs={valeurs} etat={etat} places={places} onChange={changer} />}
 
       <div className="panel">
         {captchaRequis && (

@@ -33,6 +33,7 @@ public class DocumentVersionService {
     }
 
     public List<DocumentVersion> lister(Long documentId) {
+        documents.get(documentId);
         return versions.findByDocumentIdOrderByNumeroVersionAsc(documentId);
     }
 

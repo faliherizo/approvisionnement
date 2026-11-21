@@ -63,6 +63,9 @@ public class AdminUserService {
         User u = new User();
         u.setEmail(req.email());
         u.setTenantId(TenantContext.get());
+        if (req.motDePasse() != null) {
+            qc.levis.contrat.auth.domain.PolitiqueMotDePasse.exiger(req.motDePasse());
+        }
         u.setMotDePasseHash(encoder.encode(
                 req.motDePasse() != null ? req.motDePasse() : "ChangezMoi!1"));
         appliquer(u, req);
@@ -82,6 +85,7 @@ public class AdminUserService {
         boolean actifAvant = u.isActif();
         boolean motDePasseChange = req.motDePasse() != null && !req.motDePasse().isBlank();
         if (motDePasseChange) {
+            qc.levis.contrat.auth.domain.PolitiqueMotDePasse.exiger(req.motDePasse());
             u.setMotDePasseHash(encoder.encode(req.motDePasse()));
         }
         appliquer(u, req);

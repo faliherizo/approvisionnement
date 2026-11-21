@@ -52,8 +52,10 @@ public class AiController {
             traceabilite.journaliser("REDIGER", req.instruction(), r.proposition(), r.modele(), utilisateur(auth));
             return ResponseEntity.ok(r);
         } catch (Exception e) {
+            // Le motif technique (adresse, port du moteur) reste au journal : il ne sort pas vers le client (OWASP A05).
+            org.slf4j.LoggerFactory.getLogger(AiController.class).warn("Rédaction IA indisponible : {}", e.getMessage());
             return ResponseEntity.status(503).body(java.util.Map.of(
-                    "erreur", "Service IA (Ollama) indisponible", "detail", e.getMessage()));
+                    "erreur", "Service IA (Ollama) indisponible : réessayez plus tard ou contactez l'administration."));
         }
     }
 

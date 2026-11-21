@@ -27,6 +27,14 @@ public enum StatutSaisie {
         };
     }
 
+    /**
+     * Vrai si la fiche retient une place dans une activité à capacité limitée (CHU 3.06) : une fiche soumise et non
+     * refusée ni annulée garde sa place ; un brouillon n'en réserve pas encore.
+     */
+    public boolean occupeUnePlace() {
+        return this == SOUMIS || this == EN_TRAITEMENT || this == A_COMPLETER || this == VALIDE || this == CLOTURE;
+    }
+
     /** Vrai si la demande est dans un état final (ne peut plus progresser côté traitement). */
     public boolean estTermine() {
         return this == CLOTURE || this == ANNULE;

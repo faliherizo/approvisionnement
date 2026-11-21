@@ -58,6 +58,9 @@ services:
   conversion:
     image: gotenberg/gotenberg:8.17.3
     container_name: iq-bac-conversion
+    # Délai de l'API aligné sur celui du serveur (CLM_CONVERSION_DELAI_SECONDES, 120 s) : à 30 s par défaut, Gotenberg
+    # répond 503 à une conversion longue sous charge, alors que le serveur l'attendait encore.
+    command: ["gotenberg", "--api-timeout=120s"]
     ports: ["18030:3000"]
 
   # veraPDF REST officiel : conformité PDF/A (POST /api/validate/2b).

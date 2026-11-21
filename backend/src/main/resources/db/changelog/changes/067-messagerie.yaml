@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 067-1-messagerie
+      author: levis
+      comment: "CHU 5.05 : messagerie interne sécurisée (conversations, participants, messages chiffrés au repos, lectures)."
+      changes:
+        - createTable:
+            tableName: messagerie_conversation
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: sujet, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: reference, type: VARCHAR(100) }
+              - column: { name: cree_par, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: dernier_message_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - createTable:
+            tableName: messagerie_participant
+            columns:
+              - column: { name: conversation_id, type: BIGINT, constraints: { nullable: false, foreignKeyName: fk_messagerie_participant_conv, references: messagerie_conversation(id), deleteCascade: true } }
+              - column: { name: courriel, type: VARCHAR(150), constraints: { nullable: false } }
+        - addPrimaryKey: { tableName: messagerie_participant, columnNames: "conversation_id, courriel" }
+        - createTable:
+            tableName: messagerie_message
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: conversation_id, type: BIGINT, constraints: { nullable: false, foreignKeyName: fk_messagerie_message_conv, references: messagerie_conversation(id), deleteCascade: true } }
+              - column: { name: auteur, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: contenu_chiffre, type: VARCHAR(20000), constraints: { nullable: false } }
+              - column: { name: envoye_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - createTable:
+            tableName: messagerie_lecture
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: conversation_id, type: BIGINT, constraints: { nullable: false, foreignKeyName: fk_messagerie_lecture_conv, references: messagerie_conversation(id), deleteCascade: true } }
+              - column: { name: participant, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: lu_jusqua, type: TIMESTAMP, constraints: { nullable: false } }
+        - addUniqueConstraint: { tableName: messagerie_lecture, columnNames: "conversation_id, participant", constraintName: uk_messagerie_lecture }
+        - createIndex:
+            tableName: messagerie_message
+            indexName: ix_messagerie_message_conv
+            columns:
+              - column: { name: conversation_id }

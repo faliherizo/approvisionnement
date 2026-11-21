@@ -1,7 +1,6 @@
 package qc.levis.contrat.clm.infrastructure;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -18,10 +17,21 @@ public class RappelHttp implements PortRappel {
 
     private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10))
             .followRedirects(HttpClient.Redirect.NEVER).build();
+    private final qc.levis.contrat.commun.infrastructure.reseau.GardeSortante garde;
+
+    public RappelHttp() {
+        this(qc.levis.contrat.commun.infrastructure.reseau.GardeSortante.aucune());
+    }
+
+    /** L'adresse de rappel est déclarée par l'organisation : elle passe la garde anti-SSRF. */
+    @org.springframework.beans.factory.annotation.Autowired
+    public RappelHttp(qc.levis.contrat.commun.infrastructure.reseau.GardeSortante garde) {
+        this.garde = garde;
+    }
 
     @Override
     public void envoyer(String url, String corpsJson, String signature, String cleIdempotence) {
-        HttpRequest requete = HttpRequest.newBuilder(URI.create(url)).timeout(Duration.ofSeconds(20))
+        HttpRequest requete = HttpRequest.newBuilder(garde.exiger(url)).timeout(Duration.ofSeconds(20))
                 .header("Content-Type", "application/json; charset=utf-8")
                 .header("X-CLM-Signature", signature)
                 .header("Idempotency-Key", cleIdempotence)

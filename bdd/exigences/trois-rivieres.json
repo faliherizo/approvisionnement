@@ -1,0 +1,328 @@
+{
+  "appelOffres": "Ville de Trois-Rivières — appel d'offres 7000017905",
+  "titre": "Solution de rédaction contractuelle — section III, tableau de conformité",
+  "source": "docs/trois-riviere/formulaires-separes/Tableau-de-conformite.md",
+  "exigences": [
+    {
+      "id": "TR-01",
+      "source": "Section III n° 1",
+      "libelle": "Données hébergées au Canada",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ Hébergement Microsoft Azure, régions canadiennes (Canada Central/Est), résidence des données au Canada.",
+      "verification": "documentaire",
+      "justification": "Hébergement Azure au Canada : infrastructure (région paramétrée, validation Terraform).",
+      "reference": "docs/adr/ADR-020-region-hebergement-et-niveaux-de-service.md"
+    },
+    {
+      "id": "TR-02",
+      "source": "Section III n° 2",
+      "libelle": "Générer des documents Word modifiables",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ Export .docx modifiable (moteur Apache POI, DocxContractRenderer).",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-03",
+      "source": "Section III n° 3",
+      "libelle": "Migrer/adapter les modèles Word existants",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ Import de modèles .docx existants, détection de sections, mise au format gabarit.",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-04",
+      "source": "Section III n° 4",
+      "libelle": "Compatible Microsoft 365",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ Intégration Microsoft Graph réelle (SharePoint, OneDrive, Teams, Outlook).",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-05",
+      "source": "Section III n° 5",
+      "libelle": "Gestion sécurisée des accès + auth. corporative",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ Jeton httpOnly, RBAC ; module de connecteur d'authentification — OIDC et SAML 2.0 (Microsoft Entra ID ou IdP gouvernemental) configurable et activable par organisation — les utilisateurs gouvernementaux du client s'authentifient via leur annuaire.",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-06",
+      "source": "Section III n° 6",
+      "libelle": "Authentification multifacteur (MFA)",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ MFA (TOTP et questions secrètes) — comptes de démo totp@ et question@levis.qc.ca —, ou MFA corporatif via SSO.",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-07",
+      "source": "Section III n° 7",
+      "libelle": "Rôles, permissions et profils d'accès",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ RBAC (rédacteur, approbateur, juriste, admin, superadmin), isolation multi-tenant.",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-08",
+      "source": "Section III n° 8",
+      "libelle": "Chiffrement au repos et en transit",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ TLS en transit ; secrets chiffrés (AES) au repos ; PostgreSQL chiffré.",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-09",
+      "source": "Section III n° 9",
+      "libelle": "Journaux d'accès et d'activité",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ Journal d'audit complet (accès et actions), traçable et filtrable.",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-10",
+      "source": "Section III n° 10",
+      "libelle": "Configurable aux règles internes + LCOM",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ Circuits d'approbation, gabarits et règles configurables par la Ville.",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-11",
+      "source": "Section III n° 11",
+      "libelle": "Traçabilité versions/validations/approbations",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ Versionnage, historique des validations, approbations et modifications.",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-12",
+      "source": "Section III n° 12",
+      "libelle": "Conservation docs/versions/journaux",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ Conservation des documents, versions, journaux et historiques.",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-13",
+      "source": "Section III n° 13",
+      "libelle": "Séparation des responsabilités",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ Contrôle des accès/rôles soutenant la séparation des responsabilités.",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-14",
+      "source": "Section III n° 14",
+      "libelle": "Pas d'entraînement d'IA externe sans autorisation",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ Aucun entraînement de modèle externe ; IA locale (Ollama), données non transmises.",
+      "verification": "documentaire",
+      "justification": "Aucun entraînement de modèle externe : IA locale (Ollama), aucune donnée transmise ; vérifié par revue d'architecture.",
+      "reference": "docs/architecture-technique.md"
+    },
+    {
+      "id": "TR-15",
+      "source": "Section III n° 15",
+      "libelle": "Validation humaine des contenus générés",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ Tout contenu IA est proposé et exige une validation humaine avant usage.",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-16",
+      "source": "Section III n° 16",
+      "libelle": "Méthode de migration détaillée",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ Méthode décrite (modèles, clauses, contenus) — voir mémoire §5 et import .docx.",
+      "verification": "documentaire",
+      "justification": "Méthode de migration décrite au mémoire ; l'import Word est éprouvé par le scénario TR-03.",
+      "reference": "docs/trois-riviere/"
+    },
+    {
+      "id": "TR-17",
+      "source": "Section III n° 17",
+      "libelle": "Détailler coûts (ponctuels, récurrents, additionnels, sortie)",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ Ponctuels (implantation, An 1) et récurrents (licence annuelle) au bordereau + mémoire §10 ; additionnels : toute nouvelle demande hors devis, analysée et facturée à 120 $/h (avant taxes) après accord écrit de la Ville, sans incidence sur les prix soumis ; aucuns frais de sortie (voir 36).",
+      "verification": "documentaire",
+      "justification": "Coûts : bordereau de prix.",
+      "reference": "docs/trois-riviere/"
+    },
+    {
+      "id": "TR-18",
+      "source": "Section III n° 18",
+      "libelle": "Soutien, formation, documentation en français",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ Solution, formation et documentation entièrement en français.",
+      "verification": "documentaire",
+      "justification": "Solution, soutien, formation et documentation en français : engagement de service (l'interface en français est éprouvée par tous les scénarios)."
+    },
+    {
+      "id": "TR-19",
+      "source": "Section III n° 19",
+      "libelle": "Exportation complète en fin de contrat",
+      "caractere": "Obligatoire",
+      "conformiteDeclaree": "✅ Export complet des données, documents, modèles et configuration.",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-20",
+      "source": "Section III n° 20",
+      "libelle": "Intégrations SharePoint/Teams/OneDrive/Outlook",
+      "caractere": "Souhaitable",
+      "conformiteDeclaree": "✅ Offert — publication réelle vers les quatre (Microsoft Graph).",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-21",
+      "source": "Section III n° 21",
+      "libelle": "Dossier d'approvisionnement",
+      "caractere": "Souhaitable",
+      "conformiteDeclaree": "✅ Offert — regroupement docs/versions/validations/historiques par dossier.",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-22",
+      "source": "Section III n° 22",
+      "libelle": "Rapports de suivi",
+      "caractere": "Souhaitable",
+      "conformiteDeclaree": "✅ Offert — documents générés, validations, utilisateurs, dossiers en cours.",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-23",
+      "source": "Section III n° 23",
+      "libelle": "Étapes de validation par type de document",
+      "caractere": "Souhaitable",
+      "conformiteDeclaree": "✅ Offert — circuits d'approbation paramétrables par type/processus.",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-24",
+      "source": "Section III n° 24",
+      "libelle": "Désactivation de l'IA",
+      "caractere": "Souhaitable",
+      "conformiteDeclaree": "✅ Offert — l'IA est activable/désactivable par tenant.",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-25",
+      "source": "Section III n° 25",
+      "libelle": "Références d'organisations similaires",
+      "caractere": "Souhaitable",
+      "conformiteDeclaree": "✅ Voir Formule de qualification (mandats publics : Santé Québec, Revenu Québec, Sécurité publique via Cofomo, INSPQ via Randstad).",
+      "verification": "documentaire",
+      "justification": "Références : formule de qualification.",
+      "reference": "docs/trois-riviere/"
+    },
+    {
+      "id": "TR-26",
+      "source": "Section III n° 26",
+      "libelle": "Environnement d'essai / pilote",
+      "caractere": "Souhaitable",
+      "conformiteDeclaree": "✅ Offert — démonstration en ligne <https://contrat.vinaitsolution.com/login> (comptes par rôle : admin@, redacteur@, juriste@, direction@levis.qc.ca — mot de passe Passw0rd!) + comptes de démo MFA (totp@ TOTP, question@levis.qc.ca question secrète) ; vidéo <https://contrat.vinaitsolution.com/accueil",
+      "verification": "documentaire",
+      "justification": "Environnement d'essai en ligne : service de démonstration.",
+      "reference": "https://contrat.vinaitsolution.com/login"
+    },
+    {
+      "id": "TR-27",
+      "source": "Section III n° 27",
+      "libelle": "Évolutions prévues à court terme",
+      "caractere": "Souhaitable",
+      "conformiteDeclaree": "✅ Évolutions à court terme : module SSO / OIDC gouvernemental configurable et activable par organisation ; connecteurs vers les systèmes financiers et SAP ; signature électronique avancée ; tableaux de bord analytiques ; enrichissement du moteur de recherche.",
+      "verification": "documentaire",
+      "justification": "Évolutions prévues : feuille de route.",
+      "reference": "docs/roadmap.md"
+    },
+    {
+      "id": "TR-28",
+      "source": "Section III n° 28",
+      "libelle": "Type de solution (infonuagique/locale/hybride)",
+      "caractere": "Information requise",
+      "conformiteDeclaree": "Infonuagique (SaaS), hébergée sur Microsoft Azure (régions canadiennes).",
+      "verification": "documentaire",
+      "justification": "Information requise : solution infonuagique (SaaS)."
+    },
+    {
+      "id": "TR-29",
+      "source": "Section III n° 29",
+      "libelle": "Connecteurs / interfaces / API + coûts",
+      "caractere": "Information requise",
+      "conformiteDeclaree": "API REST documentée (OpenAPI / Swagger) — interface Swagger : <https://contrat.vinaitsolution.com/swagger-ui/index.html> · spécification OpenAPI : <https://contrat.vinaitsolution.com/v3/api-docs> ; connecteurs Microsoft Graph (M365), SAP (OData) et authentification SSO (OIDC / SAML 2.0), inclus au f",
+      "verification": "bdd"
+    },
+    {
+      "id": "TR-30",
+      "source": "Section III n° 30",
+      "libelle": "Notification et suivi des incidents de sécurité",
+      "caractere": "Information requise",
+      "conformiteDeclaree": "Procédure de notification, traitement et suivi ; journalisation et alertes.",
+      "verification": "documentaire",
+      "justification": "Information requise : procédure de notification des incidents.",
+      "reference": "docs/journalisation.md"
+    },
+    {
+      "id": "TR-31",
+      "source": "Section III n° 31",
+      "libelle": "Sous-traitants (hébergement, traitement, soutien)",
+      "caractere": "Information requise",
+      "conformiteDeclaree": "Microsoft Azure (hébergement) ; aucun autre sous-traitant de traitement des données.",
+      "verification": "documentaire",
+      "justification": "Information requise : sous-traitants."
+    },
+    {
+      "id": "TR-32",
+      "source": "Section III n° 32",
+      "libelle": "Utilisation de l'IA — description",
+      "caractere": "Information requise",
+      "conformiteDeclaree": "IA locale (Ollama) d'assistance à la rédaction ; désactivable ; aucune donnée externe.",
+      "verification": "documentaire",
+      "justification": "Information requise : description de l'usage de l'IA (le comportement est éprouvé par TR-15 et TR-24)."
+    },
+    {
+      "id": "TR-33",
+      "source": "Section III n° 33",
+      "libelle": "Volume inclus (modèles/clauses/contenus)",
+      "caractere": "Information requise",
+      "conformiteDeclaree": "Nombre illimité de modèles, clauses et documents dans le forfait de base.",
+      "verification": "documentaire",
+      "justification": "Information requise : volume inclus."
+    },
+    {
+      "id": "TR-34",
+      "source": "Section III n° 34",
+      "libelle": "Délais de réponse du soutien par priorité",
+      "caractere": "Information requise",
+      "conformiteDeclaree": "Soutien avec engagements de niveau de service (délais selon priorité — mémoire §8).",
+      "verification": "documentaire",
+      "justification": "Information requise : délais de soutien."
+    },
+    {
+      "id": "TR-35",
+      "source": "Section III n° 35",
+      "libelle": "Formations incluses (utilisateurs et admins)",
+      "caractere": "Information requise",
+      "conformiteDeclaree": "Formation initiale par rôle (rédaction, juridique, approvisionnement) + admin, incluse An 1.",
+      "verification": "documentaire",
+      "justification": "Information requise : formations incluses."
+    },
+    {
+      "id": "TR-36",
+      "source": "Section III n° 36",
+      "libelle": "Frais de sortie / restitution",
+      "caractere": "Information requise",
+      "conformiteDeclaree": "Aucuns frais de sortie ; export complet fourni sans coût.",
+      "verification": "documentaire",
+      "justification": "Information requise : aucuns frais de sortie (l'export complet est éprouvé par TR-19)."
+    },
+    {
+      "id": "TR-37",
+      "source": "Section III n° 37",
+      "libelle": "Limites connues",
+      "caractere": "Information requise",
+      "conformiteDeclaree": "Génération IA en français (locale) ; connecteurs sur mesure chiffrés après cadrage.",
+      "verification": "documentaire",
+      "justification": "Information requise : limites connues."
+    }
+  ]
+}

@@ -17,3 +17,6 @@ postgres_storage_mb = 131072
 app_hostname          = "contrat.vinaitsolution.com"
 availability_test_url = "https://contrat.vinaitsolution.com/actuator/health"
 alert_email           = "faliherizo@vinaitsolution.com"
+
+# Adresses (CIDR) d'administration seules admises sur l'API du plan de contrôle et le coffre de secrets (obligatoire).
+ip_administration = ["203.0.113.10/32"]

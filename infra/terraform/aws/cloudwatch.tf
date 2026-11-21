@@ -1,6 +1,8 @@
 # Observabilité et mesure de la disponibilité (SLA 99,99 %) : alertes SNS, alarmes, canari Synthetics.
 resource "aws_sns_topic" "alerts" {
   name = "${local.name}-alerts"
+  # Alertes chiffrées au repos (clé KMS gérée par AWS pour SNS).
+  kms_master_key_id = "alias/aws/sns"
 }
 
 resource "aws_sns_topic_subscription" "email" {
@@ -41,6 +43,24 @@ resource "aws_cloudwatch_metric_alarm" "dlq" {
 resource "aws_s3_bucket" "canary" {
   bucket        = "${local.name}-canary-artifacts"
   force_destroy = true
+}
+
+# Artefacts des sondes synthétiques (captures d'écran de l'application) : jamais publics, chiffrés au repos.
+resource "aws_s3_bucket_public_access_block" "canary" {
+  bucket                  = aws_s3_bucket.canary.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "canary" {
+  bucket = aws_s3_bucket.canary.id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "aws:kms"
+    }
+  }
 }
 
 resource "aws_iam_role" "canary" {

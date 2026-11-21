@@ -49,7 +49,7 @@ class ImportServiceTest {
         assertEquals(2, r.valides());
         assertEquals(0, r.importes());
         assertTrue(r.erreurs().isEmpty());
-        verify(clauses, never()).creer(any());
+        verify(clauses, never()).creer(any(), any());
     }
 
     @Test
@@ -58,7 +58,7 @@ class ImportServiceTest {
         ImportRapport r = service.importer(csv, "admin");
         assertFalse(r.essai());
         assertEquals(1, r.importes());
-        verify(clauses).creer(any(ClauseRequest.class));
+        verify(clauses).creer(any(ClauseRequest.class), any());
         verify(audit).log(eq("admin"), eq("IMPORT_CLAUSES"), eq("Clause"), isNull(), contains("1 importées"));
     }
 
@@ -136,7 +136,7 @@ class ImportServiceTest {
         assertEquals(2, r.sectionsDetectees());
         assertEquals(0, r.clausesCreees());
         assertTrue(r.erreurs().isEmpty());
-        verify(clauses, never()).creer(any());
+        verify(clauses, never()).creer(any(), any());
         verify(templates, never()).creer(any());
     }
 
@@ -162,7 +162,7 @@ class ImportServiceTest {
         assertEquals(2, r.sectionsDetectees());
         assertEquals(2, r.clausesCreees());
         assertEquals(42L, r.templateId());
-        verify(clauses, times(2)).creer(any(ClauseRequest.class));
+        verify(clauses, times(2)).creer(any(ClauseRequest.class), any());
         verify(templates).creer(any(TemplateRequest.class));
         verify(audit).log(eq("admin"), eq("IMPORT_WORD"), eq("DocumentTemplate"), eq(42L), any());
     }
@@ -173,7 +173,7 @@ class ImportServiceTest {
         ImportWordRapport r = service.importerWord(new byte[]{1}, "X", null, "admin");
         assertEquals(0, r.clausesCreees());
         assertNull(r.templateId());
-        verify(clauses, never()).creer(any());
+        verify(clauses, never()).creer(any(), any());
         verify(templates, never()).creer(any());
     }
 }

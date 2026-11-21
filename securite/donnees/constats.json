@@ -1,0 +1,257 @@
+{
+ "description": "Registre des constats de la campagne de tests d'intrusion : chaque constat, sa correction et le test qui empêche sa réapparition. Gravité selon l'impact et l'exploitabilité (Critique, Élevée, Moyenne, Faible).",
+ "constats": [
+  {
+   "id": "SEC-01",
+   "gravite": "Élevée",
+   "owasp": "A07",
+   "constat": "Aucun frein à la force brute : 12 essais de mot de passe d'affilée, puis le bon est accepté.",
+   "correction": "Au-delà de 10 échecs en 15 minutes pour un même courriel, la connexion répond 429, même avec le bon mot de passe ; un compte inconnu est freiné pareil (aucune énumération). Compte tenu en base (journal d'audit) : commun à toutes les instances.",
+   "test": "INT-05-a ; DurcissementIntegrationTest ; LimiteurEtRevocationTest",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-02",
+   "gravite": "Élevée",
+   "owasp": "A02 · A05",
+   "constat": "Le profil de production démarrait avec le secret JWT, la clé de chiffrement et le mot de passe de base de données par défaut écrits dans la configuration : un secret JWT connu permet de forger une session de superadministrateur.",
+   "correction": "ExigencesProduction refuse le démarrage en production avec une valeur par défaut, un secret JWT de moins de 256 bits ou un cookie non Secure ; docker-compose exige des secrets propres au poste, générés par scripts/generer-secrets.sh.",
+   "test": "ExigencesProductionTest ; INT-07-f",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-03",
+   "gravite": "Élevée",
+   "owasp": "A01",
+   "constat": "Une clause d'une autre organisation se lisait, se modifiait et se supprimait par son identifiant (lecture sans contrôle d'organisation).",
+   "correction": "Toute clause hors de l'organisation courante est introuvable (404), en lecture comme en écriture.",
+   "test": "INT-03-b ; ClauseVersionIntegrationTest",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-04",
+   "gravite": "Élevée",
+   "owasp": "A01",
+   "constat": "Fiches : tout membre de l'organisation lisait, modifiait ou annulait la fiche d'un autre demandeur et voyait toutes les fiches d'un formulaire ; la structure et la création acceptaient un formulaire d'une autre organisation ; la fiche n'était pas rapprochée du formulaire de l'adresse.",
+   "correction": "AccesFiches : formulaire de l'organisation, fiche de ce formulaire, demandeur ou personnel qui traite ; sinon 404. Un demandeur ne liste que ses fiches.",
+   "test": "INT-04 ; INT-03 ; DocumentFicheIntegrationTest",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-05",
+   "gravite": "Élevée",
+   "owasp": "A01",
+   "constat": "Pièces jointes et commentaires d'une fiche accessibles à tout membre de l'organisation ; les commentaires internes du personnel étaient lus par le demandeur.",
+   "correction": "Même contrôle (AccesFiches) sur les pièces jointes, leur téléchargement et les commentaires ; le demandeur ne lit ni n'écrit de commentaire interne.",
+   "test": "INT-04 ; PiecesJointesAccesIntegrationTest",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-06",
+   "gravite": "Moyenne",
+   "owasp": "A01",
+   "constat": "Le décompte et l'export Excel de toutes les fiches (réponses des demandeurs) étaient accessibles au rôle lecteur.",
+   "correction": "Réservés au personnel qui traite (ADMIN, APPRO, DIRECTION, REDACTEUR).",
+   "test": "INT-02-a",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-07",
+   "gravite": "Moyenne",
+   "owasp": "A01",
+   "constat": "Le critère de recherche sauvegardé d'une autre personne, voire d'une autre organisation, se supprimait par son identifiant.",
+   "correction": "Suppression par le seul propriétaire, dans son organisation ; sinon 404.",
+   "test": "INT-04 ; INT-03-b",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-08",
+   "gravite": "Moyenne",
+   "owasp": "A01",
+   "constat": "Les règles d'un formulaire d'une autre organisation s'évaluaient par son identifiant.",
+   "correction": "Formulaire hors de l'organisation introuvable (404).",
+   "test": "INT-03-b",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-09",
+   "gravite": "Moyenne",
+   "owasp": "A10",
+   "constat": "Le test de découverte OIDC (et les connecteurs SAP, Salesforce, rappels) émettait des requêtes vers toute adresse saisie : 169.254.169.254 (métadonnées infonuagiques), le serveur lui-même, le réseau interne.",
+   "correction": "GardeSortante : HTTP(S) seulement, aucune adresse interne (boucle locale, privée, lien local, ULA, CGNAT, multidiffusion), sauf hôte:port autorisé par configuration (vide en production).",
+   "test": "INT-10 ; GardeSortanteTest ; DurcissementIntegrationTest",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-10",
+   "gravite": "Moyenne",
+   "owasp": "A07",
+   "constat": "Un jeton de session volé restait valide après la déconnexion, jusqu'à son expiration (1 h).",
+   "correction": "La déconnexion révoque le jeton (empreinte SHA-256 conservée jusqu'à son expiration) ; le filtre refuse un jeton révoqué.",
+   "test": "INT-05-c ; DurcissementIntegrationTest",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-11",
+   "gravite": "Moyenne",
+   "owasp": "A05",
+   "constat": "Protection contre l'encadrement désactivée sur toute l'API (clic piégé), aucune politique de contenu, aucune politique de référent ; le frontal de production ne posait aucun en-tête de sécurité et affichait sa version.",
+   "correction": "API : X-Frame-Options DENY, CSP « default-src 'none' », Referrer-Policy no-referrer, Permissions-Policy, Cache-Control no-store. Frontal : CSP sans script tiers ni en ligne, HSTS, nosniff, SAMEORIGIN, server_tokens off.",
+   "test": "INT-07-a ; INT-07-b ; DurcissementIntegrationTest",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-12",
+   "gravite": "Moyenne",
+   "owasp": "A05",
+   "constat": "En production, la documentation OpenAPI et Swagger UI étaient publiques et le cookie de session n'était pas Secure par défaut.",
+   "correction": "Documentation fermée par défaut en production (APP_API_DOCS) ; cookie Secure par défaut (dérogation explicite pour une démonstration en HTTP local).",
+   "test": "INT-07-f",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-13",
+   "gravite": "Faible",
+   "owasp": "A05",
+   "constat": "Console H2 ouverte par défaut hors production.",
+   "correction": "Fermée par défaut (H2_CONSOLE pour l'ouvrir sur un poste).",
+   "test": "INT-07-e",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-14",
+   "gravite": "Faible",
+   "owasp": "A07",
+   "constat": "Une requête sans session (ou une session expirée) recevait 403 : l'interface ne reconnaissait pas l'expiration et ne renvoyait pas à la connexion.",
+   "correction": "401 sans session ; l'interface renvoie à la connexion, sauf pour la sonde de session des pages publiques.",
+   "test": "INT-01-a ; DurcissementIntegrationTest",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-15",
+   "gravite": "Faible",
+   "owasp": "A01",
+   "constat": "L'administration de la plateforme (/api/superadmin/**) n'était contrôlée qu'à l'appel de la méthode : un paramètre manquant répondait 400 avant le refus.",
+   "correction": "Règle d'URL : /api/superadmin/** réservé au superadministrateur, avant toute lecture de la requête.",
+   "test": "INT-02-b ; DurcissementIntegrationTest",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-16",
+   "gravite": "Faible",
+   "owasp": "A03 · A05",
+   "constat": "Une pièce jointe était servie avec le type déclaré par le déposant (text/html, image/svg+xml) et un nom de fichier non échappé ; un type mal formé provoquait une erreur 500.",
+   "correction": "Types sûrs servis tels quels, tout autre en flux binaire ; en-tête Content-Disposition encodé (RFC 6266).",
+   "test": "DocumentDownloadControllerTest",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-17",
+   "gravite": "Élevée",
+   "owasp": "A01",
+   "constat": "Sous-ressources d'un devis (versions, signataires, obligations, addendas, y compris par l'identifiant de l'addenda ou de l'obligation) lisibles et créables par une autre organisation : le devis était lu sans contrôle d'organisation.",
+   "correction": "DocumentsDuTenant : tout devis hors de l'organisation est introuvable, en lecture comme en écriture.",
+   "test": "INT-03-b ; SousRessourcesIntegrationTest",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-18",
+   "gravite": "Moyenne",
+   "owasp": "A01",
+   "constat": "Le circuit d'approbation d'un formulaire d'une autre organisation se lisait et se remplaçait ; son résumé et son export répondaient (vides).",
+   "correction": "Formulaire de l'organisation exigé (404 sinon).",
+   "test": "INT-03-b ; SousRessourcesIntegrationTest",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-19",
+   "gravite": "Moyenne",
+   "owasp": "A01",
+   "constat": "Une feuille de temps se lisait, se modifiait et se soumettait par son identifiant, quel qu'en soit le propriétaire.",
+   "correction": "Lecture par le propriétaire et les approbateurs ; modification et soumission par le seul propriétaire.",
+   "test": "INT-02-a ; SousRessourcesIntegrationTest",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-20",
+   "gravite": "Moyenne",
+   "owasp": "A01",
+   "constat": "Un rôle de simple consultation créait et listait les demandes d'approbation et commentait les devis en révision.",
+   "correction": "Demandes d'approbation et commentaires de révision réservés aux rôles qui traitent et révisent.",
+   "test": "INT-02-a ; SousRessourcesIntegrationTest",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-21",
+   "gravite": "Faible",
+   "owasp": "A05",
+   "constat": "Une requête de fichier qui n'était pas en multipart provoquait une erreur 500.",
+   "correction": "Réponse 400 explicite.",
+   "test": "INT-02-a ; SousRessourcesIntegrationTest",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-22",
+   "gravite": "Faible",
+   "owasp": "A05",
+   "constat": "L'indisponibilité de l'assistant de rédaction renvoyait au client le message technique de l'exception (adresse et port internes du moteur d'IA).",
+   "correction": "Message générique au client, détail technique au journal du serveur.",
+   "test": "ZAP 100000 (réponse examinée)",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-23",
+   "gravite": "Élevée",
+   "owasp": "A02",
+   "constat": "Les variantes de déploiement AWS (ECS et relève) servaient l'application en HTTP seulement : sessions et données en clair, et cookie « Secure » inopérant.",
+   "correction": "Écouteur HTTPS (TLS 1.2 minimum, TLS 1.3 de préférence, certificat ACM), HTTP redirigé en 301, en-têtes invalides rejetés.",
+   "test": "Trivy AVD-AWS-0054, AVD-AWS-0052 ; terraform validate",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-24",
+   "gravite": "Moyenne",
+   "owasp": "A05",
+   "constat": "Les images du serveur et du frontal s'exécutaient en root ; les pods Kubernetes n'avaient aucun contexte de sécurité.",
+   "correction": "Comptes non privilégiés (10001, nginx 101 sur 8080), racine en lecture seule, aucune élévation de privilège, capacités retirées, seccomp RuntimeDefault ; image du frontal éprouvée ainsi (page, proxy, CSP sans violation).",
+   "test": "Trivy DS002, KSV014, KSV118 ; essai de l'image durcie",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-25",
+   "gravite": "Moyenne",
+   "owasp": "A05",
+   "constat": "Infrastructure : coffres de clés Azure ouverts à tout réseau, API AKS et EKS ouvertes à tout Internet (AKS sans RBAC explicite), compartiment S3 des sondes sans blocage d'accès public ni chiffrement, rubrique d'alertes SNS non chiffrée.",
+   "correction": "Coffres en refus réseau par défaut ; API AKS et EKS restreintes aux adresses d'administration (variable obligatoire, 0.0.0.0/0 refusé), RBAC AKS, accès privé EKS ; S3 privé et chiffré (KMS) ; SNS chiffré.",
+   "test": "Trivy AVD-AZU-0013, AVD-AZU-0041, AVD-AZU-0042, AVD-AWS-0086 à 0095 ; terraform validate ; AVD-AWS-0041",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-26",
+   "gravite": "Élevée",
+   "owasp": "A06",
+   "constat": "Dépendances vulnérables : pilote PostgreSQL 42.6.2 (CVE-2026-42198), axios 1.18.1 (7 CVE hautes), follow-redirects 1.16.0 (3 CVE hautes).",
+   "correction": "PostgreSQL 42.7.13, axios 1.20.0, follow-redirects 1.16.3.",
+   "test": "Trivy, npm audit",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-27",
+   "gravite": "Faible",
+   "owasp": "A05",
+   "constat": "Aucune isolation inter-origines (en-têtes COOP et CORP) contre les attaques par canal auxiliaire de type Spectre.",
+   "correction": "Cross-Origin-Opener-Policy et Cross-Origin-Resource-Policy « same-origin » sur l'API et le frontal.",
+   "test": "ZAP 90004 ; INT-07-a ; INT-07-b",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-28",
+   "gravite": "Moyenne",
+   "owasp": "A06",
+   "constat": "react-router 6.30 : redirection ouverte par barre oblique inverse dans <Link>/navigate et défaut d'hydratation côté serveur (avis modérés).",
+   "correction": "Non exploitable ici : toutes les navigations visent des chemins internes écrits dans le code, jamais une adresse fournie par l'utilisateur, et l'application n'a pas de rendu côté serveur. Passage à react-router 7 recommandé au prochain cycle.",
+   "test": "npm audit ; revue des appels navigate()",
+   "etat": "accepté (non exploitable), mise à niveau planifiée"
+  }
+ ]
+}

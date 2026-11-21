@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -77,11 +79,46 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/health").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/api/public/**").permitAll() // API publique tokenisée (auth par jeton d'API/OAuth)
+                // Administration de la plateforme : refusée au niveau de l'URL, avant même la lecture des paramètres.
+                .requestMatchers("/api/superadmin/**").hasRole("SUPERADMIN")
                 .anyRequest().authenticated()
             )
-            .headers(h -> h.frameOptions(f -> f.disable())) // H2 console (dév)
+            // Sans session (ou session expirée) : 401, que l'interface reconnaît pour renvoyer à la connexion.
+            .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+            .headers(this::entetesDeSecurite)
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+    /**
+     * En-têtes de sécurité (OWASP A05) : aucun encadrement (clic piégé), aucun reniflage de type, aucune fuite de
+     * l'adresse d'origine, aucune mise en cache des réponses. L'API ne sert que des données : sa politique de contenu
+     * n'autorise rien. La console H2 (poste de développement, fermée par défaut) garde l'encadrement par la même origine.
+     */
+    private void entetesDeSecurite(org.springframework.security.config.annotation.web.configurers.HeadersConfigurer<HttpSecurity> h) {
+        // Console H2 et Swagger UI s'affichent dans un cadre de l'application même (même origine) ; le reste, jamais.
+        var encadrables = new org.springframework.security.web.util.matcher.OrRequestMatcher(
+                new org.springframework.security.web.util.matcher.AntPathRequestMatcher("/h2-console/**"),
+                new org.springframework.security.web.util.matcher.AntPathRequestMatcher("/swagger-ui/**"));
+        h.frameOptions(f -> f.disable())
+         .addHeaderWriter(new org.springframework.security.web.header.writers.DelegatingRequestMatcherHeaderWriter(
+                 new org.springframework.security.web.util.matcher.NegatedRequestMatcher(encadrables),
+                 new org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter(
+                         org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter.XFrameOptionsMode.DENY)))
+         .addHeaderWriter(new org.springframework.security.web.header.writers.DelegatingRequestMatcherHeaderWriter(encadrables,
+                 new org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter(
+                         org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
+         .addHeaderWriter(new org.springframework.security.web.header.writers.DelegatingRequestMatcherHeaderWriter(
+                 new org.springframework.security.web.util.matcher.OrRequestMatcher(
+                         new org.springframework.security.web.util.matcher.AntPathRequestMatcher("/api/**"),
+                         new org.springframework.security.web.util.matcher.AntPathRequestMatcher("/scim/**")),
+                 new org.springframework.security.web.header.writers.StaticHeadersWriter("Content-Security-Policy",
+                         "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'")))
+         // Isolation inter-origines (attaques de type Spectre) : les réponses de l'API ne se chargent que depuis l'application.
+         .addHeaderWriter(new org.springframework.security.web.header.writers.StaticHeadersWriter("Cross-Origin-Resource-Policy", "same-origin"))
+         .addHeaderWriter(new org.springframework.security.web.header.writers.StaticHeadersWriter("Cross-Origin-Opener-Policy", "same-origin"))
+         .referrerPolicy(r -> r.policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER))
+         .permissionsPolicy(p -> p.policy("camera=(), microphone=(), geolocation=(), payment=()"));
     }
 
     @Bean

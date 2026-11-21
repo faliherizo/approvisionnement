@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 /**
@@ -18,6 +18,8 @@ export default function DropdownMenu({ label, children, align = 'left', actif = 
   const [ouvert, setOuvert] = useState(false)
   const conteneur = useRef(null)
   const bouton = useRef(null)
+  const panneau = useRef(null)
+  const [decalage, setDecalage] = useState(0)
   const menuId = useId()
   const location = useLocation()
 
@@ -25,6 +27,16 @@ export default function DropdownMenu({ label, children, align = 'left', actif = 
 
   // Referme le menu après une navigation (clic sur un lien du panneau).
   useEffect(() => { setOuvert(false) }, [location.pathname])
+
+  // Le panneau ne sort jamais de l'écran : s'il dépasse un bord (téléphone, bouton près du bord), il est décalé
+  // juste assez pour tenir avec une marge de 8 px. Mesuré avant affichage : aucun saut visible.
+  useLayoutEffect(() => {
+    if (!ouvert || !panneau.current) { setDecalage(0); return }
+    const r = panneau.current.getBoundingClientRect()
+    const marge = 8
+    if (r.right > window.innerWidth - marge) setDecalage(window.innerWidth - marge - r.right)
+    else if (r.left < marge) setDecalage(marge - r.left)
+  }, [ouvert])
 
   useEffect(() => {
     if (!ouvert) return
@@ -59,6 +71,8 @@ export default function DropdownMenu({ label, children, align = 'left', actif = 
       {ouvert && (
         <div
           id={menuId}
+          ref={panneau}
+          style={decalage ? { transform: `translateX(${decalage}px)` } : undefined}
           className={`dropdown__panel dropdown__panel--${align}`}
           onClick={(e) => { if (e.target.closest('a,button')) fermer() }}
         >

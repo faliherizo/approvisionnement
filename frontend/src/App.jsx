@@ -25,6 +25,10 @@ import Superadmin from './pages/Superadmin.jsx'
 import Gabarits from './pages/Gabarits.jsx'
 import Templates from './pages/Templates.jsx'
 import Users from './pages/Users.jsx'
+import VieePrivee from './pages/VieePrivee.jsx'
+import Messagerie from './pages/Messagerie.jsx'
+import TableauxBord from './pages/TableauxBord.jsx'
+import BanqueHeures from './pages/BanqueHeures.jsx'
 import Profil from './pages/Profil.jsx'
 import ChatIA from './pages/ChatIA.jsx'
 import Parametres from './pages/Parametres.jsx'
@@ -182,9 +186,11 @@ function Layout({ children }) {
                   )}
                 </DropdownMenu>
               )}
+              {moduleActif('saisie') && <NavLink to="/messagerie">{t('nav.messagerie')}</NavLink>}
               {moduleActif('formulaire') && (hasRole('ADMIN') || hasRole('REDACTEUR')) && (
                 <DropdownMenu label={t('nav.formulaires')} actif={dansGroupe('/formulaires')}>
                   <NavLink to="/formulaires">{t('nav.formulairesConception')}</NavLink>
+                  {moduleActif('rapport') && <NavLink to="/tableaux-de-bord">{t('nav.tableauxBord')}</NavLink>}
                 </DropdownMenu>
               )}
               {(moduleActif('paie') || moduleActif('rh')) && (hasRole('ADMIN') || hasRole('DIRECTION')) && (
@@ -198,8 +204,10 @@ function Layout({ children }) {
                 </DropdownMenu>
               )}
               {hasRole('ADMIN') && (
-                <DropdownMenu label="Administration" actif={dansGroupe('/utilisateurs', '/gabarits', '/templates', '/parametres', '/workflows', '/audit', '/donnees', '/applications', '/notifications', '/securite-avancee', '/interop')}>
+                <DropdownMenu label="Administration" actif={dansGroupe('/utilisateurs', '/gabarits', '/templates', '/parametres', '/workflows', '/audit', '/donnees', '/applications', '/notifications', '/securite-avancee', '/interop', '/vie-privee')}>
                   <NavLink to="/utilisateurs">{t('nav.users')}</NavLink>
+                  <NavLink to="/vie-privee">{t('nav.viePrivee')}</NavLink>
+                  <NavLink to="/banque-heures">{t('nav.banqueHeures')}</NavLink>
                   {moduleActif('application') && <NavLink to="/applications">{t('nav.applications')}</NavLink>}
                   {redaction && <NavLink to="/templates">Templates</NavLink>}
                   {redaction && <NavLink to="/gabarits">Gabarits</NavLink>}
@@ -294,6 +302,10 @@ export default function App() {
         <Route path="/chat-ia" element={socle(<ChatIA />)} />
         <Route path="/simulateur" element={socle(<SimulateurDepots />)} />
         <Route path="/utilisateurs" element={<ProtectedRoute><Users /></ProtectedRoute>} />
+        <Route path="/vie-privee" element={<ProtectedRoute><VieePrivee /></ProtectedRoute>} />
+        <Route path="/messagerie" element={<ProtectedRoute><Messagerie /></ProtectedRoute>} />
+        <Route path="/tableaux-de-bord" element={<ProtectedRoute><TableauxBord /></ProtectedRoute>} />
+        <Route path="/banque-heures" element={<ProtectedRoute><BanqueHeures /></ProtectedRoute>} />
         <Route path="/gabarits" element={socle(<Gabarits />)} />
         <Route path="/templates" element={socle(<Templates />)} />
         <Route path="/parametres" element={<ProtectedRoute><Parametres /></ProtectedRoute>} />

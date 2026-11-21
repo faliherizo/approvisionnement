@@ -1,0 +1,98 @@
+{
+  "comptes": {
+    "superadmin": {
+      "email": "superadmin@plateforme.ca",
+      "motDePasse": "SuperPassw0rd!"
+    },
+    "administrateur de Lévis": {
+      "email": "admin@levis.qc.ca",
+      "motDePasse": "Passw0rd!"
+    },
+    "rédacteur de Lévis": {
+      "email": "redacteur@levis.qc.ca",
+      "motDePasse": "Passw0rd!"
+    },
+    "juriste de Lévis": {
+      "email": "juriste@levis.qc.ca",
+      "motDePasse": "Passw0rd!"
+    },
+    "direction de Lévis": {
+      "email": "direction@levis.qc.ca",
+      "motDePasse": "Passw0rd!"
+    },
+    "utilisateur MFA question": {
+      "email": "question@levis.qc.ca",
+      "motDePasse": "Passw0rd!",
+      "reponseSecrete": "Montreal"
+    },
+    "utilisateur MFA TOTP": {
+      "email": "totp@levis.qc.ca",
+      "motDePasse": "Passw0rd!",
+      "totpSecret": "JBSWY3DPEHPK3PXP"
+    },
+    "initiateur IQ": {
+      "email": "initiateur@iq.example",
+      "motDePasse": "Passw0rd!"
+    },
+    "validateur IQ": {
+      "email": "validateur@iq.example",
+      "motDePasse": "Passw0rd!"
+    },
+    "approbateur IQ": {
+      "email": "approbateur@iq.example",
+      "motDePasse": "Passw0rd!"
+    },
+    "signataire interne IQ": {
+      "email": "signataire@iq.example",
+      "motDePasse": "Passw0rd!"
+    },
+    "administration d'affaires IQ": {
+      "email": "admin.affaires@iq.example",
+      "motDePasse": "Passw0rd!"
+    },
+    "administration technique IQ": {
+      "email": "admin.technique@iq.example",
+      "motDePasse": "Passw0rd!"
+    },
+    "administration principale IQ": {
+      "email": "admin.ti@iq.example",
+      "motDePasse": "Passw0rd!"
+    },
+    "auditeur IQ": {
+      "email": "auditeur@iq.example",
+      "motDePasse": "Passw0rd!"
+    },
+    "administrateur CHU": {
+      "email": "admin.bdd@chu.example",
+      "motDePasse": "Passw0rd!Chu2026"
+    },
+    "lecteur CHU": {
+      "email": "lecteur.bdd@chu.example",
+      "motDePasse": "Passw0rd!Chu2026"
+    }
+  },
+  "organisations": {
+    "CHU": {
+      "slug": "chu-bdd",
+      "titre": "CHU — essais BDD",
+      "admin": {
+        "email": "admin.bdd@chu.example",
+        "motDePasse": "Passw0rd!Chu2026",
+        "nom": "Administration CHU (essais)"
+      },
+      "modules": [
+        "formulaire",
+        "application",
+        "regle",
+        "saisie",
+        "processus",
+        "notification",
+        "rapport",
+        "interop",
+        "document",
+        "securite_avancee",
+        "rh"
+      ]
+    }
+  }
+}
