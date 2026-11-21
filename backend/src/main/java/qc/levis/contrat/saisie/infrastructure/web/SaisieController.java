@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import qc.levis.contrat.saisie.application.AccesFiches;
 import org.springframework.web.bind.annotation.*;
 import qc.levis.contrat.saisie.application.SaisieService;
+import qc.levis.contrat.saisie.application.SoumissionFiche;
 import qc.levis.contrat.saisie.application.dto.SaisieVue;
 import qc.levis.contrat.saisie.application.dto.SoumissionRequest;
 
@@ -21,10 +22,12 @@ public class SaisieController {
 
     private final SaisieService service;
     private final AccesFiches acces;
+    private final SoumissionFiche soumission;
 
-    public SaisieController(SaisieService service, AccesFiches acces) {
+    public SaisieController(SaisieService service, AccesFiches acces, SoumissionFiche soumission) {
         this.service = service;
         this.acces = acces;
+        this.soumission = soumission;
     }
 
     static AccesFiches.Acteur acteur(Authentication auth) {
@@ -60,7 +63,7 @@ public class SaisieController {
         String ip = http.getHeader("X-Forwarded-For");
         if (ip != null && ip.contains(",")) ip = ip.split(",")[0].trim();
         if (ip == null || ip.isBlank()) ip = http.getRemoteAddr();
-        return service.soumettre(id, req != null ? req : new SoumissionRequest(null, null), ip);
+        return soumission.soumettre(id, req != null ? req : new SoumissionRequest(null, null), ip);
     }
 
     @PostMapping("/{id}/prendre-en-charge")

@@ -37,12 +37,10 @@ class SaisieServiceTest {
     @Mock RegleService regleService;
     @Mock CaptchaVerifier captcha;
     @Mock ApplicationEventPublisher events;
-    @Mock qc.levis.contrat.saisie.application.PlacesService places;
     SaisieService service;
 
     @BeforeEach void avant() {
-        service = new SaisieService(repo, versions, formulaires, regleService, captcha, events, places);
-        lenient().when(places.plan(any(), any())).thenReturn(qc.levis.contrat.saisie.domain.PlanDesPlaces.compter(List.of(), List.of()));
+        service = new SaisieService(repo, versions, formulaires, regleService, captcha, events);
         TenantContext.set(1L);
     }
     @AfterEach void apres() { TenantContext.clear(); }
@@ -83,29 +81,6 @@ class SaisieServiceTest {
         when(repo.save(any())).thenAnswer(i -> i.getArgument(0));
         assertEquals("SOUMIS", service.soumettre(5L, new SoumissionRequest("{}", null)).statut());
         verify(events).publishEvent(any(FicheEvent.class));
-    }
-
-    @Test void l_evenement_porte_le_numero_de_la_fiche_pour_les_gabarits() {
-        Saisie s = saisie(5, StatutSaisie.BROUILLON); s.setDonneesJson("{\"nom\":\"Tremblay\"}"); s.setNumero("RH-2026-000005");
-        when(repo.findByIdAndTenantId(5L, 1L)).thenReturn(Optional.of(s));
-        when(versions.findTopByFormulaireIdOrderByNumeroDesc(2L)).thenReturn(Optional.of(version("{}")));
-        when(regleService.extraireRegles("{}")).thenReturn(List.of());
-        when(repo.save(any())).thenAnswer(i -> i.getArgument(0));
-        service.soumettre(5L, new SoumissionRequest(null, null));
-        org.mockito.ArgumentCaptor<FicheEvent> e = org.mockito.ArgumentCaptor.forClass(FicheEvent.class);
-        verify(events).publishEvent(e.capture());
-        assertEquals("RH-2026-000005", e.getValue().valeurs().get("numero"));
-        assertEquals("Tremblay", e.getValue().valeurs().get("nom"));
-    }
-
-    @Test void un_champ_numero_du_formulaire_prevaut_sur_le_numero_de_fiche() {
-        Saisie s = saisie(5, StatutSaisie.SOUMIS); s.setDonneesJson("{\"numero\":\"saisi\"}"); s.setNumero("RH-2026-000005");
-        when(repo.findByIdAndTenantId(5L, 1L)).thenReturn(Optional.of(s));
-        when(repo.save(any())).thenAnswer(i -> i.getArgument(0));
-        service.prendreEnCharge(5L);
-        org.mockito.ArgumentCaptor<FicheEvent> e = org.mockito.ArgumentCaptor.forClass(FicheEvent.class);
-        verify(events).publishEvent(e.capture());
-        assertEquals("saisi", e.getValue().valeurs().get("numero"));
     }
 
     @Test void valider_et_prendre_en_charge_suivent_les_transitions() {

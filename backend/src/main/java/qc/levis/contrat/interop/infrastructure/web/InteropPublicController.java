@@ -25,13 +25,15 @@ public class InteropPublicController {
     private final ModuleService modules;
     private final FormulaireRepository formulaires;
     private final SaisieService saisie;
+    private final qc.levis.contrat.saisie.application.SoumissionFiche soumission;
 
-    public InteropPublicController(InteropService interop, ModuleService modules,
-                                   FormulaireRepository formulaires, SaisieService saisie) {
+    public InteropPublicController(InteropService interop, ModuleService modules, FormulaireRepository formulaires,
+                                   SaisieService saisie, qc.levis.contrat.saisie.application.SoumissionFiche soumission) {
         this.interop = interop;
         this.modules = modules;
         this.formulaires = formulaires;
         this.saisie = saisie;
+        this.soumission = soumission;
     }
 
     /** OAuth2 client_credentials (simplifié) : échange identifiants client → jeton d'accès. */
@@ -54,7 +56,8 @@ public class InteropPublicController {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Formulaire inconnu : " + code))
                     .getId();
             SaisieVue v = saisie.creer(fid, ctx.clientId());
-            return saisie.soumettre(v.id(), new SoumissionRequest(donneesJson, null));
+            // Même contrôle des places qu'à la soumission par l'interface (CHU 3.06).
+            return soumission.soumettre(v.id(), new SoumissionRequest(donneesJson, null), null);
         } finally {
             TenantContext.clear();
         }
