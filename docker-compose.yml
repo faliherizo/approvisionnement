@@ -33,6 +33,13 @@ services:
     # Délai de l'API aligné sur celui du serveur (CLM_CONVERSION_DELAI_SECONDES, 120 s) : à 30 s par défaut, Gotenberg
     # répond 503 à une conversion longue sous charge, alors que le serveur l'attendait encore.
     command: ["gotenberg", "--api-timeout=120s"]
+    # Racine en lecture seule, sans capacité : LibreOffice n'écrit que dans des volumes temporaires.
+    read_only: true
+    tmpfs:
+      - /tmp:uid=1001,gid=1001,exec
+      - /home/gotenberg:uid=1001,gid=1001
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
     restart: unless-stopped
 
   # --- Backend Java (Spring Boot, profil prod → PostgreSQL, schéma Liquibase) ---

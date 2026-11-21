@@ -249,9 +249,36 @@
    "gravite": "Moyenne",
    "owasp": "A06",
    "constat": "react-router 6.30 : redirection ouverte par barre oblique inverse dans <Link>/navigate et défaut d'hydratation côté serveur (avis modérés).",
-   "correction": "Non exploitable ici : toutes les navigations visent des chemins internes écrits dans le code, jamais une adresse fournie par l'utilisateur, et l'application n'a pas de rendu côté serveur. Passage à react-router 7 recommandé au prochain cycle.",
-   "test": "npm audit ; revue des appels navigate()",
-   "etat": "accepté (non exploitable), mise à niveau planifiée"
+   "correction": "react-router-dom 7.18.6 : avis corrigés (npm audit : 0 vulnérabilité). L'application n'utilisait que des API stables (Routes, Route, Link, NavLink, Navigate, useNavigate, useParams, useSearchParams, useLocation), inchangées en version 7.",
+   "test": "npm audit ; e2e (navigation complète)",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-29",
+   "gravite": "Faible",
+   "owasp": "A02",
+   "constat": "Données au repos (documents, exports, artefacts des sondes, alertes) chiffrées par la clé KMS gérée par AWS : rotation et révocation hors du contrôle de l'exploitant.",
+   "correction": "Clé KMS gérée par l'organisation (rotation annuelle, politique d'accès propre) pour S3 et SNS ; usage accordé aux seuls rôles du serveur, de Glue et des sondes.",
+   "test": "Trivy AVD-AWS-0132, AVD-AWS-0136 ; terraform validate",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-30",
+   "gravite": "Faible",
+   "owasp": "A05",
+   "constat": "Le service de conversion (LibreOffice) gardait une racine inscriptible ; l'image d'outils des bacs à sable s'exécutait en root.",
+   "correction": "Gotenberg en racine en lecture seule (profil et fichiers de travail en volumes temporaires), sans capacité ; image des bacs à sable sous un compte sans privilège. Conversion et validations (PAdES-LTA, CAdES, révocation) éprouvées ainsi.",
+   "test": "Trivy KSV014, DS002 ; essai de conversion ; valider.sh, valider-signature.sh, valider-revocation.sh",
+   "etat": "corrigé"
+  },
+  {
+   "id": "SEC-31",
+   "gravite": "Faible",
+   "owasp": "A05",
+   "constat": "La base de données, les répartiteurs et le lien VPC d'API Gateway pouvaient émettre vers tout Internet, sans en avoir besoin.",
+   "correction": "Sortie limitée au VPC pour ces composants (trois variantes AWS) ; seules les tâches applicatives gardent une sortie vers Internet.",
+   "test": "Trivy aws-vpc-no-public-egress-sgr ; terraform validate",
+   "etat": "corrigé"
   }
  ]
 }

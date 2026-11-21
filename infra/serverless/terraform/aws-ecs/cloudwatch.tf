@@ -1,8 +1,8 @@
 # Observabilité et mesure de la disponibilité (SLA 99,99 %) : alertes SNS, alarmes, canari Synthetics.
 resource "aws_sns_topic" "alerts" {
   name = "${local.name}-alerts"
-  # Alertes chiffrées au repos (clé KMS gérée par AWS pour SNS).
-  kms_master_key_id = "alias/aws/sns"
+  # Alertes chiffrées au repos par la clé de l'organisation.
+  kms_master_key_id = aws_kms_key.donnees.id
 }
 
 resource "aws_sns_topic_subscription" "email" {
@@ -58,7 +58,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "canary" {
   bucket = aws_s3_bucket.canary.id
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm = "aws:kms"
+      sse_algorithm     = "aws:kms"
+      kms_master_key_id = aws_kms_key.donnees.arn
     }
   }
 }
@@ -78,6 +79,7 @@ resource "aws_iam_role_policy" "canary" {
     Version = "2012-10-17"
     Statement = [
       { Effect = "Allow", Action = ["s3:PutObject", "s3:GetBucketLocation", "s3:ListAllMyBuckets"], Resource = ["*"] },
+      { Sid = "Chiffrement", Effect = "Allow", Action = ["kms:GenerateDataKey", "kms:Decrypt"], Resource = [aws_kms_key.donnees.arn] },
       { Effect = "Allow", Action = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"], Resource = ["*"] },
       { Effect = "Allow", Action = ["cloudwatch:PutMetricData"], Resource = ["*"], Condition = { StringEquals = { "cloudwatch:namespace" = "CloudWatchSynthetics" } } }
     ]

@@ -14,7 +14,7 @@ spec:
       labels: { app: conversion }
     spec:
       automountServiceAccountToken: false
-      securityContext: { runAsNonRoot: true, runAsUser: 1001, seccompProfile: { type: RuntimeDefault } }
+      securityContext: { runAsNonRoot: true, runAsUser: 1001, fsGroup: 1001, seccompProfile: { type: RuntimeDefault } }
       containers:
         - name: conversion
           image: "{{ .Values.conversion.image }}"
@@ -27,13 +27,19 @@ spec:
           livenessProbe:
             httpGet: { path: /health, port: 3000 }
             initialDelaySeconds: 30
-          # LibreOffice écrit son profil sous la racine de l'image : celle-ci reste inscriptible, sans privilège ni capacité.
+          # Racine en lecture seule : LibreOffice écrit son profil et ses fichiers de travail dans des volumes temporaires.
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
+            readOnlyRootFilesystem: true
             capabilities: { drop: [ALL] }
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+            - { name: profil, mountPath: /home/gotenberg }
           resources:
             {{- toYaml .Values.conversion.resources | nindent 12 }}
+      volumes:
+        - { name: tmp, emptyDir: {} }
+        - { name: profil, emptyDir: {} }
 ---
 apiVersion: v1
 kind: Service

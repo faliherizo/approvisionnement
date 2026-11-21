@@ -11,6 +11,9 @@ const AXE_NORMES = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']
 async function connecterUi(page: Page, profil: string) {
   const compte = comptes[profil]
   if (!compte) throw new Error(`Profil inconnu : « ${profil} »`)
+  // Quitter d'abord la page en cours : privée de session, elle renverrait d'elle-même vers /login (expiration),
+  // en concurrence avec la navigation de cette étape.
+  await page.goto('about:blank')
   await page.context().clearCookies()
   await page.goto('/login')
   await page.getByLabel('Courriel').fill(compte.email)

@@ -18,7 +18,10 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   for_each = { documents = aws_s3_bucket.documents.id, exports = aws_s3_bucket.exports.id }
   bucket   = each.value
   rule {
-    apply_server_side_encryption_by_default { sse_algorithm = "aws:kms" }
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = "aws:kms"
+      kms_master_key_id = aws_kms_key.donnees.arn
+    }
     bucket_key_enabled = true
   }
 }

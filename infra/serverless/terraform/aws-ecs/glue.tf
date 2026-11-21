@@ -22,7 +22,7 @@ resource "aws_iam_role_policy" "glue_s3" {
       Effect   = "Allow"
       Action   = ["s3:GetObject", "s3:PutObject", "s3:ListBucket"]
       Resource = [aws_s3_bucket.exports.arn, "${aws_s3_bucket.exports.arn}/*"]
-    }]
+    }, { Sid = "Chiffrement", Effect = "Allow", Action = ["kms:GenerateDataKey", "kms:Decrypt"], Resource = [aws_kms_key.donnees.arn] }]
   })
 }
 

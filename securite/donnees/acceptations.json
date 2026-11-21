@@ -13,27 +13,11 @@
   "trivy": [
     {
       "id": "aws-vpc-no-public-egress-sgr",
-      "justification": "Les services doivent joindre Microsoft Graph, SAP, Salesforce et les fournisseurs d'identité des organisations, dont les adresses changent : la sortie reste ouverte au niveau réseau, et chaque appel vers une adresse fournie par une organisation passe la garde anti-SSRF applicative (SEC-09). Un mandataire de sortie à liste blanche est recommandé en production."
+      "justification": "Seules les tâches applicatives (service ECS, nœuds EKS) sortent vers Internet : elles doivent joindre Microsoft Graph, SAP, Salesforce et les fournisseurs d'identité des organisations, dont les adresses changent. Chaque appel vers une adresse fournie par une organisation passe la garde anti-SSRF (SEC-09). Base de données, répartiteurs et lien d'API Gateway sont limités au VPC (SEC-31). Un mandataire de sortie à liste blanche reste recommandé en production."
     },
     {
       "id": "AVD-AWS-0053",
       "justification": "Répartiteur public par conception : il sert l'application aux usagers. Il n'écoute qu'en HTTPS (HTTP redirigé, SEC-23) et rejette les en-têtes invalides."
-    },
-    {
-      "id": "AVD-AWS-0132",
-      "justification": "Chiffrement au repos par la clé KMS gérée par AWS ; une clé gérée par le client (rotation et révocation propres) est une option de durcissement selon la politique de l'organisation, sans faille ouverte."
-    },
-    {
-      "id": "KSV014",
-      "justification": "Seul le service de conversion (Gotenberg) garde une racine inscriptible : LibreOffice y écrit son profil. Il s'exécute sans privilège, sans capacité, sans compte de service monté, et n'est joignable que du serveur."
-    },
-    {
-      "id": "DS002",
-      "justification": "Seule l'image d'outils des bacs à sable (ICP et pyHanko d'essai) s'exécute en root : elle ne sert qu'aux essais locaux et n'est jamais déployée. Les images de production (serveur, frontal) s'exécutent sans privilège (SEC-24)."
-    },
-    {
-      "id": "AVD-AWS-0136",
-      "justification": "Rubrique d'alertes chiffrée au repos par la clé KMS gérée par AWS (SEC-25) ; une clé gérée par le client est une option de durcissement selon la politique de l'organisation."
     },
     {
       "id": "AVD-AWS-0040",

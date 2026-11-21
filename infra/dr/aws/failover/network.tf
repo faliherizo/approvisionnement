@@ -38,7 +38,7 @@ resource "aws_security_group" "alb" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.vpc_cidr] # aucune sortie hors du VPC : rien à joindre sur Internet
   }
   lifecycle { create_before_destroy = true }
 }
@@ -78,7 +78,7 @@ resource "aws_security_group" "rds" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.vpc_cidr] # aucune sortie hors du VPC : rien à joindre sur Internet
   }
   lifecycle { create_before_destroy = true }
 }

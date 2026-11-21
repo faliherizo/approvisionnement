@@ -6,3 +6,6 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 RUN pip install --no-cache-dir "pyhanko[opentype]==0.25.1" "pyhanko-certvalidator==0.26.3"
 WORKDIR /travail
+# Compte sans privilège : l'ICP d'essai et pyHanko n'ont besoin que de leur état (/etat) et de leurs scripts en lecture.
+RUN useradd --system --uid 10001 --no-create-home bac && mkdir -p /travail && chown bac /travail
+USER 10001

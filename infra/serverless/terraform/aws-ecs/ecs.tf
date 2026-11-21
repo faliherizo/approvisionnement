@@ -52,6 +52,7 @@ resource "aws_iam_role_policy" "ecs_task" {
     Version = "2012-10-17"
     Statement = [
       { Sid = "Documents", Effect = "Allow", Action = ["s3:GetObject", "s3:PutObject", "s3:ListBucket", "s3:DeleteObject"], Resource = [aws_s3_bucket.documents.arn, "${aws_s3_bucket.documents.arn}/*"] },
+      { Sid = "Chiffrement", Effect = "Allow", Action = ["kms:GenerateDataKey", "kms:Decrypt"], Resource = [aws_kms_key.donnees.arn] },
       { Sid = "PublicationQueue", Effect = "Allow", Action = ["sqs:SendMessage", "sqs:GetQueueAttributes"], Resource = [aws_sqs_queue.publication.arn] },
       { Sid = "Secrets", Effect = "Allow", Action = ["secretsmanager:GetSecretValue"], Resource = [aws_secretsmanager_secret.app.arn, aws_secretsmanager_secret.db.arn] },
       { Sid = "EmitEvents", Effect = "Allow", Action = ["events:PutEvents"], Resource = [aws_cloudwatch_event_bus.domain.arn] }
@@ -79,7 +80,7 @@ resource "aws_security_group" "alb" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.vpc_cidr] # aucune sortie hors du VPC : rien à joindre sur Internet
   }
   lifecycle { create_before_destroy = true }
 }
