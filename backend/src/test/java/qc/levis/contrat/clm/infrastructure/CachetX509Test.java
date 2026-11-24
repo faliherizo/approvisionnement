@@ -34,6 +34,7 @@ import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaCertStore;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
+import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.SignerInformation;
@@ -58,8 +59,13 @@ class CachetX509Test {
     private static final Clock HORLOGE = Clock.fixed(Instant.parse("2026-11-12T15:00:00Z"), ZoneOffset.UTC);
     private static final byte[] CONTENU = "Entente Agri-Nord v3".getBytes(StandardCharsets.UTF_8);
 
+    /** Premier objet DER : l'emplacement /Contents d'un PDF signé est bourré de zéros. */
+    private static byte[] sansBourrage(byte[] octets) throws Exception {
+        try (ASN1InputStream lecteur = new ASN1InputStream(octets)) { return lecteur.readObject().getEncoded(); }
+    }
+
     private static boolean valide(byte[] p7s, byte[] contenu) throws Exception {
-        CMSSignedData cms = new CMSSignedData(new CMSProcessableByteArray(contenu), p7s);
+        CMSSignedData cms = new CMSSignedData(new CMSProcessableByteArray(contenu), sansBourrage(p7s));
         SignerInformation si = cms.getSignerInfos().getSigners().iterator().next();
         X509CertificateHolder cert = (X509CertificateHolder) cms.getCertificates().getMatches(si.getSID()).iterator().next();
         try {
@@ -101,7 +107,7 @@ class CachetX509Test {
             byte[] signe = sig.getSignedContent(scelle);
             byte[] cms = sig.getContents(scelle);
             assertTrue(valide(cms, signe), "signature PAdES valide sur la plage signée");
-            SignerInformation si = new CMSSignedData(new CMSProcessableByteArray(signe), cms).getSignerInfos().getSigners().iterator().next();
+            SignerInformation si = new CMSSignedData(new CMSProcessableByteArray(signe), sansBourrage(cms)).getSignerInfos().getSigners().iterator().next();
             assertNull(si.getSignedAttributes().get(CMSAttributes.signingTime), "PAdES : l'heure est dans le dictionnaire");
             int[] plage = sig.getByteRange();
             assertTrue(plage[2] + plage[3] < scelle.length, "le DSS s'ajoute en révision incrémentale après la plage signée");

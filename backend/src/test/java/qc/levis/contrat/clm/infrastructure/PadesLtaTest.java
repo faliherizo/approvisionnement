@@ -46,6 +46,7 @@ import org.bouncycastle.cert.jcajce.JcaCertStore;
 import org.bouncycastle.cert.jcajce.JcaX509CRLConverter;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
+import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
@@ -114,7 +115,10 @@ class PadesLtaTest {
             PDSignature horodatage = signatures.get(1);
             assertEquals("ETSI.RFC3161", horodatage.getSubFilter());
             assertEquals("DocTimeStamp", horodatage.getCOSObject().getNameAsString(COSName.TYPE));
-            TimeStampToken t = new TimeStampToken(new CMSSignedData(horodatage.getContents(scelle)));
+            // Premier objet DER seulement : l'emplacement /Contents est bourré de zéros.
+            byte[] jeton;
+            try (ASN1InputStream lecteur = new ASN1InputStream(horodatage.getContents(scelle))) { jeton = lecteur.readObject().getEncoded(); }
+            TimeStampToken t = new TimeStampToken(new CMSSignedData(jeton));
             assertArrayEquals(MessageDigest.getInstance("SHA-256").digest(horodatage.getSignedContent(scelle)),
                     t.getTimeStampInfo().getMessageImprintDigest(), "l'horodatage couvre le document, DSS compris");
             int[] plage = horodatage.getByteRange();

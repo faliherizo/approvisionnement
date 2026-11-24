@@ -26,6 +26,8 @@ import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.cos.COSStream;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
+import org.bouncycastle.asn1.ASN1InputStream;
+import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.x509.AccessDescription;
 import org.bouncycastle.asn1.x509.AuthorityInformationAccess;
 import org.bouncycastle.asn1.x509.CRLDistPoint;
@@ -93,8 +95,12 @@ final class DonneesValidation {
 
     /** Certificats du CMS et de ses jetons d'horodatage (attribut non signé signature-time-stamp). */
     static List<X509Certificate> certificatsDe(byte[] cms) {
-        try {
-            CMSSignedData signe = new CMSSignedData(cms);
+        // L'emplacement /Contents d'un PDF signé est bourré de zéros : seul le premier objet DER est la signature. Les
+        // versions récentes de Bouncy Castle (≥ 1.85) refusent ces octets en trop au lieu de les ignorer.
+        try (ASN1InputStream lecteur = new ASN1InputStream(cms)) {
+            ASN1Primitive objet = lecteur.readObject();
+            if (objet == null) throw new IllegalStateException("Signature illisible : aucun contenu.");
+            CMSSignedData signe = new CMSSignedData(ContentInfo.getInstance(objet));
             List<X509Certificate> tous = new ArrayList<>(convertir(signe.getCertificates()));
             for (SignerInformation si : signe.getSignerInfos().getSigners()) {
                 Attribute jeton = si.getUnsignedAttributes() == null ? null
@@ -104,7 +110,7 @@ final class DonneesValidation {
                 }
             }
             return tous;
-        } catch (CMSException | CertificateException e) {
+        } catch (CMSException | CertificateException | IOException | IllegalArgumentException e) {
             throw new IllegalStateException("Signature illisible : " + e.getMessage(), e);
         }
     }
