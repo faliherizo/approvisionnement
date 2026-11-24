@@ -26,6 +26,16 @@ const actif = !!process.env.E2E_BASE_URL
 test.skip(!actif, 'E2E_BASE_URL absente : la recette ne vise qu\'un environnement déployé')
 test.describe.configure({ mode: 'serial', timeout: 600_000 })
 
+// Configuration de l'hébergement, sans rien écrire : les relais nginx laissent passer une pièce de 26 Mo (cahier IQ 1.4.7,
+// téléversement d'au moins 25 Mo) : le serveur la refuse ensuite faute de session, jamais nginx par 413.
+test('hébergement : pièce de 26 Mo admise par les relais nginx', async ({ request }) => {
+  const r = await request.post('/api/clm/trousses/0/documents', {
+    multipart: { fichier: { name: 'gros.pdf', mimeType: 'application/pdf', buffer: Buffer.alloc(26 * 1024 * 1024, 0x20) } },
+  })
+  expect(r.status(), 'refus par nginx (413) : client_max_body_size trop bas').not.toBe(413)
+  expect([401, 403]).toContain(r.status())
+})
+
 for (const demo of demos) {
   // Un tenant CLM seul (ADR-010) n'a que l'espace /clm ; les autres, l'espace du socle.
   const espace = demo.modules.clm && Object.entries(demo.modules).filter(([k, v]) => v && !k.startsWith('clm')).length === 0 ? 'clm' : 'socle'

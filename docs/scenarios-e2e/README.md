@@ -24,6 +24,7 @@
 | `aller` | ouvrir un écran | `{ "aller": "/recherche" }` |
 | `connecter` | changer d'utilisateur | `{ "connecter": "juriste de Lévis" }` |
 | `langue` | changer la langue de l'interface | `{ "langue": "en" }` |
+| `largeur` | afficher l'écran à une largeur donnée (téléphone : 390) | `{ "largeur": 390 }` |
 | `cliquer` | activer un bouton ou un lien, par son nom accessible | `{ "cliquer": "Rechercher" }` |
 | `dansLaLigne` | agir sur une ligne de tableau | `{ "dansLaLigne": { "texte": "Inscription", "cliquer": "Concevoir" } }` |
 | `remplir` | saisir des champs, par leur libellé ; « Section » Libellé » limite à une section, « Libellé #2 » vise la 2e occurrence | `{ "remplir": { "Terme": "garantie" } }` |
@@ -62,5 +63,5 @@ npx playwright test -c playwright.e2e.config.ts --grep @LEV-C-02   # les scénar
 |---|---|---:|---:|---:|---:|
 | Ville de Lévis — avis d'appel d'intérêt 2026-50-92 | [levis.md](levis.md) | 34 | 34 | 25 | 25 |
 | Ville de Trois-Rivières — appel d'offres 7000017905 | [trois-rivieres.md](trois-rivieres.md) | 20 | 20 | 11 | 11 |
-| Investissement Québec — AO 2026-6370-0005 | [iq.md](iq.md) | 132 | 132 | 42 | 41 |
+| Investissement Québec — AO 2026-6370-0005 | [iq.md](iq.md) | 132 | 132 | 63 | 63 |
 | Santé Québec — CHU, avis d'intention | [chu.md](chu.md) | 52 | 52 | 28 | 28 |

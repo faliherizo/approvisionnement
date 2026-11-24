@@ -12,12 +12,14 @@
 
 - **Source** : Section III n° 2
 - **Conformité déclarée** : ✅ Export .docx modifiable (moteur Apache POI, DocxContractRenderer).
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-TR-02 — Un document approuvé se génère en Word modifiable et se publie vers Microsoft 365
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : TR-02, TR-04, TR-20
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `tr.document.approuve`
@@ -30,12 +32,14 @@
 
 - **Source** : Section III n° 3
 - **Conformité déclarée** : ✅ Import de modèles .docx existants, détection de sections, mise au format gabarit.
+- **Démontrée à l'écran** : oui
 
 ### E2E-TR-01 — Un modèle Word existant est analysé puis importé comme modèle de la plateforme
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : TR-03
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : parcours d'interface (4 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/donnees`
@@ -51,12 +55,14 @@
 
 - **Source** : Section III n° 4
 - **Conformité déclarée** : ✅ Intégration Microsoft Graph réelle (SharePoint, OneDrive, Teams, Outlook).
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-TR-02 — Un document approuvé se génère en Word modifiable et se publie vers Microsoft 365
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : TR-02, TR-04, TR-20
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `tr.document.approuve`
@@ -69,12 +75,14 @@
 
 - **Source** : Section III n° 5
 - **Conformité déclarée** : ✅ Jeton httpOnly, RBAC ; module de connecteur d'authentification — OIDC et SAML 2.0 (Microsoft Entra ID ou IdP gouvernemental) configurable et activable par organisation — les utilisateurs gouvernementaux du client s'authentifient via leur annuaire.
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-TR-03 — Accès sécurisés : second facteur au choix de l'utilisateur, rôles administrés, responsabilités séparées
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : TR-05, TR-06, TR-07, TR-13
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/securite`
@@ -90,12 +98,14 @@
 
 - **Source** : Section III n° 6
 - **Conformité déclarée** : ✅ MFA (TOTP et questions secrètes) — comptes de démo totp@ et question@levis.qc.ca —, ou MFA corporatif via SSO.
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-TR-03 — Accès sécurisés : second facteur au choix de l'utilisateur, rôles administrés, responsabilités séparées
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : TR-05, TR-06, TR-07, TR-13
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/securite`
@@ -111,12 +121,14 @@
 
 - **Source** : Section III n° 7
 - **Conformité déclarée** : ✅ RBAC (rédacteur, approbateur, juriste, admin, superadmin), isolation multi-tenant.
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-TR-03 — Accès sécurisés : second facteur au choix de l'utilisateur, rôles administrés, responsabilités séparées
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : TR-05, TR-06, TR-07, TR-13
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/securite`
@@ -132,12 +144,14 @@
 
 - **Source** : Section III n° 8
 - **Conformité déclarée** : ✅ TLS en transit ; secrets chiffrés (AES) au repos ; PostgreSQL chiffré.
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-TR-04 — Le secret d'intégration est stocké chiffré, jamais réaffiché ; les règles internes se paramètrent
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : TR-08, TR-10
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/parametres`
@@ -149,12 +163,14 @@
 
 - **Source** : Section III n° 9
 - **Conformité déclarée** : ✅ Journal d'audit complet (accès et actions), traçable et filtrable.
+- **Démontrée à l'écran** : oui
 
 ### E2E-TR-05 — Le journal d'audit se filtre et s'exporte ; versions et validations du document restent tracées
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : TR-09, TR-11, TR-12
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `tr.document.approuve`
@@ -174,12 +190,14 @@
 
 - **Source** : Section III n° 10
 - **Conformité déclarée** : ✅ Circuits d'approbation, gabarits et règles configurables par la Ville.
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-TR-04 — Le secret d'intégration est stocké chiffré, jamais réaffiché ; les règles internes se paramètrent
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : TR-08, TR-10
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/parametres`
@@ -191,12 +209,14 @@
 
 - **Source** : Section III n° 11
 - **Conformité déclarée** : ✅ Versionnage, historique des validations, approbations et modifications.
+- **Démontrée à l'écran** : oui
 
 ### E2E-TR-05 — Le journal d'audit se filtre et s'exporte ; versions et validations du document restent tracées
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : TR-09, TR-11, TR-12
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `tr.document.approuve`
@@ -216,12 +236,14 @@
 
 - **Source** : Section III n° 12
 - **Conformité déclarée** : ✅ Conservation des documents, versions, journaux et historiques.
+- **Démontrée à l'écran** : oui
 
 ### E2E-TR-05 — Le journal d'audit se filtre et s'exporte ; versions et validations du document restent tracées
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : TR-09, TR-11, TR-12
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `tr.document.approuve`
@@ -241,12 +263,14 @@
 
 - **Source** : Section III n° 13
 - **Conformité déclarée** : ✅ Contrôle des accès/rôles soutenant la séparation des responsabilités.
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-TR-03 — Accès sécurisés : second facteur au choix de l'utilisateur, rôles administrés, responsabilités séparées
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : TR-05, TR-06, TR-07, TR-13
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/securite`
@@ -268,12 +292,14 @@
 
 - **Source** : Section III n° 15
 - **Conformité déclarée** : ✅ Tout contenu IA est proposé et exige une validation humaine avant usage.
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-TR-06 — L'assistant IA est encadré : suggestions tracées, désactivable puis réactivable par l'administration
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : TR-15, TR-24
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/donnees`
@@ -305,12 +331,14 @@
 
 - **Source** : Section III n° 19
 - **Conformité déclarée** : ✅ Export complet des données, documents, modèles et configuration.
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-TR-07 — En fin de contrat, l'administration exporte toutes les données en une archive
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : TR-19
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/donnees`
@@ -321,12 +349,14 @@
 
 - **Source** : Section III n° 20
 - **Conformité déclarée** : ✅ Offert — publication réelle vers les quatre (Microsoft Graph).
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-TR-02 — Un document approuvé se génère en Word modifiable et se publie vers Microsoft 365
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : TR-02, TR-04, TR-20
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `tr.document.approuve`
@@ -339,12 +369,14 @@
 
 - **Source** : Section III n° 21
 - **Conformité déclarée** : ✅ Offert — regroupement docs/versions/validations/historiques par dossier.
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-TR-08 — Un dossier d'approvisionnement regroupe ses documents
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : TR-21
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/dossiers`
@@ -357,12 +389,14 @@
 
 - **Source** : Section III n° 22
 - **Conformité déclarée** : ✅ Offert — documents générés, validations, utilisateurs, dossiers en cours.
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-TR-09 — Rapports de suivi : indicateurs, documents par statut et par type, activité par utilisateur
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : TR-22
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/rapports`
@@ -375,12 +409,14 @@
 
 - **Source** : Section III n° 23
 - **Conformité déclarée** : ✅ Offert — circuits d'approbation paramétrables par type/processus.
+- **Démontrée à l'écran** : oui
 
 ### E2E-TR-10 — Les étapes de validation se définissent par type de document
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : TR-23
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : parcours d'interface (6 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/workflows`
@@ -399,12 +435,14 @@
 
 - **Source** : Section III n° 24
 - **Conformité déclarée** : ✅ Offert — l'IA est activable/désactivable par tenant.
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-TR-06 — L'assistant IA est encadré : suggestions tracées, désactivable puis réactivable par l'administration
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : TR-15, TR-24
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/donnees`
@@ -442,12 +480,14 @@
 
 - **Source** : Section III n° 29
 - **Conformité déclarée** : API REST documentée (OpenAPI / Swagger) — interface Swagger : <https://contrat.vinaitsolution.com/swagger-ui/index.html> · spécification OpenAPI : <https://contrat.vinaitsolution.com/v3/api-docs> ; connecteurs Microsoft Graph (M365), SAP (OData) et authentification SSO (OIDC / SAML 2.0), inclus au f
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-TR-11 — L'API est documentée et testable (OpenAPI 3.0)
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : TR-29
 - **Données** : `bdd/e2e/donnees/trois-rivieres.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/api-docs`

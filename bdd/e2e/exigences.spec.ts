@@ -115,6 +115,8 @@ async function jouer(page: Page, e: Etape, ctx: Contexte, outils: { playwright: 
     await page.getByRole('button', { name: 'Se connecter', exact: true }).click()
     return void await page.waitForURL((u) => !u.pathname.startsWith('/login'))
   }
+  // Largeur de l'écran (ex. 390 : téléphone) pour la suite du scénario.
+  if ('largeur' in e) return void await page.setViewportSize({ width: e.largeur, height: e.largeur < 600 ? 844 : 900 })
   if ('langue' in e) {
     await page.evaluate((l) => localStorage.setItem('locale', l), e.langue)
     return void await page.reload()
@@ -163,11 +165,14 @@ async function jouer(page: Page, e: Etape, ctx: Contexte, outils: { playwright: 
   if ('decocher' in e) return void await (await champ(page, e.decocher)).uncheck()
   if ('televerser' in e) {
     const f = e.televerser.fichier
+    // « pdf:25Mo » : PDF valide complété d'espaces jusqu'à la taille voulue (plafonds de téléversement).
+    const taille = f.fichier.match(/^pdf:(\d+)Mo$/)
     const contenu = f.fichier === 'pdf' ? PDF
+      : taille ? Buffer.concat([PDF, Buffer.alloc(Number(taille[1]) * 1024 * 1024 - PDF.length, 0x20)])
       : f.fichier.startsWith('chemin:') ? readFileSync(join(RACINE, f.fichier.slice(7)))
       : Buffer.from(f.fichier.replace(/^texte:/, ''), 'utf8')
     return void await (await champ(page, e.televerser.champ))
-      .setInputFiles({ name: f.nom, mimeType: f.type ?? 'application/octet-stream', buffer: contenu })
+      .setInputFiles({ name: f.nom, mimeType: f.type ?? 'application/octet-stream', buffer: contenu }, { timeout: 60_000 })
   }
   if ('voir' in e) {
     for (const t of [e.voir].flat()) await expect(page.getByText(t, { exact: false }).filter({ visible: true }).first(), `« ${t} » visible`).toBeVisible()

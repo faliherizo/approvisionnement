@@ -6,12 +6,14 @@
 
 - **Source** : Avis 2026-50-92, art. 2.1 n° 1
 - **Conformité déclarée** : Oui. Bibliothèque de clauses + moteur d'assemblage produisant devis de demande de prix et d'appel d'offres public.
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-08 — Depuis l'accueil, le rédacteur crée un document vierge puis un document à partir d'un template
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-1, LEV-C-07
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/`
@@ -31,6 +33,7 @@
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-1, LEV-2.1-4, LEV-2.1-5a, LEV-2.1-5b, LEV-2.1-5c, LEV-2.1-5d, LEV-2.1-5e, LEV-C-04, LEV-C-05, LEV-C-06, LEV-C-07, LEV-C-13, LEV-2.1-9
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/assistant`
@@ -48,12 +51,14 @@
 
 - **Source** : Avis 2026-50-92, art. 2.1 n° 2
 - **Conformité déclarée** : Oui. Types de contrat paramétrables : demande de prix, AOP, gré à gré, bail, prêt à usage, contrat de services, avis d'intention, addenda.
+- **Démontrée à l'écran** : oui
 
 ### E2E-LEV-04 — Contrats de gré à gré de toute nature et avis d'intention se rédigent depuis l'assistant
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-2, LEV-C-08, LEV-C-09
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (10 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/assistant`
@@ -77,12 +82,14 @@
 
 - **Source** : Avis 2026-50-92, art. 2.1 n° 3
 - **Conformité déclarée** : Oui. Bibliothèque centralisée avec catégories STANDARD / OPTIONNELLE / PERSONNALISÉE, numérotation, sections, versions.
+- **Démontrée à l'écran** : oui
 
 ### E2E-LEV-01 — Le juriste crée une clause optionnelle classée par thématique, la retrouve, puis consulte son historique
 
 - **Profil** : juriste de Lévis
 - **Exigences démontrées** : LEV-2.1-3, LEV-C-01, LEV-C-03
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (7 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clauses`
@@ -101,12 +108,14 @@
 
 - **Source** : Avis 2026-50-92, art. 2.1 n° 4
 - **Conformité déclarée** : Oui. Assemblage en un clic : les clauses STANDARD éligibles sont intégrées automatiquement ; sélection manuelle possible.
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-06 — L'administration crée un template de document, le modifie puis le supprime
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-2.1-4, LEV-C-04
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (9 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/templates`
@@ -128,6 +137,7 @@
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-2.1-4, LEV-2.1-6, LEV-2.1-6a, LEV-2.1-7, LEV-2.1-8, LEV-C-10, LEV-C-11, LEV-C-20
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (54 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Document de demande de prix
@@ -206,6 +216,7 @@
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-1, LEV-2.1-4, LEV-2.1-5a, LEV-2.1-5b, LEV-2.1-5c, LEV-2.1-5d, LEV-2.1-5e, LEV-C-04, LEV-C-05, LEV-C-06, LEV-C-07, LEV-C-13, LEV-2.1-9
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/assistant`
@@ -223,12 +234,14 @@
 
 - **Source** : Avis 2026-50-92, art. 2.1 n° 5a
 - **Conformité déclarée** : Oui. Moteur de règles d'éligibilité par type de contrat.
+- **Démontrée à l'écran** : oui
 
 ### E2E-LEV-03 — L'assistant guidé recommande les clauses selon le type, la valeur et le contexte, puis génère le devis assemblé
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-1, LEV-2.1-4, LEV-2.1-5a, LEV-2.1-5b, LEV-2.1-5c, LEV-2.1-5d, LEV-2.1-5e, LEV-C-04, LEV-C-05, LEV-C-06, LEV-C-07, LEV-C-13, LEV-2.1-9
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/assistant`
@@ -246,12 +259,14 @@
 
 - **Source** : Avis 2026-50-92, art. 2.1 n° 5b
 - **Conformité déclarée** : Oui. Règles par mode (demande de prix, AOP, gré à gré).
+- **Démontrée à l'écran** : oui
 
 ### E2E-LEV-03 — L'assistant guidé recommande les clauses selon le type, la valeur et le contexte, puis génère le devis assemblé
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-1, LEV-2.1-4, LEV-2.1-5a, LEV-2.1-5b, LEV-2.1-5c, LEV-2.1-5d, LEV-2.1-5e, LEV-C-04, LEV-C-05, LEV-C-06, LEV-C-07, LEV-C-13, LEV-2.1-9
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/assistant`
@@ -269,12 +284,14 @@
 
 - **Source** : Avis 2026-50-92, art. 2.1 n° 5c
 - **Conformité déclarée** : Oui. Seuils paramétrables (p. ex. seuil d'AOP) déclenchant l'inclusion de clauses.
+- **Démontrée à l'écran** : oui
 
 ### E2E-LEV-03 — L'assistant guidé recommande les clauses selon le type, la valeur et le contexte, puis génère le devis assemblé
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-1, LEV-2.1-4, LEV-2.1-5a, LEV-2.1-5b, LEV-2.1-5c, LEV-2.1-5d, LEV-2.1-5e, LEV-C-04, LEV-C-05, LEV-C-06, LEV-C-07, LEV-C-13, LEV-2.1-9
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/assistant`
@@ -292,12 +309,14 @@
 
 - **Source** : Avis 2026-50-92, art. 2.1 n° 5d
 - **Conformité déclarée** : Oui. Conditions d'éligibilité sur attributs de contexte du dossier.
+- **Démontrée à l'écran** : oui
 
 ### E2E-LEV-03 — L'assistant guidé recommande les clauses selon le type, la valeur et le contexte, puis génère le devis assemblé
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-1, LEV-2.1-4, LEV-2.1-5a, LEV-2.1-5b, LEV-2.1-5c, LEV-2.1-5d, LEV-2.1-5e, LEV-C-04, LEV-C-05, LEV-C-06, LEV-C-07, LEV-C-13, LEV-2.1-9
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/assistant`
@@ -315,12 +334,14 @@
 
 - **Source** : Avis 2026-50-92, art. 2.1 n° 5e
 - **Conformité déclarée** : Oui. Gestion des dépendances (auto-inclusion des clauses requises) et exclusions (incompatibilités).
+- **Démontrée à l'écran** : oui
 
 ### E2E-LEV-03 — L'assistant guidé recommande les clauses selon le type, la valeur et le contexte, puis génère le devis assemblé
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-1, LEV-2.1-4, LEV-2.1-5a, LEV-2.1-5b, LEV-2.1-5c, LEV-2.1-5d, LEV-2.1-5e, LEV-C-04, LEV-C-05, LEV-C-06, LEV-C-07, LEV-C-13, LEV-2.1-9
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/assistant`
@@ -338,12 +359,14 @@
 
 - **Source** : Avis 2026-50-92, art. 2.1 n° 6
 - **Conformité déclarée** : Oui. Rôles distincts (Rédacteur, Approbateur, Juridique, Administrateur) et circuit d'approbation.
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-13 — Dans l'éditeur, chaque fonction du devis s'exerce : assemblage, sections, commentaires, approbation, publication, addenda, versions, obligations, signature, annexes, bordereau et générations
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-2.1-4, LEV-2.1-6, LEV-2.1-6a, LEV-2.1-7, LEV-2.1-8, LEV-C-10, LEV-C-11, LEV-C-20
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (54 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Document de demande de prix
@@ -422,6 +445,7 @@
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-6, LEV-2.1-6a, LEV-C-11, LEV-C-17
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (3 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Devis à réviser
@@ -443,12 +467,14 @@
 
 - **Source** : Avis 2026-50-92, art. 2.1 n° 6a
 - **Conformité déclarée** : Oui. Fil de commentaires par document, visibles des intervenants.
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-13 — Dans l'éditeur, chaque fonction du devis s'exerce : assemblage, sections, commentaires, approbation, publication, addenda, versions, obligations, signature, annexes, bordereau et générations
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-2.1-4, LEV-2.1-6, LEV-2.1-6a, LEV-2.1-7, LEV-2.1-8, LEV-C-10, LEV-C-11, LEV-C-20
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (54 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Document de demande de prix
@@ -527,6 +553,7 @@
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-6, LEV-2.1-6a, LEV-C-11, LEV-C-17
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (3 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Devis à réviser
@@ -548,12 +575,14 @@
 
 - **Source** : Avis 2026-50-92, art. 2.1 n° 6b
 - **Conformité déclarée** : Oui. Circuit d'approbation hiérarchisé multi-niveaux (N1, N2…) avec décisions (approuvé/refusé) et traçabilité.
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-04 — L'administration crée un circuit d'approbation, le modifie puis le supprime
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-12, LEV-2.1-6b
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (9 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/workflows`
@@ -575,6 +604,7 @@
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-12, LEV-2.1-6b
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/workflows`
@@ -592,12 +622,14 @@
 
 - **Source** : Avis 2026-50-92, art. 2.1 n° 7
 - **Conformité déclarée** : Oui. Création d'addendas, ajout de modifications rattachées à une clause précise du devis, puis émission (réintégration au document).
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-13 — Dans l'éditeur, chaque fonction du devis s'exerce : assemblage, sections, commentaires, approbation, publication, addenda, versions, obligations, signature, annexes, bordereau et générations
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-2.1-4, LEV-2.1-6, LEV-2.1-6a, LEV-2.1-7, LEV-2.1-8, LEV-C-10, LEV-C-11, LEV-C-20
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (54 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Document de demande de prix
@@ -676,6 +708,7 @@
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-7, LEV-2.1-8, LEV-C-10, LEV-C-20
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (4 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Devis assemblé
@@ -692,12 +725,14 @@
 
 - **Source** : Avis 2026-50-92, art. 2.1 n° 8
 - **Conformité déclarée** : Oui. Génération PDF et Word (DOCX) ; les addendas émis sont intégrés au document final et à ses annexes.
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-07 — L'administration crée un gabarit, le modifie, personnalise un gabarit global, puis supprime ses gabarits
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-2.1-8
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (9 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/gabarits`
@@ -719,6 +754,7 @@
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-2.1-4, LEV-2.1-6, LEV-2.1-6a, LEV-2.1-7, LEV-2.1-8, LEV-C-10, LEV-C-11, LEV-C-20
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (54 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Document de demande de prix
@@ -797,6 +833,7 @@
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-2.1-8
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (3 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Document dont la signature est démarrée
@@ -811,6 +848,7 @@
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-7, LEV-2.1-8, LEV-C-10, LEV-C-20
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (4 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Devis assemblé
@@ -827,12 +865,14 @@
 
 - **Source** : Avis 2026-50-92, art. 2.1 n° 9
 - **Conformité déclarée** : Oui. Contenu aligné sur la LCOP, la LCV, le Code municipal et le cadre normatif SCT (CCAG) ; clauses normatives verrouillées ; assistance juridique offerte (voir §5).
+- **Démontrée à l'écran** : oui
 
 ### E2E-LEV-03 — L'assistant guidé recommande les clauses selon le type, la valeur et le contexte, puis génère le devis assemblé
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-1, LEV-2.1-4, LEV-2.1-5a, LEV-2.1-5b, LEV-2.1-5c, LEV-2.1-5d, LEV-2.1-5e, LEV-C-04, LEV-C-05, LEV-C-06, LEV-C-07, LEV-C-13, LEV-2.1-9
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/assistant`
@@ -874,12 +914,14 @@
 
 - **Source** : Cahier 2026-50-92 — EF1
 - **Conformité déclarée** : ✅ Clause + catégories, CRUD
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-02 — Le juriste modifie une clause, restaure sa première version depuis l'historique, puis la supprime
 
 - **Profil** : juriste de Lévis
 - **Exigences démontrées** : LEV-C-01, LEV-C-03
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (8 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Clause standard « ECR-… »
@@ -902,6 +944,7 @@
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-01, LEV-C-15
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (6 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Personne à effacer
@@ -922,6 +965,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-2.1-13, LEV-C-01
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (14 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Clause et document à enrichir
@@ -950,6 +994,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : juriste de Lévis
 - **Exigences démontrées** : LEV-2.1-3, LEV-C-01, LEV-C-03
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (7 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clauses`
@@ -968,12 +1013,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — EF1
 - **Conformité déclarée** : ✅ Recherche multicritère /api/search : terme, portée (catégorie), thématique (section), type de contrat applicable, clauses normatives ; facettes portée et thématique
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-03 — Depuis la recherche, le juriste supprime une clause et l'administration un document
 
 - **Profil** : juriste de Lévis
 - **Exigences démontrées** : LEV-C-02
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (8 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Une clause et un document au même mot-clé
@@ -997,6 +1044,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-02
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (6 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/recherche`
@@ -1014,12 +1062,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — EF1
 - **Conformité déclarée** : Oui. Chaque création, modification ou restauration fige une version consultable (texte, auteur, date, motif) ; toute version antérieure se restaure et la restauration devient une nouvelle version.
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-02 — Le juriste modifie une clause, restaure sa première version depuis l'historique, puis la supprime
 
 - **Profil** : juriste de Lévis
 - **Exigences démontrées** : LEV-C-01, LEV-C-03
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (8 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Clause standard « ECR-… »
@@ -1042,6 +1092,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : juriste de Lévis
 - **Exigences démontrées** : LEV-2.1-3, LEV-C-01, LEV-C-03
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (7 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clauses`
@@ -1060,12 +1111,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — EF2
 - **Conformité déclarée** : ✅ DocumentService.assembler
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-06 — L'administration crée un template de document, le modifie puis le supprime
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-2.1-4, LEV-C-04
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (9 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/templates`
@@ -1087,6 +1140,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-1, LEV-2.1-4, LEV-2.1-5a, LEV-2.1-5b, LEV-2.1-5c, LEV-2.1-5d, LEV-2.1-5e, LEV-C-04, LEV-C-05, LEV-C-06, LEV-C-07, LEV-C-13, LEV-2.1-9
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/assistant`
@@ -1104,12 +1158,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — EF2
 - **Conformité déclarée** : ✅ RuleEngine + ClauseCondition
+- **Démontrée à l'écran** : oui
 
 ### E2E-LEV-03 — L'assistant guidé recommande les clauses selon le type, la valeur et le contexte, puis génère le devis assemblé
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-1, LEV-2.1-4, LEV-2.1-5a, LEV-2.1-5b, LEV-2.1-5c, LEV-2.1-5d, LEV-2.1-5e, LEV-C-04, LEV-C-05, LEV-C-06, LEV-C-07, LEV-C-13, LEV-2.1-9
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/assistant`
@@ -1127,12 +1183,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — EF2
 - **Conformité déclarée** : ✅ Dépendances et exclusions entre clauses, appliquées par le moteur d'assemblage
+- **Démontrée à l'écran** : oui
 
 ### E2E-LEV-03 — L'assistant guidé recommande les clauses selon le type, la valeur et le contexte, puis génère le devis assemblé
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-1, LEV-2.1-4, LEV-2.1-5a, LEV-2.1-5b, LEV-2.1-5c, LEV-2.1-5d, LEV-2.1-5e, LEV-C-04, LEV-C-05, LEV-C-06, LEV-C-07, LEV-C-13, LEV-2.1-9
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/assistant`
@@ -1150,12 +1208,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — EF3
 - **Conformité déclarée** : ✅ Types + assemblage
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-08 — Depuis l'accueil, le rédacteur crée un document vierge puis un document à partir d'un template
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-1, LEV-C-07
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/`
@@ -1175,6 +1235,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-1, LEV-2.1-4, LEV-2.1-5a, LEV-2.1-5b, LEV-2.1-5c, LEV-2.1-5d, LEV-2.1-5e, LEV-C-04, LEV-C-05, LEV-C-06, LEV-C-07, LEV-C-13, LEV-2.1-9
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/assistant`
@@ -1192,12 +1253,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — EF3
 - **Conformité déclarée** : ✅ Types + templates
+- **Démontrée à l'écran** : oui
 
 ### E2E-LEV-04 — Contrats de gré à gré de toute nature et avis d'intention se rédigent depuis l'assistant
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-2, LEV-C-08, LEV-C-09
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (10 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/assistant`
@@ -1221,12 +1284,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — EF3
 - **Conformité déclarée** : ✅ Type de document AVIS_INTENTION (avis d'intention de contracter de gré à gré)
+- **Démontrée à l'écran** : oui
 
 ### E2E-LEV-04 — Contrats de gré à gré de toute nature et avis d'intention se rédigent depuis l'assistant
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-2, LEV-C-08, LEV-C-09
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (10 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/assistant`
@@ -1250,12 +1315,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — EF3
 - **Conformité déclarée** : ✅ Addenda + rendu PDF/DOCX intégrant les addendas
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-13 — Dans l'éditeur, chaque fonction du devis s'exerce : assemblage, sections, commentaires, approbation, publication, addenda, versions, obligations, signature, annexes, bordereau et générations
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-2.1-4, LEV-2.1-6, LEV-2.1-6a, LEV-2.1-7, LEV-2.1-8, LEV-C-10, LEV-C-11, LEV-C-20
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (54 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Document de demande de prix
@@ -1334,6 +1401,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-7, LEV-2.1-8, LEV-C-10, LEV-C-20
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (4 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Devis assemblé
@@ -1350,12 +1418,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — EF4
 - **Conformité déclarée** : ✅ Comment + WYSIWYG
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-13 — Dans l'éditeur, chaque fonction du devis s'exerce : assemblage, sections, commentaires, approbation, publication, addenda, versions, obligations, signature, annexes, bordereau et générations
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-2.1-4, LEV-2.1-6, LEV-2.1-6a, LEV-2.1-7, LEV-2.1-8, LEV-C-10, LEV-C-11, LEV-C-20
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (54 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Document de demande de prix
@@ -1434,6 +1504,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-6, LEV-2.1-6a, LEV-C-11, LEV-C-17
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (3 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Devis à réviser
@@ -1455,12 +1526,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — EF4
 - **Conformité déclarée** : ✅ Circuit d'approbation configurable par type de document (/api/workflows, écran Circuits) ; le circuit par défaut ne sert qu'en l'absence de circuit configuré
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-04 — L'administration crée un circuit d'approbation, le modifie puis le supprime
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-12, LEV-2.1-6b
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (9 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/workflows`
@@ -1482,6 +1555,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-12, LEV-2.1-6b
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/workflows`
@@ -1499,12 +1573,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — ENF1
 - **Conformité déclarée** : ✅ Règles = ClauseCondition maintenables
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-14 — Les paramètres de l'organisation : valeurs des listes, modèle de document et les quatre intégrations, enregistrées et testées
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-13, LEV-C-16, LEV-C-21
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (20 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/parametres`
@@ -1536,6 +1612,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-1, LEV-2.1-4, LEV-2.1-5a, LEV-2.1-5b, LEV-2.1-5c, LEV-2.1-5d, LEV-2.1-5e, LEV-C-04, LEV-C-05, LEV-C-06, LEV-C-07, LEV-C-13, LEV-2.1-9
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/assistant`
@@ -1559,12 +1636,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — ENF1
 - **Conformité déclarée** : Oui. Droits d'accès et d'effacement (Loi 25, art. 27 à 28.1) : dossier structuré par source (compte, journal, rédaction, fiches, notifications), effacement par pseudonymisation avec motif de conservation, registre des demandes sous empreinte ; chiffrement en transit et au repos assuré par l'infrastructure.
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-11 — L'administration importe des clauses par CSV et efface une personne au titre de la Loi 25
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-01, LEV-C-15
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (6 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Personne à effacer
@@ -1585,6 +1664,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-15
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/vie-privee`
@@ -1598,12 +1678,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — ENF2
 - **Conformité déclarée** : ✅ Entra ID (OIDC) + RBAC + TOTP/question
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-01 — L'administration crée un compte, le modifie puis le supprime depuis l'écran des utilisateurs
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-16
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (10 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/utilisateurs`
@@ -1626,6 +1708,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-C-16
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (5 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/profil`
@@ -1642,6 +1725,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-16
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (7 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Compte sans MFA
@@ -1661,6 +1745,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-13, LEV-C-16, LEV-C-21
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (20 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/parametres`
@@ -1692,6 +1777,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-16, LEV-C-21, LEV-C-22
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/utilisateurs`
@@ -1707,12 +1793,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — ENF2
 - **Conformité déclarée** : ✅ AuditLog
+- **Démontrée à l'écran** : oui
 
 ### E2E-LEV-06 — Le juriste commente le devis, puis le circuit d'approbation démarre et chaque niveau décide
 
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-6, LEV-2.1-6a, LEV-C-11, LEV-C-17
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (3 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Devis à réviser
@@ -1746,12 +1834,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — DAO
 - **Conformité déclarée** : Oui. Fiche XML des métadonnées de l'avis (numéro, organisme, titre, type d'avis, nature, montant estimé, adjudicataire), éléments du jeu de données ouvertes SEAO ; le SEAO n'offrant pas de dépôt par API, la fiche est reprise dans le SEAO et versée au dossier ; export journalisé. Nomenclature des codes à confirmer avec la Ville.
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-13 — Dans l'éditeur, chaque fonction du devis s'exerce : assemblage, sections, commentaires, approbation, publication, addenda, versions, obligations, signature, annexes, bordereau et générations
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-2.1-4, LEV-2.1-6, LEV-2.1-6a, LEV-2.1-7, LEV-2.1-8, LEV-C-10, LEV-C-11, LEV-C-20
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (54 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Document de demande de prix
@@ -1830,6 +1920,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : rédacteur de Lévis
 - **Exigences démontrées** : LEV-2.1-7, LEV-2.1-8, LEV-C-10, LEV-C-20
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : parcours d'interface (4 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Devis assemblé
@@ -1846,12 +1937,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — DAO
 - **Conformité déclarée** : ✅ Azure Entra ID
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-14 — Les paramètres de l'organisation : valeurs des listes, modèle de document et les quatre intégrations, enregistrées et testées
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-13, LEV-C-16, LEV-C-21
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (20 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/parametres`
@@ -1883,6 +1976,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-16, LEV-C-21, LEV-C-22
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/utilisateurs`
@@ -1898,12 +1992,14 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 - **Source** : Cahier 2026-50-92 — Multi-tenant
 - **Conformité déclarée** : ✅ Bonus : isolation par tenant, i18n FR/EN/MG
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-LEV-12 — L'écran d'accueil public propose le choix de l'organisation, la connexion à l'image de l'organisation et les dépôts simulés s'ouvrent
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-22, LEV-2.1-13
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (3 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/simulateur`
@@ -1924,6 +2020,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : superadmin
 - **Exigences démontrées** : LEV-C-22, LEV-2.1-10
 - **Données** : `bdd/e2e/donnees/ecrans-levis.json`
+- **Nature** : parcours d'interface (28 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/superadmin`
@@ -1966,6 +2063,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-16, LEV-C-21, LEV-C-22
 - **Données** : `bdd/e2e/donnees/levis.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/utilisateurs`

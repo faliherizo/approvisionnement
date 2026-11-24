@@ -6,12 +6,14 @@
 
 - **Source** : Avis d'intention CHU § 1
 - **Conformité déclarée** : ✅ — multi-tenant ; infra Azure/AWS (docs trois-rivière, DR)
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-15 — Applications par environnement (production, développement, acceptation)
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-1.04, CHU-1.01
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.applications`
@@ -29,12 +31,14 @@
 
 - **Source** : Avis d'intention CHU § 1
 - **Conformité déclarée** : ✅ — TenantContext (multi-tenant) + environnement (Application)
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-18 — Les formulaires d'une organisation restent invisibles des autres
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-1.03
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire du CHU
@@ -48,12 +52,14 @@
 
 - **Source** : Avis d'intention CHU § 1
 - **Conformité déclarée** : ✅ — Application.environnement (DEV/UAT/PROD)
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-15 — Applications par environnement (production, développement, acceptation)
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-1.04, CHU-1.01
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.applications`
@@ -66,6 +72,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-1.04, CHU-5.01, CHU-4.07, CHU-8.04, CHU-7.03, CHU-7.04
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (32 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié (cible des notifications et des échanges)
@@ -129,12 +136,14 @@
 
 - **Source** : Avis d'intention CHU § 1
 - **Conformité déclarée** : ✅ Politique de session par organisation : inactivité et durée maximale, renouvellement glissant (ADR-024) ; chaque écran des scénarios vérifié à 390, 768, 1280 et 1680 px, sans débordement ni superposition
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-22 — Durée de session et affichage sur ordinateur, tablette et téléphone ; accessibilité
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-1.08, CHU-2.04
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/mes-demandes`
@@ -145,12 +154,14 @@
 
 - **Source** : Avis d'intention CHU § 2
 - **Conformité déclarée** : ✅ — i18n (FR/EN/MGA, 1500+ clés)
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-01 — Concevoir un formulaire : création, pages et champs, enregistrement, approbation puis publication
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.01, CHU-3.02, CHU-3.09, CHU-2.01
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (9 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/formulaires`
@@ -175,12 +186,14 @@
 
 - **Source** : Avis d'intention CHU § 2
 - **Conformité déclarée** : ✅ Contenu des formulaires multilingue : libellés des champs, titres des pages, aides et options traduisibles (FR, EN, MG), affichés dans la langue de l'utilisateur ; la valeur enregistrée reste celle de la conception
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-02 — Le répondant remplit en anglais : titres, libellés et options traduits
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-2.02
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié « LANGUE »
@@ -195,12 +208,14 @@
 
 - **Source** : Avis d'intention CHU § 2
 - **Conformité déclarée** : ✅ — thème par tenant (couleurs, logo)
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-19 — Thème institutionnel appliqué à l'organisation
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-2.03
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.theme`
@@ -211,12 +226,14 @@
 
 - **Source** : Avis d'intention CHU § 2
 - **Conformité déclarée** : ✅ axe-core (WCAG 2.0 à 2.2, A et AA) sur chaque écran des scénarios BDD, à quatre largeurs (390, 768, 1280, 1680 px), avec cibles ≥ 24 px, sans débordement ni superposition ; suite exécutée en intégration continue (infra/bacs-a-sable/ci.sh)
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-22 — Durée de session et affichage sur ordinateur, tablette et téléphone ; accessibilité
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-1.08, CHU-2.04
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/mes-demandes`
@@ -227,12 +244,14 @@
 
 - **Source** : Avis d'intention CHU § 3
 - **Conformité déclarée** : ✅ — FormulaireBuilder (pages)
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-01 — Concevoir un formulaire : création, pages et champs, enregistrement, approbation puis publication
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.01, CHU-3.02, CHU-3.09, CHU-2.01
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (9 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/formulaires`
@@ -257,12 +276,14 @@
 
 - **Source** : Avis d'intention CHU § 3
 - **Conformité déclarée** : ✅ — 16 types en données de référence TYPE_CHAMP
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-01 — Concevoir un formulaire : création, pages et champs, enregistrement, approbation puis publication
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.01, CHU-3.02, CHU-3.09, CHU-2.01
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (9 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/formulaires`
@@ -287,12 +308,14 @@
 
 - **Source** : Avis d'intention CHU § 3
 - **Conformité déclarée** : ✅ — FormulaireRenderer / aperçu builder
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-03 — Remplir : règles en direct (visibilité, obligation, validation, calcul), sauvegarde automatique, confirmation
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.03, CHU-3.04, CHU-4.01, CHU-4.02, CHU-4.03, CHU-4.04, CHU-5.02
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (4 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié « REGLES »
@@ -313,6 +336,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.03, CHU-3.09, CHU-4.01
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (7 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié en deux versions, et un brouillon à supprimer
@@ -331,12 +355,14 @@
 
 - **Source** : Avis d'intention CHU § 3
 - **Conformité déclarée** : ✅ — autosave + reprise ?saisie=
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-03 — Remplir : règles en direct (visibilité, obligation, validation, calcul), sauvegarde automatique, confirmation
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.03, CHU-3.04, CHU-4.01, CHU-4.02, CHU-4.03, CHU-4.04, CHU-5.02
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (4 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié « REGLES »
@@ -357,6 +383,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-5.04, CHU-6.01, CHU-3.04, CHU-4.07
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (18 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié
@@ -395,12 +422,14 @@
 
 - **Source** : Avis d'intention CHU § 3
 - **Conformité déclarée** : ✅ Activation selon la date, le nombre maximal de répondants et la plage réseau (IP) du répondant
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-04 — Défi anti-robot exigé avant la soumission ; ouverture bornée par la date, le nombre de répondants et le réseau
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.07, CHU-3.05
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (3 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié « DEFI »
@@ -416,12 +445,14 @@
 
 - **Source** : Avis d'intention CHU § 3
 - **Conformité déclarée** : Oui. Places par choix déclarées dans la structure (capacites) ; un choix complet est signalé et désactivé au remplissage, et refusé à la soumission (409) ; les soumissions d'un formulaire sont sérialisées par verrou pour qu'aucune place ne soit prise deux fois.
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-20 — Places par choix et inventaire des inscriptions
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.06, CHU-4.08
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.places.inventaire`
@@ -434,12 +465,14 @@
 
 - **Source** : Avis d'intention CHU § 3
 - **Conformité déclarée** : ✅ Défi anti-robot réel par le protocole siteverify (Cloudflare Turnstile ou hCaptcha, ADR-026), choisi par configuration ; soumission refusée sans jeton valide ; simulation par défaut en recette
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-04 — Défi anti-robot exigé avant la soumission ; ouverture bornée par la date, le nombre de répondants et le réseau
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.07, CHU-3.05
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (3 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié « DEFI »
@@ -455,12 +488,14 @@
 
 - **Source** : Avis d'intention CHU § 3
 - **Conformité déclarée** : ✅ — Formulaire.parentId, Saisie.parentSaisieId
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-21 — Formulaires liés parent-enfant, duplication, export et réimport de structure, conservation
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.08, CHU-3.10, CHU-6.07, CHU-6.06
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.formulaire.conception`
@@ -473,12 +508,14 @@
 
 - **Source** : Avis d'intention CHU § 3
 - **Conformité déclarée** : ✅ — StatutFormulaire + historique + revenirA + onglet Versions
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-01 — Concevoir un formulaire : création, pages et champs, enregistrement, approbation puis publication
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.01, CHU-3.02, CHU-3.09, CHU-2.01
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (9 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/formulaires`
@@ -504,6 +541,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.03, CHU-3.09, CHU-4.01
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (7 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié en deux versions, et un brouillon à supprimer
@@ -522,12 +560,14 @@
 
 - **Source** : Avis d'intention CHU § 3
 - **Conformité déclarée** : ✅ — dupliquer / exporter / importer
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-21 — Formulaires liés parent-enfant, duplication, export et réimport de structure, conservation
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.08, CHU-3.10, CHU-6.07, CHU-6.06
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.formulaire.conception`
@@ -540,12 +580,14 @@
 
 - **Source** : Avis d'intention CHU § 4
 - **Conformité déclarée** : ✅ — MoteurRegles VISIBILITE
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-03 — Remplir : règles en direct (visibilité, obligation, validation, calcul), sauvegarde automatique, confirmation
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.03, CHU-3.04, CHU-4.01, CHU-4.02, CHU-4.03, CHU-4.04, CHU-5.02
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (4 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié « REGLES »
@@ -566,6 +608,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.03, CHU-3.09, CHU-4.01
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (7 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié en deux versions, et un brouillon à supprimer
@@ -584,12 +627,14 @@
 
 - **Source** : Avis d'intention CHU § 4
 - **Conformité déclarée** : ✅ — OBLIGATION
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-03 — Remplir : règles en direct (visibilité, obligation, validation, calcul), sauvegarde automatique, confirmation
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.03, CHU-3.04, CHU-4.01, CHU-4.02, CHU-4.03, CHU-4.04, CHU-5.02
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (4 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié « REGLES »
@@ -609,12 +654,14 @@
 
 - **Source** : Avis d'intention CHU § 4
 - **Conformité déclarée** : ✅ — VALIDATION
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-03 — Remplir : règles en direct (visibilité, obligation, validation, calcul), sauvegarde automatique, confirmation
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.03, CHU-3.04, CHU-4.01, CHU-4.02, CHU-4.03, CHU-4.04, CHU-5.02
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (4 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié « REGLES »
@@ -634,12 +681,14 @@
 
 - **Source** : Avis d'intention CHU § 4
 - **Conformité déclarée** : ✅ — CALCUL (somme/diff/produit/quotient, détection de cycle)
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-03 — Remplir : règles en direct (visibilité, obligation, validation, calcul), sauvegarde automatique, confirmation
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.03, CHU-3.04, CHU-4.01, CHU-4.02, CHU-4.03, CHU-4.04, CHU-5.02
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (4 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié « REGLES »
@@ -659,12 +708,14 @@
 
 - **Source** : Avis d'intention CHU § 4
 - **Conformité déclarée** : ✅ — ROUTAGE + workflow (routage par montant/condition)
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-05 — Traitement des fiches : recherche multicritère, critères sauvegardés et réappliqués, export Excel
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-6.01, CHU-6.02, CHU-4.07, CHU-4.05
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (6 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.traitement`
@@ -686,6 +737,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-4.07, CHU-4.05
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (10 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié
@@ -707,12 +759,14 @@
 
 - **Source** : Avis d'intention CHU § 4
 - **Conformité déclarée** : ✅ — FicheEvent
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-07 — Notifications : gabarits, règles d'envoi par déclencheur, journal des envois
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-5.01, CHU-5.03, CHU-4.06
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.notifications`
@@ -724,12 +778,14 @@
 
 - **Source** : Avis d'intention CHU § 4
 - **Conformité déclarée** : ✅ — contexte processus : Workflow/Tache/Decision, écran Tâches et approbations (/taches)
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-05 — Traitement des fiches : recherche multicritère, critères sauvegardés et réappliqués, export Excel
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-6.01, CHU-6.02, CHU-4.07, CHU-4.05
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (6 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.traitement`
@@ -751,6 +807,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-5.04, CHU-6.01, CHU-3.04, CHU-4.07
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (18 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié
@@ -790,6 +847,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-4.07, CHU-4.05
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (10 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié
@@ -812,6 +870,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-9.01, CHU-4.07
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (29 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/rh/personnel`
@@ -857,6 +916,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-1.04, CHU-5.01, CHU-4.07, CHU-8.04, CHU-7.03, CHU-7.04
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (32 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié (cible des notifications et des échanges)
@@ -902,12 +962,14 @@
 
 - **Source** : Avis d'intention CHU § 4
 - **Conformité déclarée** : Oui. Inventaire des inscriptions par choix : places, inscrits, restantes et fiches qui occupent les places ; export CSV protégé contre l'injection de formules ; réservé au personnel qui traite.
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-20 — Places par choix et inventaire des inscriptions
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.06, CHU-4.08
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.places.inventaire`
@@ -920,12 +982,14 @@
 
 - **Source** : Avis d'intention CHU § 5
 - **Conformité déclarée** : ✅ — contexte notification (3 canaux, simulation ; adaptateurs réels Twilio/ACS à activer)
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-07 — Notifications : gabarits, règles d'envoi par déclencheur, journal des envois
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-5.01, CHU-5.03, CHU-4.06
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.notifications`
@@ -938,6 +1002,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-1.04, CHU-5.01, CHU-4.07, CHU-8.04, CHU-7.03, CHU-7.04
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (32 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié (cible des notifications et des échanges)
@@ -983,12 +1048,14 @@
 
 - **Source** : Avis d'intention CHU § 5
 - **Conformité déclarée** : ✅ — écran de remplissage
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-03 — Remplir : règles en direct (visibilité, obligation, validation, calcul), sauvegarde automatique, confirmation
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.03, CHU-3.04, CHU-4.01, CHU-4.02, CHU-4.03, CHU-4.04, CHU-5.02
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (4 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié « REGLES »
@@ -1008,12 +1075,14 @@
 
 - **Source** : Avis d'intention CHU § 5
 - **Conformité déclarée** : ✅ — règles de notification sur événements
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-07 — Notifications : gabarits, règles d'envoi par déclencheur, journal des envois
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-5.01, CHU-5.03, CHU-4.06
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.notifications`
@@ -1025,12 +1094,14 @@
 
 - **Source** : Avis d'intention CHU § 5
 - **Conformité déclarée** : Oui. Document PDF/A-2b produit depuis les données d'une fiche (questions et réponses dans l'ordre du formulaire), téléchargeable par le demandeur et le personnel ; transmission par courriel en pièce jointe (relais SMTP de l'organisation), journalisée.
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-08 — Document d'une fiche produit puis transmis par courriel
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-5.04
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.document.fiche`
@@ -1043,6 +1114,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-5.04, CHU-6.01, CHU-3.04, CHU-4.07
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (18 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié
@@ -1081,12 +1153,14 @@
 
 - **Source** : Avis d'intention CHU § 5
 - **Conformité déclarée** : Oui. Messagerie interne entre membres actifs de l'organisation : conversations visibles des seuls participants (404 sinon), messages chiffrés au repos et non modifiables, texte brut (aucun HTML interprété), non-lus par participant, échanges tracés au journal sans leur contenu, effaçables au titre de la Loi 25.
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-09 — Messagerie interne : une conversation visible de ses seuls participants
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-5.05
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.messagerie`
@@ -1099,6 +1173,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-6.04, CHU-5.05
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (18 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié (source des indicateurs) ; deux membres de l'organisation
@@ -1129,12 +1204,14 @@
 
 - **Source** : Avis d'intention CHU § 6
 - **Conformité déclarée** : ✅ — contexte rapport (CritereRechercheSauve)
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-05 — Traitement des fiches : recherche multicritère, critères sauvegardés et réappliqués, export Excel
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-6.01, CHU-6.02, CHU-4.07, CHU-4.05
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (6 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.traitement`
@@ -1156,6 +1233,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-5.04, CHU-6.01, CHU-3.04, CHU-4.07
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (18 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié
@@ -1194,12 +1272,14 @@
 
 - **Source** : Avis d'intention CHU § 6
 - **Conformité déclarée** : ✅ — export POI
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-05 — Traitement des fiches : recherche multicritère, critères sauvegardés et réappliqués, export Excel
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-6.01, CHU-6.02, CHU-4.07, CHU-4.05
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (6 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.traitement`
@@ -1220,12 +1300,14 @@
 
 - **Source** : Avis d'intention CHU § 6
 - **Conformité déclarée** : Oui. Rapport PDF/A personnalisé sur les fiches d'un formulaire : titre, questions montrées (8 au plus) et statuts retenus au choix, décompte par statut ; paramètres inconnus refusés ; réservé au personnel.
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-10 — Rapport PDF personnalisé sur les fiches d'un formulaire
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-6.03
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.rapport.pdf`
@@ -1239,12 +1321,14 @@
 
 - **Source** : Avis d'intention CHU § 6
 - **Conformité déclarée** : Oui. Tableaux de bord configurables : compteurs, histogrammes (par statut ou par réponse) et évolutions mensuelles sur les fiches des formulaires de l'organisation ; privés ou partagés, modifiables par le seul propriétaire ; seules des valeurs agrégées sont exposées ; graphiques accessibles avec vue tableau.
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-11 — Tableaux de bord configurables, partagés selon les droits
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-6.04, CHU-6.05
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.tableaux-de-bord`
@@ -1257,6 +1341,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-6.04, CHU-5.05
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (18 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié (source des indicateurs) ; deux membres de l'organisation
@@ -1287,12 +1372,14 @@
 
 - **Source** : Avis d'intention CHU § 6
 - **Conformité déclarée** : ✅ Listes et rapports selon les droits ; tableaux de bord configurables par l'utilisateur, partageables (CHU 6.04)
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-11 — Tableaux de bord configurables, partagés selon les droits
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-6.04, CHU-6.05
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.tableaux-de-bord`
@@ -1304,12 +1391,14 @@
 
 - **Source** : Avis d'intention CHU § 6
 - **Conformité déclarée** : ✅ Export intégral unifié /api/reversibilite/export : une archive ZIP JSON + manifeste, où chaque module souscrit (rédaction, formulaires, saisie) verse ses données ; s'ajoutent l'export de structure JSON et des données Excel par formulaire
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-21 — Formulaires liés parent-enfant, duplication, export et réimport de structure, conservation
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.08, CHU-3.10, CHU-6.07, CHU-6.06
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.formulaire.conception`
@@ -1322,12 +1411,14 @@
 
 - **Source** : Avis d'intention CHU § 6
 - **Conformité déclarée** : ✅ Politique de rétention par formulaire (durée de conservation des fiches), appliquée à l'échéance
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-21 — Formulaires liés parent-enfant, duplication, export et réimport de structure, conservation
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-3.08, CHU-3.10, CHU-6.07, CHU-6.06
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.formulaire.conception`
@@ -1340,12 +1431,14 @@
 
 - **Source** : Avis d'intention CHU § 7
 - **Conformité déclarée** : ✅ — connecteurs OIDC/SAML per-tenant
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-16 — Sécurité fine : groupes, membres, permissions par champ, fiche ou bouton ; masquage et journal
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-7.03, CHU-7.04, CHU-7.06, CHU-7.07, CHU-7.09, CHU-7.01
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.securite`
@@ -1359,12 +1452,14 @@
 
 - **Source** : Avis d'intention CHU § 7
 - **Conformité déclarée** : ✅ — MFA TOTP / question
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-17 — Second facteur et politique de mots de passe pour l'accès administrateur
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-7.02
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/securite`
@@ -1375,12 +1470,14 @@
 
 - **Source** : Avis d'intention CHU § 7
 - **Conformité déclarée** : ✅ — securite (Groupe/GroupeMembre/PermissionAcces)
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-16 — Sécurité fine : groupes, membres, permissions par champ, fiche ou bouton ; masquage et journal
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-7.03, CHU-7.04, CHU-7.06, CHU-7.07, CHU-7.09, CHU-7.01
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.securite`
@@ -1395,6 +1492,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-1.04, CHU-5.01, CHU-4.07, CHU-8.04, CHU-7.03, CHU-7.04
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (32 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié (cible des notifications et des échanges)
@@ -1440,12 +1538,14 @@
 
 - **Source** : Avis d'intention CHU § 7
 - **Conformité déclarée** : ✅ — MoteurAcces (portée champ/fiche/bouton, refus par défaut)
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-16 — Sécurité fine : groupes, membres, permissions par champ, fiche ou bouton ; masquage et journal
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-7.03, CHU-7.04, CHU-7.06, CHU-7.07, CHU-7.09, CHU-7.01
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.securite`
@@ -1460,6 +1560,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-1.04, CHU-5.01, CHU-4.07, CHU-8.04, CHU-7.03, CHU-7.04
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (32 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié (cible des notifications et des échanges)
@@ -1505,12 +1606,14 @@
 
 - **Source** : Avis d'intention CHU § 7
 - **Conformité déclarée** : ✅ — CLASSIFICATION + Masquage
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-06 — Pièces jointes d'une fiche : classification, analyse antivirus (maliciel refusé), commentaires internes
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-7.05, CHU-7.08
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.antivirus.pieces-jointes`
@@ -1524,12 +1627,14 @@
 
 - **Source** : Avis d'intention CHU § 7
 - **Conformité déclarée** : ✅ Masquage et classification des champs, restriction d'affichage et d'export ; chiffrement applicatif des secrets et de la messagerie (SecretCipher) ; chiffrement au repos de la base par l'hébergement (PostgreSQL géré, AES-256, toujours actif)
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-16 — Sécurité fine : groupes, membres, permissions par champ, fiche ou bouton ; masquage et journal
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-7.03, CHU-7.04, CHU-7.06, CHU-7.07, CHU-7.09, CHU-7.01
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.securite`
@@ -1543,12 +1648,14 @@
 
 - **Source** : Avis d'intention CHU § 7
 - **Conformité déclarée** : ✅ — journal d'audit (Loi 25)
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-16 — Sécurité fine : groupes, membres, permissions par champ, fiche ou bouton ; masquage et journal
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-7.03, CHU-7.04, CHU-7.06, CHU-7.07, CHU-7.09, CHU-7.01
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.securite`
@@ -1562,12 +1669,14 @@
 
 - **Source** : Avis d'intention CHU § 7
 - **Conformité déclarée** : ✅ Antivirus ClamAV sur tout fichier reçu, fermé par défaut (ADR-027) ; limiteur de débit applicatif (PareFeuFilter) et verrouillage après échecs de connexion ; anti-DDoS de plateforme (Front Door) et pare-feu applicatif OWASP à l'ingress
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-06 — Pièces jointes d'une fiche : classification, analyse antivirus (maliciel refusé), commentaires internes
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-7.05, CHU-7.08
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.antivirus.pieces-jointes`
@@ -1581,12 +1690,14 @@
 
 - **Source** : Avis d'intention CHU § 7
 - **Conformité déclarée** : ✅ — masquage NAS, courriel masqué en journal
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-16 — Sécurité fine : groupes, membres, permissions par champ, fiche ou bouton ; masquage et journal
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-7.03, CHU-7.04, CHU-7.06, CHU-7.07, CHU-7.09, CHU-7.01
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.securite`
@@ -1600,12 +1711,14 @@
 
 - **Source** : Avis d'intention CHU § 8
 - **Conformité déclarée** : ✅ — interop (/api/public/v1/formulaires/{code}/fiches)
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-13 — API : un client d'intégration est créé avec ses portées, son secret montré une seule fois
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-8.01, CHU-8.02, CHU-8.03
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (3 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/interop`
@@ -1620,12 +1733,14 @@
 
 - **Source** : Avis d'intention CHU § 8
 - **Conformité déclarée** : ✅ — OAuth2 client_credentials (jetons SHA-256)
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-13 — API : un client d'intégration est créé avec ses portées, son secret montré une seule fois
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-8.01, CHU-8.02, CHU-8.03
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (3 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/interop`
@@ -1640,12 +1755,14 @@
 
 - **Source** : Avis d'intention CHU § 8
 - **Conformité déclarée** : ✅ API publique à jeton, API d'intégration entrante (ADR-011), échanges hérités (CHU 8.04), connecteurs M365 et SAP, connecteur MCP ; une intégration propre à un système s'ajoute comme adaptateur
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-13 — API : un client d'intégration est créé avec ses portées, son secret montré une seule fois
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-8.01, CHU-8.02, CHU-8.03
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : parcours d'interface (3 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/interop`
@@ -1660,12 +1777,14 @@
 
 - **Source** : Avis d'intention CHU § 8
 - **Conformité déclarée** : ✅🆕 — correspondances d'échange (entrant, sortant, reprise de l'historique) — ADR-021
+- **Démontrée à l'écran** : oui
 
 ### E2E-CHU-14 — Échanges hérités : un échange déjà en place est déclaré et son historique repris
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-8.04
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.echanges.herites`
@@ -1678,6 +1797,7 @@
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-1.04, CHU-5.01, CHU-4.07, CHU-8.04, CHU-7.03, CHU-7.04
 - **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Nature** : parcours d'interface (32 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Formulaire publié (cible des notifications et des échanges)
@@ -1747,12 +1867,14 @@
 
 - **Source** : Avis d'intention CHU § 9
 - **Conformité déclarée** : Oui. Banque d'heures de services professionnels tenue par le fournisseur : achats, consommations par catégorie (analyse, formation, configuration, programmation, rapports) au quart d'heure, corrections tracées ; solde contrôlé (dépassement refusé) ; l'organisation consulte solde, répartition et relevé CSV.
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-CHU-12 — Banque d'heures de services professionnels tenue et suivie
 
 - **Profil** : administrateur CHU (organisation CHU)
 - **Exigences démontrées** : CHU-9.05
 - **Données** : `bdd/e2e/donnees/chu.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `chu.banque-heures`

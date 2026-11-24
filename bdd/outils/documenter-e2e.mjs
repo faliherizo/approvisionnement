@@ -48,6 +48,7 @@ function phrase(e) {
   if ('connecter' in e) return typeof e.connecter === 'string' ? `Se connecter en tant que ${e.connecter}` : `Se connecter avec le compte \`${e.connecter.email}\``
   if ('lire' in e) return `Relever le texte affiché (\`${e.lire.selecteur}\`) sous le nom \`${e.lire.variable}\``
   if ('remplirTotp' in e) return `Saisir le code TOTP courant dans ${Object.keys(e.remplirTotp).map((k) => `« ${k} »`).join(', ')}`
+  if ('largeur' in e) return `Afficher l'écran à ${e.largeur} px de large${e.largeur < 600 ? ' (téléphone)' : ''}`
   if ('langue' in e) return `Passer l'interface en ${{ fr: 'français', en: 'anglais', mg: 'malgache' }[e.langue]}`
   if ('cliquer' in e) return typeof e.cliquer === 'string' ? `Activer « ${e.cliquer} »` : `Activer « ${e.cliquer.nom} » (${e.cliquer.role})`
   if ('dansLaLigne' in e) return `Dans la ligne « ${e.dansLaLigne.texte} », activer « ${e.dansLaLigne.cliquer} »`
@@ -72,6 +73,14 @@ function phrase(e) {
   if ('ecranConforme' in e) return "Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px"
   return JSON.stringify(e)
 }
+
+// --- Nature d'un scénario : parcours d'interface, ou préparation par l'API dont l'écran ne fait que constater ------------
+// Au moins trois gestes d'utilisateur (saisir, choisir, activer, joindre…) : l'exigence est vécue à l'écran.
+const GESTES = ['cliquer', 'remplir', 'choisir', 'cocher', 'decocher', 'dansLaLigne', 'dansLaFenetre', 'dansLaSection',
+  'cliquerTexte', 'televerser', 'telecharger', 'tracer', 'repondre', 'remplirTotp']
+const gestes = (sc) => sc.etapes.filter((e) => GESTES.some((g) => g in e)).length
+const parInterface = (sc) => gestes(sc) >= 3
+const nature = (sc) => parInterface(sc) ? `parcours d'interface (${gestes(sc)} gestes)` : 'préparé par l\'API, écran constaté'
 
 // --- Couverture ------------------------------------------------------------------------------------------------------
 const parExigence = {}
@@ -116,6 +125,7 @@ const lignesReadme = [
   '| `aller` | ouvrir un écran | `{ "aller": "/recherche" }` |',
   '| `connecter` | changer d\'utilisateur | `{ "connecter": "juriste de Lévis" }` |',
   '| `langue` | changer la langue de l\'interface | `{ "langue": "en" }` |',
+  '| `largeur` | afficher l\'écran à une largeur donnée (téléphone : 390) | `{ "largeur": 390 }` |',
   '| `cliquer` | activer un bouton ou un lien, par son nom accessible | `{ "cliquer": "Rechercher" }` |',
   '| `dansLaLigne` | agir sur une ligne de tableau | `{ "dansLaLigne": { "texte": "Inscription", "cliquer": "Concevoir" } }` |',
   '| `remplir` | saisir des champs, par leur libellé ; « Section » Libellé » limite à une section, « Libellé #2 » vise la 2e occurrence | `{ "remplir": { "Terme": "garantie" } }` |',
@@ -161,17 +171,56 @@ for (const c of catalogues) {
       continue
     }
     if (!s.length) { l.push('- **Scénario e2e** : aucun (écart de couverture)', ''); continue }
-    l.push('')
+    l.push(`- **Démontrée à l'écran** : ${s.some(parInterface) ? 'oui' : 'non — seulement préparée par l\'API'}`, '')
     for (const sc of s) {
       l.push(`### ${sc.id} — ${sc.titre}`, '',
         `- **Profil** : ${sc.profil}${sc.organisation ? ` (organisation ${sc.organisation})` : ''}`,
         `- **Exigences démontrées** : ${sc.exigences.join(', ')}`,
         `- **Données** : \`bdd/e2e/donnees/${sc.fichier}\``,
+        `- **Nature** : ${nature(sc)}`,
         `- **Dernier résultat** : ${etat(sc.id)}`, '')
       sc.etapes.forEach((x, i) => l.push(`${i + 1}. ${phrase(x)}`))
       l.push('')
     }
   }
   writeFileSync(join(SORTIE, `${c.cle}.md`), l.join('\n'))
+}
+// --- Cahier des besoins d'IQ : chaque exigence du cahier, par section, avec ses parcours et les constats -----------------
+const iq = catalogues.find((c) => c.cle === 'iq')
+if (iq) {
+  const constats = jeux.flatMap((j) => j.constats ?? [])
+  const cahier = iq.exigences.filter((e) => e.id.startsWith('IQ-C-'))
+  const sections = [...new Set(cahier.map((e) => e.source))]
+  const lien = (sc) => `${sc.id}${resultats[sc.id] === 'réussi' ? ' ✅' : resultats[sc.id] === 'échoué' ? ' ❌' : ''}`
+  const l = ['# IQ 2026-6370-0005 — Cahier des besoins : scénarios e2e par exigence', '',
+    '> Généré par `bdd/outils/documenter-e2e.mjs` depuis `bdd/exigences/iq.json` (exigences du cahier, IQ-C-*) et',
+    '> `bdd/e2e/donnees/*.json` (scénarios, données et constats). Détail des étapes de chaque scénario : [iq.md](iq.md).', '',
+    '**Parcours d\'interface** : l\'utilisateur du profil saisit, configure, modifie et décide à l\'écran (au moins trois',
+    'gestes). **Préparé par l\'API** : la situation est mise en place par l\'API et l\'écran ne fait que la constater ;',
+    'un tel scénario ne détecte pas un défaut de l\'écran. Les scénarios `E2E-CB-IQ-*` (`cahier-iq.json`) sont écrits',
+    'besoin par besoin, sans préparation par l\'API.', '']
+  const demontrees = cahier.filter((e) => e.verification === 'bdd' && (parExigence[e.id] ?? []).some(parInterface))
+  const fonct = cahier.filter((e) => e.verification === 'bdd')
+  l.push(`**Couverture** : ${demontrees.length} / ${fonct.length} exigences fonctionnelles du cahier démontrées par un parcours d'interface ;`,
+    `${cahier.length - fonct.length} exigences à vérification documentaire.`, '')
+  for (const sec of sections) {
+    l.push(`## Section ${sec}`, '', '| Exigence | Besoin | Parcours d\'interface | Préparés par l\'API |', '|---|---|---|---|')
+    for (const e of cahier.filter((x) => x.source === sec)) {
+      const s = parExigence[e.id] ?? []
+      const ui = s.filter(parInterface).map(lien).join(', ')
+      const api = s.filter((x) => !parInterface(x)).map(lien).join(', ')
+      const besoin = cellule(e.libelle.replace(/\*/g, ''))
+      if (e.verification !== 'bdd') l.push(`| ${e.id} | ${besoin} | — vérification ${e.verification} | — |`)
+      else l.push(`| ${e.id} | ${besoin} | ${ui || '**aucun**'} | ${api || '—'} |`)
+    }
+    l.push('')
+  }
+  if (constats.length) {
+    l.push('## Défauts et constats relevés par ces parcours', '',
+      '| # | Exigences | Scénario | Constat | Suite donnée |', '|---|---|---|---|---|')
+    for (const c of constats) l.push(`| ${c.id} | ${c.exigences.join(', ')} | ${c.scenario} | ${cellule(c.constat)} | ${cellule(c.suite)} |`)
+    l.push('')
+  }
+  writeFileSync(join(SORTIE, 'iq-cahier-des-besoins.md'), l.join('\n'))
 }
 console.log(`docs/scenarios-e2e : ${catalogues.length} documents ; ${sansScenario.length} exigence(s) fonctionnelle(s) sans scénario e2e`)

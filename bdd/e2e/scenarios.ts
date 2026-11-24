@@ -11,6 +11,7 @@ export type Etape =
   | { aller: string }
   | { connecter: string | { email: string; motDePasse: string } }
   | { langue: 'fr' | 'en' | 'mg' }
+  | { largeur: number }
   | { cliquer: string | { role: 'button' | 'link' | 'tab' | 'menuitem' | 'checkbox' | 'radio'; nom: string } }
   | { dansLaLigne: { texte: string; cliquer: string } }
   | { remplir: Record<string, string> }

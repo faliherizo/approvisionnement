@@ -1366,7 +1366,7 @@
           "type": "lister",
           "fonction": "valider",
           "sources": [
-            "pages/clm/ModeleEditeur.jsx:146"
+            "pages/clm/ModeleEditeur.jsx:151"
           ]
         },
         {
@@ -1427,7 +1427,7 @@
           "type": "ajouter",
           "fonction": "previsualiser",
           "sources": [
-            "pages/clm/ModeleEditeur.jsx:153"
+            "pages/clm/ModeleEditeur.jsx:159"
           ]
         },
         {
@@ -1447,7 +1447,7 @@
           "type": "soumettre",
           "fonction": "soumettre",
           "sources": [
-            "pages/clm/ModeleEditeur.jsx:157"
+            "pages/clm/ModeleEditeur.jsx:164"
           ]
         },
         {

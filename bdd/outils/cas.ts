@@ -200,7 +200,7 @@ export async function executer(playwright: Playwright, baseURL: string, profilPa
     }
     const [methode, chemin] = e.appel!.split(' ')
     const api = e.anonyme ? await playwright.request.newContext({ baseURL }) : await session(playwright, baseURL, e.profil ?? cas.profil ?? profilParDefaut)
-    const options: Parameters<APIRequestContext['fetch']>[1] = { method: methode, headers: e.entetes, failOnStatusCode: false }
+    const options: Parameters<APIRequestContext['fetch']>[1] = { method: methode, headers: e.entetes, failOnStatusCode: false, timeout: 60_000 }
     if (e.multipart) {
       options.multipart = Object.fromEntries(Object.entries(e.multipart).map(([k, v]) => [k, typeof v === 'string' ? v
         : { name: v.nom, mimeType: v.type ?? 'application/octet-stream', buffer: contenuFichier(v) }]))

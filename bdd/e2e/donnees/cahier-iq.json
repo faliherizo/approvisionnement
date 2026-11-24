@@ -1,0 +1,3224 @@
+{
+  "appelOffres": "Investissement Québec — AO 2026-6370-0005",
+  "catalogue": "iq",
+  "description": "Parcours d'interface par besoin du Cahier des besoins et exigences (sections 1.4.5 à 1.4.12) : chaque scénario saisit, configure, modifie et décide à l'écran, sans préparation par l'API.",
+  "scenarios": [
+    {
+      "id": "E2E-CB-IQ-01",
+      "titre": "Modèle créé et configuré à l'écran, soumis, publié par une autre administration, puis utilisé en signature en lot (un dossier sans téléphone échoue seul)",
+      "exigences": [
+        "IQ-C-32",
+        "IQ-C-35",
+        "IQ-C-11",
+        "IQ-A-03",
+        "IQ-D-06",
+        "IQ-A-02",
+        "IQ-D-01",
+        "IQ-D-02"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "cliquer": "Créer un modèle"
+        },
+        {
+          "voir": "Nouveau modèle"
+        },
+        {
+          "remplir": {
+            "Nom": "Entente CB ${unique}"
+          }
+        },
+        {
+          "choisir": {
+            "Catégorie": "(premier)"
+          }
+        },
+        {
+          "remplir": {
+            "Corps du contrat": "Entente avec {{beneficiaire}} pour un montant de {{montant}} $. {{clauses}}"
+          }
+        },
+        {
+          "cliquer": "Ajouter un champ"
+        },
+        {
+          "remplir": {
+            "Nom technique": "beneficiaire",
+            "Libellé": "Bénéficiaire"
+          }
+        },
+        {
+          "cocher": "Obligatoire"
+        },
+        {
+          "choisir": {
+            "Source Salesforce": "Demandeur"
+          }
+        },
+        {
+          "cliquer": "Ajouter un champ"
+        },
+        {
+          "remplir": {
+            "Nom technique": "montant",
+            "Libellé": "Montant",
+            "Format (expression régulière)": "^[0-9]+$"
+          }
+        },
+        {
+          "cliquer": "Ajouter une clause"
+        },
+        {
+          "remplir": {
+            "Titre": "Versement",
+            "Texte": "Le montant est versé en un seul paiement."
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "voir": "Brouillon enregistré."
+        },
+        {
+          "remplir": {
+            "Bénéficiaire": "Entreprise Essai inc.",
+            "Montant": "25000"
+          }
+        },
+        {
+          "cliquer": "Tester la règle"
+        },
+        {
+          "voir": "Entente avec Entreprise Essai inc. pour un montant de 25000 $"
+        },
+        {
+          "cliquer": "Vérifier"
+        },
+        {
+          "voir": "Modèle valide."
+        },
+        {
+          "cliquer": "Soumettre à publication"
+        },
+        {
+          "voir": "soumis à publication"
+        },
+        {
+          "connecter": "administration principale IQ"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Entente CB ${unique}",
+            "cliquer": "Publier"
+          }
+        },
+        {
+          "voir": "« Entente CB ${unique} » publié."
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "connecter": "initiateur IQ"
+        },
+        {
+          "aller": "/clm/lots"
+        },
+        {
+          "remplir": {
+            "Libellé du lot": "Lot CB ${unique}"
+          }
+        },
+        {
+          "choisir": {
+            "Modèle de contrat": "Entente CB ${unique}",
+            "Première colonne": "Numéro de dossier Salesforce"
+          }
+        },
+        {
+          "remplir": {
+            "Dossiers, un par ligne": "DEM-2026-0001;Jeanne Tremblay;jeanne.tremblay@exemple.ca;+15145550101\nDEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;"
+          }
+        },
+        {
+          "voir": "2 dossier(s) dans le lot."
+        },
+        {
+          "cliquer": "Créer le lot"
+        },
+        {
+          "voir": "Lot « Lot CB ${unique} » : 1 trousse(s) créée(s), 1 échec(s)."
+        },
+        {
+          "voir": "DEM-2026-0001"
+        },
+        {
+          "voir": "téléphone requis pour la vérification par SMS"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-02",
+      "titre": "Un modèle vide ne peut être soumis à publication",
+      "exigences": [
+        "IQ-C-32",
+        "IQ-D-06"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "cliquer": "Créer un modèle"
+        },
+        {
+          "voir": "Nouveau modèle"
+        },
+        {
+          "cliquer": "Vérifier"
+        },
+        {
+          "voir": "Le corps du contrat est vide."
+        },
+        {
+          "cliquer": "Soumettre à publication"
+        },
+        {
+          "voir": "Le corps du contrat est vide."
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-03",
+      "titre": "Séparation des responsabilités : l'auteur ne publie pas son propre modèle ; un administrateur le renvoie en brouillon",
+      "exigences": [
+        "IQ-C-67",
+        "IQ-D-06"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "cliquer": "Créer un modèle"
+        },
+        {
+          "remplir": {
+            "Nom": "Auteur CB ${unique}",
+            "Corps du contrat": "Lettre d'entente. {{clauses}}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "voir": "Brouillon enregistré."
+        },
+        {
+          "cliquer": "Soumettre à publication"
+        },
+        {
+          "voir": "soumis à publication"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Auteur CB ${unique}",
+            "cliquer": "Publier"
+          }
+        },
+        {
+          "voir": "l'auteur ne publie pas son propre modèle"
+        },
+        {
+          "connecter": "administration principale IQ"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Auteur CB ${unique}",
+            "cliquer": "Renvoyer en brouillon"
+          }
+        },
+        {
+          "voir": "« Auteur CB ${unique} » renvoyé en brouillon."
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-04",
+      "titre": "Circuit séquentiel saisi à l'écran : validation puis approbation, décisions commentées et historisées, suivi de l'état",
+      "exigences": [
+        "IQ-C-01",
+        "IQ-C-18",
+        "IQ-C-22",
+        "IQ-C-23",
+        "IQ-C-25",
+        "IQ-C-48",
+        "IQ-D-04",
+        "IQ-D-08",
+        "IQ-D-09",
+        "IQ-S-02",
+        "IQ-S-03"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Circuit CB ${unique}",
+            "Référence externe": "CB${UNIQUE}-SEQ"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "televerser": {
+            "champ": "Téléverser un document",
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "entente-${unique}.pdf",
+              "type": "application/pdf"
+            }
+          }
+        },
+        {
+          "voir": "entente-${unique}.pdf"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Ajouter une étape"
+        },
+        {
+          "remplir": {
+            "Clé": "v1",
+            "Libellé": "Validation juridique"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "VALIDATION"
+          }
+        },
+        {
+          "cliquer": "Ajouter un responsable"
+        },
+        {
+          "remplir": {
+            "Responsable 1": "validateur@iq.example"
+          }
+        },
+        {
+          "cliquer": "Ajouter une étape"
+        },
+        {
+          "remplir": {
+            "Clé": "a1",
+            "Libellé": "Approbation"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "APPROBATION"
+          }
+        },
+        {
+          "cliquer": "Ajouter un responsable"
+        },
+        {
+          "remplir": {
+            "Responsable 1": "approbateur@iq.example"
+          }
+        },
+        {
+          "cliquer": "Tester le parcours"
+        },
+        {
+          "voir": "Parcours valide."
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Lancer le parcours"
+        },
+        {
+          "url": "/clm/trousses/\\d+"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Parcours"
+          }
+        },
+        {
+          "voir": "Validation juridique"
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "connecter": "validateur IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Traiter — CB${UNIQUE}-SEQ Validation juridique"
+        },
+        {
+          "remplir": {
+            "Commentaire": "Clauses conformes au programme"
+          }
+        },
+        {
+          "cliquer": "Valider"
+        },
+        {
+          "voir": "Décision enregistrée"
+        },
+        {
+          "connecter": "approbateur IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Traiter — CB${UNIQUE}-SEQ Approbation"
+        },
+        {
+          "remplir": {
+            "Commentaire": "Approuvé selon la délégation"
+          }
+        },
+        {
+          "cliquer": "Approuver"
+        },
+        {
+          "voir": "Décision enregistrée : approuvé."
+        },
+        {
+          "connecter": "initiateur IQ"
+        },
+        {
+          "aller": "/clm/suivi"
+        },
+        {
+          "voir": "CB${UNIQUE}-SEQ"
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "aller": "/clm/trousses"
+        },
+        {
+          "voir": "Terminée"
+        },
+        {
+          "cliquer": {
+            "role": "link",
+            "nom": "Ouvrir le détail de CB${UNIQUE}-SEQ"
+          }
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Historique"
+          }
+        },
+        {
+          "voir": [
+            "Clauses conformes au programme",
+            "Approuvé selon la délégation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-05",
+      "titre": "Validations en parallèle : un validateur rejette en motivant, la trousse est rejetée",
+      "exigences": [
+        "IQ-C-18",
+        "IQ-C-22",
+        "IQ-C-23",
+        "IQ-D-04",
+        "IQ-S-09"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Parallèle CB ${unique}",
+            "Référence externe": "CB${UNIQUE}-PAR"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "televerser": {
+            "champ": "Téléverser un document",
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "entente-${unique}.pdf",
+              "type": "application/pdf"
+            }
+          }
+        },
+        {
+          "voir": "entente-${unique}.pdf"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Ajouter une étape"
+        },
+        {
+          "remplir": {
+            "Clé": "v1",
+            "Libellé": "Validation juridique"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "VALIDATION"
+          }
+        },
+        {
+          "cliquer": "Ajouter un responsable"
+        },
+        {
+          "remplir": {
+            "Responsable 1": "validateur@iq.example"
+          }
+        },
+        {
+          "cliquer": "Ajouter une étape"
+        },
+        {
+          "remplir": {
+            "Clé": "v2",
+            "Libellé": "Validation financière"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "VALIDATION"
+          }
+        },
+        {
+          "remplir": {
+            "Phase": "1"
+          }
+        },
+        {
+          "cliquer": "Ajouter un responsable"
+        },
+        {
+          "remplir": {
+            "Responsable 1": "approbateur@iq.example"
+          }
+        },
+        {
+          "cliquer": "Tester le parcours"
+        },
+        {
+          "voir": "Parcours valide."
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Lancer le parcours"
+        },
+        {
+          "url": "/clm/trousses/\\d+"
+        },
+        {
+          "connecter": "validateur IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Traiter — CB${UNIQUE}-PAR Validation juridique"
+        },
+        {
+          "cliquer": "Rejeter"
+        },
+        {
+          "voir": "Un motif est obligatoire"
+        },
+        {
+          "remplir": {
+            "Commentaire": "Montant hors programme"
+          }
+        },
+        {
+          "cliquer": "Rejeter"
+        },
+        {
+          "voir": "Décision enregistrée : rejeté."
+        },
+        {
+          "connecter": "initiateur IQ"
+        },
+        {
+          "aller": "/clm/trousses"
+        },
+        {
+          "cliquer": {
+            "role": "link",
+            "nom": "Ouvrir le détail de CB${UNIQUE}-PAR"
+          }
+        },
+        {
+          "voir": "Rejetée"
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-06",
+      "titre": "Retour pour correction : le validateur renvoie à l'initiateur avec un motif",
+      "exigences": [
+        "IQ-C-22",
+        "IQ-C-55",
+        "IQ-S-03",
+        "IQ-S-09"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Correction CB ${unique}",
+            "Référence externe": "CB${UNIQUE}-COR"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "televerser": {
+            "champ": "Téléverser un document",
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "entente-${unique}.pdf",
+              "type": "application/pdf"
+            }
+          }
+        },
+        {
+          "voir": "entente-${unique}.pdf"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Ajouter une étape"
+        },
+        {
+          "remplir": {
+            "Clé": "v1",
+            "Libellé": "Validation juridique"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "VALIDATION"
+          }
+        },
+        {
+          "cliquer": "Ajouter un responsable"
+        },
+        {
+          "remplir": {
+            "Responsable 1": "validateur@iq.example"
+          }
+        },
+        {
+          "cliquer": "Tester le parcours"
+        },
+        {
+          "voir": "Parcours valide."
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Lancer le parcours"
+        },
+        {
+          "url": "/clm/trousses/\\d+"
+        },
+        {
+          "connecter": "validateur IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Traiter — CB${UNIQUE}-COR Validation juridique"
+        },
+        {
+          "remplir": {
+            "Commentaire": "Annexe B manquante"
+          }
+        },
+        {
+          "cliquer": "Retourner pour correction"
+        },
+        {
+          "voir": "Trousse retournée pour correction."
+        },
+        {
+          "connecter": "initiateur IQ"
+        },
+        {
+          "aller": "/clm/trousses"
+        },
+        {
+          "cliquer": {
+            "role": "link",
+            "nom": "Ouvrir le détail de CB${UNIQUE}-COR"
+          }
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Historique"
+          }
+        },
+        {
+          "voir": "Annexe B manquante"
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-07",
+      "titre": "Réassignation en cours de processus : l'étape passe à un autre intervenant sans redémarrer le parcours",
+      "exigences": [
+        "IQ-C-20",
+        "IQ-C-21",
+        "IQ-C-55",
+        "IQ-D-05",
+        "IQ-S-05"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Réassignation CB ${unique}",
+            "Référence externe": "CB${UNIQUE}-REA"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "televerser": {
+            "champ": "Téléverser un document",
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "entente-${unique}.pdf",
+              "type": "application/pdf"
+            }
+          }
+        },
+        {
+          "voir": "entente-${unique}.pdf"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Ajouter une étape"
+        },
+        {
+          "remplir": {
+            "Clé": "v1",
+            "Libellé": "Validation juridique"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "VALIDATION"
+          }
+        },
+        {
+          "cliquer": "Ajouter un responsable"
+        },
+        {
+          "remplir": {
+            "Responsable 1": "validateur@iq.example"
+          }
+        },
+        {
+          "cliquer": "Tester le parcours"
+        },
+        {
+          "voir": "Parcours valide."
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Lancer le parcours"
+        },
+        {
+          "url": "/clm/trousses/\\d+"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Parcours"
+          }
+        },
+        {
+          "cliquerTexte": "Réassigner, ajouter ou retirer des intervenants — Validation juridique"
+        },
+        {
+          "remplir": {
+            "Assignation par utilisateur, groupe ou règle » Responsable 1": "approbateur@iq.example",
+            "Assignation par utilisateur, groupe ou règle » Motif": "Validateur en congé"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Assignation par utilisateur, groupe ou règle",
+            "cliquer": "Enregistrer"
+          }
+        },
+        {
+          "connecter": "validateur IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "nePasVoir": "CB${UNIQUE}-REA"
+        },
+        {
+          "connecter": "approbateur IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Traiter — CB${UNIQUE}-REA Validation juridique"
+        },
+        {
+          "cliquer": "Valider"
+        },
+        {
+          "voir": "Décision enregistrée"
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-08",
+      "titre": "Attribution par groupe : l'administration crée le groupe et y place le validateur, qui reçoit l'étape",
+      "exigences": [
+        "IQ-C-19",
+        "IQ-C-67",
+        "IQ-D-05"
+      ],
+      "profil": "administration principale IQ",
+      "etapes": [
+        {
+          "aller": "/clm/admin/groupes"
+        },
+        {
+          "remplir": {
+            "Nouveau groupe » Code": "JUR_${UNIQUE}",
+            "Nouveau groupe » Libellé": "Juridique ${unique}"
+          }
+        },
+        {
+          "cliquer": "Créer le groupe"
+        },
+        {
+          "choisir": {
+            "Ajouter un membre au groupe JUR_${UNIQUE} » Membre": "validateur@iq.example"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Ajouter un membre au groupe JUR_${UNIQUE}",
+            "cliquer": "Ajouter"
+          }
+        },
+        {
+          "voir": "validateur@iq.example"
+        },
+        {
+          "connecter": "initiateur IQ"
+        },
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Groupe CB ${unique}",
+            "Référence externe": "CB${UNIQUE}-GRP"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "televerser": {
+            "champ": "Téléverser un document",
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "entente-${unique}.pdf",
+              "type": "application/pdf"
+            }
+          }
+        },
+        {
+          "voir": "entente-${unique}.pdf"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Ajouter une étape"
+        },
+        {
+          "remplir": {
+            "Clé": "v1",
+            "Libellé": "Validation juridique"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "VALIDATION"
+          }
+        },
+        {
+          "cliquer": "Affecter un groupe"
+        },
+        {
+          "remplir": {
+            "Responsable 1": "JUR_${UNIQUE}"
+          }
+        },
+        {
+          "cliquer": "Tester le parcours"
+        },
+        {
+          "voir": "Parcours valide."
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Lancer le parcours"
+        },
+        {
+          "url": "/clm/trousses/\\d+"
+        },
+        {
+          "connecter": "validateur IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Traiter — CB${UNIQUE}-GRP Validation juridique"
+        },
+        {
+          "cliquer": "Valider"
+        },
+        {
+          "voir": "Décision enregistrée"
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-09",
+      "titre": "Signature séquentielle de deux signataires internes : le second n'est sollicité qu'après le premier",
+      "exigences": [
+        "IQ-C-26",
+        "IQ-C-29",
+        "IQ-C-54",
+        "IQ-D-04"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Séquentielle CB ${unique}",
+            "Référence externe": "CB${UNIQUE}-SSQ"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "televerser": {
+            "champ": "Téléverser un document",
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "entente-${unique}.pdf",
+              "type": "application/pdf"
+            }
+          }
+        },
+        {
+          "voir": "entente-${unique}.pdf"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "remplir": {
+            "Nom": "Étienne Côté",
+            "Courriel": "signataire@iq.example",
+            "Téléphone": "+15145550190"
+          }
+        },
+        {
+          "choisir": {
+            "Rôle dans le contrat": "SIGNATAIRE_1"
+          }
+        },
+        {
+          "decocher": "Externe"
+        },
+        {
+          "cliquer": "Ajouter un signataire"
+        },
+        {
+          "voir": "Étienne Côté"
+        },
+        {
+          "remplir": {
+            "Nom": "Sophie Roy",
+            "Courriel": "approbateur@iq.example",
+            "Téléphone": "+15145550190"
+          }
+        },
+        {
+          "choisir": {
+            "Rôle dans le contrat": "SIGNATAIRE_2"
+          }
+        },
+        {
+          "decocher": "Externe"
+        },
+        {
+          "cliquer": "Ajouter un signataire"
+        },
+        {
+          "voir": "Sophie Roy"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Ajouter une étape"
+        },
+        {
+          "remplir": {
+            "Clé": "s1",
+            "Libellé": "Signature IQ"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "SIGNATURE"
+          }
+        },
+        {
+          "cliquer": "Ajouter un responsable"
+        },
+        {
+          "choisir": {
+            "Type du responsable 1": "PARTICIPANT"
+          }
+        },
+        {
+          "choisir": {
+            "Responsable 1": "Étienne Côté"
+          }
+        },
+        {
+          "cliquer": "Ajouter une étape"
+        },
+        {
+          "remplir": {
+            "Clé": "s2",
+            "Libellé": "Signature cosignataire"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "SIGNATURE"
+          }
+        },
+        {
+          "cliquer": "Ajouter un responsable"
+        },
+        {
+          "choisir": {
+            "Type du responsable 1": "PARTICIPANT"
+          }
+        },
+        {
+          "choisir": {
+            "Responsable 1": "Sophie Roy"
+          }
+        },
+        {
+          "cliquer": "Tester le parcours"
+        },
+        {
+          "voir": "Parcours valide."
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Lancer le parcours"
+        },
+        {
+          "url": "/clm/trousses/\\d+"
+        },
+        {
+          "connecter": "approbateur IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "nePasVoir": "CB${UNIQUE}-SSQ"
+        },
+        {
+          "connecter": "signataire interne IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Traiter — CB${UNIQUE}-SSQ Signature IQ"
+        },
+        {
+          "cliquer": "Signer maintenant"
+        },
+        {
+          "url": "/portail/"
+        },
+        {
+          "cliquer": "Recevoir mon code"
+        },
+        {
+          "voir": "Code envoyé."
+        },
+        {
+          "preparer": {
+            "description": "Code reçu par courriel",
+            "etapes": [
+              {
+                "courriel": {
+                  "destinataire": "signataire@iq.example",
+                  "motif": "pour CB${UNIQUE}-SSQ : ([0-9]+)",
+                  "capturer": "code"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "remplir": {
+            "Code de vérification": "${code}"
+          }
+        },
+        {
+          "cliquer": "Vérifier mon identité"
+        },
+        {
+          "cliquer": "Lire / télécharger"
+        },
+        {
+          "cocher": "J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite."
+        },
+        {
+          "remplir": {
+            "Votre nom complet": "Étienne Côté"
+          }
+        },
+        {
+          "cliquer": "Signer"
+        },
+        {
+          "voir": "Merci, votre signature est enregistrée"
+        },
+        {
+          "connecter": "approbateur IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Traiter — CB${UNIQUE}-SSQ Signature cosignataire"
+        },
+        {
+          "cliquer": "Signer maintenant"
+        },
+        {
+          "url": "/portail/"
+        },
+        {
+          "cliquer": "Recevoir mon code"
+        },
+        {
+          "voir": "Code envoyé."
+        },
+        {
+          "preparer": {
+            "description": "Code reçu par courriel",
+            "etapes": [
+              {
+                "courriel": {
+                  "destinataire": "approbateur@iq.example",
+                  "motif": "pour CB${UNIQUE}-SSQ : ([0-9]+)",
+                  "capturer": "code"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "remplir": {
+            "Code de vérification": "${code}"
+          }
+        },
+        {
+          "cliquer": "Vérifier mon identité"
+        },
+        {
+          "cliquer": "Lire / télécharger"
+        },
+        {
+          "cocher": "J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite."
+        },
+        {
+          "remplir": {
+            "Votre nom complet": "Sophie Roy"
+          }
+        },
+        {
+          "cliquer": "Signer"
+        },
+        {
+          "voir": "Merci, votre signature est enregistrée"
+        },
+        {
+          "connecter": "initiateur IQ"
+        },
+        {
+          "aller": "/clm/trousses"
+        },
+        {
+          "cliquer": {
+            "role": "link",
+            "nom": "Ouvrir le détail de CB${UNIQUE}-SSQ"
+          }
+        },
+        {
+          "voir": "Terminée"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-10",
+      "titre": "Signature parallèle : les deux signataires sont sollicités en même temps",
+      "exigences": [
+        "IQ-C-26",
+        "IQ-C-28",
+        "IQ-C-54",
+        "IQ-D-04"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Parallèle sig CB ${unique}",
+            "Référence externe": "CB${UNIQUE}-SPA"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "televerser": {
+            "champ": "Téléverser un document",
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "entente-${unique}.pdf",
+              "type": "application/pdf"
+            }
+          }
+        },
+        {
+          "voir": "entente-${unique}.pdf"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "remplir": {
+            "Nom": "Étienne Côté",
+            "Courriel": "signataire@iq.example",
+            "Téléphone": "+15145550190"
+          }
+        },
+        {
+          "choisir": {
+            "Rôle dans le contrat": "SIGNATAIRE_1"
+          }
+        },
+        {
+          "decocher": "Externe"
+        },
+        {
+          "cliquer": "Ajouter un signataire"
+        },
+        {
+          "voir": "Étienne Côté"
+        },
+        {
+          "remplir": {
+            "Nom": "Sophie Roy",
+            "Courriel": "approbateur@iq.example",
+            "Téléphone": "+15145550190"
+          }
+        },
+        {
+          "choisir": {
+            "Rôle dans le contrat": "SIGNATAIRE_2"
+          }
+        },
+        {
+          "decocher": "Externe"
+        },
+        {
+          "cliquer": "Ajouter un signataire"
+        },
+        {
+          "voir": "Sophie Roy"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Ajouter une étape"
+        },
+        {
+          "remplir": {
+            "Clé": "s1",
+            "Libellé": "Signature IQ"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "SIGNATURE"
+          }
+        },
+        {
+          "cliquer": "Ajouter un responsable"
+        },
+        {
+          "choisir": {
+            "Type du responsable 1": "PARTICIPANT"
+          }
+        },
+        {
+          "choisir": {
+            "Responsable 1": "Étienne Côté"
+          }
+        },
+        {
+          "cliquer": "Ajouter une étape"
+        },
+        {
+          "remplir": {
+            "Clé": "s2",
+            "Libellé": "Signature cosignataire"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "SIGNATURE"
+          }
+        },
+        {
+          "remplir": {
+            "Phase": "1"
+          }
+        },
+        {
+          "cliquer": "Ajouter un responsable"
+        },
+        {
+          "choisir": {
+            "Type du responsable 1": "PARTICIPANT"
+          }
+        },
+        {
+          "choisir": {
+            "Responsable 1": "Sophie Roy"
+          }
+        },
+        {
+          "cliquer": "Tester le parcours"
+        },
+        {
+          "voir": "Parcours valide."
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Lancer le parcours"
+        },
+        {
+          "url": "/clm/trousses/\\d+"
+        },
+        {
+          "connecter": "approbateur IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Traiter — CB${UNIQUE}-SPA Signature cosignataire"
+        },
+        {
+          "cliquer": "Signer maintenant"
+        },
+        {
+          "url": "/portail/"
+        },
+        {
+          "cliquer": "Recevoir mon code"
+        },
+        {
+          "voir": "Code envoyé."
+        },
+        {
+          "preparer": {
+            "description": "Code reçu par courriel",
+            "etapes": [
+              {
+                "courriel": {
+                  "destinataire": "approbateur@iq.example",
+                  "motif": "pour CB${UNIQUE}-SPA : ([0-9]+)",
+                  "capturer": "code"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "remplir": {
+            "Code de vérification": "${code}"
+          }
+        },
+        {
+          "cliquer": "Vérifier mon identité"
+        },
+        {
+          "cliquer": "Lire / télécharger"
+        },
+        {
+          "cocher": "J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite."
+        },
+        {
+          "remplir": {
+            "Votre nom complet": "Sophie Roy"
+          }
+        },
+        {
+          "cliquer": "Signer"
+        },
+        {
+          "voir": "Merci, votre signature est enregistrée"
+        },
+        {
+          "connecter": "signataire interne IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Traiter — CB${UNIQUE}-SPA Signature IQ"
+        },
+        {
+          "cliquer": "Signer maintenant"
+        },
+        {
+          "url": "/portail/"
+        },
+        {
+          "cliquer": "Recevoir mon code"
+        },
+        {
+          "voir": "Code envoyé."
+        },
+        {
+          "preparer": {
+            "description": "Code reçu par courriel",
+            "etapes": [
+              {
+                "courriel": {
+                  "destinataire": "signataire@iq.example",
+                  "motif": "pour CB${UNIQUE}-SPA : ([0-9]+)",
+                  "capturer": "code"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "remplir": {
+            "Code de vérification": "${code}"
+          }
+        },
+        {
+          "cliquer": "Vérifier mon identité"
+        },
+        {
+          "cliquer": "Lire / télécharger"
+        },
+        {
+          "cocher": "J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite."
+        },
+        {
+          "remplir": {
+            "Votre nom complet": "Étienne Côté"
+          }
+        },
+        {
+          "cliquer": "Signer"
+        },
+        {
+          "voir": "Merci, votre signature est enregistrée"
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-11",
+      "titre": "Signataire ajouté puis substitué en cours de processus, sans relancer la trousse",
+      "exigences": [
+        "IQ-C-30",
+        "IQ-C-31",
+        "IQ-C-55",
+        "IQ-S-05"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Substitution CB ${unique}",
+            "Référence externe": "CB${UNIQUE}-SUB"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "televerser": {
+            "champ": "Téléverser un document",
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "entente-${unique}.pdf",
+              "type": "application/pdf"
+            }
+          }
+        },
+        {
+          "voir": "entente-${unique}.pdf"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "remplir": {
+            "Nom": "Étienne Côté",
+            "Courriel": "signataire@iq.example",
+            "Téléphone": "+15145550190"
+          }
+        },
+        {
+          "choisir": {
+            "Rôle dans le contrat": "SIGNATAIRE_1"
+          }
+        },
+        {
+          "decocher": "Externe"
+        },
+        {
+          "cliquer": "Ajouter un signataire"
+        },
+        {
+          "voir": "Étienne Côté"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Ajouter une étape"
+        },
+        {
+          "remplir": {
+            "Clé": "s1",
+            "Libellé": "Signature IQ"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "SIGNATURE"
+          }
+        },
+        {
+          "cliquer": "Ajouter un responsable"
+        },
+        {
+          "choisir": {
+            "Type du responsable 1": "PARTICIPANT"
+          }
+        },
+        {
+          "choisir": {
+            "Responsable 1": "Étienne Côté"
+          }
+        },
+        {
+          "cliquer": "Tester le parcours"
+        },
+        {
+          "voir": "Parcours valide."
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Lancer le parcours"
+        },
+        {
+          "url": "/clm/trousses/\\d+"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Participants (1)"
+          }
+        },
+        {
+          "remplir": {
+            "Nom": "Sophie Roy",
+            "Courriel": "approbateur@iq.example",
+            "Téléphone": "+15145550190"
+          }
+        },
+        {
+          "choisir": {
+            "Rôle dans le contrat": "SIGNATAIRE_2"
+          }
+        },
+        {
+          "decocher": "Externe"
+        },
+        {
+          "cliquer": "Ajouter un signataire"
+        },
+        {
+          "voir": "Sophie Roy"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Parcours"
+          }
+        },
+        {
+          "cliquerTexte": "Réassigner, ajouter ou retirer des intervenants — Signature IQ"
+        },
+        {
+          "choisir": {
+            "Assignation par utilisateur, groupe ou règle » Responsable 1": "Sophie Roy"
+          }
+        },
+        {
+          "remplir": {
+            "Assignation par utilisateur, groupe ou règle » Motif": "Signataire remplacé par délégation"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Assignation par utilisateur, groupe ou règle",
+            "cliquer": "Enregistrer"
+          }
+        },
+        {
+          "connecter": "signataire interne IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "nePasVoir": "CB${UNIQUE}-SUB"
+        },
+        {
+          "connecter": "approbateur IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Traiter — CB${UNIQUE}-SUB Signature IQ"
+        },
+        {
+          "cliquer": "Signer maintenant"
+        },
+        {
+          "url": "/portail/"
+        },
+        {
+          "cliquer": "Recevoir mon code"
+        },
+        {
+          "voir": "Code envoyé."
+        },
+        {
+          "preparer": {
+            "description": "Code reçu par courriel",
+            "etapes": [
+              {
+                "courriel": {
+                  "destinataire": "approbateur@iq.example",
+                  "motif": "pour CB${UNIQUE}-SUB : ([0-9]+)",
+                  "capturer": "code"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "remplir": {
+            "Code de vérification": "${code}"
+          }
+        },
+        {
+          "cliquer": "Vérifier mon identité"
+        },
+        {
+          "cliquer": "Lire / télécharger"
+        },
+        {
+          "cocher": "J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite."
+        },
+        {
+          "remplir": {
+            "Votre nom complet": "Sophie Roy"
+          }
+        },
+        {
+          "cliquer": "Signer"
+        },
+        {
+          "voir": "Merci, votre signature est enregistrée"
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-12",
+      "titre": "Notifications configurables : l'administration désactive puis réactive l'invitation à signer par courriel",
+      "exigences": [
+        "IQ-C-40",
+        "IQ-C-24",
+        "IQ-C-58",
+        "IQ-D-07",
+        "IQ-S-06"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "aller": "/clm/admin/notifications"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Désactiver — Invitation à signer Courriel"
+          }
+        },
+        {
+          "voir": "Message désactivé."
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Activer — Invitation à signer Courriel"
+          }
+        },
+        {
+          "voir": "Message activé."
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Désactiver — Rappel de non-réponse Courriel"
+          }
+        },
+        {
+          "voir": "Message désactivé."
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Activer — Rappel de non-réponse Courriel"
+          }
+        },
+        {
+          "voir": "Message activé."
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-13",
+      "titre": "Rappels, copies et échéance réglés à la création d'une trousse, puis retrouvés au résumé",
+      "exigences": [
+        "IQ-C-41",
+        "IQ-C-42",
+        "IQ-C-24",
+        "IQ-C-43",
+        "IQ-D-07",
+        "IQ-S-06"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Rappels CB ${unique}",
+            "Référence externe": "CB${UNIQUE}-RAP",
+            "Échéance": "${dansUnMois}",
+            "Destinataires en copie": "direction.${unique}@iq.example, conformite.${unique}@iq.example",
+            "Rappel tous les (jours)": "3",
+            "Nombre maximal de rappels": "4"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "voir": "CB${UNIQUE}-RAP"
+        },
+        {
+          "aller": "/clm/trousses"
+        },
+        {
+          "cliquer": {
+            "role": "link",
+            "nom": "Ouvrir le détail de CB${UNIQUE}-RAP"
+          }
+        },
+        {
+          "voir": [
+            "direction.${unique}@iq.example",
+            "conformite.${unique}@iq.example"
+          ]
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-14",
+      "titre": "Modèle partagé avec un seul groupe : ses membres le voient, les autres non",
+      "exigences": [
+        "IQ-C-33",
+        "IQ-C-67"
+      ],
+      "profil": "administration principale IQ",
+      "etapes": [
+        {
+          "aller": "/clm/admin/groupes"
+        },
+        {
+          "remplir": {
+            "Nouveau groupe » Code": "PRT_${UNIQUE}",
+            "Nouveau groupe » Libellé": "Partage ${unique}"
+          }
+        },
+        {
+          "cliquer": "Créer le groupe"
+        },
+        {
+          "choisir": {
+            "Ajouter un membre au groupe PRT_${UNIQUE} » Membre": "validateur@iq.example"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Ajouter un membre au groupe PRT_${UNIQUE}",
+            "cliquer": "Ajouter"
+          }
+        },
+        {
+          "connecter": "administration d'affaires IQ"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "cliquer": "Créer un modèle"
+        },
+        {
+          "remplir": {
+            "Nom": "Partagé CB ${unique}",
+            "Corps du contrat": "Convention réservée au groupe. {{clauses}}",
+            "Partage par groupes": "PRT_${UNIQUE}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "voir": "Brouillon enregistré."
+        },
+        {
+          "cliquer": "Soumettre à publication"
+        },
+        {
+          "voir": "soumis à publication"
+        },
+        {
+          "connecter": "administration principale IQ"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Partagé CB ${unique}",
+            "cliquer": "Publier"
+          }
+        },
+        {
+          "voir": "Partagé avec : PRT_${UNIQUE}"
+        },
+        {
+          "connecter": "validateur IQ"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "voir": "Partagé CB ${unique}"
+        },
+        {
+          "connecter": "initiateur IQ"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "nePasVoir": "Partagé CB ${unique}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-15",
+      "titre": "Champs d'un modèle : liste, date, case à cocher, zone de signature positionnée pour un rôle, clause conditionnelle vérifiée par l'essai",
+      "exigences": [
+        "IQ-C-34",
+        "IQ-C-35",
+        "IQ-C-36",
+        "IQ-C-37",
+        "IQ-C-38",
+        "IQ-D-01",
+        "IQ-S-01"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "cliquer": "Créer un modèle"
+        },
+        {
+          "remplir": {
+            "Nom": "Champs CB ${unique}",
+            "Corps du contrat": "Programme {{programme}} à compter du {{debut}}. {{clauses}}"
+          }
+        },
+        {
+          "cliquer": "Ajouter un champ"
+        },
+        {
+          "remplir": {
+            "Nom technique": "programme",
+            "Libellé": "Programme"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "LISTE"
+          }
+        },
+        {
+          "remplir": {
+            "Options (séparées par des virgules)": "ESSOR, IMPULSION"
+          }
+        },
+        {
+          "cliquer": "Ajouter un champ"
+        },
+        {
+          "remplir": {
+            "Nom technique": "debut",
+            "Libellé": "Date de début"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "DATE"
+          }
+        },
+        {
+          "cliquer": "Ajouter un champ"
+        },
+        {
+          "remplir": {
+            "Nom technique": "garantie",
+            "Libellé": "Garantie exigée"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "CASE"
+          }
+        },
+        {
+          "cliquer": "Ajouter un champ"
+        },
+        {
+          "remplir": {
+            "Nom technique": "signature1",
+            "Libellé": "Signature du bénéficiaire"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "SIGNATURE"
+          }
+        },
+        {
+          "choisir": {
+            "Rôle autorisé à compléter": "SIGNATAIRE_1"
+          }
+        },
+        {
+          "cliquer": "Positionner sur le document"
+        },
+        {
+          "remplir": {
+            "Haut (%)": "75"
+          }
+        },
+        {
+          "voir": [
+            "Zone de signature",
+            "Premier signataire"
+          ]
+        },
+        {
+          "cliquer": "Ajouter une clause"
+        },
+        {
+          "remplir": {
+            "Titre": "Garantie",
+            "Texte": "Le bénéficiaire fournit une garantie de prêt."
+          }
+        },
+        {
+          "choisir": {
+            "Garantie » Si le champ": "garantie"
+          }
+        },
+        {
+          "choisir": {
+            "Garantie » Opérateur": "EGAL"
+          }
+        },
+        {
+          "remplir": {
+            "Garantie » Valeur": "true"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "voir": "Brouillon enregistré."
+        },
+        {
+          "cliquer": "Vérifier"
+        },
+        {
+          "voir": "Modèle valide."
+        },
+        {
+          "remplir": {
+            "Programme": "ESSOR",
+            "Date de début": "2026-12-01",
+            "Garantie exigée": "true"
+          }
+        },
+        {
+          "cliquer": "Tester la règle"
+        },
+        {
+          "voir": [
+            "Clauses retenues : clause1",
+            "Le bénéficiaire fournit une garantie de prêt."
+          ]
+        },
+        {
+          "remplir": {
+            "Garantie exigée": "false"
+          }
+        },
+        {
+          "cliquer": "Tester la règle"
+        },
+        {
+          "voir": "Clauses retenues : —"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-16",
+      "titre": "Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté",
+      "exigences": [
+        "IQ-C-44",
+        "IQ-C-45",
+        "IQ-C-46",
+        "IQ-C-47",
+        "IQ-C-50",
+        "IQ-D-03",
+        "IQ-D-09"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Documents CB ${unique}",
+            "Référence externe": "CB${UNIQUE}-DOC"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "televerser": {
+            "champ": "Téléverser un document",
+            "fichier": {
+              "fichier": "pdf:25Mo",
+              "nom": "convention-25Mo-${unique}.pdf",
+              "type": "application/pdf"
+            }
+          }
+        },
+        {
+          "voir": "convention-25Mo-${unique}.pdf"
+        },
+        {
+          "televerser": {
+            "champ": "Téléverser un document",
+            "fichier": {
+              "fichier": "chemin:donnees/fichiers/gabarit-iq.docx",
+              "nom": "annexe-${unique}.docx",
+              "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            }
+          }
+        },
+        {
+          "voir": "annexe-${unique}.docx"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Remplacer par une nouvelle version — annexe-${unique}.docx"
+          }
+        },
+        {
+          "televerser": {
+            "champ": "Fichier",
+            "fichier": {
+              "fichier": "chemin:donnees/fichiers/gabarit-iq.docx",
+              "nom": "annexe-v2-${unique}.docx",
+              "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            }
+          }
+        },
+        {
+          "remplir": {
+            "Motif": "Montant corrigé"
+          }
+        },
+        {
+          "cliquer": "Remplacer"
+        },
+        {
+          "voir": "annexe-v2-${unique}.docx"
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "aller": "/clm/trousses"
+        },
+        {
+          "cliquer": {
+            "role": "link",
+            "nom": "Ouvrir le détail de CB${UNIQUE}-DOC"
+          }
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Historique"
+          }
+        },
+        {
+          "voir": "Nouvelle version"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Documents (2)"
+          }
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Versions — annexe-v2-${unique}.docx"
+          }
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Consulter les métadonnées — version 2"
+          }
+        },
+        {
+          "voir": [
+            "Montant corrigé",
+            "v2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-17",
+      "titre": "Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration",
+      "exigences": [
+        "IQ-C-09",
+        "IQ-C-10",
+        "IQ-C-11",
+        "IQ-C-12",
+        "IQ-C-14",
+        "IQ-C-29",
+        "IQ-C-56",
+        "IQ-D-01",
+        "IQ-D-02",
+        "IQ-A-17",
+        "IQ-S-01",
+        "IQ-C-52",
+        "IQ-C-53",
+        "IQ-C-57",
+        "IQ-S-04",
+        "IQ-S-08",
+        "IQ-C-08",
+        "IQ-C-13",
+        "IQ-C-15"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "cliquer": "Créer un modèle"
+        },
+        {
+          "remplir": {
+            "Nom": "Convention SF CB ${unique}",
+            "Corps du contrat": "Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}"
+          }
+        },
+        {
+          "cliquer": "Ajouter un champ"
+        },
+        {
+          "remplir": {
+            "Nom technique": "demandeur",
+            "Libellé": "Demandeur"
+          }
+        },
+        {
+          "cocher": "Obligatoire"
+        },
+        {
+          "choisir": {
+            "Source Salesforce": "Demandeur"
+          }
+        },
+        {
+          "cliquer": "Ajouter un champ"
+        },
+        {
+          "remplir": {
+            "Nom technique": "montant",
+            "Libellé": "Montant"
+          }
+        },
+        {
+          "choisir": {
+            "Source Salesforce": "Montant"
+          }
+        },
+        {
+          "cliquer": "Ajouter un champ"
+        },
+        {
+          "remplir": {
+            "Nom technique": "signature1",
+            "Libellé": "Signature du bénéficiaire"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "SIGNATURE"
+          }
+        },
+        {
+          "choisir": {
+            "Rôle autorisé à compléter": "SIGNATAIRE_1"
+          }
+        },
+        {
+          "cliquer": "Positionner sur le document"
+        },
+        {
+          "cliquer": "Ajouter une étape"
+        },
+        {
+          "remplir": {
+            "Types : validation, approbation, signature » Clé": "s1",
+            "Types : validation, approbation, signature » Libellé": "Signature du bénéficiaire"
+          }
+        },
+        {
+          "choisir": {
+            "Types : validation, approbation, signature » Type": "SIGNATURE"
+          }
+        },
+        {
+          "cliquer": "Ajouter un responsable"
+        },
+        {
+          "choisir": {
+            "Assignation par utilisateur, groupe ou règle » Type du responsable 1": "PARTICIPANT"
+          }
+        },
+        {
+          "choisir": {
+            "Assignation par utilisateur, groupe ou règle » Responsable 1": "SIGNATAIRE_1"
+          }
+        },
+        {
+          "cliquer": "Vérifier"
+        },
+        {
+          "voir": "Modèle valide."
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "voir": "Brouillon enregistré."
+        },
+        {
+          "cliquer": "Soumettre à publication"
+        },
+        {
+          "voir": "soumis à publication"
+        },
+        {
+          "connecter": "administration principale IQ"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Convention SF CB ${unique}",
+            "cliquer": "Publier"
+          }
+        },
+        {
+          "connecter": "initiateur IQ"
+        },
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "cocher": "Salesforce"
+        },
+        {
+          "remplir": {
+            "Identifiant de demande ou numéro de dossier Salesforce": "DEM-2026-0002"
+          }
+        },
+        {
+          "cliquer": "Rechercher #2"
+        },
+        {
+          "voir": "Techno Mauricie"
+        },
+        {
+          "remplir": {
+            "Titre": "Convention SF CB ${unique}",
+            "Référence externe": "CB${UNIQUE}-SF"
+          }
+        },
+        {
+          "choisir": {
+            "Modèle de contrat": "Convention SF CB ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Importer / actualiser"
+        },
+        {
+          "voir": [
+            "Techno Mauricie",
+            "1200000"
+          ]
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Générer depuis le modèle"
+        },
+        {
+          "voir": "CB${UNIQUE}-SF.pdf"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "remplir": {
+            "Nom": "Julie Mauricie",
+            "Courriel": "julie.${unique}@technomauricie.example",
+            "Téléphone": "+18195550142"
+          }
+        },
+        {
+          "choisir": {
+            "Rôle dans le contrat": "SIGNATAIRE_1"
+          }
+        },
+        {
+          "choisir": {
+            "Vérification d’identité": "QUESTION"
+          }
+        },
+        {
+          "remplir": {
+            "Question de vérification": "Ville du siège ?",
+            "Réponse attendue": "Trois-Rivières"
+          }
+        },
+        {
+          "cocher": "Externe"
+        },
+        {
+          "cliquer": "Ajouter un signataire"
+        },
+        {
+          "voir": "Julie Mauricie"
+        },
+        {
+          "choisir": {
+            "Signataire de la zone « Signature du bénéficiaire »": "(premier)"
+          }
+        },
+        {
+          "cliquer": "Attribuer la zone — Signature du bénéficiaire"
+        },
+        {
+          "voir": "Zone « Signature du bénéficiaire » attribuée."
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Lancer le parcours"
+        },
+        {
+          "url": "/clm/trousses/\\d+"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Historique"
+          }
+        },
+        {
+          "voir": [
+            "Préremplissage Salesforce",
+            "DEM-2026-0002"
+          ]
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "preparer": {
+            "description": "Invitation reçue par courriel par la signataire externe",
+            "etapes": [
+              {
+                "courriel": {
+                  "destinataire": "julie.${unique}@technomauricie.example",
+                  "motif": "/portail/([A-Za-z0-9_-]+)",
+                  "capturer": "jeton"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "largeur": 390
+        },
+        {
+          "aller": "/portail/${jeton}"
+        },
+        {
+          "remplir": {
+            "Ville du siège ?": "Trois-Rivières"
+          }
+        },
+        {
+          "cliquer": "Vérifier mon identité"
+        },
+        {
+          "cliquer": "Lire / télécharger"
+        },
+        {
+          "cocher": "J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite."
+        },
+        {
+          "remplir": {
+            "Votre nom complet": "Julie Mauricie"
+          }
+        },
+        {
+          "cliquer": "Signer"
+        },
+        {
+          "voir": "Merci, votre signature est enregistrée"
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "largeur": 1280
+        },
+        {
+          "aller": "/clm/suivi"
+        },
+        {
+          "voir": "CB${UNIQUE}-SF"
+        },
+        {
+          "connecter": "administration principale IQ"
+        },
+        {
+          "aller": "/clm/admin/integrations"
+        },
+        {
+          "cliquer": "Relayer maintenant"
+        },
+        {
+          "voir": "Transmis"
+        },
+        {
+          "voir": [
+            "Journal des retours de statut",
+            "LANCEE · ",
+            "SIGNATURE_TERMINEE · ",
+            "a0B5e00000GRT002"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-18",
+      "titre": "Dossier de preuve d'une trousse signée : intégrité vérifiée, signatures et consentements consultés, certificat et dossier complet exportés ; journal d'audit filtré par trousse",
+      "exigences": [
+        "IQ-C-49",
+        "IQ-C-51",
+        "IQ-C-63",
+        "IQ-C-64",
+        "IQ-C-65",
+        "IQ-D-10",
+        "IQ-D-11",
+        "IQ-D-19",
+        "IQ-S-07",
+        "IQ-S-10"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Preuve CB ${unique}",
+            "Référence externe": "CB${UNIQUE}-PRV"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "televerser": {
+            "champ": "Téléverser un document",
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "entente-${unique}.pdf",
+              "type": "application/pdf"
+            }
+          }
+        },
+        {
+          "voir": "entente-${unique}.pdf"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "remplir": {
+            "Nom": "Étienne Côté",
+            "Courriel": "signataire@iq.example",
+            "Téléphone": "+15145550190"
+          }
+        },
+        {
+          "choisir": {
+            "Rôle dans le contrat": "SIGNATAIRE_1"
+          }
+        },
+        {
+          "decocher": "Externe"
+        },
+        {
+          "cliquer": "Ajouter un signataire"
+        },
+        {
+          "voir": "Étienne Côté"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Ajouter une étape"
+        },
+        {
+          "remplir": {
+            "Clé": "s1",
+            "Libellé": "Signature IQ"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "SIGNATURE"
+          }
+        },
+        {
+          "cliquer": "Ajouter un responsable"
+        },
+        {
+          "choisir": {
+            "Type du responsable 1": "PARTICIPANT"
+          }
+        },
+        {
+          "choisir": {
+            "Responsable 1": "Étienne Côté"
+          }
+        },
+        {
+          "cliquer": "Tester le parcours"
+        },
+        {
+          "voir": "Parcours valide."
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Lancer le parcours"
+        },
+        {
+          "url": "/clm/trousses/\\d+"
+        },
+        {
+          "connecter": "signataire interne IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Traiter — CB${UNIQUE}-PRV Signature IQ"
+        },
+        {
+          "cliquer": "Signer maintenant"
+        },
+        {
+          "url": "/portail/"
+        },
+        {
+          "cliquer": "Recevoir mon code"
+        },
+        {
+          "voir": "Code envoyé."
+        },
+        {
+          "preparer": {
+            "description": "Code reçu par courriel",
+            "etapes": [
+              {
+                "courriel": {
+                  "destinataire": "signataire@iq.example",
+                  "motif": "pour CB${UNIQUE}-PRV : ([0-9]+)",
+                  "capturer": "code"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "remplir": {
+            "Code de vérification": "${code}"
+          }
+        },
+        {
+          "cliquer": "Vérifier mon identité"
+        },
+        {
+          "cliquer": "Lire / télécharger"
+        },
+        {
+          "cocher": "J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite."
+        },
+        {
+          "remplir": {
+            "Votre nom complet": "Étienne Côté"
+          }
+        },
+        {
+          "cliquer": "Signer"
+        },
+        {
+          "voir": "Merci, votre signature est enregistrée"
+        },
+        {
+          "connecter": "initiateur IQ"
+        },
+        {
+          "aller": "/clm/trousses"
+        },
+        {
+          "cliquer": {
+            "role": "link",
+            "nom": "Ouvrir le détail de CB${UNIQUE}-PRV"
+          }
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Preuve"
+          }
+        },
+        {
+          "cliquer": "Vérifier l’intégrité"
+        },
+        {
+          "voir": "Intégrité confirmée : journal, documents et attestations intacts."
+        },
+        {
+          "voir": [
+            "Identités, consentements et signatures",
+            "Étienne Côté"
+          ]
+        },
+        {
+          "telecharger": "Télécharger le certificat (PDF)"
+        },
+        {
+          "telecharger": "Exporter le dossier complet (ZIP)"
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "connecter": "administration principale IQ"
+        },
+        {
+          "aller": "/clm/admin/journal"
+        },
+        {
+          "remplir": {
+            "Trousse (référence)": "CB${UNIQUE}-PRV"
+          }
+        },
+        {
+          "cliquer": "Rechercher #2"
+        },
+        {
+          "voir": [
+            "Trousse créée",
+            "Document ajouté"
+          ]
+        },
+        {
+          "telecharger": "Exporter le journal (CSV)"
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-19",
+      "titre": "Séparation des rôles : l'auditeur consulte une trousse sans pouvoir agir, l'administration technique n'accède pas aux trousses",
+      "exigences": [
+        "IQ-C-67",
+        "IQ-D-15",
+        "IQ-D-16",
+        "IQ-D-17",
+        "IQ-A-26"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Rôles CB ${unique}",
+            "Référence externe": "CB${UNIQUE}-ROL"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "voir": "CB${UNIQUE}-ROL"
+        },
+        {
+          "connecter": "auditeur IQ"
+        },
+        {
+          "aller": "/clm/trousses"
+        },
+        {
+          "cliquer": {
+            "role": "link",
+            "nom": "Ouvrir le détail de CB${UNIQUE}-ROL"
+          }
+        },
+        {
+          "voir": "Rôles CB ${unique}"
+        },
+        {
+          "nePasVoir": [
+            "Lancer le parcours",
+            "Annuler la trousse"
+          ]
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "connecter": "administration technique IQ"
+        },
+        {
+          "aller": "/clm/trousses"
+        },
+        {
+          "nePasVoir": "CB${UNIQUE}-ROL"
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-20",
+      "titre": "Vérification d'identité proportionnée : une trousse à risque élevé impose un niveau minimal au signataire externe",
+      "exigences": [
+        "IQ-C-61",
+        "IQ-C-62",
+        "IQ-A-23"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Risque CB ${unique}",
+            "Référence externe": "CB${UNIQUE}-RSQ"
+          }
+        },
+        {
+          "choisir": {
+            "Niveau de risque": "ELEVE"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "voir": "Niveau minimal imposé par le risque"
+        },
+        {
+          "remplir": {
+            "Nom": "Paul Externe",
+            "Courriel": "paul.${unique}@exemple.ca",
+            "Téléphone": "+15145550177"
+          }
+        },
+        {
+          "choisir": {
+            "Rôle dans le contrat": "SIGNATAIRE_1"
+          }
+        },
+        {
+          "cocher": "Externe"
+        },
+        {
+          "cliquer": "Ajouter un signataire"
+        },
+        {
+          "voir": "Paul Externe"
+        },
+        {
+          "voir": "ajouté (vérification"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-21",
+      "titre": "Interfaces en français, offertes en anglais : l'utilisateur change de langue, la console d'administration reste en français",
+      "exigences": [
+        "IQ-D-21",
+        "IQ-D-22",
+        "IQ-D-23",
+        "IQ-A-15"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "voir": "Boîte de tâches"
+        },
+        {
+          "langue": "en"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "voir": "Task inbox"
+        },
+        {
+          "cliquer": {
+            "role": "link",
+            "nom": "My packages"
+          }
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "langue": "fr"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "voir": "Boîte de tâches"
+        },
+        {
+          "connecter": "administration principale IQ"
+        },
+        {
+          "aller": "/clm/admin/integrations"
+        },
+        {
+          "voir": [
+            "Intégrations API",
+            "Journal des retours de statut"
+          ]
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    }
+  ],
+  "constats": [
+    {
+      "id": "D-01",
+      "exigences": [
+        "IQ-C-32",
+        "IQ-D-06"
+      ],
+      "scenario": "E2E-CB-IQ-02",
+      "constat": "Un modèle sans corps, sans champ ni gabarit Word passait la vérification : il pouvait être soumis puis publié, et rien n'en serait généré.",
+      "suite": "Corrigé — la vérification exige un corps ou un gabarit Word (« Le corps du contrat est vide. »)."
+    },
+    {
+      "id": "D-02",
+      "exigences": [
+        "IQ-C-32",
+        "IQ-C-38"
+      ],
+      "scenario": "E2E-CB-IQ-17",
+      "constat": "« Vérifier », « Tester la règle » et « Soumettre à publication » jugeaient la dernière version enregistrée, pas ce qui est à l'écran : corps « vide » juste après l'avoir saisi, ou soumission sans les dernières modifications.",
+      "suite": "Corrigé — un brouillon modifié est enregistré avant ces trois actions."
+    },
+    {
+      "id": "D-03",
+      "exigences": [
+        "IQ-C-32"
+      ],
+      "scenario": "E2E-CB-IQ-17",
+      "constat": "Le second enregistrement d'un modèle dans l'éditeur échouait toujours (« Conflit de version ») : le serveur renvoyait l'ancien numéro de version.",
+      "suite": "Corrigé — la version renvoyée est celle enregistrée ; test d'intégration à deux enregistrements successifs."
+    },
+    {
+      "id": "D-04",
+      "exigences": [
+        "IQ-C-12",
+        "IQ-C-57"
+      ],
+      "scenario": "E2E-CB-IQ-09",
+      "constat": "En production, les liens de signature (invitations, « Signer maintenant ») menaient à http://localhost:5173/portail : l'adresse publique du portail n'était pas configurée.",
+      "suite": "Corrigé — CLM_PORTAIL_URL posée en production ; le déploiement refuse de démarrer sans adresse https."
+    },
+    {
+      "id": "D-05",
+      "exigences": [
+        "IQ-C-47"
+      ],
+      "scenario": "E2E-CB-IQ-16",
+      "constat": "En production, toute pièce de plus de 1 Mo était refusée (413) par les relais nginx, alors que le cahier exige au moins 25 Mo.",
+      "suite": "Corrigé — 32 Mo aux deux relais (comme Spring) ; la recette déployée vérifie qu'une pièce de 26 Mo passe."
+    },
+    {
+      "id": "C-01",
+      "exigences": [
+        "IQ-A-03"
+      ],
+      "scenario": "E2E-CB-IQ-01",
+      "constat": "La signature en lot propose un modèle dont un champ obligatoire n'a ni source Salesforce ni valeur par défaut ; chaque dossier échoue alors (« Données incomplètes »).",
+      "suite": "Amélioration proposée : avertir au choix du modèle. Le parcours utilise un champ sourcé de Salesforce."
+    },
+    {
+      "id": "C-02",
+      "exigences": [
+        "IQ-C-52",
+        "IQ-C-57"
+      ],
+      "scenario": "E2E-CB-IQ-09",
+      "constat": "Un signataire interne déjà connecté reçoit tout de même un code par courriel au portail avant de signer.",
+      "suite": "Selon la politique d'identité interne d'IQ (niveau COURRIEL) : à confirmer avec IQ (étape de plus pour l'interne)."
+    },
+    {
+      "id": "C-03",
+      "exigences": [
+        "IQ-C-30",
+        "IQ-C-57"
+      ],
+      "scenario": "E2E-CB-IQ-09",
+      "constat": "La case « Externe » est cochée par défaut à l'ajout d'un signataire : un employé d'IQ devient signataire externe si on oublie de la décocher.",
+      "suite": "Constat d'ergonomie : décocher par défaut quand le courriel appartient à l'organisation (à décider)."
+    },
+    {
+      "id": "C-04",
+      "exigences": [
+        "IQ-C-32",
+        "IQ-C-67"
+      ],
+      "scenario": "E2E-CB-IQ-03",
+      "constat": "Un modèle créé par l'administration d'affaires doit être publié par une autre administration (séparation des responsabilités) ; l'auteur reçoit un refus explicite.",
+      "suite": "Comportement voulu : chez IQ, admin.ti@iq.example (administration principale) publie les modèles de admin.affaires@iq.example."
+    }
+  ]
+}

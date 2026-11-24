@@ -6,12 +6,71 @@
 
 - **Source** : 1.3
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-04 — Circuit séquentiel saisi à l'écran : validation puis approbation, décisions commentées et historisées, suivi de l'état
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-D-08, IQ-D-09, IQ-S-02, IQ-S-03
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Circuit CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SEQ`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `a1` ; « Libellé » : `Approbation`
+16. Choisir « Type » : `APPROBATION`
+17. Activer « Ajouter un responsable »
+18. Saisir « Responsable 1 » : `approbateur@iq.example`
+19. Activer « Tester le parcours »
+20. Voir « Parcours valide. »
+21. Activer « Enregistrer »
+22. Activer « Continuer »
+23. Activer « Lancer le parcours »
+24. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+25. Activer « Parcours » (tab)
+26. Voir « Validation juridique »
+27. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+28. Se connecter en tant que validateur IQ
+29. Ouvrir l'écran `/clm/taches`
+30. Activer « Traiter — CB${UNIQUE}-SEQ Validation juridique »
+31. Saisir « Commentaire » : `Clauses conformes au programme`
+32. Activer « Valider »
+33. Voir « Décision enregistrée »
+34. Se connecter en tant que approbateur IQ
+35. Ouvrir l'écran `/clm/taches`
+36. Activer « Traiter — CB${UNIQUE}-SEQ Approbation »
+37. Saisir « Commentaire » : `Approuvé selon la délégation`
+38. Activer « Approuver »
+39. Voir « Décision enregistrée : approuvé. »
+40. Se connecter en tant que initiateur IQ
+41. Ouvrir l'écran `/clm/suivi`
+42. Voir « CB${UNIQUE}-SEQ »
+43. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+44. Ouvrir l'écran `/clm/trousses`
+45. Voir « Terminée »
+46. Activer « Ouvrir le détail de CB${UNIQUE}-SEQ » (link)
+47. Activer « Historique » (tab)
+48. Voir « Clauses conformes au programme », « Approuvé selon la délégation »
 
 ### E2E-IQ-06 — Parcours de validation puis d'approbation, décisions tracées
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-S-02, IQ-S-03, IQ-S-09, IQ-C-52
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.validation-approbation`
@@ -32,13 +91,15 @@
 
 - **Source** : 1.3
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-11 — Signature externe : invitation, identité, consentement, signature, preuve
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ❌ échoué
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -51,6 +112,7 @@
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-A-01, IQ-A-02, IQ-C-06, IQ-C-16, IQ-C-69, IQ-D-12, IQ-D-26, IQ-D-27, IQ-D-28, IQ-A-07, IQ-C-03
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.integration.api`
@@ -62,12 +124,14 @@
 
 - **Source** : 1.3
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-32 — Analyse d'un document par l'IA encadrée, depuis l'accueil
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-59, IQ-C-04, IQ-S-10b
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.ia.analyse`
@@ -84,12 +148,14 @@
 
 - **Source** : 1.4.3
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-19 — API d'intégration : client, jeton, création de trousse par un système
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-A-01, IQ-A-02, IQ-C-06, IQ-C-16, IQ-C-69, IQ-D-12, IQ-D-26, IQ-D-27, IQ-D-28, IQ-A-07, IQ-C-03
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.integration.api`
@@ -101,12 +167,14 @@
 
 - **Source** : 1.4.3
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-30 — Isolation des données entre organisations et modules
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-07, IQ-D-20
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.isolation`
@@ -117,12 +185,104 @@
 
 - **Source** : 1.4.4
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-IQ-20 — Statuts renvoyés à Salesforce à chaque jalon
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-08, IQ-C-13, IQ-C-15, IQ-A-05, IQ-A-10, IQ-A-12, IQ-A-14
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.salesforce.statuts`
@@ -134,12 +294,104 @@
 
 - **Source** : 1.4.5
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-IQ-33 — Générer le contrat d'un modèle publié, valeurs préremplies depuis Salesforce et corrigeables
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-D-01, IQ-D-02, IQ-A-06, IQ-A-17, IQ-A-18, IQ-C-56
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.generation.salesforce`
@@ -153,12 +405,104 @@
 
 - **Source** : 1.4.5
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-IQ-33 — Générer le contrat d'un modèle publié, valeurs préremplies depuis Salesforce et corrigeables
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-D-01, IQ-D-02, IQ-A-06, IQ-A-17, IQ-A-18, IQ-C-56
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.generation.salesforce`
@@ -172,12 +516,153 @@
 
 - **Source** : 1.4.5
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-01 — Modèle créé et configuré à l'écran, soumis, publié par une autre administration, puis utilisé en signature en lot (un dossier sans téléphone échoue seul)
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-32, IQ-C-35, IQ-C-11, IQ-A-03, IQ-D-06, IQ-A-02, IQ-D-01, IQ-D-02
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (22 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Voir « Nouveau modèle »
+4. Saisir « Nom » : `Entente CB ${unique}`
+5. Choisir « Catégorie » : `(premier)`
+6. Saisir « Corps du contrat » : `Entente avec {{beneficiaire}} pour un montant de {{montant}} $. {{clauses}}`
+7. Activer « Ajouter un champ »
+8. Saisir « Nom technique » : `beneficiaire` ; « Libellé » : `Bénéficiaire`
+9. Cocher « Obligatoire »
+10. Choisir « Source Salesforce » : `Demandeur`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant` ; « Format (expression régulière) » : `^[0-9]+$`
+13. Activer « Ajouter une clause »
+14. Saisir « Titre » : `Versement` ; « Texte » : `Le montant est versé en un seul paiement.`
+15. Activer « Enregistrer le brouillon »
+16. Voir « Brouillon enregistré. »
+17. Saisir « Bénéficiaire » : `Entreprise Essai inc.` ; « Montant » : `25000`
+18. Activer « Tester la règle »
+19. Voir « Entente avec Entreprise Essai inc. pour un montant de 25000 $ »
+20. Activer « Vérifier »
+21. Voir « Modèle valide. »
+22. Activer « Soumettre à publication »
+23. Voir « soumis à publication »
+24. Se connecter en tant que administration principale IQ
+25. Ouvrir l'écran `/clm/modeles`
+26. Dans la ligne « Entente CB ${unique} », activer « Publier »
+27. Voir « « Entente CB ${unique} » publié. »
+28. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+29. Se connecter en tant que initiateur IQ
+30. Ouvrir l'écran `/clm/lots`
+31. Saisir « Libellé du lot » : `Lot CB ${unique}`
+32. Choisir « Modèle de contrat » : `Entente CB ${unique}` ; « Première colonne » : `Numéro de dossier Salesforce`
+33. Saisir « Dossiers, un par ligne » : `DEM-2026-0001;Jeanne Tremblay;jeanne.tremblay@exemple.ca;+15145550101
+DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
+34. Voir « 2 dossier(s) dans le lot. »
+35. Activer « Créer le lot »
+36. Voir « Lot « Lot CB ${unique} » : 1 trousse(s) créée(s), 1 échec(s). »
+37. Voir « DEM-2026-0001 »
+38. Voir « téléphone requis pour la vérification par SMS »
+39. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-IQ-33 — Générer le contrat d'un modèle publié, valeurs préremplies depuis Salesforce et corrigeables
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-D-01, IQ-D-02, IQ-A-06, IQ-A-17, IQ-A-18, IQ-C-56
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.generation.salesforce`
@@ -191,12 +676,104 @@
 
 - **Source** : 1.4.5
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-ECR-IQ-01 — L'initiateur crée une trousse à l'écran : documents déposés, remplacés et retirés, signataires ajoutés et retirés, parcours testé puis enregistré, lancement ; la preuve se vérifie
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-29, IQ-C-12, IQ-C-51
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (33 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/trousses/nouvelle`
@@ -243,6 +820,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-14, IQ-C-37, IQ-C-12
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (27 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Modèle publié (champs, zone de signature, clause conditionnelle, parcours de validation)
@@ -284,6 +862,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-D-01, IQ-D-02, IQ-A-06, IQ-A-17, IQ-A-18, IQ-C-56
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.generation.salesforce`
@@ -297,12 +876,104 @@
 
 - **Source** : 1.4.5
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-IQ-20 — Statuts renvoyés à Salesforce à chaque jalon
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-08, IQ-C-13, IQ-C-15, IQ-A-05, IQ-A-10, IQ-A-12, IQ-A-14
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.salesforce.statuts`
@@ -314,12 +985,104 @@
 
 - **Source** : 1.4.5
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-ECR-IQ-02 — Une trousse naît d'un dossier Salesforce et d'un modèle : recherche et import, valeur corrigée, contrat généré en PDF et en Word, zone de signature attribuée, lancement ; le validateur commente puis valide sa tâche
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-14, IQ-C-37, IQ-C-12
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (27 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Modèle publié (champs, zone de signature, clause conditionnelle, parcours de validation)
@@ -361,6 +1124,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-D-01, IQ-D-02, IQ-A-06, IQ-A-17, IQ-A-18, IQ-C-56
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.generation.salesforce`
@@ -374,12 +1138,158 @@
 
 - **Source** : 1.4.5
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
+
+### E2E-ECR-IQ-05 — L'administration du CLM : messages modifiés et testés, connexion Salesforce testée, relayée, configurée puis rétablie, client d'intégration créé puis révoqué, paramètres modifiés puis rétablis, groupe créé et garni puis supprimé, départ d'un employé transféré, journal filtré et exporté
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-16, IQ-C-30, IQ-C-15, IQ-C-40, IQ-D-18, IQ-A-26
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (32 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Compte jetable qui quitte l'organisation, avec une étape de validation ouverte à son nom
+2. Ouvrir l'écran `/clm/admin`
+3. Ouvrir l'écran `/clm/admin/notifications`
+4. Activer « Modifier »
+5. Saisir « Sujet » : `Invitation E2E ${unique}`
+6. Activer « Enregistrer »
+7. Saisir « Destinataire de test » : `test.${unique}@iq.example`
+8. Activer « Envoyer un test »
+9. Ouvrir l'écran `/clm/admin/integrations`
+10. Activer « Tester la connexion »
+11. Activer « Relayer maintenant »
+12. Activer « Configurer la connexion »
+13. Dans la section « Configurer la connexion », activer « Enregistrer »
+14. Activer « Configurer la connexion »
+15. Activer « Rétablir la connexion de la plateforme »
+16. Saisir « Nouveau client d’intégration » Nom » : `Client E2E ${unique}`
+17. Activer « Créer le client »
+18. Activer « J’ai copié les valeurs »
+19. Activer « Révoquer — Client E2E ${unique} » (button)
+20. Ouvrir l'écran `/clm/admin/parametres`
+21. Activer « Modifier un paramètre autorisé »
+22. Saisir « Rappel tous les (jours) » : `4`
+23. Activer « Enregistrer »
+24. Activer « Modifier un paramètre autorisé »
+25. Activer « Rétablir les paramètres de la plateforme »
+26. Ouvrir l'écran `/clm/admin/listes`
+27. Ouvrir l'écran `/clm/admin/groupes`
+28. Saisir « Nouveau groupe » Code » : `GRP_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Groupe écran ${unique}`
+29. Activer « Créer le groupe »
+30. Choisir « Ajouter un membre au groupe GRP_${UNIQUE} » Membre » : `initiateur@iq.example`
+31. Dans la section « Ajouter un membre au groupe GRP_${UNIQUE} », activer « Ajouter »
+32. Activer « Retirer initiateur@iq.example du groupe GRP_${UNIQUE} » (button)
+33. Activer « Supprimer le groupe GRP_${UNIQUE} » (button)
+34. Ouvrir l'écran `/clm/admin/departs`
+35. Saisir « Courriel de la personne qui part » : `depart.${unique}@iq.example`
+36. Activer « Consulter »
+37. Choisir « Personne qui reprend » : `(premier)`
+38. Activer « Transférer »
+39. Ouvrir l'écran `/clm/admin/journal`
+40. Saisir « Acteur » : `initiateur@iq.example`
+41. Activer « Rechercher #2 »
+42. Ouvrir l'écran `/clm/admin/audit`
+43. Ouvrir l'écran `/clm/options`
+44. Ouvrir l'écran `/clm/profil`
+45. Ouvrir l'écran `/clm/securite`
 
 ### E2E-IQ-20 — Statuts renvoyés à Salesforce à chaque jalon
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-08, IQ-C-13, IQ-C-15, IQ-A-05, IQ-A-10, IQ-A-12, IQ-A-14
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.salesforce.statuts`
@@ -391,12 +1301,14 @@
 
 - **Source** : 1.4.5
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-IQ-05 — L'administration du CLM : messages modifiés et testés, connexion Salesforce testée, relayée, configurée puis rétablie, client d'intégration créé puis révoqué, paramètres modifiés puis rétablis, groupe créé et garni puis supprimé, départ d'un employé transféré, journal filtré et exporté
 
 - **Profil** : administration principale IQ
-- **Exigences démontrées** : IQ-C-16, IQ-C-30
+- **Exigences démontrées** : IQ-C-16, IQ-C-30, IQ-C-15, IQ-C-40, IQ-D-18, IQ-A-26
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (32 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Compte jetable qui quitte l'organisation, avec une étape de validation ouverte à son nom
@@ -450,6 +1362,7 @@
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-A-01, IQ-A-02, IQ-C-06, IQ-C-16, IQ-C-69, IQ-D-12, IQ-D-26, IQ-D-27, IQ-D-28, IQ-A-07, IQ-C-03
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.integration.api`
@@ -462,6 +1375,7 @@
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-D-29, IQ-C-16
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.api.documentee`
@@ -472,12 +1386,14 @@
 
 - **Source** : 1.4.6
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-03 — Cycle de vie d'un modèle : rédaction, soumission, publication, nouvelle version
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-32, IQ-C-33, IQ-C-34, IQ-C-35, IQ-C-36, IQ-C-37, IQ-C-38, IQ-D-06, IQ-C-17
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.modele.cycle`
@@ -489,12 +1405,117 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-04 — Circuit séquentiel saisi à l'écran : validation puis approbation, décisions commentées et historisées, suivi de l'état
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-D-08, IQ-D-09, IQ-S-02, IQ-S-03
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Circuit CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SEQ`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `a1` ; « Libellé » : `Approbation`
+16. Choisir « Type » : `APPROBATION`
+17. Activer « Ajouter un responsable »
+18. Saisir « Responsable 1 » : `approbateur@iq.example`
+19. Activer « Tester le parcours »
+20. Voir « Parcours valide. »
+21. Activer « Enregistrer »
+22. Activer « Continuer »
+23. Activer « Lancer le parcours »
+24. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+25. Activer « Parcours » (tab)
+26. Voir « Validation juridique »
+27. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+28. Se connecter en tant que validateur IQ
+29. Ouvrir l'écran `/clm/taches`
+30. Activer « Traiter — CB${UNIQUE}-SEQ Validation juridique »
+31. Saisir « Commentaire » : `Clauses conformes au programme`
+32. Activer « Valider »
+33. Voir « Décision enregistrée »
+34. Se connecter en tant que approbateur IQ
+35. Ouvrir l'écran `/clm/taches`
+36. Activer « Traiter — CB${UNIQUE}-SEQ Approbation »
+37. Saisir « Commentaire » : `Approuvé selon la délégation`
+38. Activer « Approuver »
+39. Voir « Décision enregistrée : approuvé. »
+40. Se connecter en tant que initiateur IQ
+41. Ouvrir l'écran `/clm/suivi`
+42. Voir « CB${UNIQUE}-SEQ »
+43. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+44. Ouvrir l'écran `/clm/trousses`
+45. Voir « Terminée »
+46. Activer « Ouvrir le détail de CB${UNIQUE}-SEQ » (link)
+47. Activer « Historique » (tab)
+48. Voir « Clauses conformes au programme », « Approuvé selon la délégation »
+
+### E2E-CB-IQ-05 — Validations en parallèle : un validateur rejette en motivant, la trousse est rejetée
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-18, IQ-C-22, IQ-C-23, IQ-D-04, IQ-S-09
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (26 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Parallèle CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-PAR`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `v2` ; « Libellé » : `Validation financière`
+16. Choisir « Type » : `VALIDATION`
+17. Saisir « Phase » : `1`
+18. Activer « Ajouter un responsable »
+19. Saisir « Responsable 1 » : `approbateur@iq.example`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Se connecter en tant que validateur IQ
+27. Ouvrir l'écran `/clm/taches`
+28. Activer « Traiter — CB${UNIQUE}-PAR Validation juridique »
+29. Activer « Rejeter »
+30. Voir « Un motif est obligatoire »
+31. Saisir « Commentaire » : `Montant hors programme`
+32. Activer « Rejeter »
+33. Voir « Décision enregistrée : rejeté. »
+34. Se connecter en tant que initiateur IQ
+35. Ouvrir l'écran `/clm/trousses`
+36. Activer « Ouvrir le détail de CB${UNIQUE}-PAR » (link)
+37. Voir « Rejetée »
 
 ### E2E-IQ-06 — Parcours de validation puis d'approbation, décisions tracées
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-S-02, IQ-S-03, IQ-S-09, IQ-C-52
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.validation-approbation`
@@ -510,6 +1531,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-18, IQ-C-20, IQ-C-21, IQ-C-55, IQ-D-05, IQ-S-05
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.parallele-reassignation`
@@ -523,12 +1545,54 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅🆕
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-08 — Attribution par groupe : l'administration crée le groupe et y place le validateur, qui reçoit l'étape
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-19, IQ-C-67, IQ-D-05
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (21 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/groupes`
+2. Saisir « Nouveau groupe » Code » : `JUR_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Juridique ${unique}`
+3. Activer « Créer le groupe »
+4. Choisir « Ajouter un membre au groupe JUR_${UNIQUE} » Membre » : `validateur@iq.example`
+5. Dans la section « Ajouter un membre au groupe JUR_${UNIQUE} », activer « Ajouter »
+6. Voir « validateur@iq.example »
+7. Se connecter en tant que initiateur IQ
+8. Ouvrir l'écran `/clm/trousses/nouvelle`
+9. Saisir « Titre » : `Groupe CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-GRP`
+10. Activer « Enregistrer le brouillon »
+11. Activer « Continuer »
+12. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+13. Voir « entente-${unique}.pdf »
+14. Activer « Continuer »
+15. Activer « Continuer »
+16. Activer « Ajouter une étape »
+17. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+18. Choisir « Type » : `VALIDATION`
+19. Activer « Affecter un groupe »
+20. Saisir « Responsable 1 » : `JUR_${UNIQUE}`
+21. Activer « Tester le parcours »
+22. Voir « Parcours valide. »
+23. Activer « Enregistrer »
+24. Activer « Continuer »
+25. Activer « Lancer le parcours »
+26. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+27. Se connecter en tant que validateur IQ
+28. Ouvrir l'écran `/clm/taches`
+29. Activer « Traiter — CB${UNIQUE}-GRP Validation juridique »
+30. Activer « Valider »
+31. Voir « Décision enregistrée »
 
 ### E2E-IQ-09 — Règles d'affaires : étape non requise selon les valeurs
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-19, IQ-A-25, IQ-D-07
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.regles`
@@ -540,12 +1604,54 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-07 — Réassignation en cours de processus : l'étape passe à un autre intervenant sans redémarrer le parcours
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-20, IQ-C-21, IQ-C-55, IQ-D-05, IQ-S-05
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (21 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Réassignation CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-REA`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Tester le parcours »
+15. Voir « Parcours valide. »
+16. Activer « Enregistrer »
+17. Activer « Continuer »
+18. Activer « Lancer le parcours »
+19. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+20. Activer « Parcours » (tab)
+21. Activer l'élément « Réassigner, ajouter ou retirer des intervenants — Validation juridique » (ligne ou carte cliquable)
+22. Saisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `approbateur@iq.example` ; « Assignation par utilisateur, groupe ou règle » Motif » : `Validateur en congé`
+23. Dans la section « Assignation par utilisateur, groupe ou règle », activer « Enregistrer »
+24. Se connecter en tant que validateur IQ
+25. Ouvrir l'écran `/clm/taches`
+26. Ne pas voir « CB${UNIQUE}-REA »
+27. Se connecter en tant que approbateur IQ
+28. Ouvrir l'écran `/clm/taches`
+29. Activer « Traiter — CB${UNIQUE}-REA Validation juridique »
+30. Activer « Valider »
+31. Voir « Décision enregistrée »
 
 ### E2E-IQ-08 — Étapes parallèles et réassignation d'une tâche
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-18, IQ-C-20, IQ-C-21, IQ-C-55, IQ-D-05, IQ-S-05
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.parallele-reassignation`
@@ -559,12 +1665,106 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-07 — Réassignation en cours de processus : l'étape passe à un autre intervenant sans redémarrer le parcours
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-20, IQ-C-21, IQ-C-55, IQ-D-05, IQ-S-05
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (21 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Réassignation CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-REA`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Tester le parcours »
+15. Voir « Parcours valide. »
+16. Activer « Enregistrer »
+17. Activer « Continuer »
+18. Activer « Lancer le parcours »
+19. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+20. Activer « Parcours » (tab)
+21. Activer l'élément « Réassigner, ajouter ou retirer des intervenants — Validation juridique » (ligne ou carte cliquable)
+22. Saisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `approbateur@iq.example` ; « Assignation par utilisateur, groupe ou règle » Motif » : `Validateur en congé`
+23. Dans la section « Assignation par utilisateur, groupe ou règle », activer « Enregistrer »
+24. Se connecter en tant que validateur IQ
+25. Ouvrir l'écran `/clm/taches`
+26. Ne pas voir « CB${UNIQUE}-REA »
+27. Se connecter en tant que approbateur IQ
+28. Ouvrir l'écran `/clm/taches`
+29. Activer « Traiter — CB${UNIQUE}-REA Validation juridique »
+30. Activer « Valider »
+31. Voir « Décision enregistrée »
+
+### E2E-ECR-IQ-06 — L'exploitation des trousses : étape relancée et réassignée, document analysé par l'IA et révisé, certificat téléchargé, trousse annulée, listes exportées, tâche confiée, démarrée et réassignée, lot créé et approuvé ; le validateur délègue, le signataire interne signe depuis sa tâche
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-31, IQ-C-50, IQ-C-30, IQ-C-59, IQ-A-28, IQ-C-43, IQ-C-21
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (33 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Modèle publié ; trousse en validation et trousse en signature interne, lancées
+2. Ouvrir l'écran `/clm/trousses/${trousse}`
+3. Choisir « Étape à relancer » : `(premier)`
+4. Activer « Relancer l’étape »
+5. Activer « Parcours » (tab)
+6. Activer l'élément « Réassigner, ajouter ou retirer des intervenants — Validation » (ligne ou carte cliquable)
+7. Saisir « Assignation par utilisateur, groupe ou règle » Motif » : `Absence du validateur`
+8. Dans la section « Assignation par utilisateur, groupe ou règle », activer « Enregistrer »
+9. Activer « Documents (1) » (tab)
+10. Activer « Analyser (IA) — piece-trousse-${unique}.pdf » (button)
+11. Saisir « Justification » : `Résultat conforme au document`
+12. Activer « Valider le résultat »
+13. Activer « Preuve » (tab)
+14. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+15. Répondre « Annulation E2E » à la prochaine saisie demandée par le navigateur
+16. Activer « Annuler la trousse »
+17. Ouvrir l'écran `/clm/trousses`
+18. Télécharger par « Exporter la liste (CSV) » et obtenir un fichier non vide
+19. Ouvrir l'écran `/clm/suivi`
+20. Télécharger par « Exporter (CSV) » et obtenir un fichier non vide
+21. Ouvrir l'écran `/clm/taches`
+22. Activer « Nouvelle tâche »
+23. Saisir « Tâche » : `Tâche E2E ${unique}`
+24. Choisir « Assignée à » : `initiateur@iq.example` ; « Trousse liée » : `(premier)`
+25. Activer « Confier la tâche »
+26. Activer « Démarrer — Tâche E2E ${unique} » (button)
+27. Activer « Réassigner — Tâche E2E ${unique} » (button)
+28. Choisir « Nouvelle personne assignée » : `(premier)`
+29. Activer « Confirmer la réassignation »
+30. Ouvrir l'écran `/clm/lots`
+31. Saisir « Libellé du lot » : `Lot E2E ${unique}` ; « Dossiers, un par ligne » : `Dossier A ${unique} ; Marie Lot ; marie.lot.${unique}@agrinord.example ; +15145550190`
+32. Choisir « Modèle de contrat » : `Convention lot ${unique}`
+33. Activer « Créer le lot »
+34. Activer « Approuver le lot — Lot E2E ${unique} » (button)
+35. Se connecter en tant que validateur IQ
+36. Ouvrir l'écran `/clm/taches`
+37. Activer « Traiter — ${trousseRef} Validation »
+38. Saisir « Courriel du délégataire » : `approbateur@iq.example` ; « Motif » : `Vacances`
+39. Activer « Confirmer la délégation »
+40. Se connecter en tant que signataire interne IQ
+41. Ouvrir l'écran `/clm/taches`
+42. Activer « Traiter — ${trousseSigRef} Signature »
+43. Activer « Signer maintenant »
 
 ### E2E-IQ-08 — Étapes parallèles et réassignation d'une tâche
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-18, IQ-C-20, IQ-C-21, IQ-C-55, IQ-D-05, IQ-S-05
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.parallele-reassignation`
@@ -578,12 +1778,156 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-04 — Circuit séquentiel saisi à l'écran : validation puis approbation, décisions commentées et historisées, suivi de l'état
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-D-08, IQ-D-09, IQ-S-02, IQ-S-03
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Circuit CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SEQ`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `a1` ; « Libellé » : `Approbation`
+16. Choisir « Type » : `APPROBATION`
+17. Activer « Ajouter un responsable »
+18. Saisir « Responsable 1 » : `approbateur@iq.example`
+19. Activer « Tester le parcours »
+20. Voir « Parcours valide. »
+21. Activer « Enregistrer »
+22. Activer « Continuer »
+23. Activer « Lancer le parcours »
+24. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+25. Activer « Parcours » (tab)
+26. Voir « Validation juridique »
+27. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+28. Se connecter en tant que validateur IQ
+29. Ouvrir l'écran `/clm/taches`
+30. Activer « Traiter — CB${UNIQUE}-SEQ Validation juridique »
+31. Saisir « Commentaire » : `Clauses conformes au programme`
+32. Activer « Valider »
+33. Voir « Décision enregistrée »
+34. Se connecter en tant que approbateur IQ
+35. Ouvrir l'écran `/clm/taches`
+36. Activer « Traiter — CB${UNIQUE}-SEQ Approbation »
+37. Saisir « Commentaire » : `Approuvé selon la délégation`
+38. Activer « Approuver »
+39. Voir « Décision enregistrée : approuvé. »
+40. Se connecter en tant que initiateur IQ
+41. Ouvrir l'écran `/clm/suivi`
+42. Voir « CB${UNIQUE}-SEQ »
+43. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+44. Ouvrir l'écran `/clm/trousses`
+45. Voir « Terminée »
+46. Activer « Ouvrir le détail de CB${UNIQUE}-SEQ » (link)
+47. Activer « Historique » (tab)
+48. Voir « Clauses conformes au programme », « Approuvé selon la délégation »
+
+### E2E-CB-IQ-05 — Validations en parallèle : un validateur rejette en motivant, la trousse est rejetée
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-18, IQ-C-22, IQ-C-23, IQ-D-04, IQ-S-09
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (26 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Parallèle CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-PAR`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `v2` ; « Libellé » : `Validation financière`
+16. Choisir « Type » : `VALIDATION`
+17. Saisir « Phase » : `1`
+18. Activer « Ajouter un responsable »
+19. Saisir « Responsable 1 » : `approbateur@iq.example`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Se connecter en tant que validateur IQ
+27. Ouvrir l'écran `/clm/taches`
+28. Activer « Traiter — CB${UNIQUE}-PAR Validation juridique »
+29. Activer « Rejeter »
+30. Voir « Un motif est obligatoire »
+31. Saisir « Commentaire » : `Montant hors programme`
+32. Activer « Rejeter »
+33. Voir « Décision enregistrée : rejeté. »
+34. Se connecter en tant que initiateur IQ
+35. Ouvrir l'écran `/clm/trousses`
+36. Activer « Ouvrir le détail de CB${UNIQUE}-PAR » (link)
+37. Voir « Rejetée »
+
+### E2E-CB-IQ-06 — Retour pour correction : le validateur renvoie à l'initiateur avec un motif
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-22, IQ-C-55, IQ-S-03, IQ-S-09
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (20 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Correction CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-COR`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Tester le parcours »
+15. Voir « Parcours valide. »
+16. Activer « Enregistrer »
+17. Activer « Continuer »
+18. Activer « Lancer le parcours »
+19. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+20. Se connecter en tant que validateur IQ
+21. Ouvrir l'écran `/clm/taches`
+22. Activer « Traiter — CB${UNIQUE}-COR Validation juridique »
+23. Saisir « Commentaire » : `Annexe B manquante`
+24. Activer « Retourner pour correction »
+25. Voir « Trousse retournée pour correction. »
+26. Se connecter en tant que initiateur IQ
+27. Ouvrir l'écran `/clm/trousses`
+28. Activer « Ouvrir le détail de CB${UNIQUE}-COR » (link)
+29. Activer « Historique » (tab)
+30. Voir « Annexe B manquante »
 
 ### E2E-IQ-06 — Parcours de validation puis d'approbation, décisions tracées
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-S-02, IQ-S-03, IQ-S-09, IQ-C-52
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.validation-approbation`
@@ -599,6 +1943,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-22, IQ-S-09
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.rejet`
@@ -610,12 +1955,117 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-04 — Circuit séquentiel saisi à l'écran : validation puis approbation, décisions commentées et historisées, suivi de l'état
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-D-08, IQ-D-09, IQ-S-02, IQ-S-03
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Circuit CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SEQ`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `a1` ; « Libellé » : `Approbation`
+16. Choisir « Type » : `APPROBATION`
+17. Activer « Ajouter un responsable »
+18. Saisir « Responsable 1 » : `approbateur@iq.example`
+19. Activer « Tester le parcours »
+20. Voir « Parcours valide. »
+21. Activer « Enregistrer »
+22. Activer « Continuer »
+23. Activer « Lancer le parcours »
+24. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+25. Activer « Parcours » (tab)
+26. Voir « Validation juridique »
+27. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+28. Se connecter en tant que validateur IQ
+29. Ouvrir l'écran `/clm/taches`
+30. Activer « Traiter — CB${UNIQUE}-SEQ Validation juridique »
+31. Saisir « Commentaire » : `Clauses conformes au programme`
+32. Activer « Valider »
+33. Voir « Décision enregistrée »
+34. Se connecter en tant que approbateur IQ
+35. Ouvrir l'écran `/clm/taches`
+36. Activer « Traiter — CB${UNIQUE}-SEQ Approbation »
+37. Saisir « Commentaire » : `Approuvé selon la délégation`
+38. Activer « Approuver »
+39. Voir « Décision enregistrée : approuvé. »
+40. Se connecter en tant que initiateur IQ
+41. Ouvrir l'écran `/clm/suivi`
+42. Voir « CB${UNIQUE}-SEQ »
+43. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+44. Ouvrir l'écran `/clm/trousses`
+45. Voir « Terminée »
+46. Activer « Ouvrir le détail de CB${UNIQUE}-SEQ » (link)
+47. Activer « Historique » (tab)
+48. Voir « Clauses conformes au programme », « Approuvé selon la délégation »
+
+### E2E-CB-IQ-05 — Validations en parallèle : un validateur rejette en motivant, la trousse est rejetée
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-18, IQ-C-22, IQ-C-23, IQ-D-04, IQ-S-09
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (26 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Parallèle CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-PAR`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `v2` ; « Libellé » : `Validation financière`
+16. Choisir « Type » : `VALIDATION`
+17. Saisir « Phase » : `1`
+18. Activer « Ajouter un responsable »
+19. Saisir « Responsable 1 » : `approbateur@iq.example`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Se connecter en tant que validateur IQ
+27. Ouvrir l'écran `/clm/taches`
+28. Activer « Traiter — CB${UNIQUE}-PAR Validation juridique »
+29. Activer « Rejeter »
+30. Voir « Un motif est obligatoire »
+31. Saisir « Commentaire » : `Montant hors programme`
+32. Activer « Rejeter »
+33. Voir « Décision enregistrée : rejeté. »
+34. Se connecter en tant que initiateur IQ
+35. Ouvrir l'écran `/clm/trousses`
+36. Activer « Ouvrir le détail de CB${UNIQUE}-PAR » (link)
+37. Voir « Rejetée »
 
 ### E2E-IQ-06 — Parcours de validation puis d'approbation, décisions tracées
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-S-02, IQ-S-03, IQ-S-09, IQ-C-52
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.validation-approbation`
@@ -630,12 +2080,50 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-12 — Notifications configurables : l'administration désactive puis réactive l'invitation à signer par courriel
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-40, IQ-C-24, IQ-C-58, IQ-D-07, IQ-S-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (4 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/notifications`
+2. Activer « Désactiver — Invitation à signer Courriel » (button)
+3. Voir « Message désactivé. »
+4. Activer « Activer — Invitation à signer Courriel » (button)
+5. Voir « Message activé. »
+6. Activer « Désactiver — Rappel de non-réponse Courriel » (button)
+7. Voir « Message désactivé. »
+8. Activer « Activer — Rappel de non-réponse Courriel » (button)
+9. Voir « Message activé. »
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-CB-IQ-13 — Rappels, copies et échéance réglés à la création d'une trousse, puis retrouvés au résumé
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-41, IQ-C-42, IQ-C-24, IQ-C-43, IQ-D-07, IQ-S-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (3 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Rappels CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-RAP` ; « Échéance » : `${dansUnMois}` ; « Destinataires en copie » : `direction.${unique}@iq.example, conformite.${unique}@iq.example` ; « Rappel tous les (jours) » : `3` ; « Nombre maximal de rappels » : `4`
+3. Activer « Enregistrer le brouillon »
+4. Voir « CB${UNIQUE}-RAP »
+5. Ouvrir l'écran `/clm/trousses`
+6. Activer « Ouvrir le détail de CB${UNIQUE}-RAP » (link)
+7. Voir « direction.${unique}@iq.example », « conformite.${unique}@iq.example »
+8. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-15 — Messages désactivés puis réactivés, invitation et rappel reçus
 
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-C-24, IQ-C-40, IQ-C-41, IQ-S-06, IQ-D-07, IQ-C-58
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.notifications`
@@ -647,12 +2135,71 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-04 — Circuit séquentiel saisi à l'écran : validation puis approbation, décisions commentées et historisées, suivi de l'état
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-D-08, IQ-D-09, IQ-S-02, IQ-S-03
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Circuit CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SEQ`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `a1` ; « Libellé » : `Approbation`
+16. Choisir « Type » : `APPROBATION`
+17. Activer « Ajouter un responsable »
+18. Saisir « Responsable 1 » : `approbateur@iq.example`
+19. Activer « Tester le parcours »
+20. Voir « Parcours valide. »
+21. Activer « Enregistrer »
+22. Activer « Continuer »
+23. Activer « Lancer le parcours »
+24. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+25. Activer « Parcours » (tab)
+26. Voir « Validation juridique »
+27. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+28. Se connecter en tant que validateur IQ
+29. Ouvrir l'écran `/clm/taches`
+30. Activer « Traiter — CB${UNIQUE}-SEQ Validation juridique »
+31. Saisir « Commentaire » : `Clauses conformes au programme`
+32. Activer « Valider »
+33. Voir « Décision enregistrée »
+34. Se connecter en tant que approbateur IQ
+35. Ouvrir l'écran `/clm/taches`
+36. Activer « Traiter — CB${UNIQUE}-SEQ Approbation »
+37. Saisir « Commentaire » : `Approuvé selon la délégation`
+38. Activer « Approuver »
+39. Voir « Décision enregistrée : approuvé. »
+40. Se connecter en tant que initiateur IQ
+41. Ouvrir l'écran `/clm/suivi`
+42. Voir « CB${UNIQUE}-SEQ »
+43. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+44. Ouvrir l'écran `/clm/trousses`
+45. Voir « Terminée »
+46. Activer « Ouvrir le détail de CB${UNIQUE}-SEQ » (link)
+47. Activer « Historique » (tab)
+48. Voir « Clauses conformes au programme », « Approuvé selon la délégation »
 
 ### E2E-IQ-06 — Parcours de validation puis d'approbation, décisions tracées
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-S-02, IQ-S-03, IQ-S-09, IQ-C-52
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.validation-approbation`
@@ -668,6 +2215,7 @@
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-C-43, IQ-C-25, IQ-D-08
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.suivi`
@@ -679,12 +2227,173 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-09 — Signature séquentielle de deux signataires internes : le second n'est sollicité qu'après le premier
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-26, IQ-C-29, IQ-C-54, IQ-D-04
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (49 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Séquentielle CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SSQ`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Saisir « Nom » : `Sophie Roy` ; « Courriel » : `approbateur@iq.example` ; « Téléphone » : `+15145550190`
+14. Choisir « Rôle dans le contrat » : `SIGNATAIRE_2`
+15. Décocher « Externe »
+16. Activer « Ajouter un signataire »
+17. Voir « Sophie Roy »
+18. Activer « Continuer »
+19. Activer « Ajouter une étape »
+20. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+21. Choisir « Type » : `SIGNATURE`
+22. Activer « Ajouter un responsable »
+23. Choisir « Type du responsable 1 » : `PARTICIPANT`
+24. Choisir « Responsable 1 » : `Étienne Côté`
+25. Activer « Ajouter une étape »
+26. Saisir « Clé » : `s2` ; « Libellé » : `Signature cosignataire`
+27. Choisir « Type » : `SIGNATURE`
+28. Activer « Ajouter un responsable »
+29. Choisir « Type du responsable 1 » : `PARTICIPANT`
+30. Choisir « Responsable 1 » : `Sophie Roy`
+31. Activer « Tester le parcours »
+32. Voir « Parcours valide. »
+33. Activer « Enregistrer »
+34. Activer « Continuer »
+35. Activer « Lancer le parcours »
+36. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+37. Se connecter en tant que approbateur IQ
+38. Ouvrir l'écran `/clm/taches`
+39. Ne pas voir « CB${UNIQUE}-SSQ »
+40. Se connecter en tant que signataire interne IQ
+41. Ouvrir l'écran `/clm/taches`
+42. Activer « Traiter — CB${UNIQUE}-SSQ Signature IQ »
+43. Activer « Signer maintenant »
+44. Arriver sur une adresse de la forme `/portail/`
+45. Activer « Recevoir mon code »
+46. Voir « Code envoyé. »
+47. Préparer par l'API : Code reçu par courriel
+48. Saisir « Code de vérification » : `${code}`
+49. Activer « Vérifier mon identité »
+50. Activer « Lire / télécharger »
+51. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+52. Saisir « Votre nom complet » : `Étienne Côté`
+53. Activer « Signer »
+54. Voir « Merci, votre signature est enregistrée »
+55. Se connecter en tant que approbateur IQ
+56. Ouvrir l'écran `/clm/taches`
+57. Activer « Traiter — CB${UNIQUE}-SSQ Signature cosignataire »
+58. Activer « Signer maintenant »
+59. Arriver sur une adresse de la forme `/portail/`
+60. Activer « Recevoir mon code »
+61. Voir « Code envoyé. »
+62. Préparer par l'API : Code reçu par courriel
+63. Saisir « Code de vérification » : `${code}`
+64. Activer « Vérifier mon identité »
+65. Activer « Lire / télécharger »
+66. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+67. Saisir « Votre nom complet » : `Sophie Roy`
+68. Activer « Signer »
+69. Voir « Merci, votre signature est enregistrée »
+70. Se connecter en tant que initiateur IQ
+71. Ouvrir l'écran `/clm/trousses`
+72. Activer « Ouvrir le détail de CB${UNIQUE}-SSQ » (link)
+73. Voir « Terminée »
+74. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-CB-IQ-10 — Signature parallèle : les deux signataires sont sollicités en même temps
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-26, IQ-C-28, IQ-C-54, IQ-D-04
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (49 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Parallèle sig CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SPA`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Saisir « Nom » : `Sophie Roy` ; « Courriel » : `approbateur@iq.example` ; « Téléphone » : `+15145550190`
+14. Choisir « Rôle dans le contrat » : `SIGNATAIRE_2`
+15. Décocher « Externe »
+16. Activer « Ajouter un signataire »
+17. Voir « Sophie Roy »
+18. Activer « Continuer »
+19. Activer « Ajouter une étape »
+20. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+21. Choisir « Type » : `SIGNATURE`
+22. Activer « Ajouter un responsable »
+23. Choisir « Type du responsable 1 » : `PARTICIPANT`
+24. Choisir « Responsable 1 » : `Étienne Côté`
+25. Activer « Ajouter une étape »
+26. Saisir « Clé » : `s2` ; « Libellé » : `Signature cosignataire`
+27. Choisir « Type » : `SIGNATURE`
+28. Saisir « Phase » : `1`
+29. Activer « Ajouter un responsable »
+30. Choisir « Type du responsable 1 » : `PARTICIPANT`
+31. Choisir « Responsable 1 » : `Sophie Roy`
+32. Activer « Tester le parcours »
+33. Voir « Parcours valide. »
+34. Activer « Enregistrer »
+35. Activer « Continuer »
+36. Activer « Lancer le parcours »
+37. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+38. Se connecter en tant que approbateur IQ
+39. Ouvrir l'écran `/clm/taches`
+40. Activer « Traiter — CB${UNIQUE}-SPA Signature cosignataire »
+41. Activer « Signer maintenant »
+42. Arriver sur une adresse de la forme `/portail/`
+43. Activer « Recevoir mon code »
+44. Voir « Code envoyé. »
+45. Préparer par l'API : Code reçu par courriel
+46. Saisir « Code de vérification » : `${code}`
+47. Activer « Vérifier mon identité »
+48. Activer « Lire / télécharger »
+49. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+50. Saisir « Votre nom complet » : `Sophie Roy`
+51. Activer « Signer »
+52. Voir « Merci, votre signature est enregistrée »
+53. Se connecter en tant que signataire interne IQ
+54. Ouvrir l'écran `/clm/taches`
+55. Activer « Traiter — CB${UNIQUE}-SPA Signature IQ »
+56. Activer « Signer maintenant »
+57. Arriver sur une adresse de la forme `/portail/`
+58. Activer « Recevoir mon code »
+59. Voir « Code envoyé. »
+60. Préparer par l'API : Code reçu par courriel
+61. Saisir « Code de vérification » : `${code}`
+62. Activer « Vérifier mon identité »
+63. Activer « Lire / télécharger »
+64. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+65. Saisir « Votre nom complet » : `Étienne Côté`
+66. Activer « Signer »
+67. Voir « Merci, votre signature est enregistrée »
 
 ### E2E-IQ-12 — Signature séquentielle puis conjointe d'un groupe
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-26, IQ-C-27, IQ-C-28, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.sequentielle-parallele`
@@ -696,12 +2405,14 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
 
 ### E2E-ECR-IQ-03 — Au portail, le signataire externe vérifie son identité, lit le document, consent et signe ; un autre refuse de signer en motivant
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-51, IQ-C-27
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (11 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Trousse lancée, signataire externe invité (jeton lu dans le courriel)
@@ -726,6 +2437,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-26, IQ-C-27, IQ-C-28, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.sequentielle-parallele`
@@ -737,12 +2449,90 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-10 — Signature parallèle : les deux signataires sont sollicités en même temps
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-26, IQ-C-28, IQ-C-54, IQ-D-04
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (49 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Parallèle sig CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SPA`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Saisir « Nom » : `Sophie Roy` ; « Courriel » : `approbateur@iq.example` ; « Téléphone » : `+15145550190`
+14. Choisir « Rôle dans le contrat » : `SIGNATAIRE_2`
+15. Décocher « Externe »
+16. Activer « Ajouter un signataire »
+17. Voir « Sophie Roy »
+18. Activer « Continuer »
+19. Activer « Ajouter une étape »
+20. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+21. Choisir « Type » : `SIGNATURE`
+22. Activer « Ajouter un responsable »
+23. Choisir « Type du responsable 1 » : `PARTICIPANT`
+24. Choisir « Responsable 1 » : `Étienne Côté`
+25. Activer « Ajouter une étape »
+26. Saisir « Clé » : `s2` ; « Libellé » : `Signature cosignataire`
+27. Choisir « Type » : `SIGNATURE`
+28. Saisir « Phase » : `1`
+29. Activer « Ajouter un responsable »
+30. Choisir « Type du responsable 1 » : `PARTICIPANT`
+31. Choisir « Responsable 1 » : `Sophie Roy`
+32. Activer « Tester le parcours »
+33. Voir « Parcours valide. »
+34. Activer « Enregistrer »
+35. Activer « Continuer »
+36. Activer « Lancer le parcours »
+37. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+38. Se connecter en tant que approbateur IQ
+39. Ouvrir l'écran `/clm/taches`
+40. Activer « Traiter — CB${UNIQUE}-SPA Signature cosignataire »
+41. Activer « Signer maintenant »
+42. Arriver sur une adresse de la forme `/portail/`
+43. Activer « Recevoir mon code »
+44. Voir « Code envoyé. »
+45. Préparer par l'API : Code reçu par courriel
+46. Saisir « Code de vérification » : `${code}`
+47. Activer « Vérifier mon identité »
+48. Activer « Lire / télécharger »
+49. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+50. Saisir « Votre nom complet » : `Sophie Roy`
+51. Activer « Signer »
+52. Voir « Merci, votre signature est enregistrée »
+53. Se connecter en tant que signataire interne IQ
+54. Ouvrir l'écran `/clm/taches`
+55. Activer « Traiter — CB${UNIQUE}-SPA Signature IQ »
+56. Activer « Signer maintenant »
+57. Arriver sur une adresse de la forme `/portail/`
+58. Activer « Recevoir mon code »
+59. Voir « Code envoyé. »
+60. Préparer par l'API : Code reçu par courriel
+61. Saisir « Code de vérification » : `${code}`
+62. Activer « Vérifier mon identité »
+63. Activer « Lire / télécharger »
+64. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+65. Saisir « Votre nom complet » : `Étienne Côté`
+66. Activer « Signer »
+67. Voir « Merci, votre signature est enregistrée »
 
 ### E2E-IQ-12 — Signature séquentielle puis conjointe d'un groupe
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-26, IQ-C-27, IQ-C-28, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.sequentielle-parallele`
@@ -754,12 +2544,187 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-09 — Signature séquentielle de deux signataires internes : le second n'est sollicité qu'après le premier
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-26, IQ-C-29, IQ-C-54, IQ-D-04
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (49 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Séquentielle CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SSQ`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Saisir « Nom » : `Sophie Roy` ; « Courriel » : `approbateur@iq.example` ; « Téléphone » : `+15145550190`
+14. Choisir « Rôle dans le contrat » : `SIGNATAIRE_2`
+15. Décocher « Externe »
+16. Activer « Ajouter un signataire »
+17. Voir « Sophie Roy »
+18. Activer « Continuer »
+19. Activer « Ajouter une étape »
+20. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+21. Choisir « Type » : `SIGNATURE`
+22. Activer « Ajouter un responsable »
+23. Choisir « Type du responsable 1 » : `PARTICIPANT`
+24. Choisir « Responsable 1 » : `Étienne Côté`
+25. Activer « Ajouter une étape »
+26. Saisir « Clé » : `s2` ; « Libellé » : `Signature cosignataire`
+27. Choisir « Type » : `SIGNATURE`
+28. Activer « Ajouter un responsable »
+29. Choisir « Type du responsable 1 » : `PARTICIPANT`
+30. Choisir « Responsable 1 » : `Sophie Roy`
+31. Activer « Tester le parcours »
+32. Voir « Parcours valide. »
+33. Activer « Enregistrer »
+34. Activer « Continuer »
+35. Activer « Lancer le parcours »
+36. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+37. Se connecter en tant que approbateur IQ
+38. Ouvrir l'écran `/clm/taches`
+39. Ne pas voir « CB${UNIQUE}-SSQ »
+40. Se connecter en tant que signataire interne IQ
+41. Ouvrir l'écran `/clm/taches`
+42. Activer « Traiter — CB${UNIQUE}-SSQ Signature IQ »
+43. Activer « Signer maintenant »
+44. Arriver sur une adresse de la forme `/portail/`
+45. Activer « Recevoir mon code »
+46. Voir « Code envoyé. »
+47. Préparer par l'API : Code reçu par courriel
+48. Saisir « Code de vérification » : `${code}`
+49. Activer « Vérifier mon identité »
+50. Activer « Lire / télécharger »
+51. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+52. Saisir « Votre nom complet » : `Étienne Côté`
+53. Activer « Signer »
+54. Voir « Merci, votre signature est enregistrée »
+55. Se connecter en tant que approbateur IQ
+56. Ouvrir l'écran `/clm/taches`
+57. Activer « Traiter — CB${UNIQUE}-SSQ Signature cosignataire »
+58. Activer « Signer maintenant »
+59. Arriver sur une adresse de la forme `/portail/`
+60. Activer « Recevoir mon code »
+61. Voir « Code envoyé. »
+62. Préparer par l'API : Code reçu par courriel
+63. Saisir « Code de vérification » : `${code}`
+64. Activer « Vérifier mon identité »
+65. Activer « Lire / télécharger »
+66. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+67. Saisir « Votre nom complet » : `Sophie Roy`
+68. Activer « Signer »
+69. Voir « Merci, votre signature est enregistrée »
+70. Se connecter en tant que initiateur IQ
+71. Ouvrir l'écran `/clm/trousses`
+72. Activer « Ouvrir le détail de CB${UNIQUE}-SSQ » (link)
+73. Voir « Terminée »
+74. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-ECR-IQ-01 — L'initiateur crée une trousse à l'écran : documents déposés, remplacés et retirés, signataires ajoutés et retirés, parcours testé puis enregistré, lancement ; la preuve se vérifie
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-29, IQ-C-12, IQ-C-51
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (33 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/trousses/nouvelle`
@@ -806,6 +2771,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-D-01, IQ-D-02, IQ-A-06, IQ-A-17, IQ-A-18, IQ-C-56
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.generation.salesforce`
@@ -819,12 +2785,77 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅🆕
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-11 — Signataire ajouté puis substitué en cours de processus, sans relancer la trousse
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-30, IQ-C-31, IQ-C-55, IQ-S-05
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (39 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Substitution CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SUB`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Activer « Continuer »
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+16. Choisir « Type » : `SIGNATURE`
+17. Activer « Ajouter un responsable »
+18. Choisir « Type du responsable 1 » : `PARTICIPANT`
+19. Choisir « Responsable 1 » : `Étienne Côté`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Activer « Participants (1) » (tab)
+27. Saisir « Nom » : `Sophie Roy` ; « Courriel » : `approbateur@iq.example` ; « Téléphone » : `+15145550190`
+28. Choisir « Rôle dans le contrat » : `SIGNATAIRE_2`
+29. Décocher « Externe »
+30. Activer « Ajouter un signataire »
+31. Voir « Sophie Roy »
+32. Activer « Parcours » (tab)
+33. Activer l'élément « Réassigner, ajouter ou retirer des intervenants — Signature IQ » (ligne ou carte cliquable)
+34. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `Sophie Roy`
+35. Saisir « Assignation par utilisateur, groupe ou règle » Motif » : `Signataire remplacé par délégation`
+36. Dans la section « Assignation par utilisateur, groupe ou règle », activer « Enregistrer »
+37. Se connecter en tant que signataire interne IQ
+38. Ouvrir l'écran `/clm/taches`
+39. Ne pas voir « CB${UNIQUE}-SUB »
+40. Se connecter en tant que approbateur IQ
+41. Ouvrir l'écran `/clm/taches`
+42. Activer « Traiter — CB${UNIQUE}-SUB Signature IQ »
+43. Activer « Signer maintenant »
+44. Arriver sur une adresse de la forme `/portail/`
+45. Activer « Recevoir mon code »
+46. Voir « Code envoyé. »
+47. Préparer par l'API : Code reçu par courriel
+48. Saisir « Code de vérification » : `${code}`
+49. Activer « Vérifier mon identité »
+50. Activer « Lire / télécharger »
+51. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+52. Saisir « Votre nom complet » : `Sophie Roy`
+53. Activer « Signer »
+54. Voir « Merci, votre signature est enregistrée »
 
 ### E2E-ECR-IQ-05 — L'administration du CLM : messages modifiés et testés, connexion Salesforce testée, relayée, configurée puis rétablie, client d'intégration créé puis révoqué, paramètres modifiés puis rétablis, groupe créé et garni puis supprimé, départ d'un employé transféré, journal filtré et exporté
 
 - **Profil** : administration principale IQ
-- **Exigences démontrées** : IQ-C-16, IQ-C-30
+- **Exigences démontrées** : IQ-C-16, IQ-C-30, IQ-C-15, IQ-C-40, IQ-D-18, IQ-A-26
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (32 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Compte jetable qui quitte l'organisation, avec une étape de validation ouverte à son nom
@@ -876,8 +2907,9 @@
 ### E2E-ECR-IQ-06 — L'exploitation des trousses : étape relancée et réassignée, document analysé par l'IA et révisé, certificat téléchargé, trousse annulée, listes exportées, tâche confiée, démarrée et réassignée, lot créé et approuvé ; le validateur délègue, le signataire interne signe depuis sa tâche
 
 - **Profil** : initiateur IQ
-- **Exigences démontrées** : IQ-C-31, IQ-C-50, IQ-C-30
+- **Exigences démontrées** : IQ-C-31, IQ-C-50, IQ-C-30, IQ-C-59, IQ-A-28, IQ-C-43, IQ-C-21
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (33 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Modèle publié ; trousse en validation et trousse en signature interne, lancées
@@ -929,6 +2961,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-30, IQ-C-31, IQ-S-05
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signataires.en-cours`
@@ -940,12 +2973,77 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅🆕
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-11 — Signataire ajouté puis substitué en cours de processus, sans relancer la trousse
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-30, IQ-C-31, IQ-C-55, IQ-S-05
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (39 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Substitution CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SUB`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Activer « Continuer »
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+16. Choisir « Type » : `SIGNATURE`
+17. Activer « Ajouter un responsable »
+18. Choisir « Type du responsable 1 » : `PARTICIPANT`
+19. Choisir « Responsable 1 » : `Étienne Côté`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Activer « Participants (1) » (tab)
+27. Saisir « Nom » : `Sophie Roy` ; « Courriel » : `approbateur@iq.example` ; « Téléphone » : `+15145550190`
+28. Choisir « Rôle dans le contrat » : `SIGNATAIRE_2`
+29. Décocher « Externe »
+30. Activer « Ajouter un signataire »
+31. Voir « Sophie Roy »
+32. Activer « Parcours » (tab)
+33. Activer l'élément « Réassigner, ajouter ou retirer des intervenants — Signature IQ » (ligne ou carte cliquable)
+34. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `Sophie Roy`
+35. Saisir « Assignation par utilisateur, groupe ou règle » Motif » : `Signataire remplacé par délégation`
+36. Dans la section « Assignation par utilisateur, groupe ou règle », activer « Enregistrer »
+37. Se connecter en tant que signataire interne IQ
+38. Ouvrir l'écran `/clm/taches`
+39. Ne pas voir « CB${UNIQUE}-SUB »
+40. Se connecter en tant que approbateur IQ
+41. Ouvrir l'écran `/clm/taches`
+42. Activer « Traiter — CB${UNIQUE}-SUB Signature IQ »
+43. Activer « Signer maintenant »
+44. Arriver sur une adresse de la forme `/portail/`
+45. Activer « Recevoir mon code »
+46. Voir « Code envoyé. »
+47. Préparer par l'API : Code reçu par courriel
+48. Saisir « Code de vérification » : `${code}`
+49. Activer « Vérifier mon identité »
+50. Activer « Lire / télécharger »
+51. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+52. Saisir « Votre nom complet » : `Sophie Roy`
+53. Activer « Signer »
+54. Voir « Merci, votre signature est enregistrée »
 
 ### E2E-ECR-IQ-06 — L'exploitation des trousses : étape relancée et réassignée, document analysé par l'IA et révisé, certificat téléchargé, trousse annulée, listes exportées, tâche confiée, démarrée et réassignée, lot créé et approuvé ; le validateur délègue, le signataire interne signe depuis sa tâche
 
 - **Profil** : initiateur IQ
-- **Exigences démontrées** : IQ-C-31, IQ-C-50, IQ-C-30
+- **Exigences démontrées** : IQ-C-31, IQ-C-50, IQ-C-30, IQ-C-59, IQ-A-28, IQ-C-43, IQ-C-21
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (33 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Modèle publié ; trousse en validation et trousse en signature interne, lancées
@@ -997,6 +3095,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-30, IQ-C-31, IQ-S-05
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signataires.en-cours`
@@ -1008,12 +3107,80 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-01 — Modèle créé et configuré à l'écran, soumis, publié par une autre administration, puis utilisé en signature en lot (un dossier sans téléphone échoue seul)
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-32, IQ-C-35, IQ-C-11, IQ-A-03, IQ-D-06, IQ-A-02, IQ-D-01, IQ-D-02
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (22 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Voir « Nouveau modèle »
+4. Saisir « Nom » : `Entente CB ${unique}`
+5. Choisir « Catégorie » : `(premier)`
+6. Saisir « Corps du contrat » : `Entente avec {{beneficiaire}} pour un montant de {{montant}} $. {{clauses}}`
+7. Activer « Ajouter un champ »
+8. Saisir « Nom technique » : `beneficiaire` ; « Libellé » : `Bénéficiaire`
+9. Cocher « Obligatoire »
+10. Choisir « Source Salesforce » : `Demandeur`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant` ; « Format (expression régulière) » : `^[0-9]+$`
+13. Activer « Ajouter une clause »
+14. Saisir « Titre » : `Versement` ; « Texte » : `Le montant est versé en un seul paiement.`
+15. Activer « Enregistrer le brouillon »
+16. Voir « Brouillon enregistré. »
+17. Saisir « Bénéficiaire » : `Entreprise Essai inc.` ; « Montant » : `25000`
+18. Activer « Tester la règle »
+19. Voir « Entente avec Entreprise Essai inc. pour un montant de 25000 $ »
+20. Activer « Vérifier »
+21. Voir « Modèle valide. »
+22. Activer « Soumettre à publication »
+23. Voir « soumis à publication »
+24. Se connecter en tant que administration principale IQ
+25. Ouvrir l'écran `/clm/modeles`
+26. Dans la ligne « Entente CB ${unique} », activer « Publier »
+27. Voir « « Entente CB ${unique} » publié. »
+28. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+29. Se connecter en tant que initiateur IQ
+30. Ouvrir l'écran `/clm/lots`
+31. Saisir « Libellé du lot » : `Lot CB ${unique}`
+32. Choisir « Modèle de contrat » : `Entente CB ${unique}` ; « Première colonne » : `Numéro de dossier Salesforce`
+33. Saisir « Dossiers, un par ligne » : `DEM-2026-0001;Jeanne Tremblay;jeanne.tremblay@exemple.ca;+15145550101
+DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
+34. Voir « 2 dossier(s) dans le lot. »
+35. Activer « Créer le lot »
+36. Voir « Lot « Lot CB ${unique} » : 1 trousse(s) créée(s), 1 échec(s). »
+37. Voir « DEM-2026-0001 »
+38. Voir « téléphone requis pour la vérification par SMS »
+39. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-CB-IQ-02 — Un modèle vide ne peut être soumis à publication
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-32, IQ-D-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (3 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Voir « Nouveau modèle »
+4. Activer « Vérifier »
+5. Voir « Le corps du contrat est vide. »
+6. Activer « Soumettre à publication »
+7. Voir « Le corps du contrat est vide. »
+8. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-03 — Cycle de vie d'un modèle : rédaction, soumission, publication, nouvelle version
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-32, IQ-C-33, IQ-C-34, IQ-C-35, IQ-C-36, IQ-C-37, IQ-C-38, IQ-D-06, IQ-C-17
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.modele.cycle`
@@ -1025,12 +3192,46 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅🆕
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-14 — Modèle partagé avec un seul groupe : ses membres le voient, les autres non
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-33, IQ-C-67
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (9 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/groupes`
+2. Saisir « Nouveau groupe » Code » : `PRT_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Partage ${unique}`
+3. Activer « Créer le groupe »
+4. Choisir « Ajouter un membre au groupe PRT_${UNIQUE} » Membre » : `validateur@iq.example`
+5. Dans la section « Ajouter un membre au groupe PRT_${UNIQUE} », activer « Ajouter »
+6. Se connecter en tant que administration d'affaires IQ
+7. Ouvrir l'écran `/clm/modeles`
+8. Activer « Créer un modèle »
+9. Saisir « Nom » : `Partagé CB ${unique}` ; « Corps du contrat » : `Convention réservée au groupe. {{clauses}}` ; « Partage par groupes » : `PRT_${UNIQUE}`
+10. Activer « Enregistrer le brouillon »
+11. Voir « Brouillon enregistré. »
+12. Activer « Soumettre à publication »
+13. Voir « soumis à publication »
+14. Se connecter en tant que administration principale IQ
+15. Ouvrir l'écran `/clm/modeles`
+16. Dans la ligne « Partagé CB ${unique} », activer « Publier »
+17. Voir « Partagé avec : PRT_${UNIQUE} »
+18. Se connecter en tant que validateur IQ
+19. Ouvrir l'écran `/clm/modeles`
+20. Voir « Partagé CB ${unique} »
+21. Se connecter en tant que initiateur IQ
+22. Ouvrir l'écran `/clm/modeles`
+23. Ne pas voir « Partagé CB ${unique} »
 
 ### E2E-IQ-03 — Cycle de vie d'un modèle : rédaction, soumission, publication, nouvelle version
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-32, IQ-C-33, IQ-C-34, IQ-C-35, IQ-C-36, IQ-C-37, IQ-C-38, IQ-D-06, IQ-C-17
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.modele.cycle`
@@ -1042,12 +3243,59 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-15 — Champs d'un modèle : liste, date, case à cocher, zone de signature positionnée pour un rôle, clause conditionnelle vérifiée par l'essai
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-34, IQ-C-35, IQ-C-36, IQ-C-37, IQ-C-38, IQ-D-01, IQ-S-01
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Champs CB ${unique}` ; « Corps du contrat » : `Programme {{programme}} à compter du {{debut}}. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `programme` ; « Libellé » : `Programme`
+6. Choisir « Type » : `LISTE`
+7. Saisir « Options (séparées par des virgules) » : `ESSOR, IMPULSION`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `debut` ; « Libellé » : `Date de début`
+10. Choisir « Type » : `DATE`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `garantie` ; « Libellé » : `Garantie exigée`
+13. Choisir « Type » : `CASE`
+14. Activer « Ajouter un champ »
+15. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+16. Choisir « Type » : `SIGNATURE`
+17. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+18. Activer « Positionner sur le document »
+19. Saisir « Haut (%) » : `75`
+20. Voir « Zone de signature », « Premier signataire »
+21. Activer « Ajouter une clause »
+22. Saisir « Titre » : `Garantie` ; « Texte » : `Le bénéficiaire fournit une garantie de prêt.`
+23. Choisir « Garantie » Si le champ » : `garantie`
+24. Choisir « Garantie » Opérateur » : `EGAL`
+25. Saisir « Garantie » Valeur » : `true`
+26. Activer « Enregistrer le brouillon »
+27. Voir « Brouillon enregistré. »
+28. Activer « Vérifier »
+29. Voir « Modèle valide. »
+30. Saisir « Programme » : `ESSOR` ; « Date de début » : `2026-12-01` ; « Garantie exigée » : `true`
+31. Activer « Tester la règle »
+32. Voir « Clauses retenues : clause1 », « Le bénéficiaire fournit une garantie de prêt. »
+33. Saisir « Garantie exigée » : `false`
+34. Activer « Tester la règle »
+35. Voir « Clauses retenues : — »
+36. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-03 — Cycle de vie d'un modèle : rédaction, soumission, publication, nouvelle version
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-32, IQ-C-33, IQ-C-34, IQ-C-35, IQ-C-36, IQ-C-37, IQ-C-38, IQ-D-06, IQ-C-17
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.modele.cycle`
@@ -1059,12 +3307,108 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-01 — Modèle créé et configuré à l'écran, soumis, publié par une autre administration, puis utilisé en signature en lot (un dossier sans téléphone échoue seul)
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-32, IQ-C-35, IQ-C-11, IQ-A-03, IQ-D-06, IQ-A-02, IQ-D-01, IQ-D-02
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (22 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Voir « Nouveau modèle »
+4. Saisir « Nom » : `Entente CB ${unique}`
+5. Choisir « Catégorie » : `(premier)`
+6. Saisir « Corps du contrat » : `Entente avec {{beneficiaire}} pour un montant de {{montant}} $. {{clauses}}`
+7. Activer « Ajouter un champ »
+8. Saisir « Nom technique » : `beneficiaire` ; « Libellé » : `Bénéficiaire`
+9. Cocher « Obligatoire »
+10. Choisir « Source Salesforce » : `Demandeur`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant` ; « Format (expression régulière) » : `^[0-9]+$`
+13. Activer « Ajouter une clause »
+14. Saisir « Titre » : `Versement` ; « Texte » : `Le montant est versé en un seul paiement.`
+15. Activer « Enregistrer le brouillon »
+16. Voir « Brouillon enregistré. »
+17. Saisir « Bénéficiaire » : `Entreprise Essai inc.` ; « Montant » : `25000`
+18. Activer « Tester la règle »
+19. Voir « Entente avec Entreprise Essai inc. pour un montant de 25000 $ »
+20. Activer « Vérifier »
+21. Voir « Modèle valide. »
+22. Activer « Soumettre à publication »
+23. Voir « soumis à publication »
+24. Se connecter en tant que administration principale IQ
+25. Ouvrir l'écran `/clm/modeles`
+26. Dans la ligne « Entente CB ${unique} », activer « Publier »
+27. Voir « « Entente CB ${unique} » publié. »
+28. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+29. Se connecter en tant que initiateur IQ
+30. Ouvrir l'écran `/clm/lots`
+31. Saisir « Libellé du lot » : `Lot CB ${unique}`
+32. Choisir « Modèle de contrat » : `Entente CB ${unique}` ; « Première colonne » : `Numéro de dossier Salesforce`
+33. Saisir « Dossiers, un par ligne » : `DEM-2026-0001;Jeanne Tremblay;jeanne.tremblay@exemple.ca;+15145550101
+DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
+34. Voir « 2 dossier(s) dans le lot. »
+35. Activer « Créer le lot »
+36. Voir « Lot « Lot CB ${unique} » : 1 trousse(s) créée(s), 1 échec(s). »
+37. Voir « DEM-2026-0001 »
+38. Voir « téléphone requis pour la vérification par SMS »
+39. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-CB-IQ-15 — Champs d'un modèle : liste, date, case à cocher, zone de signature positionnée pour un rôle, clause conditionnelle vérifiée par l'essai
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-34, IQ-C-35, IQ-C-36, IQ-C-37, IQ-C-38, IQ-D-01, IQ-S-01
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Champs CB ${unique}` ; « Corps du contrat » : `Programme {{programme}} à compter du {{debut}}. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `programme` ; « Libellé » : `Programme`
+6. Choisir « Type » : `LISTE`
+7. Saisir « Options (séparées par des virgules) » : `ESSOR, IMPULSION`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `debut` ; « Libellé » : `Date de début`
+10. Choisir « Type » : `DATE`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `garantie` ; « Libellé » : `Garantie exigée`
+13. Choisir « Type » : `CASE`
+14. Activer « Ajouter un champ »
+15. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+16. Choisir « Type » : `SIGNATURE`
+17. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+18. Activer « Positionner sur le document »
+19. Saisir « Haut (%) » : `75`
+20. Voir « Zone de signature », « Premier signataire »
+21. Activer « Ajouter une clause »
+22. Saisir « Titre » : `Garantie` ; « Texte » : `Le bénéficiaire fournit une garantie de prêt.`
+23. Choisir « Garantie » Si le champ » : `garantie`
+24. Choisir « Garantie » Opérateur » : `EGAL`
+25. Saisir « Garantie » Valeur » : `true`
+26. Activer « Enregistrer le brouillon »
+27. Voir « Brouillon enregistré. »
+28. Activer « Vérifier »
+29. Voir « Modèle valide. »
+30. Saisir « Programme » : `ESSOR` ; « Date de début » : `2026-12-01` ; « Garantie exigée » : `true`
+31. Activer « Tester la règle »
+32. Voir « Clauses retenues : clause1 », « Le bénéficiaire fournit une garantie de prêt. »
+33. Saisir « Garantie exigée » : `false`
+34. Activer « Tester la règle »
+35. Voir « Clauses retenues : — »
+36. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-03 — Cycle de vie d'un modèle : rédaction, soumission, publication, nouvelle version
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-32, IQ-C-33, IQ-C-34, IQ-C-35, IQ-C-36, IQ-C-37, IQ-C-38, IQ-D-06, IQ-C-17
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.modele.cycle`
@@ -1076,12 +3420,59 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-15 — Champs d'un modèle : liste, date, case à cocher, zone de signature positionnée pour un rôle, clause conditionnelle vérifiée par l'essai
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-34, IQ-C-35, IQ-C-36, IQ-C-37, IQ-C-38, IQ-D-01, IQ-S-01
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Champs CB ${unique}` ; « Corps du contrat » : `Programme {{programme}} à compter du {{debut}}. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `programme` ; « Libellé » : `Programme`
+6. Choisir « Type » : `LISTE`
+7. Saisir « Options (séparées par des virgules) » : `ESSOR, IMPULSION`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `debut` ; « Libellé » : `Date de début`
+10. Choisir « Type » : `DATE`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `garantie` ; « Libellé » : `Garantie exigée`
+13. Choisir « Type » : `CASE`
+14. Activer « Ajouter un champ »
+15. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+16. Choisir « Type » : `SIGNATURE`
+17. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+18. Activer « Positionner sur le document »
+19. Saisir « Haut (%) » : `75`
+20. Voir « Zone de signature », « Premier signataire »
+21. Activer « Ajouter une clause »
+22. Saisir « Titre » : `Garantie` ; « Texte » : `Le bénéficiaire fournit une garantie de prêt.`
+23. Choisir « Garantie » Si le champ » : `garantie`
+24. Choisir « Garantie » Opérateur » : `EGAL`
+25. Saisir « Garantie » Valeur » : `true`
+26. Activer « Enregistrer le brouillon »
+27. Voir « Brouillon enregistré. »
+28. Activer « Vérifier »
+29. Voir « Modèle valide. »
+30. Saisir « Programme » : `ESSOR` ; « Date de début » : `2026-12-01` ; « Garantie exigée » : `true`
+31. Activer « Tester la règle »
+32. Voir « Clauses retenues : clause1 », « Le bénéficiaire fournit une garantie de prêt. »
+33. Saisir « Garantie exigée » : `false`
+34. Activer « Tester la règle »
+35. Voir « Clauses retenues : — »
+36. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-03 — Cycle de vie d'un modèle : rédaction, soumission, publication, nouvelle version
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-32, IQ-C-33, IQ-C-34, IQ-C-35, IQ-C-36, IQ-C-37, IQ-C-38, IQ-D-06, IQ-C-17
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.modele.cycle`
@@ -1093,12 +3484,59 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-15 — Champs d'un modèle : liste, date, case à cocher, zone de signature positionnée pour un rôle, clause conditionnelle vérifiée par l'essai
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-34, IQ-C-35, IQ-C-36, IQ-C-37, IQ-C-38, IQ-D-01, IQ-S-01
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Champs CB ${unique}` ; « Corps du contrat » : `Programme {{programme}} à compter du {{debut}}. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `programme` ; « Libellé » : `Programme`
+6. Choisir « Type » : `LISTE`
+7. Saisir « Options (séparées par des virgules) » : `ESSOR, IMPULSION`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `debut` ; « Libellé » : `Date de début`
+10. Choisir « Type » : `DATE`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `garantie` ; « Libellé » : `Garantie exigée`
+13. Choisir « Type » : `CASE`
+14. Activer « Ajouter un champ »
+15. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+16. Choisir « Type » : `SIGNATURE`
+17. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+18. Activer « Positionner sur le document »
+19. Saisir « Haut (%) » : `75`
+20. Voir « Zone de signature », « Premier signataire »
+21. Activer « Ajouter une clause »
+22. Saisir « Titre » : `Garantie` ; « Texte » : `Le bénéficiaire fournit une garantie de prêt.`
+23. Choisir « Garantie » Si le champ » : `garantie`
+24. Choisir « Garantie » Opérateur » : `EGAL`
+25. Saisir « Garantie » Valeur » : `true`
+26. Activer « Enregistrer le brouillon »
+27. Voir « Brouillon enregistré. »
+28. Activer « Vérifier »
+29. Voir « Modèle valide. »
+30. Saisir « Programme » : `ESSOR` ; « Date de début » : `2026-12-01` ; « Garantie exigée » : `true`
+31. Activer « Tester la règle »
+32. Voir « Clauses retenues : clause1 », « Le bénéficiaire fournit une garantie de prêt. »
+33. Saisir « Garantie exigée » : `false`
+34. Activer « Tester la règle »
+35. Voir « Clauses retenues : — »
+36. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-ECR-IQ-02 — Une trousse naît d'un dossier Salesforce et d'un modèle : recherche et import, valeur corrigée, contrat généré en PDF et en Word, zone de signature attribuée, lancement ; le validateur commente puis valide sa tâche
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-14, IQ-C-37, IQ-C-12
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (27 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Modèle publié (champs, zone de signature, clause conditionnelle, parcours de validation)
@@ -1140,6 +3578,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-45, IQ-C-37
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (16 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/modeles`
@@ -1169,6 +3608,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-32, IQ-C-33, IQ-C-34, IQ-C-35, IQ-C-36, IQ-C-37, IQ-C-38, IQ-D-06, IQ-C-17
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.modele.cycle`
@@ -1180,12 +3620,59 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-15 — Champs d'un modèle : liste, date, case à cocher, zone de signature positionnée pour un rôle, clause conditionnelle vérifiée par l'essai
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-34, IQ-C-35, IQ-C-36, IQ-C-37, IQ-C-38, IQ-D-01, IQ-S-01
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Champs CB ${unique}` ; « Corps du contrat » : `Programme {{programme}} à compter du {{debut}}. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `programme` ; « Libellé » : `Programme`
+6. Choisir « Type » : `LISTE`
+7. Saisir « Options (séparées par des virgules) » : `ESSOR, IMPULSION`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `debut` ; « Libellé » : `Date de début`
+10. Choisir « Type » : `DATE`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `garantie` ; « Libellé » : `Garantie exigée`
+13. Choisir « Type » : `CASE`
+14. Activer « Ajouter un champ »
+15. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+16. Choisir « Type » : `SIGNATURE`
+17. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+18. Activer « Positionner sur le document »
+19. Saisir « Haut (%) » : `75`
+20. Voir « Zone de signature », « Premier signataire »
+21. Activer « Ajouter une clause »
+22. Saisir « Titre » : `Garantie` ; « Texte » : `Le bénéficiaire fournit une garantie de prêt.`
+23. Choisir « Garantie » Si le champ » : `garantie`
+24. Choisir « Garantie » Opérateur » : `EGAL`
+25. Saisir « Garantie » Valeur » : `true`
+26. Activer « Enregistrer le brouillon »
+27. Voir « Brouillon enregistré. »
+28. Activer « Vérifier »
+29. Voir « Modèle valide. »
+30. Saisir « Programme » : `ESSOR` ; « Date de début » : `2026-12-01` ; « Garantie exigée » : `true`
+31. Activer « Tester la règle »
+32. Voir « Clauses retenues : clause1 », « Le bénéficiaire fournit une garantie de prêt. »
+33. Saisir « Garantie exigée » : `false`
+34. Activer « Tester la règle »
+35. Voir « Clauses retenues : — »
+36. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-03 — Cycle de vie d'un modèle : rédaction, soumission, publication, nouvelle version
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-32, IQ-C-33, IQ-C-34, IQ-C-35, IQ-C-36, IQ-C-37, IQ-C-38, IQ-D-06, IQ-C-17
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.modele.cycle`
@@ -1197,12 +3684,14 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-04 — Générer un contrat depuis un modèle, prérempli par Salesforce
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-39
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.generation.salesforce`
@@ -1216,12 +3705,87 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-12 — Notifications configurables : l'administration désactive puis réactive l'invitation à signer par courriel
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-40, IQ-C-24, IQ-C-58, IQ-D-07, IQ-S-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (4 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/notifications`
+2. Activer « Désactiver — Invitation à signer Courriel » (button)
+3. Voir « Message désactivé. »
+4. Activer « Activer — Invitation à signer Courriel » (button)
+5. Voir « Message activé. »
+6. Activer « Désactiver — Rappel de non-réponse Courriel » (button)
+7. Voir « Message désactivé. »
+8. Activer « Activer — Rappel de non-réponse Courriel » (button)
+9. Voir « Message activé. »
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-ECR-IQ-05 — L'administration du CLM : messages modifiés et testés, connexion Salesforce testée, relayée, configurée puis rétablie, client d'intégration créé puis révoqué, paramètres modifiés puis rétablis, groupe créé et garni puis supprimé, départ d'un employé transféré, journal filtré et exporté
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-16, IQ-C-30, IQ-C-15, IQ-C-40, IQ-D-18, IQ-A-26
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (32 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Compte jetable qui quitte l'organisation, avec une étape de validation ouverte à son nom
+2. Ouvrir l'écran `/clm/admin`
+3. Ouvrir l'écran `/clm/admin/notifications`
+4. Activer « Modifier »
+5. Saisir « Sujet » : `Invitation E2E ${unique}`
+6. Activer « Enregistrer »
+7. Saisir « Destinataire de test » : `test.${unique}@iq.example`
+8. Activer « Envoyer un test »
+9. Ouvrir l'écran `/clm/admin/integrations`
+10. Activer « Tester la connexion »
+11. Activer « Relayer maintenant »
+12. Activer « Configurer la connexion »
+13. Dans la section « Configurer la connexion », activer « Enregistrer »
+14. Activer « Configurer la connexion »
+15. Activer « Rétablir la connexion de la plateforme »
+16. Saisir « Nouveau client d’intégration » Nom » : `Client E2E ${unique}`
+17. Activer « Créer le client »
+18. Activer « J’ai copié les valeurs »
+19. Activer « Révoquer — Client E2E ${unique} » (button)
+20. Ouvrir l'écran `/clm/admin/parametres`
+21. Activer « Modifier un paramètre autorisé »
+22. Saisir « Rappel tous les (jours) » : `4`
+23. Activer « Enregistrer »
+24. Activer « Modifier un paramètre autorisé »
+25. Activer « Rétablir les paramètres de la plateforme »
+26. Ouvrir l'écran `/clm/admin/listes`
+27. Ouvrir l'écran `/clm/admin/groupes`
+28. Saisir « Nouveau groupe » Code » : `GRP_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Groupe écran ${unique}`
+29. Activer « Créer le groupe »
+30. Choisir « Ajouter un membre au groupe GRP_${UNIQUE} » Membre » : `initiateur@iq.example`
+31. Dans la section « Ajouter un membre au groupe GRP_${UNIQUE} », activer « Ajouter »
+32. Activer « Retirer initiateur@iq.example du groupe GRP_${UNIQUE} » (button)
+33. Activer « Supprimer le groupe GRP_${UNIQUE} » (button)
+34. Ouvrir l'écran `/clm/admin/departs`
+35. Saisir « Courriel de la personne qui part » : `depart.${unique}@iq.example`
+36. Activer « Consulter »
+37. Choisir « Personne qui reprend » : `(premier)`
+38. Activer « Transférer »
+39. Ouvrir l'écran `/clm/admin/journal`
+40. Saisir « Acteur » : `initiateur@iq.example`
+41. Activer « Rechercher #2 »
+42. Ouvrir l'écran `/clm/admin/audit`
+43. Ouvrir l'écran `/clm/options`
+44. Ouvrir l'écran `/clm/profil`
+45. Ouvrir l'écran `/clm/securite`
 
 ### E2E-IQ-15 — Messages désactivés puis réactivés, invitation et rappel reçus
 
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-C-24, IQ-C-40, IQ-C-41, IQ-S-06, IQ-D-07, IQ-C-58
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.notifications`
@@ -1233,12 +3797,31 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-13 — Rappels, copies et échéance réglés à la création d'une trousse, puis retrouvés au résumé
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-41, IQ-C-42, IQ-C-24, IQ-C-43, IQ-D-07, IQ-S-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (3 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Rappels CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-RAP` ; « Échéance » : `${dansUnMois}` ; « Destinataires en copie » : `direction.${unique}@iq.example, conformite.${unique}@iq.example` ; « Rappel tous les (jours) » : `3` ; « Nombre maximal de rappels » : `4`
+3. Activer « Enregistrer le brouillon »
+4. Voir « CB${UNIQUE}-RAP »
+5. Ouvrir l'écran `/clm/trousses`
+6. Activer « Ouvrir le détail de CB${UNIQUE}-RAP » (link)
+7. Voir « direction.${unique}@iq.example », « conformite.${unique}@iq.example »
+8. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-15 — Messages désactivés puis réactivés, invitation et rappel reçus
 
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-C-24, IQ-C-40, IQ-C-41, IQ-S-06, IQ-D-07, IQ-C-58
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.notifications`
@@ -1250,12 +3833,31 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-13 — Rappels, copies et échéance réglés à la création d'une trousse, puis retrouvés au résumé
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-41, IQ-C-42, IQ-C-24, IQ-C-43, IQ-D-07, IQ-S-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (3 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Rappels CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-RAP` ; « Échéance » : `${dansUnMois}` ; « Destinataires en copie » : `direction.${unique}@iq.example, conformite.${unique}@iq.example` ; « Rappel tous les (jours) » : `3` ; « Nombre maximal de rappels » : `4`
+3. Activer « Enregistrer le brouillon »
+4. Voir « CB${UNIQUE}-RAP »
+5. Ouvrir l'écran `/clm/trousses`
+6. Activer « Ouvrir le détail de CB${UNIQUE}-RAP » (link)
+7. Voir « direction.${unique}@iq.example », « conformite.${unique}@iq.example »
+8. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-01 — Créer une trousse, déposer documents et annexes, inviter un participant externe
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-50, IQ-D-03, IQ-D-09, IQ-S-01, IQ-C-42, IQ-C-57
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.trousse.creation`
@@ -1268,12 +3870,83 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-13 — Rappels, copies et échéance réglés à la création d'une trousse, puis retrouvés au résumé
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-41, IQ-C-42, IQ-C-24, IQ-C-43, IQ-D-07, IQ-S-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (3 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Rappels CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-RAP` ; « Échéance » : `${dansUnMois}` ; « Destinataires en copie » : `direction.${unique}@iq.example, conformite.${unique}@iq.example` ; « Rappel tous les (jours) » : `3` ; « Nombre maximal de rappels » : `4`
+3. Activer « Enregistrer le brouillon »
+4. Voir « CB${UNIQUE}-RAP »
+5. Ouvrir l'écran `/clm/trousses`
+6. Activer « Ouvrir le détail de CB${UNIQUE}-RAP » (link)
+7. Voir « direction.${unique}@iq.example », « conformite.${unique}@iq.example »
+8. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-ECR-IQ-06 — L'exploitation des trousses : étape relancée et réassignée, document analysé par l'IA et révisé, certificat téléchargé, trousse annulée, listes exportées, tâche confiée, démarrée et réassignée, lot créé et approuvé ; le validateur délègue, le signataire interne signe depuis sa tâche
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-31, IQ-C-50, IQ-C-30, IQ-C-59, IQ-A-28, IQ-C-43, IQ-C-21
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (33 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Modèle publié ; trousse en validation et trousse en signature interne, lancées
+2. Ouvrir l'écran `/clm/trousses/${trousse}`
+3. Choisir « Étape à relancer » : `(premier)`
+4. Activer « Relancer l’étape »
+5. Activer « Parcours » (tab)
+6. Activer l'élément « Réassigner, ajouter ou retirer des intervenants — Validation » (ligne ou carte cliquable)
+7. Saisir « Assignation par utilisateur, groupe ou règle » Motif » : `Absence du validateur`
+8. Dans la section « Assignation par utilisateur, groupe ou règle », activer « Enregistrer »
+9. Activer « Documents (1) » (tab)
+10. Activer « Analyser (IA) — piece-trousse-${unique}.pdf » (button)
+11. Saisir « Justification » : `Résultat conforme au document`
+12. Activer « Valider le résultat »
+13. Activer « Preuve » (tab)
+14. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+15. Répondre « Annulation E2E » à la prochaine saisie demandée par le navigateur
+16. Activer « Annuler la trousse »
+17. Ouvrir l'écran `/clm/trousses`
+18. Télécharger par « Exporter la liste (CSV) » et obtenir un fichier non vide
+19. Ouvrir l'écran `/clm/suivi`
+20. Télécharger par « Exporter (CSV) » et obtenir un fichier non vide
+21. Ouvrir l'écran `/clm/taches`
+22. Activer « Nouvelle tâche »
+23. Saisir « Tâche » : `Tâche E2E ${unique}`
+24. Choisir « Assignée à » : `initiateur@iq.example` ; « Trousse liée » : `(premier)`
+25. Activer « Confier la tâche »
+26. Activer « Démarrer — Tâche E2E ${unique} » (button)
+27. Activer « Réassigner — Tâche E2E ${unique} » (button)
+28. Choisir « Nouvelle personne assignée » : `(premier)`
+29. Activer « Confirmer la réassignation »
+30. Ouvrir l'écran `/clm/lots`
+31. Saisir « Libellé du lot » : `Lot E2E ${unique}` ; « Dossiers, un par ligne » : `Dossier A ${unique} ; Marie Lot ; marie.lot.${unique}@agrinord.example ; +15145550190`
+32. Choisir « Modèle de contrat » : `Convention lot ${unique}`
+33. Activer « Créer le lot »
+34. Activer « Approuver le lot — Lot E2E ${unique} » (button)
+35. Se connecter en tant que validateur IQ
+36. Ouvrir l'écran `/clm/taches`
+37. Activer « Traiter — ${trousseRef} Validation »
+38. Saisir « Courriel du délégataire » : `approbateur@iq.example` ; « Motif » : `Vacances`
+39. Activer « Confirmer la délégation »
+40. Se connecter en tant que signataire interne IQ
+41. Ouvrir l'écran `/clm/taches`
+42. Activer « Traiter — ${trousseSigRef} Signature »
+43. Activer « Signer maintenant »
 
 ### E2E-IQ-16 — Suivi centralisé des trousses et des échéances
 
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-C-43, IQ-C-25, IQ-D-08
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.suivi`
@@ -1285,12 +3958,45 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-47, IQ-C-50, IQ-D-03, IQ-D-09
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (14 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Documents CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-DOC`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « convention-25Mo-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « convention-25Mo-${unique}.pdf »
+7. Joindre « annexe-${unique}.docx » au champ « Téléverser un document »
+8. Voir « annexe-${unique}.docx »
+9. Activer « Remplacer par une nouvelle version — annexe-${unique}.docx » (button)
+10. Joindre « annexe-v2-${unique}.docx » au champ « Fichier »
+11. Saisir « Motif » : `Montant corrigé`
+12. Activer « Remplacer »
+13. Voir « annexe-v2-${unique}.docx »
+14. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+15. Ouvrir l'écran `/clm/trousses`
+16. Activer « Ouvrir le détail de CB${UNIQUE}-DOC » (link)
+17. Activer « Historique » (tab)
+18. Voir « Nouvelle version »
+19. Activer « Documents (2) » (tab)
+20. Activer « Versions — annexe-v2-${unique}.docx » (button)
+21. Activer « Consulter les métadonnées — version 2 » (button)
+22. Voir « Montant corrigé », « v2 »
 
 ### E2E-ECR-IQ-01 — L'initiateur crée une trousse à l'écran : documents déposés, remplacés et retirés, signataires ajoutés et retirés, parcours testé puis enregistré, lancement ; la preuve se vérifie
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-29, IQ-C-12, IQ-C-51
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (33 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/trousses/nouvelle`
@@ -1337,6 +4043,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-50, IQ-D-03, IQ-D-09, IQ-S-01, IQ-C-42, IQ-C-57
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.trousse.creation`
@@ -1349,12 +4056,45 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-47, IQ-C-50, IQ-D-03, IQ-D-09
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (14 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Documents CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-DOC`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « convention-25Mo-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « convention-25Mo-${unique}.pdf »
+7. Joindre « annexe-${unique}.docx » au champ « Téléverser un document »
+8. Voir « annexe-${unique}.docx »
+9. Activer « Remplacer par une nouvelle version — annexe-${unique}.docx » (button)
+10. Joindre « annexe-v2-${unique}.docx » au champ « Fichier »
+11. Saisir « Motif » : `Montant corrigé`
+12. Activer « Remplacer »
+13. Voir « annexe-v2-${unique}.docx »
+14. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+15. Ouvrir l'écran `/clm/trousses`
+16. Activer « Ouvrir le détail de CB${UNIQUE}-DOC » (link)
+17. Activer « Historique » (tab)
+18. Voir « Nouvelle version »
+19. Activer « Documents (2) » (tab)
+20. Activer « Versions — annexe-v2-${unique}.docx » (button)
+21. Activer « Consulter les métadonnées — version 2 » (button)
+22. Voir « Montant corrigé », « v2 »
 
 ### E2E-ECR-IQ-01 — L'initiateur crée une trousse à l'écran : documents déposés, remplacés et retirés, signataires ajoutés et retirés, parcours testé puis enregistré, lancement ; la preuve se vérifie
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-29, IQ-C-12, IQ-C-51
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (33 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/trousses/nouvelle`
@@ -1401,6 +4141,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-45, IQ-C-37
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (16 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/modeles`
@@ -1430,6 +4171,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-50, IQ-D-03, IQ-D-09, IQ-S-01, IQ-C-42, IQ-C-57
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.trousse.creation`
@@ -1442,12 +4184,45 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-47, IQ-C-50, IQ-D-03, IQ-D-09
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (14 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Documents CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-DOC`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « convention-25Mo-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « convention-25Mo-${unique}.pdf »
+7. Joindre « annexe-${unique}.docx » au champ « Téléverser un document »
+8. Voir « annexe-${unique}.docx »
+9. Activer « Remplacer par une nouvelle version — annexe-${unique}.docx » (button)
+10. Joindre « annexe-v2-${unique}.docx » au champ « Fichier »
+11. Saisir « Motif » : `Montant corrigé`
+12. Activer « Remplacer »
+13. Voir « annexe-v2-${unique}.docx »
+14. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+15. Ouvrir l'écran `/clm/trousses`
+16. Activer « Ouvrir le détail de CB${UNIQUE}-DOC » (link)
+17. Activer « Historique » (tab)
+18. Voir « Nouvelle version »
+19. Activer « Documents (2) » (tab)
+20. Activer « Versions — annexe-v2-${unique}.docx » (button)
+21. Activer « Consulter les métadonnées — version 2 » (button)
+22. Voir « Montant corrigé », « v2 »
 
 ### E2E-IQ-01 — Créer une trousse, déposer documents et annexes, inviter un participant externe
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-50, IQ-D-03, IQ-D-09, IQ-S-01, IQ-C-42, IQ-C-57
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.trousse.creation`
@@ -1460,12 +4235,45 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-47, IQ-C-50, IQ-D-03, IQ-D-09
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (14 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Documents CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-DOC`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « convention-25Mo-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « convention-25Mo-${unique}.pdf »
+7. Joindre « annexe-${unique}.docx » au champ « Téléverser un document »
+8. Voir « annexe-${unique}.docx »
+9. Activer « Remplacer par une nouvelle version — annexe-${unique}.docx » (button)
+10. Joindre « annexe-v2-${unique}.docx » au champ « Fichier »
+11. Saisir « Motif » : `Montant corrigé`
+12. Activer « Remplacer »
+13. Voir « annexe-v2-${unique}.docx »
+14. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+15. Ouvrir l'écran `/clm/trousses`
+16. Activer « Ouvrir le détail de CB${UNIQUE}-DOC » (link)
+17. Activer « Historique » (tab)
+18. Voir « Nouvelle version »
+19. Activer « Documents (2) » (tab)
+20. Activer « Versions — annexe-v2-${unique}.docx » (button)
+21. Activer « Consulter les métadonnées — version 2 » (button)
+22. Voir « Montant corrigé », « v2 »
 
 ### E2E-IQ-02 — Dépôt de documents volumineux dans une trousse
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-47
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.documents.taille`
@@ -1477,12 +4285,71 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-04 — Circuit séquentiel saisi à l'écran : validation puis approbation, décisions commentées et historisées, suivi de l'état
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-D-08, IQ-D-09, IQ-S-02, IQ-S-03
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Circuit CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SEQ`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `a1` ; « Libellé » : `Approbation`
+16. Choisir « Type » : `APPROBATION`
+17. Activer « Ajouter un responsable »
+18. Saisir « Responsable 1 » : `approbateur@iq.example`
+19. Activer « Tester le parcours »
+20. Voir « Parcours valide. »
+21. Activer « Enregistrer »
+22. Activer « Continuer »
+23. Activer « Lancer le parcours »
+24. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+25. Activer « Parcours » (tab)
+26. Voir « Validation juridique »
+27. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+28. Se connecter en tant que validateur IQ
+29. Ouvrir l'écran `/clm/taches`
+30. Activer « Traiter — CB${UNIQUE}-SEQ Validation juridique »
+31. Saisir « Commentaire » : `Clauses conformes au programme`
+32. Activer « Valider »
+33. Voir « Décision enregistrée »
+34. Se connecter en tant que approbateur IQ
+35. Ouvrir l'écran `/clm/taches`
+36. Activer « Traiter — CB${UNIQUE}-SEQ Approbation »
+37. Saisir « Commentaire » : `Approuvé selon la délégation`
+38. Activer « Approuver »
+39. Voir « Décision enregistrée : approuvé. »
+40. Se connecter en tant que initiateur IQ
+41. Ouvrir l'écran `/clm/suivi`
+42. Voir « CB${UNIQUE}-SEQ »
+43. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+44. Ouvrir l'écran `/clm/trousses`
+45. Voir « Terminée »
+46. Activer « Ouvrir le détail de CB${UNIQUE}-SEQ » (link)
+47. Activer « Historique » (tab)
+48. Voir « Clauses conformes au programme », « Approuvé selon la délégation »
 
 ### E2E-IQ-06 — Parcours de validation puis d'approbation, décisions tracées
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-S-02, IQ-S-03, IQ-S-09, IQ-C-52
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.validation-approbation`
@@ -1497,12 +4364,79 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-18 — Dossier de preuve d'une trousse signée : intégrité vérifiée, signatures et consentements consultés, certificat et dossier complet exportés ; journal d'audit filtré par trousse
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-63, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (37 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Preuve CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-PRV`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Activer « Continuer »
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+16. Choisir « Type » : `SIGNATURE`
+17. Activer « Ajouter un responsable »
+18. Choisir « Type du responsable 1 » : `PARTICIPANT`
+19. Choisir « Responsable 1 » : `Étienne Côté`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Se connecter en tant que signataire interne IQ
+27. Ouvrir l'écran `/clm/taches`
+28. Activer « Traiter — CB${UNIQUE}-PRV Signature IQ »
+29. Activer « Signer maintenant »
+30. Arriver sur une adresse de la forme `/portail/`
+31. Activer « Recevoir mon code »
+32. Voir « Code envoyé. »
+33. Préparer par l'API : Code reçu par courriel
+34. Saisir « Code de vérification » : `${code}`
+35. Activer « Vérifier mon identité »
+36. Activer « Lire / télécharger »
+37. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+38. Saisir « Votre nom complet » : `Étienne Côté`
+39. Activer « Signer »
+40. Voir « Merci, votre signature est enregistrée »
+41. Se connecter en tant que initiateur IQ
+42. Ouvrir l'écran `/clm/trousses`
+43. Activer « Ouvrir le détail de CB${UNIQUE}-PRV » (link)
+44. Activer « Preuve » (tab)
+45. Activer « Vérifier l’intégrité »
+46. Voir « Intégrité confirmée : journal, documents et attestations intacts. »
+47. Voir « Identités, consentements et signatures », « Étienne Côté »
+48. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+49. Télécharger par « Exporter le dossier complet (ZIP) » et obtenir un fichier non vide
+50. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+51. Se connecter en tant que administration principale IQ
+52. Ouvrir l'écran `/clm/admin/journal`
+53. Saisir « Trousse (référence) » : `CB${UNIQUE}-PRV`
+54. Activer « Rechercher #2 »
+55. Voir « Trousse créée », « Document ajouté »
+56. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
 
 ### E2E-IQ-17 — Dossier de preuve consulté, vérifié, exporté ; journal consulté et exporté
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10, IQ-A-29
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
@@ -1518,12 +4452,45 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-47, IQ-C-50, IQ-D-03, IQ-D-09
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (14 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Documents CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-DOC`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « convention-25Mo-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « convention-25Mo-${unique}.pdf »
+7. Joindre « annexe-${unique}.docx » au champ « Téléverser un document »
+8. Voir « annexe-${unique}.docx »
+9. Activer « Remplacer par une nouvelle version — annexe-${unique}.docx » (button)
+10. Joindre « annexe-v2-${unique}.docx » au champ « Fichier »
+11. Saisir « Motif » : `Montant corrigé`
+12. Activer « Remplacer »
+13. Voir « annexe-v2-${unique}.docx »
+14. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+15. Ouvrir l'écran `/clm/trousses`
+16. Activer « Ouvrir le détail de CB${UNIQUE}-DOC » (link)
+17. Activer « Historique » (tab)
+18. Voir « Nouvelle version »
+19. Activer « Documents (2) » (tab)
+20. Activer « Versions — annexe-v2-${unique}.docx » (button)
+21. Activer « Consulter les métadonnées — version 2 » (button)
+22. Voir « Montant corrigé », « v2 »
 
 ### E2E-ECR-IQ-06 — L'exploitation des trousses : étape relancée et réassignée, document analysé par l'IA et révisé, certificat téléchargé, trousse annulée, listes exportées, tâche confiée, démarrée et réassignée, lot créé et approuvé ; le validateur délègue, le signataire interne signe depuis sa tâche
 
 - **Profil** : initiateur IQ
-- **Exigences démontrées** : IQ-C-31, IQ-C-50, IQ-C-30
+- **Exigences démontrées** : IQ-C-31, IQ-C-50, IQ-C-30, IQ-C-59, IQ-A-28, IQ-C-43, IQ-C-21
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (33 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Modèle publié ; trousse en validation et trousse en signature interne, lancées
@@ -1575,6 +4542,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-50, IQ-D-03, IQ-D-09, IQ-S-01, IQ-C-42, IQ-C-57
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.trousse.creation`
@@ -1587,12 +4555,79 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-18 — Dossier de preuve d'une trousse signée : intégrité vérifiée, signatures et consentements consultés, certificat et dossier complet exportés ; journal d'audit filtré par trousse
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-63, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (37 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Preuve CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-PRV`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Activer « Continuer »
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+16. Choisir « Type » : `SIGNATURE`
+17. Activer « Ajouter un responsable »
+18. Choisir « Type du responsable 1 » : `PARTICIPANT`
+19. Choisir « Responsable 1 » : `Étienne Côté`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Se connecter en tant que signataire interne IQ
+27. Ouvrir l'écran `/clm/taches`
+28. Activer « Traiter — CB${UNIQUE}-PRV Signature IQ »
+29. Activer « Signer maintenant »
+30. Arriver sur une adresse de la forme `/portail/`
+31. Activer « Recevoir mon code »
+32. Voir « Code envoyé. »
+33. Préparer par l'API : Code reçu par courriel
+34. Saisir « Code de vérification » : `${code}`
+35. Activer « Vérifier mon identité »
+36. Activer « Lire / télécharger »
+37. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+38. Saisir « Votre nom complet » : `Étienne Côté`
+39. Activer « Signer »
+40. Voir « Merci, votre signature est enregistrée »
+41. Se connecter en tant que initiateur IQ
+42. Ouvrir l'écran `/clm/trousses`
+43. Activer « Ouvrir le détail de CB${UNIQUE}-PRV » (link)
+44. Activer « Preuve » (tab)
+45. Activer « Vérifier l’intégrité »
+46. Voir « Intégrité confirmée : journal, documents et attestations intacts. »
+47. Voir « Identités, consentements et signatures », « Étienne Côté »
+48. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+49. Télécharger par « Exporter le dossier complet (ZIP) » et obtenir un fichier non vide
+50. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+51. Se connecter en tant que administration principale IQ
+52. Ouvrir l'écran `/clm/admin/journal`
+53. Saisir « Trousse (référence) » : `CB${UNIQUE}-PRV`
+54. Activer « Rechercher #2 »
+55. Voir « Trousse créée », « Document ajouté »
+56. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
 
 ### E2E-ECR-IQ-01 — L'initiateur crée une trousse à l'écran : documents déposés, remplacés et retirés, signataires ajoutés et retirés, parcours testé puis enregistré, lancement ; la preuve se vérifie
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-29, IQ-C-12, IQ-C-51
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (33 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/trousses/nouvelle`
@@ -1639,6 +4674,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-51, IQ-C-27
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (11 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Trousse lancée, signataire externe invité (jeton lu dans le courriel)
@@ -1661,8 +4697,9 @@
 ### E2E-ECR-IQ-07 — Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)
 
 - **Profil** : administration principale IQ
-- **Exigences démontrées** : IQ-C-51, IQ-C-65
+- **Exigences démontrées** : IQ-C-51, IQ-C-65, IQ-C-66, IQ-A-21, IQ-A-11, IQ-A-19, IQ-A-08, IQ-A-27, IQ-C-60, IQ-C-62
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (23 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Signataire invité avec vérification par code
@@ -1705,6 +4742,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10, IQ-A-29
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
@@ -1720,12 +4758,104 @@
 
 - **Source** : 1.4.8
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-IQ-06 — Parcours de validation puis d'approbation, décisions tracées
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-S-02, IQ-S-03, IQ-S-09, IQ-C-52
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.validation-approbation`
@@ -1740,12 +4870,104 @@
 
 - **Source** : 1.4.8
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-IQ-34 — Consulter ses tâches et ses trousses sur téléphone, sans débordement ni violation d'accessibilité
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-53, IQ-S-08, IQ-D-13
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/taches`
@@ -1758,13 +4980,174 @@
 
 - **Source** : 1.4.8
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-09 — Signature séquentielle de deux signataires internes : le second n'est sollicité qu'après le premier
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-26, IQ-C-29, IQ-C-54, IQ-D-04
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (49 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Séquentielle CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SSQ`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Saisir « Nom » : `Sophie Roy` ; « Courriel » : `approbateur@iq.example` ; « Téléphone » : `+15145550190`
+14. Choisir « Rôle dans le contrat » : `SIGNATAIRE_2`
+15. Décocher « Externe »
+16. Activer « Ajouter un signataire »
+17. Voir « Sophie Roy »
+18. Activer « Continuer »
+19. Activer « Ajouter une étape »
+20. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+21. Choisir « Type » : `SIGNATURE`
+22. Activer « Ajouter un responsable »
+23. Choisir « Type du responsable 1 » : `PARTICIPANT`
+24. Choisir « Responsable 1 » : `Étienne Côté`
+25. Activer « Ajouter une étape »
+26. Saisir « Clé » : `s2` ; « Libellé » : `Signature cosignataire`
+27. Choisir « Type » : `SIGNATURE`
+28. Activer « Ajouter un responsable »
+29. Choisir « Type du responsable 1 » : `PARTICIPANT`
+30. Choisir « Responsable 1 » : `Sophie Roy`
+31. Activer « Tester le parcours »
+32. Voir « Parcours valide. »
+33. Activer « Enregistrer »
+34. Activer « Continuer »
+35. Activer « Lancer le parcours »
+36. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+37. Se connecter en tant que approbateur IQ
+38. Ouvrir l'écran `/clm/taches`
+39. Ne pas voir « CB${UNIQUE}-SSQ »
+40. Se connecter en tant que signataire interne IQ
+41. Ouvrir l'écran `/clm/taches`
+42. Activer « Traiter — CB${UNIQUE}-SSQ Signature IQ »
+43. Activer « Signer maintenant »
+44. Arriver sur une adresse de la forme `/portail/`
+45. Activer « Recevoir mon code »
+46. Voir « Code envoyé. »
+47. Préparer par l'API : Code reçu par courriel
+48. Saisir « Code de vérification » : `${code}`
+49. Activer « Vérifier mon identité »
+50. Activer « Lire / télécharger »
+51. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+52. Saisir « Votre nom complet » : `Étienne Côté`
+53. Activer « Signer »
+54. Voir « Merci, votre signature est enregistrée »
+55. Se connecter en tant que approbateur IQ
+56. Ouvrir l'écran `/clm/taches`
+57. Activer « Traiter — CB${UNIQUE}-SSQ Signature cosignataire »
+58. Activer « Signer maintenant »
+59. Arriver sur une adresse de la forme `/portail/`
+60. Activer « Recevoir mon code »
+61. Voir « Code envoyé. »
+62. Préparer par l'API : Code reçu par courriel
+63. Saisir « Code de vérification » : `${code}`
+64. Activer « Vérifier mon identité »
+65. Activer « Lire / télécharger »
+66. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+67. Saisir « Votre nom complet » : `Sophie Roy`
+68. Activer « Signer »
+69. Voir « Merci, votre signature est enregistrée »
+70. Se connecter en tant que initiateur IQ
+71. Ouvrir l'écran `/clm/trousses`
+72. Activer « Ouvrir le détail de CB${UNIQUE}-SSQ » (link)
+73. Voir « Terminée »
+74. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-CB-IQ-10 — Signature parallèle : les deux signataires sont sollicités en même temps
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-26, IQ-C-28, IQ-C-54, IQ-D-04
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (49 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Parallèle sig CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SPA`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Saisir « Nom » : `Sophie Roy` ; « Courriel » : `approbateur@iq.example` ; « Téléphone » : `+15145550190`
+14. Choisir « Rôle dans le contrat » : `SIGNATAIRE_2`
+15. Décocher « Externe »
+16. Activer « Ajouter un signataire »
+17. Voir « Sophie Roy »
+18. Activer « Continuer »
+19. Activer « Ajouter une étape »
+20. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+21. Choisir « Type » : `SIGNATURE`
+22. Activer « Ajouter un responsable »
+23. Choisir « Type du responsable 1 » : `PARTICIPANT`
+24. Choisir « Responsable 1 » : `Étienne Côté`
+25. Activer « Ajouter une étape »
+26. Saisir « Clé » : `s2` ; « Libellé » : `Signature cosignataire`
+27. Choisir « Type » : `SIGNATURE`
+28. Saisir « Phase » : `1`
+29. Activer « Ajouter un responsable »
+30. Choisir « Type du responsable 1 » : `PARTICIPANT`
+31. Choisir « Responsable 1 » : `Sophie Roy`
+32. Activer « Tester le parcours »
+33. Voir « Parcours valide. »
+34. Activer « Enregistrer »
+35. Activer « Continuer »
+36. Activer « Lancer le parcours »
+37. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+38. Se connecter en tant que approbateur IQ
+39. Ouvrir l'écran `/clm/taches`
+40. Activer « Traiter — CB${UNIQUE}-SPA Signature cosignataire »
+41. Activer « Signer maintenant »
+42. Arriver sur une adresse de la forme `/portail/`
+43. Activer « Recevoir mon code »
+44. Voir « Code envoyé. »
+45. Préparer par l'API : Code reçu par courriel
+46. Saisir « Code de vérification » : `${code}`
+47. Activer « Vérifier mon identité »
+48. Activer « Lire / télécharger »
+49. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+50. Saisir « Votre nom complet » : `Sophie Roy`
+51. Activer « Signer »
+52. Voir « Merci, votre signature est enregistrée »
+53. Se connecter en tant que signataire interne IQ
+54. Ouvrir l'écran `/clm/taches`
+55. Activer « Traiter — CB${UNIQUE}-SPA Signature IQ »
+56. Activer « Signer maintenant »
+57. Arriver sur une adresse de la forme `/portail/`
+58. Activer « Recevoir mon code »
+59. Voir « Code envoyé. »
+60. Préparer par l'API : Code reçu par courriel
+61. Saisir « Code de vérification » : `${code}`
+62. Activer « Vérifier mon identité »
+63. Activer « Lire / télécharger »
+64. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+65. Saisir « Votre nom complet » : `Étienne Côté`
+66. Activer « Signer »
+67. Voir « Merci, votre signature est enregistrée »
 
 ### E2E-IQ-11 — Signature externe : invitation, identité, consentement, signature, preuve
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ❌ échoué
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -1777,6 +5160,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-26, IQ-C-27, IQ-C-28, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.sequentielle-parallele`
@@ -1788,12 +5172,156 @@
 
 - **Source** : 1.4.8
 - **Conformité déclarée** : ✅🆕
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-06 — Retour pour correction : le validateur renvoie à l'initiateur avec un motif
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-22, IQ-C-55, IQ-S-03, IQ-S-09
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (20 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Correction CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-COR`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Tester le parcours »
+15. Voir « Parcours valide. »
+16. Activer « Enregistrer »
+17. Activer « Continuer »
+18. Activer « Lancer le parcours »
+19. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+20. Se connecter en tant que validateur IQ
+21. Ouvrir l'écran `/clm/taches`
+22. Activer « Traiter — CB${UNIQUE}-COR Validation juridique »
+23. Saisir « Commentaire » : `Annexe B manquante`
+24. Activer « Retourner pour correction »
+25. Voir « Trousse retournée pour correction. »
+26. Se connecter en tant que initiateur IQ
+27. Ouvrir l'écran `/clm/trousses`
+28. Activer « Ouvrir le détail de CB${UNIQUE}-COR » (link)
+29. Activer « Historique » (tab)
+30. Voir « Annexe B manquante »
+
+### E2E-CB-IQ-07 — Réassignation en cours de processus : l'étape passe à un autre intervenant sans redémarrer le parcours
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-20, IQ-C-21, IQ-C-55, IQ-D-05, IQ-S-05
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (21 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Réassignation CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-REA`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Tester le parcours »
+15. Voir « Parcours valide. »
+16. Activer « Enregistrer »
+17. Activer « Continuer »
+18. Activer « Lancer le parcours »
+19. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+20. Activer « Parcours » (tab)
+21. Activer l'élément « Réassigner, ajouter ou retirer des intervenants — Validation juridique » (ligne ou carte cliquable)
+22. Saisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `approbateur@iq.example` ; « Assignation par utilisateur, groupe ou règle » Motif » : `Validateur en congé`
+23. Dans la section « Assignation par utilisateur, groupe ou règle », activer « Enregistrer »
+24. Se connecter en tant que validateur IQ
+25. Ouvrir l'écran `/clm/taches`
+26. Ne pas voir « CB${UNIQUE}-REA »
+27. Se connecter en tant que approbateur IQ
+28. Ouvrir l'écran `/clm/taches`
+29. Activer « Traiter — CB${UNIQUE}-REA Validation juridique »
+30. Activer « Valider »
+31. Voir « Décision enregistrée »
+
+### E2E-CB-IQ-11 — Signataire ajouté puis substitué en cours de processus, sans relancer la trousse
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-30, IQ-C-31, IQ-C-55, IQ-S-05
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (39 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Substitution CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SUB`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Activer « Continuer »
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+16. Choisir « Type » : `SIGNATURE`
+17. Activer « Ajouter un responsable »
+18. Choisir « Type du responsable 1 » : `PARTICIPANT`
+19. Choisir « Responsable 1 » : `Étienne Côté`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Activer « Participants (1) » (tab)
+27. Saisir « Nom » : `Sophie Roy` ; « Courriel » : `approbateur@iq.example` ; « Téléphone » : `+15145550190`
+28. Choisir « Rôle dans le contrat » : `SIGNATAIRE_2`
+29. Décocher « Externe »
+30. Activer « Ajouter un signataire »
+31. Voir « Sophie Roy »
+32. Activer « Parcours » (tab)
+33. Activer l'élément « Réassigner, ajouter ou retirer des intervenants — Signature IQ » (ligne ou carte cliquable)
+34. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `Sophie Roy`
+35. Saisir « Assignation par utilisateur, groupe ou règle » Motif » : `Signataire remplacé par délégation`
+36. Dans la section « Assignation par utilisateur, groupe ou règle », activer « Enregistrer »
+37. Se connecter en tant que signataire interne IQ
+38. Ouvrir l'écran `/clm/taches`
+39. Ne pas voir « CB${UNIQUE}-SUB »
+40. Se connecter en tant que approbateur IQ
+41. Ouvrir l'écran `/clm/taches`
+42. Activer « Traiter — CB${UNIQUE}-SUB Signature IQ »
+43. Activer « Signer maintenant »
+44. Arriver sur une adresse de la forme `/portail/`
+45. Activer « Recevoir mon code »
+46. Voir « Code envoyé. »
+47. Préparer par l'API : Code reçu par courriel
+48. Saisir « Code de vérification » : `${code}`
+49. Activer « Vérifier mon identité »
+50. Activer « Lire / télécharger »
+51. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+52. Saisir « Votre nom complet » : `Sophie Roy`
+53. Activer « Signer »
+54. Voir « Merci, votre signature est enregistrée »
 
 ### E2E-IQ-08 — Étapes parallèles et réassignation d'une tâche
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-18, IQ-C-20, IQ-C-21, IQ-C-55, IQ-D-05, IQ-S-05
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.parallele-reassignation`
@@ -1807,12 +5335,104 @@
 
 - **Source** : 1.4.8
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-IQ-33 — Générer le contrat d'un modèle publié, valeurs préremplies depuis Salesforce et corrigeables
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-D-01, IQ-D-02, IQ-A-06, IQ-A-17, IQ-A-18, IQ-C-56
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.generation.salesforce`
@@ -1826,12 +5446,104 @@
 
 - **Source** : 1.4.8
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-IQ-01 — Créer une trousse, déposer documents et annexes, inviter un participant externe
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-50, IQ-D-03, IQ-D-09, IQ-S-01, IQ-C-42, IQ-C-57
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.trousse.creation`
@@ -1845,7 +5557,8 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ❌ échoué
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -1857,12 +5570,33 @@
 
 - **Source** : 1.4.8
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-12 — Notifications configurables : l'administration désactive puis réactive l'invitation à signer par courriel
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-40, IQ-C-24, IQ-C-58, IQ-D-07, IQ-S-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (4 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/notifications`
+2. Activer « Désactiver — Invitation à signer Courriel » (button)
+3. Voir « Message désactivé. »
+4. Activer « Activer — Invitation à signer Courriel » (button)
+5. Voir « Message activé. »
+6. Activer « Désactiver — Rappel de non-réponse Courriel » (button)
+7. Voir « Message désactivé. »
+8. Activer « Activer — Rappel de non-réponse Courriel » (button)
+9. Voir « Message activé. »
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-15 — Messages désactivés puis réactivés, invitation et rappel reçus
 
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-C-24, IQ-C-40, IQ-C-41, IQ-S-06, IQ-D-07, IQ-C-58
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.notifications`
@@ -1874,12 +5608,66 @@
 
 - **Source** : 1.4.9
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-ECR-IQ-06 — L'exploitation des trousses : étape relancée et réassignée, document analysé par l'IA et révisé, certificat téléchargé, trousse annulée, listes exportées, tâche confiée, démarrée et réassignée, lot créé et approuvé ; le validateur délègue, le signataire interne signe depuis sa tâche
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-31, IQ-C-50, IQ-C-30, IQ-C-59, IQ-A-28, IQ-C-43, IQ-C-21
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (33 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Modèle publié ; trousse en validation et trousse en signature interne, lancées
+2. Ouvrir l'écran `/clm/trousses/${trousse}`
+3. Choisir « Étape à relancer » : `(premier)`
+4. Activer « Relancer l’étape »
+5. Activer « Parcours » (tab)
+6. Activer l'élément « Réassigner, ajouter ou retirer des intervenants — Validation » (ligne ou carte cliquable)
+7. Saisir « Assignation par utilisateur, groupe ou règle » Motif » : `Absence du validateur`
+8. Dans la section « Assignation par utilisateur, groupe ou règle », activer « Enregistrer »
+9. Activer « Documents (1) » (tab)
+10. Activer « Analyser (IA) — piece-trousse-${unique}.pdf » (button)
+11. Saisir « Justification » : `Résultat conforme au document`
+12. Activer « Valider le résultat »
+13. Activer « Preuve » (tab)
+14. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+15. Répondre « Annulation E2E » à la prochaine saisie demandée par le navigateur
+16. Activer « Annuler la trousse »
+17. Ouvrir l'écran `/clm/trousses`
+18. Télécharger par « Exporter la liste (CSV) » et obtenir un fichier non vide
+19. Ouvrir l'écran `/clm/suivi`
+20. Télécharger par « Exporter (CSV) » et obtenir un fichier non vide
+21. Ouvrir l'écran `/clm/taches`
+22. Activer « Nouvelle tâche »
+23. Saisir « Tâche » : `Tâche E2E ${unique}`
+24. Choisir « Assignée à » : `initiateur@iq.example` ; « Trousse liée » : `(premier)`
+25. Activer « Confier la tâche »
+26. Activer « Démarrer — Tâche E2E ${unique} » (button)
+27. Activer « Réassigner — Tâche E2E ${unique} » (button)
+28. Choisir « Nouvelle personne assignée » : `(premier)`
+29. Activer « Confirmer la réassignation »
+30. Ouvrir l'écran `/clm/lots`
+31. Saisir « Libellé du lot » : `Lot E2E ${unique}` ; « Dossiers, un par ligne » : `Dossier A ${unique} ; Marie Lot ; marie.lot.${unique}@agrinord.example ; +15145550190`
+32. Choisir « Modèle de contrat » : `Convention lot ${unique}`
+33. Activer « Créer le lot »
+34. Activer « Approuver le lot — Lot E2E ${unique} » (button)
+35. Se connecter en tant que validateur IQ
+36. Ouvrir l'écran `/clm/taches`
+37. Activer « Traiter — ${trousseRef} Validation »
+38. Saisir « Courriel du délégataire » : `approbateur@iq.example` ; « Motif » : `Vacances`
+39. Activer « Confirmer la délégation »
+40. Se connecter en tant que signataire interne IQ
+41. Ouvrir l'écran `/clm/taches`
+42. Activer « Traiter — ${trousseSigRef} Signature »
+43. Activer « Signer maintenant »
 
 ### E2E-IQ-32 — Analyse d'un document par l'IA encadrée, depuis l'accueil
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-59, IQ-C-04, IQ-S-10b
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.ia.analyse`
@@ -1890,12 +5678,57 @@
 
 - **Source** : 1.4.10
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-ECR-IQ-07 — Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-51, IQ-C-65, IQ-C-66, IQ-A-21, IQ-A-11, IQ-A-19, IQ-A-08, IQ-A-27, IQ-C-60, IQ-C-62
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (23 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Signataire invité avec vérification par code
+2. Ouvrir l'écran `/portail/${jeton}`
+3. Activer « Recevoir mon code »
+4. Préparer par l'API : cas `iq.signature.externe`
+5. Ouvrir l'écran `/clm/admin/journal`
+6. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
+7. Ouvrir l'écran `/clm/admin/conservation`
+8. Choisir « Type de contrat » : `PRET`
+9. Saisir « Durée après la clôture (ans) » : `10`
+10. Activer « Enregistrer la règle »
+11. Activer « Retirer — Contrat de prêt » (button)
+12. Répondre « Litige E2E ${unique} » à la prochaine saisie demandée par le navigateur
+13. Activer « Geler — ${trousseRef} » (button)
+14. Activer « Lever le gel — ${trousseRef} » (button)
+15. Saisir « Clôturées du » : `${aujourdhui}` ; « au » : `${demain}`
+16. Télécharger par « Télécharger le lot » et obtenir un fichier non vide
+17. Ouvrir l'écran `/clm/admin/sso`
+18. Saisir « Groupe (identifiant ou nom) » : `grp-e2e-${unique}`
+19. Choisir « Ajouter la correspondance » Rôle » : `LECTEUR`
+20. Activer « Ajouter la correspondance »
+21. Activer « Retirer — grp-e2e-${unique} » (button)
+22. Activer « Créer un jeton | Remplacer le jeton »
+23. Préparer par l'API : Administrateur jetable (futur compte de secours)
+24. Se connecter avec le compte `secours.${unique}@iq.example`
+25. Ouvrir l'écran `/clm/securite`
+26. Activer « Configurer le TOTP »
+27. Relever le texte affiché (`code`) sous le nom `secretTotp`
+28. Saisir le code TOTP courant dans « Code de confirmation »
+29. Activer « Activer »
+30. Ouvrir l'écran `/clm/admin/sso`
+31. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
+32. Activer « Réserver aux comptes de secours »
+33. Activer « Ouvrir à tous les comptes »
+34. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
 
 ### E2E-IQ-28 — Authentification unique de l'organisation
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-C-60
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.sso.connexion`
@@ -1907,6 +5740,7 @@
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-C-60
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/admin/sso`
@@ -1920,13 +5754,38 @@
 
 - **Source** : 1.4.10
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-20 — Vérification d'identité proportionnée : une trousse à risque élevé impose un niveau minimal au signataire externe
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-61, IQ-C-62, IQ-A-23
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (9 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Risque CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-RSQ`
+3. Choisir « Niveau de risque » : `ELEVE`
+4. Activer « Enregistrer le brouillon »
+5. Activer « Continuer »
+6. Activer « Continuer »
+7. Voir « Niveau minimal imposé par le risque »
+8. Saisir « Nom » : `Paul Externe` ; « Courriel » : `paul.${unique}@exemple.ca` ; « Téléphone » : `+15145550177`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Cocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Paul Externe »
+13. Voir « ajouté (vérification »
+14. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-11 — Signature externe : invitation, identité, consentement, signature, preuve
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ❌ échoué
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -1939,6 +5798,7 @@
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-A-23, IQ-C-61
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.identite.par-risque`
@@ -1949,13 +5809,81 @@
 
 - **Source** : 1.4.10
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-20 — Vérification d'identité proportionnée : une trousse à risque élevé impose un niveau minimal au signataire externe
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-61, IQ-C-62, IQ-A-23
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (9 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Risque CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-RSQ`
+3. Choisir « Niveau de risque » : `ELEVE`
+4. Activer « Enregistrer le brouillon »
+5. Activer « Continuer »
+6. Activer « Continuer »
+7. Voir « Niveau minimal imposé par le risque »
+8. Saisir « Nom » : `Paul Externe` ; « Courriel » : `paul.${unique}@exemple.ca` ; « Téléphone » : `+15145550177`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Cocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Paul Externe »
+13. Voir « ajouté (vérification »
+14. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-ECR-IQ-07 — Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-51, IQ-C-65, IQ-C-66, IQ-A-21, IQ-A-11, IQ-A-19, IQ-A-08, IQ-A-27, IQ-C-60, IQ-C-62
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (23 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Signataire invité avec vérification par code
+2. Ouvrir l'écran `/portail/${jeton}`
+3. Activer « Recevoir mon code »
+4. Préparer par l'API : cas `iq.signature.externe`
+5. Ouvrir l'écran `/clm/admin/journal`
+6. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
+7. Ouvrir l'écran `/clm/admin/conservation`
+8. Choisir « Type de contrat » : `PRET`
+9. Saisir « Durée après la clôture (ans) » : `10`
+10. Activer « Enregistrer la règle »
+11. Activer « Retirer — Contrat de prêt » (button)
+12. Répondre « Litige E2E ${unique} » à la prochaine saisie demandée par le navigateur
+13. Activer « Geler — ${trousseRef} » (button)
+14. Activer « Lever le gel — ${trousseRef} » (button)
+15. Saisir « Clôturées du » : `${aujourdhui}` ; « au » : `${demain}`
+16. Télécharger par « Télécharger le lot » et obtenir un fichier non vide
+17. Ouvrir l'écran `/clm/admin/sso`
+18. Saisir « Groupe (identifiant ou nom) » : `grp-e2e-${unique}`
+19. Choisir « Ajouter la correspondance » Rôle » : `LECTEUR`
+20. Activer « Ajouter la correspondance »
+21. Activer « Retirer — grp-e2e-${unique} » (button)
+22. Activer « Créer un jeton | Remplacer le jeton »
+23. Préparer par l'API : Administrateur jetable (futur compte de secours)
+24. Se connecter avec le compte `secours.${unique}@iq.example`
+25. Ouvrir l'écran `/clm/securite`
+26. Activer « Configurer le TOTP »
+27. Relever le texte affiché (`code`) sous le nom `secretTotp`
+28. Saisir le code TOTP courant dans « Code de confirmation »
+29. Activer « Activer »
+30. Ouvrir l'écran `/clm/admin/sso`
+31. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
+32. Activer « Réserver aux comptes de secours »
+33. Activer « Ouvrir à tous les comptes »
+34. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
 
 ### E2E-IQ-11 — Signature externe : invitation, identité, consentement, signature, preuve
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ❌ échoué
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -1967,13 +5895,80 @@
 
 - **Source** : 1.4.11
 - **Conformité déclarée** : ✅🆕
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-18 — Dossier de preuve d'une trousse signée : intégrité vérifiée, signatures et consentements consultés, certificat et dossier complet exportés ; journal d'audit filtré par trousse
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-63, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (37 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Preuve CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-PRV`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Activer « Continuer »
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+16. Choisir « Type » : `SIGNATURE`
+17. Activer « Ajouter un responsable »
+18. Choisir « Type du responsable 1 » : `PARTICIPANT`
+19. Choisir « Responsable 1 » : `Étienne Côté`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Se connecter en tant que signataire interne IQ
+27. Ouvrir l'écran `/clm/taches`
+28. Activer « Traiter — CB${UNIQUE}-PRV Signature IQ »
+29. Activer « Signer maintenant »
+30. Arriver sur une adresse de la forme `/portail/`
+31. Activer « Recevoir mon code »
+32. Voir « Code envoyé. »
+33. Préparer par l'API : Code reçu par courriel
+34. Saisir « Code de vérification » : `${code}`
+35. Activer « Vérifier mon identité »
+36. Activer « Lire / télécharger »
+37. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+38. Saisir « Votre nom complet » : `Étienne Côté`
+39. Activer « Signer »
+40. Voir « Merci, votre signature est enregistrée »
+41. Se connecter en tant que initiateur IQ
+42. Ouvrir l'écran `/clm/trousses`
+43. Activer « Ouvrir le détail de CB${UNIQUE}-PRV » (link)
+44. Activer « Preuve » (tab)
+45. Activer « Vérifier l’intégrité »
+46. Voir « Intégrité confirmée : journal, documents et attestations intacts. »
+47. Voir « Identités, consentements et signatures », « Étienne Côté »
+48. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+49. Télécharger par « Exporter le dossier complet (ZIP) » et obtenir un fichier non vide
+50. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+51. Se connecter en tant que administration principale IQ
+52. Ouvrir l'écran `/clm/admin/journal`
+53. Saisir « Trousse (référence) » : `CB${UNIQUE}-PRV`
+54. Activer « Rechercher #2 »
+55. Voir « Trousse créée », « Document ajouté »
+56. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
 
 ### E2E-IQ-11 — Signature externe : invitation, identité, consentement, signature, preuve
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ❌ échoué
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -1985,13 +5980,80 @@
 
 - **Source** : 1.4.11
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-18 — Dossier de preuve d'une trousse signée : intégrité vérifiée, signatures et consentements consultés, certificat et dossier complet exportés ; journal d'audit filtré par trousse
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-63, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (37 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Preuve CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-PRV`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Activer « Continuer »
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+16. Choisir « Type » : `SIGNATURE`
+17. Activer « Ajouter un responsable »
+18. Choisir « Type du responsable 1 » : `PARTICIPANT`
+19. Choisir « Responsable 1 » : `Étienne Côté`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Se connecter en tant que signataire interne IQ
+27. Ouvrir l'écran `/clm/taches`
+28. Activer « Traiter — CB${UNIQUE}-PRV Signature IQ »
+29. Activer « Signer maintenant »
+30. Arriver sur une adresse de la forme `/portail/`
+31. Activer « Recevoir mon code »
+32. Voir « Code envoyé. »
+33. Préparer par l'API : Code reçu par courriel
+34. Saisir « Code de vérification » : `${code}`
+35. Activer « Vérifier mon identité »
+36. Activer « Lire / télécharger »
+37. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+38. Saisir « Votre nom complet » : `Étienne Côté`
+39. Activer « Signer »
+40. Voir « Merci, votre signature est enregistrée »
+41. Se connecter en tant que initiateur IQ
+42. Ouvrir l'écran `/clm/trousses`
+43. Activer « Ouvrir le détail de CB${UNIQUE}-PRV » (link)
+44. Activer « Preuve » (tab)
+45. Activer « Vérifier l’intégrité »
+46. Voir « Intégrité confirmée : journal, documents et attestations intacts. »
+47. Voir « Identités, consentements et signatures », « Étienne Côté »
+48. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+49. Télécharger par « Exporter le dossier complet (ZIP) » et obtenir un fichier non vide
+50. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+51. Se connecter en tant que administration principale IQ
+52. Ouvrir l'écran `/clm/admin/journal`
+53. Saisir « Trousse (référence) » : `CB${UNIQUE}-PRV`
+54. Activer « Rechercher #2 »
+55. Voir « Trousse créée », « Document ajouté »
+56. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
 
 ### E2E-IQ-11 — Signature externe : invitation, identité, consentement, signature, preuve
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ❌ échoué
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -2004,6 +6066,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10, IQ-A-29
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
@@ -2019,12 +6082,79 @@
 
 - **Source** : 1.4.11
 - **Conformité déclarée** : ✅🆕
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-18 — Dossier de preuve d'une trousse signée : intégrité vérifiée, signatures et consentements consultés, certificat et dossier complet exportés ; journal d'audit filtré par trousse
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-63, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (37 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Preuve CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-PRV`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Activer « Continuer »
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+16. Choisir « Type » : `SIGNATURE`
+17. Activer « Ajouter un responsable »
+18. Choisir « Type du responsable 1 » : `PARTICIPANT`
+19. Choisir « Responsable 1 » : `Étienne Côté`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Se connecter en tant que signataire interne IQ
+27. Ouvrir l'écran `/clm/taches`
+28. Activer « Traiter — CB${UNIQUE}-PRV Signature IQ »
+29. Activer « Signer maintenant »
+30. Arriver sur une adresse de la forme `/portail/`
+31. Activer « Recevoir mon code »
+32. Voir « Code envoyé. »
+33. Préparer par l'API : Code reçu par courriel
+34. Saisir « Code de vérification » : `${code}`
+35. Activer « Vérifier mon identité »
+36. Activer « Lire / télécharger »
+37. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+38. Saisir « Votre nom complet » : `Étienne Côté`
+39. Activer « Signer »
+40. Voir « Merci, votre signature est enregistrée »
+41. Se connecter en tant que initiateur IQ
+42. Ouvrir l'écran `/clm/trousses`
+43. Activer « Ouvrir le détail de CB${UNIQUE}-PRV » (link)
+44. Activer « Preuve » (tab)
+45. Activer « Vérifier l’intégrité »
+46. Voir « Intégrité confirmée : journal, documents et attestations intacts. »
+47. Voir « Identités, consentements et signatures », « Étienne Côté »
+48. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+49. Télécharger par « Exporter le dossier complet (ZIP) » et obtenir un fichier non vide
+50. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+51. Se connecter en tant que administration principale IQ
+52. Ouvrir l'écran `/clm/admin/journal`
+53. Saisir « Trousse (référence) » : `CB${UNIQUE}-PRV`
+54. Activer « Rechercher #2 »
+55. Voir « Trousse créée », « Document ajouté »
+56. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
 
 ### E2E-ECR-IQ-07 — Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)
 
 - **Profil** : administration principale IQ
-- **Exigences démontrées** : IQ-C-51, IQ-C-65
+- **Exigences démontrées** : IQ-C-51, IQ-C-65, IQ-C-66, IQ-A-21, IQ-A-11, IQ-A-19, IQ-A-08, IQ-A-27, IQ-C-60, IQ-C-62
 - **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (23 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Signataire invité avec vérification par code
@@ -2067,6 +6197,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10, IQ-A-29
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
@@ -2082,12 +6213,57 @@
 
 - **Source** : 1.4.12
 - **Conformité déclarée** : ✅🆕
+- **Démontrée à l'écran** : oui
+
+### E2E-ECR-IQ-07 — Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-51, IQ-C-65, IQ-C-66, IQ-A-21, IQ-A-11, IQ-A-19, IQ-A-08, IQ-A-27, IQ-C-60, IQ-C-62
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (23 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Signataire invité avec vérification par code
+2. Ouvrir l'écran `/portail/${jeton}`
+3. Activer « Recevoir mon code »
+4. Préparer par l'API : cas `iq.signature.externe`
+5. Ouvrir l'écran `/clm/admin/journal`
+6. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
+7. Ouvrir l'écran `/clm/admin/conservation`
+8. Choisir « Type de contrat » : `PRET`
+9. Saisir « Durée après la clôture (ans) » : `10`
+10. Activer « Enregistrer la règle »
+11. Activer « Retirer — Contrat de prêt » (button)
+12. Répondre « Litige E2E ${unique} » à la prochaine saisie demandée par le navigateur
+13. Activer « Geler — ${trousseRef} » (button)
+14. Activer « Lever le gel — ${trousseRef} » (button)
+15. Saisir « Clôturées du » : `${aujourdhui}` ; « au » : `${demain}`
+16. Télécharger par « Télécharger le lot » et obtenir un fichier non vide
+17. Ouvrir l'écran `/clm/admin/sso`
+18. Saisir « Groupe (identifiant ou nom) » : `grp-e2e-${unique}`
+19. Choisir « Ajouter la correspondance » Rôle » : `LECTEUR`
+20. Activer « Ajouter la correspondance »
+21. Activer « Retirer — grp-e2e-${unique} » (button)
+22. Activer « Créer un jeton | Remplacer le jeton »
+23. Préparer par l'API : Administrateur jetable (futur compte de secours)
+24. Se connecter avec le compte `secours.${unique}@iq.example`
+25. Ouvrir l'écran `/clm/securite`
+26. Activer « Configurer le TOTP »
+27. Relever le texte affiché (`code`) sous le nom `secretTotp`
+28. Saisir le code TOTP courant dans « Code de confirmation »
+29. Activer « Activer »
+30. Ouvrir l'écran `/clm/admin/sso`
+31. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
+32. Activer « Réserver aux comptes de secours »
+33. Activer « Ouvrir à tous les comptes »
+34. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
 
 ### E2E-IQ-18 — Conservation par type, gel légal, exportation en lot, relevé d'utilisation
 
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-C-66, IQ-A-21, IQ-A-11, IQ-A-22
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
@@ -2099,12 +6275,131 @@
 
 - **Source** : 1.4.12
 - **Conformité déclarée** : ✅🆕
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-03 — Séparation des responsabilités : l'auteur ne publie pas son propre modèle ; un administrateur le renvoie en brouillon
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-67, IQ-D-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (6 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Auteur CB ${unique}` ; « Corps du contrat » : `Lettre d'entente. {{clauses}}`
+4. Activer « Enregistrer le brouillon »
+5. Voir « Brouillon enregistré. »
+6. Activer « Soumettre à publication »
+7. Voir « soumis à publication »
+8. Ouvrir l'écran `/clm/modeles`
+9. Dans la ligne « Auteur CB ${unique} », activer « Publier »
+10. Voir « l'auteur ne publie pas son propre modèle »
+11. Se connecter en tant que administration principale IQ
+12. Ouvrir l'écran `/clm/modeles`
+13. Dans la ligne « Auteur CB ${unique} », activer « Renvoyer en brouillon »
+14. Voir « « Auteur CB ${unique} » renvoyé en brouillon. »
+
+### E2E-CB-IQ-08 — Attribution par groupe : l'administration crée le groupe et y place le validateur, qui reçoit l'étape
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-19, IQ-C-67, IQ-D-05
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (21 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/groupes`
+2. Saisir « Nouveau groupe » Code » : `JUR_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Juridique ${unique}`
+3. Activer « Créer le groupe »
+4. Choisir « Ajouter un membre au groupe JUR_${UNIQUE} » Membre » : `validateur@iq.example`
+5. Dans la section « Ajouter un membre au groupe JUR_${UNIQUE} », activer « Ajouter »
+6. Voir « validateur@iq.example »
+7. Se connecter en tant que initiateur IQ
+8. Ouvrir l'écran `/clm/trousses/nouvelle`
+9. Saisir « Titre » : `Groupe CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-GRP`
+10. Activer « Enregistrer le brouillon »
+11. Activer « Continuer »
+12. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+13. Voir « entente-${unique}.pdf »
+14. Activer « Continuer »
+15. Activer « Continuer »
+16. Activer « Ajouter une étape »
+17. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+18. Choisir « Type » : `VALIDATION`
+19. Activer « Affecter un groupe »
+20. Saisir « Responsable 1 » : `JUR_${UNIQUE}`
+21. Activer « Tester le parcours »
+22. Voir « Parcours valide. »
+23. Activer « Enregistrer »
+24. Activer « Continuer »
+25. Activer « Lancer le parcours »
+26. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+27. Se connecter en tant que validateur IQ
+28. Ouvrir l'écran `/clm/taches`
+29. Activer « Traiter — CB${UNIQUE}-GRP Validation juridique »
+30. Activer « Valider »
+31. Voir « Décision enregistrée »
+
+### E2E-CB-IQ-14 — Modèle partagé avec un seul groupe : ses membres le voient, les autres non
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-33, IQ-C-67
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (9 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/groupes`
+2. Saisir « Nouveau groupe » Code » : `PRT_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Partage ${unique}`
+3. Activer « Créer le groupe »
+4. Choisir « Ajouter un membre au groupe PRT_${UNIQUE} » Membre » : `validateur@iq.example`
+5. Dans la section « Ajouter un membre au groupe PRT_${UNIQUE} », activer « Ajouter »
+6. Se connecter en tant que administration d'affaires IQ
+7. Ouvrir l'écran `/clm/modeles`
+8. Activer « Créer un modèle »
+9. Saisir « Nom » : `Partagé CB ${unique}` ; « Corps du contrat » : `Convention réservée au groupe. {{clauses}}` ; « Partage par groupes » : `PRT_${UNIQUE}`
+10. Activer « Enregistrer le brouillon »
+11. Voir « Brouillon enregistré. »
+12. Activer « Soumettre à publication »
+13. Voir « soumis à publication »
+14. Se connecter en tant que administration principale IQ
+15. Ouvrir l'écran `/clm/modeles`
+16. Dans la ligne « Partagé CB ${unique} », activer « Publier »
+17. Voir « Partagé avec : PRT_${UNIQUE} »
+18. Se connecter en tant que validateur IQ
+19. Ouvrir l'écran `/clm/modeles`
+20. Voir « Partagé CB ${unique} »
+21. Se connecter en tant que initiateur IQ
+22. Ouvrir l'écran `/clm/modeles`
+23. Ne pas voir « Partagé CB ${unique} »
+
+### E2E-CB-IQ-19 — Séparation des rôles : l'auditeur consulte une trousse sans pouvoir agir, l'administration technique n'accède pas aux trousses
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-67, IQ-D-15, IQ-D-16, IQ-D-17, IQ-A-26
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (3 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Rôles CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-ROL`
+3. Activer « Enregistrer le brouillon »
+4. Voir « CB${UNIQUE}-ROL »
+5. Se connecter en tant que auditeur IQ
+6. Ouvrir l'écran `/clm/trousses`
+7. Activer « Ouvrir le détail de CB${UNIQUE}-ROL » (link)
+8. Voir « Rôles CB ${unique} »
+9. Ne pas voir « Lancer le parcours », « Annuler la trousse »
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+11. Se connecter en tant que administration technique IQ
+12. Ouvrir l'écran `/clm/trousses`
+13. Ne pas voir « CB${UNIQUE}-ROL »
 
 ### E2E-IQ-25 — Moindre privilège : administrations séparées, auditeur en lecture seule
 
 - **Profil** : administration principale IQ
 - **Exigences démontrées** : IQ-D-15, IQ-D-16, IQ-D-17, IQ-A-26, IQ-C-67
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.acces.administrations`
@@ -2119,6 +6414,7 @@
 - **Profil** : administration principale IQ
 - **Exigences démontrées** : IQ-D-05, IQ-D-18, IQ-C-67
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.acces.comptes`
@@ -2136,12 +6432,14 @@
 
 - **Source** : 1.7.1
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-19 — API d'intégration : client, jeton, création de trousse par un système
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-A-01, IQ-A-02, IQ-C-06, IQ-C-16, IQ-C-69, IQ-D-12, IQ-D-26, IQ-D-27, IQ-D-28, IQ-A-07, IQ-C-03
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.integration.api`
@@ -2159,12 +6457,198 @@
 
 - **Source** : 3.1.1
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-01 — Modèle créé et configuré à l'écran, soumis, publié par une autre administration, puis utilisé en signature en lot (un dossier sans téléphone échoue seul)
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-32, IQ-C-35, IQ-C-11, IQ-A-03, IQ-D-06, IQ-A-02, IQ-D-01, IQ-D-02
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (22 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Voir « Nouveau modèle »
+4. Saisir « Nom » : `Entente CB ${unique}`
+5. Choisir « Catégorie » : `(premier)`
+6. Saisir « Corps du contrat » : `Entente avec {{beneficiaire}} pour un montant de {{montant}} $. {{clauses}}`
+7. Activer « Ajouter un champ »
+8. Saisir « Nom technique » : `beneficiaire` ; « Libellé » : `Bénéficiaire`
+9. Cocher « Obligatoire »
+10. Choisir « Source Salesforce » : `Demandeur`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant` ; « Format (expression régulière) » : `^[0-9]+$`
+13. Activer « Ajouter une clause »
+14. Saisir « Titre » : `Versement` ; « Texte » : `Le montant est versé en un seul paiement.`
+15. Activer « Enregistrer le brouillon »
+16. Voir « Brouillon enregistré. »
+17. Saisir « Bénéficiaire » : `Entreprise Essai inc.` ; « Montant » : `25000`
+18. Activer « Tester la règle »
+19. Voir « Entente avec Entreprise Essai inc. pour un montant de 25000 $ »
+20. Activer « Vérifier »
+21. Voir « Modèle valide. »
+22. Activer « Soumettre à publication »
+23. Voir « soumis à publication »
+24. Se connecter en tant que administration principale IQ
+25. Ouvrir l'écran `/clm/modeles`
+26. Dans la ligne « Entente CB ${unique} », activer « Publier »
+27. Voir « « Entente CB ${unique} » publié. »
+28. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+29. Se connecter en tant que initiateur IQ
+30. Ouvrir l'écran `/clm/lots`
+31. Saisir « Libellé du lot » : `Lot CB ${unique}`
+32. Choisir « Modèle de contrat » : `Entente CB ${unique}` ; « Première colonne » : `Numéro de dossier Salesforce`
+33. Saisir « Dossiers, un par ligne » : `DEM-2026-0001;Jeanne Tremblay;jeanne.tremblay@exemple.ca;+15145550101
+DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
+34. Voir « 2 dossier(s) dans le lot. »
+35. Activer « Créer le lot »
+36. Voir « Lot « Lot CB ${unique} » : 1 trousse(s) créée(s), 1 échec(s). »
+37. Voir « DEM-2026-0001 »
+38. Voir « téléphone requis pour la vérification par SMS »
+39. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-CB-IQ-15 — Champs d'un modèle : liste, date, case à cocher, zone de signature positionnée pour un rôle, clause conditionnelle vérifiée par l'essai
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-34, IQ-C-35, IQ-C-36, IQ-C-37, IQ-C-38, IQ-D-01, IQ-S-01
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Champs CB ${unique}` ; « Corps du contrat » : `Programme {{programme}} à compter du {{debut}}. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `programme` ; « Libellé » : `Programme`
+6. Choisir « Type » : `LISTE`
+7. Saisir « Options (séparées par des virgules) » : `ESSOR, IMPULSION`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `debut` ; « Libellé » : `Date de début`
+10. Choisir « Type » : `DATE`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `garantie` ; « Libellé » : `Garantie exigée`
+13. Choisir « Type » : `CASE`
+14. Activer « Ajouter un champ »
+15. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+16. Choisir « Type » : `SIGNATURE`
+17. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+18. Activer « Positionner sur le document »
+19. Saisir « Haut (%) » : `75`
+20. Voir « Zone de signature », « Premier signataire »
+21. Activer « Ajouter une clause »
+22. Saisir « Titre » : `Garantie` ; « Texte » : `Le bénéficiaire fournit une garantie de prêt.`
+23. Choisir « Garantie » Si le champ » : `garantie`
+24. Choisir « Garantie » Opérateur » : `EGAL`
+25. Saisir « Garantie » Valeur » : `true`
+26. Activer « Enregistrer le brouillon »
+27. Voir « Brouillon enregistré. »
+28. Activer « Vérifier »
+29. Voir « Modèle valide. »
+30. Saisir « Programme » : `ESSOR` ; « Date de début » : `2026-12-01` ; « Garantie exigée » : `true`
+31. Activer « Tester la règle »
+32. Voir « Clauses retenues : clause1 », « Le bénéficiaire fournit une garantie de prêt. »
+33. Saisir « Garantie exigée » : `false`
+34. Activer « Tester la règle »
+35. Voir « Clauses retenues : — »
+36. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-IQ-33 — Générer le contrat d'un modèle publié, valeurs préremplies depuis Salesforce et corrigeables
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-D-01, IQ-D-02, IQ-A-06, IQ-A-17, IQ-A-18, IQ-C-56
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.generation.salesforce`
@@ -2178,12 +6662,153 @@
 
 - **Source** : 3.1.1
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-01 — Modèle créé et configuré à l'écran, soumis, publié par une autre administration, puis utilisé en signature en lot (un dossier sans téléphone échoue seul)
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-32, IQ-C-35, IQ-C-11, IQ-A-03, IQ-D-06, IQ-A-02, IQ-D-01, IQ-D-02
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (22 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Voir « Nouveau modèle »
+4. Saisir « Nom » : `Entente CB ${unique}`
+5. Choisir « Catégorie » : `(premier)`
+6. Saisir « Corps du contrat » : `Entente avec {{beneficiaire}} pour un montant de {{montant}} $. {{clauses}}`
+7. Activer « Ajouter un champ »
+8. Saisir « Nom technique » : `beneficiaire` ; « Libellé » : `Bénéficiaire`
+9. Cocher « Obligatoire »
+10. Choisir « Source Salesforce » : `Demandeur`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant` ; « Format (expression régulière) » : `^[0-9]+$`
+13. Activer « Ajouter une clause »
+14. Saisir « Titre » : `Versement` ; « Texte » : `Le montant est versé en un seul paiement.`
+15. Activer « Enregistrer le brouillon »
+16. Voir « Brouillon enregistré. »
+17. Saisir « Bénéficiaire » : `Entreprise Essai inc.` ; « Montant » : `25000`
+18. Activer « Tester la règle »
+19. Voir « Entente avec Entreprise Essai inc. pour un montant de 25000 $ »
+20. Activer « Vérifier »
+21. Voir « Modèle valide. »
+22. Activer « Soumettre à publication »
+23. Voir « soumis à publication »
+24. Se connecter en tant que administration principale IQ
+25. Ouvrir l'écran `/clm/modeles`
+26. Dans la ligne « Entente CB ${unique} », activer « Publier »
+27. Voir « « Entente CB ${unique} » publié. »
+28. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+29. Se connecter en tant que initiateur IQ
+30. Ouvrir l'écran `/clm/lots`
+31. Saisir « Libellé du lot » : `Lot CB ${unique}`
+32. Choisir « Modèle de contrat » : `Entente CB ${unique}` ; « Première colonne » : `Numéro de dossier Salesforce`
+33. Saisir « Dossiers, un par ligne » : `DEM-2026-0001;Jeanne Tremblay;jeanne.tremblay@exemple.ca;+15145550101
+DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
+34. Voir « 2 dossier(s) dans le lot. »
+35. Activer « Créer le lot »
+36. Voir « Lot « Lot CB ${unique} » : 1 trousse(s) créée(s), 1 échec(s). »
+37. Voir « DEM-2026-0001 »
+38. Voir « téléphone requis pour la vérification par SMS »
+39. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-IQ-33 — Générer le contrat d'un modèle publié, valeurs préremplies depuis Salesforce et corrigeables
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-D-01, IQ-D-02, IQ-A-06, IQ-A-17, IQ-A-18, IQ-C-56
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.generation.salesforce`
@@ -2197,12 +6822,45 @@
 
 - **Source** : 3.1.1
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-47, IQ-C-50, IQ-D-03, IQ-D-09
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (14 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Documents CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-DOC`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « convention-25Mo-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « convention-25Mo-${unique}.pdf »
+7. Joindre « annexe-${unique}.docx » au champ « Téléverser un document »
+8. Voir « annexe-${unique}.docx »
+9. Activer « Remplacer par une nouvelle version — annexe-${unique}.docx » (button)
+10. Joindre « annexe-v2-${unique}.docx » au champ « Fichier »
+11. Saisir « Motif » : `Montant corrigé`
+12. Activer « Remplacer »
+13. Voir « annexe-v2-${unique}.docx »
+14. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+15. Ouvrir l'écran `/clm/trousses`
+16. Activer « Ouvrir le détail de CB${UNIQUE}-DOC » (link)
+17. Activer « Historique » (tab)
+18. Voir « Nouvelle version »
+19. Activer « Documents (2) » (tab)
+20. Activer « Versions — annexe-v2-${unique}.docx » (button)
+21. Activer « Consulter les métadonnées — version 2 » (button)
+22. Voir « Montant corrigé », « v2 »
 
 ### E2E-IQ-01 — Créer une trousse, déposer documents et annexes, inviter un participant externe
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-50, IQ-D-03, IQ-D-09, IQ-S-01, IQ-C-42, IQ-C-57
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.trousse.creation`
@@ -2215,12 +6873,276 @@
 
 - **Source** : 3.1.1
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-04 — Circuit séquentiel saisi à l'écran : validation puis approbation, décisions commentées et historisées, suivi de l'état
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-D-08, IQ-D-09, IQ-S-02, IQ-S-03
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Circuit CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SEQ`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `a1` ; « Libellé » : `Approbation`
+16. Choisir « Type » : `APPROBATION`
+17. Activer « Ajouter un responsable »
+18. Saisir « Responsable 1 » : `approbateur@iq.example`
+19. Activer « Tester le parcours »
+20. Voir « Parcours valide. »
+21. Activer « Enregistrer »
+22. Activer « Continuer »
+23. Activer « Lancer le parcours »
+24. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+25. Activer « Parcours » (tab)
+26. Voir « Validation juridique »
+27. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+28. Se connecter en tant que validateur IQ
+29. Ouvrir l'écran `/clm/taches`
+30. Activer « Traiter — CB${UNIQUE}-SEQ Validation juridique »
+31. Saisir « Commentaire » : `Clauses conformes au programme`
+32. Activer « Valider »
+33. Voir « Décision enregistrée »
+34. Se connecter en tant que approbateur IQ
+35. Ouvrir l'écran `/clm/taches`
+36. Activer « Traiter — CB${UNIQUE}-SEQ Approbation »
+37. Saisir « Commentaire » : `Approuvé selon la délégation`
+38. Activer « Approuver »
+39. Voir « Décision enregistrée : approuvé. »
+40. Se connecter en tant que initiateur IQ
+41. Ouvrir l'écran `/clm/suivi`
+42. Voir « CB${UNIQUE}-SEQ »
+43. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+44. Ouvrir l'écran `/clm/trousses`
+45. Voir « Terminée »
+46. Activer « Ouvrir le détail de CB${UNIQUE}-SEQ » (link)
+47. Activer « Historique » (tab)
+48. Voir « Clauses conformes au programme », « Approuvé selon la délégation »
+
+### E2E-CB-IQ-05 — Validations en parallèle : un validateur rejette en motivant, la trousse est rejetée
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-18, IQ-C-22, IQ-C-23, IQ-D-04, IQ-S-09
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (26 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Parallèle CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-PAR`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `v2` ; « Libellé » : `Validation financière`
+16. Choisir « Type » : `VALIDATION`
+17. Saisir « Phase » : `1`
+18. Activer « Ajouter un responsable »
+19. Saisir « Responsable 1 » : `approbateur@iq.example`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Se connecter en tant que validateur IQ
+27. Ouvrir l'écran `/clm/taches`
+28. Activer « Traiter — CB${UNIQUE}-PAR Validation juridique »
+29. Activer « Rejeter »
+30. Voir « Un motif est obligatoire »
+31. Saisir « Commentaire » : `Montant hors programme`
+32. Activer « Rejeter »
+33. Voir « Décision enregistrée : rejeté. »
+34. Se connecter en tant que initiateur IQ
+35. Ouvrir l'écran `/clm/trousses`
+36. Activer « Ouvrir le détail de CB${UNIQUE}-PAR » (link)
+37. Voir « Rejetée »
+
+### E2E-CB-IQ-09 — Signature séquentielle de deux signataires internes : le second n'est sollicité qu'après le premier
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-26, IQ-C-29, IQ-C-54, IQ-D-04
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (49 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Séquentielle CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SSQ`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Saisir « Nom » : `Sophie Roy` ; « Courriel » : `approbateur@iq.example` ; « Téléphone » : `+15145550190`
+14. Choisir « Rôle dans le contrat » : `SIGNATAIRE_2`
+15. Décocher « Externe »
+16. Activer « Ajouter un signataire »
+17. Voir « Sophie Roy »
+18. Activer « Continuer »
+19. Activer « Ajouter une étape »
+20. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+21. Choisir « Type » : `SIGNATURE`
+22. Activer « Ajouter un responsable »
+23. Choisir « Type du responsable 1 » : `PARTICIPANT`
+24. Choisir « Responsable 1 » : `Étienne Côté`
+25. Activer « Ajouter une étape »
+26. Saisir « Clé » : `s2` ; « Libellé » : `Signature cosignataire`
+27. Choisir « Type » : `SIGNATURE`
+28. Activer « Ajouter un responsable »
+29. Choisir « Type du responsable 1 » : `PARTICIPANT`
+30. Choisir « Responsable 1 » : `Sophie Roy`
+31. Activer « Tester le parcours »
+32. Voir « Parcours valide. »
+33. Activer « Enregistrer »
+34. Activer « Continuer »
+35. Activer « Lancer le parcours »
+36. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+37. Se connecter en tant que approbateur IQ
+38. Ouvrir l'écran `/clm/taches`
+39. Ne pas voir « CB${UNIQUE}-SSQ »
+40. Se connecter en tant que signataire interne IQ
+41. Ouvrir l'écran `/clm/taches`
+42. Activer « Traiter — CB${UNIQUE}-SSQ Signature IQ »
+43. Activer « Signer maintenant »
+44. Arriver sur une adresse de la forme `/portail/`
+45. Activer « Recevoir mon code »
+46. Voir « Code envoyé. »
+47. Préparer par l'API : Code reçu par courriel
+48. Saisir « Code de vérification » : `${code}`
+49. Activer « Vérifier mon identité »
+50. Activer « Lire / télécharger »
+51. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+52. Saisir « Votre nom complet » : `Étienne Côté`
+53. Activer « Signer »
+54. Voir « Merci, votre signature est enregistrée »
+55. Se connecter en tant que approbateur IQ
+56. Ouvrir l'écran `/clm/taches`
+57. Activer « Traiter — CB${UNIQUE}-SSQ Signature cosignataire »
+58. Activer « Signer maintenant »
+59. Arriver sur une adresse de la forme `/portail/`
+60. Activer « Recevoir mon code »
+61. Voir « Code envoyé. »
+62. Préparer par l'API : Code reçu par courriel
+63. Saisir « Code de vérification » : `${code}`
+64. Activer « Vérifier mon identité »
+65. Activer « Lire / télécharger »
+66. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+67. Saisir « Votre nom complet » : `Sophie Roy`
+68. Activer « Signer »
+69. Voir « Merci, votre signature est enregistrée »
+70. Se connecter en tant que initiateur IQ
+71. Ouvrir l'écran `/clm/trousses`
+72. Activer « Ouvrir le détail de CB${UNIQUE}-SSQ » (link)
+73. Voir « Terminée »
+74. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-CB-IQ-10 — Signature parallèle : les deux signataires sont sollicités en même temps
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-26, IQ-C-28, IQ-C-54, IQ-D-04
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (49 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Parallèle sig CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SPA`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Saisir « Nom » : `Sophie Roy` ; « Courriel » : `approbateur@iq.example` ; « Téléphone » : `+15145550190`
+14. Choisir « Rôle dans le contrat » : `SIGNATAIRE_2`
+15. Décocher « Externe »
+16. Activer « Ajouter un signataire »
+17. Voir « Sophie Roy »
+18. Activer « Continuer »
+19. Activer « Ajouter une étape »
+20. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+21. Choisir « Type » : `SIGNATURE`
+22. Activer « Ajouter un responsable »
+23. Choisir « Type du responsable 1 » : `PARTICIPANT`
+24. Choisir « Responsable 1 » : `Étienne Côté`
+25. Activer « Ajouter une étape »
+26. Saisir « Clé » : `s2` ; « Libellé » : `Signature cosignataire`
+27. Choisir « Type » : `SIGNATURE`
+28. Saisir « Phase » : `1`
+29. Activer « Ajouter un responsable »
+30. Choisir « Type du responsable 1 » : `PARTICIPANT`
+31. Choisir « Responsable 1 » : `Sophie Roy`
+32. Activer « Tester le parcours »
+33. Voir « Parcours valide. »
+34. Activer « Enregistrer »
+35. Activer « Continuer »
+36. Activer « Lancer le parcours »
+37. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+38. Se connecter en tant que approbateur IQ
+39. Ouvrir l'écran `/clm/taches`
+40. Activer « Traiter — CB${UNIQUE}-SPA Signature cosignataire »
+41. Activer « Signer maintenant »
+42. Arriver sur une adresse de la forme `/portail/`
+43. Activer « Recevoir mon code »
+44. Voir « Code envoyé. »
+45. Préparer par l'API : Code reçu par courriel
+46. Saisir « Code de vérification » : `${code}`
+47. Activer « Vérifier mon identité »
+48. Activer « Lire / télécharger »
+49. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+50. Saisir « Votre nom complet » : `Sophie Roy`
+51. Activer « Signer »
+52. Voir « Merci, votre signature est enregistrée »
+53. Se connecter en tant que signataire interne IQ
+54. Ouvrir l'écran `/clm/taches`
+55. Activer « Traiter — CB${UNIQUE}-SPA Signature IQ »
+56. Activer « Signer maintenant »
+57. Arriver sur une adresse de la forme `/portail/`
+58. Activer « Recevoir mon code »
+59. Voir « Code envoyé. »
+60. Préparer par l'API : Code reçu par courriel
+61. Saisir « Code de vérification » : `${code}`
+62. Activer « Vérifier mon identité »
+63. Activer « Lire / télécharger »
+64. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+65. Saisir « Votre nom complet » : `Étienne Côté`
+66. Activer « Signer »
+67. Voir « Merci, votre signature est enregistrée »
 
 ### E2E-IQ-06 — Parcours de validation puis d'approbation, décisions tracées
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-S-02, IQ-S-03, IQ-S-09, IQ-C-52
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.validation-approbation`
@@ -2235,12 +7157,94 @@
 
 - **Source** : 3.1.1
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-07 — Réassignation en cours de processus : l'étape passe à un autre intervenant sans redémarrer le parcours
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-20, IQ-C-21, IQ-C-55, IQ-D-05, IQ-S-05
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (21 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Réassignation CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-REA`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Tester le parcours »
+15. Voir « Parcours valide. »
+16. Activer « Enregistrer »
+17. Activer « Continuer »
+18. Activer « Lancer le parcours »
+19. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+20. Activer « Parcours » (tab)
+21. Activer l'élément « Réassigner, ajouter ou retirer des intervenants — Validation juridique » (ligne ou carte cliquable)
+22. Saisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `approbateur@iq.example` ; « Assignation par utilisateur, groupe ou règle » Motif » : `Validateur en congé`
+23. Dans la section « Assignation par utilisateur, groupe ou règle », activer « Enregistrer »
+24. Se connecter en tant que validateur IQ
+25. Ouvrir l'écran `/clm/taches`
+26. Ne pas voir « CB${UNIQUE}-REA »
+27. Se connecter en tant que approbateur IQ
+28. Ouvrir l'écran `/clm/taches`
+29. Activer « Traiter — CB${UNIQUE}-REA Validation juridique »
+30. Activer « Valider »
+31. Voir « Décision enregistrée »
+
+### E2E-CB-IQ-08 — Attribution par groupe : l'administration crée le groupe et y place le validateur, qui reçoit l'étape
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-19, IQ-C-67, IQ-D-05
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (21 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/groupes`
+2. Saisir « Nouveau groupe » Code » : `JUR_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Juridique ${unique}`
+3. Activer « Créer le groupe »
+4. Choisir « Ajouter un membre au groupe JUR_${UNIQUE} » Membre » : `validateur@iq.example`
+5. Dans la section « Ajouter un membre au groupe JUR_${UNIQUE} », activer « Ajouter »
+6. Voir « validateur@iq.example »
+7. Se connecter en tant que initiateur IQ
+8. Ouvrir l'écran `/clm/trousses/nouvelle`
+9. Saisir « Titre » : `Groupe CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-GRP`
+10. Activer « Enregistrer le brouillon »
+11. Activer « Continuer »
+12. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+13. Voir « entente-${unique}.pdf »
+14. Activer « Continuer »
+15. Activer « Continuer »
+16. Activer « Ajouter une étape »
+17. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+18. Choisir « Type » : `VALIDATION`
+19. Activer « Affecter un groupe »
+20. Saisir « Responsable 1 » : `JUR_${UNIQUE}`
+21. Activer « Tester le parcours »
+22. Voir « Parcours valide. »
+23. Activer « Enregistrer »
+24. Activer « Continuer »
+25. Activer « Lancer le parcours »
+26. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+27. Se connecter en tant que validateur IQ
+28. Ouvrir l'écran `/clm/taches`
+29. Activer « Traiter — CB${UNIQUE}-GRP Validation juridique »
+30. Activer « Valider »
+31. Voir « Décision enregistrée »
 
 ### E2E-IQ-08 — Étapes parallèles et réassignation d'une tâche
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-18, IQ-C-20, IQ-C-21, IQ-C-55, IQ-D-05, IQ-S-05
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.parallele-reassignation`
@@ -2255,6 +7259,7 @@
 - **Profil** : administration principale IQ
 - **Exigences démontrées** : IQ-D-05, IQ-D-18, IQ-C-67
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.acces.comptes`
@@ -2266,12 +7271,103 @@
 
 - **Source** : 3.1.1
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-01 — Modèle créé et configuré à l'écran, soumis, publié par une autre administration, puis utilisé en signature en lot (un dossier sans téléphone échoue seul)
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-32, IQ-C-35, IQ-C-11, IQ-A-03, IQ-D-06, IQ-A-02, IQ-D-01, IQ-D-02
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (22 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Voir « Nouveau modèle »
+4. Saisir « Nom » : `Entente CB ${unique}`
+5. Choisir « Catégorie » : `(premier)`
+6. Saisir « Corps du contrat » : `Entente avec {{beneficiaire}} pour un montant de {{montant}} $. {{clauses}}`
+7. Activer « Ajouter un champ »
+8. Saisir « Nom technique » : `beneficiaire` ; « Libellé » : `Bénéficiaire`
+9. Cocher « Obligatoire »
+10. Choisir « Source Salesforce » : `Demandeur`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant` ; « Format (expression régulière) » : `^[0-9]+$`
+13. Activer « Ajouter une clause »
+14. Saisir « Titre » : `Versement` ; « Texte » : `Le montant est versé en un seul paiement.`
+15. Activer « Enregistrer le brouillon »
+16. Voir « Brouillon enregistré. »
+17. Saisir « Bénéficiaire » : `Entreprise Essai inc.` ; « Montant » : `25000`
+18. Activer « Tester la règle »
+19. Voir « Entente avec Entreprise Essai inc. pour un montant de 25000 $ »
+20. Activer « Vérifier »
+21. Voir « Modèle valide. »
+22. Activer « Soumettre à publication »
+23. Voir « soumis à publication »
+24. Se connecter en tant que administration principale IQ
+25. Ouvrir l'écran `/clm/modeles`
+26. Dans la ligne « Entente CB ${unique} », activer « Publier »
+27. Voir « « Entente CB ${unique} » publié. »
+28. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+29. Se connecter en tant que initiateur IQ
+30. Ouvrir l'écran `/clm/lots`
+31. Saisir « Libellé du lot » : `Lot CB ${unique}`
+32. Choisir « Modèle de contrat » : `Entente CB ${unique}` ; « Première colonne » : `Numéro de dossier Salesforce`
+33. Saisir « Dossiers, un par ligne » : `DEM-2026-0001;Jeanne Tremblay;jeanne.tremblay@exemple.ca;+15145550101
+DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
+34. Voir « 2 dossier(s) dans le lot. »
+35. Activer « Créer le lot »
+36. Voir « Lot « Lot CB ${unique} » : 1 trousse(s) créée(s), 1 échec(s). »
+37. Voir « DEM-2026-0001 »
+38. Voir « téléphone requis pour la vérification par SMS »
+39. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-CB-IQ-02 — Un modèle vide ne peut être soumis à publication
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-32, IQ-D-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (3 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Voir « Nouveau modèle »
+4. Activer « Vérifier »
+5. Voir « Le corps du contrat est vide. »
+6. Activer « Soumettre à publication »
+7. Voir « Le corps du contrat est vide. »
+8. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-CB-IQ-03 — Séparation des responsabilités : l'auteur ne publie pas son propre modèle ; un administrateur le renvoie en brouillon
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-67, IQ-D-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (6 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Auteur CB ${unique}` ; « Corps du contrat » : `Lettre d'entente. {{clauses}}`
+4. Activer « Enregistrer le brouillon »
+5. Voir « Brouillon enregistré. »
+6. Activer « Soumettre à publication »
+7. Voir « soumis à publication »
+8. Ouvrir l'écran `/clm/modeles`
+9. Dans la ligne « Auteur CB ${unique} », activer « Publier »
+10. Voir « l'auteur ne publie pas son propre modèle »
+11. Se connecter en tant que administration principale IQ
+12. Ouvrir l'écran `/clm/modeles`
+13. Dans la ligne « Auteur CB ${unique} », activer « Renvoyer en brouillon »
+14. Voir « « Auteur CB ${unique} » renvoyé en brouillon. »
 
 ### E2E-IQ-03 — Cycle de vie d'un modèle : rédaction, soumission, publication, nouvelle version
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-32, IQ-C-33, IQ-C-34, IQ-C-35, IQ-C-36, IQ-C-37, IQ-C-38, IQ-D-06, IQ-C-17
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.modele.cycle`
@@ -2283,12 +7379,50 @@
 
 - **Source** : 3.1.1
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-12 — Notifications configurables : l'administration désactive puis réactive l'invitation à signer par courriel
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-40, IQ-C-24, IQ-C-58, IQ-D-07, IQ-S-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (4 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/notifications`
+2. Activer « Désactiver — Invitation à signer Courriel » (button)
+3. Voir « Message désactivé. »
+4. Activer « Activer — Invitation à signer Courriel » (button)
+5. Voir « Message activé. »
+6. Activer « Désactiver — Rappel de non-réponse Courriel » (button)
+7. Voir « Message désactivé. »
+8. Activer « Activer — Rappel de non-réponse Courriel » (button)
+9. Voir « Message activé. »
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-CB-IQ-13 — Rappels, copies et échéance réglés à la création d'une trousse, puis retrouvés au résumé
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-41, IQ-C-42, IQ-C-24, IQ-C-43, IQ-D-07, IQ-S-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (3 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Rappels CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-RAP` ; « Échéance » : `${dansUnMois}` ; « Destinataires en copie » : `direction.${unique}@iq.example, conformite.${unique}@iq.example` ; « Rappel tous les (jours) » : `3` ; « Nombre maximal de rappels » : `4`
+3. Activer « Enregistrer le brouillon »
+4. Voir « CB${UNIQUE}-RAP »
+5. Ouvrir l'écran `/clm/trousses`
+6. Activer « Ouvrir le détail de CB${UNIQUE}-RAP » (link)
+7. Voir « direction.${unique}@iq.example », « conformite.${unique}@iq.example »
+8. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-09 — Règles d'affaires : étape non requise selon les valeurs
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-19, IQ-A-25, IQ-D-07
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.regles`
@@ -2301,6 +7435,7 @@
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-C-24, IQ-C-40, IQ-C-41, IQ-S-06, IQ-D-07, IQ-C-58
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.notifications`
@@ -2312,12 +7447,71 @@
 
 - **Source** : 3.1.1
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-04 — Circuit séquentiel saisi à l'écran : validation puis approbation, décisions commentées et historisées, suivi de l'état
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-D-08, IQ-D-09, IQ-S-02, IQ-S-03
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Circuit CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SEQ`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `a1` ; « Libellé » : `Approbation`
+16. Choisir « Type » : `APPROBATION`
+17. Activer « Ajouter un responsable »
+18. Saisir « Responsable 1 » : `approbateur@iq.example`
+19. Activer « Tester le parcours »
+20. Voir « Parcours valide. »
+21. Activer « Enregistrer »
+22. Activer « Continuer »
+23. Activer « Lancer le parcours »
+24. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+25. Activer « Parcours » (tab)
+26. Voir « Validation juridique »
+27. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+28. Se connecter en tant que validateur IQ
+29. Ouvrir l'écran `/clm/taches`
+30. Activer « Traiter — CB${UNIQUE}-SEQ Validation juridique »
+31. Saisir « Commentaire » : `Clauses conformes au programme`
+32. Activer « Valider »
+33. Voir « Décision enregistrée »
+34. Se connecter en tant que approbateur IQ
+35. Ouvrir l'écran `/clm/taches`
+36. Activer « Traiter — CB${UNIQUE}-SEQ Approbation »
+37. Saisir « Commentaire » : `Approuvé selon la délégation`
+38. Activer « Approuver »
+39. Voir « Décision enregistrée : approuvé. »
+40. Se connecter en tant que initiateur IQ
+41. Ouvrir l'écran `/clm/suivi`
+42. Voir « CB${UNIQUE}-SEQ »
+43. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+44. Ouvrir l'écran `/clm/trousses`
+45. Voir « Terminée »
+46. Activer « Ouvrir le détail de CB${UNIQUE}-SEQ » (link)
+47. Activer « Historique » (tab)
+48. Voir « Clauses conformes au programme », « Approuvé selon la délégation »
 
 ### E2E-IQ-16 — Suivi centralisé des trousses et des échéances
 
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-C-43, IQ-C-25, IQ-D-08
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.suivi`
@@ -2329,12 +7523,102 @@
 
 - **Source** : 3.1.1
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-04 — Circuit séquentiel saisi à l'écran : validation puis approbation, décisions commentées et historisées, suivi de l'état
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-D-08, IQ-D-09, IQ-S-02, IQ-S-03
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Circuit CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SEQ`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `a1` ; « Libellé » : `Approbation`
+16. Choisir « Type » : `APPROBATION`
+17. Activer « Ajouter un responsable »
+18. Saisir « Responsable 1 » : `approbateur@iq.example`
+19. Activer « Tester le parcours »
+20. Voir « Parcours valide. »
+21. Activer « Enregistrer »
+22. Activer « Continuer »
+23. Activer « Lancer le parcours »
+24. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+25. Activer « Parcours » (tab)
+26. Voir « Validation juridique »
+27. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+28. Se connecter en tant que validateur IQ
+29. Ouvrir l'écran `/clm/taches`
+30. Activer « Traiter — CB${UNIQUE}-SEQ Validation juridique »
+31. Saisir « Commentaire » : `Clauses conformes au programme`
+32. Activer « Valider »
+33. Voir « Décision enregistrée »
+34. Se connecter en tant que approbateur IQ
+35. Ouvrir l'écran `/clm/taches`
+36. Activer « Traiter — CB${UNIQUE}-SEQ Approbation »
+37. Saisir « Commentaire » : `Approuvé selon la délégation`
+38. Activer « Approuver »
+39. Voir « Décision enregistrée : approuvé. »
+40. Se connecter en tant que initiateur IQ
+41. Ouvrir l'écran `/clm/suivi`
+42. Voir « CB${UNIQUE}-SEQ »
+43. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+44. Ouvrir l'écran `/clm/trousses`
+45. Voir « Terminée »
+46. Activer « Ouvrir le détail de CB${UNIQUE}-SEQ » (link)
+47. Activer « Historique » (tab)
+48. Voir « Clauses conformes au programme », « Approuvé selon la délégation »
+
+### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-47, IQ-C-50, IQ-D-03, IQ-D-09
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (14 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Documents CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-DOC`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « convention-25Mo-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « convention-25Mo-${unique}.pdf »
+7. Joindre « annexe-${unique}.docx » au champ « Téléverser un document »
+8. Voir « annexe-${unique}.docx »
+9. Activer « Remplacer par une nouvelle version — annexe-${unique}.docx » (button)
+10. Joindre « annexe-v2-${unique}.docx » au champ « Fichier »
+11. Saisir « Motif » : `Montant corrigé`
+12. Activer « Remplacer »
+13. Voir « annexe-v2-${unique}.docx »
+14. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+15. Ouvrir l'écran `/clm/trousses`
+16. Activer « Ouvrir le détail de CB${UNIQUE}-DOC » (link)
+17. Activer « Historique » (tab)
+18. Voir « Nouvelle version »
+19. Activer « Documents (2) » (tab)
+20. Activer « Versions — annexe-v2-${unique}.docx » (button)
+21. Activer « Consulter les métadonnées — version 2 » (button)
+22. Voir « Montant corrigé », « v2 »
 
 ### E2E-IQ-01 — Créer une trousse, déposer documents et annexes, inviter un participant externe
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-50, IQ-D-03, IQ-D-09, IQ-S-01, IQ-C-42, IQ-C-57
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.trousse.creation`
@@ -2347,12 +7631,79 @@
 
 - **Source** : 3.1.1
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-18 — Dossier de preuve d'une trousse signée : intégrité vérifiée, signatures et consentements consultés, certificat et dossier complet exportés ; journal d'audit filtré par trousse
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-63, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (37 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Preuve CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-PRV`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Activer « Continuer »
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+16. Choisir « Type » : `SIGNATURE`
+17. Activer « Ajouter un responsable »
+18. Choisir « Type du responsable 1 » : `PARTICIPANT`
+19. Choisir « Responsable 1 » : `Étienne Côté`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Se connecter en tant que signataire interne IQ
+27. Ouvrir l'écran `/clm/taches`
+28. Activer « Traiter — CB${UNIQUE}-PRV Signature IQ »
+29. Activer « Signer maintenant »
+30. Arriver sur une adresse de la forme `/portail/`
+31. Activer « Recevoir mon code »
+32. Voir « Code envoyé. »
+33. Préparer par l'API : Code reçu par courriel
+34. Saisir « Code de vérification » : `${code}`
+35. Activer « Vérifier mon identité »
+36. Activer « Lire / télécharger »
+37. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+38. Saisir « Votre nom complet » : `Étienne Côté`
+39. Activer « Signer »
+40. Voir « Merci, votre signature est enregistrée »
+41. Se connecter en tant que initiateur IQ
+42. Ouvrir l'écran `/clm/trousses`
+43. Activer « Ouvrir le détail de CB${UNIQUE}-PRV » (link)
+44. Activer « Preuve » (tab)
+45. Activer « Vérifier l’intégrité »
+46. Voir « Intégrité confirmée : journal, documents et attestations intacts. »
+47. Voir « Identités, consentements et signatures », « Étienne Côté »
+48. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+49. Télécharger par « Exporter le dossier complet (ZIP) » et obtenir un fichier non vide
+50. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+51. Se connecter en tant que administration principale IQ
+52. Ouvrir l'écran `/clm/admin/journal`
+53. Saisir « Trousse (référence) » : `CB${UNIQUE}-PRV`
+54. Activer « Rechercher #2 »
+55. Voir « Trousse créée », « Document ajouté »
+56. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
 
 ### E2E-IQ-17 — Dossier de preuve consulté, vérifié, exporté ; journal consulté et exporté
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10, IQ-A-29
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
@@ -2368,12 +7719,79 @@
 
 - **Source** : 3.1.1
 - **Conformité déclarée** : ✅🆕
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-18 — Dossier de preuve d'une trousse signée : intégrité vérifiée, signatures et consentements consultés, certificat et dossier complet exportés ; journal d'audit filtré par trousse
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-63, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (37 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Preuve CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-PRV`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Activer « Continuer »
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+16. Choisir « Type » : `SIGNATURE`
+17. Activer « Ajouter un responsable »
+18. Choisir « Type du responsable 1 » : `PARTICIPANT`
+19. Choisir « Responsable 1 » : `Étienne Côté`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Se connecter en tant que signataire interne IQ
+27. Ouvrir l'écran `/clm/taches`
+28. Activer « Traiter — CB${UNIQUE}-PRV Signature IQ »
+29. Activer « Signer maintenant »
+30. Arriver sur une adresse de la forme `/portail/`
+31. Activer « Recevoir mon code »
+32. Voir « Code envoyé. »
+33. Préparer par l'API : Code reçu par courriel
+34. Saisir « Code de vérification » : `${code}`
+35. Activer « Vérifier mon identité »
+36. Activer « Lire / télécharger »
+37. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+38. Saisir « Votre nom complet » : `Étienne Côté`
+39. Activer « Signer »
+40. Voir « Merci, votre signature est enregistrée »
+41. Se connecter en tant que initiateur IQ
+42. Ouvrir l'écran `/clm/trousses`
+43. Activer « Ouvrir le détail de CB${UNIQUE}-PRV » (link)
+44. Activer « Preuve » (tab)
+45. Activer « Vérifier l’intégrité »
+46. Voir « Intégrité confirmée : journal, documents et attestations intacts. »
+47. Voir « Identités, consentements et signatures », « Étienne Côté »
+48. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+49. Télécharger par « Exporter le dossier complet (ZIP) » et obtenir un fichier non vide
+50. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+51. Se connecter en tant que administration principale IQ
+52. Ouvrir l'écran `/clm/admin/journal`
+53. Saisir « Trousse (référence) » : `CB${UNIQUE}-PRV`
+54. Activer « Rechercher #2 »
+55. Voir « Trousse créée », « Document ajouté »
+56. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
 
 ### E2E-IQ-17 — Dossier de preuve consulté, vérifié, exporté ; journal consulté et exporté
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10, IQ-A-29
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
@@ -2389,12 +7807,14 @@
 
 - **Source** : 3.1.1
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-19 — API d'intégration : client, jeton, création de trousse par un système
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-A-01, IQ-A-02, IQ-C-06, IQ-C-16, IQ-C-69, IQ-D-12, IQ-D-26, IQ-D-27, IQ-D-28, IQ-A-07, IQ-C-03
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.integration.api`
@@ -2406,12 +7826,14 @@
 
 - **Source** : 3.3.1 A
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-34 — Consulter ses tâches et ses trousses sur téléphone, sans débordement ni violation d'accessibilité
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-53, IQ-S-08, IQ-D-13
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/taches`
@@ -2425,6 +7847,7 @@
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-D-21, IQ-D-22, IQ-D-23, IQ-A-15, IQ-D-13
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/admin/notifications`
@@ -2440,12 +7863,14 @@
 
 - **Source** : 3.3.1 B
 - **Conformité déclarée** : ✅🆕 — hors périmètre PCI : numéro de carte refusé à la frontière — ADR-022
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-31 — Aucune donnée de carte de paiement acceptée
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-D-14
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.cartes.pci`
@@ -2456,12 +7881,36 @@
 
 - **Source** : 3.3.2
 - **Conformité déclarée** : ✅🆕
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-19 — Séparation des rôles : l'auditeur consulte une trousse sans pouvoir agir, l'administration technique n'accède pas aux trousses
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-67, IQ-D-15, IQ-D-16, IQ-D-17, IQ-A-26
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (3 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Rôles CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-ROL`
+3. Activer « Enregistrer le brouillon »
+4. Voir « CB${UNIQUE}-ROL »
+5. Se connecter en tant que auditeur IQ
+6. Ouvrir l'écran `/clm/trousses`
+7. Activer « Ouvrir le détail de CB${UNIQUE}-ROL » (link)
+8. Voir « Rôles CB ${unique} »
+9. Ne pas voir « Lancer le parcours », « Annuler la trousse »
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+11. Se connecter en tant que administration technique IQ
+12. Ouvrir l'écran `/clm/trousses`
+13. Ne pas voir « CB${UNIQUE}-ROL »
 
 ### E2E-IQ-25 — Moindre privilège : administrations séparées, auditeur en lecture seule
 
 - **Profil** : administration principale IQ
 - **Exigences démontrées** : IQ-D-15, IQ-D-16, IQ-D-17, IQ-A-26, IQ-C-67
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.acces.administrations`
@@ -2475,12 +7924,36 @@
 
 - **Source** : 3.3.2
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-19 — Séparation des rôles : l'auditeur consulte une trousse sans pouvoir agir, l'administration technique n'accède pas aux trousses
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-67, IQ-D-15, IQ-D-16, IQ-D-17, IQ-A-26
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (3 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Rôles CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-ROL`
+3. Activer « Enregistrer le brouillon »
+4. Voir « CB${UNIQUE}-ROL »
+5. Se connecter en tant que auditeur IQ
+6. Ouvrir l'écran `/clm/trousses`
+7. Activer « Ouvrir le détail de CB${UNIQUE}-ROL » (link)
+8. Voir « Rôles CB ${unique} »
+9. Ne pas voir « Lancer le parcours », « Annuler la trousse »
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+11. Se connecter en tant que administration technique IQ
+12. Ouvrir l'écran `/clm/trousses`
+13. Ne pas voir « CB${UNIQUE}-ROL »
 
 ### E2E-IQ-25 — Moindre privilège : administrations séparées, auditeur en lecture seule
 
 - **Profil** : administration principale IQ
 - **Exigences démontrées** : IQ-D-15, IQ-D-16, IQ-D-17, IQ-A-26, IQ-C-67
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.acces.administrations`
@@ -2494,12 +7967,36 @@
 
 - **Source** : 3.3.2
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-19 — Séparation des rôles : l'auditeur consulte une trousse sans pouvoir agir, l'administration technique n'accède pas aux trousses
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-67, IQ-D-15, IQ-D-16, IQ-D-17, IQ-A-26
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (3 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Rôles CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-ROL`
+3. Activer « Enregistrer le brouillon »
+4. Voir « CB${UNIQUE}-ROL »
+5. Se connecter en tant que auditeur IQ
+6. Ouvrir l'écran `/clm/trousses`
+7. Activer « Ouvrir le détail de CB${UNIQUE}-ROL » (link)
+8. Voir « Rôles CB ${unique} »
+9. Ne pas voir « Lancer le parcours », « Annuler la trousse »
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+11. Se connecter en tant que administration technique IQ
+12. Ouvrir l'écran `/clm/trousses`
+13. Ne pas voir « CB${UNIQUE}-ROL »
 
 ### E2E-IQ-25 — Moindre privilège : administrations séparées, auditeur en lecture seule
 
 - **Profil** : administration principale IQ
 - **Exigences démontrées** : IQ-D-15, IQ-D-16, IQ-D-17, IQ-A-26, IQ-C-67
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.acces.administrations`
@@ -2513,12 +8010,68 @@
 
 - **Source** : 3.3.2
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-ECR-IQ-05 — L'administration du CLM : messages modifiés et testés, connexion Salesforce testée, relayée, configurée puis rétablie, client d'intégration créé puis révoqué, paramètres modifiés puis rétablis, groupe créé et garni puis supprimé, départ d'un employé transféré, journal filtré et exporté
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-16, IQ-C-30, IQ-C-15, IQ-C-40, IQ-D-18, IQ-A-26
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (32 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Compte jetable qui quitte l'organisation, avec une étape de validation ouverte à son nom
+2. Ouvrir l'écran `/clm/admin`
+3. Ouvrir l'écran `/clm/admin/notifications`
+4. Activer « Modifier »
+5. Saisir « Sujet » : `Invitation E2E ${unique}`
+6. Activer « Enregistrer »
+7. Saisir « Destinataire de test » : `test.${unique}@iq.example`
+8. Activer « Envoyer un test »
+9. Ouvrir l'écran `/clm/admin/integrations`
+10. Activer « Tester la connexion »
+11. Activer « Relayer maintenant »
+12. Activer « Configurer la connexion »
+13. Dans la section « Configurer la connexion », activer « Enregistrer »
+14. Activer « Configurer la connexion »
+15. Activer « Rétablir la connexion de la plateforme »
+16. Saisir « Nouveau client d’intégration » Nom » : `Client E2E ${unique}`
+17. Activer « Créer le client »
+18. Activer « J’ai copié les valeurs »
+19. Activer « Révoquer — Client E2E ${unique} » (button)
+20. Ouvrir l'écran `/clm/admin/parametres`
+21. Activer « Modifier un paramètre autorisé »
+22. Saisir « Rappel tous les (jours) » : `4`
+23. Activer « Enregistrer »
+24. Activer « Modifier un paramètre autorisé »
+25. Activer « Rétablir les paramètres de la plateforme »
+26. Ouvrir l'écran `/clm/admin/listes`
+27. Ouvrir l'écran `/clm/admin/groupes`
+28. Saisir « Nouveau groupe » Code » : `GRP_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Groupe écran ${unique}`
+29. Activer « Créer le groupe »
+30. Choisir « Ajouter un membre au groupe GRP_${UNIQUE} » Membre » : `initiateur@iq.example`
+31. Dans la section « Ajouter un membre au groupe GRP_${UNIQUE} », activer « Ajouter »
+32. Activer « Retirer initiateur@iq.example du groupe GRP_${UNIQUE} » (button)
+33. Activer « Supprimer le groupe GRP_${UNIQUE} » (button)
+34. Ouvrir l'écran `/clm/admin/departs`
+35. Saisir « Courriel de la personne qui part » : `depart.${unique}@iq.example`
+36. Activer « Consulter »
+37. Choisir « Personne qui reprend » : `(premier)`
+38. Activer « Transférer »
+39. Ouvrir l'écran `/clm/admin/journal`
+40. Saisir « Acteur » : `initiateur@iq.example`
+41. Activer « Rechercher #2 »
+42. Ouvrir l'écran `/clm/admin/audit`
+43. Ouvrir l'écran `/clm/options`
+44. Ouvrir l'écran `/clm/profil`
+45. Ouvrir l'écran `/clm/securite`
 
 ### E2E-IQ-26 — Comptes, groupes et rôles administrés
 
 - **Profil** : administration principale IQ
 - **Exigences démontrées** : IQ-D-05, IQ-D-18, IQ-C-67
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.acces.comptes`
@@ -2530,12 +8083,79 @@
 
 - **Source** : 3.3.2
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-18 — Dossier de preuve d'une trousse signée : intégrité vérifiée, signatures et consentements consultés, certificat et dossier complet exportés ; journal d'audit filtré par trousse
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-63, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (37 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Preuve CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-PRV`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Activer « Continuer »
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+16. Choisir « Type » : `SIGNATURE`
+17. Activer « Ajouter un responsable »
+18. Choisir « Type du responsable 1 » : `PARTICIPANT`
+19. Choisir « Responsable 1 » : `Étienne Côté`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Se connecter en tant que signataire interne IQ
+27. Ouvrir l'écran `/clm/taches`
+28. Activer « Traiter — CB${UNIQUE}-PRV Signature IQ »
+29. Activer « Signer maintenant »
+30. Arriver sur une adresse de la forme `/portail/`
+31. Activer « Recevoir mon code »
+32. Voir « Code envoyé. »
+33. Préparer par l'API : Code reçu par courriel
+34. Saisir « Code de vérification » : `${code}`
+35. Activer « Vérifier mon identité »
+36. Activer « Lire / télécharger »
+37. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+38. Saisir « Votre nom complet » : `Étienne Côté`
+39. Activer « Signer »
+40. Voir « Merci, votre signature est enregistrée »
+41. Se connecter en tant que initiateur IQ
+42. Ouvrir l'écran `/clm/trousses`
+43. Activer « Ouvrir le détail de CB${UNIQUE}-PRV » (link)
+44. Activer « Preuve » (tab)
+45. Activer « Vérifier l’intégrité »
+46. Voir « Intégrité confirmée : journal, documents et attestations intacts. »
+47. Voir « Identités, consentements et signatures », « Étienne Côté »
+48. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+49. Télécharger par « Exporter le dossier complet (ZIP) » et obtenir un fichier non vide
+50. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+51. Se connecter en tant que administration principale IQ
+52. Ouvrir l'écran `/clm/admin/journal`
+53. Saisir « Trousse (référence) » : `CB${UNIQUE}-PRV`
+54. Activer « Rechercher #2 »
+55. Voir « Trousse créée », « Document ajouté »
+56. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
 
 ### E2E-IQ-17 — Dossier de preuve consulté, vérifié, exporté ; journal consulté et exporté
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10, IQ-A-29
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
@@ -2551,12 +8171,14 @@
 
 - **Source** : 3.3.2
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-30 — Isolation des données entre organisations et modules
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-07, IQ-D-20
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.isolation`
@@ -2567,12 +8189,37 @@
 
 - **Source** : 3.3.3
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
+
+### E2E-CB-IQ-21 — Interfaces en français, offertes en anglais : l'utilisateur change de langue, la console d'administration reste en français
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-D-21, IQ-D-22, IQ-D-23, IQ-A-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/taches`
+2. Voir « Boîte de tâches »
+3. Passer l'interface en anglais
+4. Ouvrir l'écran `/clm/taches`
+5. Voir « Task inbox »
+6. Activer « My packages » (link)
+7. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+8. Passer l'interface en français
+9. Ouvrir l'écran `/clm/taches`
+10. Voir « Boîte de tâches »
+11. Se connecter en tant que administration principale IQ
+12. Ouvrir l'écran `/clm/admin/integrations`
+13. Voir « Intégrations API », « Journal des retours de statut »
+14. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-35 — Interfaces et console d'administration en français, offertes en anglais
 
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-D-21, IQ-D-22, IQ-D-23, IQ-A-15, IQ-D-13
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/admin/notifications`
@@ -2588,12 +8235,37 @@
 
 - **Source** : 3.3.3
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
+
+### E2E-CB-IQ-21 — Interfaces en français, offertes en anglais : l'utilisateur change de langue, la console d'administration reste en français
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-D-21, IQ-D-22, IQ-D-23, IQ-A-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/taches`
+2. Voir « Boîte de tâches »
+3. Passer l'interface en anglais
+4. Ouvrir l'écran `/clm/taches`
+5. Voir « Task inbox »
+6. Activer « My packages » (link)
+7. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+8. Passer l'interface en français
+9. Ouvrir l'écran `/clm/taches`
+10. Voir « Boîte de tâches »
+11. Se connecter en tant que administration principale IQ
+12. Ouvrir l'écran `/clm/admin/integrations`
+13. Voir « Intégrations API », « Journal des retours de statut »
+14. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-35 — Interfaces et console d'administration en français, offertes en anglais
 
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-D-21, IQ-D-22, IQ-D-23, IQ-A-15, IQ-D-13
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/admin/notifications`
@@ -2609,12 +8281,37 @@
 
 - **Source** : 3.3.3
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
+
+### E2E-CB-IQ-21 — Interfaces en français, offertes en anglais : l'utilisateur change de langue, la console d'administration reste en français
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-D-21, IQ-D-22, IQ-D-23, IQ-A-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/taches`
+2. Voir « Boîte de tâches »
+3. Passer l'interface en anglais
+4. Ouvrir l'écran `/clm/taches`
+5. Voir « Task inbox »
+6. Activer « My packages » (link)
+7. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+8. Passer l'interface en français
+9. Ouvrir l'écran `/clm/taches`
+10. Voir « Boîte de tâches »
+11. Se connecter en tant que administration principale IQ
+12. Ouvrir l'écran `/clm/admin/integrations`
+13. Voir « Intégrations API », « Journal des retours de statut »
+14. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-35 — Interfaces et console d'administration en français, offertes en anglais
 
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-D-21, IQ-D-22, IQ-D-23, IQ-A-15, IQ-D-13
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/admin/notifications`
@@ -2642,12 +8339,14 @@
 
 - **Source** : 3.3.5
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-19 — API d'intégration : client, jeton, création de trousse par un système
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-A-01, IQ-A-02, IQ-C-06, IQ-C-16, IQ-C-69, IQ-D-12, IQ-D-26, IQ-D-27, IQ-D-28, IQ-A-07, IQ-C-03
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.integration.api`
@@ -2659,12 +8358,14 @@
 
 - **Source** : 3.3.5
 - **Conformité déclarée** : ✅🆕
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-19 — API d'intégration : client, jeton, création de trousse par un système
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-A-01, IQ-A-02, IQ-C-06, IQ-C-16, IQ-C-69, IQ-D-12, IQ-D-26, IQ-D-27, IQ-D-28, IQ-A-07, IQ-C-03
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.integration.api`
@@ -2676,12 +8377,14 @@
 
 - **Source** : 3.3.6
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-19 — API d'intégration : client, jeton, création de trousse par un système
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-A-01, IQ-A-02, IQ-C-06, IQ-C-16, IQ-C-69, IQ-D-12, IQ-D-26, IQ-D-27, IQ-D-28, IQ-A-07, IQ-C-03
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.integration.api`
@@ -2693,12 +8396,14 @@
 
 - **Source** : 3.3.8
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-23 — Interfaces standards et documentées (OpenAPI, SCIM)
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-D-29, IQ-C-16
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.api.documentee`
@@ -2709,12 +8414,149 @@
 
 - **Source** : 7.3 sc. 1
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-15 — Champs d'un modèle : liste, date, case à cocher, zone de signature positionnée pour un rôle, clause conditionnelle vérifiée par l'essai
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-34, IQ-C-35, IQ-C-36, IQ-C-37, IQ-C-38, IQ-D-01, IQ-S-01
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Champs CB ${unique}` ; « Corps du contrat » : `Programme {{programme}} à compter du {{debut}}. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `programme` ; « Libellé » : `Programme`
+6. Choisir « Type » : `LISTE`
+7. Saisir « Options (séparées par des virgules) » : `ESSOR, IMPULSION`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `debut` ; « Libellé » : `Date de début`
+10. Choisir « Type » : `DATE`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `garantie` ; « Libellé » : `Garantie exigée`
+13. Choisir « Type » : `CASE`
+14. Activer « Ajouter un champ »
+15. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+16. Choisir « Type » : `SIGNATURE`
+17. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+18. Activer « Positionner sur le document »
+19. Saisir « Haut (%) » : `75`
+20. Voir « Zone de signature », « Premier signataire »
+21. Activer « Ajouter une clause »
+22. Saisir « Titre » : `Garantie` ; « Texte » : `Le bénéficiaire fournit une garantie de prêt.`
+23. Choisir « Garantie » Si le champ » : `garantie`
+24. Choisir « Garantie » Opérateur » : `EGAL`
+25. Saisir « Garantie » Valeur » : `true`
+26. Activer « Enregistrer le brouillon »
+27. Voir « Brouillon enregistré. »
+28. Activer « Vérifier »
+29. Voir « Modèle valide. »
+30. Saisir « Programme » : `ESSOR` ; « Date de début » : `2026-12-01` ; « Garantie exigée » : `true`
+31. Activer « Tester la règle »
+32. Voir « Clauses retenues : clause1 », « Le bénéficiaire fournit une garantie de prêt. »
+33. Saisir « Garantie exigée » : `false`
+34. Activer « Tester la règle »
+35. Voir « Clauses retenues : — »
+36. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-IQ-01 — Créer une trousse, déposer documents et annexes, inviter un participant externe
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-50, IQ-D-03, IQ-D-09, IQ-S-01, IQ-C-42, IQ-C-57
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.trousse.creation`
@@ -2727,12 +8569,71 @@
 
 - **Source** : 7.3 sc. 2
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-04 — Circuit séquentiel saisi à l'écran : validation puis approbation, décisions commentées et historisées, suivi de l'état
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-D-08, IQ-D-09, IQ-S-02, IQ-S-03
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Circuit CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SEQ`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `a1` ; « Libellé » : `Approbation`
+16. Choisir « Type » : `APPROBATION`
+17. Activer « Ajouter un responsable »
+18. Saisir « Responsable 1 » : `approbateur@iq.example`
+19. Activer « Tester le parcours »
+20. Voir « Parcours valide. »
+21. Activer « Enregistrer »
+22. Activer « Continuer »
+23. Activer « Lancer le parcours »
+24. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+25. Activer « Parcours » (tab)
+26. Voir « Validation juridique »
+27. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+28. Se connecter en tant que validateur IQ
+29. Ouvrir l'écran `/clm/taches`
+30. Activer « Traiter — CB${UNIQUE}-SEQ Validation juridique »
+31. Saisir « Commentaire » : `Clauses conformes au programme`
+32. Activer « Valider »
+33. Voir « Décision enregistrée »
+34. Se connecter en tant que approbateur IQ
+35. Ouvrir l'écran `/clm/taches`
+36. Activer « Traiter — CB${UNIQUE}-SEQ Approbation »
+37. Saisir « Commentaire » : `Approuvé selon la délégation`
+38. Activer « Approuver »
+39. Voir « Décision enregistrée : approuvé. »
+40. Se connecter en tant que initiateur IQ
+41. Ouvrir l'écran `/clm/suivi`
+42. Voir « CB${UNIQUE}-SEQ »
+43. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+44. Ouvrir l'écran `/clm/trousses`
+45. Voir « Terminée »
+46. Activer « Ouvrir le détail de CB${UNIQUE}-SEQ » (link)
+47. Activer « Historique » (tab)
+48. Voir « Clauses conformes au programme », « Approuvé selon la délégation »
 
 ### E2E-IQ-06 — Parcours de validation puis d'approbation, décisions tracées
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-S-02, IQ-S-03, IQ-S-09, IQ-C-52
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.validation-approbation`
@@ -2747,12 +8648,110 @@
 
 - **Source** : 7.3 sc. 3
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-04 — Circuit séquentiel saisi à l'écran : validation puis approbation, décisions commentées et historisées, suivi de l'état
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-D-08, IQ-D-09, IQ-S-02, IQ-S-03
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (29 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Circuit CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SEQ`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `a1` ; « Libellé » : `Approbation`
+16. Choisir « Type » : `APPROBATION`
+17. Activer « Ajouter un responsable »
+18. Saisir « Responsable 1 » : `approbateur@iq.example`
+19. Activer « Tester le parcours »
+20. Voir « Parcours valide. »
+21. Activer « Enregistrer »
+22. Activer « Continuer »
+23. Activer « Lancer le parcours »
+24. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+25. Activer « Parcours » (tab)
+26. Voir « Validation juridique »
+27. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+28. Se connecter en tant que validateur IQ
+29. Ouvrir l'écran `/clm/taches`
+30. Activer « Traiter — CB${UNIQUE}-SEQ Validation juridique »
+31. Saisir « Commentaire » : `Clauses conformes au programme`
+32. Activer « Valider »
+33. Voir « Décision enregistrée »
+34. Se connecter en tant que approbateur IQ
+35. Ouvrir l'écran `/clm/taches`
+36. Activer « Traiter — CB${UNIQUE}-SEQ Approbation »
+37. Saisir « Commentaire » : `Approuvé selon la délégation`
+38. Activer « Approuver »
+39. Voir « Décision enregistrée : approuvé. »
+40. Se connecter en tant que initiateur IQ
+41. Ouvrir l'écran `/clm/suivi`
+42. Voir « CB${UNIQUE}-SEQ »
+43. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+44. Ouvrir l'écran `/clm/trousses`
+45. Voir « Terminée »
+46. Activer « Ouvrir le détail de CB${UNIQUE}-SEQ » (link)
+47. Activer « Historique » (tab)
+48. Voir « Clauses conformes au programme », « Approuvé selon la délégation »
+
+### E2E-CB-IQ-06 — Retour pour correction : le validateur renvoie à l'initiateur avec un motif
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-22, IQ-C-55, IQ-S-03, IQ-S-09
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (20 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Correction CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-COR`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Tester le parcours »
+15. Voir « Parcours valide. »
+16. Activer « Enregistrer »
+17. Activer « Continuer »
+18. Activer « Lancer le parcours »
+19. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+20. Se connecter en tant que validateur IQ
+21. Ouvrir l'écran `/clm/taches`
+22. Activer « Traiter — CB${UNIQUE}-COR Validation juridique »
+23. Saisir « Commentaire » : `Annexe B manquante`
+24. Activer « Retourner pour correction »
+25. Voir « Trousse retournée pour correction. »
+26. Se connecter en tant que initiateur IQ
+27. Ouvrir l'écran `/clm/trousses`
+28. Activer « Ouvrir le détail de CB${UNIQUE}-COR » (link)
+29. Activer « Historique » (tab)
+30. Voir « Annexe B manquante »
 
 ### E2E-IQ-06 — Parcours de validation puis d'approbation, décisions tracées
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-S-02, IQ-S-03, IQ-S-09, IQ-C-52
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.validation-approbation`
@@ -2767,13 +8766,105 @@
 
 - **Source** : 7.3 sc. 4
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-IQ-11 — Signature externe : invitation, identité, consentement, signature, preuve
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ❌ échoué
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -2785,12 +8876,117 @@
 
 - **Source** : 7.3 sc. 5
 - **Conformité déclarée** : ✅🆕
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-07 — Réassignation en cours de processus : l'étape passe à un autre intervenant sans redémarrer le parcours
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-20, IQ-C-21, IQ-C-55, IQ-D-05, IQ-S-05
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (21 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Réassignation CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-REA`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Tester le parcours »
+15. Voir « Parcours valide. »
+16. Activer « Enregistrer »
+17. Activer « Continuer »
+18. Activer « Lancer le parcours »
+19. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+20. Activer « Parcours » (tab)
+21. Activer l'élément « Réassigner, ajouter ou retirer des intervenants — Validation juridique » (ligne ou carte cliquable)
+22. Saisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `approbateur@iq.example` ; « Assignation par utilisateur, groupe ou règle » Motif » : `Validateur en congé`
+23. Dans la section « Assignation par utilisateur, groupe ou règle », activer « Enregistrer »
+24. Se connecter en tant que validateur IQ
+25. Ouvrir l'écran `/clm/taches`
+26. Ne pas voir « CB${UNIQUE}-REA »
+27. Se connecter en tant que approbateur IQ
+28. Ouvrir l'écran `/clm/taches`
+29. Activer « Traiter — CB${UNIQUE}-REA Validation juridique »
+30. Activer « Valider »
+31. Voir « Décision enregistrée »
+
+### E2E-CB-IQ-11 — Signataire ajouté puis substitué en cours de processus, sans relancer la trousse
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-30, IQ-C-31, IQ-C-55, IQ-S-05
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (39 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Substitution CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SUB`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Activer « Continuer »
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+16. Choisir « Type » : `SIGNATURE`
+17. Activer « Ajouter un responsable »
+18. Choisir « Type du responsable 1 » : `PARTICIPANT`
+19. Choisir « Responsable 1 » : `Étienne Côté`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Activer « Participants (1) » (tab)
+27. Saisir « Nom » : `Sophie Roy` ; « Courriel » : `approbateur@iq.example` ; « Téléphone » : `+15145550190`
+28. Choisir « Rôle dans le contrat » : `SIGNATAIRE_2`
+29. Décocher « Externe »
+30. Activer « Ajouter un signataire »
+31. Voir « Sophie Roy »
+32. Activer « Parcours » (tab)
+33. Activer l'élément « Réassigner, ajouter ou retirer des intervenants — Signature IQ » (ligne ou carte cliquable)
+34. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `Sophie Roy`
+35. Saisir « Assignation par utilisateur, groupe ou règle » Motif » : `Signataire remplacé par délégation`
+36. Dans la section « Assignation par utilisateur, groupe ou règle », activer « Enregistrer »
+37. Se connecter en tant que signataire interne IQ
+38. Ouvrir l'écran `/clm/taches`
+39. Ne pas voir « CB${UNIQUE}-SUB »
+40. Se connecter en tant que approbateur IQ
+41. Ouvrir l'écran `/clm/taches`
+42. Activer « Traiter — CB${UNIQUE}-SUB Signature IQ »
+43. Activer « Signer maintenant »
+44. Arriver sur une adresse de la forme `/portail/`
+45. Activer « Recevoir mon code »
+46. Voir « Code envoyé. »
+47. Préparer par l'API : Code reçu par courriel
+48. Saisir « Code de vérification » : `${code}`
+49. Activer « Vérifier mon identité »
+50. Activer « Lire / télécharger »
+51. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+52. Saisir « Votre nom complet » : `Sophie Roy`
+53. Activer « Signer »
+54. Voir « Merci, votre signature est enregistrée »
 
 ### E2E-IQ-08 — Étapes parallèles et réassignation d'une tâche
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-18, IQ-C-20, IQ-C-21, IQ-C-55, IQ-D-05, IQ-S-05
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.parallele-reassignation`
@@ -2805,6 +9001,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-30, IQ-C-31, IQ-S-05
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signataires.en-cours`
@@ -2816,12 +9013,50 @@
 
 - **Source** : 7.3 sc. 6
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-12 — Notifications configurables : l'administration désactive puis réactive l'invitation à signer par courriel
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-40, IQ-C-24, IQ-C-58, IQ-D-07, IQ-S-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (4 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/notifications`
+2. Activer « Désactiver — Invitation à signer Courriel » (button)
+3. Voir « Message désactivé. »
+4. Activer « Activer — Invitation à signer Courriel » (button)
+5. Voir « Message activé. »
+6. Activer « Désactiver — Rappel de non-réponse Courriel » (button)
+7. Voir « Message désactivé. »
+8. Activer « Activer — Rappel de non-réponse Courriel » (button)
+9. Voir « Message activé. »
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-CB-IQ-13 — Rappels, copies et échéance réglés à la création d'une trousse, puis retrouvés au résumé
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-41, IQ-C-42, IQ-C-24, IQ-C-43, IQ-D-07, IQ-S-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (3 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Rappels CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-RAP` ; « Échéance » : `${dansUnMois}` ; « Destinataires en copie » : `direction.${unique}@iq.example, conformite.${unique}@iq.example` ; « Rappel tous les (jours) » : `3` ; « Nombre maximal de rappels » : `4`
+3. Activer « Enregistrer le brouillon »
+4. Voir « CB${UNIQUE}-RAP »
+5. Ouvrir l'écran `/clm/trousses`
+6. Activer « Ouvrir le détail de CB${UNIQUE}-RAP » (link)
+7. Voir « direction.${unique}@iq.example », « conformite.${unique}@iq.example »
+8. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-15 — Messages désactivés puis réactivés, invitation et rappel reçus
 
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-C-24, IQ-C-40, IQ-C-41, IQ-S-06, IQ-D-07, IQ-C-58
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.notifications`
@@ -2833,13 +9068,80 @@
 
 - **Source** : 7.3 sc. 7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-18 — Dossier de preuve d'une trousse signée : intégrité vérifiée, signatures et consentements consultés, certificat et dossier complet exportés ; journal d'audit filtré par trousse
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-63, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (37 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Preuve CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-PRV`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Activer « Continuer »
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+16. Choisir « Type » : `SIGNATURE`
+17. Activer « Ajouter un responsable »
+18. Choisir « Type du responsable 1 » : `PARTICIPANT`
+19. Choisir « Responsable 1 » : `Étienne Côté`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Se connecter en tant que signataire interne IQ
+27. Ouvrir l'écran `/clm/taches`
+28. Activer « Traiter — CB${UNIQUE}-PRV Signature IQ »
+29. Activer « Signer maintenant »
+30. Arriver sur une adresse de la forme `/portail/`
+31. Activer « Recevoir mon code »
+32. Voir « Code envoyé. »
+33. Préparer par l'API : Code reçu par courriel
+34. Saisir « Code de vérification » : `${code}`
+35. Activer « Vérifier mon identité »
+36. Activer « Lire / télécharger »
+37. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+38. Saisir « Votre nom complet » : `Étienne Côté`
+39. Activer « Signer »
+40. Voir « Merci, votre signature est enregistrée »
+41. Se connecter en tant que initiateur IQ
+42. Ouvrir l'écran `/clm/trousses`
+43. Activer « Ouvrir le détail de CB${UNIQUE}-PRV » (link)
+44. Activer « Preuve » (tab)
+45. Activer « Vérifier l’intégrité »
+46. Voir « Intégrité confirmée : journal, documents et attestations intacts. »
+47. Voir « Identités, consentements et signatures », « Étienne Côté »
+48. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+49. Télécharger par « Exporter le dossier complet (ZIP) » et obtenir un fichier non vide
+50. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+51. Se connecter en tant que administration principale IQ
+52. Ouvrir l'écran `/clm/admin/journal`
+53. Saisir « Trousse (référence) » : `CB${UNIQUE}-PRV`
+54. Activer « Rechercher #2 »
+55. Voir « Trousse créée », « Document ajouté »
+56. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
 
 ### E2E-IQ-11 — Signature externe : invitation, identité, consentement, signature, preuve
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ❌ échoué
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -2852,6 +9154,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10, IQ-A-29
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
@@ -2867,12 +9170,104 @@
 
 - **Source** : 7.3 sc. 8
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-IQ-34 — Consulter ses tâches et ses trousses sur téléphone, sans débordement ni violation d'accessibilité
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-53, IQ-S-08, IQ-D-13
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/taches`
@@ -2885,12 +9280,99 @@
 
 - **Source** : 7.3 sc. 9
 - **Conformité déclarée** : ✅🆕
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-05 — Validations en parallèle : un validateur rejette en motivant, la trousse est rejetée
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-18, IQ-C-22, IQ-C-23, IQ-D-04, IQ-S-09
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (26 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Parallèle CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-PAR`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `v2` ; « Libellé » : `Validation financière`
+16. Choisir « Type » : `VALIDATION`
+17. Saisir « Phase » : `1`
+18. Activer « Ajouter un responsable »
+19. Saisir « Responsable 1 » : `approbateur@iq.example`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Se connecter en tant que validateur IQ
+27. Ouvrir l'écran `/clm/taches`
+28. Activer « Traiter — CB${UNIQUE}-PAR Validation juridique »
+29. Activer « Rejeter »
+30. Voir « Un motif est obligatoire »
+31. Saisir « Commentaire » : `Montant hors programme`
+32. Activer « Rejeter »
+33. Voir « Décision enregistrée : rejeté. »
+34. Se connecter en tant que initiateur IQ
+35. Ouvrir l'écran `/clm/trousses`
+36. Activer « Ouvrir le détail de CB${UNIQUE}-PAR » (link)
+37. Voir « Rejetée »
+
+### E2E-CB-IQ-06 — Retour pour correction : le validateur renvoie à l'initiateur avec un motif
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-22, IQ-C-55, IQ-S-03, IQ-S-09
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (20 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Correction CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-COR`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Activer « Continuer »
+9. Activer « Ajouter une étape »
+10. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+11. Choisir « Type » : `VALIDATION`
+12. Activer « Ajouter un responsable »
+13. Saisir « Responsable 1 » : `validateur@iq.example`
+14. Activer « Tester le parcours »
+15. Voir « Parcours valide. »
+16. Activer « Enregistrer »
+17. Activer « Continuer »
+18. Activer « Lancer le parcours »
+19. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+20. Se connecter en tant que validateur IQ
+21. Ouvrir l'écran `/clm/taches`
+22. Activer « Traiter — CB${UNIQUE}-COR Validation juridique »
+23. Saisir « Commentaire » : `Annexe B manquante`
+24. Activer « Retourner pour correction »
+25. Voir « Trousse retournée pour correction. »
+26. Se connecter en tant que initiateur IQ
+27. Ouvrir l'écran `/clm/trousses`
+28. Activer « Ouvrir le détail de CB${UNIQUE}-COR » (link)
+29. Activer « Historique » (tab)
+30. Voir « Annexe B manquante »
 
 ### E2E-IQ-06 — Parcours de validation puis d'approbation, décisions tracées
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-01, IQ-C-18, IQ-C-22, IQ-C-23, IQ-C-25, IQ-C-48, IQ-D-04, IQ-S-02, IQ-S-03, IQ-S-09, IQ-C-52
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.validation-approbation`
@@ -2906,6 +9388,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-22, IQ-S-09
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.rejet`
@@ -2917,12 +9400,79 @@
 
 - **Source** : 7.3 sc. 10
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-18 — Dossier de preuve d'une trousse signée : intégrité vérifiée, signatures et consentements consultés, certificat et dossier complet exportés ; journal d'audit filtré par trousse
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-63, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (37 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Preuve CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-PRV`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « entente-${unique}.pdf »
+7. Activer « Continuer »
+8. Saisir « Nom » : `Étienne Côté` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550190`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Décocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Étienne Côté »
+13. Activer « Continuer »
+14. Activer « Ajouter une étape »
+15. Saisir « Clé » : `s1` ; « Libellé » : `Signature IQ`
+16. Choisir « Type » : `SIGNATURE`
+17. Activer « Ajouter un responsable »
+18. Choisir « Type du responsable 1 » : `PARTICIPANT`
+19. Choisir « Responsable 1 » : `Étienne Côté`
+20. Activer « Tester le parcours »
+21. Voir « Parcours valide. »
+22. Activer « Enregistrer »
+23. Activer « Continuer »
+24. Activer « Lancer le parcours »
+25. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+26. Se connecter en tant que signataire interne IQ
+27. Ouvrir l'écran `/clm/taches`
+28. Activer « Traiter — CB${UNIQUE}-PRV Signature IQ »
+29. Activer « Signer maintenant »
+30. Arriver sur une adresse de la forme `/portail/`
+31. Activer « Recevoir mon code »
+32. Voir « Code envoyé. »
+33. Préparer par l'API : Code reçu par courriel
+34. Saisir « Code de vérification » : `${code}`
+35. Activer « Vérifier mon identité »
+36. Activer « Lire / télécharger »
+37. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+38. Saisir « Votre nom complet » : `Étienne Côté`
+39. Activer « Signer »
+40. Voir « Merci, votre signature est enregistrée »
+41. Se connecter en tant que initiateur IQ
+42. Ouvrir l'écran `/clm/trousses`
+43. Activer « Ouvrir le détail de CB${UNIQUE}-PRV » (link)
+44. Activer « Preuve » (tab)
+45. Activer « Vérifier l’intégrité »
+46. Voir « Intégrité confirmée : journal, documents et attestations intacts. »
+47. Voir « Identités, consentements et signatures », « Étienne Côté »
+48. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+49. Télécharger par « Exporter le dossier complet (ZIP) » et obtenir un fichier non vide
+50. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+51. Se connecter en tant que administration principale IQ
+52. Ouvrir l'écran `/clm/admin/journal`
+53. Saisir « Trousse (référence) » : `CB${UNIQUE}-PRV`
+54. Activer « Rechercher #2 »
+55. Voir « Trousse créée », « Document ajouté »
+56. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
 
 ### E2E-IQ-17 — Dossier de preuve consulté, vérifié, exporté ; journal consulté et exporté
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10, IQ-A-29
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
@@ -2938,12 +9488,14 @@
 
 - **Source** : 7.3 sc. 10
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-32 — Analyse d'un document par l'IA encadrée, depuis l'accueil
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-59, IQ-C-04, IQ-S-10b
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.ia.analyse`
@@ -2954,12 +9506,14 @@
 
 - **Source** : Add. § 4.4
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-19 — API d'intégration : client, jeton, création de trousse par un système
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-A-01, IQ-A-02, IQ-C-06, IQ-C-16, IQ-C-69, IQ-D-12, IQ-D-26, IQ-D-27, IQ-D-28, IQ-A-07, IQ-C-03
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.integration.api`
@@ -2971,12 +9525,63 @@
 
 - **Source** : Add. Q10
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-01 — Modèle créé et configuré à l'écran, soumis, publié par une autre administration, puis utilisé en signature en lot (un dossier sans téléphone échoue seul)
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-32, IQ-C-35, IQ-C-11, IQ-A-03, IQ-D-06, IQ-A-02, IQ-D-01, IQ-D-02
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (22 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Voir « Nouveau modèle »
+4. Saisir « Nom » : `Entente CB ${unique}`
+5. Choisir « Catégorie » : `(premier)`
+6. Saisir « Corps du contrat » : `Entente avec {{beneficiaire}} pour un montant de {{montant}} $. {{clauses}}`
+7. Activer « Ajouter un champ »
+8. Saisir « Nom technique » : `beneficiaire` ; « Libellé » : `Bénéficiaire`
+9. Cocher « Obligatoire »
+10. Choisir « Source Salesforce » : `Demandeur`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant` ; « Format (expression régulière) » : `^[0-9]+$`
+13. Activer « Ajouter une clause »
+14. Saisir « Titre » : `Versement` ; « Texte » : `Le montant est versé en un seul paiement.`
+15. Activer « Enregistrer le brouillon »
+16. Voir « Brouillon enregistré. »
+17. Saisir « Bénéficiaire » : `Entreprise Essai inc.` ; « Montant » : `25000`
+18. Activer « Tester la règle »
+19. Voir « Entente avec Entreprise Essai inc. pour un montant de 25000 $ »
+20. Activer « Vérifier »
+21. Voir « Modèle valide. »
+22. Activer « Soumettre à publication »
+23. Voir « soumis à publication »
+24. Se connecter en tant que administration principale IQ
+25. Ouvrir l'écran `/clm/modeles`
+26. Dans la ligne « Entente CB ${unique} », activer « Publier »
+27. Voir « « Entente CB ${unique} » publié. »
+28. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+29. Se connecter en tant que initiateur IQ
+30. Ouvrir l'écran `/clm/lots`
+31. Saisir « Libellé du lot » : `Lot CB ${unique}`
+32. Choisir « Modèle de contrat » : `Entente CB ${unique}` ; « Première colonne » : `Numéro de dossier Salesforce`
+33. Saisir « Dossiers, un par ligne » : `DEM-2026-0001;Jeanne Tremblay;jeanne.tremblay@exemple.ca;+15145550101
+DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
+34. Voir « 2 dossier(s) dans le lot. »
+35. Activer « Créer le lot »
+36. Voir « Lot « Lot CB ${unique} » : 1 trousse(s) créée(s), 1 échec(s). »
+37. Voir « DEM-2026-0001 »
+38. Voir « téléphone requis pour la vérification par SMS »
+39. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-19 — API d'intégration : client, jeton, création de trousse par un système
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-A-01, IQ-A-02, IQ-C-06, IQ-C-16, IQ-C-69, IQ-D-12, IQ-D-26, IQ-D-27, IQ-D-28, IQ-A-07, IQ-C-03
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.integration.api`
@@ -2988,12 +9593,63 @@
 
 - **Source** : Add. Q10
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-01 — Modèle créé et configuré à l'écran, soumis, publié par une autre administration, puis utilisé en signature en lot (un dossier sans téléphone échoue seul)
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-32, IQ-C-35, IQ-C-11, IQ-A-03, IQ-D-06, IQ-A-02, IQ-D-01, IQ-D-02
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (22 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Voir « Nouveau modèle »
+4. Saisir « Nom » : `Entente CB ${unique}`
+5. Choisir « Catégorie » : `(premier)`
+6. Saisir « Corps du contrat » : `Entente avec {{beneficiaire}} pour un montant de {{montant}} $. {{clauses}}`
+7. Activer « Ajouter un champ »
+8. Saisir « Nom technique » : `beneficiaire` ; « Libellé » : `Bénéficiaire`
+9. Cocher « Obligatoire »
+10. Choisir « Source Salesforce » : `Demandeur`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant` ; « Format (expression régulière) » : `^[0-9]+$`
+13. Activer « Ajouter une clause »
+14. Saisir « Titre » : `Versement` ; « Texte » : `Le montant est versé en un seul paiement.`
+15. Activer « Enregistrer le brouillon »
+16. Voir « Brouillon enregistré. »
+17. Saisir « Bénéficiaire » : `Entreprise Essai inc.` ; « Montant » : `25000`
+18. Activer « Tester la règle »
+19. Voir « Entente avec Entreprise Essai inc. pour un montant de 25000 $ »
+20. Activer « Vérifier »
+21. Voir « Modèle valide. »
+22. Activer « Soumettre à publication »
+23. Voir « soumis à publication »
+24. Se connecter en tant que administration principale IQ
+25. Ouvrir l'écran `/clm/modeles`
+26. Dans la ligne « Entente CB ${unique} », activer « Publier »
+27. Voir « « Entente CB ${unique} » publié. »
+28. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+29. Se connecter en tant que initiateur IQ
+30. Ouvrir l'écran `/clm/lots`
+31. Saisir « Libellé du lot » : `Lot CB ${unique}`
+32. Choisir « Modèle de contrat » : `Entente CB ${unique}` ; « Première colonne » : `Numéro de dossier Salesforce`
+33. Saisir « Dossiers, un par ligne » : `DEM-2026-0001;Jeanne Tremblay;jeanne.tremblay@exemple.ca;+15145550101
+DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
+34. Voir « 2 dossier(s) dans le lot. »
+35. Activer « Créer le lot »
+36. Voir « Lot « Lot CB ${unique} » : 1 trousse(s) créée(s), 1 échec(s). »
+37. Voir « DEM-2026-0001 »
+38. Voir « téléphone requis pour la vérification par SMS »
+39. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-22 — Signature en lot et approbation globale
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-A-03, IQ-A-28
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.lots`
@@ -3011,12 +9667,14 @@
 
 - **Source** : Add. Q1
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-20 — Statuts renvoyés à Salesforce à chaque jalon
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-08, IQ-C-13, IQ-C-15, IQ-A-05, IQ-A-10, IQ-A-12, IQ-A-14
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.salesforce.statuts`
@@ -3028,12 +9686,14 @@
 
 - **Source** : Add. Q8
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-33 — Générer le contrat d'un modèle publié, valeurs préremplies depuis Salesforce et corrigeables
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-D-01, IQ-D-02, IQ-A-06, IQ-A-17, IQ-A-18, IQ-C-56
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.generation.salesforce`
@@ -3047,12 +9707,14 @@
 
 - **Source** : Add. Q3
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-19 — API d'intégration : client, jeton, création de trousse par un système
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-A-01, IQ-A-02, IQ-C-06, IQ-C-16, IQ-C-69, IQ-D-12, IQ-D-26, IQ-D-27, IQ-D-28, IQ-A-07, IQ-C-03
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.integration.api`
@@ -3064,12 +9726,57 @@
 
 - **Source** : Add. Q3, add. 3 Q51
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-ECR-IQ-07 — Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-51, IQ-C-65, IQ-C-66, IQ-A-21, IQ-A-11, IQ-A-19, IQ-A-08, IQ-A-27, IQ-C-60, IQ-C-62
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (23 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Signataire invité avec vérification par code
+2. Ouvrir l'écran `/portail/${jeton}`
+3. Activer « Recevoir mon code »
+4. Préparer par l'API : cas `iq.signature.externe`
+5. Ouvrir l'écran `/clm/admin/journal`
+6. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
+7. Ouvrir l'écran `/clm/admin/conservation`
+8. Choisir « Type de contrat » : `PRET`
+9. Saisir « Durée après la clôture (ans) » : `10`
+10. Activer « Enregistrer la règle »
+11. Activer « Retirer — Contrat de prêt » (button)
+12. Répondre « Litige E2E ${unique} » à la prochaine saisie demandée par le navigateur
+13. Activer « Geler — ${trousseRef} » (button)
+14. Activer « Lever le gel — ${trousseRef} » (button)
+15. Saisir « Clôturées du » : `${aujourdhui}` ; « au » : `${demain}`
+16. Télécharger par « Télécharger le lot » et obtenir un fichier non vide
+17. Ouvrir l'écran `/clm/admin/sso`
+18. Saisir « Groupe (identifiant ou nom) » : `grp-e2e-${unique}`
+19. Choisir « Ajouter la correspondance » Rôle » : `LECTEUR`
+20. Activer « Ajouter la correspondance »
+21. Activer « Retirer — grp-e2e-${unique} » (button)
+22. Activer « Créer un jeton | Remplacer le jeton »
+23. Préparer par l'API : Administrateur jetable (futur compte de secours)
+24. Se connecter avec le compte `secours.${unique}@iq.example`
+25. Ouvrir l'écran `/clm/securite`
+26. Activer « Configurer le TOTP »
+27. Relever le texte affiché (`code`) sous le nom `secretTotp`
+28. Saisir le code TOTP courant dans « Code de confirmation »
+29. Activer « Activer »
+30. Ouvrir l'écran `/clm/admin/sso`
+31. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
+32. Activer « Réserver aux comptes de secours »
+33. Activer « Ouvrir à tous les comptes »
+34. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
 
 ### E2E-IQ-27 — Annuaire SCIM 2.0 et correspondances de rôles
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-A-08, IQ-A-19, IQ-A-20, IQ-A-27
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.annuaire.scim`
@@ -3081,12 +9788,14 @@
 
 - **Source** : Add. Q3
 - **Conformité déclarée** : ✅🆕 — connecteur MCP en lecture seule — ADR-023
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-24 — Connecteur MCP en lecture seule pour un assistant d'IA
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-A-09
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.mcp`
@@ -3097,12 +9806,14 @@
 
 - **Source** : Add. 2 Q11
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-20 — Statuts renvoyés à Salesforce à chaque jalon
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-08, IQ-C-13, IQ-C-15, IQ-A-05, IQ-A-10, IQ-A-12, IQ-A-14
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.salesforce.statuts`
@@ -3114,12 +9825,57 @@
 
 - **Source** : Add. 2 Q13
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-ECR-IQ-07 — Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-51, IQ-C-65, IQ-C-66, IQ-A-21, IQ-A-11, IQ-A-19, IQ-A-08, IQ-A-27, IQ-C-60, IQ-C-62
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (23 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Signataire invité avec vérification par code
+2. Ouvrir l'écran `/portail/${jeton}`
+3. Activer « Recevoir mon code »
+4. Préparer par l'API : cas `iq.signature.externe`
+5. Ouvrir l'écran `/clm/admin/journal`
+6. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
+7. Ouvrir l'écran `/clm/admin/conservation`
+8. Choisir « Type de contrat » : `PRET`
+9. Saisir « Durée après la clôture (ans) » : `10`
+10. Activer « Enregistrer la règle »
+11. Activer « Retirer — Contrat de prêt » (button)
+12. Répondre « Litige E2E ${unique} » à la prochaine saisie demandée par le navigateur
+13. Activer « Geler — ${trousseRef} » (button)
+14. Activer « Lever le gel — ${trousseRef} » (button)
+15. Saisir « Clôturées du » : `${aujourdhui}` ; « au » : `${demain}`
+16. Télécharger par « Télécharger le lot » et obtenir un fichier non vide
+17. Ouvrir l'écran `/clm/admin/sso`
+18. Saisir « Groupe (identifiant ou nom) » : `grp-e2e-${unique}`
+19. Choisir « Ajouter la correspondance » Rôle » : `LECTEUR`
+20. Activer « Ajouter la correspondance »
+21. Activer « Retirer — grp-e2e-${unique} » (button)
+22. Activer « Créer un jeton | Remplacer le jeton »
+23. Préparer par l'API : Administrateur jetable (futur compte de secours)
+24. Se connecter avec le compte `secours.${unique}@iq.example`
+25. Ouvrir l'écran `/clm/securite`
+26. Activer « Configurer le TOTP »
+27. Relever le texte affiché (`code`) sous le nom `secretTotp`
+28. Saisir le code TOTP courant dans « Code de confirmation »
+29. Activer « Activer »
+30. Ouvrir l'écran `/clm/admin/sso`
+31. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
+32. Activer « Réserver aux comptes de secours »
+33. Activer « Ouvrir à tous les comptes »
+34. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
 
 ### E2E-IQ-18 — Conservation par type, gel légal, exportation en lot, relevé d'utilisation
 
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-C-66, IQ-A-21, IQ-A-11, IQ-A-22
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
@@ -3131,12 +9887,14 @@
 
 - **Source** : Add. 2 Q14
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-20 — Statuts renvoyés à Salesforce à chaque jalon
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-08, IQ-C-13, IQ-C-15, IQ-A-05, IQ-A-10, IQ-A-12, IQ-A-14
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.salesforce.statuts`
@@ -3148,12 +9906,14 @@
 
 - **Source** : Add. 2 Q15
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-21 — Minimisation des données échangées avec Salesforce
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-A-13
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.salesforce.minimisation`
@@ -3164,12 +9924,14 @@
 
 - **Source** : Add. 2 Q17
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-20 — Statuts renvoyés à Salesforce à chaque jalon
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-08, IQ-C-13, IQ-C-15, IQ-A-05, IQ-A-10, IQ-A-12, IQ-A-14
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.salesforce.statuts`
@@ -3181,12 +9943,37 @@
 
 - **Source** : Add. 2 Q19
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
+
+### E2E-CB-IQ-21 — Interfaces en français, offertes en anglais : l'utilisateur change de langue, la console d'administration reste en français
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-D-21, IQ-D-22, IQ-D-23, IQ-A-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/taches`
+2. Voir « Boîte de tâches »
+3. Passer l'interface en anglais
+4. Ouvrir l'écran `/clm/taches`
+5. Voir « Task inbox »
+6. Activer « My packages » (link)
+7. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+8. Passer l'interface en français
+9. Ouvrir l'écran `/clm/taches`
+10. Voir « Boîte de tâches »
+11. Se connecter en tant que administration principale IQ
+12. Ouvrir l'écran `/clm/admin/integrations`
+13. Voir « Intégrations API », « Journal des retours de statut »
+14. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-35 — Interfaces et console d'administration en français, offertes en anglais
 
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-D-21, IQ-D-22, IQ-D-23, IQ-A-15, IQ-D-13
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/admin/notifications`
@@ -3208,12 +9995,14 @@
 
 - **Source** : Add. 3 Q26
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-05 — Gabarit Word d'IQ fusionné en Word et en PDF
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-A-30, IQ-A-18
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.gabarit.word`
@@ -3226,6 +10015,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-D-01, IQ-D-02, IQ-A-06, IQ-A-17, IQ-A-18, IQ-C-56
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.generation.salesforce`
@@ -3239,12 +10029,57 @@
 
 - **Source** : Add. 3 Q43
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-ECR-IQ-07 — Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-51, IQ-C-65, IQ-C-66, IQ-A-21, IQ-A-11, IQ-A-19, IQ-A-08, IQ-A-27, IQ-C-60, IQ-C-62
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (23 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Signataire invité avec vérification par code
+2. Ouvrir l'écran `/portail/${jeton}`
+3. Activer « Recevoir mon code »
+4. Préparer par l'API : cas `iq.signature.externe`
+5. Ouvrir l'écran `/clm/admin/journal`
+6. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
+7. Ouvrir l'écran `/clm/admin/conservation`
+8. Choisir « Type de contrat » : `PRET`
+9. Saisir « Durée après la clôture (ans) » : `10`
+10. Activer « Enregistrer la règle »
+11. Activer « Retirer — Contrat de prêt » (button)
+12. Répondre « Litige E2E ${unique} » à la prochaine saisie demandée par le navigateur
+13. Activer « Geler — ${trousseRef} » (button)
+14. Activer « Lever le gel — ${trousseRef} » (button)
+15. Saisir « Clôturées du » : `${aujourdhui}` ; « au » : `${demain}`
+16. Télécharger par « Télécharger le lot » et obtenir un fichier non vide
+17. Ouvrir l'écran `/clm/admin/sso`
+18. Saisir « Groupe (identifiant ou nom) » : `grp-e2e-${unique}`
+19. Choisir « Ajouter la correspondance » Rôle » : `LECTEUR`
+20. Activer « Ajouter la correspondance »
+21. Activer « Retirer — grp-e2e-${unique} » (button)
+22. Activer « Créer un jeton | Remplacer le jeton »
+23. Préparer par l'API : Administrateur jetable (futur compte de secours)
+24. Se connecter avec le compte `secours.${unique}@iq.example`
+25. Ouvrir l'écran `/clm/securite`
+26. Activer « Configurer le TOTP »
+27. Relever le texte affiché (`code`) sous le nom `secretTotp`
+28. Saisir le code TOTP courant dans « Code de confirmation »
+29. Activer « Activer »
+30. Ouvrir l'écran `/clm/admin/sso`
+31. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
+32. Activer « Réserver aux comptes de secours »
+33. Activer « Ouvrir à tous les comptes »
+34. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
 
 ### E2E-IQ-27 — Annuaire SCIM 2.0 et correspondances de rôles
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-A-08, IQ-A-19, IQ-A-20, IQ-A-27
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.annuaire.scim`
@@ -3256,12 +10091,14 @@
 
 - **Source** : Add. 3 Q44
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-27 — Annuaire SCIM 2.0 et correspondances de rôles
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-A-08, IQ-A-19, IQ-A-20, IQ-A-27
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.annuaire.scim`
@@ -3273,12 +10110,57 @@
 
 - **Source** : Add. 3 Q46-Q48
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-ECR-IQ-07 — Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-51, IQ-C-65, IQ-C-66, IQ-A-21, IQ-A-11, IQ-A-19, IQ-A-08, IQ-A-27, IQ-C-60, IQ-C-62
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (23 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Signataire invité avec vérification par code
+2. Ouvrir l'écran `/portail/${jeton}`
+3. Activer « Recevoir mon code »
+4. Préparer par l'API : cas `iq.signature.externe`
+5. Ouvrir l'écran `/clm/admin/journal`
+6. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
+7. Ouvrir l'écran `/clm/admin/conservation`
+8. Choisir « Type de contrat » : `PRET`
+9. Saisir « Durée après la clôture (ans) » : `10`
+10. Activer « Enregistrer la règle »
+11. Activer « Retirer — Contrat de prêt » (button)
+12. Répondre « Litige E2E ${unique} » à la prochaine saisie demandée par le navigateur
+13. Activer « Geler — ${trousseRef} » (button)
+14. Activer « Lever le gel — ${trousseRef} » (button)
+15. Saisir « Clôturées du » : `${aujourdhui}` ; « au » : `${demain}`
+16. Télécharger par « Télécharger le lot » et obtenir un fichier non vide
+17. Ouvrir l'écran `/clm/admin/sso`
+18. Saisir « Groupe (identifiant ou nom) » : `grp-e2e-${unique}`
+19. Choisir « Ajouter la correspondance » Rôle » : `LECTEUR`
+20. Activer « Ajouter la correspondance »
+21. Activer « Retirer — grp-e2e-${unique} » (button)
+22. Activer « Créer un jeton | Remplacer le jeton »
+23. Préparer par l'API : Administrateur jetable (futur compte de secours)
+24. Se connecter avec le compte `secours.${unique}@iq.example`
+25. Ouvrir l'écran `/clm/securite`
+26. Activer « Configurer le TOTP »
+27. Relever le texte affiché (`code`) sous le nom `secretTotp`
+28. Saisir le code TOTP courant dans « Code de confirmation »
+29. Activer « Activer »
+30. Ouvrir l'écran `/clm/admin/sso`
+31. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
+32. Activer « Réserver aux comptes de secours »
+33. Activer « Ouvrir à tous les comptes »
+34. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
 
 ### E2E-IQ-18 — Conservation par type, gel légal, exportation en lot, relevé d'utilisation
 
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-C-66, IQ-A-21, IQ-A-11, IQ-A-22
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
@@ -3290,12 +10172,14 @@
 
 - **Source** : Add. 3 Q39
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-18 — Conservation par type, gel légal, exportation en lot, relevé d'utilisation
 
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-C-66, IQ-A-21, IQ-A-11, IQ-A-22
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
@@ -3307,12 +10191,37 @@
 
 - **Source** : Add. 4 Q1
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-20 — Vérification d'identité proportionnée : une trousse à risque élevé impose un niveau minimal au signataire externe
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-61, IQ-C-62, IQ-A-23
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (9 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Risque CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-RSQ`
+3. Choisir « Niveau de risque » : `ELEVE`
+4. Activer « Enregistrer le brouillon »
+5. Activer « Continuer »
+6. Activer « Continuer »
+7. Voir « Niveau minimal imposé par le risque »
+8. Saisir « Nom » : `Paul Externe` ; « Courriel » : `paul.${unique}@exemple.ca` ; « Téléphone » : `+15145550177`
+9. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+10. Cocher « Externe »
+11. Activer « Ajouter un signataire »
+12. Voir « Paul Externe »
+13. Voir « ajouté (vérification »
+14. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-14 — Vérification d'identité proportionnée au risque
 
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-A-23, IQ-C-61
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.identite.par-risque`
@@ -3323,12 +10232,14 @@
 
 - **Source** : Add. 4 Q6
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-13 — Signature d'un représentant après attestation de son autorité
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-A-24
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.representant`
@@ -3340,12 +10251,14 @@
 
 - **Source** : Add. 4 Q8, Q20
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-09 — Règles d'affaires : étape non requise selon les valeurs
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-19, IQ-A-25, IQ-D-07
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.parcours.regles`
@@ -3357,12 +10270,90 @@
 
 - **Source** : Add. 4 Q10
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-19 — Séparation des rôles : l'auditeur consulte une trousse sans pouvoir agir, l'administration technique n'accède pas aux trousses
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-67, IQ-D-15, IQ-D-16, IQ-D-17, IQ-A-26
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (3 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Rôles CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-ROL`
+3. Activer « Enregistrer le brouillon »
+4. Voir « CB${UNIQUE}-ROL »
+5. Se connecter en tant que auditeur IQ
+6. Ouvrir l'écran `/clm/trousses`
+7. Activer « Ouvrir le détail de CB${UNIQUE}-ROL » (link)
+8. Voir « Rôles CB ${unique} »
+9. Ne pas voir « Lancer le parcours », « Annuler la trousse »
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+11. Se connecter en tant que administration technique IQ
+12. Ouvrir l'écran `/clm/trousses`
+13. Ne pas voir « CB${UNIQUE}-ROL »
+
+### E2E-ECR-IQ-05 — L'administration du CLM : messages modifiés et testés, connexion Salesforce testée, relayée, configurée puis rétablie, client d'intégration créé puis révoqué, paramètres modifiés puis rétablis, groupe créé et garni puis supprimé, départ d'un employé transféré, journal filtré et exporté
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-16, IQ-C-30, IQ-C-15, IQ-C-40, IQ-D-18, IQ-A-26
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (32 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Compte jetable qui quitte l'organisation, avec une étape de validation ouverte à son nom
+2. Ouvrir l'écran `/clm/admin`
+3. Ouvrir l'écran `/clm/admin/notifications`
+4. Activer « Modifier »
+5. Saisir « Sujet » : `Invitation E2E ${unique}`
+6. Activer « Enregistrer »
+7. Saisir « Destinataire de test » : `test.${unique}@iq.example`
+8. Activer « Envoyer un test »
+9. Ouvrir l'écran `/clm/admin/integrations`
+10. Activer « Tester la connexion »
+11. Activer « Relayer maintenant »
+12. Activer « Configurer la connexion »
+13. Dans la section « Configurer la connexion », activer « Enregistrer »
+14. Activer « Configurer la connexion »
+15. Activer « Rétablir la connexion de la plateforme »
+16. Saisir « Nouveau client d’intégration » Nom » : `Client E2E ${unique}`
+17. Activer « Créer le client »
+18. Activer « J’ai copié les valeurs »
+19. Activer « Révoquer — Client E2E ${unique} » (button)
+20. Ouvrir l'écran `/clm/admin/parametres`
+21. Activer « Modifier un paramètre autorisé »
+22. Saisir « Rappel tous les (jours) » : `4`
+23. Activer « Enregistrer »
+24. Activer « Modifier un paramètre autorisé »
+25. Activer « Rétablir les paramètres de la plateforme »
+26. Ouvrir l'écran `/clm/admin/listes`
+27. Ouvrir l'écran `/clm/admin/groupes`
+28. Saisir « Nouveau groupe » Code » : `GRP_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Groupe écran ${unique}`
+29. Activer « Créer le groupe »
+30. Choisir « Ajouter un membre au groupe GRP_${UNIQUE} » Membre » : `initiateur@iq.example`
+31. Dans la section « Ajouter un membre au groupe GRP_${UNIQUE} », activer « Ajouter »
+32. Activer « Retirer initiateur@iq.example du groupe GRP_${UNIQUE} » (button)
+33. Activer « Supprimer le groupe GRP_${UNIQUE} » (button)
+34. Ouvrir l'écran `/clm/admin/departs`
+35. Saisir « Courriel de la personne qui part » : `depart.${unique}@iq.example`
+36. Activer « Consulter »
+37. Choisir « Personne qui reprend » : `(premier)`
+38. Activer « Transférer »
+39. Ouvrir l'écran `/clm/admin/journal`
+40. Saisir « Acteur » : `initiateur@iq.example`
+41. Activer « Rechercher #2 »
+42. Ouvrir l'écran `/clm/admin/audit`
+43. Ouvrir l'écran `/clm/options`
+44. Ouvrir l'écran `/clm/profil`
+45. Ouvrir l'écran `/clm/securite`
 
 ### E2E-IQ-25 — Moindre privilège : administrations séparées, auditeur en lecture seule
 
 - **Profil** : administration principale IQ
 - **Exigences démontrées** : IQ-D-15, IQ-D-16, IQ-D-17, IQ-A-26, IQ-C-67
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.acces.administrations`
@@ -3376,12 +10367,57 @@
 
 - **Source** : Add. 4 Q31
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-ECR-IQ-07 — Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-51, IQ-C-65, IQ-C-66, IQ-A-21, IQ-A-11, IQ-A-19, IQ-A-08, IQ-A-27, IQ-C-60, IQ-C-62
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (23 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Signataire invité avec vérification par code
+2. Ouvrir l'écran `/portail/${jeton}`
+3. Activer « Recevoir mon code »
+4. Préparer par l'API : cas `iq.signature.externe`
+5. Ouvrir l'écran `/clm/admin/journal`
+6. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
+7. Ouvrir l'écran `/clm/admin/conservation`
+8. Choisir « Type de contrat » : `PRET`
+9. Saisir « Durée après la clôture (ans) » : `10`
+10. Activer « Enregistrer la règle »
+11. Activer « Retirer — Contrat de prêt » (button)
+12. Répondre « Litige E2E ${unique} » à la prochaine saisie demandée par le navigateur
+13. Activer « Geler — ${trousseRef} » (button)
+14. Activer « Lever le gel — ${trousseRef} » (button)
+15. Saisir « Clôturées du » : `${aujourdhui}` ; « au » : `${demain}`
+16. Télécharger par « Télécharger le lot » et obtenir un fichier non vide
+17. Ouvrir l'écran `/clm/admin/sso`
+18. Saisir « Groupe (identifiant ou nom) » : `grp-e2e-${unique}`
+19. Choisir « Ajouter la correspondance » Rôle » : `LECTEUR`
+20. Activer « Ajouter la correspondance »
+21. Activer « Retirer — grp-e2e-${unique} » (button)
+22. Activer « Créer un jeton | Remplacer le jeton »
+23. Préparer par l'API : Administrateur jetable (futur compte de secours)
+24. Se connecter avec le compte `secours.${unique}@iq.example`
+25. Ouvrir l'écran `/clm/securite`
+26. Activer « Configurer le TOTP »
+27. Relever le texte affiché (`code`) sous le nom `secretTotp`
+28. Saisir le code TOTP courant dans « Code de confirmation »
+29. Activer « Activer »
+30. Ouvrir l'écran `/clm/admin/sso`
+31. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
+32. Activer « Réserver aux comptes de secours »
+33. Activer « Ouvrir à tous les comptes »
+34. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
 
 ### E2E-IQ-27 — Annuaire SCIM 2.0 et correspondances de rôles
 
 - **Profil** : administration technique IQ
 - **Exigences démontrées** : IQ-A-08, IQ-A-19, IQ-A-20, IQ-A-27
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.annuaire.scim`
@@ -3393,12 +10429,66 @@
 
 - **Source** : Add. 4 Q36
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-ECR-IQ-06 — L'exploitation des trousses : étape relancée et réassignée, document analysé par l'IA et révisé, certificat téléchargé, trousse annulée, listes exportées, tâche confiée, démarrée et réassignée, lot créé et approuvé ; le validateur délègue, le signataire interne signe depuis sa tâche
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-31, IQ-C-50, IQ-C-30, IQ-C-59, IQ-A-28, IQ-C-43, IQ-C-21
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Nature** : parcours d'interface (33 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Modèle publié ; trousse en validation et trousse en signature interne, lancées
+2. Ouvrir l'écran `/clm/trousses/${trousse}`
+3. Choisir « Étape à relancer » : `(premier)`
+4. Activer « Relancer l’étape »
+5. Activer « Parcours » (tab)
+6. Activer l'élément « Réassigner, ajouter ou retirer des intervenants — Validation » (ligne ou carte cliquable)
+7. Saisir « Assignation par utilisateur, groupe ou règle » Motif » : `Absence du validateur`
+8. Dans la section « Assignation par utilisateur, groupe ou règle », activer « Enregistrer »
+9. Activer « Documents (1) » (tab)
+10. Activer « Analyser (IA) — piece-trousse-${unique}.pdf » (button)
+11. Saisir « Justification » : `Résultat conforme au document`
+12. Activer « Valider le résultat »
+13. Activer « Preuve » (tab)
+14. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+15. Répondre « Annulation E2E » à la prochaine saisie demandée par le navigateur
+16. Activer « Annuler la trousse »
+17. Ouvrir l'écran `/clm/trousses`
+18. Télécharger par « Exporter la liste (CSV) » et obtenir un fichier non vide
+19. Ouvrir l'écran `/clm/suivi`
+20. Télécharger par « Exporter (CSV) » et obtenir un fichier non vide
+21. Ouvrir l'écran `/clm/taches`
+22. Activer « Nouvelle tâche »
+23. Saisir « Tâche » : `Tâche E2E ${unique}`
+24. Choisir « Assignée à » : `initiateur@iq.example` ; « Trousse liée » : `(premier)`
+25. Activer « Confier la tâche »
+26. Activer « Démarrer — Tâche E2E ${unique} » (button)
+27. Activer « Réassigner — Tâche E2E ${unique} » (button)
+28. Choisir « Nouvelle personne assignée » : `(premier)`
+29. Activer « Confirmer la réassignation »
+30. Ouvrir l'écran `/clm/lots`
+31. Saisir « Libellé du lot » : `Lot E2E ${unique}` ; « Dossiers, un par ligne » : `Dossier A ${unique} ; Marie Lot ; marie.lot.${unique}@agrinord.example ; +15145550190`
+32. Choisir « Modèle de contrat » : `Convention lot ${unique}`
+33. Activer « Créer le lot »
+34. Activer « Approuver le lot — Lot E2E ${unique} » (button)
+35. Se connecter en tant que validateur IQ
+36. Ouvrir l'écran `/clm/taches`
+37. Activer « Traiter — ${trousseRef} Validation »
+38. Saisir « Courriel du délégataire » : `approbateur@iq.example` ; « Motif » : `Vacances`
+39. Activer « Confirmer la délégation »
+40. Se connecter en tant que signataire interne IQ
+41. Ouvrir l'écran `/clm/taches`
+42. Activer « Traiter — ${trousseSigRef} Signature »
+43. Activer « Signer maintenant »
 
 ### E2E-IQ-22 — Signature en lot et approbation globale
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-A-03, IQ-A-28
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.lots`
@@ -3410,12 +10500,14 @@
 
 - **Source** : Add. 4 Q14
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-17 — Dossier de preuve consulté, vérifié, exporté ; journal consulté et exporté
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-49, IQ-C-51, IQ-C-64, IQ-C-65, IQ-D-10, IQ-D-11, IQ-D-19, IQ-S-07, IQ-S-10, IQ-A-29
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.signature.externe`
@@ -3431,12 +10523,14 @@
 
 - **Source** : Add. 4 Q22
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : non — seulement préparée par l'API
 
 ### E2E-IQ-05 — Gabarit Word d'IQ fusionné en Word et en PDF
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-A-30, IQ-A-18
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.gabarit.word`
@@ -3448,12 +10542,104 @@
 
 - **Source** : Add. 2 Q7
 - **Conformité déclarée** : ✅
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-17 — Génération depuis Salesforce Grantmaking : modèle aux champs sourcés et à l'étape de signature par rôle, dossier importé, contrat généré, signataire associé automatiquement, trousse lancée et traçable jusqu'au dossier source ; la signataire externe signe sur téléphone depuis son invitation ; les statuts sont relayés vers Salesforce par l'administration
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-C-56, IQ-D-01, IQ-D-02, IQ-A-17, IQ-S-01, IQ-C-52, IQ-C-53, IQ-C-57, IQ-S-04, IQ-S-08, IQ-C-08, IQ-C-13, IQ-C-15
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (53 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `Convention SF CB ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `demandeur` ; « Libellé » : `Demandeur`
+6. Cocher « Obligatoire »
+7. Choisir « Source Salesforce » : `Demandeur`
+8. Activer « Ajouter un champ »
+9. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+10. Choisir « Source Salesforce » : `Montant`
+11. Activer « Ajouter un champ »
+12. Saisir « Nom technique » : `signature1` ; « Libellé » : `Signature du bénéficiaire`
+13. Choisir « Type » : `SIGNATURE`
+14. Choisir « Rôle autorisé à compléter » : `SIGNATAIRE_1`
+15. Activer « Positionner sur le document »
+16. Activer « Ajouter une étape »
+17. Saisir « Types : validation, approbation, signature » Clé » : `s1` ; « Types : validation, approbation, signature » Libellé » : `Signature du bénéficiaire`
+18. Choisir « Types : validation, approbation, signature » Type » : `SIGNATURE`
+19. Activer « Ajouter un responsable »
+20. Choisir « Assignation par utilisateur, groupe ou règle » Type du responsable 1 » : `PARTICIPANT`
+21. Choisir « Assignation par utilisateur, groupe ou règle » Responsable 1 » : `SIGNATAIRE_1`
+22. Activer « Vérifier »
+23. Voir « Modèle valide. »
+24. Activer « Enregistrer le brouillon »
+25. Voir « Brouillon enregistré. »
+26. Activer « Soumettre à publication »
+27. Voir « soumis à publication »
+28. Se connecter en tant que administration principale IQ
+29. Ouvrir l'écran `/clm/modeles`
+30. Dans la ligne « Convention SF CB ${unique} », activer « Publier »
+31. Se connecter en tant que initiateur IQ
+32. Ouvrir l'écran `/clm/trousses/nouvelle`
+33. Cocher « Salesforce »
+34. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0002`
+35. Activer « Rechercher #2 »
+36. Voir « Techno Mauricie »
+37. Saisir « Titre » : `Convention SF CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-SF`
+38. Choisir « Modèle de contrat » : `Convention SF CB ${unique}`
+39. Activer « Enregistrer le brouillon »
+40. Activer « Importer / actualiser »
+41. Voir « Techno Mauricie », « 1200000 »
+42. Activer « Continuer »
+43. Activer « Générer depuis le modèle »
+44. Voir « CB${UNIQUE}-SF.pdf »
+45. Activer « Continuer »
+46. Saisir « Nom » : `Julie Mauricie` ; « Courriel » : `julie.${unique}@technomauricie.example` ; « Téléphone » : `+18195550142`
+47. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+48. Choisir « Vérification d’identité » : `QUESTION`
+49. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Trois-Rivières`
+50. Cocher « Externe »
+51. Activer « Ajouter un signataire »
+52. Voir « Julie Mauricie »
+53. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+54. Activer « Attribuer la zone — Signature du bénéficiaire »
+55. Voir « Zone « Signature du bénéficiaire » attribuée. »
+56. Activer « Continuer »
+57. Activer « Continuer »
+58. Activer « Lancer le parcours »
+59. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+60. Activer « Historique » (tab)
+61. Voir « Préremplissage Salesforce », « DEM-2026-0002 »
+62. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+63. Préparer par l'API : Invitation reçue par courriel par la signataire externe
+64. Afficher l'écran à 390 px de large (téléphone)
+65. Ouvrir l'écran `/portail/${jeton}`
+66. Saisir « Ville du siège ? » : `Trois-Rivières`
+67. Activer « Vérifier mon identité »
+68. Activer « Lire / télécharger »
+69. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+70. Saisir « Votre nom complet » : `Julie Mauricie`
+71. Activer « Signer »
+72. Voir « Merci, votre signature est enregistrée »
+73. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+74. Afficher l'écran à 1280 px de large
+75. Ouvrir l'écran `/clm/suivi`
+76. Voir « CB${UNIQUE}-SF »
+77. Se connecter en tant que administration principale IQ
+78. Ouvrir l'écran `/clm/admin/integrations`
+79. Activer « Relayer maintenant »
+80. Voir « Transmis »
+81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
 
 ### E2E-IQ-33 — Générer le contrat d'un modèle publié, valeurs préremplies depuis Salesforce et corrigeables
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-09, IQ-C-10, IQ-C-11, IQ-C-12, IQ-C-14, IQ-C-29, IQ-D-01, IQ-D-02, IQ-A-06, IQ-A-17, IQ-A-18, IQ-C-56
 - **Données** : `bdd/e2e/donnees/iq.json`
+- **Nature** : préparé par l'API, écran constaté
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : cas `iq.generation.salesforce`

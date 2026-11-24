@@ -784,7 +784,11 @@
       "titre": "L'administration du CLM : messages modifiés et testés, connexion Salesforce testée, relayée, configurée puis rétablie, client d'intégration créé puis révoqué, paramètres modifiés puis rétablis, groupe créé et garni puis supprimé, départ d'un employé transféré, journal filtré et exporté",
       "exigences": [
         "IQ-C-16",
-        "IQ-C-30"
+        "IQ-C-30",
+        "IQ-C-15",
+        "IQ-C-40",
+        "IQ-D-18",
+        "IQ-A-26"
       ],
       "profil": "administration principale IQ",
       "etapes": [
@@ -1027,7 +1031,11 @@
       "exigences": [
         "IQ-C-31",
         "IQ-C-50",
-        "IQ-C-30"
+        "IQ-C-30",
+        "IQ-C-59",
+        "IQ-A-28",
+        "IQ-C-43",
+        "IQ-C-21"
       ],
       "profil": "initiateur IQ",
       "etapes": [
@@ -1423,7 +1431,15 @@
       "titre": "Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)",
       "exigences": [
         "IQ-C-51",
-        "IQ-C-65"
+        "IQ-C-65",
+        "IQ-C-66",
+        "IQ-A-21",
+        "IQ-A-11",
+        "IQ-A-19",
+        "IQ-A-08",
+        "IQ-A-27",
+        "IQ-C-60",
+        "IQ-C-62"
       ],
       "profil": "administration principale IQ",
       "etapes": [
