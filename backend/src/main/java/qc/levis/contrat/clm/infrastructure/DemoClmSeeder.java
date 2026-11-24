@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import qc.levis.contrat.clm.application.ContexteClm;
-import qc.levis.contrat.tenant.application.repository.TenantRepository;
+import qc.levis.contrat.clm.application.port.IdentiteOrganisation;
 
 /**
  * Environnement de démonstration : au démarrage, chaque organisation qui a un jeu de démonstration CLM reçoit ce qui lui
@@ -18,18 +18,18 @@ public class DemoClmSeeder implements CommandLineRunner {
 
     private final DemonstrationClm demonstration;
     private final ContexteClm ctx;
-    private final TenantRepository tenants;
+    private final IdentiteOrganisation organisations;
 
-    public DemoClmSeeder(DemonstrationClm demonstration, ContexteClm ctx, TenantRepository tenants) {
+    public DemoClmSeeder(DemonstrationClm demonstration, ContexteClm ctx, IdentiteOrganisation organisations) {
         this.demonstration = demonstration;
         this.ctx = ctx;
-        this.tenants = tenants;
+        this.organisations = organisations;
     }
 
     @Override
     public void run(String... args) {
         for (String slug : demonstration.organisations()) {
-            tenants.findBySlug(slug).ifPresent(t -> ctx.dansTenant(t.getId(), () -> demonstration.charger(slug)));
+            organisations.parIdentifiant(slug).ifPresent(id -> ctx.dansTenant(id, () -> demonstration.charger(slug)));
         }
     }
 }

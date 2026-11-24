@@ -155,6 +155,11 @@ public final class AdaptateursClm {
             return tenants.publicParId(tenantId).map(t -> new Organisation(t.titre(), t.theme().logoImage()))
                     .orElse(new Organisation(null, null));
         }
+
+        @Override
+        public java.util.Optional<Long> parIdentifiant(String identifiant) {
+            return tenants.idParSlug(identifiant);
+        }
     }
 
     /** Tenant porté par le fil d'exécution, alimenté par le filtre d'authentification de la plateforme. */

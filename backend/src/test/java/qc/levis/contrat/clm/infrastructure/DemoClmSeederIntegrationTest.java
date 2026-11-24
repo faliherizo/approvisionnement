@@ -42,7 +42,9 @@ class DemoClmSeederIntegrationTest {
                 "Entente de confidentialité", "PUBLIE", "Lettre d'offre de prêt", "PUBLIE"), statuts);
         assertTrue(groupes.findByTenantIdOrderByCodeAsc(iq).stream().map(g -> g.getCode()).toList()
                 .containsAll(List.of("DIRECTION_FIN", "FINANCEMENT", "JURIDIQUE")));
-        assertEquals(4, regles.findByTenantIdOrderByTypeContratAsc(iq).size());
+        List<String> types = regles.findByTenantIdOrderByTypeContratAsc(iq).stream().map(r -> String.valueOf(r.getTypeContrat())).toList();
+        assertTrue(types.containsAll(List.of("null", "SUBVENTION", "PRET", "CONFIDENTIALITE")), types.toString());
+        int nbRegles = types.size();
         Map<String, String> etats = trousses.findByTenantIdOrderByMajLeDesc(iq).stream()
                 .filter(t -> t.getReference().startsWith("DEMO-"))
                 .collect(Collectors.toMap(Trousse::getReference, t -> t.getStatut().name()));
@@ -52,7 +54,7 @@ class DemoClmSeederIntegrationTest {
         seeder.run();
 
         assertEquals(statuts.size(), demo(modeles.findByTenantIdOrderByNomAscNumeroDesc(iq)).size());
-        assertEquals(4, regles.findByTenantIdOrderByTypeContratAsc(iq).size());
+        assertEquals(nbRegles, regles.findByTenantIdOrderByTypeContratAsc(iq).size());
         assertEquals(3, trousses.findByTenantIdOrderByMajLeDesc(iq).stream().filter(t -> t.getReference().startsWith("DEMO-")).count());
     }
 

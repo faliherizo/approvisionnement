@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
-import qc.levis.contrat.auth.application.repository.UserRepository;
 import qc.levis.contrat.clm.application.ConservationService;
 import qc.levis.contrat.clm.application.ContexteClm;
 import qc.levis.contrat.clm.application.DocumentClmService;
@@ -43,7 +42,8 @@ public class DemonstrationClm {
     record GroupeDemo(String code, String libelle, List<String> membres) {}
     record TrousseDemo(String proprietaire, String modele, ClmDto.TrousseRequest requete, Map<String, Object> valeurs,
                        List<ClmDto.ParticipantRequest> participants, boolean lancer) {}
-    record DemoClm(String administrationAffaires, String administrationPrincipale, List<GroupeDemo> groupes,
+    /** {@code acteurs} : comptes de démonstration et leurs rôles, sous lesquels le jeu est chargé. */
+    record DemoClm(String administrationAffaires, String administrationPrincipale, Map<String, List<String>> acteurs, List<GroupeDemo> groupes,
                    List<ClmDto.RegleConservationRequest> conservation, List<ClmDto.ModeleRequest> modeles, List<TrousseDemo> trousses) {}
 
     /** Services et dépôts de lecture du module CLM, regroupés pour garder un constructeur lisible. */
@@ -65,13 +65,11 @@ public class DemonstrationClm {
 
     private final Moyens m;
     private final ContexteClm ctx;
-    private final UserRepository users;
     private final ObjectMapper json = new ObjectMapper().findAndRegisterModules();
 
-    public DemonstrationClm(Moyens moyens, ContexteClm ctx, UserRepository users) {
+    public DemonstrationClm(Moyens moyens, ContexteClm ctx) {
         this.m = moyens;
         this.ctx = ctx;
-        this.users = users;
     }
 
     /** Organisations (identifiant court) pour lesquelles un jeu de démonstration existe. */
@@ -112,8 +110,9 @@ public class DemonstrationClm {
         demo.conservation().forEach(r -> tenter(b, "règle de conservation " + (r.typeContrat() == null ? "par défaut" : r.typeContrat()),
                 () -> { if (regle(tenantId, r, affaires)) b.regles++; }));
         demo.modeles().forEach(mo -> tenter(b, "modèle « " + mo.nom() + " »",
-                () -> { if (modele(tenantId, mo, affaires, demo.administrationPrincipale())) b.modeles++; }));
-        demo.trousses().forEach(tr -> tenter(b, "trousse " + tr.requete().reference(), () -> { if (trousse(tenantId, tr)) b.trousses++; }));
+                () -> { if (modele(tenantId, mo, acteur(demo, affaires), acteur(demo, demo.administrationPrincipale()))) b.modeles++; }));
+        demo.trousses().forEach(tr -> tenter(b, "trousse " + tr.requete().reference(),
+                () -> { if (trousse(tenantId, tr, acteur(demo, tr.proprietaire()))) b.trousses++; }));
     }
 
     private boolean groupe(Long tenantId, GroupeDemo g, String acteur) {
@@ -134,21 +133,20 @@ public class DemonstrationClm {
         return !existe;
     }
 
-    private boolean modele(Long tenantId, ClmDto.ModeleRequest req, String auteur, String publieur) {
+    private boolean modele(Long tenantId, ClmDto.ModeleRequest req, Habilitations.Acteur auteur, Habilitations.Acteur publieur) {
         if (modeleNomme(tenantId, req.nom()) != null) {
             return false;
         }
-        Long id = m.modeles.creer(req, acteur(auteur)).id();
-        m.modeles.soumettre(id, acteur(auteur));
-        m.modeles.publier(id, acteur(publieur));
+        Long id = m.modeles.creer(req, auteur).id();
+        m.modeles.soumettre(id, auteur);
+        m.modeles.publier(id, publieur);
         return true;
     }
 
-    private boolean trousse(Long tenantId, TrousseDemo tr) {
+    private boolean trousse(Long tenantId, TrousseDemo tr, Habilitations.Acteur initiateur) {
         if (m.troussesLues.existsByTenantIdAndReference(tenantId, tr.requete().reference().toUpperCase(java.util.Locale.ROOT))) {
             return false;
         }
-        Habilitations.Acteur initiateur = acteur(tr.proprietaire());
         ModeleContrat modele = modeleNomme(tenantId, tr.modele());
         Long id = m.trousses.creer(avecModele(tr.requete(), modele), initiateur).resume().id();
         m.trousses.saisirValeurs(id, new ClmDto.ValeursRequest(tr.valeurs()), initiateur);
@@ -173,9 +171,11 @@ public class DemonstrationClm {
                 .filter(x -> x.getNom().equals(nom)).findFirst().orElse(null);
     }
 
-    private Habilitations.Acteur acteur(String courriel) {
-        List<String> roles = users.findByEmail(courriel).map(u -> u.getRoles().stream().map(Enum::name).toList())
-                .orElseThrow(() -> new IllegalStateException("Compte de démonstration absent : " + courriel));
+    private Habilitations.Acteur acteur(DemoClm demo, String courriel) {
+        List<String> roles = demo.acteurs() == null ? null : demo.acteurs().get(courriel);
+        if (roles == null) {
+            throw new IllegalStateException("Compte absent des acteurs du jeu de démonstration : " + courriel);
+        }
         return ctx.acteur(courriel, roles);
     }
 

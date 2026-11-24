@@ -8,4 +8,7 @@ public interface IdentiteOrganisation {
     }
 
     Organisation de(Long tenantId);
+
+    /** Organisation désignée par son identifiant court (sous-domaine), si elle existe. */
+    java.util.Optional<Long> parIdentifiant(String identifiant);
 }

@@ -58,6 +58,10 @@ class AdaptateursClmTest {
 
         assertEquals(new IdentiteOrganisation.Organisation("Ville de Lévis", "data:image/png;base64,AAAA"), identite.de(1L));
         assertEquals(new IdentiteOrganisation.Organisation(null, null), identite.de(9L), "tenant inactif ou inconnu : identité neutre");
+        when(tenants.idParSlug("levis")).thenReturn(Optional.of(1L));
+        when(tenants.idParSlug("inconnue")).thenReturn(Optional.empty());
+        assertEquals(Optional.of(1L), identite.parIdentifiant("levis"));
+        assertEquals(Optional.empty(), identite.parIdentifiant("inconnue"));
     }
 
     @Test

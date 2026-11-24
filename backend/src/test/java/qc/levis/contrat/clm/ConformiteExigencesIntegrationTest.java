@@ -153,6 +153,10 @@ class ConformiteExigencesIntegrationTest {
 
     @Test
     void le_calendrier_de_conservation_s_applique_aux_trousses_closes_et_le_gel_legal_suspend_la_destruction() throws Exception {
+        // Les règles de démonstration (data/clm-demo.json) peuvent exister : le décompte se fait par rapport à l'existant.
+        java.util.Set<String> avant = new java.util.HashSet<>();
+        corps(appel("GET", "/api/clm/admin/conservation/regles", admin, null), 200)
+                .forEach(r -> avant.add(r.path("typeContrat").isNull() ? "" : r.path("typeContrat").asText()));
         corps(appel("PUT", "/api/clm/admin/conservation/regles", admin, "{\"dureeAns\":7,\"sortFinal\":\"DETRUIRE\"}"), 200);
         JsonNode garantie = corps(appel("PUT", "/api/clm/admin/conservation/regles", admin,
                 "{\"typeContrat\":\"GARANTIE\",\"dureeAns\":10,\"sortFinal\":\"VERSER\"}"), 200);
@@ -160,7 +164,10 @@ class ConformiteExigencesIntegrationTest {
                 "{\"typeContrat\":\"GARANTIE\",\"dureeAns\":10,\"sortFinal\":\"verser\"}"), 200).get("dureeAns").asInt(), "remplace, ne duplique pas");
         assertEquals(400, appel("PUT", "/api/clm/admin/conservation/regles", admin, "{\"dureeAns\":0,\"sortFinal\":\"DETRUIRE\"}").getStatus());
         assertEquals(400, appel("PUT", "/api/clm/admin/conservation/regles", admin, "{\"dureeAns\":5,\"sortFinal\":\"BRULER\"}").getStatus());
-        assertEquals(2, corps(appel("GET", "/api/clm/admin/conservation/regles", admin, null), 200).size());
+        avant.add("");
+        avant.add("GARANTIE");
+        assertEquals(avant.size(), corps(appel("GET", "/api/clm/admin/conservation/regles", admin, null), 200).size(),
+                "règle par défaut et règle GARANTIE remplacées ou ajoutées, sans doublon");
 
         long id = corps(appel("POST", "/api/clm/trousses", initiateur, "{\"titre\":\"À conserver\"}"), 200).get("resume").get("id").asLong();
         corps(appel("POST", "/api/clm/trousses/" + id + "/annuler", initiateur, "{\"motif\":\"Abandon\"}"), 200);

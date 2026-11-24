@@ -2,6 +2,11 @@
   "iq": {
     "administrationAffaires": "admin.affaires@iq.example",
     "administrationPrincipale": "admin.ti@iq.example",
+    "acteurs": {
+      "admin.affaires@iq.example": ["ADMIN_AFFAIRES"],
+      "admin.ti@iq.example": ["ADMIN"],
+      "initiateur@iq.example": ["REDACTEUR"]
+    },
     "groupes": [
       { "code": "JURIDIQUE", "libelle": "Affaires juridiques", "membres": ["validateur@iq.example"] },
       { "code": "DIRECTION_FIN", "libelle": "Vice-présidence Financement", "membres": ["approbateur@iq.example"] },

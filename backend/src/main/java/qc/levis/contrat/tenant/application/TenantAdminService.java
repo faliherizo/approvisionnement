@@ -105,6 +105,11 @@ public class TenantAdminService {
         return new TenantPublic(t.getSlug(), t.getTitre(), t.getSousTitre(), theme(t));
     }
 
+    /** Identifiant d'une organisation, par son identifiant court (sous-domaine). */
+    public Optional<Long> idParSlug(String slug) {
+        return tenants.findBySlug(slug).map(Tenant::getId);
+    }
+
     /** Identité publique d'un tenant actif, pour les pages sans session qui le connaissent par son identifiant. */
     public Optional<TenantPublic> publicParId(Long id) {
         return tenants.findById(id).filter(Tenant::isActif)
