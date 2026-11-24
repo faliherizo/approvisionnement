@@ -22,7 +22,7 @@
         <!-- CVE-2026-42198 (pilote 42.6.2 imposé par le parent Spring Boot) : corrigé à partir de 42.7.11. -->
         <postgresql.version>42.7.13</postgresql.version>
         <!-- Testcontainers 1.21 : compatible avec l'API Docker 28 (Spring Boot 3.2 fixe 1.19, refusée par Docker récent). -->
-        <testcontainers.version>1.21.3</testcontainers.version>
+        <testcontainers.version>1.21.4</testcontainers.version>
     </properties>
 
     <dependencies>
