@@ -75,6 +75,9 @@ public class TenantsDemoSeeder implements CommandLineRunner {
     public void run(String... args) throws IOException {
         for (TenantDemo demo : lire()) {
             Tenant t = tenants.findBySlug(demo.slug()).orElseGet(() -> creer(demo));
+            if (demo.listes() != null) {
+                listes(t.getId(), demo.listes());
+            }
             if (Boolean.TRUE.equals(demo.bibliotheque())) {
                 bibliotheque.amorcer(t.getId());
             }
@@ -103,21 +106,26 @@ public class TenantsDemoSeeder implements CommandLineRunner {
             }
         });
         log.info("Organisation de démonstration créée : {} (modules {})", demo.slug(), demo.modules());
-        if (demo.listes() != null) {
-            listes(t.getId(), demo.listes());
-        }
         return t;
     }
 
-    /** Valeurs créées comme le ferait l'administration de l'organisation : chaque liste exige son module souscrit. */
+    /**
+     * Valeurs créées comme le ferait l'administration de l'organisation : chaque liste exige son module souscrit. Seules
+     * les valeurs absentes (par code) sont ajoutées, y compris dans une organisation déjà en place : ce que
+     * l'administration a renommé, retiré ou ajouté n'est jamais touché.
+     */
     private void listes(Long tenantId, Map<String, List<ValeurDemo>> listes) {
         TenantContext.set(tenantId);
         try {
             for (Map.Entry<String, List<ValeurDemo>> liste : listes.entrySet()) {
+                java.util.Set<String> presents = references.lister(liste.getKey(), false).stream()
+                        .map(r -> r.code()).collect(Collectors.toSet());
                 int ordre = 0;
                 for (ValeurDemo v : liste.getValue()) {
                     ordre += 10;
-                    references.creer(new ReferenceRequest(liste.getKey(), v.code(), v.libelle(), v.detail(), ordre, true), false);
+                    if (!presents.contains(v.code())) {
+                        references.creer(new ReferenceRequest(liste.getKey(), v.code(), v.libelle(), v.detail(), ordre, true), false);
+                    }
                 }
             }
         } finally {

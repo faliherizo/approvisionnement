@@ -143,6 +143,16 @@ async function jouer(page: Page, e: Etape, ctx: Contexte, outils: { playwright: 
     for (const [nom, valeur] of Object.entries(e.remplir)) await (await champ(page, nom)).fill(String(valeur))
     return
   }
+  // Options proposées par une liste : présence et absence (une valeur retirée par l'administration n'est plus offerte).
+  if ('options' in e) {
+    for (const [nom, attendu] of Object.entries(e.options)) {
+      const liste = await champ(page, nom)
+      const lire = () => liste.locator('option').evaluateAll((os) => os.map((o) => o.textContent?.trim() ?? ''))
+      for (const t of attendu.contient ?? []) await expect.poll(async () => (await lire()).some((l) => l.includes(t)), { message: `« ${nom} » propose « ${t} »` }).toBe(true)
+      for (const t of attendu.exclut ?? []) expect((await lire()).some((l) => l.includes(t)), `« ${nom} » ne propose plus « ${t} »`).toBe(false)
+    }
+    return
+  }
   if ('choisir' in e) {
     for (const [nom, valeur] of Object.entries(e.choisir)) {
       const liste = await champ(page, nom)
@@ -198,7 +208,7 @@ async function jouer(page: Page, e: Etape, ctx: Contexte, outils: { playwright: 
     return
   }
   if ('telecharger' in e) {
-    const [fichier] = await Promise.all([page.waitForEvent('download'), (await bouton(page, e.telecharger)).click()])
+    const [fichier] = await Promise.all([page.waitForEvent('download', { timeout: 60_000 }), (await bouton(page, e.telecharger)).click()])
     const chemin = await fichier.path()
     expect(chemin && statSync(chemin).size, `fichier téléchargé par « ${e.telecharger} »`).toBeGreaterThan(0)
     return

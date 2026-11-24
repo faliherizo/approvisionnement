@@ -1386,7 +1386,134 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 
 - **Source** : 1.4.6
 - **Conformité déclarée** : ✅
-- **Démontrée à l'écran** : non — seulement préparée par l'API
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-23 — Flexibilité en cours d'utilisation : l'organisation ajoute un type de contrat, change un paramètre et fait évoluer un modèle, sans développement ; les trousses suivantes en tiennent compte
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-17, IQ-C-55, IQ-D-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (24 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/listes`
+2. Choisir « Liste » : `CLM_TYPE_CONTRAT`
+3. Activer « Ajouter une valeur »
+4. Saisir « Code » : `PILOTE_${UNIQUE}` ; « Libellé » : `Entente pilote ${unique}`
+5. Activer « Enregistrer »
+6. Voir « Valeur enregistrée. »
+7. Ouvrir l'écran `/clm/admin/parametres`
+8. Activer « Modifier un paramètre autorisé »
+9. Saisir « Rappel tous les (jours) » : `6`
+10. Activer « Enregistrer »
+11. Voir « Paramètres enregistrés. »
+12. Se connecter en tant que initiateur IQ
+13. Ouvrir l'écran `/clm/trousses/nouvelle`
+14. Constater la valeur « Rappel tous les (jours) » : `6`
+15. Saisir « Titre » : `Flexible CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-FLX`
+16. Choisir « Type de contrat » : `Entente pilote ${unique}`
+17. Activer « Enregistrer le brouillon »
+18. Voir « CB${UNIQUE}-FLX »
+19. Se connecter en tant que administration d'affaires IQ
+20. Ouvrir l'écran `/clm/modeles`
+21. Activer « Créer un modèle »
+22. Saisir « Nom » : `Évolutif CB ${unique}` ; « Corps du contrat » : `Version 1 de l'entente. {{clauses}}`
+23. Activer « Soumettre à publication »
+24. Voir « soumis à publication »
+25. Se connecter en tant que administration principale IQ
+26. Ouvrir l'écran `/clm/modeles`
+27. Dans la ligne « Évolutif CB ${unique} », activer « Publier »
+28. Voir « « Évolutif CB ${unique} » publié. »
+29. Se connecter en tant que administration d'affaires IQ
+30. Ouvrir l'écran `/clm/modeles`
+31. Dans la ligne « Évolutif CB ${unique} », activer « Nouvelle version »
+32. Voir « Nouvelle version de « Évolutif CB ${unique} » créée. »
+33. Activer « Modifier le brouillon — Évolutif CB ${unique} » (link)
+34. Saisir « Corps du contrat » : `Version 2 de l'entente, clause de résiliation ajoutée. {{clauses}}`
+35. Activer « Soumettre à publication »
+36. Voir « soumis à publication »
+37. Se connecter en tant que administration principale IQ
+38. Ouvrir l'écran `/clm/modeles`
+39. Saisir « Rechercher » : `Évolutif CB ${unique}`
+40. Choisir « État » : `EN_REVISION`
+41. Dans la ligne « Évolutif CB ${unique} », activer « Publier »
+42. Voir « publié. »
+43. Choisir « État » : `RETIRE`
+44. Voir « Évolutif CB ${unique} »
+45. Ouvrir l'écran `/clm/admin/parametres`
+46. Activer « Modifier un paramètre autorisé »
+47. Activer « Rétablir les paramètres de la plateforme »
+48. Voir « Paramètres de la plateforme rétablis. »
+
+### E2E-CB-IQ-24 — Listes de référence configurées par l'administration de l'organisation : chaque valeur ajoutée, renommée ou retirée se répercute aussitôt dans les listes déroulantes des écrans d'affaires
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-17, IQ-C-67, IQ-D-05
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (36 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/listes`
+2. Choisir « Liste » : `CLM_UNITE`
+3. Activer « Ajouter une valeur »
+4. Saisir « Code » : `INNOV_${UNIQUE}` ; « Libellé » : `Innovation ${unique}`
+5. Activer « Enregistrer »
+6. Voir « Valeur enregistrée. »
+7. Voir « Innovation ${unique} »
+8. Choisir « Liste » : `CLM_UNITE`
+9. Activer « Ajouter une valeur »
+10. Saisir « Code » : `ANCIENNE_${UNIQUE}` ; « Libellé » : `Unité dissoute ${unique}`
+11. Activer « Enregistrer »
+12. Voir « Valeur enregistrée. »
+13. Voir « Unité dissoute ${unique} »
+14. Activer « Retirer — Unité dissoute ${unique} » (button)
+15. Voir « Valeur retirée des sélecteurs. »
+16. Choisir « Liste » : `CLM_ROLE_CONTRAT`
+17. Activer « Ajouter une valeur »
+18. Saisir « Code » : `MANDATAIRE_${UNIQUE}` ; « Libellé » : `Mandataire ${unique}`
+19. Activer « Enregistrer »
+20. Voir « Valeur enregistrée. »
+21. Voir « Mandataire ${unique} »
+22. Choisir « Liste » : `CLM_CHAMP_SALESFORCE`
+23. Activer « Ajouter une valeur »
+24. Saisir « Code » : `Region_${UNIQUE}` ; « Libellé » : `Région administrative ${unique}`
+25. Activer « Enregistrer »
+26. Voir « Valeur enregistrée. »
+27. Voir « Région administrative ${unique} »
+28. Choisir « Liste » : `CLM_PRIORITE_TACHE`
+29. Activer « Ajouter une valeur »
+30. Saisir « Code » : `CRITIQUE_${UNIQUE}` ; « Libellé » : `Critique ${unique}`
+31. Activer « Enregistrer »
+32. Voir « Valeur enregistrée. »
+33. Voir « Critique ${unique} »
+34. Choisir « Liste » : `CLM_TYPE_CONTRAT`
+35. Activer « Ajouter une valeur »
+36. Saisir « Code » : `ACCORD_${UNIQUE}` ; « Libellé » : `Accord cadre ${unique}`
+37. Activer « Enregistrer »
+38. Voir « Valeur enregistrée. »
+39. Voir « Accord cadre ${unique} »
+40. Activer « Modifier — Accord cadre ${unique} » (button)
+41. Saisir « Libellé » : `Accord-cadre de partenariat ${unique}`
+42. Activer « Enregistrer »
+43. Voir « Accord-cadre de partenariat ${unique} »
+44. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+45. Se connecter en tant que initiateur IQ
+46. Ouvrir l'écran `/clm/trousses/nouvelle`
+47. Constater que « Unité responsable » propose « Innovation ${unique} » et ne propose plus « Unité dissoute ${unique} » ; Constater que « Type de contrat » propose « Accord-cadre de partenariat ${unique} » et ne propose plus « Accord cadre ${unique} »
+48. Saisir « Titre » : `Références CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-REF`
+49. Choisir « Unité responsable » : `Innovation ${unique}` ; « Type de contrat » : `Accord-cadre de partenariat ${unique}`
+50. Activer « Enregistrer le brouillon »
+51. Activer « Continuer »
+52. Activer « Continuer »
+53. Constater que « Rôle dans le contrat » propose « Mandataire ${unique} »
+54. Ouvrir l'écran `/clm/taches`
+55. Activer « Nouvelle tâche »
+56. Constater que « Priorité » propose « Critique ${unique} »
+57. Se connecter en tant que administration d'affaires IQ
+58. Ouvrir l'écran `/clm/modeles`
+59. Activer « Créer un modèle »
+60. Activer « Ajouter un champ »
+61. Constater que « Source Salesforce » propose « Région administrative ${unique} »
 
 ### E2E-IQ-03 — Cycle de vie d'un modèle : rédaction, soumission, publication, nouvelle version
 
@@ -3684,7 +3811,48 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
-- **Démontrée à l'écran** : non — seulement préparée par l'API
+- **Démontrée à l'écran** : oui
+
+### E2E-CB-IQ-22 — Saisie assistée : une valeur déjà retenue dans une trousse est proposée à la saisie du même champ dans la trousse suivante
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-39, IQ-C-56
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (18 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Se connecter en tant que administration d'affaires IQ
+2. Ouvrir l'écran `/clm/modeles`
+3. Activer « Créer un modèle »
+4. Saisir « Nom » : `Suggestions CB ${unique}` ; « Corps du contrat » : `Convention au titre du programme {{programme}}. {{clauses}}`
+5. Activer « Ajouter un champ »
+6. Saisir « Nom technique » : `programme` ; « Libellé » : `Programme`
+7. Activer « Soumettre à publication »
+8. Voir « soumis à publication »
+9. Se connecter en tant que administration principale IQ
+10. Ouvrir l'écran `/clm/modeles`
+11. Dans la ligne « Suggestions CB ${unique} », activer « Publier »
+12. Voir « « Suggestions CB ${unique} » publié. »
+13. Se connecter en tant que initiateur IQ
+14. Ouvrir l'écran `/clm/trousses/nouvelle`
+15. Saisir « Titre » : `Suggestion A ${unique}` ; « Référence externe » : `CB${UNIQUE}-SGA`
+16. Choisir « Modèle de contrat » : `Suggestions CB ${unique}`
+17. Activer « Enregistrer le brouillon »
+18. Activer « Corriger la valeur — Programme »
+19. Saisir « Nouvelle valeur — Programme » : `Essor régional ${unique}`
+20. Dans la section « Corriger la valeur — Programme », activer « Enregistrer »
+21. Voir « Valeur de « Programme » enregistrée. »
+22. Ouvrir l'écran `/clm/trousses/nouvelle`
+23. Saisir « Titre » : `Suggestion B ${unique}` ; « Référence externe » : `CB${UNIQUE}-SGB`
+24. Choisir « Modèle de contrat » : `Suggestions CB ${unique}`
+25. Activer « Enregistrer le brouillon »
+26. Activer « Corriger la valeur — Programme »
+27. Voir « valeur(s) déjà utilisée(s) proposée(s) : flèche bas pour les parcourir. »
+28. Saisir « Nouvelle valeur — Programme » : `Essor régional ${unique}`
+29. Dans la section « Corriger la valeur — Programme », activer « Enregistrer »
+30. Voir « Valeur de « Programme » enregistrée. »
+31. Voir « Essor régional ${unique} »
+32. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-04 — Générer un contrat depuis un modèle, prérempli par Salesforce
 
@@ -5316,6 +5484,63 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 53. Activer « Signer »
 54. Voir « Merci, votre signature est enregistrée »
 
+### E2E-CB-IQ-23 — Flexibilité en cours d'utilisation : l'organisation ajoute un type de contrat, change un paramètre et fait évoluer un modèle, sans développement ; les trousses suivantes en tiennent compte
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-17, IQ-C-55, IQ-D-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (24 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/listes`
+2. Choisir « Liste » : `CLM_TYPE_CONTRAT`
+3. Activer « Ajouter une valeur »
+4. Saisir « Code » : `PILOTE_${UNIQUE}` ; « Libellé » : `Entente pilote ${unique}`
+5. Activer « Enregistrer »
+6. Voir « Valeur enregistrée. »
+7. Ouvrir l'écran `/clm/admin/parametres`
+8. Activer « Modifier un paramètre autorisé »
+9. Saisir « Rappel tous les (jours) » : `6`
+10. Activer « Enregistrer »
+11. Voir « Paramètres enregistrés. »
+12. Se connecter en tant que initiateur IQ
+13. Ouvrir l'écran `/clm/trousses/nouvelle`
+14. Constater la valeur « Rappel tous les (jours) » : `6`
+15. Saisir « Titre » : `Flexible CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-FLX`
+16. Choisir « Type de contrat » : `Entente pilote ${unique}`
+17. Activer « Enregistrer le brouillon »
+18. Voir « CB${UNIQUE}-FLX »
+19. Se connecter en tant que administration d'affaires IQ
+20. Ouvrir l'écran `/clm/modeles`
+21. Activer « Créer un modèle »
+22. Saisir « Nom » : `Évolutif CB ${unique}` ; « Corps du contrat » : `Version 1 de l'entente. {{clauses}}`
+23. Activer « Soumettre à publication »
+24. Voir « soumis à publication »
+25. Se connecter en tant que administration principale IQ
+26. Ouvrir l'écran `/clm/modeles`
+27. Dans la ligne « Évolutif CB ${unique} », activer « Publier »
+28. Voir « « Évolutif CB ${unique} » publié. »
+29. Se connecter en tant que administration d'affaires IQ
+30. Ouvrir l'écran `/clm/modeles`
+31. Dans la ligne « Évolutif CB ${unique} », activer « Nouvelle version »
+32. Voir « Nouvelle version de « Évolutif CB ${unique} » créée. »
+33. Activer « Modifier le brouillon — Évolutif CB ${unique} » (link)
+34. Saisir « Corps du contrat » : `Version 2 de l'entente, clause de résiliation ajoutée. {{clauses}}`
+35. Activer « Soumettre à publication »
+36. Voir « soumis à publication »
+37. Se connecter en tant que administration principale IQ
+38. Ouvrir l'écran `/clm/modeles`
+39. Saisir « Rechercher » : `Évolutif CB ${unique}`
+40. Choisir « État » : `EN_REVISION`
+41. Dans la ligne « Évolutif CB ${unique} », activer « Publier »
+42. Voir « publié. »
+43. Choisir « État » : `RETIRE`
+44. Voir « Évolutif CB ${unique} »
+45. Ouvrir l'écran `/clm/admin/parametres`
+46. Activer « Modifier un paramètre autorisé »
+47. Activer « Rétablir les paramètres de la plateforme »
+48. Voir « Paramètres de la plateforme rétablis. »
+
 ### E2E-IQ-08 — Étapes parallèles et réassignation d'une tâche
 
 - **Profil** : initiateur IQ
@@ -5426,6 +5651,47 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 79. Activer « Relayer maintenant »
 80. Voir « Transmis »
 81. Voir « Journal des retours de statut », « LANCEE ·  », « SIGNATURE_TERMINEE ·  », « a0B5e00000GRT002 »
+
+### E2E-CB-IQ-22 — Saisie assistée : une valeur déjà retenue dans une trousse est proposée à la saisie du même champ dans la trousse suivante
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-39, IQ-C-56
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (18 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Se connecter en tant que administration d'affaires IQ
+2. Ouvrir l'écran `/clm/modeles`
+3. Activer « Créer un modèle »
+4. Saisir « Nom » : `Suggestions CB ${unique}` ; « Corps du contrat » : `Convention au titre du programme {{programme}}. {{clauses}}`
+5. Activer « Ajouter un champ »
+6. Saisir « Nom technique » : `programme` ; « Libellé » : `Programme`
+7. Activer « Soumettre à publication »
+8. Voir « soumis à publication »
+9. Se connecter en tant que administration principale IQ
+10. Ouvrir l'écran `/clm/modeles`
+11. Dans la ligne « Suggestions CB ${unique} », activer « Publier »
+12. Voir « « Suggestions CB ${unique} » publié. »
+13. Se connecter en tant que initiateur IQ
+14. Ouvrir l'écran `/clm/trousses/nouvelle`
+15. Saisir « Titre » : `Suggestion A ${unique}` ; « Référence externe » : `CB${UNIQUE}-SGA`
+16. Choisir « Modèle de contrat » : `Suggestions CB ${unique}`
+17. Activer « Enregistrer le brouillon »
+18. Activer « Corriger la valeur — Programme »
+19. Saisir « Nouvelle valeur — Programme » : `Essor régional ${unique}`
+20. Dans la section « Corriger la valeur — Programme », activer « Enregistrer »
+21. Voir « Valeur de « Programme » enregistrée. »
+22. Ouvrir l'écran `/clm/trousses/nouvelle`
+23. Saisir « Titre » : `Suggestion B ${unique}` ; « Référence externe » : `CB${UNIQUE}-SGB`
+24. Choisir « Modèle de contrat » : `Suggestions CB ${unique}`
+25. Activer « Enregistrer le brouillon »
+26. Activer « Corriger la valeur — Programme »
+27. Voir « valeur(s) déjà utilisée(s) proposée(s) : flèche bas pour les parcourir. »
+28. Saisir « Nouvelle valeur — Programme » : `Essor régional ${unique}`
+29. Dans la section « Corriger la valeur — Programme », activer « Enregistrer »
+30. Voir « Valeur de « Programme » enregistrée. »
+31. Voir « Essor régional ${unique} »
+32. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-33 — Générer le contrat d'un modèle publié, valeurs préremplies depuis Salesforce et corrigeables
 
@@ -6394,6 +6660,76 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 12. Ouvrir l'écran `/clm/trousses`
 13. Ne pas voir « CB${UNIQUE}-ROL »
 
+### E2E-CB-IQ-24 — Listes de référence configurées par l'administration de l'organisation : chaque valeur ajoutée, renommée ou retirée se répercute aussitôt dans les listes déroulantes des écrans d'affaires
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-17, IQ-C-67, IQ-D-05
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (36 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/listes`
+2. Choisir « Liste » : `CLM_UNITE`
+3. Activer « Ajouter une valeur »
+4. Saisir « Code » : `INNOV_${UNIQUE}` ; « Libellé » : `Innovation ${unique}`
+5. Activer « Enregistrer »
+6. Voir « Valeur enregistrée. »
+7. Voir « Innovation ${unique} »
+8. Choisir « Liste » : `CLM_UNITE`
+9. Activer « Ajouter une valeur »
+10. Saisir « Code » : `ANCIENNE_${UNIQUE}` ; « Libellé » : `Unité dissoute ${unique}`
+11. Activer « Enregistrer »
+12. Voir « Valeur enregistrée. »
+13. Voir « Unité dissoute ${unique} »
+14. Activer « Retirer — Unité dissoute ${unique} » (button)
+15. Voir « Valeur retirée des sélecteurs. »
+16. Choisir « Liste » : `CLM_ROLE_CONTRAT`
+17. Activer « Ajouter une valeur »
+18. Saisir « Code » : `MANDATAIRE_${UNIQUE}` ; « Libellé » : `Mandataire ${unique}`
+19. Activer « Enregistrer »
+20. Voir « Valeur enregistrée. »
+21. Voir « Mandataire ${unique} »
+22. Choisir « Liste » : `CLM_CHAMP_SALESFORCE`
+23. Activer « Ajouter une valeur »
+24. Saisir « Code » : `Region_${UNIQUE}` ; « Libellé » : `Région administrative ${unique}`
+25. Activer « Enregistrer »
+26. Voir « Valeur enregistrée. »
+27. Voir « Région administrative ${unique} »
+28. Choisir « Liste » : `CLM_PRIORITE_TACHE`
+29. Activer « Ajouter une valeur »
+30. Saisir « Code » : `CRITIQUE_${UNIQUE}` ; « Libellé » : `Critique ${unique}`
+31. Activer « Enregistrer »
+32. Voir « Valeur enregistrée. »
+33. Voir « Critique ${unique} »
+34. Choisir « Liste » : `CLM_TYPE_CONTRAT`
+35. Activer « Ajouter une valeur »
+36. Saisir « Code » : `ACCORD_${UNIQUE}` ; « Libellé » : `Accord cadre ${unique}`
+37. Activer « Enregistrer »
+38. Voir « Valeur enregistrée. »
+39. Voir « Accord cadre ${unique} »
+40. Activer « Modifier — Accord cadre ${unique} » (button)
+41. Saisir « Libellé » : `Accord-cadre de partenariat ${unique}`
+42. Activer « Enregistrer »
+43. Voir « Accord-cadre de partenariat ${unique} »
+44. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+45. Se connecter en tant que initiateur IQ
+46. Ouvrir l'écran `/clm/trousses/nouvelle`
+47. Constater que « Unité responsable » propose « Innovation ${unique} » et ne propose plus « Unité dissoute ${unique} » ; Constater que « Type de contrat » propose « Accord-cadre de partenariat ${unique} » et ne propose plus « Accord cadre ${unique} »
+48. Saisir « Titre » : `Références CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-REF`
+49. Choisir « Unité responsable » : `Innovation ${unique}` ; « Type de contrat » : `Accord-cadre de partenariat ${unique}`
+50. Activer « Enregistrer le brouillon »
+51. Activer « Continuer »
+52. Activer « Continuer »
+53. Constater que « Rôle dans le contrat » propose « Mandataire ${unique} »
+54. Ouvrir l'écran `/clm/taches`
+55. Activer « Nouvelle tâche »
+56. Constater que « Priorité » propose « Critique ${unique} »
+57. Se connecter en tant que administration d'affaires IQ
+58. Ouvrir l'écran `/clm/modeles`
+59. Activer « Créer un modèle »
+60. Activer « Ajouter un champ »
+61. Constater que « Source Salesforce » propose « Région administrative ${unique} »
+
 ### E2E-IQ-25 — Moindre privilège : administrations séparées, auditeur en lecture seule
 
 - **Profil** : administration principale IQ
@@ -7239,6 +7575,76 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 30. Activer « Valider »
 31. Voir « Décision enregistrée »
 
+### E2E-CB-IQ-24 — Listes de référence configurées par l'administration de l'organisation : chaque valeur ajoutée, renommée ou retirée se répercute aussitôt dans les listes déroulantes des écrans d'affaires
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-17, IQ-C-67, IQ-D-05
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (36 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/listes`
+2. Choisir « Liste » : `CLM_UNITE`
+3. Activer « Ajouter une valeur »
+4. Saisir « Code » : `INNOV_${UNIQUE}` ; « Libellé » : `Innovation ${unique}`
+5. Activer « Enregistrer »
+6. Voir « Valeur enregistrée. »
+7. Voir « Innovation ${unique} »
+8. Choisir « Liste » : `CLM_UNITE`
+9. Activer « Ajouter une valeur »
+10. Saisir « Code » : `ANCIENNE_${UNIQUE}` ; « Libellé » : `Unité dissoute ${unique}`
+11. Activer « Enregistrer »
+12. Voir « Valeur enregistrée. »
+13. Voir « Unité dissoute ${unique} »
+14. Activer « Retirer — Unité dissoute ${unique} » (button)
+15. Voir « Valeur retirée des sélecteurs. »
+16. Choisir « Liste » : `CLM_ROLE_CONTRAT`
+17. Activer « Ajouter une valeur »
+18. Saisir « Code » : `MANDATAIRE_${UNIQUE}` ; « Libellé » : `Mandataire ${unique}`
+19. Activer « Enregistrer »
+20. Voir « Valeur enregistrée. »
+21. Voir « Mandataire ${unique} »
+22. Choisir « Liste » : `CLM_CHAMP_SALESFORCE`
+23. Activer « Ajouter une valeur »
+24. Saisir « Code » : `Region_${UNIQUE}` ; « Libellé » : `Région administrative ${unique}`
+25. Activer « Enregistrer »
+26. Voir « Valeur enregistrée. »
+27. Voir « Région administrative ${unique} »
+28. Choisir « Liste » : `CLM_PRIORITE_TACHE`
+29. Activer « Ajouter une valeur »
+30. Saisir « Code » : `CRITIQUE_${UNIQUE}` ; « Libellé » : `Critique ${unique}`
+31. Activer « Enregistrer »
+32. Voir « Valeur enregistrée. »
+33. Voir « Critique ${unique} »
+34. Choisir « Liste » : `CLM_TYPE_CONTRAT`
+35. Activer « Ajouter une valeur »
+36. Saisir « Code » : `ACCORD_${UNIQUE}` ; « Libellé » : `Accord cadre ${unique}`
+37. Activer « Enregistrer »
+38. Voir « Valeur enregistrée. »
+39. Voir « Accord cadre ${unique} »
+40. Activer « Modifier — Accord cadre ${unique} » (button)
+41. Saisir « Libellé » : `Accord-cadre de partenariat ${unique}`
+42. Activer « Enregistrer »
+43. Voir « Accord-cadre de partenariat ${unique} »
+44. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+45. Se connecter en tant que initiateur IQ
+46. Ouvrir l'écran `/clm/trousses/nouvelle`
+47. Constater que « Unité responsable » propose « Innovation ${unique} » et ne propose plus « Unité dissoute ${unique} » ; Constater que « Type de contrat » propose « Accord-cadre de partenariat ${unique} » et ne propose plus « Accord cadre ${unique} »
+48. Saisir « Titre » : `Références CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-REF`
+49. Choisir « Unité responsable » : `Innovation ${unique}` ; « Type de contrat » : `Accord-cadre de partenariat ${unique}`
+50. Activer « Enregistrer le brouillon »
+51. Activer « Continuer »
+52. Activer « Continuer »
+53. Constater que « Rôle dans le contrat » propose « Mandataire ${unique} »
+54. Ouvrir l'écran `/clm/taches`
+55. Activer « Nouvelle tâche »
+56. Constater que « Priorité » propose « Critique ${unique} »
+57. Se connecter en tant que administration d'affaires IQ
+58. Ouvrir l'écran `/clm/modeles`
+59. Activer « Créer un modèle »
+60. Activer « Ajouter un champ »
+61. Constater que « Source Salesforce » propose « Région administrative ${unique} »
+
 ### E2E-IQ-08 — Étapes parallèles et réassignation d'une tâche
 
 - **Profil** : initiateur IQ
@@ -7361,6 +7767,63 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 12. Ouvrir l'écran `/clm/modeles`
 13. Dans la ligne « Auteur CB ${unique} », activer « Renvoyer en brouillon »
 14. Voir « « Auteur CB ${unique} » renvoyé en brouillon. »
+
+### E2E-CB-IQ-23 — Flexibilité en cours d'utilisation : l'organisation ajoute un type de contrat, change un paramètre et fait évoluer un modèle, sans développement ; les trousses suivantes en tiennent compte
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-17, IQ-C-55, IQ-D-06
+- **Données** : `bdd/e2e/donnees/cahier-iq.json`
+- **Nature** : parcours d'interface (24 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/listes`
+2. Choisir « Liste » : `CLM_TYPE_CONTRAT`
+3. Activer « Ajouter une valeur »
+4. Saisir « Code » : `PILOTE_${UNIQUE}` ; « Libellé » : `Entente pilote ${unique}`
+5. Activer « Enregistrer »
+6. Voir « Valeur enregistrée. »
+7. Ouvrir l'écran `/clm/admin/parametres`
+8. Activer « Modifier un paramètre autorisé »
+9. Saisir « Rappel tous les (jours) » : `6`
+10. Activer « Enregistrer »
+11. Voir « Paramètres enregistrés. »
+12. Se connecter en tant que initiateur IQ
+13. Ouvrir l'écran `/clm/trousses/nouvelle`
+14. Constater la valeur « Rappel tous les (jours) » : `6`
+15. Saisir « Titre » : `Flexible CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-FLX`
+16. Choisir « Type de contrat » : `Entente pilote ${unique}`
+17. Activer « Enregistrer le brouillon »
+18. Voir « CB${UNIQUE}-FLX »
+19. Se connecter en tant que administration d'affaires IQ
+20. Ouvrir l'écran `/clm/modeles`
+21. Activer « Créer un modèle »
+22. Saisir « Nom » : `Évolutif CB ${unique}` ; « Corps du contrat » : `Version 1 de l'entente. {{clauses}}`
+23. Activer « Soumettre à publication »
+24. Voir « soumis à publication »
+25. Se connecter en tant que administration principale IQ
+26. Ouvrir l'écran `/clm/modeles`
+27. Dans la ligne « Évolutif CB ${unique} », activer « Publier »
+28. Voir « « Évolutif CB ${unique} » publié. »
+29. Se connecter en tant que administration d'affaires IQ
+30. Ouvrir l'écran `/clm/modeles`
+31. Dans la ligne « Évolutif CB ${unique} », activer « Nouvelle version »
+32. Voir « Nouvelle version de « Évolutif CB ${unique} » créée. »
+33. Activer « Modifier le brouillon — Évolutif CB ${unique} » (link)
+34. Saisir « Corps du contrat » : `Version 2 de l'entente, clause de résiliation ajoutée. {{clauses}}`
+35. Activer « Soumettre à publication »
+36. Voir « soumis à publication »
+37. Se connecter en tant que administration principale IQ
+38. Ouvrir l'écran `/clm/modeles`
+39. Saisir « Rechercher » : `Évolutif CB ${unique}`
+40. Choisir « État » : `EN_REVISION`
+41. Dans la ligne « Évolutif CB ${unique} », activer « Publier »
+42. Voir « publié. »
+43. Choisir « État » : `RETIRE`
+44. Voir « Évolutif CB ${unique} »
+45. Ouvrir l'écran `/clm/admin/parametres`
+46. Activer « Modifier un paramètre autorisé »
+47. Activer « Rétablir les paramètres de la plateforme »
+48. Voir « Paramètres de la plateforme rétablis. »
 
 ### E2E-IQ-03 — Cycle de vie d'un modèle : rédaction, soumission, publication, nouvelle version
 

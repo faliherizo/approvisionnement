@@ -48,6 +48,32 @@ Comptes amorcés par `TenantsDemoSeeder`, à partir de `backend/src/main/resourc
 Parcours type : l'initiateur crée une trousse, le validateur la révise, l'approbateur l'approuve, le signataire
 signe ; l'auditeur consulte la preuve et le journal.
 
+**Données de démonstration déjà en place** (`backend/src/main/resources/data/clm-demo.json`, amorcées au démarrage par
+`DemoClmSeeder`, sans jamais écraser ce qui existe) :
+
+| Donnée | Contenu |
+|---|---|
+| Modèles publiés | Convention d'aide financière (subvention), Lettre d'offre de prêt, Entente de confidentialité — proposés dans « Créer une trousse » et dans la signature en lot ; Contrat de services professionnels, partagé avec le seul groupe Juridique |
+| Groupes | JURIDIQUE (validateur), DIRECTION_FIN (approbateur), FINANCEMENT (initiateur) |
+| Conservation | défaut 10 ans (conserver) ; subvention 10 ans (verser) ; prêt 7 ans (détruire) ; confidentialité 5 ans (détruire) |
+| Trousses | DEMO-AGRINORD (convention lancée : tâche de validation chez validateur@), DEMO-MAURICIE (offre de prêt lancée : tâche d'approbation chez approbateur@), DEMO-LAURENTIDES (entente en brouillon) |
+
+Les modèles d'IQ se créent par l'administration d'affaires (`admin.affaires@`) et se publient par une autre
+administration (`admin.ti@`) : l'auteur ne publie pas son propre modèle.
+
+**Listes déroulantes configurables par l'administration de l'organisation** (sans développement ni redéploiement) :
+
+| Liste déroulante | Où elle se configure | Où elle sert |
+|---|---|---|
+| Modèle de contrat | Catalogue des modèles (`/clm/modeles`) : créer, publier, retirer, nouvelle version | Créer une trousse, signature en lot |
+| Type de contrat, Unité responsable, Rôle dans le contrat, Source Salesforce, Priorité | Administration CLM → Listes de référence (`/clm/admin/listes`) : ajouter, renommer, retirer, proposer de nouveau | Créer une trousse, participants, éditeur de modèle, tâches |
+| Groupes (attribution d'étapes, partage de modèles) | Administration CLM → Groupes (`/clm/admin/groupes`) | Parcours, catalogue des modèles |
+| Règles de conservation | Conservation et destruction (`/clm/admin/conservation`) | Clôture et destruction des trousses |
+
+Démontré par le scénario e2e E2E-CB-IQ-24 : chaque valeur ajoutée, renommée ou retirée se répercute aussitôt dans les
+listes des écrans. Les listes de l'organisation de démonstration sont complétées au démarrage (`tenants-demo.json`,
+`listes`) : seules les valeurs absentes sont ajoutées, ce que l'administration a modifié n'est jamais écrasé.
+
 ## Ville de Trois-Rivières — <https://v3r.contrat.vinaitsolution.com>
 
 Rédaction contractuelle (approvisionnement). Comptes amorcés par `TenantsDemoSeeder` (même fichier que IQ) ;

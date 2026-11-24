@@ -1,0 +1,130 @@
+{
+  "iq": {
+    "administrationAffaires": "admin.affaires@iq.example",
+    "administrationPrincipale": "admin.ti@iq.example",
+    "groupes": [
+      { "code": "JURIDIQUE", "libelle": "Affaires juridiques", "membres": ["validateur@iq.example"] },
+      { "code": "DIRECTION_FIN", "libelle": "Vice-présidence Financement", "membres": ["approbateur@iq.example"] },
+      { "code": "FINANCEMENT", "libelle": "Financement des entreprises", "membres": ["initiateur@iq.example"] }
+    ],
+    "conservation": [
+      { "typeContrat": null, "dureeAns": 10, "sortFinal": "CONSERVER" },
+      { "typeContrat": "SUBVENTION", "dureeAns": 10, "sortFinal": "VERSER" },
+      { "typeContrat": "PRET", "dureeAns": 7, "sortFinal": "DETRUIRE" },
+      { "typeContrat": "CONFIDENTIALITE", "dureeAns": 5, "sortFinal": "DETRUIRE" }
+    ],
+    "modeles": [
+      {
+        "nom": "Convention d'aide financière",
+        "categorie": "SUBVENTION",
+        "corps": "CONVENTION D'AIDE FINANCIÈRE\n\nEntre Investissement Québec et {{demandeur}}, au titre du programme {{programme}}, pour une aide de {{montant}} $ à compter du {{debut}}.\n\n{{clauses}}",
+        "champs": [
+          { "cle": "demandeur", "libelle": "Demandeur", "type": "TEXTE", "obligatoire": true, "source": "Demandeur" },
+          { "cle": "programme", "libelle": "Programme", "type": "TEXTE", "obligatoire": true, "source": "Programme" },
+          { "cle": "montant", "libelle": "Montant", "type": "TEXTE", "obligatoire": true, "source": "Montant", "format": "\\d+(\\.\\d{2})?" },
+          { "cle": "debut", "libelle": "Date de début", "type": "DATE" },
+          { "cle": "garantie", "libelle": "Garantie exigée", "type": "CASE" },
+          { "cle": "signature1", "libelle": "Signature du bénéficiaire", "type": "SIGNATURE", "roleDestinataire": "SIGNATAIRE_1",
+            "position": { "page": 1, "x": 10, "y": 78, "largeur": 40, "hauteur": 10 } }
+        ],
+        "clauses": [
+          { "cle": "versement", "titre": "Versement", "texte": "L'aide est versée sur présentation des pièces justificatives.", "combinateur": "ET", "conditions": [] },
+          { "cle": "garantie", "titre": "Garantie", "texte": "Le bénéficiaire fournit une garantie à la satisfaction d'Investissement Québec.", "combinateur": "ET",
+            "conditions": [{ "champ": "garantie", "operateur": "EGAL", "valeur": "true" }] }
+        ],
+        "parcours": [
+          { "cle": "v1", "libelle": "Validation juridique", "phase": 1, "type": "VALIDATION", "affectations": [{ "type": "GROUPE", "valeur": "JURIDIQUE" }], "delaiJours": 5 },
+          { "cle": "a1", "libelle": "Approbation", "phase": 2, "type": "APPROBATION", "affectations": [{ "type": "UTILISATEUR", "valeur": "approbateur@iq.example" }], "delaiJours": 5 },
+          { "cle": "s1", "libelle": "Signature du bénéficiaire", "phase": 3, "type": "SIGNATURE", "affectations": [{ "type": "PARTICIPANT", "valeur": "SIGNATAIRE_1" }] }
+        ]
+      },
+      {
+        "nom": "Lettre d'offre de prêt",
+        "categorie": "PRET",
+        "corps": "LETTRE D'OFFRE\n\nInvestissement Québec offre à {{entreprise}} un prêt de {{montant}} $ sur {{duree}}, au taux de {{taux}}.\n\n{{clauses}}",
+        "champs": [
+          { "cle": "entreprise", "libelle": "Entreprise", "type": "TEXTE", "obligatoire": true, "source": "Demandeur" },
+          { "cle": "montant", "libelle": "Montant", "type": "TEXTE", "obligatoire": true, "source": "Montant" },
+          { "cle": "duree", "libelle": "Durée", "type": "LISTE", "options": ["36 mois", "60 mois", "120 mois"], "valeurDefaut": "60 mois" },
+          { "cle": "taux", "libelle": "Taux", "type": "TEXTE", "valeurDefaut": "5,25 %" },
+          { "cle": "signature1", "libelle": "Signature de l'emprunteur", "type": "SIGNATURE", "roleDestinataire": "SIGNATAIRE_1",
+            "position": { "page": 1, "x": 10, "y": 80, "largeur": 40, "hauteur": 10 } }
+        ],
+        "clauses": [
+          { "cle": "acceptation", "titre": "Acceptation", "texte": "L'offre est valide 30 jours à compter de sa transmission.", "combinateur": "ET", "conditions": [] }
+        ],
+        "parcours": [
+          { "cle": "a1", "libelle": "Approbation du financement", "phase": 1, "type": "APPROBATION", "affectations": [{ "type": "GROUPE", "valeur": "DIRECTION_FIN" }], "delaiJours": 3 },
+          { "cle": "s1", "libelle": "Signature de l'emprunteur", "phase": 2, "type": "SIGNATURE", "affectations": [{ "type": "PARTICIPANT", "valeur": "SIGNATAIRE_1" }] }
+        ]
+      },
+      {
+        "nom": "Entente de confidentialité",
+        "categorie": "CONFIDENTIALITE",
+        "corps": "ENTENTE DE CONFIDENTIALITÉ\n\nEntre Investissement Québec et {{partie}}, relativement à : {{objet}}.\n\n{{clauses}}",
+        "champs": [
+          { "cle": "partie", "libelle": "Partie", "type": "TEXTE", "obligatoire": true, "source": "Demandeur" },
+          { "cle": "objet", "libelle": "Objet", "type": "TEXTE", "valeurDefaut": "Analyse d'un dossier de financement" },
+          { "cle": "signature1", "libelle": "Signature de la partie", "type": "SIGNATURE", "roleDestinataire": "SIGNATAIRE_1",
+            "position": { "page": 1, "x": 10, "y": 80, "largeur": 35, "hauteur": 10 } },
+          { "cle": "signature2", "libelle": "Signature d'Investissement Québec", "type": "SIGNATURE", "roleDestinataire": "SIGNATAIRE_2",
+            "position": { "page": 1, "x": 55, "y": 80, "largeur": 35, "hauteur": 10 } }
+        ],
+        "clauses": [
+          { "cle": "duree", "titre": "Durée", "texte": "Les obligations de confidentialité survivent cinq ans à la fin de l'entente.", "combinateur": "ET", "conditions": [] }
+        ],
+        "parcours": [
+          { "cle": "s1", "libelle": "Signature de la partie", "phase": 1, "type": "SIGNATURE", "affectations": [{ "type": "PARTICIPANT", "valeur": "SIGNATAIRE_1" }] },
+          { "cle": "s2", "libelle": "Signature d'Investissement Québec", "phase": 1, "type": "SIGNATURE", "affectations": [{ "type": "PARTICIPANT", "valeur": "SIGNATAIRE_2" }] }
+        ]
+      },
+      {
+        "nom": "Contrat de services professionnels",
+        "categorie": "SERVICES",
+        "groupes": "JURIDIQUE",
+        "corps": "CONTRAT DE SERVICES PROFESSIONNELS\n\nInvestissement Québec retient les services de {{fournisseur}} pour des honoraires de {{honoraires}} $.\n\n{{clauses}}",
+        "champs": [
+          { "cle": "fournisseur", "libelle": "Fournisseur", "type": "TEXTE", "obligatoire": true },
+          { "cle": "honoraires", "libelle": "Honoraires", "type": "TEXTE", "obligatoire": true, "format": "\\d+(\\.\\d{2})?" }
+        ],
+        "clauses": [],
+        "parcours": [
+          { "cle": "v1", "libelle": "Validation juridique", "phase": 1, "type": "VALIDATION", "affectations": [{ "type": "UTILISATEUR", "valeur": "validateur@iq.example" }] },
+          { "cle": "a1", "libelle": "Approbation", "phase": 2, "type": "APPROBATION", "affectations": [{ "type": "UTILISATEUR", "valeur": "approbateur@iq.example" }] }
+        ]
+      }
+    ],
+    "trousses": [
+      {
+        "proprietaire": "initiateur@iq.example",
+        "modele": "Convention d'aide financière",
+        "requete": { "reference": "DEMO-AGRINORD", "titre": "Convention d'aide financière — Coopérative Agri-Nord", "typeContrat": "SUBVENTION", "risque": "FAIBLE", "rappelFrequenceJours": 3, "rappelsMax": 3 },
+        "valeurs": { "demandeur": "Coopérative Agri-Nord inc.", "programme": "Programme Essor", "montant": "250000.00", "debut": "2027-01-15", "garantie": "true" },
+        "participants": [
+          { "nom": "Marie Tremblay", "courriel": "marie.tremblay@agrinord.example", "telephone": "+15145550190", "roleContrat": "SIGNATAIRE_1", "externe": true,
+            "niveauIdentite": "QUESTION", "question": "Ville du siège social ?", "reponse": "Québec", "langue": "FR" }
+        ],
+        "lancer": true
+      },
+      {
+        "proprietaire": "initiateur@iq.example",
+        "modele": "Lettre d'offre de prêt",
+        "requete": { "reference": "DEMO-MAURICIE", "titre": "Lettre d'offre de prêt — Techno Mauricie", "typeContrat": "PRET", "risque": "MOYEN" },
+        "valeurs": { "entreprise": "Techno Mauricie s.e.c.", "montant": "1200000.00", "duree": "120 mois" },
+        "participants": [
+          { "nom": "Julie Gagnon", "courriel": "julie.gagnon@technomauricie.example", "telephone": "+18195550142", "roleContrat": "SIGNATAIRE_1", "externe": true,
+            "niveauIdentite": "QUESTION", "question": "Année de fondation ?", "reponse": "1998", "langue": "FR" }
+        ],
+        "lancer": true
+      },
+      {
+        "proprietaire": "initiateur@iq.example",
+        "modele": "Entente de confidentialité",
+        "requete": { "reference": "DEMO-LAURENTIDES", "titre": "Entente de confidentialité — Bois Laurentides", "typeContrat": "CONFIDENTIALITE", "risque": "FAIBLE" },
+        "valeurs": { "partie": "Bois Laurentides inc." },
+        "participants": [],
+        "lancer": false
+      }
+    ]
+  }
+}

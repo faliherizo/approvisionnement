@@ -8,7 +8,7 @@ gestes). **Préparé par l'API** : la situation est mise en place par l'API et l
 un tel scénario ne détecte pas un défaut de l'écran. Les scénarios `E2E-CB-IQ-*` (`cahier-iq.json`) sont écrits
 besoin par besoin, sans préparation par l'API.
 
-**Couverture** : 59 / 66 exigences fonctionnelles du cahier démontrées par un parcours d'interface ;
+**Couverture** : 61 / 66 exigences fonctionnelles du cahier démontrées par un parcours d'interface ;
 4 exigences à vérification documentaire.
 
 ## Section 1.3
@@ -51,7 +51,7 @@ besoin par besoin, sans préparation par l'API.
 
 | Exigence | Besoin | Parcours d'interface | Préparés par l'API |
 |---|---|---|---|
-| IQ-C-17 | Flexibilité et agilité tout au long de l'utilisation | **aucun** | E2E-IQ-03 ✅ |
+| IQ-C-17 | Flexibilité et agilité tout au long de l'utilisation | E2E-CB-IQ-23 ✅, E2E-CB-IQ-24 ✅ | E2E-IQ-03 ✅ |
 
 ## Section 1.4.7
 
@@ -78,7 +78,7 @@ besoin par besoin, sans préparation par l'API.
 | IQ-C-36 | Distinguer champs de formulaire, de saisie et de signature | E2E-CB-IQ-15 ✅ | E2E-IQ-03 ✅ |
 | IQ-C-37 | Attribution des champs à des signataires | E2E-CB-IQ-15 ✅, E2E-ECR-IQ-02 ✅, E2E-ECR-IQ-04 ✅ | E2E-IQ-03 ✅ |
 | IQ-C-38 | Règles conditionnelles d'affichage | E2E-CB-IQ-15 ✅ | E2E-IQ-03 ✅ |
-| IQ-C-39 | Saisie assistée (suggestions) | **aucun** | E2E-IQ-04 ✅ |
+| IQ-C-39 | Saisie assistée (suggestions) | E2E-CB-IQ-22 ✅ | E2E-IQ-04 ✅ |
 | IQ-C-40 | Notifications activables et désactivables | E2E-CB-IQ-12 ✅, E2E-ECR-IQ-05 ✅ | E2E-IQ-15 ✅ |
 | IQ-C-41 | Rappels automatiques de non-réponse | E2E-CB-IQ-13 ✅ | E2E-IQ-15 ✅ |
 | IQ-C-42 | Destinataires en copie | E2E-CB-IQ-13 ✅ | E2E-IQ-01 ✅ |
@@ -99,8 +99,8 @@ besoin par besoin, sans préparation par l'API.
 | IQ-C-52 | Minimiser le nombre d'étapes | E2E-CB-IQ-17 ✅ | E2E-IQ-06 ✅ |
 | IQ-C-53 | Exécution fluide web et mobile | E2E-CB-IQ-17 ✅ | E2E-IQ-34 ✅ |
 | IQ-C-54 | Limiter les dépendances entre signataires | E2E-CB-IQ-09 ✅, E2E-CB-IQ-10 ✅ | E2E-IQ-11 ✅, E2E-IQ-12 ✅ |
-| IQ-C-55 | Flexibilité des workflows en cours de processus | E2E-CB-IQ-06 ✅, E2E-CB-IQ-07 ✅, E2E-CB-IQ-11 ✅ | E2E-IQ-08 ✅ |
-| IQ-C-56 | Minimiser les interventions manuelles | E2E-CB-IQ-17 ✅ | E2E-IQ-33 ✅ |
+| IQ-C-55 | Flexibilité des workflows en cours de processus | E2E-CB-IQ-06 ✅, E2E-CB-IQ-07 ✅, E2E-CB-IQ-11 ✅, E2E-CB-IQ-23 ✅ | E2E-IQ-08 ✅ |
+| IQ-C-56 | Minimiser les interventions manuelles | E2E-CB-IQ-17 ✅, E2E-CB-IQ-22 ✅ | E2E-IQ-33 ✅ |
 | IQ-C-57 | Expérience simple pour initiateurs, signataires internes et externes | E2E-CB-IQ-17 ✅ | E2E-IQ-01 ✅, E2E-IQ-11 ✅ |
 | IQ-C-58 | Personnalisation : image de marque, messages, parcours | E2E-CB-IQ-12 ✅ | E2E-IQ-15 ✅ |
 
@@ -131,7 +131,7 @@ besoin par besoin, sans préparation par l'API.
 | Exigence | Besoin | Parcours d'interface | Préparés par l'API |
 |---|---|---|---|
 | IQ-C-66 | Protection du cycle de vie, dont la destruction au moment opportun (Loi sur les archives) | E2E-ECR-IQ-07 ✅ | E2E-IQ-18 ✅ |
-| IQ-C-67 | Accès, modèles, workflows, historiques selon rôles, groupes, unités, domaines | E2E-CB-IQ-03 ✅, E2E-CB-IQ-08 ✅, E2E-CB-IQ-14 ✅, E2E-CB-IQ-19 ✅ | E2E-IQ-25 ✅, E2E-IQ-26 ✅ |
+| IQ-C-67 | Accès, modèles, workflows, historiques selon rôles, groupes, unités, domaines | E2E-CB-IQ-03 ✅, E2E-CB-IQ-08 ✅, E2E-CB-IQ-14 ✅, E2E-CB-IQ-19 ✅, E2E-CB-IQ-24 ✅ | E2E-IQ-25 ✅, E2E-IQ-26 ✅ |
 
 ## Section 1.7.1
 

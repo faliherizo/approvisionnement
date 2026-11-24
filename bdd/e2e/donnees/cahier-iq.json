@@ -3130,6 +3130,609 @@
           "ecranConforme": true
         }
       ]
+    },
+    {
+      "id": "E2E-CB-IQ-22",
+      "titre": "Saisie assistée : une valeur déjà retenue dans une trousse est proposée à la saisie du même champ dans la trousse suivante",
+      "exigences": [
+        "IQ-C-39",
+        "IQ-C-56"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "connecter": "administration d'affaires IQ"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "cliquer": "Créer un modèle"
+        },
+        {
+          "remplir": {
+            "Nom": "Suggestions CB ${unique}",
+            "Corps du contrat": "Convention au titre du programme {{programme}}. {{clauses}}"
+          }
+        },
+        {
+          "cliquer": "Ajouter un champ"
+        },
+        {
+          "remplir": {
+            "Nom technique": "programme",
+            "Libellé": "Programme"
+          }
+        },
+        {
+          "cliquer": "Soumettre à publication"
+        },
+        {
+          "voir": "soumis à publication"
+        },
+        {
+          "connecter": "administration principale IQ"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Suggestions CB ${unique}",
+            "cliquer": "Publier"
+          }
+        },
+        {
+          "voir": "« Suggestions CB ${unique} » publié."
+        },
+        {
+          "connecter": "initiateur IQ"
+        },
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Suggestion A ${unique}",
+            "Référence externe": "CB${UNIQUE}-SGA"
+          }
+        },
+        {
+          "choisir": {
+            "Modèle de contrat": "Suggestions CB ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Corriger la valeur — Programme"
+        },
+        {
+          "remplir": {
+            "Nouvelle valeur — Programme": "Essor régional ${unique}"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Corriger la valeur — Programme",
+            "cliquer": "Enregistrer"
+          }
+        },
+        {
+          "voir": "Valeur de « Programme » enregistrée."
+        },
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Suggestion B ${unique}",
+            "Référence externe": "CB${UNIQUE}-SGB"
+          }
+        },
+        {
+          "choisir": {
+            "Modèle de contrat": "Suggestions CB ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Corriger la valeur — Programme"
+        },
+        {
+          "voir": "valeur(s) déjà utilisée(s) proposée(s) : flèche bas pour les parcourir."
+        },
+        {
+          "remplir": {
+            "Nouvelle valeur — Programme": "Essor régional ${unique}"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Corriger la valeur — Programme",
+            "cliquer": "Enregistrer"
+          }
+        },
+        {
+          "voir": "Valeur de « Programme » enregistrée."
+        },
+        {
+          "voir": "Essor régional ${unique}"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-23",
+      "titre": "Flexibilité en cours d'utilisation : l'organisation ajoute un type de contrat, change un paramètre et fait évoluer un modèle, sans développement ; les trousses suivantes en tiennent compte",
+      "exigences": [
+        "IQ-C-17",
+        "IQ-C-55",
+        "IQ-D-06"
+      ],
+      "profil": "administration principale IQ",
+      "etapes": [
+        {
+          "aller": "/clm/admin/listes"
+        },
+        {
+          "choisir": {
+            "Liste": "CLM_TYPE_CONTRAT"
+          }
+        },
+        {
+          "cliquer": "Ajouter une valeur"
+        },
+        {
+          "remplir": {
+            "Code": "PILOTE_${UNIQUE}",
+            "Libellé": "Entente pilote ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "voir": "Valeur enregistrée."
+        },
+        {
+          "aller": "/clm/admin/parametres"
+        },
+        {
+          "cliquer": "Modifier un paramètre autorisé"
+        },
+        {
+          "remplir": {
+            "Rappel tous les (jours)": "6"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "voir": "Paramètres enregistrés."
+        },
+        {
+          "connecter": "initiateur IQ"
+        },
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "valeur": {
+            "Rappel tous les (jours)": "6"
+          }
+        },
+        {
+          "remplir": {
+            "Titre": "Flexible CB ${unique}",
+            "Référence externe": "CB${UNIQUE}-FLX"
+          }
+        },
+        {
+          "choisir": {
+            "Type de contrat": "Entente pilote ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "voir": "CB${UNIQUE}-FLX"
+        },
+        {
+          "connecter": "administration d'affaires IQ"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "cliquer": "Créer un modèle"
+        },
+        {
+          "remplir": {
+            "Nom": "Évolutif CB ${unique}",
+            "Corps du contrat": "Version 1 de l'entente. {{clauses}}"
+          }
+        },
+        {
+          "cliquer": "Soumettre à publication"
+        },
+        {
+          "voir": "soumis à publication"
+        },
+        {
+          "connecter": "administration principale IQ"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Évolutif CB ${unique}",
+            "cliquer": "Publier"
+          }
+        },
+        {
+          "voir": "« Évolutif CB ${unique} » publié."
+        },
+        {
+          "connecter": "administration d'affaires IQ"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Évolutif CB ${unique}",
+            "cliquer": "Nouvelle version"
+          }
+        },
+        {
+          "voir": "Nouvelle version de « Évolutif CB ${unique} » créée."
+        },
+        {
+          "cliquer": {
+            "role": "link",
+            "nom": "Modifier le brouillon — Évolutif CB ${unique}"
+          }
+        },
+        {
+          "remplir": {
+            "Corps du contrat": "Version 2 de l'entente, clause de résiliation ajoutée. {{clauses}}"
+          }
+        },
+        {
+          "cliquer": "Soumettre à publication"
+        },
+        {
+          "voir": "soumis à publication"
+        },
+        {
+          "connecter": "administration principale IQ"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "remplir": {
+            "Rechercher": "Évolutif CB ${unique}"
+          }
+        },
+        {
+          "choisir": {
+            "État": "EN_REVISION"
+          }
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Évolutif CB ${unique}",
+            "cliquer": "Publier"
+          }
+        },
+        {
+          "voir": "publié."
+        },
+        {
+          "choisir": {
+            "État": "RETIRE"
+          }
+        },
+        {
+          "voir": "Évolutif CB ${unique}"
+        },
+        {
+          "aller": "/clm/admin/parametres"
+        },
+        {
+          "cliquer": "Modifier un paramètre autorisé"
+        },
+        {
+          "cliquer": "Rétablir les paramètres de la plateforme"
+        },
+        {
+          "voir": "Paramètres de la plateforme rétablis."
+        }
+      ]
+    },
+    {
+      "id": "E2E-CB-IQ-24",
+      "titre": "Listes de référence configurées par l'administration de l'organisation : chaque valeur ajoutée, renommée ou retirée se répercute aussitôt dans les listes déroulantes des écrans d'affaires",
+      "exigences": [
+        "IQ-C-17",
+        "IQ-C-67",
+        "IQ-D-05"
+      ],
+      "profil": "administration principale IQ",
+      "etapes": [
+        {
+          "aller": "/clm/admin/listes"
+        },
+        {
+          "choisir": {
+            "Liste": "CLM_UNITE"
+          }
+        },
+        {
+          "cliquer": "Ajouter une valeur"
+        },
+        {
+          "remplir": {
+            "Code": "INNOV_${UNIQUE}",
+            "Libellé": "Innovation ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "voir": "Valeur enregistrée."
+        },
+        {
+          "voir": "Innovation ${unique}"
+        },
+        {
+          "choisir": {
+            "Liste": "CLM_UNITE"
+          }
+        },
+        {
+          "cliquer": "Ajouter une valeur"
+        },
+        {
+          "remplir": {
+            "Code": "ANCIENNE_${UNIQUE}",
+            "Libellé": "Unité dissoute ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "voir": "Valeur enregistrée."
+        },
+        {
+          "voir": "Unité dissoute ${unique}"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Retirer — Unité dissoute ${unique}"
+          }
+        },
+        {
+          "voir": "Valeur retirée des sélecteurs."
+        },
+        {
+          "choisir": {
+            "Liste": "CLM_ROLE_CONTRAT"
+          }
+        },
+        {
+          "cliquer": "Ajouter une valeur"
+        },
+        {
+          "remplir": {
+            "Code": "MANDATAIRE_${UNIQUE}",
+            "Libellé": "Mandataire ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "voir": "Valeur enregistrée."
+        },
+        {
+          "voir": "Mandataire ${unique}"
+        },
+        {
+          "choisir": {
+            "Liste": "CLM_CHAMP_SALESFORCE"
+          }
+        },
+        {
+          "cliquer": "Ajouter une valeur"
+        },
+        {
+          "remplir": {
+            "Code": "Region_${UNIQUE}",
+            "Libellé": "Région administrative ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "voir": "Valeur enregistrée."
+        },
+        {
+          "voir": "Région administrative ${unique}"
+        },
+        {
+          "choisir": {
+            "Liste": "CLM_PRIORITE_TACHE"
+          }
+        },
+        {
+          "cliquer": "Ajouter une valeur"
+        },
+        {
+          "remplir": {
+            "Code": "CRITIQUE_${UNIQUE}",
+            "Libellé": "Critique ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "voir": "Valeur enregistrée."
+        },
+        {
+          "voir": "Critique ${unique}"
+        },
+        {
+          "choisir": {
+            "Liste": "CLM_TYPE_CONTRAT"
+          }
+        },
+        {
+          "cliquer": "Ajouter une valeur"
+        },
+        {
+          "remplir": {
+            "Code": "ACCORD_${UNIQUE}",
+            "Libellé": "Accord cadre ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "voir": "Valeur enregistrée."
+        },
+        {
+          "voir": "Accord cadre ${unique}"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Modifier — Accord cadre ${unique}"
+          }
+        },
+        {
+          "remplir": {
+            "Libellé": "Accord-cadre de partenariat ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "voir": "Accord-cadre de partenariat ${unique}"
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "connecter": "initiateur IQ"
+        },
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "options": {
+            "Unité responsable": {
+              "contient": [
+                "Innovation ${unique}"
+              ],
+              "exclut": [
+                "Unité dissoute ${unique}"
+              ]
+            },
+            "Type de contrat": {
+              "contient": [
+                "Accord-cadre de partenariat ${unique}"
+              ],
+              "exclut": [
+                "Accord cadre ${unique}"
+              ]
+            }
+          }
+        },
+        {
+          "remplir": {
+            "Titre": "Références CB ${unique}",
+            "Référence externe": "CB${UNIQUE}-REF"
+          }
+        },
+        {
+          "choisir": {
+            "Unité responsable": "Innovation ${unique}",
+            "Type de contrat": "Accord-cadre de partenariat ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "options": {
+            "Rôle dans le contrat": {
+              "contient": [
+                "Mandataire ${unique}"
+              ]
+            }
+          }
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Nouvelle tâche"
+        },
+        {
+          "options": {
+            "Priorité": {
+              "contient": [
+                "Critique ${unique}"
+              ]
+            }
+          }
+        },
+        {
+          "connecter": "administration d'affaires IQ"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "cliquer": "Créer un modèle"
+        },
+        {
+          "cliquer": "Ajouter un champ"
+        },
+        {
+          "options": {
+            "Source Salesforce": {
+              "contient": [
+                "Région administrative ${unique}"
+              ]
+            }
+          }
+        }
+      ]
     }
   ],
   "constats": [

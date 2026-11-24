@@ -346,6 +346,10 @@ public final class ClmDto {
     public record GroupeRequest(String code, String libelle) {
     }
 
+    /** Jeu de démonstration chargé dans une organisation : ce qui a été ajouté, et chaque élément écarté avec son motif. */
+    public record BilanDemonstration(int groupes, int regles, int modeles, int trousses, List<String> ecarts) {
+    }
+
     public record MembreRequest(String courriel) {
     }
 

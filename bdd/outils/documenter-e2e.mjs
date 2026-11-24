@@ -38,7 +38,21 @@ if (existsSync(RAPPORT)) {
   }
   for (const s of lireJson(RAPPORT).suites ?? []) parcourir(s)
 }
-const etat = (id) => ({ 'réussi': '✅ réussi', 'échoué': '❌ échoué', 'non exécuté': '⏸ non exécuté' }[resultats[id]] ?? '— pas encore exécuté')
+// Un scénario absent de cette exécution (exécution partielle, --grep) garde le résultat déjà inscrit dans la documentation.
+const precedents = {}
+if (existsSync(SORTIE)) {
+  for (const f of readdirSync(SORTIE).filter((x) => x.endsWith('.md'))) {
+    let id = null
+    for (const ligne of readFileSync(join(SORTIE, f), 'utf8').split('\n')) {
+      const titre = ligne.match(/^### (E2E-[A-Z0-9-]+) — /)
+      if (titre) id = titre[1]
+      const r = ligne.match(/^- \*\*Dernier résultat\*\* : (✅ réussi|❌ échoué|⏸ non exécuté)/)
+      if (id && r) precedents[id] = r[1]
+    }
+  }
+}
+const etat = (id) => ({ 'réussi': '✅ réussi', 'échoué': '❌ échoué', 'non exécuté': '⏸ non exécuté' }[resultats[id]]
+  ?? precedents[id] ?? '— pas encore exécuté')
 
 // --- Étapes en langage d'analyste -----------------------------------------------------------------------------------
 const liste = (v) => [v].flat().map((x) => `« ${x} »`).join(', ')
@@ -54,6 +68,7 @@ function phrase(e) {
   if ('dansLaLigne' in e) return `Dans la ligne « ${e.dansLaLigne.texte} », activer « ${e.dansLaLigne.cliquer} »`
   if ('remplir' in e) return `Saisir ${paires(e.remplir)}`
   if ('choisir' in e) return `Choisir ${paires(e.choisir)}`
+  if ('options' in e) return Object.entries(e.options).map(([k, v]) => `Constater que « ${k} »${v.contient ? ` propose ${liste(v.contient)}` : ''}${v.contient && v.exclut ? ' et' : ''}${v.exclut ? ` ne propose plus ${liste(v.exclut)}` : ''}`).join(' ; ')
   if ('cocher' in e) return `Cocher « ${e.cocher} »`
   if ('decocher' in e) return `Décocher « ${e.decocher} »`
   if ('televerser' in e) return `Joindre « ${e.televerser.fichier.nom} » au champ « ${e.televerser.champ} »`
@@ -130,6 +145,7 @@ const lignesReadme = [
   '| `dansLaLigne` | agir sur une ligne de tableau | `{ "dansLaLigne": { "texte": "Inscription", "cliquer": "Concevoir" } }` |',
   '| `remplir` | saisir des champs, par leur libellé ; « Section » Libellé » limite à une section, « Libellé #2 » vise la 2e occurrence | `{ "remplir": { "Terme": "garantie" } }` |',
   '| `choisir` | choisir dans une liste, par libellé ou par code | `{ "choisir": { "Catégorie": "OPTIONNELLE" } }` |',
+  '| `options` | constater les options d\'une liste (présentes, absentes) | `{ "options": { "Unité responsable": { "contient": ["Innovation"], "exclut": ["Ancienne"] } } }` |',
   '| `cocher` / `decocher` | case à cocher, par son libellé | `{ "cocher": "Clauses normatives seulement" }` |',
   '| `televerser` | joindre un fichier | `{ "televerser": { "champ": "Pièce", "fichier": { "fichier": "pdf", "nom": "a.pdf" } } }` |',
   '| `voir` / `nePasVoir` | constater un texte à l\'écran | `{ "voir": ["Circuit créé"] }` |',
@@ -154,7 +170,7 @@ const lignesReadme = [
 for (const c of catalogues) {
   const f = fonctionnelles(c)
   const scenarios = new Set(f.flatMap((e) => (parExigence[e.id] ?? []).map((s) => s.id)))
-  const reussis = [...scenarios].filter((id) => resultats[id] === 'réussi').length
+  const reussis = [...scenarios].filter((id) => etat(id).startsWith('✅')).length
   lignesReadme.push(`| ${cellule(c.appelOffres)} | [${c.cle}.md](${c.cle}.md) | ${f.length} | ${f.filter((e) => parExigence[e.id]).length} | ${scenarios.size} | ${reussis} |`)
 }
 writeFileSync(join(SORTIE, 'README.md'), lignesReadme.join('\n') + '\n')
@@ -191,7 +207,7 @@ if (iq) {
   const constats = jeux.flatMap((j) => j.constats ?? [])
   const cahier = iq.exigences.filter((e) => e.id.startsWith('IQ-C-'))
   const sections = [...new Set(cahier.map((e) => e.source))]
-  const lien = (sc) => `${sc.id}${resultats[sc.id] === 'réussi' ? ' ✅' : resultats[sc.id] === 'échoué' ? ' ❌' : ''}`
+  const lien = (sc) => `${sc.id}${etat(sc.id).startsWith('✅') ? ' ✅' : etat(sc.id).startsWith('❌') ? ' ❌' : ''}`
   const l = ['# IQ 2026-6370-0005 — Cahier des besoins : scénarios e2e par exigence', '',
     '> Généré par `bdd/outils/documenter-e2e.mjs` depuis `bdd/exigences/iq.json` (exigences du cahier, IQ-C-*) et',
     '> `bdd/e2e/donnees/*.json` (scénarios, données et constats). Détail des étapes de chaque scénario : [iq.md](iq.md).', '',

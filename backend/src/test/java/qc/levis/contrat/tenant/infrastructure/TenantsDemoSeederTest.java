@@ -46,6 +46,30 @@ class TenantsDemoSeederTest {
     private final TenantsDemoSeeder seeder = new TenantsDemoSeeder(tenants, users, modules, references, encoder, bibliotheque);
 
     /** V3R déjà en place, ses comptes aussi : seul IQ est en jeu dans les cas qui l'éprouvent. */
+    private static List<qc.levis.contrat.reference.application.dto.ValeurReference> valeurs(String liste, String... codes) {
+        return java.util.Arrays.stream(codes).map(c -> new qc.levis.contrat.reference.application.dto.ValeurReference(
+                1L, liste, c, "Renommée par l'administration", null, 10, true, "PERSONNALISEE")).toList();
+    }
+
+    @Test
+    void une_organisation_existante_recoit_seulement_les_valeurs_de_liste_qui_lui_manquent() throws Exception {
+        Tenant iq = new Tenant("iq", "Investissement Québec", null);
+        ReflectionTestUtils.setField(iq, "id", 3L);
+        when(tenants.findBySlug("iq")).thenReturn(Optional.of(iq));
+        v3rExistante();
+        when(users.existsByEmail(anyString())).thenReturn(true);
+        when(references.lister("CLM_UNITE", false)).thenReturn(valeurs("CLM_UNITE", "FINANCEMENT_ENTREPRISES", "VP_FINANCEMENT",
+                "AFFAIRES_JURIDIQUES", "GESTION_CONTRACTUELLE"));
+        when(references.lister("CLM_TYPE_CONTRAT", false)).thenReturn(valeurs("CLM_TYPE_CONTRAT", "GARANTIE"));
+
+        seeder.run();
+
+        ArgumentCaptor<ReferenceRequest> creees = ArgumentCaptor.forClass(ReferenceRequest.class);
+        verify(references).creer(creees.capture(), eq(false));
+        assertEquals("DIRECTION_GENERALE", creees.getValue().code(), "seule la valeur absente est ajoutée");
+        assertNull(TenantContext.get(), "le contexte d'organisation est rendu");
+    }
+
     private void v3rExistante() {
         Tenant v3r = new Tenant("v3r", "Ville de Trois-Rivières", null);
         ReflectionTestUtils.setField(v3r, "id", 7L);
@@ -120,12 +144,17 @@ class TenantsDemoSeederTest {
         when(tenants.findBySlug("iq")).thenReturn(Optional.of(new Tenant("iq", "Investissement Québec", null)));
         v3rExistante();
         when(users.existsByEmail(anyString())).thenReturn(true);
+        // Listes déjà complètes, dont une valeur que l'administration a renommée : rien n'est recréé ni écrasé.
+        when(references.lister("CLM_UNITE", false)).thenReturn(valeurs("CLM_UNITE", "FINANCEMENT_ENTREPRISES", "VP_FINANCEMENT",
+                "AFFAIRES_JURIDIQUES", "GESTION_CONTRACTUELLE", "DIRECTION_GENERALE"));
+        when(references.lister("CLM_TYPE_CONTRAT", false)).thenReturn(valeurs("CLM_TYPE_CONTRAT", "GARANTIE"));
 
         seeder.run();
 
         verify(tenants, never()).save(any());
         verify(users, never()).save(any());
-        verifyNoInteractions(modules, references, encoder);
+        verify(references, never()).creer(any(), org.mockito.ArgumentMatchers.anyBoolean());
+        verifyNoInteractions(modules, encoder);
         // L'amorçage de la bibliothèque est idempotent : il est demandé, et c'est lui qui ne fait rien si elle existe.
         verify(bibliotheque).amorcer(7L);
     }
