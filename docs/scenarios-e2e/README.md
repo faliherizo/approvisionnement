@@ -60,7 +60,7 @@ npx playwright test -c playwright.e2e.config.ts --grep @LEV-C-02   # les scénar
 
 | Appel d'offres | Document | Exigences fonctionnelles | Couvertes en e2e | Scénarios | Réussis |
 |---|---|---:|---:|---:|---:|
-| Ville de Lévis — avis d'appel d'intérêt 2026-50-92 | [levis.md](levis.md) | 34 | 34 | 25 | 24 |
+| Ville de Lévis — avis d'appel d'intérêt 2026-50-92 | [levis.md](levis.md) | 34 | 34 | 25 | 25 |
 | Ville de Trois-Rivières — appel d'offres 7000017905 | [trois-rivieres.md](trois-rivieres.md) | 20 | 20 | 11 | 11 |
-| Investissement Québec — AO 2026-6370-0005 | [iq.md](iq.md) | 132 | 132 | 42 | 42 |
+| Investissement Québec — AO 2026-6370-0005 | [iq.md](iq.md) | 132 | 132 | 42 | 41 |
 | Santé Québec — CHU, avis d'intention | [chu.md](chu.md) | 52 | 52 | 28 | 28 |

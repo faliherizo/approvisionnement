@@ -19,7 +19,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -933,7 +933,7 @@ class ClmIntegrationTest {
                 .file(new MockMultipartFile("fichier", nom, "application/octet-stream", contenu)).cookie(qui), attendu);
     }
 
-    private JsonNode appel(MockHttpServletRequestBuilder req, ResultMatcher attendu) throws Exception {
+    private JsonNode appel(org.springframework.test.web.servlet.request.AbstractMockHttpServletRequestBuilder<?> req, ResultMatcher attendu) throws Exception {
         String s = mvc.perform(req).andExpect(attendu).andReturn().getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8);
         return s.isBlank() ? json.createObjectNode() : json.readTree(s);
     }

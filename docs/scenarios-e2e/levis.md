@@ -1692,15 +1692,16 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-16, LEV-C-21, LEV-C-22
 - **Données** : `bdd/e2e/donnees/levis.json`
-- **Dernier résultat** : ❌ échoué
+- **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/utilisateurs`
-2. Voir « redacteur@levis.qc.ca », « REDACTEUR »
-3. Passer l'interface en anglais
-4. Voir « Documents »
-5. Passer l'interface en français
-6. Ouvrir l'écran `/parametres`
-7. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+2. Saisir « Recherche (courriel, nom)… » : `redacteur@levis`
+3. Voir « redacteur@levis.qc.ca », « REDACTEUR »
+4. Passer l'interface en anglais
+5. Voir « Documents »
+6. Passer l'interface en français
+7. Ouvrir l'écran `/parametres`
+8. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ## LEV-C-17 — ENF2 Journal d'audit
 
@@ -1882,15 +1883,16 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-16, LEV-C-21, LEV-C-22
 - **Données** : `bdd/e2e/donnees/levis.json`
-- **Dernier résultat** : ❌ échoué
+- **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/utilisateurs`
-2. Voir « redacteur@levis.qc.ca », « REDACTEUR »
-3. Passer l'interface en anglais
-4. Voir « Documents »
-5. Passer l'interface en français
-6. Ouvrir l'écran `/parametres`
-7. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+2. Saisir « Recherche (courriel, nom)… » : `redacteur@levis`
+3. Voir « redacteur@levis.qc.ca », « REDACTEUR »
+4. Passer l'interface en anglais
+5. Voir « Documents »
+6. Passer l'interface en français
+7. Ouvrir l'écran `/parametres`
+8. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ## LEV-C-22 — Multi-tenant / multilingue (au-delà du cahier)
 
@@ -1957,12 +1959,13 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-16, LEV-C-21, LEV-C-22
 - **Données** : `bdd/e2e/donnees/levis.json`
-- **Dernier résultat** : ❌ échoué
+- **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/utilisateurs`
-2. Voir « redacteur@levis.qc.ca », « REDACTEUR »
-3. Passer l'interface en anglais
-4. Voir « Documents »
-5. Passer l'interface en français
-6. Ouvrir l'écran `/parametres`
-7. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+2. Saisir « Recherche (courriel, nom)… » : `redacteur@levis`
+3. Voir « redacteur@levis.qc.ca », « REDACTEUR »
+4. Passer l'interface en anglais
+5. Voir « Documents »
+6. Passer l'interface en français
+7. Ouvrir l'écran `/parametres`
+8. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px

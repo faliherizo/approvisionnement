@@ -40,10 +40,8 @@ public class SecurityConfig {
      */
     @Bean
     static org.springframework.security.access.hierarchicalroles.RoleHierarchy hierarchieDesRoles() {
-        org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl h =
-                new org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl();
-        h.setHierarchy("ROLE_ADMIN > ROLE_ADMIN_AFFAIRES\nROLE_ADMIN > ROLE_ADMIN_TECHNIQUE");
-        return h;
+        return org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl.fromHierarchy(
+                "ROLE_ADMIN > ROLE_ADMIN_AFFAIRES\nROLE_ADMIN > ROLE_ADMIN_TECHNIQUE");
     }
 
     @Bean
@@ -98,8 +96,8 @@ public class SecurityConfig {
     private void entetesDeSecurite(org.springframework.security.config.annotation.web.configurers.HeadersConfigurer<HttpSecurity> h) {
         // Console H2 et Swagger UI s'affichent dans un cadre de l'application même (même origine) ; le reste, jamais.
         var encadrables = new org.springframework.security.web.util.matcher.OrRequestMatcher(
-                new org.springframework.security.web.util.matcher.AntPathRequestMatcher("/h2-console/**"),
-                new org.springframework.security.web.util.matcher.AntPathRequestMatcher("/swagger-ui/**"));
+                org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher.withDefaults().matcher("/h2-console/**"),
+                org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher.withDefaults().matcher("/swagger-ui/**"));
         h.frameOptions(f -> f.disable())
          .addHeaderWriter(new org.springframework.security.web.header.writers.DelegatingRequestMatcherHeaderWriter(
                  new org.springframework.security.web.util.matcher.NegatedRequestMatcher(encadrables),
@@ -110,15 +108,16 @@ public class SecurityConfig {
                          org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
          .addHeaderWriter(new org.springframework.security.web.header.writers.DelegatingRequestMatcherHeaderWriter(
                  new org.springframework.security.web.util.matcher.OrRequestMatcher(
-                         new org.springframework.security.web.util.matcher.AntPathRequestMatcher("/api/**"),
-                         new org.springframework.security.web.util.matcher.AntPathRequestMatcher("/scim/**")),
+                         org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher.withDefaults().matcher("/api/**"),
+                         org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher.withDefaults().matcher("/scim/**")),
                  new org.springframework.security.web.header.writers.StaticHeadersWriter("Content-Security-Policy",
                          "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'")))
          // Isolation inter-origines (attaques de type Spectre) : les réponses de l'API ne se chargent que depuis l'application.
          .addHeaderWriter(new org.springframework.security.web.header.writers.StaticHeadersWriter("Cross-Origin-Resource-Policy", "same-origin"))
          .addHeaderWriter(new org.springframework.security.web.header.writers.StaticHeadersWriter("Cross-Origin-Opener-Policy", "same-origin"))
          .referrerPolicy(r -> r.policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER))
-         .permissionsPolicy(p -> p.policy("camera=(), microphone=(), geolocation=(), payment=()"));
+         .addHeaderWriter(new org.springframework.security.web.header.writers.StaticHeadersWriter("Permissions-Policy",
+                 "camera=(), microphone=(), geolocation=(), payment=()"));
     }
 
     @Bean

@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: contrat-backend
+  # Spring Boot 4 sert le JSON avec Jackson 3 par défaut ; l'application et ses DTO restent en Jackson 2 (module
+  # spring-boot-jackson2) jusqu'à leur migration : les convertisseurs HTTP utilisent donc Jackson 2.
+  http:
+    converters:
+      preferred-json-mapper: jackson2
   # Serveur SMTP du canal COURRIEL (app.notification.courriel.mode=smtp) ; secrets par variables d'environnement.
   mail:
     host: ${MAIL_HOST:localhost}

@@ -1,8 +1,0 @@
-# Exemptions Trivy — chacune nominative, motivée, approuvée et à échéance (passé « exp: », Trivy la refuse d'elle-même).
-#
-# spring-webmvc 6.2.x (Spring Boot 3.5.16, dernière version de la branche 3) : ces deux vulnérabilités ne sont corrigées
-# qu'en Spring Framework 7.0.9, soit Spring Boot 4 — migration majeure à planifier, qui lève ces exemptions.
-# Décision du 2026-11-24 : déployer la 3.5.16, qui retire une cinquantaine d'autres vulnérabilités de la version en
-# service (Spring Boot 3.2.5). Le serveur n'est exposé que derrière le relais nginx du frontend et le Nginx central.
-CVE-2026-47884 exp:2027-01-31
-CVE-2026-47890 exp:2027-01-31

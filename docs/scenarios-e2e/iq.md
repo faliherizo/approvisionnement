@@ -38,7 +38,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ✅ réussi
+- **Dernier résultat** : ❌ échoué
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -1764,7 +1764,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ✅ réussi
+- **Dernier résultat** : ❌ échoué
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -1845,7 +1845,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ✅ réussi
+- **Dernier résultat** : ❌ échoué
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -1926,7 +1926,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ✅ réussi
+- **Dernier résultat** : ❌ échoué
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -1955,7 +1955,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ✅ réussi
+- **Dernier résultat** : ❌ échoué
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -1973,7 +1973,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ✅ réussi
+- **Dernier résultat** : ❌ échoué
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -1991,7 +1991,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ✅ réussi
+- **Dernier résultat** : ❌ échoué
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -2773,7 +2773,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ✅ réussi
+- **Dernier résultat** : ❌ échoué
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
@@ -2839,7 +2839,7 @@
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-S-04, IQ-C-61, IQ-C-62, IQ-C-63, IQ-C-64, IQ-C-03, IQ-C-57, IQ-S-07, IQ-A-04, IQ-C-54
 - **Données** : `bdd/e2e/donnees/iq.json`
-- **Dernier résultat** : ✅ réussi
+- **Dernier résultat** : ❌ échoué
 
 1. Préparer par l'API : cas `iq.signature.externe`
 2. Ouvrir l'écran `/clm/trousses/${trousse}`
