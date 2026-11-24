@@ -18,12 +18,20 @@ export default function Users() {
   const [err, setErr] = useState(null)
 
   const taille = 8
+  // Les effets s'exécutent avant la garde de rôle plus bas : sans elle ici, un non-administrateur appellerait l'API et
+  // recevrait un refus (403) non traité. L'erreur d'un chargement est affichée, jamais laissée sans suite.
+  const admin = hasRole('ADMIN')
   const charger = useCallback(() => {
+    if (!admin) return
     api.get('/admin/users', { params: { q, page, taille } }).then((r) => setData(r.data))
-  }, [q, page])
+      .catch((e) => setErr(e.response?.data?.message || t('users.erreurChargement')))
+  }, [q, page, admin, t])
 
   useEffect(() => { charger() }, [charger])
-  useEffect(() => { api.get('/admin/users/roles').then((r) => setRolesDispo(r.data)) }, [])
+  useEffect(() => {
+    if (!admin) return
+    api.get('/admin/users/roles').then((r) => setRolesDispo(r.data)).catch(() => setRolesDispo([]))
+  }, [admin])
 
   if (!hasRole('ADMIN')) return <div className="panel">{t('users.adminOnly')}</div>
 

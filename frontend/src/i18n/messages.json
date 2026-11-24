@@ -9669,5 +9669,10 @@
     "fr": "Zone de signature manuscrite",
     "en": "Handwritten signature area",
     "mg": "Faritra fanaovana sonia an-tanana"
+  },
+  "users.erreurChargement": {
+    "fr": "La liste des utilisateurs n'a pas pu être chargée.",
+    "en": "The user list could not be loaded.",
+    "mg": "Tsy afaka nampidirina ny lisitry ny mpampiasa."
   }
 }
