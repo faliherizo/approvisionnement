@@ -16,7 +16,7 @@ arreter() {
   [[ -n "${SERVEUR:-}" ]] && kill "$SERVEUR" 2>/dev/null || true
   # Vite tourne sous npm : on arrête ce qui écoute sur le port de recette.
   [[ -n "${FRONT:-}" ]] && { kill "$FRONT" 2>/dev/null; lsof -ti tcp:5175 -sTCP:LISTEN | xargs kill 2>/dev/null; } || true
-  "${COMPOSE[@]}" logs --no-color icp pyhanko > "$R/services.log" 2>&1 || true
+  "${COMPOSE[@]}" logs --no-color icp pyhanko antivirus ia > "$R/services.log" 2>&1 || true
   [[ "${GARDER_BACS:-}" == "1" ]] || "${COMPOSE[@]}" down >/dev/null 2>&1 || true
 }
 trap arreter EXIT
@@ -48,6 +48,10 @@ docker exec iq-bac-ia ollama pull qwen2.5:0.5b >/dev/null
 # Modèle du banc : 4 fils de calcul. Laissé à son défaut (tous les processeurs), le calcul s'étouffe sous la charge des
 # autres services et tombe à environ un jeton par seconde.
 docker exec iq-bac-ia sh -c 'printf "FROM qwen2.5:0.5b\nPARAMETER num_thread 4\n" > /tmp/Modelfile && ollama create contrat-banc -f /tmp/Modelfile' >/dev/null
+# Essai de génération : un modèle absent ou un exécuteur trop lent se voit ici, et non à mi-campagne.
+essai_ia=$(curl -s -m 180 -w ' HTTP%{http_code}' http://localhost:11435/api/generate \
+  -d '{"model":"contrat-banc","prompt":"Bonjour.","stream":false,"options":{"num_predict":8}}')
+[[ "$essai_ia" == *'"response"'* ]] || { echo "Ollama ne génère pas : $essai_ia"; docker logs --tail 60 iq-bac-ia; exit 1; }
 # clamd ne parle pas HTTP : on attend qu'il réponde « PONG » (signatures chargées).
 clamd_pret=0
 for _ in $(seq 1 150); do [[ "$( (printf 'PING\n'; sleep 1) | nc localhost 13310 2>/dev/null)" == PONG* ]] && { clamd_pret=1; break; }; sleep 2; done
