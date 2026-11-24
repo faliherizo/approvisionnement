@@ -30,7 +30,8 @@ docker run --rm -v "$B/icp/etat:/etat" alpine:3.20 chown -R 10001:10001 /etat
 "${COMPOSE[@]}" up -d --build --wait icp
 # pyHanko partage l'espace réseau de l'ICP : il est recréé pour suivre un éventuel redémarrage de celle-ci.
 "${COMPOSE[@]}" up -d --force-recreate pyhanko
-"${COMPOSE[@]}" up -d conversion verapdf courriel
+# ClamAV démarré tôt : le chargement de ses signatures prend une à deux minutes.
+"${COMPOSE[@]}" up -d conversion verapdf courriel antivirus
 for u in http://localhost:18093/sante http://localhost:18030/health http://localhost:18092/api/info http://localhost:18025/api/v1/info; do attendre "$u"; done
 
 echo "== Serveur branché sur les bacs à sable"
@@ -48,7 +49,9 @@ docker exec iq-bac-ia ollama pull qwen2.5:0.5b >/dev/null
 # autres services et tombe à environ un jeton par seconde.
 docker exec iq-bac-ia sh -c 'printf "FROM qwen2.5:0.5b\nPARAMETER num_thread 4\n" > /tmp/Modelfile && ollama create contrat-banc -f /tmp/Modelfile' >/dev/null
 # clamd ne parle pas HTTP : on attend qu'il réponde « PONG » (signatures chargées).
-for _ in $(seq 1 90); do [[ "$( (printf 'PING\n'; sleep 1) | nc localhost 13310 2>/dev/null)" == PONG* ]] && break; sleep 2; done
+clamd_pret=0
+for _ in $(seq 1 150); do [[ "$( (printf 'PING\n'; sleep 1) | nc localhost 13310 2>/dev/null)" == PONG* ]] && { clamd_pret=1; break; }; sleep 2; done
+[[ $clamd_pret -eq 1 ]] || { echo "ClamAV ne répond pas (port 13310)."; "${COMPOSE[@]}" logs --no-color --tail 40 antivirus; exit 1; }
 # Jar lancé directement : « mvn spring-boot:run » délègue à un processus Java qu'arrêter Maven ne tue pas.
 mvn -B -q -f "$RACINE/backend/pom.xml" -DskipTests package
 JAR=$(ls "$RACINE"/backend/target/contrat-backend-*.jar | grep -v original | head -1)
