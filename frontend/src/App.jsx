@@ -78,6 +78,12 @@ function ProtectedRoute({ children }) {
   return user ? children : <Navigate to="/login" replace />
 }
 
+/** Console de la plateforme : réservée au superadministrateur ; un administrateur d'organisation retrouve son accueil. */
+function RouteSuperadmin({ children }) {
+  const { hasRole } = useAuth()
+  return hasRole('SUPERADMIN') ? children : <Navigate to="/" replace />
+}
+
 /** Page d'un module : sans lui, l'organisation retrouve son accueil (sa navigation ne la propose pas non plus). */
 function RouteModule({ code, children }) {
   const { actif, chargement } = useModules()
@@ -312,7 +318,7 @@ export default function App() {
         <Route path="/securite" element={<ProtectedRoute><Securite /></ProtectedRoute>} />
         <Route path="/profil" element={<ProtectedRoute><Profil /></ProtectedRoute>} />
         <Route path="/api-docs" element={<ProtectedRoute><ApiDocs /></ProtectedRoute>} />
-        <Route path="/superadmin" element={<ProtectedRoute><Superadmin /></ProtectedRoute>} />
+        <Route path="/superadmin" element={<ProtectedRoute><RouteSuperadmin><Superadmin /></RouteSuperadmin></ProtectedRoute>} />
         <Route path="/formulaires" element={<ProtectedRoute><Formulaires /></ProtectedRoute>} />
         <Route path="/formulaires/:id/remplir" element={<ProtectedRoute><FormulaireRemplir /></ProtectedRoute>} />
         <Route path="/formulaires/:id/fiches" element={<ProtectedRoute><Saisies /></ProtectedRoute>} />

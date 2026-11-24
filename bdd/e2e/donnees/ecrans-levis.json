@@ -756,6 +756,12 @@
           "cliquer": "Rafraîchir"
         },
         {
+          "aller": "/superadmin"
+        },
+        {
+          "url": ":\\d+/(?!superadmin)"
+        },
+        {
           "aller": "/accueil"
         },
         {

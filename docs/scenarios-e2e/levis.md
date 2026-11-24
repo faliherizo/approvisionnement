@@ -1908,14 +1908,16 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 
 1. Ouvrir l'écran `/simulateur`
 2. Activer « Rafraîchir »
-3. Ouvrir l'écran `/accueil`
-4. Activer « Accéder à l’application »
-5. Voir « Choisir votre organisation »
-6. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
-7. Choisir « Organisation » : `Ville de Lévis`
-8. Voir « Administration de la plateforme »
-9. Ouvrir l'écran `http://levis.e2e.localhost:5175/login`
-10. Voir « Ville de Lévis »
+3. Ouvrir l'écran `/superadmin`
+4. Arriver sur une adresse de la forme `:\d+/(?!superadmin)`
+5. Ouvrir l'écran `/accueil`
+6. Activer « Accéder à l’application »
+7. Voir « Choisir votre organisation »
+8. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+9. Choisir « Organisation » : `Ville de Lévis`
+10. Voir « Administration de la plateforme »
+11. Ouvrir l'écran `http://levis.e2e.localhost:5175/login`
+12. Voir « Ville de Lévis »
 
 ### E2E-ECR-LEV-15 — Le superadmin crée une organisation, la modifie, la désactive et la réactive, lui donne un administrateur, un thème, des modules, un tarif, un modèle de document et une banque d'heures
 
