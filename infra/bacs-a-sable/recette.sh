@@ -28,9 +28,8 @@ docker compose -f "$B/docker-compose.yml" up -d >/dev/null
 for _ in $(seq 1 90); do [[ "$( (printf 'PING\n'; sleep 1) | nc localhost 13310 2>/dev/null)" == PONG* ]] && break; sleep 2; done
 # IA générative : le petit modèle du bac à sable, tiré une fois (le volume ia-modeles le garde).
 docker exec iq-bac-ia ollama pull smollm2:135m >/dev/null
-# Modèle du banc : smollm2 (135 M de paramètres) à 4 fils de calcul ; sur un exécuteur de CI, qwen2.5:0.5b dépassait le
-# délai de lecture du serveur (120 s). Laissé à son défaut (tous les processeurs), le calcul s'étouffe aussi. Laissé à son défaut (tous les processeurs), le calcul s'étouffe sous la charge des
-# autres services et tombe à environ un jeton par seconde.
+# Modèle du banc : smollm2 (135 M de paramètres) à 4 fils de calcul. Laissé à son défaut (tous les processeurs), le
+# calcul s'étouffe sous la charge des autres services et tombe à environ un jeton par seconde.
 docker exec iq-bac-ia sh -c 'printf "FROM smollm2:135m\nPARAMETER num_thread 4\n" > /tmp/Modelfile && ollama create contrat-banc -f /tmp/Modelfile' >/dev/null
 
 (cd "$RACINE/backend" && mvn -q -o -DskipTests -Djacoco.skip=true package)
