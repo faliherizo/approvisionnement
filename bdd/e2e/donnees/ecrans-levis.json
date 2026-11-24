@@ -1,0 +1,1526 @@
+{
+  "appelOffres": "Ville de Lévis — fonctionnalités de chaque écran du socle",
+  "catalogue": "levis",
+  "scenarios": [
+    {
+      "id": "E2E-ECR-LEV-01",
+      "titre": "L'administration crée un compte, le modifie puis le supprime depuis l'écran des utilisateurs",
+      "exigences": [
+        "LEV-C-16"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/utilisateurs"
+        },
+        {
+          "cliquer": "Nouvel utilisateur"
+        },
+        {
+          "remplir": {
+            "Courriel": "e2e.${unique}@levis.qc.ca",
+            "Nom": "Compte E2E ${unique}",
+            "Mot de passe": "Passw0rd!E2E-2026"
+          }
+        },
+        {
+          "cocher": "REDACTEUR"
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "remplir": {
+            "Recherche (courriel, nom)…": "e2e.${unique}"
+          }
+        },
+        {
+          "voir": "Compte E2E ${unique}"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "e2e.${unique}@levis.qc.ca",
+            "cliquer": "Éditer"
+          }
+        },
+        {
+          "remplir": {
+            "Direction": "Approvisionnement E2E"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "voir": "Compte E2E ${unique}"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "e2e.${unique}@levis.qc.ca",
+            "cliquer": "Supprimer"
+          }
+        },
+        {
+          "dansLaFenetre": "Confirmer"
+        },
+        {
+          "nePasVoir": "e2e.${unique}@levis.qc.ca"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-LEV-02",
+      "titre": "Le juriste modifie une clause, restaure sa première version depuis l'historique, puis la supprime",
+      "exigences": [
+        "LEV-C-01",
+        "LEV-C-03"
+      ],
+      "profil": "juriste de Lévis",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Clause standard « ECR-… »",
+            "etapes": [
+              {
+                "appel": "POST /api/clauses",
+                "corps": {
+                  "code": "ECR-${UNIQUE}",
+                  "titre": "Clause écran ${unique}",
+                  "categorie": "STANDARD",
+                  "corps": "Texte d'origine de la clause.",
+                  "section": "Essais E2E"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clauses"
+        },
+        {
+          "remplir": {
+            "Recherche (code, titre, texte)…": "ECR-${UNIQUE}"
+          }
+        },
+        {
+          "voir": "Clause écran ${unique}"
+        },
+        {
+          "cliquer": "Éditer"
+        },
+        {
+          "remplir": {
+            "Titre": "Clause écran modifiée ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "voir": "Clause écran modifiée ${unique}"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Historique de la clause ECR-${UNIQUE}"
+          }
+        },
+        {
+          "cliquer": "Restaurer la version 1"
+        },
+        {
+          "voir": "Clause écran ${unique}"
+        },
+        {
+          "cliquer": "Supprimer"
+        },
+        {
+          "dansLaFenetre": "Confirmer"
+        },
+        {
+          "nePasVoir": "Clause écran ${unique}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-LEV-03",
+      "titre": "Depuis la recherche, le juriste supprime une clause et l'administration un document",
+      "exigences": [
+        "LEV-C-02"
+      ],
+      "profil": "juriste de Lévis",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Une clause et un document au même mot-clé",
+            "etapes": [
+              {
+                "appel": "POST /api/clauses",
+                "corps": {
+                  "code": "RCH-${UNIQUE}",
+                  "titre": "Recherche ${unique}",
+                  "categorie": "OPTIONNELLE",
+                  "corps": "Clause de recherche ${unique}.",
+                  "section": "Essais E2E"
+                }
+              },
+              {
+                "appel": "POST /api/documents",
+                "corps": {
+                  "titre": "Document recherche ${unique}",
+                  "type": "DEMANDE_PRIX",
+                  "modeSollicitation": "DEMANDE_PRIX",
+                  "valeurEstimee": 15000
+                },
+                "profil": "rédacteur de Lévis"
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/recherche"
+        },
+        {
+          "remplir": {
+            "Terme": "${unique}"
+          }
+        },
+        {
+          "cliquer": "Rechercher"
+        },
+        {
+          "voir": [
+            "Recherche ${unique}",
+            "Document recherche ${unique}"
+          ]
+        },
+        {
+          "dansLaLigne": {
+            "texte": "RCH-${UNIQUE}",
+            "cliquer": "Supprimer"
+          }
+        },
+        {
+          "dansLaFenetre": "Confirmer"
+        },
+        {
+          "nePasVoir": "RCH-${UNIQUE}"
+        },
+        {
+          "connecter": "administrateur de Lévis"
+        },
+        {
+          "aller": "/recherche"
+        },
+        {
+          "remplir": {
+            "Terme": "${unique}"
+          }
+        },
+        {
+          "cliquer": "Rechercher"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Document recherche ${unique}",
+            "cliquer": "Supprimer"
+          }
+        },
+        {
+          "dansLaFenetre": "Confirmer"
+        },
+        {
+          "nePasVoir": [
+            "RCH-${UNIQUE}",
+            "Document recherche ${unique}"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-LEV-04",
+      "titre": "L'administration crée un circuit d'approbation, le modifie puis le supprime",
+      "exigences": [
+        "LEV-C-12",
+        "LEV-2.1-6b"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/workflows"
+        },
+        {
+          "remplir": {
+            "Nom": "Circuit écran ${unique}"
+          }
+        },
+        {
+          "choisir": {
+            "Type de document": "PRET_A_USAGE"
+          }
+        },
+        {
+          "cocher": "APPRO"
+        },
+        {
+          "cocher": "DIRECTION"
+        },
+        {
+          "cliquer": "Créer le circuit"
+        },
+        {
+          "voir": "Circuit écran ${unique}"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Éditer le circuit Circuit écran ${unique}"
+          }
+        },
+        {
+          "remplir": {
+            "Nom": "Circuit écran modifié ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer les modifications"
+        },
+        {
+          "voir": "Circuit écran modifié ${unique}"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Supprimer le circuit Circuit écran modifié ${unique}"
+          }
+        },
+        {
+          "nePasVoir": "Circuit écran modifié ${unique}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-LEV-05",
+      "titre": "Un dossier d'approvisionnement change de statut, se voit rattacher puis détacher un document, est modifié puis supprimé",
+      "exigences": [
+        "LEV-2.1-13"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Un document à rattacher",
+            "etapes": [
+              {
+                "appel": "POST /api/documents",
+                "corps": {
+                  "titre": "Pièce dossier ${unique}",
+                  "type": "DEMANDE_PRIX",
+                  "modeSollicitation": "DEMANDE_PRIX",
+                  "valeurEstimee": 9000
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/dossiers"
+        },
+        {
+          "remplir": {
+            "Titre": "Dossier écran ${unique}",
+            "N° d’appel d’offres": "AO-${UNIQUE}",
+            "Objet du dossier": "Essais de l'écran des dossiers"
+          }
+        },
+        {
+          "cliquer": "Créer le dossier"
+        },
+        {
+          "cliquerTexte": "Dossier écran ${unique}"
+        },
+        {
+          "choisir": {
+            "Statut du dossier": "EN_COURS"
+          }
+        },
+        {
+          "cliquer": "Transmettre la référence à SAP"
+        },
+        {
+          "choisir": {
+            "Rattacher un document existant": "Pièce dossier ${unique}"
+          }
+        },
+        {
+          "cliquer": "Rattacher au dossier"
+        },
+        {
+          "voir": "Pièce dossier ${unique}"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Détacher le document Pièce dossier ${unique}"
+          }
+        },
+        {
+          "voir": "Aucun document rattaché."
+        },
+        {
+          "cliquer": "Modifier"
+        },
+        {
+          "remplir": {
+            "Objet du dossier": "Objet modifié ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer les modifications"
+        },
+        {
+          "cliquerTexte": "Dossier écran ${unique}"
+        },
+        {
+          "cliquer": "Supprimer le dossier"
+        },
+        {
+          "dansLaFenetre": "Confirmer"
+        },
+        {
+          "nePasVoir": "Dossier écran ${unique}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-LEV-06",
+      "titre": "L'administration crée un template de document, le modifie puis le supprime",
+      "exigences": [
+        "LEV-2.1-4",
+        "LEV-C-04"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/templates"
+        },
+        {
+          "cliquer": "Nouveau template"
+        },
+        {
+          "remplir": {
+            "Code": "TPL_${UNIQUE}",
+            "Nom (affiché)": "Template écran ${unique}"
+          }
+        },
+        {
+          "choisir": {
+            "Type de contrat": "CONTRAT_SERVICES"
+          }
+        },
+        {
+          "cliquer": "Créer le template"
+        },
+        {
+          "voir": "Template écran ${unique}"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "TPL_${UNIQUE}",
+            "cliquer": "Modifier"
+          }
+        },
+        {
+          "remplir": {
+            "Nom (affiché)": "Template écran modifié ${unique}"
+          }
+        },
+        {
+          "dansLaFenetre": "Enregistrer"
+        },
+        {
+          "voir": "Template écran modifié ${unique}"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "TPL_${UNIQUE}",
+            "cliquer": "Supprimer"
+          }
+        },
+        {
+          "dansLaFenetre": "Supprimer"
+        },
+        {
+          "nePasVoir": "TPL_${UNIQUE}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-LEV-07",
+      "titre": "L'administration crée un gabarit, le modifie, personnalise un gabarit global, puis supprime ses gabarits",
+      "exigences": [
+        "LEV-2.1-8"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/gabarits"
+        },
+        {
+          "cliquer": "Nouveau gabarit"
+        },
+        {
+          "remplir": {
+            "Code": "GAB_${UNIQUE}",
+            "Nom (affiché)": "Gabarit écran ${unique}"
+          }
+        },
+        {
+          "dansLaFenetre": "Créer le gabarit"
+        },
+        {
+          "voir": "Gabarit écran ${unique}"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "GAB_${UNIQUE}",
+            "cliquer": "Modifier"
+          }
+        },
+        {
+          "remplir": {
+            "Sous-titre": "Sous-titre E2E"
+          }
+        },
+        {
+          "dansLaFenetre": "Enregistrer"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "GAB_${UNIQUE}",
+            "cliquer": "Supprimer"
+          }
+        },
+        {
+          "dansLaFenetre": "Supprimer"
+        },
+        {
+          "nePasVoir": "GAB_${UNIQUE}"
+        },
+        {
+          "cliquer": "Personnaliser"
+        },
+        {
+          "voir": "cloné pour personnalis"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-LEV-08",
+      "titre": "Depuis l'accueil, le rédacteur crée un document vierge puis un document à partir d'un template",
+      "exigences": [
+        "LEV-2.1-1",
+        "LEV-C-07"
+      ],
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "aller": "/"
+        },
+        {
+          "remplir": {
+            "Titre": "Accueil vierge ${unique}",
+            "Valeur estimée ($)": "30000"
+          }
+        },
+        {
+          "cliquer": "Créer le document"
+        },
+        {
+          "url": "/documents/\\d+"
+        },
+        {
+          "voir": "Accueil vierge ${unique}"
+        },
+        {
+          "aller": "/"
+        },
+        {
+          "choisir": {
+            "Template": "Bail — gré à gré"
+          }
+        },
+        {
+          "remplir": {
+            "Titre du document": "Accueil template ${unique}"
+          }
+        },
+        {
+          "cliquer": "Instancier le template"
+        },
+        {
+          "url": "/documents/\\d+"
+        },
+        {
+          "voir": "Accueil template ${unique}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-LEV-09",
+      "titre": "Le rédacteur modifie son profil et gère ses répertoires de dépôt",
+      "exigences": [
+        "LEV-C-16"
+      ],
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "aller": "/profil"
+        },
+        {
+          "remplir": {
+            "Direction": "Approvisionnement ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "remplir": {
+            "Nouveau répertoire": "Contrats/E2E-${unique}"
+          }
+        },
+        {
+          "cliquer": "Ajouter"
+        },
+        {
+          "voir": "Contrats/E2E-${unique}"
+        },
+        {
+          "cliquer": "Retirer"
+        },
+        {
+          "nePasVoir": "Contrats/E2E-${unique}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-LEV-10",
+      "titre": "Un utilisateur active puis désactive le MFA par application (TOTP) et par question secrète",
+      "exigences": [
+        "LEV-C-16"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Compte sans MFA",
+            "etapes": [
+              {
+                "appel": "POST /api/admin/users",
+                "corps": {
+                  "email": "mfa.${unique}@levis.qc.ca",
+                  "nom": "MFA ${unique}",
+                  "motDePasse": "Passw0rd!E2E-2026",
+                  "roles": [
+                    "LECTEUR"
+                  ],
+                  "actif": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "connecter": {
+            "email": "mfa.${unique}@levis.qc.ca",
+            "motDePasse": "Passw0rd!E2E-2026"
+          }
+        },
+        {
+          "aller": "/securite"
+        },
+        {
+          "cliquer": "Configurer le TOTP"
+        },
+        {
+          "lire": {
+            "selecteur": "code",
+            "variable": "secretTotp"
+          }
+        },
+        {
+          "remplirTotp": {
+            "Code de confirmation": "secretTotp"
+          }
+        },
+        {
+          "cliquer": "Activer"
+        },
+        {
+          "cliquer": "Désactiver le MFA"
+        },
+        {
+          "remplir": {
+            "Question": "Ville natale ?",
+            "Réponse": "Lévis"
+          }
+        },
+        {
+          "cliquer": "Activer la question secrète"
+        },
+        {
+          "cliquer": "Désactiver le MFA"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-LEV-11",
+      "titre": "L'administration importe des clauses par CSV et efface une personne au titre de la Loi 25",
+      "exigences": [
+        "LEV-C-01",
+        "LEV-C-15"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Personne à effacer",
+            "etapes": [
+              {
+                "appel": "POST /api/admin/users",
+                "corps": {
+                  "email": "efface.${unique}@levis.qc.ca",
+                  "nom": "Efface ${unique}",
+                  "motDePasse": "Passw0rd!E2E-2026",
+                  "roles": [
+                    "LECTEUR"
+                  ],
+                  "actif": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/donnees"
+        },
+        {
+          "remplir": {
+            "Contenu CSV": "code,titre,categorie,corps\nIMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé."
+          }
+        },
+        {
+          "cliquer": "Importer"
+        },
+        {
+          "voir": "IMP-${UNIQUE}"
+        },
+        {
+          "aller": "/vie-privee"
+        },
+        {
+          "remplir": {
+            "Motif": "Demande écrite E2E ${unique}"
+          }
+        },
+        {
+          "remplir": {
+            "Courriel de la personne concernée #2": "efface.${unique}@levis.qc.ca"
+          }
+        },
+        {
+          "cliquer": "Effacer la personne"
+        },
+        {
+          "dansLaFenetre": "Confirmer"
+        },
+        {
+          "voir": "Demande écrite E2E ${unique}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-LEV-12",
+      "titre": "L'écran d'accueil public, la connexion à l'image de l'organisation et les dépôts simulés s'ouvrent",
+      "exigences": [
+        "LEV-C-22",
+        "LEV-2.1-13"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/simulateur"
+        },
+        {
+          "cliquer": "Rafraîchir"
+        },
+        {
+          "aller": "/accueil"
+        },
+        {
+          "aller": "http://levis.e2e.localhost:5175/login"
+        },
+        {
+          "voir": "Ville de Lévis"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-LEV-13",
+      "titre": "Dans l'éditeur, chaque fonction du devis s'exerce : assemblage, sections, commentaires, approbation, publication, addenda, versions, obligations, signature, annexes, bordereau et générations",
+      "exigences": [
+        "LEV-2.1-4",
+        "LEV-2.1-6",
+        "LEV-2.1-6a",
+        "LEV-2.1-7",
+        "LEV-2.1-8",
+        "LEV-C-10",
+        "LEV-C-11",
+        "LEV-C-20"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Document de demande de prix",
+            "etapes": [
+              {
+                "appel": "POST /api/documents",
+                "corps": {
+                  "titre": "Éditeur ${unique}",
+                  "numeroAO": "AO-${UNIQUE}",
+                  "type": "DEMANDE_PRIX",
+                  "modeSollicitation": "DEMANDE_PRIX",
+                  "valeurEstimee": 25000
+                },
+                "capturer": {
+                  "doc": "$.id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/documents/${doc}"
+        },
+        {
+          "cliquer": "Assembler le devis"
+        },
+        {
+          "cliquer": "Ajouter une section libre"
+        },
+        {
+          "remplir": {
+            "Titre de la section": "Section libre ${unique}",
+            "Contenu": "Contenu propre au projet."
+          }
+        },
+        {
+          "dansLaFenetre": "Ajouter la section"
+        },
+        {
+          "voir": "Section libre ${unique}"
+        },
+        {
+          "dansLaSection": {
+            "titre": "Devis assemblé",
+            "cliquer": "Rédiger"
+          }
+        },
+        {
+          "remplir": {
+            "Titre de la section": "Section rédigée ${unique}"
+          }
+        },
+        {
+          "dansLaFenetre": "Enregistrer"
+        },
+        {
+          "voir": "Section rédigée ${unique}"
+        },
+        {
+          "dansLaSection": {
+            "titre": "Devis assemblé",
+            "cliquer": "Retirer"
+          }
+        },
+        {
+          "remplir": {
+            "Commenter le devis…": "Commentaire ${unique}"
+          }
+        },
+        {
+          "cliquer": "Commenter"
+        },
+        {
+          "cliquer": "Marquer résolu"
+        },
+        {
+          "cliquer": "Démarrer l'approbation"
+        },
+        {
+          "connecter": "rédacteur de Lévis"
+        },
+        {
+          "aller": "/documents/${doc}"
+        },
+        {
+          "dansLaSection": {
+            "titre": "Circuit d'approbation",
+            "cliquer": "Approuver"
+          }
+        },
+        {
+          "voir": "Étape approuvée"
+        },
+        {
+          "connecter": "juriste de Lévis"
+        },
+        {
+          "aller": "/documents/${doc}"
+        },
+        {
+          "dansLaSection": {
+            "titre": "Circuit d'approbation",
+            "cliquer": "Approuver"
+          }
+        },
+        {
+          "voir": "Étape approuvée"
+        },
+        {
+          "connecter": "direction de Lévis"
+        },
+        {
+          "aller": "/documents/${doc}"
+        },
+        {
+          "dansLaSection": {
+            "titre": "Circuit d'approbation",
+            "cliquer": "Approuver"
+          }
+        },
+        {
+          "voir": "Étape approuvée"
+        },
+        {
+          "connecter": "administrateur de Lévis"
+        },
+        {
+          "aller": "/documents/${doc}"
+        },
+        {
+          "remplir": {
+            "Répertoire de destination": "Contrats/E2E-${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer ce répertoire"
+        },
+        {
+          "cliquer": "Publier"
+        },
+        {
+          "cliquer": "Nouvel addenda"
+        },
+        {
+          "remplir": {
+            "Objet de l'addenda": "Addenda ${unique}"
+          }
+        },
+        {
+          "dansLaFenetre": "Valider"
+        },
+        {
+          "cliquer": "Ajouter un changement"
+        },
+        {
+          "choisir": {
+            "Clause du devis à modifier": "(premier)"
+          }
+        },
+        {
+          "remplir": {
+            "Nouveau texte de la clause": "Texte modifié par l'addenda ${unique}."
+          }
+        },
+        {
+          "dansLaFenetre": "Ajouter le changement"
+        },
+        {
+          "cliquer": "Émettre (réintégrer)"
+        },
+        {
+          "cliquer": "Capturer une version"
+        },
+        {
+          "dansLaFenetre": "Valider"
+        },
+        {
+          "cliquer": "Capturer une version"
+        },
+        {
+          "dansLaFenetre": "Valider"
+        },
+        {
+          "choisir": {
+            "version A": "v1",
+            "version B": "v2"
+          }
+        },
+        {
+          "cliquer": "Comparer"
+        },
+        {
+          "dansLaSection": {
+            "titre": "Obligations",
+            "cliquer": "Ajouter"
+          }
+        },
+        {
+          "remplir": {
+            "Titre": "Obligation ${unique}"
+          }
+        },
+        {
+          "dansLaFenetre": "Valider"
+        },
+        {
+          "cliquer": "Compléter"
+        },
+        {
+          "cliquer": "Ajouter un signataire"
+        },
+        {
+          "remplir": {
+            "Nom": "Signataire ${unique}",
+            "Courriel": "signataire.${unique}@exemple.ca"
+          }
+        },
+        {
+          "dansLaFenetre": "Valider"
+        },
+        {
+          "cliquer": "Démarrer la signature"
+        },
+        {
+          "cliquer": "Signer"
+        },
+        {
+          "remplir": {
+            "Nom complet du signataire": "Signataire ${unique}"
+          }
+        },
+        {
+          "dansLaFenetre": "Apposer la signature"
+        },
+        {
+          "cliquer": "Ajouter une annexe"
+        },
+        {
+          "remplir": {
+            "Titre": "Annexe ${unique}"
+          }
+        },
+        {
+          "dansLaFenetre": "Valider"
+        },
+        {
+          "voir": "Annexe ${unique}"
+        },
+        {
+          "dansLaSection": {
+            "titre": "Annexes",
+            "cliquer": "Supprimer"
+          }
+        },
+        {
+          "cliquer": "Ajouter une ligne"
+        },
+        {
+          "dansLaSection": {
+            "titre": "Bordereau de prix",
+            "cliquer": "Enregistrer"
+          }
+        },
+        {
+          "cliquer": "Générer"
+        },
+        {
+          "cliquer": "Aperçu PDF"
+        },
+        {
+          "dansLaFenetre": "Fermer"
+        },
+        {
+          "cliquer": "Générer"
+        },
+        {
+          "telecharger": "Fiche SEAO (XML)"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-LEV-14",
+      "titre": "Les paramètres de l'organisation : valeurs des listes, modèle de document et les quatre intégrations, enregistrées et testées",
+      "exigences": [
+        "LEV-C-13",
+        "LEV-C-16",
+        "LEV-C-21"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/parametres"
+        },
+        {
+          "cliquer": "Ajouter une valeur"
+        },
+        {
+          "remplir": {
+            "Code": "E2E_${UNIQUE}",
+            "Libellé": "Valeur E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "voir": "Valeur E2E ${unique}"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Modifier — Valeur E2E ${unique}"
+          }
+        },
+        {
+          "remplir": {
+            "Libellé": "Valeur E2E modifiée ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Retirer — Valeur E2E modifiée ${unique}"
+          }
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Supprimer — Valeur E2E modifiée ${unique}"
+          }
+        },
+        {
+          "nePasVoir": "Valeur E2E modifiée ${unique}"
+        },
+        {
+          "remplir": {
+            "Pied de page (mention)": "Document E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le modèle"
+        },
+        {
+          "dansLaSection": {
+            "titre": "Intégration Microsoft 365",
+            "cliquer": "Enregistrer"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Intégration Microsoft 365",
+            "cliquer": "Tester la connexion"
+          }
+        },
+        {
+          "remplir": {
+            "URL de base du service OData": "https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata/sap",
+            "Chemin du service": "/API_BUSINESS_PARTNER/A_BusinessPartner"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Intégration SAP",
+            "cliquer": "Enregistrer"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Intégration SAP",
+            "cliquer": "Tester la connexion"
+          }
+        },
+        {
+          "remplir": {
+            "Émetteur (issuer / URL de découverte)": "http://localhost:8180/realms/iq",
+            "Identifiant client (client_id)": "contrat-e2e"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Authentification OpenID Connect",
+            "cliquer": "Enregistrer"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Authentification OpenID Connect",
+            "cliquer": "Tester la découverte"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Authentification SAML 2.0",
+            "cliquer": "Enregistrer"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Authentification SAML 2.0",
+            "cliquer": "Tester la configuration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-LEV-15",
+      "titre": "Le superadmin crée une organisation, la modifie, la désactive et la réactive, lui donne un administrateur, un thème, des modules, un tarif, un modèle de document et une banque d'heures",
+      "exigences": [
+        "LEV-C-22",
+        "LEV-2.1-10"
+      ],
+      "profil": "superadmin",
+      "etapes": [
+        {
+          "aller": "/superadmin"
+        },
+        {
+          "remplir": {
+            "Nouveau tenant » Slug (sous-domaine)": "e2e-${unique}",
+            "Nouveau tenant » Titre de connexion": "Organisation E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Créer le tenant"
+        },
+        {
+          "voir": "Organisation E2E ${unique}"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "e2e-${unique}",
+            "cliquer": "Éditer"
+          }
+        },
+        {
+          "remplir": {
+            "Sous-titre": "Sous-titre E2E"
+          }
+        },
+        {
+          "dansLaFenetre": "Enregistrer les modifications"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "e2e-${unique}",
+            "cliquer": "Désactiver"
+          }
+        },
+        {
+          "dansLaLigne": {
+            "texte": "e2e-${unique}",
+            "cliquer": "Activer"
+          }
+        },
+        {
+          "choisir": {
+            "Créer l'administrateur d'un tenant » Tenant": "Organisation E2E ${unique}"
+          }
+        },
+        {
+          "remplir": {
+            "Créer l'administrateur d'un tenant » Courriel": "admin.${unique}@e2e.example",
+            "Créer l'administrateur d'un tenant » Nom": "Admin E2E",
+            "Créer l'administrateur d'un tenant » Mot de passe": "Passw0rd!E2E-2026"
+          }
+        },
+        {
+          "cliquer": "Créer l'admin"
+        },
+        {
+          "choisir": {
+            "Thème & design par tenant » Tenant": "Organisation E2E ${unique}"
+          }
+        },
+        {
+          "remplir": {
+            "Thème & design par tenant » Logo / texte de marque": "E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le thème"
+        },
+        {
+          "aller": "/superadmin"
+        },
+        {
+          "choisir": {
+            "Modules par tenant » Organisation": "Organisation E2E ${unique}"
+          }
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Moteur de formulaires",
+            "cliquer": "Activer"
+          }
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Moteur de formulaires",
+            "cliquer": "Désactiver"
+          }
+        },
+        {
+          "choisir": {
+            "Tarification par tenant » Tenant": "Organisation E2E ${unique}"
+          }
+        },
+        {
+          "remplir": {
+            "Forfait annuel (avant taxes)": "12000"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le tarif"
+        },
+        {
+          "choisir": {
+            "Modèle de document » Tenant": "Organisation E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le modèle"
+        },
+        {
+          "choisir": {
+            "Banques d'heures des organisations » Organisation": "Ville de Lévis"
+          }
+        },
+        {
+          "remplir": {
+            "Ouvrir une banque d'heures » Nom": "Banque E2E ${unique}",
+            "Ouvrir une banque d'heures » Début": "${aujourdhui}",
+            "Ouvrir une banque d'heures » Fin": "${dansUnMois}",
+            "Heures achetées": "40"
+          }
+        },
+        {
+          "cliquer": "Ouvrir une banque d'heures"
+        },
+        {
+          "cliquer": "Banque E2E ${unique} — 40 h restantes"
+        },
+        {
+          "remplir": {
+            "Inscrire le mouvement » Heures": "2",
+            "Inscrire le mouvement » Date": "${aujourdhui}",
+            "Inscrire le mouvement » Description": "Soutien E2E ${unique}",
+            "Inscrire le mouvement » Intervenant": "Conseiller E2E"
+          }
+        },
+        {
+          "cliquer": "Inscrire le mouvement"
+        },
+        {
+          "voir": "Soutien E2E ${unique}"
+        },
+        {
+          "connecter": "administrateur de Lévis"
+        },
+        {
+          "aller": "/banque-heures"
+        },
+        {
+          "telecharger": "⬇ Télécharger le relevé (CSV)"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-LEV-16",
+      "titre": "L'assistant IA (Ollama hébergé) : base de connaissances alimentée puis épurée, question posée ; proposition de texte insérée dans une clause, et proposée dans l'éditeur du devis",
+      "exigences": [
+        "LEV-2.1-13",
+        "LEV-C-01"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Clause et document à enrichir",
+            "etapes": [
+              {
+                "appel": "POST /api/clauses",
+                "corps": {
+                  "code": "IA-${UNIQUE}",
+                  "titre": "Clause IA ${unique}",
+                  "categorie": "OPTIONNELLE",
+                  "corps": "Texte initial.",
+                  "section": "Essais E2E"
+                }
+              },
+              {
+                "appel": "POST /api/documents",
+                "corps": {
+                  "titre": "Devis IA ${unique}",
+                  "type": "DEMANDE_PRIX",
+                  "modeSollicitation": "DEMANDE_PRIX",
+                  "valeurEstimee": 20000
+                },
+                "capturer": {
+                  "doc": "$.id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/chat-ia"
+        },
+        {
+          "remplir": {
+            "Titre": "Note E2E ${unique}",
+            "Contenu (texte du document / données)": "La garantie d'exécution est de 10 % du contrat."
+          }
+        },
+        {
+          "cliquer": "Ajouter à la base de connaissances"
+        },
+        {
+          "voir": "Note E2E ${unique}"
+        },
+        {
+          "remplir": {
+            "Votre question juridique / de rédaction…": "Quel est le taux de la garantie d'exécution ?"
+          }
+        },
+        {
+          "cliquer": "Envoyer"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Retirer « Note E2E ${unique} » de la base de connaissances"
+          }
+        },
+        {
+          "nePasVoir": "Note E2E ${unique}"
+        },
+        {
+          "aller": "/clauses"
+        },
+        {
+          "remplir": {
+            "Recherche (code, titre, texte)…": "IA-${UNIQUE}"
+          }
+        },
+        {
+          "cliquer": "Éditer"
+        },
+        {
+          "remplir": {
+            "Instruction": "Rédige une clause de garantie d'exécution"
+          }
+        },
+        {
+          "cliquer": "Proposer un texte"
+        },
+        {
+          "cliquer": "Insérer dans le formulaire"
+        },
+        {
+          "dansLaFenetre": "Enregistrer"
+        },
+        {
+          "aller": "/documents/${doc}"
+        },
+        {
+          "remplir": {
+            "Instruction": "Rédige l'objet du contrat"
+          }
+        },
+        {
+          "cliquer": "Proposer un texte"
+        },
+        {
+          "cliquer": "Insérer dans le formulaire"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-LEV-17",
+      "titre": "Le cocontractant signe le devis par son lien de signature, sans compte",
+      "exigences": [
+        "LEV-2.1-8"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Document dont la signature est démarrée",
+            "etapes": [
+              {
+                "appel": "POST /api/documents",
+                "corps": {
+                  "titre": "Signature publique ${unique}",
+                  "type": "DEMANDE_PRIX",
+                  "modeSollicitation": "DEMANDE_PRIX",
+                  "valeurEstimee": 15000
+                },
+                "capturer": {
+                  "doc": "$.id"
+                }
+              },
+              {
+                "appel": "POST /api/documents/${doc}/signataires",
+                "corps": {
+                  "nom": "Cocontractant E2E",
+                  "courriel": "cocontractant.${unique}@exemple.ca",
+                  "role": "Cocontractant"
+                },
+                "capturer": {
+                  "jeton": "$.jeton"
+                }
+              },
+              {
+                "appel": "POST /api/documents/${doc}/signature/demarrer"
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/signature/${jeton}"
+        },
+        {
+          "remplir": {
+            "Nom complet": "Cocontractant E2E"
+          }
+        },
+        {
+          "tracer": true
+        },
+        {
+          "cliquer": "Apposer ma signature"
+        },
+        {
+          "voir": "Votre signature a bien été enregistrée"
+        }
+      ]
+    }
+  ]
+}

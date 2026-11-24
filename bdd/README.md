@@ -221,6 +221,28 @@ constaté, contrôle d'accessibilité et de mise en page aux quatre largeurs. Le
 `npm run e2e` les exécute et régénère [`docs/scenarios-e2e/`](../docs/scenarios-e2e/README.md) ;
 `npm run e2e:couverture` échoue si une exigence fonctionnelle n'a aucun scénario e2e.
 
+**Couverture des fonctionnalités, écran par écran.** Au-delà des exigences, chaque écran (route de `App.jsx`) et chacune
+de ses fonctionnalités — lister, consulter, ajouter, modifier, supprimer, télécharger, transférer, attribuer, approuver,
+signer, déléguer… — doivent être exercés depuis l'interface. La liste n'est pas tenue à la main : elle est **tirée du
+code** du frontend.
+
+| Outil | Rôle |
+|---|---|
+| `outils/inventaire-ecrans.mjs` | pour chaque route, le composant rendu, les composants qu'il importe et chaque opération d'API qu'ils déclenchent → `e2e/fonctionnalites/inventaire.json` (généré) |
+| `e2e/fonctionnalites/complements.json` | adresses calculées (`api.get(base)`) déclarées, et **exclusions nominatives et motivées** — l'inventaire échoue sur un appel non déclaré |
+| moteur `e2e/exigences.spec.ts` | consigne, pour chaque scénario, les écrans ouverts et les appels d'API faits depuis chacun, avec leur statut ; attend après chaque geste qu'aucun appel ne soit en cours |
+| `outils/couverture-ecrans.mjs` | croise inventaire et traces → [`docs/scenarios-e2e/ecrans.md`](../docs/scenarios-e2e/ecrans.md) ; `--verifier` échoue sur un écran jamais ouvert ou une fonctionnalité non couverte |
+
+Une fonctionnalité est couverte quand un scénario **réussi** l'a déclenchée depuis un écran qui la porte, avec une
+réponse en succès ; les préparations par l'API ne comptent pas. Bilan : 71 écrans ouverts ; 544 fonctionnalités
+couvertes et 6 sans objet en e2e (échéance de conservation d'un an, panne d'un système externe), chacune renvoyant au
+test d'intégration qui la couvre. Les scénarios d'écran sont dans `e2e/donnees/ecrans-*.json`.
+
+```bash
+npm run e2e            # inventaire, scénarios, documentation, couverture des écrans
+npm run e2e:ecrans     # porte : tous les écrans ouverts, toutes les fonctionnalités couvertes
+```
+
 ## 9. Défauts révélés par ces scénarios et corrigés dans la plateforme
 
 | Défaut | Correction |
@@ -239,6 +261,11 @@ constaté, contrôle d'accessibilité et de mise en page aux quatre largeurs. Le
 | Une structure de formulaire de l'API (`cle`, types en majuscules) s'affichait mal : tous les libellés visaient le premier champ, types ignorés | le rendu lit les deux dialectes, comme le serveur (`normaliserChamp`) |
 | Recherche multicritère des fiches et critères sauvegardés offerts par l'API seulement | écran « Rechercher dans les fiches » (`RechercheFiches`) |
 | `/api-docs` partait vers le serveur en développement (page d'erreur) | proxy Vite sur « /api/ » et non « /api » |
+| Un formulaire supprimé restait affiché dans la liste (suppression logique non filtrée) | `FormulaireService.lister` écarte les formulaires désactivés ; l'export de réversibilité les garde |
+| L'assistant IA était inutilisable depuis l'édition d'une clause : son formulaire, imbriqué, soumettait la clause | `AiAssistant` sans `<form>` (groupe nommé, bouton `type="button"`, Entrée lance la génération) |
+| Génération IA sans borne : sur processeur, une réponse dépassait le délai et bloquait la file d'Ollama | `num_predict` borné (`app.ai.ollama.longueur-max`, 512 par défaut) |
+| Copie dans le presse-papier refusée par le navigateur : erreur non traitée, aucun retour | réussite et échec annoncés par un message |
+| Accessibilité : champs sans nom (feuille de temps, versions à comparer), boutons « × » sans nom, zones de texte enrichi nommées « Zone de texte enrichi », pavé de signature sans nom | `aria-label` tirés des libellés visibles, en trois langues |
 
 Les failles de sécurité relevées par les tests d'intrusion sont décrites dans
 [`docs/securite/rapport-tests-intrusion.md`](../docs/securite/rapport-tests-intrusion.md).

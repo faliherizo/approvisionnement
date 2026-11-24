@@ -45,7 +45,9 @@ const liste = (v) => [v].flat().map((x) => `« ${x} »`).join(', ')
 const paires = (o) => Object.entries(o).map(([k, v]) => `« ${k} » : ${v === '' ? '(vide)' : `\`${v}\``}`).join(' ; ')
 function phrase(e) {
   if ('aller' in e) return `Ouvrir l'écran \`${e.aller}\``
-  if ('connecter' in e) return `Se connecter en tant que ${e.connecter}`
+  if ('connecter' in e) return typeof e.connecter === 'string' ? `Se connecter en tant que ${e.connecter}` : `Se connecter avec le compte \`${e.connecter.email}\``
+  if ('lire' in e) return `Relever le texte affiché (\`${e.lire.selecteur}\`) sous le nom \`${e.lire.variable}\``
+  if ('remplirTotp' in e) return `Saisir le code TOTP courant dans ${Object.keys(e.remplirTotp).map((k) => `« ${k} »`).join(', ')}`
   if ('langue' in e) return `Passer l'interface en ${{ fr: 'français', en: 'anglais', mg: 'malgache' }[e.langue]}`
   if ('cliquer' in e) return typeof e.cliquer === 'string' ? `Activer « ${e.cliquer} »` : `Activer « ${e.cliquer.nom} » (${e.cliquer.role})`
   if ('dansLaLigne' in e) return `Dans la ligne « ${e.dansLaLigne.texte} », activer « ${e.dansLaLigne.cliquer} »`
@@ -62,6 +64,11 @@ function phrase(e) {
   if ('preparer' in e) return typeof e.preparer === 'string' ? `Préparer par l'API : cas \`${e.preparer}\``
     : `Préparer par l'API : ${e.preparer.description}`
   if ('telecharger' in e) return `Télécharger par « ${e.telecharger} » et obtenir un fichier non vide`
+  if ('dansLaFenetre' in e) return `Dans la fenêtre ouverte, activer « ${e.dansLaFenetre} »`
+  if ('dansLaSection' in e) return `Dans la section « ${e.dansLaSection.titre} », activer « ${e.dansLaSection.cliquer} »`
+  if ('cliquerTexte' in e) return `Activer l'élément « ${e.cliquerTexte} » (ligne ou carte cliquable)`
+  if ('tracer' in e) return 'Tracer une signature manuscrite sur le pavé de signature'
+  if ('repondre' in e) return `Répondre « ${e.repondre} » à la prochaine saisie demandée par le navigateur`
   if ('ecranConforme' in e) return "Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px"
   return JSON.stringify(e)
 }
@@ -111,7 +118,7 @@ const lignesReadme = [
   '| `langue` | changer la langue de l\'interface | `{ "langue": "en" }` |',
   '| `cliquer` | activer un bouton ou un lien, par son nom accessible | `{ "cliquer": "Rechercher" }` |',
   '| `dansLaLigne` | agir sur une ligne de tableau | `{ "dansLaLigne": { "texte": "Inscription", "cliquer": "Concevoir" } }` |',
-  '| `remplir` | saisir des champs, par leur libellé | `{ "remplir": { "Terme": "garantie" } }` |',
+  '| `remplir` | saisir des champs, par leur libellé ; « Section » Libellé » limite à une section, « Libellé #2 » vise la 2e occurrence | `{ "remplir": { "Terme": "garantie" } }` |',
   '| `choisir` | choisir dans une liste, par libellé ou par code | `{ "choisir": { "Catégorie": "OPTIONNELLE" } }` |',
   '| `cocher` / `decocher` | case à cocher, par son libellé | `{ "cocher": "Clauses normatives seulement" }` |',
   '| `televerser` | joindre un fichier | `{ "televerser": { "champ": "Pièce", "fichier": { "fichier": "pdf", "nom": "a.pdf" } } }` |',
@@ -120,7 +127,14 @@ const lignesReadme = [
   '| `voirTitre` / `url` | constater le titre ou l\'adresse | `{ "url": "/documents/\\\\d+" }` |',
   '| `telecharger` | télécharger un fichier et vérifier qu\'il n\'est pas vide | `{ "telecharger": "Exporter en CSV" }` |',
   '| `preparer` | mise en place par l\'API (cas BDD nommé ou étapes en ligne) | `{ "preparer": "lev.clauses.recherche-multicritere" }` |',
-  '| `ecranConforme` | contrôle d\'accessibilité et de mise en page | `{ "ecranConforme": true }` |', '',
+  '| `ecranConforme` | contrôle d\'accessibilité et de mise en page | `{ "ecranConforme": true }` |',
+  '| `dansLaFenetre` | activer un bouton de la fenêtre de dialogue ouverte (confirmation) | `{ "dansLaFenetre": "Supprimer" }` |',
+  '| `dansLaSection` | activer un bouton d\'une section, repérée par le début de son titre | `{ "dansLaSection": { "titre": "Annexes", "cliquer": "Supprimer" } }` |',
+  '| `cliquerTexte` | activer un élément cliquable par son texte (ligne de tableau, carte) | `{ "cliquerTexte": "Dossier E2E" }` |',
+  '| `lire` / `remplirTotp` | relever un texte affiché (ex. secret TOTP), puis saisir le code calculé à partir de lui | `{ "lire": { "selecteur": "code", "variable": "secret" } }` |',
+  '| `tracer` | tracer une signature manuscrite à la souris sur le pavé de signature | `{ "tracer": true }` |',
+  '| `repondre` | réponse à une saisie native du navigateur (motif demandé par `window.prompt`) ; les confirmations sont acceptées | `{ "repondre": "Départ à la retraite" }` |', '',
+  'Chaque scénario consigne aussi les écrans ouverts et les appels d\'API faits depuis chacun : la couverture des fonctionnalités écran par écran en découle ([ecrans.md](ecrans.md)).', '',
   '## Exécution', '',
   'Même plateforme que la suite BDD : serveur :8100 branché sur les bacs à sable, frontend de recette :5175 (`bdd/README.md`).', '',
   '```bash', 'cd bdd', 'npm run e2e              # exécute les scénarios, puis régénère ce dossier', 'npm run e2e:couverture   # échoue si une exigence fonctionnelle n\'a aucun scénario e2e',

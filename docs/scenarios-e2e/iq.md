@@ -192,6 +192,93 @@
 - **Source** : 1.4.5
 - **Conformité déclarée** : ✅
 
+### E2E-ECR-IQ-01 — L'initiateur crée une trousse à l'écran : documents déposés, remplacés et retirés, signataires ajoutés et retirés, parcours testé puis enregistré, lancement ; la preuve se vérifie
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-29, IQ-C-12, IQ-C-51
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Trousse écran ${unique}`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « contrat-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « contrat-${unique}.pdf »
+7. Joindre « annexe-${unique}.pdf » au champ « Téléverser un document »
+8. Voir « annexe-${unique}.pdf »
+9. Activer « Prévisualiser — contrat-${unique}.pdf » (button)
+10. Télécharger par « Télécharger — contrat-${unique}.pdf » et obtenir un fichier non vide
+11. Activer « Remplacer par une nouvelle version — contrat-${unique}.pdf » (button)
+12. Joindre « contrat-v2-${unique}.pdf » au champ « Fichier »
+13. Saisir « Motif » : `Correction E2E`
+14. Activer « Remplacer »
+15. Activer « Retirer avant lancement — annexe-${unique}.pdf » (button)
+16. Activer « Continuer »
+17. Saisir « Nom » : `Marie E2E ${unique}` ; « Courriel » : `marie.${unique}@agrinord.example` ; « Téléphone » : `+15145550190`
+18. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+19. Cocher « Externe »
+20. Activer « Ajouter un signataire »
+21. Voir « Marie E2E ${unique} »
+22. Saisir « Nom » : `Retiré E2E ${unique}` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550191`
+23. Activer « Ajouter un signataire »
+24. Activer « Retirer — Retiré E2E ${unique} » (button)
+25. Activer « Continuer »
+26. Activer « Ajouter une étape »
+27. Saisir « Clé » : `s1` ; « Libellé » : `Signature`
+28. Choisir « Type » : `SIGNATURE`
+29. Activer « Ajouter un responsable »
+30. Choisir « Type du responsable 1 » : `PARTICIPANT`
+31. Choisir « Responsable 1 » : `(premier)`
+32. Activer « Tester le parcours »
+33. Activer « Enregistrer »
+34. Activer « Continuer »
+35. Activer « Lancer le parcours »
+36. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+37. Activer « Preuve » (tab)
+38. Activer « Vérifier l’intégrité »
+
+### E2E-ECR-IQ-02 — Une trousse naît d'un dossier Salesforce et d'un modèle : recherche et import, valeur corrigée, contrat généré en PDF et en Word, zone de signature attribuée, lancement ; le validateur commente puis valide sa tâche
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-14, IQ-C-37, IQ-C-12
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Modèle publié (champs, zone de signature, clause conditionnelle, parcours de validation)
+2. Ouvrir l'écran `/clm/trousses/nouvelle`
+3. Cocher « Salesforce »
+4. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0001`
+5. Activer « Rechercher #2 »
+6. Saisir « Titre » : `Trousse modèle ${unique}` ; « Référence externe » : `REF-${UNIQUE}`
+7. Choisir « Modèle de contrat » : `Convention écran ${unique}`
+8. Activer « Enregistrer le brouillon »
+9. Activer « Importer / actualiser »
+10. Activer « Corriger »
+11. Saisir « Nouvelle valeur » : `Coopérative E2E ${unique}`
+12. Dans la section « Corriger la valeur », activer « Enregistrer »
+13. Activer « Continuer »
+14. Activer « Générer depuis le modèle »
+15. Activer « Générer en Word modifiable »
+16. Activer « Continuer »
+17. Saisir « Nom » : `Marie E2E ${unique}` ; « Courriel » : `marie.${unique}@agrinord.example` ; « Téléphone » : `+15145550190`
+18. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+19. Cocher « Externe »
+20. Activer « Ajouter un signataire »
+21. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+22. Activer « Attribuer la zone — Signature du bénéficiaire »
+23. Activer « Continuer »
+24. Activer « Continuer »
+25. Activer « Lancer le parcours »
+26. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+27. Se connecter en tant que validateur IQ
+28. Ouvrir l'écran `/clm/taches`
+29. Activer « Traiter — REF-${UNIQUE} Validation juridique »
+30. Saisir « Nouveau commentaire » : `Vérifié par l'e2e`
+31. Dans la section « Commentaires contextualisés », activer « Ajouter un commentaire »
+32. Voir « Vérifié par l'e2e »
+33. Activer « Valider »
+
 ### E2E-IQ-33 — Générer le contrat d'un modèle publié, valeurs préremplies depuis Salesforce et corrigeables
 
 - **Profil** : initiateur IQ
@@ -228,6 +315,47 @@
 - **Source** : 1.4.5
 - **Conformité déclarée** : ✅
 
+### E2E-ECR-IQ-02 — Une trousse naît d'un dossier Salesforce et d'un modèle : recherche et import, valeur corrigée, contrat généré en PDF et en Word, zone de signature attribuée, lancement ; le validateur commente puis valide sa tâche
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-14, IQ-C-37, IQ-C-12
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Modèle publié (champs, zone de signature, clause conditionnelle, parcours de validation)
+2. Ouvrir l'écran `/clm/trousses/nouvelle`
+3. Cocher « Salesforce »
+4. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0001`
+5. Activer « Rechercher #2 »
+6. Saisir « Titre » : `Trousse modèle ${unique}` ; « Référence externe » : `REF-${UNIQUE}`
+7. Choisir « Modèle de contrat » : `Convention écran ${unique}`
+8. Activer « Enregistrer le brouillon »
+9. Activer « Importer / actualiser »
+10. Activer « Corriger »
+11. Saisir « Nouvelle valeur » : `Coopérative E2E ${unique}`
+12. Dans la section « Corriger la valeur », activer « Enregistrer »
+13. Activer « Continuer »
+14. Activer « Générer depuis le modèle »
+15. Activer « Générer en Word modifiable »
+16. Activer « Continuer »
+17. Saisir « Nom » : `Marie E2E ${unique}` ; « Courriel » : `marie.${unique}@agrinord.example` ; « Téléphone » : `+15145550190`
+18. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+19. Cocher « Externe »
+20. Activer « Ajouter un signataire »
+21. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+22. Activer « Attribuer la zone — Signature du bénéficiaire »
+23. Activer « Continuer »
+24. Activer « Continuer »
+25. Activer « Lancer le parcours »
+26. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+27. Se connecter en tant que validateur IQ
+28. Ouvrir l'écran `/clm/taches`
+29. Activer « Traiter — REF-${UNIQUE} Validation juridique »
+30. Saisir « Nouveau commentaire » : `Vérifié par l'e2e`
+31. Dans la section « Commentaires contextualisés », activer « Ajouter un commentaire »
+32. Voir « Vérifié par l'e2e »
+33. Activer « Valider »
+
 ### E2E-IQ-33 — Générer le contrat d'un modèle publié, valeurs préremplies depuis Salesforce et corrigeables
 
 - **Profil** : initiateur IQ
@@ -263,6 +391,59 @@
 
 - **Source** : 1.4.5
 - **Conformité déclarée** : ✅
+
+### E2E-ECR-IQ-05 — L'administration du CLM : messages modifiés et testés, connexion Salesforce testée, relayée, configurée puis rétablie, client d'intégration créé puis révoqué, paramètres modifiés puis rétablis, groupe créé et garni puis supprimé, départ d'un employé transféré, journal filtré et exporté
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-16, IQ-C-30
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Compte jetable qui quitte l'organisation, avec une étape de validation ouverte à son nom
+2. Ouvrir l'écran `/clm/admin`
+3. Ouvrir l'écran `/clm/admin/notifications`
+4. Activer « Modifier »
+5. Saisir « Sujet » : `Invitation E2E ${unique}`
+6. Activer « Enregistrer »
+7. Saisir « Destinataire de test » : `test.${unique}@iq.example`
+8. Activer « Envoyer un test »
+9. Ouvrir l'écran `/clm/admin/integrations`
+10. Activer « Tester la connexion »
+11. Activer « Relayer maintenant »
+12. Activer « Configurer la connexion »
+13. Dans la section « Configurer la connexion », activer « Enregistrer »
+14. Activer « Configurer la connexion »
+15. Activer « Rétablir la connexion de la plateforme »
+16. Saisir « Nouveau client d’intégration » Nom » : `Client E2E ${unique}`
+17. Activer « Créer le client »
+18. Activer « J’ai copié les valeurs »
+19. Activer « Révoquer — Client E2E ${unique} » (button)
+20. Ouvrir l'écran `/clm/admin/parametres`
+21. Activer « Modifier un paramètre autorisé »
+22. Saisir « Rappel tous les (jours) » : `4`
+23. Activer « Enregistrer »
+24. Activer « Modifier un paramètre autorisé »
+25. Activer « Rétablir les paramètres de la plateforme »
+26. Ouvrir l'écran `/clm/admin/listes`
+27. Ouvrir l'écran `/clm/admin/groupes`
+28. Saisir « Nouveau groupe » Code » : `GRP_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Groupe écran ${unique}`
+29. Activer « Créer le groupe »
+30. Choisir « Ajouter un membre au groupe GRP_${UNIQUE} » Membre » : `initiateur@iq.example`
+31. Dans la section « Ajouter un membre au groupe GRP_${UNIQUE} », activer « Ajouter »
+32. Activer « Retirer initiateur@iq.example du groupe GRP_${UNIQUE} » (button)
+33. Activer « Supprimer le groupe GRP_${UNIQUE} » (button)
+34. Ouvrir l'écran `/clm/admin/departs`
+35. Saisir « Courriel de la personne qui part » : `depart.${unique}@iq.example`
+36. Activer « Consulter »
+37. Choisir « Personne qui reprend » : `(premier)`
+38. Activer « Transférer »
+39. Ouvrir l'écran `/clm/admin/journal`
+40. Saisir « Acteur » : `initiateur@iq.example`
+41. Activer « Rechercher #2 »
+42. Ouvrir l'écran `/clm/admin/audit`
+43. Ouvrir l'écran `/clm/options`
+44. Ouvrir l'écran `/clm/profil`
+45. Ouvrir l'écran `/clm/securite`
 
 ### E2E-IQ-19 — API d'intégration : client, jeton, création de trousse par un système
 
@@ -516,6 +697,30 @@
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
 
+### E2E-ECR-IQ-03 — Au portail, le signataire externe vérifie son identité, lit le document, consent et signe ; un autre refuse de signer en motivant
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-51, IQ-C-27
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Trousse lancée, signataire externe invité (jeton lu dans le courriel)
+2. Ouvrir l'écran `/portail/${jeton}`
+3. Saisir « Ville du siège ? » : `Québec`
+4. Activer « Vérifier mon identité »
+5. Activer « Lire / télécharger »
+6. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+7. Saisir « Votre nom complet » : `Marie Tremblay`
+8. Activer « Signer »
+9. Voir « Merci, votre signature est enregistrée »
+10. Préparer par l'API : Deuxième trousse, signataire invité
+11. Ouvrir l'écran `/portail/${jeton}`
+12. Saisir « Ville du siège ? » : `Québec`
+13. Activer « Vérifier mon identité »
+14. Activer « Refuser de signer ou signaler un problème »
+15. Saisir « Motif » : `Les montants ne correspondent pas à l'entente.`
+16. Activer « Confirmer le refus »
+
 ### E2E-IQ-12 — Signature séquentielle puis conjointe d'un groupe
 
 - **Profil** : initiateur IQ
@@ -550,6 +755,52 @@
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
 
+### E2E-ECR-IQ-01 — L'initiateur crée une trousse à l'écran : documents déposés, remplacés et retirés, signataires ajoutés et retirés, parcours testé puis enregistré, lancement ; la preuve se vérifie
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-29, IQ-C-12, IQ-C-51
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Trousse écran ${unique}`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « contrat-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « contrat-${unique}.pdf »
+7. Joindre « annexe-${unique}.pdf » au champ « Téléverser un document »
+8. Voir « annexe-${unique}.pdf »
+9. Activer « Prévisualiser — contrat-${unique}.pdf » (button)
+10. Télécharger par « Télécharger — contrat-${unique}.pdf » et obtenir un fichier non vide
+11. Activer « Remplacer par une nouvelle version — contrat-${unique}.pdf » (button)
+12. Joindre « contrat-v2-${unique}.pdf » au champ « Fichier »
+13. Saisir « Motif » : `Correction E2E`
+14. Activer « Remplacer »
+15. Activer « Retirer avant lancement — annexe-${unique}.pdf » (button)
+16. Activer « Continuer »
+17. Saisir « Nom » : `Marie E2E ${unique}` ; « Courriel » : `marie.${unique}@agrinord.example` ; « Téléphone » : `+15145550190`
+18. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+19. Cocher « Externe »
+20. Activer « Ajouter un signataire »
+21. Voir « Marie E2E ${unique} »
+22. Saisir « Nom » : `Retiré E2E ${unique}` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550191`
+23. Activer « Ajouter un signataire »
+24. Activer « Retirer — Retiré E2E ${unique} » (button)
+25. Activer « Continuer »
+26. Activer « Ajouter une étape »
+27. Saisir « Clé » : `s1` ; « Libellé » : `Signature`
+28. Choisir « Type » : `SIGNATURE`
+29. Activer « Ajouter un responsable »
+30. Choisir « Type du responsable 1 » : `PARTICIPANT`
+31. Choisir « Responsable 1 » : `(premier)`
+32. Activer « Tester le parcours »
+33. Activer « Enregistrer »
+34. Activer « Continuer »
+35. Activer « Lancer le parcours »
+36. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+37. Activer « Preuve » (tab)
+38. Activer « Vérifier l’intégrité »
+
 ### E2E-IQ-33 — Générer le contrat d'un modèle publié, valeurs préremplies depuis Salesforce et corrigeables
 
 - **Profil** : initiateur IQ
@@ -569,6 +820,110 @@
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅🆕
 
+### E2E-ECR-IQ-05 — L'administration du CLM : messages modifiés et testés, connexion Salesforce testée, relayée, configurée puis rétablie, client d'intégration créé puis révoqué, paramètres modifiés puis rétablis, groupe créé et garni puis supprimé, départ d'un employé transféré, journal filtré et exporté
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-16, IQ-C-30
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Compte jetable qui quitte l'organisation, avec une étape de validation ouverte à son nom
+2. Ouvrir l'écran `/clm/admin`
+3. Ouvrir l'écran `/clm/admin/notifications`
+4. Activer « Modifier »
+5. Saisir « Sujet » : `Invitation E2E ${unique}`
+6. Activer « Enregistrer »
+7. Saisir « Destinataire de test » : `test.${unique}@iq.example`
+8. Activer « Envoyer un test »
+9. Ouvrir l'écran `/clm/admin/integrations`
+10. Activer « Tester la connexion »
+11. Activer « Relayer maintenant »
+12. Activer « Configurer la connexion »
+13. Dans la section « Configurer la connexion », activer « Enregistrer »
+14. Activer « Configurer la connexion »
+15. Activer « Rétablir la connexion de la plateforme »
+16. Saisir « Nouveau client d’intégration » Nom » : `Client E2E ${unique}`
+17. Activer « Créer le client »
+18. Activer « J’ai copié les valeurs »
+19. Activer « Révoquer — Client E2E ${unique} » (button)
+20. Ouvrir l'écran `/clm/admin/parametres`
+21. Activer « Modifier un paramètre autorisé »
+22. Saisir « Rappel tous les (jours) » : `4`
+23. Activer « Enregistrer »
+24. Activer « Modifier un paramètre autorisé »
+25. Activer « Rétablir les paramètres de la plateforme »
+26. Ouvrir l'écran `/clm/admin/listes`
+27. Ouvrir l'écran `/clm/admin/groupes`
+28. Saisir « Nouveau groupe » Code » : `GRP_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Groupe écran ${unique}`
+29. Activer « Créer le groupe »
+30. Choisir « Ajouter un membre au groupe GRP_${UNIQUE} » Membre » : `initiateur@iq.example`
+31. Dans la section « Ajouter un membre au groupe GRP_${UNIQUE} », activer « Ajouter »
+32. Activer « Retirer initiateur@iq.example du groupe GRP_${UNIQUE} » (button)
+33. Activer « Supprimer le groupe GRP_${UNIQUE} » (button)
+34. Ouvrir l'écran `/clm/admin/departs`
+35. Saisir « Courriel de la personne qui part » : `depart.${unique}@iq.example`
+36. Activer « Consulter »
+37. Choisir « Personne qui reprend » : `(premier)`
+38. Activer « Transférer »
+39. Ouvrir l'écran `/clm/admin/journal`
+40. Saisir « Acteur » : `initiateur@iq.example`
+41. Activer « Rechercher #2 »
+42. Ouvrir l'écran `/clm/admin/audit`
+43. Ouvrir l'écran `/clm/options`
+44. Ouvrir l'écran `/clm/profil`
+45. Ouvrir l'écran `/clm/securite`
+
+### E2E-ECR-IQ-06 — L'exploitation des trousses : étape relancée et réassignée, document analysé par l'IA et révisé, certificat téléchargé, trousse annulée, listes exportées, tâche confiée, démarrée et réassignée, lot créé et approuvé ; le validateur délègue, le signataire interne signe depuis sa tâche
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-31, IQ-C-50, IQ-C-30
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Modèle publié ; trousse en validation et trousse en signature interne, lancées
+2. Ouvrir l'écran `/clm/trousses/${trousse}`
+3. Choisir « Étape à relancer » : `(premier)`
+4. Activer « Relancer l’étape »
+5. Activer « Parcours » (tab)
+6. Activer l'élément « Réassigner, ajouter ou retirer des intervenants — Validation » (ligne ou carte cliquable)
+7. Saisir « Assignation par utilisateur, groupe ou règle » Motif » : `Absence du validateur`
+8. Dans la section « Assignation par utilisateur, groupe ou règle », activer « Enregistrer »
+9. Activer « Documents (1) » (tab)
+10. Activer « Analyser (IA) — piece-trousse-${unique}.pdf » (button)
+11. Saisir « Justification » : `Résultat conforme au document`
+12. Activer « Valider le résultat »
+13. Activer « Preuve » (tab)
+14. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+15. Répondre « Annulation E2E » à la prochaine saisie demandée par le navigateur
+16. Activer « Annuler la trousse »
+17. Ouvrir l'écran `/clm/trousses`
+18. Télécharger par « Exporter la liste (CSV) » et obtenir un fichier non vide
+19. Ouvrir l'écran `/clm/suivi`
+20. Télécharger par « Exporter (CSV) » et obtenir un fichier non vide
+21. Ouvrir l'écran `/clm/taches`
+22. Activer « Nouvelle tâche »
+23. Saisir « Tâche » : `Tâche E2E ${unique}`
+24. Choisir « Assignée à » : `initiateur@iq.example` ; « Trousse liée » : `(premier)`
+25. Activer « Confier la tâche »
+26. Activer « Démarrer — Tâche E2E ${unique} » (button)
+27. Activer « Réassigner — Tâche E2E ${unique} » (button)
+28. Choisir « Nouvelle personne assignée » : `(premier)`
+29. Activer « Confirmer la réassignation »
+30. Ouvrir l'écran `/clm/lots`
+31. Saisir « Libellé du lot » : `Lot E2E ${unique}` ; « Dossiers, un par ligne » : `Dossier A ${unique} ; Marie Lot ; marie.lot.${unique}@agrinord.example ; +15145550190`
+32. Choisir « Modèle de contrat » : `Convention lot ${unique}`
+33. Activer « Créer le lot »
+34. Activer « Approuver le lot — Lot E2E ${unique} » (button)
+35. Se connecter en tant que validateur IQ
+36. Ouvrir l'écran `/clm/taches`
+37. Activer « Traiter — ${trousseRef} Validation »
+38. Saisir « Courriel du délégataire » : `approbateur@iq.example` ; « Motif » : `Vacances`
+39. Activer « Confirmer la délégation »
+40. Se connecter en tant que signataire interne IQ
+41. Ouvrir l'écran `/clm/taches`
+42. Activer « Traiter — ${trousseSigRef} Signature »
+43. Activer « Signer maintenant »
+
 ### E2E-IQ-10 — Modifier les signataires d'une trousse en cours
 
 - **Profil** : initiateur IQ
@@ -585,6 +940,57 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅🆕
+
+### E2E-ECR-IQ-06 — L'exploitation des trousses : étape relancée et réassignée, document analysé par l'IA et révisé, certificat téléchargé, trousse annulée, listes exportées, tâche confiée, démarrée et réassignée, lot créé et approuvé ; le validateur délègue, le signataire interne signe depuis sa tâche
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-31, IQ-C-50, IQ-C-30
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Modèle publié ; trousse en validation et trousse en signature interne, lancées
+2. Ouvrir l'écran `/clm/trousses/${trousse}`
+3. Choisir « Étape à relancer » : `(premier)`
+4. Activer « Relancer l’étape »
+5. Activer « Parcours » (tab)
+6. Activer l'élément « Réassigner, ajouter ou retirer des intervenants — Validation » (ligne ou carte cliquable)
+7. Saisir « Assignation par utilisateur, groupe ou règle » Motif » : `Absence du validateur`
+8. Dans la section « Assignation par utilisateur, groupe ou règle », activer « Enregistrer »
+9. Activer « Documents (1) » (tab)
+10. Activer « Analyser (IA) — piece-trousse-${unique}.pdf » (button)
+11. Saisir « Justification » : `Résultat conforme au document`
+12. Activer « Valider le résultat »
+13. Activer « Preuve » (tab)
+14. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+15. Répondre « Annulation E2E » à la prochaine saisie demandée par le navigateur
+16. Activer « Annuler la trousse »
+17. Ouvrir l'écran `/clm/trousses`
+18. Télécharger par « Exporter la liste (CSV) » et obtenir un fichier non vide
+19. Ouvrir l'écran `/clm/suivi`
+20. Télécharger par « Exporter (CSV) » et obtenir un fichier non vide
+21. Ouvrir l'écran `/clm/taches`
+22. Activer « Nouvelle tâche »
+23. Saisir « Tâche » : `Tâche E2E ${unique}`
+24. Choisir « Assignée à » : `initiateur@iq.example` ; « Trousse liée » : `(premier)`
+25. Activer « Confier la tâche »
+26. Activer « Démarrer — Tâche E2E ${unique} » (button)
+27. Activer « Réassigner — Tâche E2E ${unique} » (button)
+28. Choisir « Nouvelle personne assignée » : `(premier)`
+29. Activer « Confirmer la réassignation »
+30. Ouvrir l'écran `/clm/lots`
+31. Saisir « Libellé du lot » : `Lot E2E ${unique}` ; « Dossiers, un par ligne » : `Dossier A ${unique} ; Marie Lot ; marie.lot.${unique}@agrinord.example ; +15145550190`
+32. Choisir « Modèle de contrat » : `Convention lot ${unique}`
+33. Activer « Créer le lot »
+34. Activer « Approuver le lot — Lot E2E ${unique} » (button)
+35. Se connecter en tant que validateur IQ
+36. Ouvrir l'écran `/clm/taches`
+37. Activer « Traiter — ${trousseRef} Validation »
+38. Saisir « Courriel du délégataire » : `approbateur@iq.example` ; « Motif » : `Vacances`
+39. Activer « Confirmer la délégation »
+40. Se connecter en tant que signataire interne IQ
+41. Ouvrir l'écran `/clm/taches`
+42. Activer « Traiter — ${trousseSigRef} Signature »
+43. Activer « Signer maintenant »
 
 ### E2E-IQ-10 — Modifier les signataires d'une trousse en cours
 
@@ -687,6 +1093,76 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+
+### E2E-ECR-IQ-02 — Une trousse naît d'un dossier Salesforce et d'un modèle : recherche et import, valeur corrigée, contrat généré en PDF et en Word, zone de signature attribuée, lancement ; le validateur commente puis valide sa tâche
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-14, IQ-C-37, IQ-C-12
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Modèle publié (champs, zone de signature, clause conditionnelle, parcours de validation)
+2. Ouvrir l'écran `/clm/trousses/nouvelle`
+3. Cocher « Salesforce »
+4. Saisir « Identifiant de demande ou numéro de dossier Salesforce » : `DEM-2026-0001`
+5. Activer « Rechercher #2 »
+6. Saisir « Titre » : `Trousse modèle ${unique}` ; « Référence externe » : `REF-${UNIQUE}`
+7. Choisir « Modèle de contrat » : `Convention écran ${unique}`
+8. Activer « Enregistrer le brouillon »
+9. Activer « Importer / actualiser »
+10. Activer « Corriger »
+11. Saisir « Nouvelle valeur » : `Coopérative E2E ${unique}`
+12. Dans la section « Corriger la valeur », activer « Enregistrer »
+13. Activer « Continuer »
+14. Activer « Générer depuis le modèle »
+15. Activer « Générer en Word modifiable »
+16. Activer « Continuer »
+17. Saisir « Nom » : `Marie E2E ${unique}` ; « Courriel » : `marie.${unique}@agrinord.example` ; « Téléphone » : `+15145550190`
+18. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+19. Cocher « Externe »
+20. Activer « Ajouter un signataire »
+21. Choisir « Signataire de la zone « Signature du bénéficiaire » » : `(premier)`
+22. Activer « Attribuer la zone — Signature du bénéficiaire »
+23. Activer « Continuer »
+24. Activer « Continuer »
+25. Activer « Lancer le parcours »
+26. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+27. Se connecter en tant que validateur IQ
+28. Ouvrir l'écran `/clm/taches`
+29. Activer « Traiter — REF-${UNIQUE} Validation juridique »
+30. Saisir « Nouveau commentaire » : `Vérifié par l'e2e`
+31. Dans la section « Commentaires contextualisés », activer « Ajouter un commentaire »
+32. Voir « Vérifié par l'e2e »
+33. Activer « Valider »
+
+### E2E-ECR-IQ-04 — Un modèle se crée et se rédige à l'écran : champ ajouté, vérification, aperçu, gabarit Word déposé, téléchargé puis retiré, soumission ; l'administration le publie, puis une nouvelle version s'ouvre
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-45, IQ-C-37
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Arriver sur une adresse de la forme `/clm/modeles/\d+`
+4. Saisir « Nom » : `Modèle écran ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{beneficiaire}}, pour {{montant}} $.
+{{clauses}}`
+5. Activer « Ajouter un champ »
+6. Saisir « Nom technique » : `beneficiaire` ; « Libellé » : `Bénéficiaire`
+7. Activer « Ajouter un champ »
+8. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+9. Activer « Enregistrer le brouillon »
+10. Activer « Vérifier »
+11. Activer « Tester la règle »
+12. Joindre « gabarit-${unique}.docx » au champ « Document Word (.docx) »
+13. Activer « Déposer le gabarit »
+14. Télécharger par « Télécharger le gabarit » et obtenir un fichier non vide
+15. Activer « Retirer le gabarit »
+16. Activer « Soumettre à publication »
+17. Se connecter en tant que administration d'affaires IQ
+18. Ouvrir l'écran `/clm/modeles`
+19. Dans la ligne « Modèle écran ${unique} », activer « Publier »
+20. Dans la ligne « Modèle écran ${unique} », activer « Nouvelle version »
 
 ### E2E-IQ-03 — Cycle de vie d'un modèle : rédaction, soumission, publication, nouvelle version
 
@@ -810,6 +1286,52 @@
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
 
+### E2E-ECR-IQ-01 — L'initiateur crée une trousse à l'écran : documents déposés, remplacés et retirés, signataires ajoutés et retirés, parcours testé puis enregistré, lancement ; la preuve se vérifie
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-29, IQ-C-12, IQ-C-51
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Trousse écran ${unique}`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « contrat-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « contrat-${unique}.pdf »
+7. Joindre « annexe-${unique}.pdf » au champ « Téléverser un document »
+8. Voir « annexe-${unique}.pdf »
+9. Activer « Prévisualiser — contrat-${unique}.pdf » (button)
+10. Télécharger par « Télécharger — contrat-${unique}.pdf » et obtenir un fichier non vide
+11. Activer « Remplacer par une nouvelle version — contrat-${unique}.pdf » (button)
+12. Joindre « contrat-v2-${unique}.pdf » au champ « Fichier »
+13. Saisir « Motif » : `Correction E2E`
+14. Activer « Remplacer »
+15. Activer « Retirer avant lancement — annexe-${unique}.pdf » (button)
+16. Activer « Continuer »
+17. Saisir « Nom » : `Marie E2E ${unique}` ; « Courriel » : `marie.${unique}@agrinord.example` ; « Téléphone » : `+15145550190`
+18. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+19. Cocher « Externe »
+20. Activer « Ajouter un signataire »
+21. Voir « Marie E2E ${unique} »
+22. Saisir « Nom » : `Retiré E2E ${unique}` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550191`
+23. Activer « Ajouter un signataire »
+24. Activer « Retirer — Retiré E2E ${unique} » (button)
+25. Activer « Continuer »
+26. Activer « Ajouter une étape »
+27. Saisir « Clé » : `s1` ; « Libellé » : `Signature`
+28. Choisir « Type » : `SIGNATURE`
+29. Activer « Ajouter un responsable »
+30. Choisir « Type du responsable 1 » : `PARTICIPANT`
+31. Choisir « Responsable 1 » : `(premier)`
+32. Activer « Tester le parcours »
+33. Activer « Enregistrer »
+34. Activer « Continuer »
+35. Activer « Lancer le parcours »
+36. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+37. Activer « Preuve » (tab)
+38. Activer « Vérifier l’intégrité »
+
 ### E2E-IQ-01 — Créer une trousse, déposer documents et annexes, inviter un participant externe
 
 - **Profil** : initiateur IQ
@@ -827,6 +1349,81 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+
+### E2E-ECR-IQ-01 — L'initiateur crée une trousse à l'écran : documents déposés, remplacés et retirés, signataires ajoutés et retirés, parcours testé puis enregistré, lancement ; la preuve se vérifie
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-29, IQ-C-12, IQ-C-51
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Trousse écran ${unique}`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « contrat-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « contrat-${unique}.pdf »
+7. Joindre « annexe-${unique}.pdf » au champ « Téléverser un document »
+8. Voir « annexe-${unique}.pdf »
+9. Activer « Prévisualiser — contrat-${unique}.pdf » (button)
+10. Télécharger par « Télécharger — contrat-${unique}.pdf » et obtenir un fichier non vide
+11. Activer « Remplacer par une nouvelle version — contrat-${unique}.pdf » (button)
+12. Joindre « contrat-v2-${unique}.pdf » au champ « Fichier »
+13. Saisir « Motif » : `Correction E2E`
+14. Activer « Remplacer »
+15. Activer « Retirer avant lancement — annexe-${unique}.pdf » (button)
+16. Activer « Continuer »
+17. Saisir « Nom » : `Marie E2E ${unique}` ; « Courriel » : `marie.${unique}@agrinord.example` ; « Téléphone » : `+15145550190`
+18. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+19. Cocher « Externe »
+20. Activer « Ajouter un signataire »
+21. Voir « Marie E2E ${unique} »
+22. Saisir « Nom » : `Retiré E2E ${unique}` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550191`
+23. Activer « Ajouter un signataire »
+24. Activer « Retirer — Retiré E2E ${unique} » (button)
+25. Activer « Continuer »
+26. Activer « Ajouter une étape »
+27. Saisir « Clé » : `s1` ; « Libellé » : `Signature`
+28. Choisir « Type » : `SIGNATURE`
+29. Activer « Ajouter un responsable »
+30. Choisir « Type du responsable 1 » : `PARTICIPANT`
+31. Choisir « Responsable 1 » : `(premier)`
+32. Activer « Tester le parcours »
+33. Activer « Enregistrer »
+34. Activer « Continuer »
+35. Activer « Lancer le parcours »
+36. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+37. Activer « Preuve » (tab)
+38. Activer « Vérifier l’intégrité »
+
+### E2E-ECR-IQ-04 — Un modèle se crée et se rédige à l'écran : champ ajouté, vérification, aperçu, gabarit Word déposé, téléchargé puis retiré, soumission ; l'administration le publie, puis une nouvelle version s'ouvre
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-45, IQ-C-37
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Arriver sur une adresse de la forme `/clm/modeles/\d+`
+4. Saisir « Nom » : `Modèle écran ${unique}` ; « Corps du contrat » : `Entre Investissement Québec et {{beneficiaire}}, pour {{montant}} $.
+{{clauses}}`
+5. Activer « Ajouter un champ »
+6. Saisir « Nom technique » : `beneficiaire` ; « Libellé » : `Bénéficiaire`
+7. Activer « Ajouter un champ »
+8. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+9. Activer « Enregistrer le brouillon »
+10. Activer « Vérifier »
+11. Activer « Tester la règle »
+12. Joindre « gabarit-${unique}.docx » au champ « Document Word (.docx) »
+13. Activer « Déposer le gabarit »
+14. Télécharger par « Télécharger le gabarit » et obtenir un fichier non vide
+15. Activer « Retirer le gabarit »
+16. Activer « Soumettre à publication »
+17. Se connecter en tant que administration d'affaires IQ
+18. Ouvrir l'écran `/clm/modeles`
+19. Dans la ligne « Modèle écran ${unique} », activer « Publier »
+20. Dans la ligne « Modèle écran ${unique} », activer « Nouvelle version »
 
 ### E2E-IQ-01 — Créer une trousse, déposer documents et annexes, inviter un participant externe
 
@@ -922,6 +1519,57 @@
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
 
+### E2E-ECR-IQ-06 — L'exploitation des trousses : étape relancée et réassignée, document analysé par l'IA et révisé, certificat téléchargé, trousse annulée, listes exportées, tâche confiée, démarrée et réassignée, lot créé et approuvé ; le validateur délègue, le signataire interne signe depuis sa tâche
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-31, IQ-C-50, IQ-C-30
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Modèle publié ; trousse en validation et trousse en signature interne, lancées
+2. Ouvrir l'écran `/clm/trousses/${trousse}`
+3. Choisir « Étape à relancer » : `(premier)`
+4. Activer « Relancer l’étape »
+5. Activer « Parcours » (tab)
+6. Activer l'élément « Réassigner, ajouter ou retirer des intervenants — Validation » (ligne ou carte cliquable)
+7. Saisir « Assignation par utilisateur, groupe ou règle » Motif » : `Absence du validateur`
+8. Dans la section « Assignation par utilisateur, groupe ou règle », activer « Enregistrer »
+9. Activer « Documents (1) » (tab)
+10. Activer « Analyser (IA) — piece-trousse-${unique}.pdf » (button)
+11. Saisir « Justification » : `Résultat conforme au document`
+12. Activer « Valider le résultat »
+13. Activer « Preuve » (tab)
+14. Télécharger par « Télécharger le certificat (PDF) » et obtenir un fichier non vide
+15. Répondre « Annulation E2E » à la prochaine saisie demandée par le navigateur
+16. Activer « Annuler la trousse »
+17. Ouvrir l'écran `/clm/trousses`
+18. Télécharger par « Exporter la liste (CSV) » et obtenir un fichier non vide
+19. Ouvrir l'écran `/clm/suivi`
+20. Télécharger par « Exporter (CSV) » et obtenir un fichier non vide
+21. Ouvrir l'écran `/clm/taches`
+22. Activer « Nouvelle tâche »
+23. Saisir « Tâche » : `Tâche E2E ${unique}`
+24. Choisir « Assignée à » : `initiateur@iq.example` ; « Trousse liée » : `(premier)`
+25. Activer « Confier la tâche »
+26. Activer « Démarrer — Tâche E2E ${unique} » (button)
+27. Activer « Réassigner — Tâche E2E ${unique} » (button)
+28. Choisir « Nouvelle personne assignée » : `(premier)`
+29. Activer « Confirmer la réassignation »
+30. Ouvrir l'écran `/clm/lots`
+31. Saisir « Libellé du lot » : `Lot E2E ${unique}` ; « Dossiers, un par ligne » : `Dossier A ${unique} ; Marie Lot ; marie.lot.${unique}@agrinord.example ; +15145550190`
+32. Choisir « Modèle de contrat » : `Convention lot ${unique}`
+33. Activer « Créer le lot »
+34. Activer « Approuver le lot — Lot E2E ${unique} » (button)
+35. Se connecter en tant que validateur IQ
+36. Ouvrir l'écran `/clm/taches`
+37. Activer « Traiter — ${trousseRef} Validation »
+38. Saisir « Courriel du délégataire » : `approbateur@iq.example` ; « Motif » : `Vacances`
+39. Activer « Confirmer la délégation »
+40. Se connecter en tant que signataire interne IQ
+41. Ouvrir l'écran `/clm/taches`
+42. Activer « Traiter — ${trousseSigRef} Signature »
+43. Activer « Signer maintenant »
+
 ### E2E-IQ-01 — Créer une trousse, déposer documents et annexes, inviter un participant externe
 
 - **Profil** : initiateur IQ
@@ -939,6 +1587,118 @@
 
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
+
+### E2E-ECR-IQ-01 — L'initiateur crée une trousse à l'écran : documents déposés, remplacés et retirés, signataires ajoutés et retirés, parcours testé puis enregistré, lancement ; la preuve se vérifie
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-29, IQ-C-12, IQ-C-51
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Trousse écran ${unique}`
+3. Activer « Enregistrer le brouillon »
+4. Activer « Continuer »
+5. Joindre « contrat-${unique}.pdf » au champ « Téléverser un document »
+6. Voir « contrat-${unique}.pdf »
+7. Joindre « annexe-${unique}.pdf » au champ « Téléverser un document »
+8. Voir « annexe-${unique}.pdf »
+9. Activer « Prévisualiser — contrat-${unique}.pdf » (button)
+10. Télécharger par « Télécharger — contrat-${unique}.pdf » et obtenir un fichier non vide
+11. Activer « Remplacer par une nouvelle version — contrat-${unique}.pdf » (button)
+12. Joindre « contrat-v2-${unique}.pdf » au champ « Fichier »
+13. Saisir « Motif » : `Correction E2E`
+14. Activer « Remplacer »
+15. Activer « Retirer avant lancement — annexe-${unique}.pdf » (button)
+16. Activer « Continuer »
+17. Saisir « Nom » : `Marie E2E ${unique}` ; « Courriel » : `marie.${unique}@agrinord.example` ; « Téléphone » : `+15145550190`
+18. Choisir « Rôle dans le contrat » : `SIGNATAIRE_1`
+19. Cocher « Externe »
+20. Activer « Ajouter un signataire »
+21. Voir « Marie E2E ${unique} »
+22. Saisir « Nom » : `Retiré E2E ${unique}` ; « Courriel » : `signataire@iq.example` ; « Téléphone » : `+15145550191`
+23. Activer « Ajouter un signataire »
+24. Activer « Retirer — Retiré E2E ${unique} » (button)
+25. Activer « Continuer »
+26. Activer « Ajouter une étape »
+27. Saisir « Clé » : `s1` ; « Libellé » : `Signature`
+28. Choisir « Type » : `SIGNATURE`
+29. Activer « Ajouter un responsable »
+30. Choisir « Type du responsable 1 » : `PARTICIPANT`
+31. Choisir « Responsable 1 » : `(premier)`
+32. Activer « Tester le parcours »
+33. Activer « Enregistrer »
+34. Activer « Continuer »
+35. Activer « Lancer le parcours »
+36. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+37. Activer « Preuve » (tab)
+38. Activer « Vérifier l’intégrité »
+
+### E2E-ECR-IQ-03 — Au portail, le signataire externe vérifie son identité, lit le document, consent et signe ; un autre refuse de signer en motivant
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-51, IQ-C-27
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Trousse lancée, signataire externe invité (jeton lu dans le courriel)
+2. Ouvrir l'écran `/portail/${jeton}`
+3. Saisir « Ville du siège ? » : `Québec`
+4. Activer « Vérifier mon identité »
+5. Activer « Lire / télécharger »
+6. Cocher « J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite. »
+7. Saisir « Votre nom complet » : `Marie Tremblay`
+8. Activer « Signer »
+9. Voir « Merci, votre signature est enregistrée »
+10. Préparer par l'API : Deuxième trousse, signataire invité
+11. Ouvrir l'écran `/portail/${jeton}`
+12. Saisir « Ville du siège ? » : `Québec`
+13. Activer « Vérifier mon identité »
+14. Activer « Refuser de signer ou signaler un problème »
+15. Saisir « Motif » : `Les montants ne correspondent pas à l'entente.`
+16. Activer « Confirmer le refus »
+
+### E2E-ECR-IQ-07 — Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-51, IQ-C-65
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Signataire invité avec vérification par code
+2. Ouvrir l'écran `/portail/${jeton}`
+3. Activer « Recevoir mon code »
+4. Préparer par l'API : cas `iq.signature.externe`
+5. Ouvrir l'écran `/clm/admin/journal`
+6. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
+7. Ouvrir l'écran `/clm/admin/conservation`
+8. Choisir « Type de contrat » : `PRET`
+9. Saisir « Durée après la clôture (ans) » : `10`
+10. Activer « Enregistrer la règle »
+11. Activer « Retirer — Contrat de prêt » (button)
+12. Répondre « Litige E2E ${unique} » à la prochaine saisie demandée par le navigateur
+13. Activer « Geler — ${trousseRef} » (button)
+14. Activer « Lever le gel — ${trousseRef} » (button)
+15. Saisir « Clôturées du » : `${aujourdhui}` ; « au » : `${demain}`
+16. Télécharger par « Télécharger le lot » et obtenir un fichier non vide
+17. Ouvrir l'écran `/clm/admin/sso`
+18. Saisir « Groupe (identifiant ou nom) » : `grp-e2e-${unique}`
+19. Choisir « Ajouter la correspondance » Rôle » : `LECTEUR`
+20. Activer « Ajouter la correspondance »
+21. Activer « Retirer — grp-e2e-${unique} » (button)
+22. Activer « Créer un jeton | Remplacer le jeton »
+23. Préparer par l'API : Administrateur jetable (futur compte de secours)
+24. Se connecter avec le compte `secours.${unique}@iq.example`
+25. Ouvrir l'écran `/clm/securite`
+26. Activer « Configurer le TOTP »
+27. Relever le texte affiché (`code`) sous le nom `secretTotp`
+28. Saisir le code TOTP courant dans « Code de confirmation »
+29. Activer « Activer »
+30. Ouvrir l'écran `/clm/admin/sso`
+31. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
+32. Activer « Réserver aux comptes de secours »
+33. Activer « Ouvrir à tous les comptes »
+34. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
 
 ### E2E-IQ-17 — Dossier de preuve consulté, vérifié, exporté ; journal consulté et exporté
 
@@ -1259,6 +2019,48 @@
 
 - **Source** : 1.4.11
 - **Conformité déclarée** : ✅🆕
+
+### E2E-ECR-IQ-07 — Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)
+
+- **Profil** : administration principale IQ
+- **Exigences démontrées** : IQ-C-51, IQ-C-65
+- **Données** : `bdd/e2e/donnees/ecrans-iq.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Signataire invité avec vérification par code
+2. Ouvrir l'écran `/portail/${jeton}`
+3. Activer « Recevoir mon code »
+4. Préparer par l'API : cas `iq.signature.externe`
+5. Ouvrir l'écran `/clm/admin/journal`
+6. Télécharger par « Exporter le journal (CSV) » et obtenir un fichier non vide
+7. Ouvrir l'écran `/clm/admin/conservation`
+8. Choisir « Type de contrat » : `PRET`
+9. Saisir « Durée après la clôture (ans) » : `10`
+10. Activer « Enregistrer la règle »
+11. Activer « Retirer — Contrat de prêt » (button)
+12. Répondre « Litige E2E ${unique} » à la prochaine saisie demandée par le navigateur
+13. Activer « Geler — ${trousseRef} » (button)
+14. Activer « Lever le gel — ${trousseRef} » (button)
+15. Saisir « Clôturées du » : `${aujourdhui}` ; « au » : `${demain}`
+16. Télécharger par « Télécharger le lot » et obtenir un fichier non vide
+17. Ouvrir l'écran `/clm/admin/sso`
+18. Saisir « Groupe (identifiant ou nom) » : `grp-e2e-${unique}`
+19. Choisir « Ajouter la correspondance » Rôle » : `LECTEUR`
+20. Activer « Ajouter la correspondance »
+21. Activer « Retirer — grp-e2e-${unique} » (button)
+22. Activer « Créer un jeton | Remplacer le jeton »
+23. Préparer par l'API : Administrateur jetable (futur compte de secours)
+24. Se connecter avec le compte `secours.${unique}@iq.example`
+25. Ouvrir l'écran `/clm/securite`
+26. Activer « Configurer le TOTP »
+27. Relever le texte affiché (`code`) sous le nom `secretTotp`
+28. Saisir le code TOTP courant dans « Code de confirmation »
+29. Activer « Activer »
+30. Ouvrir l'écran `/clm/admin/sso`
+31. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
+32. Activer « Réserver aux comptes de secours »
+33. Activer « Ouvrir à tous les comptes »
+34. Activer « Compte de secours — secours.${unique}@iq.example » (checkbox)
 
 ### E2E-IQ-17 — Dossier de preuve consulté, vérifié, exporté ; journal consulté et exporté
 

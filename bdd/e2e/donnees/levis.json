@@ -484,6 +484,11 @@
           "aller": "/utilisateurs"
         },
         {
+          "remplir": {
+            "Recherche (courriel, nom)…": "redacteur@levis"
+          }
+        },
+        {
           "voir": [
             "redacteur@levis.qc.ca",
             "REDACTEUR"

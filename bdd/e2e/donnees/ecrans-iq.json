@@ -1,0 +1,1687 @@
+{
+  "appelOffres": "Investissement Québec — fonctionnalités de chaque écran du CLM",
+  "catalogue": "iq",
+  "scenarios": [
+    {
+      "id": "E2E-ECR-IQ-01",
+      "titre": "L'initiateur crée une trousse à l'écran : documents déposés, remplacés et retirés, signataires ajoutés et retirés, parcours testé puis enregistré, lancement ; la preuve se vérifie",
+      "exigences": [
+        "IQ-C-44",
+        "IQ-C-45",
+        "IQ-C-29",
+        "IQ-C-12",
+        "IQ-C-51"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Trousse écran ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "televerser": {
+            "champ": "Téléverser un document",
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "contrat-${unique}.pdf",
+              "type": "application/pdf"
+            }
+          }
+        },
+        {
+          "voir": "contrat-${unique}.pdf"
+        },
+        {
+          "televerser": {
+            "champ": "Téléverser un document",
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "annexe-${unique}.pdf",
+              "type": "application/pdf"
+            }
+          }
+        },
+        {
+          "voir": "annexe-${unique}.pdf"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Prévisualiser — contrat-${unique}.pdf"
+          }
+        },
+        {
+          "telecharger": "Télécharger — contrat-${unique}.pdf"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Remplacer par une nouvelle version — contrat-${unique}.pdf"
+          }
+        },
+        {
+          "televerser": {
+            "champ": "Fichier",
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "contrat-v2-${unique}.pdf",
+              "type": "application/pdf"
+            }
+          }
+        },
+        {
+          "remplir": {
+            "Motif": "Correction E2E"
+          }
+        },
+        {
+          "cliquer": "Remplacer"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Retirer avant lancement — annexe-${unique}.pdf"
+          }
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "remplir": {
+            "Nom": "Marie E2E ${unique}",
+            "Courriel": "marie.${unique}@agrinord.example",
+            "Téléphone": "+15145550190"
+          }
+        },
+        {
+          "choisir": {
+            "Rôle dans le contrat": "SIGNATAIRE_1"
+          }
+        },
+        {
+          "cocher": "Externe"
+        },
+        {
+          "cliquer": "Ajouter un signataire"
+        },
+        {
+          "voir": "Marie E2E ${unique}"
+        },
+        {
+          "remplir": {
+            "Nom": "Retiré E2E ${unique}",
+            "Courriel": "signataire@iq.example",
+            "Téléphone": "+15145550191"
+          }
+        },
+        {
+          "cliquer": "Ajouter un signataire"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Retirer — Retiré E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Ajouter une étape"
+        },
+        {
+          "remplir": {
+            "Clé": "s1",
+            "Libellé": "Signature"
+          }
+        },
+        {
+          "choisir": {
+            "Type": "SIGNATURE"
+          }
+        },
+        {
+          "cliquer": "Ajouter un responsable"
+        },
+        {
+          "choisir": {
+            "Type du responsable 1": "PARTICIPANT"
+          }
+        },
+        {
+          "choisir": {
+            "Responsable 1": "(premier)"
+          }
+        },
+        {
+          "cliquer": "Tester le parcours"
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Lancer le parcours"
+        },
+        {
+          "url": "/clm/trousses/\\d+"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Preuve"
+          }
+        },
+        {
+          "cliquer": "Vérifier l’intégrité"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-IQ-02",
+      "titre": "Une trousse naît d'un dossier Salesforce et d'un modèle : recherche et import, valeur corrigée, contrat généré en PDF et en Word, zone de signature attribuée, lancement ; le validateur commente puis valide sa tâche",
+      "exigences": [
+        "IQ-C-14",
+        "IQ-C-37",
+        "IQ-C-12"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Modèle publié (champs, zone de signature, clause conditionnelle, parcours de validation)",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/modeles",
+                "corps": {
+                  "nom": "Convention écran ${unique}",
+                  "categorie": "GARANTIE",
+                  "corps": "Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $ au titre du programme {{programme}}, à compter du {{debut}}.\n{{clauses}}",
+                  "champs": [
+                    {
+                      "cle": "demandeur",
+                      "libelle": "Demandeur",
+                      "type": "TEXTE",
+                      "obligatoire": true,
+                      "source": "Demandeur"
+                    },
+                    {
+                      "cle": "montant",
+                      "libelle": "Montant",
+                      "type": "TEXTE",
+                      "obligatoire": true,
+                      "source": "Montant",
+                      "format": "\\d+(\\.\\d{2})?"
+                    },
+                    {
+                      "cle": "programme",
+                      "libelle": "Programme",
+                      "type": "LISTE",
+                      "options": [
+                        "ESSOR",
+                        "IMPULSION"
+                      ]
+                    },
+                    {
+                      "cle": "debut",
+                      "libelle": "Date de début",
+                      "type": "DATE"
+                    },
+                    {
+                      "cle": "garantie",
+                      "libelle": "Garantie exigée",
+                      "type": "CASE"
+                    },
+                    {
+                      "cle": "signature1",
+                      "libelle": "Signature du bénéficiaire",
+                      "type": "SIGNATURE",
+                      "roleDestinataire": "SIGNATAIRE_1",
+                      "position": {
+                        "page": 1,
+                        "x": 10,
+                        "y": 75,
+                        "largeur": 40,
+                        "hauteur": 10
+                      }
+                    }
+                  ],
+                  "clauses": [
+                    {
+                      "cle": "garantie",
+                      "titre": "Garantie",
+                      "texte": "Le bénéficiaire fournit une garantie de prêt.",
+                      "combinateur": "ET",
+                      "conditions": [
+                        {
+                          "champ": "garantie",
+                          "operateur": "EGAL",
+                          "valeur": "true"
+                        }
+                      ]
+                    }
+                  ],
+                  "parcours": [
+                    {
+                      "cle": "v1",
+                      "libelle": "Validation juridique",
+                      "phase": 1,
+                      "type": "VALIDATION",
+                      "affectations": [
+                        {
+                          "type": "UTILISATEUR",
+                          "valeur": "validateur@iq.example"
+                        }
+                      ],
+                      "delaiJours": 5
+                    }
+                  ],
+                  "groupes": null
+                },
+                "capturer": {
+                  "modele": "$.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/modeles/${modele}/soumettre",
+                "corps": {}
+              },
+              {
+                "appel": "POST /api/clm/modeles/${modele}/publier",
+                "profil": "administration d'affaires IQ",
+                "corps": {}
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "cocher": "Salesforce"
+        },
+        {
+          "remplir": {
+            "Identifiant de demande ou numéro de dossier Salesforce": "DEM-2026-0001"
+          }
+        },
+        {
+          "cliquer": "Rechercher #2"
+        },
+        {
+          "remplir": {
+            "Titre": "Trousse modèle ${unique}",
+            "Référence externe": "REF-${UNIQUE}"
+          }
+        },
+        {
+          "choisir": {
+            "Modèle de contrat": "Convention écran ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Importer / actualiser"
+        },
+        {
+          "cliquer": "Corriger"
+        },
+        {
+          "remplir": {
+            "Nouvelle valeur": "Coopérative E2E ${unique}"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Corriger la valeur",
+            "cliquer": "Enregistrer"
+          }
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Générer depuis le modèle"
+        },
+        {
+          "cliquer": "Générer en Word modifiable"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "remplir": {
+            "Nom": "Marie E2E ${unique}",
+            "Courriel": "marie.${unique}@agrinord.example",
+            "Téléphone": "+15145550190"
+          }
+        },
+        {
+          "choisir": {
+            "Rôle dans le contrat": "SIGNATAIRE_1"
+          }
+        },
+        {
+          "cocher": "Externe"
+        },
+        {
+          "cliquer": "Ajouter un signataire"
+        },
+        {
+          "choisir": {
+            "Signataire de la zone « Signature du bénéficiaire »": "(premier)"
+          }
+        },
+        {
+          "cliquer": "Attribuer la zone — Signature du bénéficiaire"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Continuer"
+        },
+        {
+          "cliquer": "Lancer le parcours"
+        },
+        {
+          "url": "/clm/trousses/\\d+"
+        },
+        {
+          "connecter": "validateur IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Traiter — REF-${UNIQUE} Validation juridique"
+        },
+        {
+          "remplir": {
+            "Nouveau commentaire": "Vérifié par l'e2e"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Commentaires contextualisés",
+            "cliquer": "Ajouter un commentaire"
+          }
+        },
+        {
+          "voir": "Vérifié par l'e2e"
+        },
+        {
+          "cliquer": "Valider"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-IQ-03",
+      "titre": "Au portail, le signataire externe vérifie son identité, lit le document, consent et signe ; un autre refuse de signer en motivant",
+      "exigences": [
+        "IQ-C-51",
+        "IQ-C-27"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Trousse lancée, signataire externe invité (jeton lu dans le courriel)",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "corps": {
+                  "titre": "Portail signe ${unique}",
+                  "risque": "FAIBLE",
+                  "unite": "FINANCEMENT_ENTREPRISES"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id",
+                  "trousseRef": "$.resume.reference"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.resume.statut",
+                    "egal": "BROUILLON"
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "convention.pdf",
+                    "type": "application/pdf"
+                  }
+                },
+                "capturer": {
+                  "document": "$.id",
+                  "documentCle": "$.cleDocument"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.analyse",
+                    "egal": "PROPRE"
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/participants",
+                "corps": {
+                  "nom": "Marie Tremblay",
+                  "courriel": "signe.${unique}@agrinord.example",
+                  "telephone": "+15145550190",
+                  "roleContrat": "SIGNATAIRE_1",
+                  "externe": true,
+                  "niveauIdentite": "QUESTION",
+                  "question": "Ville du siège ?",
+                  "reponse": "Québec"
+                },
+                "capturer": {
+                  "marie": "$.id"
+                }
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+                "corps": [
+                  {
+                    "cle": "s1",
+                    "libelle": "Signature",
+                    "phase": 1,
+                    "type": "SIGNATURE",
+                    "affectations": [
+                      {
+                        "type": "PARTICIPANT",
+                        "valeur": "${marie}"
+                      }
+                    ]
+                  }
+                ],
+                "capturer": {
+                  "e_s1": "$[0].id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/lancer",
+                "corps": {},
+                "verifier": [
+                  {
+                    "chemin": "$.resume.statut",
+                    "egal": "EN_TRAITEMENT"
+                  }
+                ]
+              },
+              {
+                "courriel": {
+                  "destinataire": "signe.${unique}@agrinord.example",
+                  "motif": "/portail/([A-Za-z0-9_-]+)",
+                  "capturer": "jeton"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/portail/${jeton}"
+        },
+        {
+          "remplir": {
+            "Ville du siège ?": "Québec"
+          }
+        },
+        {
+          "cliquer": "Vérifier mon identité"
+        },
+        {
+          "cliquer": "Lire / télécharger"
+        },
+        {
+          "cocher": "J’ai lu les documents et je consens à les signer électroniquement ; ma signature a la même valeur qu’une signature manuscrite."
+        },
+        {
+          "remplir": {
+            "Votre nom complet": "Marie Tremblay"
+          }
+        },
+        {
+          "cliquer": "Signer"
+        },
+        {
+          "voir": "Merci, votre signature est enregistrée"
+        },
+        {
+          "preparer": {
+            "description": "Deuxième trousse, signataire invité",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "corps": {
+                  "titre": "Portail refus ${unique}",
+                  "risque": "FAIBLE",
+                  "unite": "FINANCEMENT_ENTREPRISES"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id",
+                  "trousseRef": "$.resume.reference"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.resume.statut",
+                    "egal": "BROUILLON"
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "convention.pdf",
+                    "type": "application/pdf"
+                  }
+                },
+                "capturer": {
+                  "document": "$.id",
+                  "documentCle": "$.cleDocument"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.analyse",
+                    "egal": "PROPRE"
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/participants",
+                "corps": {
+                  "nom": "Marie Tremblay",
+                  "courriel": "refus.${unique}@agrinord.example",
+                  "telephone": "+15145550190",
+                  "roleContrat": "SIGNATAIRE_1",
+                  "externe": true,
+                  "niveauIdentite": "QUESTION",
+                  "question": "Ville du siège ?",
+                  "reponse": "Québec"
+                },
+                "capturer": {
+                  "marie": "$.id"
+                }
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+                "corps": [
+                  {
+                    "cle": "s1",
+                    "libelle": "Signature",
+                    "phase": 1,
+                    "type": "SIGNATURE",
+                    "affectations": [
+                      {
+                        "type": "PARTICIPANT",
+                        "valeur": "${marie}"
+                      }
+                    ]
+                  }
+                ],
+                "capturer": {
+                  "e_s1": "$[0].id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/lancer",
+                "corps": {},
+                "verifier": [
+                  {
+                    "chemin": "$.resume.statut",
+                    "egal": "EN_TRAITEMENT"
+                  }
+                ]
+              },
+              {
+                "courriel": {
+                  "destinataire": "refus.${unique}@agrinord.example",
+                  "motif": "/portail/([A-Za-z0-9_-]+)",
+                  "capturer": "jeton"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/portail/${jeton}"
+        },
+        {
+          "remplir": {
+            "Ville du siège ?": "Québec"
+          }
+        },
+        {
+          "cliquer": "Vérifier mon identité"
+        },
+        {
+          "cliquer": "Refuser de signer ou signaler un problème"
+        },
+        {
+          "remplir": {
+            "Motif": "Les montants ne correspondent pas à l'entente."
+          }
+        },
+        {
+          "cliquer": "Confirmer le refus"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-IQ-04",
+      "titre": "Un modèle se crée et se rédige à l'écran : champ ajouté, vérification, aperçu, gabarit Word déposé, téléchargé puis retiré, soumission ; l'administration le publie, puis une nouvelle version s'ouvre",
+      "exigences": [
+        "IQ-C-45",
+        "IQ-C-37"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "cliquer": "Créer un modèle"
+        },
+        {
+          "url": "/clm/modeles/\\d+"
+        },
+        {
+          "remplir": {
+            "Nom": "Modèle écran ${unique}",
+            "Corps du contrat": "Entre Investissement Québec et {{beneficiaire}}, pour {{montant}} $.\n{{clauses}}"
+          }
+        },
+        {
+          "cliquer": "Ajouter un champ"
+        },
+        {
+          "remplir": {
+            "Nom technique": "beneficiaire",
+            "Libellé": "Bénéficiaire"
+          }
+        },
+        {
+          "cliquer": "Ajouter un champ"
+        },
+        {
+          "remplir": {
+            "Nom technique": "montant",
+            "Libellé": "Montant"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "cliquer": "Vérifier"
+        },
+        {
+          "cliquer": "Tester la règle"
+        },
+        {
+          "televerser": {
+            "champ": "Document Word (.docx)",
+            "fichier": {
+              "fichier": "chemin:donnees/fichiers/gabarit-iq.docx",
+              "nom": "gabarit-${unique}.docx",
+              "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            }
+          }
+        },
+        {
+          "cliquer": "Déposer le gabarit"
+        },
+        {
+          "telecharger": "Télécharger le gabarit"
+        },
+        {
+          "cliquer": "Retirer le gabarit"
+        },
+        {
+          "cliquer": "Soumettre à publication"
+        },
+        {
+          "connecter": "administration d'affaires IQ"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Modèle écran ${unique}",
+            "cliquer": "Publier"
+          }
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Modèle écran ${unique}",
+            "cliquer": "Nouvelle version"
+          }
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-IQ-05",
+      "titre": "L'administration du CLM : messages modifiés et testés, connexion Salesforce testée, relayée, configurée puis rétablie, client d'intégration créé puis révoqué, paramètres modifiés puis rétablis, groupe créé et garni puis supprimé, départ d'un employé transféré, journal filtré et exporté",
+      "exigences": [
+        "IQ-C-16",
+        "IQ-C-30"
+      ],
+      "profil": "administration principale IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Compte jetable qui quitte l'organisation, avec une étape de validation ouverte à son nom",
+            "etapes": [
+              {
+                "appel": "POST /api/admin/users",
+                "corps": {
+                  "email": "depart.${unique}@iq.example",
+                  "nom": "Départ ${unique}",
+                  "motDePasse": "Passw0rd!E2E-2026",
+                  "roles": [
+                    "REDACTEUR"
+                  ],
+                  "actif": true
+                }
+              },
+              {
+                "profil": "initiateur IQ",
+                "appel": "POST /api/clm/trousses",
+                "corps": {
+                  "titre": "Départ ${unique}",
+                  "risque": "FAIBLE",
+                  "unite": "FINANCEMENT_ENTREPRISES"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id"
+                }
+              },
+              {
+                "profil": "initiateur IQ",
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "depart.pdf",
+                    "type": "application/pdf"
+                  }
+                }
+              },
+              {
+                "profil": "initiateur IQ",
+                "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+                "corps": [
+                  {
+                    "cle": "v1",
+                    "libelle": "Validation",
+                    "phase": 1,
+                    "type": "VALIDATION",
+                    "affectations": [
+                      {
+                        "type": "UTILISATEUR",
+                        "valeur": "depart.${unique}@iq.example"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "profil": "initiateur IQ",
+                "appel": "POST /api/clm/trousses/${trousse}/lancer",
+                "corps": {}
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/admin"
+        },
+        {
+          "aller": "/clm/admin/notifications"
+        },
+        {
+          "cliquer": "Modifier"
+        },
+        {
+          "remplir": {
+            "Sujet": "Invitation E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "remplir": {
+            "Destinataire de test": "test.${unique}@iq.example"
+          }
+        },
+        {
+          "cliquer": "Envoyer un test"
+        },
+        {
+          "aller": "/clm/admin/integrations"
+        },
+        {
+          "cliquer": "Tester la connexion"
+        },
+        {
+          "cliquer": "Relayer maintenant"
+        },
+        {
+          "cliquer": "Configurer la connexion"
+        },
+        {
+          "dansLaSection": {
+            "titre": "Configurer la connexion",
+            "cliquer": "Enregistrer"
+          }
+        },
+        {
+          "cliquer": "Configurer la connexion"
+        },
+        {
+          "cliquer": "Rétablir la connexion de la plateforme"
+        },
+        {
+          "remplir": {
+            "Nouveau client d’intégration » Nom": "Client E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Créer le client"
+        },
+        {
+          "cliquer": "J’ai copié les valeurs"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Révoquer — Client E2E ${unique}"
+          }
+        },
+        {
+          "aller": "/clm/admin/parametres"
+        },
+        {
+          "cliquer": "Modifier un paramètre autorisé"
+        },
+        {
+          "remplir": {
+            "Rappel tous les (jours)": "4"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "cliquer": "Modifier un paramètre autorisé"
+        },
+        {
+          "cliquer": "Rétablir les paramètres de la plateforme"
+        },
+        {
+          "aller": "/clm/admin/listes"
+        },
+        {
+          "aller": "/clm/admin/groupes"
+        },
+        {
+          "remplir": {
+            "Nouveau groupe » Code": "GRP_${UNIQUE}",
+            "Nouveau groupe » Libellé": "Groupe écran ${unique}"
+          }
+        },
+        {
+          "cliquer": "Créer le groupe"
+        },
+        {
+          "choisir": {
+            "Ajouter un membre au groupe GRP_${UNIQUE} » Membre": "initiateur@iq.example"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Ajouter un membre au groupe GRP_${UNIQUE}",
+            "cliquer": "Ajouter"
+          }
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Retirer initiateur@iq.example du groupe GRP_${UNIQUE}"
+          }
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Supprimer le groupe GRP_${UNIQUE}"
+          }
+        },
+        {
+          "aller": "/clm/admin/departs"
+        },
+        {
+          "remplir": {
+            "Courriel de la personne qui part": "depart.${unique}@iq.example"
+          }
+        },
+        {
+          "cliquer": "Consulter"
+        },
+        {
+          "choisir": {
+            "Personne qui reprend": "(premier)"
+          }
+        },
+        {
+          "cliquer": "Transférer"
+        },
+        {
+          "aller": "/clm/admin/journal"
+        },
+        {
+          "remplir": {
+            "Acteur": "initiateur@iq.example"
+          }
+        },
+        {
+          "cliquer": "Rechercher #2"
+        },
+        {
+          "aller": "/clm/admin/audit"
+        },
+        {
+          "aller": "/clm/options"
+        },
+        {
+          "aller": "/clm/profil"
+        },
+        {
+          "aller": "/clm/securite"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-IQ-06",
+      "titre": "L'exploitation des trousses : étape relancée et réassignée, document analysé par l'IA et révisé, certificat téléchargé, trousse annulée, listes exportées, tâche confiée, démarrée et réassignée, lot créé et approuvé ; le validateur délègue, le signataire interne signe depuis sa tâche",
+      "exigences": [
+        "IQ-C-31",
+        "IQ-C-50",
+        "IQ-C-30"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Modèle publié ; trousse en validation et trousse en signature interne, lancées",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/modeles",
+                "corps": {
+                  "nom": "Convention lot ${unique}",
+                  "categorie": "GARANTIE",
+                  "corps": "Entre Investissement Québec et {{demandeur}}, pour un montant de {{montant}} $ au titre du programme {{programme}}, à compter du {{debut}}.\n{{clauses}}",
+                  "champs": [
+                    {
+                      "cle": "demandeur",
+                      "libelle": "Demandeur",
+                      "type": "TEXTE",
+                      "obligatoire": true,
+                      "source": "Demandeur"
+                    },
+                    {
+                      "cle": "montant",
+                      "libelle": "Montant",
+                      "type": "TEXTE",
+                      "obligatoire": true,
+                      "source": "Montant",
+                      "format": "\\d+(\\.\\d{2})?"
+                    },
+                    {
+                      "cle": "programme",
+                      "libelle": "Programme",
+                      "type": "LISTE",
+                      "options": [
+                        "ESSOR",
+                        "IMPULSION"
+                      ]
+                    },
+                    {
+                      "cle": "debut",
+                      "libelle": "Date de début",
+                      "type": "DATE"
+                    },
+                    {
+                      "cle": "garantie",
+                      "libelle": "Garantie exigée",
+                      "type": "CASE"
+                    },
+                    {
+                      "cle": "signature1",
+                      "libelle": "Signature du bénéficiaire",
+                      "type": "SIGNATURE",
+                      "roleDestinataire": "SIGNATAIRE_1",
+                      "position": {
+                        "page": 1,
+                        "x": 10,
+                        "y": 75,
+                        "largeur": 40,
+                        "hauteur": 10
+                      }
+                    }
+                  ],
+                  "clauses": [
+                    {
+                      "cle": "garantie",
+                      "titre": "Garantie",
+                      "texte": "Le bénéficiaire fournit une garantie de prêt.",
+                      "combinateur": "ET",
+                      "conditions": [
+                        {
+                          "champ": "garantie",
+                          "operateur": "EGAL",
+                          "valeur": "true"
+                        }
+                      ]
+                    }
+                  ],
+                  "parcours": [
+                    {
+                      "cle": "v1",
+                      "libelle": "Validation juridique",
+                      "phase": 1,
+                      "type": "VALIDATION",
+                      "affectations": [
+                        {
+                          "type": "UTILISATEUR",
+                          "valeur": "validateur@iq.example"
+                        }
+                      ],
+                      "delaiJours": 5
+                    }
+                  ],
+                  "groupes": null
+                },
+                "capturer": {
+                  "modele": "$.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/modeles/${modele}/soumettre",
+                "corps": {}
+              },
+              {
+                "appel": "POST /api/clm/modeles/${modele}/publier",
+                "profil": "administration d'affaires IQ",
+                "corps": {}
+              },
+              {
+                "profil": "initiateur IQ",
+                "appel": "POST /api/clm/trousses",
+                "corps": {
+                  "titre": "Exploitation ${unique}",
+                  "risque": "FAIBLE",
+                  "unite": "FINANCEMENT_ENTREPRISES"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id",
+                  "trousseRef": "$.resume.reference"
+                }
+              },
+              {
+                "profil": "initiateur IQ",
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "piece-trousse-${unique}.pdf",
+                    "type": "application/pdf"
+                  }
+                }
+              },
+              {
+                "profil": "initiateur IQ",
+                "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+                "corps": [
+                  {
+                    "cle": "v1",
+                    "libelle": "Validation",
+                    "phase": 1,
+                    "type": "VALIDATION",
+                    "affectations": [
+                      {
+                        "type": "UTILISATEUR",
+                        "valeur": "validateur@iq.example"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "profil": "initiateur IQ",
+                "appel": "POST /api/clm/trousses/${trousse}/lancer",
+                "corps": {}
+              },
+              {
+                "profil": "initiateur IQ",
+                "appel": "POST /api/clm/trousses",
+                "corps": {
+                  "titre": "Signature interne ${unique}",
+                  "risque": "FAIBLE",
+                  "unite": "FINANCEMENT_ENTREPRISES"
+                },
+                "capturer": {
+                  "trousseSig": "$.resume.id",
+                  "trousseSigRef": "$.resume.reference"
+                }
+              },
+              {
+                "profil": "initiateur IQ",
+                "appel": "POST /api/clm/trousses/${trousseSig}/documents",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "piece-trousseSig-${unique}.pdf",
+                    "type": "application/pdf"
+                  }
+                }
+              },
+              {
+                "profil": "initiateur IQ",
+                "appel": "POST /api/clm/trousses/${trousseSig}/participants",
+                "corps": {
+                  "nom": "Étienne Côté",
+                  "courriel": "signataire@iq.example",
+                  "roleContrat": "SIGNATAIRE_1",
+                  "externe": false
+                },
+                "capturer": {
+                  "sigPart": "$.id"
+                }
+              },
+              {
+                "profil": "initiateur IQ",
+                "appel": "PUT /api/clm/trousses/${trousseSig}/parcours",
+                "corps": [
+                  {
+                    "cle": "s1",
+                    "libelle": "Signature",
+                    "phase": 1,
+                    "type": "SIGNATURE",
+                    "affectations": [
+                      {
+                        "type": "PARTICIPANT",
+                        "valeur": "${sigPart}"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "profil": "initiateur IQ",
+                "appel": "POST /api/clm/trousses/${trousseSig}/lancer",
+                "corps": {}
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "choisir": {
+            "Étape à relancer": "(premier)"
+          }
+        },
+        {
+          "cliquer": "Relancer l’étape"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Parcours"
+          }
+        },
+        {
+          "cliquerTexte": "Réassigner, ajouter ou retirer des intervenants — Validation"
+        },
+        {
+          "remplir": {
+            "Assignation par utilisateur, groupe ou règle » Motif": "Absence du validateur"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Assignation par utilisateur, groupe ou règle",
+            "cliquer": "Enregistrer"
+          }
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Documents (1)"
+          }
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Analyser (IA) — piece-trousse-${unique}.pdf"
+          }
+        },
+        {
+          "remplir": {
+            "Justification": "Résultat conforme au document"
+          }
+        },
+        {
+          "cliquer": "Valider le résultat"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Preuve"
+          }
+        },
+        {
+          "telecharger": "Télécharger le certificat (PDF)"
+        },
+        {
+          "repondre": "Annulation E2E"
+        },
+        {
+          "cliquer": "Annuler la trousse"
+        },
+        {
+          "aller": "/clm/trousses"
+        },
+        {
+          "telecharger": "Exporter la liste (CSV)"
+        },
+        {
+          "aller": "/clm/suivi"
+        },
+        {
+          "telecharger": "Exporter (CSV)"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Nouvelle tâche"
+        },
+        {
+          "remplir": {
+            "Tâche": "Tâche E2E ${unique}"
+          }
+        },
+        {
+          "choisir": {
+            "Assignée à": "initiateur@iq.example",
+            "Trousse liée": "(premier)"
+          }
+        },
+        {
+          "cliquer": "Confier la tâche"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Démarrer — Tâche E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Réassigner — Tâche E2E ${unique}"
+          }
+        },
+        {
+          "choisir": {
+            "Nouvelle personne assignée": "(premier)"
+          }
+        },
+        {
+          "cliquer": "Confirmer la réassignation"
+        },
+        {
+          "aller": "/clm/lots"
+        },
+        {
+          "remplir": {
+            "Libellé du lot": "Lot E2E ${unique}",
+            "Dossiers, un par ligne": "Dossier A ${unique} ; Marie Lot ; marie.lot.${unique}@agrinord.example ; +15145550190"
+          }
+        },
+        {
+          "choisir": {
+            "Modèle de contrat": "Convention lot ${unique}"
+          }
+        },
+        {
+          "cliquer": "Créer le lot"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Approuver le lot — Lot E2E ${unique}"
+          }
+        },
+        {
+          "connecter": "validateur IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Traiter — ${trousseRef} Validation"
+        },
+        {
+          "remplir": {
+            "Courriel du délégataire": "approbateur@iq.example",
+            "Motif": "Vacances"
+          }
+        },
+        {
+          "cliquer": "Confirmer la délégation"
+        },
+        {
+          "connecter": "signataire interne IQ"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "cliquer": "Traiter — ${trousseSigRef} Signature"
+        },
+        {
+          "cliquer": "Signer maintenant"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-IQ-07",
+      "titre": "Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)",
+      "exigences": [
+        "IQ-C-51",
+        "IQ-C-65"
+      ],
+      "profil": "administration principale IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Signataire invité avec vérification par code",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "corps": {
+                  "titre": "Portail code ${unique}",
+                  "risque": "FAIBLE",
+                  "unite": "FINANCEMENT_ENTREPRISES"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id",
+                  "trousseRef": "$.resume.reference"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.resume.statut",
+                    "egal": "BROUILLON"
+                  }
+                ],
+                "profil": "initiateur IQ"
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "convention.pdf",
+                    "type": "application/pdf"
+                  }
+                },
+                "capturer": {
+                  "document": "$.id",
+                  "documentCle": "$.cleDocument"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.analyse",
+                    "egal": "PROPRE"
+                  }
+                ],
+                "profil": "initiateur IQ"
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/participants",
+                "corps": {
+                  "nom": "Paul Code",
+                  "courriel": "code.${unique}@agrinord.example",
+                  "telephone": "+15145550192",
+                  "roleContrat": "SIGNATAIRE_1",
+                  "externe": true,
+                  "niveauIdentite": "COURRIEL"
+                },
+                "capturer": {
+                  "marie": "$.id"
+                },
+                "profil": "initiateur IQ"
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+                "corps": [
+                  {
+                    "cle": "s1",
+                    "libelle": "Signature",
+                    "phase": 1,
+                    "type": "SIGNATURE",
+                    "affectations": [
+                      {
+                        "type": "PARTICIPANT",
+                        "valeur": "${marie}"
+                      }
+                    ]
+                  }
+                ],
+                "capturer": {
+                  "e_s1": "$[0].id"
+                },
+                "profil": "initiateur IQ"
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/lancer",
+                "corps": {},
+                "verifier": [
+                  {
+                    "chemin": "$.resume.statut",
+                    "egal": "EN_TRAITEMENT"
+                  }
+                ],
+                "profil": "initiateur IQ"
+              },
+              {
+                "courriel": {
+                  "destinataire": "code.${unique}@agrinord.example",
+                  "motif": "/portail/([A-Za-z0-9_-]+)",
+                  "capturer": "jeton"
+                },
+                "profil": "initiateur IQ"
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/portail/${jeton}"
+        },
+        {
+          "cliquer": "Recevoir mon code"
+        },
+        {
+          "preparer": "iq.signature.externe"
+        },
+        {
+          "aller": "/clm/admin/journal"
+        },
+        {
+          "telecharger": "Exporter le journal (CSV)"
+        },
+        {
+          "aller": "/clm/admin/conservation"
+        },
+        {
+          "choisir": {
+            "Type de contrat": "PRET"
+          }
+        },
+        {
+          "remplir": {
+            "Durée après la clôture (ans)": "10"
+          }
+        },
+        {
+          "cliquer": "Enregistrer la règle"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Retirer — Contrat de prêt"
+          }
+        },
+        {
+          "repondre": "Litige E2E ${unique}"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Geler — ${trousseRef}"
+          }
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Lever le gel — ${trousseRef}"
+          }
+        },
+        {
+          "remplir": {
+            "Clôturées du": "${aujourdhui}",
+            "au": "${demain}"
+          }
+        },
+        {
+          "telecharger": "Télécharger le lot"
+        },
+        {
+          "aller": "/clm/admin/sso"
+        },
+        {
+          "remplir": {
+            "Groupe (identifiant ou nom)": "grp-e2e-${unique}"
+          }
+        },
+        {
+          "choisir": {
+            "Ajouter la correspondance » Rôle": "LECTEUR"
+          }
+        },
+        {
+          "cliquer": "Ajouter la correspondance"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Retirer — grp-e2e-${unique}"
+          }
+        },
+        {
+          "cliquer": "Créer un jeton | Remplacer le jeton"
+        },
+        {
+          "preparer": {
+            "description": "Administrateur jetable (futur compte de secours)",
+            "etapes": [
+              {
+                "appel": "POST /api/admin/users",
+                "corps": {
+                  "email": "secours.${unique}@iq.example",
+                  "nom": "Secours ${unique}",
+                  "motDePasse": "Passw0rd!E2E-2026",
+                  "roles": [
+                    "ADMIN"
+                  ],
+                  "actif": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "connecter": {
+            "email": "secours.${unique}@iq.example",
+            "motDePasse": "Passw0rd!E2E-2026"
+          }
+        },
+        {
+          "aller": "/clm/securite"
+        },
+        {
+          "cliquer": "Configurer le TOTP"
+        },
+        {
+          "lire": {
+            "selecteur": "code",
+            "variable": "secretTotp"
+          }
+        },
+        {
+          "remplirTotp": {
+            "Code de confirmation": "secretTotp"
+          }
+        },
+        {
+          "cliquer": "Activer"
+        },
+        {
+          "aller": "/clm/admin/sso"
+        },
+        {
+          "cliquer": {
+            "role": "checkbox",
+            "nom": "Compte de secours — secours.${unique}@iq.example"
+          }
+        },
+        {
+          "cliquer": "Réserver aux comptes de secours"
+        },
+        {
+          "cliquer": "Ouvrir à tous les comptes"
+        },
+        {
+          "cliquer": {
+            "role": "checkbox",
+            "nom": "Compte de secours — secours.${unique}@iq.example"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,966 @@
+{
+  "appelOffres": "Santé Québec (CHU) — fonctionnalités de chaque écran de la plateforme de formulaires",
+  "catalogue": "chu",
+  "scenarios": [
+    {
+      "id": "E2E-ECR-CHU-01",
+      "titre": "Le concepteur évalue les règles dans l'aperçu, revient à une version antérieure puis supprime un brouillon de formulaire",
+      "exigences": [
+        "CHU-3.03",
+        "CHU-3.09",
+        "CHU-4.01"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Formulaire publié en deux versions, et un brouillon à supprimer",
+            "etapes": [
+              {
+                "appel": "POST /api/formulaires",
+                "corps": {
+                  "code": "VERS_${UNIQUE}",
+                  "nom": "VERS ${unique}",
+                  "domaine": "RH",
+                  "conservationJours": 365
+                },
+                "capturer": {
+                  "formulaire": "$.id"
+                }
+              },
+              {
+                "appel": "PUT /api/formulaires/${formulaire}/structure",
+                "corps": {
+                  "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"type\": \"TEXTE\", \"obligatoire\": true}]}]}"
+                }
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/soumettre"
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/publier"
+              },
+              {
+                "appel": "PUT /api/formulaires/${formulaire}/structure",
+                "corps": {
+                  "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom complet\", \"type\": \"TEXTE\", \"obligatoire\": true}]}]}"
+                }
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/soumettre"
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/publier"
+              },
+              {
+                "appel": "POST /api/formulaires",
+                "corps": {
+                  "code": "SUPPR_${UNIQUE}",
+                  "nom": "SUPPR ${unique}",
+                  "domaine": "RH",
+                  "conservationJours": 365
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/formulaires"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "VERS ${unique}",
+            "cliquer": "Concevoir"
+          }
+        },
+        {
+          "cliquer": "Aperçu"
+        },
+        {
+          "remplir": {
+            "Nom complet": "Essai d'aperçu"
+          }
+        },
+        {
+          "voir": "Aperçu du formulaire"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Versions"
+          }
+        },
+        {
+          "cliquer": "Revenir à cette version"
+        },
+        {
+          "cliquer": "← Retour à la liste"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "SUPPR ${unique}",
+            "cliquer": "Supprimer"
+          }
+        },
+        {
+          "nePasVoir": "SUPPR ${unique}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-CHU-02",
+      "titre": "Une fiche se dépose depuis le catalogue, puis se traite : pièce jointe et téléchargement, commentaire, document PDF, transmission, validation, critères sauvegardés ; un brouillon s'annule depuis « Mes demandes »",
+      "exigences": [
+        "CHU-5.04",
+        "CHU-6.01",
+        "CHU-3.04",
+        "CHU-4.07"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Formulaire publié",
+            "etapes": [
+              {
+                "appel": "POST /api/formulaires",
+                "corps": {
+                  "code": "FICH_${UNIQUE}",
+                  "nom": "FICH ${unique}",
+                  "domaine": "RH",
+                  "conservationJours": 365
+                },
+                "capturer": {
+                  "formulaire": "$.id"
+                }
+              },
+              {
+                "appel": "PUT /api/formulaires/${formulaire}/structure",
+                "corps": {
+                  "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"type\": \"TEXTE\", \"obligatoire\": true}]}]}"
+                }
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/soumettre"
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/publier"
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/nouvelle-demande"
+        },
+        {
+          "voir": "FICH ${unique}"
+        },
+        {
+          "aller": "/formulaires/${formulaire}/remplir"
+        },
+        {
+          "remplir": {
+            "Nom": "Fiche traitée ${unique}"
+          }
+        },
+        {
+          "cliquer": "Soumettre"
+        },
+        {
+          "aller": "/formulaires/${formulaire}/fiches"
+        },
+        {
+          "cliquer": "Détails"
+        },
+        {
+          "televerser": {
+            "champ": "Ajouter un document",
+            "fichier": {
+              "fichier": "pdf",
+              "nom": "piece-${unique}.pdf",
+              "type": "application/pdf"
+            }
+          }
+        },
+        {
+          "voir": "piece-${unique}.pdf"
+        },
+        {
+          "telecharger": "Télécharger"
+        },
+        {
+          "remplir": {
+            "Votre commentaire…": "Commentaire de traitement ${unique}"
+          }
+        },
+        {
+          "cliquer": "Commenter"
+        },
+        {
+          "voir": "Commentaire de traitement ${unique}"
+        },
+        {
+          "telecharger": "Document PDF de la fiche"
+        },
+        {
+          "cliquer": "Transmettre"
+        },
+        {
+          "remplir": {
+            "Courriel du destinataire": "destinataire.${unique}@chu.example"
+          }
+        },
+        {
+          "dansLaFenetre": "Envoyer le document"
+        },
+        {
+          "cliquer": "Valider"
+        },
+        {
+          "remplir": {
+            "Nom des critères": "Critères ${unique}"
+          }
+        },
+        {
+          "cliquer": "Sauvegarder ces critères"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Supprimer les critères « Critères ${unique} »"
+          }
+        },
+        {
+          "aller": "/formulaires/${formulaire}/fiches"
+        },
+        {
+          "nePasVoir": "Critères ${unique}"
+        },
+        {
+          "aller": "/mes-demandes"
+        },
+        {
+          "telecharger": "Document PDF de la fiche"
+        },
+        {
+          "aller": "/formulaires/${formulaire}/remplir"
+        },
+        {
+          "remplir": {
+            "Nom": "Brouillon ${unique}"
+          }
+        },
+        {
+          "voir": "Enregistré"
+        },
+        {
+          "aller": "/mes-demandes"
+        },
+        {
+          "cliquer": "Annuler"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-CHU-03",
+      "titre": "Le concepteur donne un circuit à un formulaire ; la fiche soumise devient une tâche que l'administration examine et approuve",
+      "exigences": [
+        "CHU-4.07",
+        "CHU-4.05"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Formulaire publié",
+            "etapes": [
+              {
+                "appel": "POST /api/formulaires",
+                "corps": {
+                  "code": "CIRC_${UNIQUE}",
+                  "nom": "CIRC ${unique}",
+                  "domaine": "RH",
+                  "conservationJours": 365
+                },
+                "capturer": {
+                  "formulaire": "$.id"
+                }
+              },
+              {
+                "appel": "PUT /api/formulaires/${formulaire}/structure",
+                "corps": {
+                  "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"type\": \"TEXTE\", \"obligatoire\": true}]}]}"
+                }
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/soumettre"
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/publier"
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/formulaires"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "CIRC ${unique}",
+            "cliquer": "Concevoir"
+          }
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Workflow"
+          }
+        },
+        {
+          "cliquer": "+ Ajouter une étape"
+        },
+        {
+          "choisir": {
+            "Responsable (rôle)": "ADMIN"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "aller": "/formulaires/${formulaire}/remplir"
+        },
+        {
+          "remplir": {
+            "Nom": "Demande à approuver ${unique}"
+          }
+        },
+        {
+          "cliquer": "Soumettre"
+        },
+        {
+          "aller": "/taches"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "CIRC ${unique}",
+            "cliquer": "Examiner"
+          }
+        },
+        {
+          "remplir": {
+            "Commentaire": "Conforme"
+          }
+        },
+        {
+          "dansLaFenetre": "Approuver"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-CHU-04",
+      "titre": "Ressources humaines : un employé est créé, modifié, consulté avec son aperçu de paie, puis archivé ; une feuille de temps est saisie, soumise et approuvée ; un projet et ses tâches se gèrent",
+      "exigences": [
+        "CHU-9.01",
+        "CHU-4.07"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "aller": "/rh/personnel"
+        },
+        {
+          "remplir": {
+            "Prénom": "Camille",
+            "Nom": "E2E ${unique}",
+            "Poste": "Analyste",
+            "Salaire annuel ($)": "65000"
+          }
+        },
+        {
+          "cliquer": "Créer"
+        },
+        {
+          "voir": "Camille E2E ${unique}"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "E2E ${unique}",
+            "cliquer": "Éditer"
+          }
+        },
+        {
+          "remplir": {
+            "Département": "Ressources humaines"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "cliquer": "Camille E2E ${unique}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Paie"
+          }
+        },
+        {
+          "cliquer": "Calculer le bulletin"
+        },
+        {
+          "aller": "/rh/personnel"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "E2E ${unique}",
+            "cliquer": "Archiver"
+          }
+        },
+        {
+          "dansLaLigne": {
+            "texte": "E2E ${unique}",
+            "cliquer": "Réactiver"
+          }
+        },
+        {
+          "aller": "/rh/feuilles-temps"
+        },
+        {
+          "cliquer": "+ Nouvelle feuille"
+        },
+        {
+          "cliquer": "+ Ajouter une ligne"
+        },
+        {
+          "remplir": {
+            "Heures": "7"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "cliquer": "Ouvrir"
+        },
+        {
+          "remplir": {
+            "Heures": "7.5"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "cliquer": "Ouvrir"
+        },
+        {
+          "cliquer": "Soumettre"
+        },
+        {
+          "aller": "/rh/feuilles-temps"
+        },
+        {
+          "cliquer": "Approuver"
+        },
+        {
+          "aller": "/rh/projets-taches"
+        },
+        {
+          "remplir": {
+            "Code": "PRJ-${UNIQUE}",
+            "Nom du projet": "Projet E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Créer le projet"
+        },
+        {
+          "aller": "/rh/projets-taches"
+        },
+        {
+          "choisir": {
+            "Projet": "Projet E2E ${unique}"
+          }
+        },
+        {
+          "remplir": {
+            "Nom de la tâche": "Tâche E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Créer la tâche"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Tâche E2E ${unique}",
+            "cliquer": "Éditer"
+          }
+        },
+        {
+          "remplir": {
+            "Nom de la tâche": "Tâche E2E modifiée ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Tâche E2E modifiée ${unique}",
+            "cliquer": "Supprimer"
+          }
+        },
+        {
+          "nePasVoir": "Tâche E2E modifiée ${unique}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-CHU-05",
+      "titre": "Paie et fiscalité : aperçu de paie, impôt sur le revenu, et les trois déclarations (taxes, retenues, relevés annuels)",
+      "exigences": [
+        "CHU-9.01"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "aller": "/paie"
+        },
+        {
+          "remplir": {
+            "Salaire brut de la période ($)": "2500"
+          }
+        },
+        {
+          "cliquer": "Calculer"
+        },
+        {
+          "voir": "Retenues de l’employé"
+        },
+        {
+          "aller": "/impot"
+        },
+        {
+          "remplir": {
+            "Revenu / chiffre d’affaires ($)": "90000"
+          }
+        },
+        {
+          "cliquer": "Calculer"
+        },
+        {
+          "voir": "Résultat"
+        },
+        {
+          "aller": "/declarations"
+        },
+        {
+          "cliquer": "Calculer"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Retenues à la source"
+          }
+        },
+        {
+          "cliquer": "Calculer"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Relevé 1 + T4"
+          }
+        },
+        {
+          "cliquer": "Calculer"
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-CHU-06",
+      "titre": "Administration de la plateforme : applications, gabarits et règles de notification, approbations multi-niveaux, échanges hérités, permissions et groupes",
+      "exigences": [
+        "CHU-1.04",
+        "CHU-5.01",
+        "CHU-4.07",
+        "CHU-8.04",
+        "CHU-7.03",
+        "CHU-7.04"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Formulaire publié (cible des notifications et des échanges)",
+            "etapes": [
+              {
+                "appel": "POST /api/formulaires",
+                "corps": {
+                  "code": "ADM_${UNIQUE}",
+                  "nom": "ADM ${unique}",
+                  "domaine": "RH",
+                  "conservationJours": 365
+                },
+                "capturer": {
+                  "formulaire": "$.id"
+                }
+              },
+              {
+                "appel": "PUT /api/formulaires/${formulaire}/structure",
+                "corps": {
+                  "structureJson": "{\"pages\":[{\"titre\":\"Identité\",\"champs\":[{\"cle\":\"nom\",\"libelle\":\"Nom\",\"type\":\"TEXTE\"}]}]}"
+                }
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/soumettre"
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/publier"
+              },
+              {
+                "appel": "POST /api/admin/users",
+                "corps": {
+                  "email": "membre.${unique}@chu.example",
+                  "nom": "membre ${unique}",
+                  "motDePasse": "Passw0rd!E2E-2026",
+                  "roles": [
+                    "LECTEUR"
+                  ],
+                  "actif": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/applications"
+        },
+        {
+          "remplir": {
+            "Code (ex. portail_appro)": "app_${unique}",
+            "Nom de l’application": "Application E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Créer"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Application E2E ${unique}",
+            "cliquer": "Éditer"
+          }
+        },
+        {
+          "remplir": {
+            "Description": "Décrite par l'e2e"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "Application E2E ${unique}",
+            "cliquer": "Archiver"
+          }
+        },
+        {
+          "aller": "/notifications"
+        },
+        {
+          "remplir": {
+            "Code (ex. accuse_reception)": "avis_${unique}",
+            "Sujet": "Avis E2E",
+            "Corps du message": "Bonjour {{nom}}"
+          }
+        },
+        {
+          "cliquer": "Ajouter le gabarit"
+        },
+        {
+          "remplir": {
+            "Id du formulaire": "${formulaire}"
+          }
+        },
+        {
+          "choisir": {
+            "Gabarit": "avis_${unique}"
+          }
+        },
+        {
+          "remplir": {
+            "Destinataires (courriels, rôles…)": "notif.${unique}@chu.example"
+          }
+        },
+        {
+          "cliquer": "Ajouter la règle"
+        },
+        {
+          "aller": "/approbations"
+        },
+        {
+          "remplir": {
+            "Règles d’approbation » Type de document": "BON_${UNIQUE}",
+            "Champ": "montant",
+            "Valeur": "1000",
+            "Approbateur": "ADMIN"
+          }
+        },
+        {
+          "cliquer": "Ajouter la règle"
+        },
+        {
+          "remplir": {
+            "Nouvelle demande d’approbation » Type de document": "BON_${UNIQUE}",
+            "Montant": "5000"
+          }
+        },
+        {
+          "cliquer": "Créer la demande"
+        },
+        {
+          "dansLaSection": {
+            "titre": "Mes approbations en attente",
+            "cliquer": "Approuver"
+          }
+        },
+        {
+          "aller": "/interop"
+        },
+        {
+          "remplir": {
+            "Code d'échange": "ech-${unique}",
+            "Correspondances": "NOM_EMPLOYE=nom"
+          }
+        },
+        {
+          "choisir": {
+            "Formulaire cible": "(premier)"
+          }
+        },
+        {
+          "cliquer": "Déclarer l'échange"
+        },
+        {
+          "choisir": {
+            "Échange": "ech-${unique}"
+          }
+        },
+        {
+          "remplir": {
+            "Export JSON": "[{\"NOM_EMPLOYE\": \"Alice\"}]"
+          }
+        },
+        {
+          "cliquer": "Essayer (n'écrit rien)"
+        },
+        {
+          "cliquer": "Reprendre les lignes valides"
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Désactiver l'échange ech-${unique}"
+          }
+        },
+        {
+          "aller": "/securite-avancee"
+        },
+        {
+          "remplir": {
+            "Rôle / groupe / utilisateur": "LECTEUR",
+            "Code du champ / de la fiche / du bouton": "cible_${unique}"
+          }
+        },
+        {
+          "cliquer": "Ajouter la permission"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "cible_${unique}",
+            "cliquer": "Supprimer"
+          }
+        },
+        {
+          "remplir": {
+            "Code du groupe": "grp_${unique}",
+            "Nom du groupe": "Groupe E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Ajouter le groupe"
+        },
+        {
+          "remplir": {
+            "Identifiant / courriel — grp_${unique}": "membre.${unique}@chu.example"
+          }
+        },
+        {
+          "dansLaLigne": {
+            "texte": "grp_${unique}",
+            "cliquer": "Ajouter"
+          }
+        }
+      ]
+    },
+    {
+      "id": "E2E-ECR-CHU-07",
+      "titre": "Un tableau de bord est créé, ouvert, modifié puis supprimé ; une conversation est ouverte, reçoit une réponse et un participant",
+      "exigences": [
+        "CHU-6.04",
+        "CHU-5.05"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Formulaire publié (source des indicateurs) ; deux membres de l'organisation",
+            "etapes": [
+              {
+                "appel": "POST /api/formulaires",
+                "corps": {
+                  "code": "TDB_${UNIQUE}",
+                  "nom": "TDB ${unique}",
+                  "domaine": "RH",
+                  "conservationJours": 365
+                },
+                "capturer": {
+                  "formulaire": "$.id"
+                }
+              },
+              {
+                "appel": "PUT /api/formulaires/${formulaire}/structure",
+                "corps": {
+                  "structureJson": "{\"pages\":[{\"titre\":\"Identité\",\"champs\":[{\"cle\":\"activite\",\"libelle\":\"Activité\",\"type\":\"TEXTE\"}]}]}"
+                }
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/soumettre"
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/publier"
+              },
+              {
+                "appel": "POST /api/admin/users",
+                "corps": {
+                  "email": "participant.${unique}@chu.example",
+                  "nom": "participant ${unique}",
+                  "motDePasse": "Passw0rd!E2E-2026",
+                  "roles": [
+                    "LECTEUR"
+                  ],
+                  "actif": true
+                }
+              },
+              {
+                "appel": "POST /api/admin/users",
+                "corps": {
+                  "email": "invite.${unique}@chu.example",
+                  "nom": "invite ${unique}",
+                  "motDePasse": "Passw0rd!E2E-2026",
+                  "roles": [
+                    "LECTEUR"
+                  ],
+                  "actif": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/tableaux-de-bord"
+        },
+        {
+          "cliquer": "Nouveau tableau de bord"
+        },
+        {
+          "remplir": {
+            "Nom": "Tableau E2E ${unique}",
+            "Titre de l'indicateur": "Fiches par activité"
+          }
+        },
+        {
+          "choisir": {
+            "Formulaire": "TDB ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "choisir": {
+            "Tableau de bord": "Tableau E2E ${unique}"
+          }
+        },
+        {
+          "voir": "Fiches par activité"
+        },
+        {
+          "cliquer": "Modifier"
+        },
+        {
+          "remplir": {
+            "Nom": "Tableau E2E modifié ${unique}"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "cliquer": "Supprimer le tableau de bord"
+        },
+        {
+          "dansLaFenetre": "Confirmer"
+        },
+        {
+          "aller": "/messagerie"
+        },
+        {
+          "cliquer": "Nouvelle conversation"
+        },
+        {
+          "remplir": {
+            "Sujet": "Conversation E2E ${unique}",
+            "Participants (courriels)": "participant.${unique}@chu.example",
+            "Message": "Premier message"
+          }
+        },
+        {
+          "cliquer": "Envoyer"
+        },
+        {
+          "cliquer": "Conversation E2E ${unique}"
+        },
+        {
+          "remplir": {
+            "Votre réponse": "Réponse E2E"
+          }
+        },
+        {
+          "cliquer": "Envoyer"
+        },
+        {
+          "voir": "Réponse E2E"
+        },
+        {
+          "remplir": {
+            "Ajouter un participant (courriel)": "invite.${unique}@chu.example"
+          }
+        },
+        {
+          "cliquer": "Ajouter"
+        }
+      ]
+    }
+  ]
+}

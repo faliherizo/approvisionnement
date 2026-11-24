@@ -76,7 +76,7 @@ function champ(c, valeurs, setValeurs) {
     )
   }
   if (c.type === 'richtext') {
-    return <RichText value={valeurs[c.name] || ''} onChange={set}
+    return <RichText value={valeurs[c.name] || ''} onChange={set} libelle={c.label}
                      rows={c.rows || 4} placeholder={c.placeholder} />
   }
   if (c.type === 'textarea') {

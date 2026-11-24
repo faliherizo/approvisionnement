@@ -1,0 +1,80 @@
+# Plateforme contractuelle — démonstration https://contrat.vinaitsolution.com, sur le VPS OVH partagé.
+#
+# Lancée par deploy/ovh/deployer.sh (jamais à la main sans CONTRAT_VERSION), projet Compose « contractuelle_contrat » :
+# le réseau privé et le volume de la base gardent les noms de l'installation d'origine, la base n'est donc pas recréée.
+# Les images sont construites par le pipeline (.github/workflows/deployer-contrat.yml), jamais sur le VPS.
+# Aucun port publié : le Nginx central (vina_nginx) joint contrat-frontend:8080 par le réseau partagé « web ».
+services:
+  db:
+    image: postgres:15
+    container_name: contrat-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: contrat
+      POSTGRES_USER: contrat
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD absent de .env.contrat}
+    volumes:
+      - contrat_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U contrat -d contrat"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [contrat-network]
+    mem_limit: 512m
+    logging: { driver: json-file, options: { max-size: "10m", max-file: "3" } }
+
+  backend:
+    image: contrat/backend:${CONTRAT_VERSION:?version attendue}
+    container_name: contrat-backend
+    restart: unless-stopped
+    depends_on:
+      db: { condition: service_healthy }
+    env_file: .env.contrat
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_URL: jdbc:postgresql://db:5432/contrat
+      DB_USER: contrat
+      # Sans plafond, la JVM dimensionne son tas sur la mémoire de l'hôte, partagée par une douzaine d'applications.
+      JAVA_TOOL_OPTIONS: -XX:MaxRAMPercentage=70 -XX:+ExitOnOutOfMemoryError
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 2 bash -c '</dev/tcp/localhost/8080' || exit 1"]
+      interval: 15s
+      timeout: 5s
+      start_period: 120s
+      retries: 8
+    volumes:
+      - ./donnees/simulateur:/app/data/simulateur
+    networks:
+      - contrat-network   # la base
+      - web               # l'Ollama mutualisé (vina_ollama)
+    mem_limit: 1280m
+    logging: { driver: json-file, options: { max-size: "10m", max-file: "5" } }
+
+  frontend:
+    image: contrat/web:${CONTRAT_VERSION:?version attendue}
+    container_name: contrat-frontend
+    restart: unless-stopped
+    depends_on: [backend]
+    environment:
+      # Nom de conteneur, et non « backend » : sur le réseau partagé « web », un autre service s'appelle déjà backend.
+      BACKEND_URL: http://contrat-backend:8080
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO /dev/null http://127.0.0.1:8080/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks:
+      - contrat-network
+      - web               # atteint par le Nginx central
+    mem_limit: 128m
+    logging: { driver: json-file, options: { max-size: "10m", max-file: "3" } }
+
+networks:
+  contrat-network:
+    driver: bridge
+  web:
+    external: true
+
+volumes:
+  contrat_pg:

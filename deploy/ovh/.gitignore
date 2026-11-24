@@ -1,0 +1,5 @@
+# Propres au serveur : secrets, versions en service, dépôts simulés.
+.env.contrat
+.version-courante
+.version-precedente
+donnees/

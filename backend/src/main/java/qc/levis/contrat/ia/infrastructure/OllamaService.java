@@ -20,9 +20,16 @@ public class OllamaService implements AssistantRedactionPort {
 
     private final RestClient client;
     private final String modele;
+    private final int longueurMax;
 
+    /**
+     * @param longueurMax nombre maximal de jetons produits (num_predict). Sans borne, un modèle sur processeur peut générer
+     *                    jusqu'à remplir son contexte : la réponse dépasse alors le délai de lecture, et les requêtes
+     *                    suivantes s'empilent derrière elle. Une clause ou une réponse tient largement en 512 jetons.
+     */
     public OllamaService(@Value("${app.ai.ollama.base-url:http://localhost:11434}") String baseUrl,
-                         @Value("${app.ai.ollama.model:llama3.1}") String modele) {
+                         @Value("${app.ai.ollama.model:llama3.1}") String modele,
+                         @Value("${app.ai.ollama.longueur-max:512}") int longueurMax) {
         // Timeouts explicites : en l'absence d'Ollama, l'appel échoue vite (503)
         // plutôt que de bloquer la requête HTTP.
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
@@ -30,6 +37,7 @@ public class OllamaService implements AssistantRedactionPort {
         factory.setReadTimeout(Duration.ofSeconds(120)); // génération LLM
         this.client = RestClient.builder().baseUrl(baseUrl).requestFactory(factory).build();
         this.modele = modele;
+        this.longueurMax = longueurMax;
     }
 
     @Override
@@ -39,7 +47,7 @@ public class OllamaService implements AssistantRedactionPort {
                 "model", modele,
                 "prompt", prompt,
                 "stream", false,
-                "options", Map.of("temperature", 0.2)
+                "options", Map.of("temperature", 0.2, "num_predict", longueurMax)
         );
         @SuppressWarnings("unchecked")
         Map<String, Object> resp = client.post()

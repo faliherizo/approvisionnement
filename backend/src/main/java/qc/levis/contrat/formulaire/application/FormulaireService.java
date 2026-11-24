@@ -29,13 +29,16 @@ public class FormulaireService {
         this.versions = versions;
     }
 
-    /** Liste les formulaires du tenant ; filtre par domaine si {@code domaine} est fourni (cloisonnement). */
+    /**
+     * Liste les formulaires du tenant ; filtre par domaine si {@code domaine} est fourni (cloisonnement). Un formulaire
+     * supprimé (désactivé : ses fiches restent conservées) n'y figure plus ; l'export de réversibilité, lui, les garde.
+     */
     public List<FormulaireVue> lister(String domaine) {
         List<Formulaire> src = (domaine == null || domaine.isBlank())
                 ? repo.findByTenantIdOrderByNomAsc(tenant())
                 : repo.findByTenantIdAndDomaineOrderByNomAsc(tenant(), domaine);
         List<FormulaireVue> res = new ArrayList<>();
-        for (Formulaire f : src) res.add(vue(f));
+        for (Formulaire f : src) if (f.isActif()) res.add(vue(f));
         return res;
     }
 

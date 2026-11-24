@@ -1,0 +1,6621 @@
+{
+  "genere": "node outils/inventaire-ecrans.mjs — ne pas éditer",
+  "ecrans": [
+    {
+      "route": "/portail/:jeton",
+      "espace": "clm",
+      "composant": "Portail",
+      "fichiers": [
+        "pages/clm/Portail.jsx",
+        "i18n/I18nContext.jsx",
+        "components/LangSwitcher.jsx",
+        "pages/clm/commun.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /clm/portail/{}",
+          "methode": "GET",
+          "chemin": "/clm/portail/{}",
+          "type": "consulter",
+          "fonction": "charger",
+          "sources": [
+            "pages/clm/Portail.jsx:42"
+          ]
+        },
+        {
+          "id": "GET /clm/portail/{}/documents/{}",
+          "methode": "GET",
+          "chemin": "/clm/portail/{}/documents/{}",
+          "type": "consulter",
+          "fonction": "ouvrir",
+          "sources": [
+            "pages/clm/Portail.jsx:61"
+          ]
+        },
+        {
+          "id": "POST /clm/portail/{}/refuser",
+          "methode": "POST",
+          "chemin": "/clm/portail/{}/refuser",
+          "type": "refuser",
+          "fonction": "refuser",
+          "sources": [
+            "pages/clm/Portail.jsx:76"
+          ]
+        },
+        {
+          "id": "POST /clm/portail/{}/signer",
+          "methode": "POST",
+          "chemin": "/clm/portail/{}/signer",
+          "type": "signer",
+          "fonction": "signer",
+          "sources": [
+            "pages/clm/Portail.jsx:71"
+          ]
+        },
+        {
+          "id": "POST /clm/portail/{}/verification",
+          "methode": "POST",
+          "chemin": "/clm/portail/{}/verification",
+          "type": "ajouter",
+          "fonction": "demarrer",
+          "sources": [
+            "pages/clm/Portail.jsx:52"
+          ]
+        },
+        {
+          "id": "POST /clm/portail/{}/verification/reponse",
+          "methode": "POST",
+          "chemin": "/clm/portail/{}/verification/reponse",
+          "type": "ajouter",
+          "fonction": "verifier",
+          "sources": [
+            "pages/clm/Portail.jsx:57"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm",
+      "espace": "clm",
+      "composant": "ClmTableauBord",
+      "fichiers": [
+        "pages/clm/ClmTableauBord.jsx",
+        "auth.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /clm/tableau-de-bord",
+          "methode": "GET",
+          "chemin": "/clm/tableau-de-bord",
+          "type": "lister",
+          "fonction": "Contenu",
+          "sources": [
+            "pages/clm/ClmTableauBord.jsx:20"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/commun.jsx:149"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_UNITE",
+          "methode": "GET",
+          "chemin": "/reference/CLM_UNITE",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/ClmTableauBord.jsx:22"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/trousses",
+      "espace": "clm",
+      "composant": "Trousses",
+      "fichiers": [
+        "pages/clm/Trousses.jsx",
+        "auth.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /clm/suivi/export",
+          "methode": "GET",
+          "chemin": "/clm/suivi/export",
+          "type": "télécharger",
+          "fonction": "exporter",
+          "sources": [
+            "pages/clm/Trousses.jsx:60"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses",
+          "methode": "GET",
+          "chemin": "/clm/trousses",
+          "type": "lister",
+          "fonction": "Contenu",
+          "sources": [
+            "pages/clm/Trousses.jsx:25"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/commun.jsx:149"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_TYPE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/CLM_TYPE_CONTRAT",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/Trousses.jsx:27"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/trousses/nouvelle",
+      "espace": "clm",
+      "composant": "TrousseCreer",
+      "fichiers": [
+        "pages/clm/TrousseCreer.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js",
+        "pages/clm/commun.jsx",
+        "pages/clm/gabarit.jsx",
+        "pages/clm/OngletDocuments.jsx",
+        "pages/clm/OngletParticipants.jsx",
+        "pages/clm/OngletParcours.jsx",
+        "pages/clm/ValeursTrousse.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /clm/trousses/{}/documents/{}",
+          "methode": "DELETE",
+          "chemin": "/clm/trousses/{}/documents/{}",
+          "type": "supprimer",
+          "fonction": "gestionnaire en ligne (onClick)",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:124"
+          ]
+        },
+        {
+          "id": "DELETE /clm/trousses/{}/participants/{}",
+          "methode": "DELETE",
+          "chemin": "/clm/trousses/{}/participants/{}",
+          "type": "supprimer",
+          "fonction": "retirer",
+          "sources": [
+            "pages/clm/OngletParticipants.jsx:52"
+          ]
+        },
+        {
+          "id": "GET /clm/modeles",
+          "methode": "GET",
+          "chemin": "/clm/modeles",
+          "type": "lister",
+          "fonction": "Contenu",
+          "sources": [
+            "pages/clm/TrousseCreer.jsx:197"
+          ]
+        },
+        {
+          "id": "GET /clm/modeles/{}",
+          "methode": "GET",
+          "chemin": "/clm/modeles/{}",
+          "type": "consulter",
+          "fonction": "OngletParticipants",
+          "sources": [
+            "pages/clm/OngletParticipants.jsx:27"
+          ]
+        },
+        {
+          "id": "GET /clm/parametres",
+          "methode": "GET",
+          "chemin": "/clm/parametres",
+          "type": "lister",
+          "fonction": "Contenu",
+          "sources": [
+            "pages/clm/TrousseCreer.jsx:198",
+            "pages/clm/OngletParticipants.jsx:21"
+          ]
+        },
+        {
+          "id": "GET /clm/salesforce/dossiers/{}",
+          "methode": "GET",
+          "chemin": "/clm/salesforce/dossiers/{}",
+          "type": "consulter",
+          "fonction": "rechercherSf",
+          "sources": [
+            "pages/clm/TrousseCreer.jsx:222"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}",
+          "type": "consulter",
+          "fonction": "Contenu",
+          "sources": [
+            "pages/clm/TrousseCreer.jsx:196"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}/analyses",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/analyses",
+          "type": "lister",
+          "fonction": "OngletDocuments",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:24"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}/documents/{}/contenu",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/documents/{}/contenu",
+          "type": "télécharger",
+          "fonction": "charger",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:67",
+            "pages/clm/commun.jsx:189"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}/documents/{}/texte",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/documents/{}/texte",
+          "type": "lister",
+          "fonction": "Visionneuse",
+          "sources": [
+            "pages/clm/commun.jsx:193"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}/suggestions/{}",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/suggestions/{}",
+          "type": "consulter",
+          "fonction": "libelle",
+          "sources": [
+            "pages/clm/ValeursTrousse.jsx:53"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/commun.jsx:149"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_CHAMP_SALESFORCE",
+          "methode": "GET",
+          "chemin": "/reference/CLM_CHAMP_SALESFORCE",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/TrousseCreer.jsx:199",
+            "pages/clm/TrousseCreer.jsx:33"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_CLAUSE_ATTENDUE",
+          "methode": "GET",
+          "chemin": "/reference/CLM_CLAUSE_ATTENDUE",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:26"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_ROLE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/CLM_ROLE_CONTRAT",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/TrousseCreer.jsx:127",
+            "pages/clm/OngletParticipants.jsx:20",
+            "pages/clm/OngletParcours.jsx:102"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_TYPE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/CLM_TYPE_CONTRAT",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/TrousseCreer.jsx:51",
+            "pages/clm/OngletDocuments.jsx:25"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_UNITE",
+          "methode": "GET",
+          "chemin": "/reference/CLM_UNITE",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/TrousseCreer.jsx:52",
+            "pages/clm/TrousseCreer.jsx:126"
+          ]
+        },
+        {
+          "id": "POST /clm/analyses/{}/revision",
+          "methode": "POST",
+          "chemin": "/clm/analyses/{}/revision",
+          "type": "ajouter",
+          "fonction": "reviser",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:242"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses",
+          "methode": "POST",
+          "chemin": "/clm/trousses",
+          "type": "ajouter",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/clm/TrousseCreer.jsx:246"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/documents",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/documents",
+          "type": "ajouter",
+          "fonction": "envoyer",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:52"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/documents/{}/analyse",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/documents/{}/analyse",
+          "type": "ajouter",
+          "fonction": "gestionnaire en ligne (onClick)",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:126"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/documents/{}/versions",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/documents/{}/versions",
+          "type": "ajouter",
+          "fonction": "envoyer",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:52"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/generer",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/generer",
+          "type": "generer",
+          "fonction": "gestionnaire en ligne (onClick)",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:87",
+            "pages/clm/OngletDocuments.jsx:88"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/lancer",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/lancer",
+          "type": "lancer",
+          "fonction": "lancer",
+          "sources": [
+            "pages/clm/TrousseCreer.jsx:282"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/parcours/tester",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/parcours/tester",
+          "type": "ajouter",
+          "fonction": "tester",
+          "sources": [
+            "pages/clm/OngletParcours.jsx:258"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/participants",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/participants",
+          "type": "ajouter",
+          "fonction": "ajouter",
+          "sources": [
+            "pages/clm/OngletParticipants.jsx:43"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/preremplissage",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/preremplissage",
+          "type": "ajouter",
+          "fonction": "importer",
+          "sources": [
+            "pages/clm/TrousseCreer.jsx:233"
+          ]
+        },
+        {
+          "id": "PUT /clm/etapes/{}/affectations",
+          "methode": "PUT",
+          "chemin": "/clm/etapes/{}/affectations",
+          "type": "modifier",
+          "fonction": "reassigner",
+          "sources": [
+            "pages/clm/OngletParcours.jsx:271"
+          ]
+        },
+        {
+          "id": "PUT /clm/trousses/{}",
+          "methode": "PUT",
+          "chemin": "/clm/trousses/{}",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/clm/TrousseCreer.jsx:246"
+          ]
+        },
+        {
+          "id": "PUT /clm/trousses/{}/parcours",
+          "methode": "PUT",
+          "chemin": "/clm/trousses/{}/parcours",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/clm/OngletParcours.jsx:265"
+          ]
+        },
+        {
+          "id": "PUT /clm/trousses/{}/participants/{}/role",
+          "methode": "PUT",
+          "chemin": "/clm/trousses/{}/participants/{}/role",
+          "type": "modifier",
+          "fonction": "attribuer",
+          "sources": [
+            "pages/clm/OngletParticipants.jsx:57"
+          ]
+        },
+        {
+          "id": "PUT /clm/trousses/{}/valeurs",
+          "methode": "PUT",
+          "chemin": "/clm/trousses/{}/valeurs",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/clm/ValeursTrousse.jsx:63"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/trousses/:id",
+      "espace": "clm",
+      "composant": "TrousseDetail",
+      "fichiers": [
+        "pages/clm/TrousseDetail.jsx",
+        "auth.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js",
+        "pages/clm/commun.jsx",
+        "pages/clm/gabarit.jsx",
+        "pages/clm/TrousseCreer.jsx",
+        "pages/clm/ValeursTrousse.jsx",
+        "pages/clm/OngletDocuments.jsx",
+        "pages/clm/OngletParticipants.jsx",
+        "pages/clm/OngletParcours.jsx",
+        "pages/clm/OngletPreuve.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /clm/trousses/{}/documents/{}",
+          "methode": "DELETE",
+          "chemin": "/clm/trousses/{}/documents/{}",
+          "type": "supprimer",
+          "fonction": "gestionnaire en ligne (onClick)",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:124"
+          ]
+        },
+        {
+          "id": "DELETE /clm/trousses/{}/participants/{}",
+          "methode": "DELETE",
+          "chemin": "/clm/trousses/{}/participants/{}",
+          "type": "supprimer",
+          "fonction": "retirer",
+          "sources": [
+            "pages/clm/OngletParticipants.jsx:52"
+          ]
+        },
+        {
+          "id": "GET /clm/modeles/{}",
+          "methode": "GET",
+          "chemin": "/clm/modeles/{}",
+          "type": "consulter",
+          "fonction": "OngletParticipants",
+          "sources": [
+            "pages/clm/OngletParticipants.jsx:27"
+          ]
+        },
+        {
+          "id": "GET /clm/parametres",
+          "methode": "GET",
+          "chemin": "/clm/parametres",
+          "type": "lister",
+          "fonction": "OngletParticipants",
+          "sources": [
+            "pages/clm/OngletParticipants.jsx:21"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}",
+          "type": "consulter",
+          "fonction": "setOnglet",
+          "sources": [
+            "pages/clm/TrousseDetail.jsx:32"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}/analyses",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/analyses",
+          "type": "lister",
+          "fonction": "OngletDocuments",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:24"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}/documents/{}/contenu",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/documents/{}/contenu",
+          "type": "télécharger",
+          "fonction": "charger",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:67",
+            "pages/clm/commun.jsx:189"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}/documents/{}/texte",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/documents/{}/texte",
+          "type": "lister",
+          "fonction": "Visionneuse",
+          "sources": [
+            "pages/clm/commun.jsx:193"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}/historique",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/historique",
+          "type": "lister",
+          "fonction": "setOnglet",
+          "sources": [
+            "pages/clm/TrousseDetail.jsx:33"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}/preuve",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/preuve",
+          "type": "télécharger",
+          "fonction": "OngletPreuve",
+          "sources": [
+            "pages/clm/OngletPreuve.jsx:14"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}/preuve/{}",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/preuve/{}",
+          "type": "télécharger",
+          "fonction": "charger",
+          "sources": [
+            "pages/clm/OngletPreuve.jsx:28"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}/suggestions/{}",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/suggestions/{}",
+          "type": "consulter",
+          "fonction": "libelle",
+          "sources": [
+            "pages/clm/ValeursTrousse.jsx:53"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/commun.jsx:149"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_CHAMP_SALESFORCE",
+          "methode": "GET",
+          "chemin": "/reference/CLM_CHAMP_SALESFORCE",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/TrousseCreer.jsx:33"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_CLAUSE_ATTENDUE",
+          "methode": "GET",
+          "chemin": "/reference/CLM_CLAUSE_ATTENDUE",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:26"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_ROLE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/CLM_ROLE_CONTRAT",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/OngletParticipants.jsx:20",
+            "pages/clm/OngletParcours.jsx:102"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_TYPE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/CLM_TYPE_CONTRAT",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/TrousseDetail.jsx:34",
+            "pages/clm/OngletDocuments.jsx:25"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_UNITE",
+          "methode": "GET",
+          "chemin": "/reference/CLM_UNITE",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/TrousseDetail.jsx:35"
+          ]
+        },
+        {
+          "id": "POST /clm/analyses/{}/revision",
+          "methode": "POST",
+          "chemin": "/clm/analyses/{}/revision",
+          "type": "ajouter",
+          "fonction": "reviser",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:242"
+          ]
+        },
+        {
+          "id": "POST /clm/etapes/{}/relancer",
+          "methode": "POST",
+          "chemin": "/clm/etapes/{}/relancer",
+          "type": "relancer",
+          "fonction": "relancerEtape",
+          "sources": [
+            "pages/clm/TrousseDetail.jsx:52"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/{}",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/{}",
+          "type": "ajouter",
+          "fonction": "action",
+          "sources": [
+            "pages/clm/TrousseDetail.jsx:41"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/documents",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/documents",
+          "type": "ajouter",
+          "fonction": "envoyer",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:52"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/documents/{}/analyse",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/documents/{}/analyse",
+          "type": "ajouter",
+          "fonction": "gestionnaire en ligne (onClick)",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:126"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/documents/{}/versions",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/documents/{}/versions",
+          "type": "ajouter",
+          "fonction": "envoyer",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:52"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/generer",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/generer",
+          "type": "generer",
+          "fonction": "gestionnaire en ligne (onClick)",
+          "sources": [
+            "pages/clm/OngletDocuments.jsx:87",
+            "pages/clm/OngletDocuments.jsx:88"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/parcours/tester",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/parcours/tester",
+          "type": "ajouter",
+          "fonction": "tester",
+          "sources": [
+            "pages/clm/OngletParcours.jsx:258"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/participants",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/participants",
+          "type": "ajouter",
+          "fonction": "ajouter",
+          "sources": [
+            "pages/clm/OngletParticipants.jsx:43"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/preuve/integrite",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/preuve/integrite",
+          "type": "ajouter",
+          "fonction": "verifier",
+          "sources": [
+            "pages/clm/OngletPreuve.jsx:21"
+          ]
+        },
+        {
+          "id": "PUT /clm/etapes/{}/affectations",
+          "methode": "PUT",
+          "chemin": "/clm/etapes/{}/affectations",
+          "type": "modifier",
+          "fonction": "reassigner",
+          "sources": [
+            "pages/clm/OngletParcours.jsx:271"
+          ]
+        },
+        {
+          "id": "PUT /clm/trousses/{}/parcours",
+          "methode": "PUT",
+          "chemin": "/clm/trousses/{}/parcours",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/clm/OngletParcours.jsx:265"
+          ]
+        },
+        {
+          "id": "PUT /clm/trousses/{}/participants/{}/role",
+          "methode": "PUT",
+          "chemin": "/clm/trousses/{}/participants/{}/role",
+          "type": "modifier",
+          "fonction": "attribuer",
+          "sources": [
+            "pages/clm/OngletParticipants.jsx:57"
+          ]
+        },
+        {
+          "id": "PUT /clm/trousses/{}/valeurs",
+          "methode": "PUT",
+          "chemin": "/clm/trousses/{}/valeurs",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/clm/ValeursTrousse.jsx:63"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/lots",
+      "espace": "clm",
+      "composant": "Lots",
+      "fichiers": [
+        "pages/clm/Lots.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /clm/lots",
+          "methode": "GET",
+          "chemin": "/clm/lots",
+          "type": "lister",
+          "fonction": "EcranLots",
+          "sources": [
+            "pages/clm/Lots.jsx:99"
+          ]
+        },
+        {
+          "id": "GET /clm/modeles",
+          "methode": "GET",
+          "chemin": "/clm/modeles",
+          "type": "lister",
+          "fonction": "NouveauLot",
+          "sources": [
+            "pages/clm/Lots.jsx:26"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "POST /clm/lots",
+          "methode": "POST",
+          "chemin": "/clm/lots",
+          "type": "ajouter",
+          "fonction": "envoyer",
+          "sources": [
+            "pages/clm/Lots.jsx:39"
+          ]
+        },
+        {
+          "id": "POST /clm/lots/{}/approuver",
+          "methode": "POST",
+          "chemin": "/clm/lots/{}/approuver",
+          "type": "approuver",
+          "fonction": "approuver",
+          "sources": [
+            "pages/clm/Lots.jsx:115"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/taches",
+      "espace": "clm",
+      "composant": "TachesClm",
+      "fichiers": [
+        "pages/clm/TachesClm.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx",
+        "pages/clm/TachesAssignees.jsx",
+        "auth.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /clm/membres",
+          "methode": "GET",
+          "chemin": "/clm/membres",
+          "type": "lister",
+          "fonction": "TachesAssignees",
+          "sources": [
+            "pages/clm/TachesAssignees.jsx:111"
+          ]
+        },
+        {
+          "id": "GET /clm/taches",
+          "methode": "GET",
+          "chemin": "/clm/taches",
+          "type": "lister",
+          "fonction": "Contenu",
+          "sources": [
+            "pages/clm/TachesClm.jsx:181"
+          ]
+        },
+        {
+          "id": "GET /clm/taches-assignees",
+          "methode": "GET",
+          "chemin": "/clm/taches-assignees",
+          "type": "lister",
+          "fonction": "TachesAssignees",
+          "sources": [
+            "pages/clm/TachesAssignees.jsx:110"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses",
+          "methode": "GET",
+          "chemin": "/clm/trousses",
+          "type": "lister",
+          "fonction": "NouvelleTache",
+          "sources": [
+            "pages/clm/TachesAssignees.jsx:16"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}",
+          "type": "consulter",
+          "fonction": "Decision",
+          "sources": [
+            "pages/clm/TachesClm.jsx:17"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}/documents/{}/contenu",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/documents/{}/contenu",
+          "type": "télécharger",
+          "fonction": "Visionneuse",
+          "sources": [
+            "pages/clm/commun.jsx:189"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}/documents/{}/texte",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/documents/{}/texte",
+          "type": "lister",
+          "fonction": "Visionneuse",
+          "sources": [
+            "pages/clm/commun.jsx:193"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}/historique",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/historique",
+          "type": "lister",
+          "fonction": "Decision",
+          "sources": [
+            "pages/clm/TachesClm.jsx:18"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/commun.jsx:149"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_PRIORITE_TACHE",
+          "methode": "GET",
+          "chemin": "/reference/CLM_PRIORITE_TACHE",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/TachesAssignees.jsx:104",
+            "pages/clm/TachesAssignees.jsx:15"
+          ]
+        },
+        {
+          "id": "POST /clm/etapes/{}/commentaires",
+          "methode": "POST",
+          "chemin": "/clm/etapes/{}/commentaires",
+          "type": "ajouter",
+          "fonction": "commenter",
+          "sources": [
+            "pages/clm/TachesClm.jsx:46"
+          ]
+        },
+        {
+          "id": "POST /clm/etapes/{}/decider",
+          "methode": "POST",
+          "chemin": "/clm/etapes/{}/decider",
+          "type": "ajouter",
+          "fonction": "decider",
+          "sources": [
+            "pages/clm/TachesClm.jsx:41"
+          ]
+        },
+        {
+          "id": "POST /clm/etapes/{}/deleguer",
+          "methode": "POST",
+          "chemin": "/clm/etapes/{}/deleguer",
+          "type": "deleguer",
+          "fonction": "deleguer",
+          "sources": [
+            "pages/clm/TachesClm.jsx:51"
+          ]
+        },
+        {
+          "id": "POST /clm/etapes/{}/lien-signature",
+          "methode": "POST",
+          "chemin": "/clm/etapes/{}/lien-signature",
+          "type": "ajouter",
+          "fonction": "lienSignature",
+          "sources": [
+            "pages/clm/TachesClm.jsx:55"
+          ]
+        },
+        {
+          "id": "POST /clm/taches-assignees",
+          "methode": "POST",
+          "chemin": "/clm/taches-assignees",
+          "type": "ajouter",
+          "fonction": "creer",
+          "sources": [
+            "pages/clm/TachesAssignees.jsx:27"
+          ]
+        },
+        {
+          "id": "POST /clm/taches-assignees/{}/action",
+          "methode": "POST",
+          "chemin": "/clm/taches-assignees/{}/action",
+          "type": "ajouter",
+          "fonction": "agir",
+          "sources": [
+            "pages/clm/TachesAssignees.jsx:117"
+          ]
+        },
+        {
+          "id": "POST /clm/taches-assignees/{}/reassigner",
+          "methode": "POST",
+          "chemin": "/clm/taches-assignees/{}/reassigner",
+          "type": "reassigner",
+          "fonction": "envoyer",
+          "sources": [
+            "pages/clm/TachesAssignees.jsx:77"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/suivi",
+      "espace": "clm",
+      "composant": "SuiviClm",
+      "fichiers": [
+        "pages/clm/SuiviClm.jsx",
+        "auth.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /clm/suivi",
+          "methode": "GET",
+          "chemin": "/clm/suivi",
+          "type": "lister",
+          "fonction": "Contenu",
+          "sources": [
+            "pages/clm/SuiviClm.jsx:27"
+          ]
+        },
+        {
+          "id": "GET /clm/suivi/export",
+          "methode": "GET",
+          "chemin": "/clm/suivi/export",
+          "type": "télécharger",
+          "fonction": "exporter",
+          "sources": [
+            "pages/clm/SuiviClm.jsx:35"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/commun.jsx:149"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_UNITE",
+          "methode": "GET",
+          "chemin": "/reference/CLM_UNITE",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/SuiviClm.jsx:31"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/integrations/salesforce/trousses/{}/relancer",
+          "methode": "POST",
+          "chemin": "/clm/admin/integrations/salesforce/trousses/{}/relancer",
+          "type": "relancer",
+          "fonction": "relancerIntegration",
+          "sources": [
+            "pages/clm/SuiviClm.jsx:40"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/modeles",
+      "espace": "clm",
+      "composant": "Modeles",
+      "fichiers": [
+        "pages/clm/Modeles.jsx",
+        "i18n/I18nContext.jsx",
+        "auth.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /clm/modeles",
+          "methode": "GET",
+          "chemin": "/clm/modeles",
+          "type": "lister",
+          "fonction": "Contenu",
+          "sources": [
+            "pages/clm/Modeles.jsx:21"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/commun.jsx:149"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_TYPE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/CLM_TYPE_CONTRAT",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/Modeles.jsx:24"
+          ]
+        },
+        {
+          "id": "POST /clm/modeles",
+          "methode": "POST",
+          "chemin": "/clm/modeles",
+          "type": "ajouter",
+          "fonction": "creer",
+          "sources": [
+            "pages/clm/Modeles.jsx:38"
+          ]
+        },
+        {
+          "id": "POST /clm/modeles/{}/{}",
+          "methode": "POST",
+          "chemin": "/clm/modeles/{}/{}",
+          "type": "ajouter",
+          "fonction": "transition",
+          "sources": [
+            "pages/clm/Modeles.jsx:44"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/modeles/:id",
+      "espace": "clm",
+      "composant": "ModeleEditeur",
+      "fichiers": [
+        "pages/clm/ModeleEditeur.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx",
+        "pages/clm/OngletParcours.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /clm/modeles/{}/gabarit-word",
+          "methode": "DELETE",
+          "chemin": "/clm/modeles/{}/gabarit-word",
+          "type": "supprimer",
+          "fonction": "retirer",
+          "sources": [
+            "pages/clm/ModeleEditeur.jsx:36"
+          ]
+        },
+        {
+          "id": "GET /clm/modeles/{}",
+          "methode": "GET",
+          "chemin": "/clm/modeles/{}",
+          "type": "consulter",
+          "fonction": "charger",
+          "sources": [
+            "pages/clm/ModeleEditeur.jsx:108"
+          ]
+        },
+        {
+          "id": "GET /clm/modeles/{}/gabarit-word",
+          "methode": "GET",
+          "chemin": "/clm/modeles/{}/gabarit-word",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/clm/ModeleEditeur.jsx:38"
+          ]
+        },
+        {
+          "id": "GET /clm/modeles/{}/validation",
+          "methode": "GET",
+          "chemin": "/clm/modeles/{}/validation",
+          "type": "lister",
+          "fonction": "valider",
+          "sources": [
+            "pages/clm/ModeleEditeur.jsx:146"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/commun.jsx:149"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_CHAMP_SALESFORCE",
+          "methode": "GET",
+          "chemin": "/reference/CLM_CHAMP_SALESFORCE",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/ModeleEditeur.jsx:101"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_ROLE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/CLM_ROLE_CONTRAT",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/ModeleEditeur.jsx:102",
+            "pages/clm/OngletParcours.jsx:102"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_TYPE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/CLM_TYPE_CONTRAT",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/ModeleEditeur.jsx:100"
+          ]
+        },
+        {
+          "id": "POST /clm/modeles/{}/apercu",
+          "methode": "POST",
+          "chemin": "/clm/modeles/{}/apercu",
+          "type": "ajouter",
+          "fonction": "previsualiser",
+          "sources": [
+            "pages/clm/ModeleEditeur.jsx:153"
+          ]
+        },
+        {
+          "id": "POST /clm/modeles/{}/gabarit-word",
+          "methode": "POST",
+          "chemin": "/clm/modeles/{}/gabarit-word",
+          "type": "ajouter",
+          "fonction": "deposer",
+          "sources": [
+            "pages/clm/ModeleEditeur.jsx:31"
+          ]
+        },
+        {
+          "id": "POST /clm/modeles/{}/soumettre",
+          "methode": "POST",
+          "chemin": "/clm/modeles/{}/soumettre",
+          "type": "soumettre",
+          "fonction": "soumettre",
+          "sources": [
+            "pages/clm/ModeleEditeur.jsx:157"
+          ]
+        },
+        {
+          "id": "PUT /clm/modeles/{}",
+          "methode": "PUT",
+          "chemin": "/clm/modeles/{}",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/clm/ModeleEditeur.jsx:139"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/admin",
+      "espace": "clm",
+      "composant": "AccueilAdminClm",
+      "fichiers": [
+        "App.jsx",
+        "auth.jsx"
+      ],
+      "operations": []
+    },
+    {
+      "route": "/clm/admin/notifications",
+      "espace": "clm",
+      "composant": "NotificationsClm",
+      "fichiers": [
+        "pages/clm/AdminClm.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /clm/admin/messages",
+          "methode": "GET",
+          "chemin": "/clm/admin/messages",
+          "type": "lister",
+          "fonction": "Notifications",
+          "sources": [
+            "pages/clm/AdminClm.jsx:19"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/parametres",
+          "methode": "GET",
+          "chemin": "/clm/admin/parametres",
+          "type": "lister",
+          "fonction": "Notifications",
+          "sources": [
+            "pages/clm/AdminClm.jsx:20"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/messages/{}/test",
+          "methode": "POST",
+          "chemin": "/clm/admin/messages/{}/test",
+          "type": "ajouter",
+          "fonction": "tester",
+          "sources": [
+            "pages/clm/AdminClm.jsx:33"
+          ]
+        },
+        {
+          "id": "PUT /clm/admin/messages",
+          "methode": "PUT",
+          "chemin": "/clm/admin/messages",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/clm/AdminClm.jsx:29"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/admin/integrations",
+      "espace": "clm",
+      "composant": "IntegrationsClm",
+      "fichiers": [
+        "pages/clm/AdminClm.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /clm/admin/integrations/salesforce/configuration",
+          "methode": "DELETE",
+          "chemin": "/clm/admin/integrations/salesforce/configuration",
+          "type": "supprimer",
+          "fonction": "retablir",
+          "sources": [
+            "pages/clm/AdminClm.jsx:303"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/clients-integration",
+          "methode": "GET",
+          "chemin": "/clm/admin/clients-integration",
+          "type": "lister",
+          "fonction": "ClientsIntegration",
+          "sources": [
+            "pages/clm/AdminClm.jsx:170"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/integrations/salesforce",
+          "methode": "GET",
+          "chemin": "/clm/admin/integrations/salesforce",
+          "type": "lister",
+          "fonction": "Integrations",
+          "sources": [
+            "pages/clm/AdminClm.jsx:281"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/parametres",
+          "methode": "GET",
+          "chemin": "/clm/admin/parametres",
+          "type": "lister",
+          "fonction": "Integrations",
+          "sources": [
+            "pages/clm/AdminClm.jsx:282"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/rappels",
+          "methode": "GET",
+          "chemin": "/clm/admin/rappels",
+          "type": "lister",
+          "fonction": "ClientsIntegration",
+          "sources": [
+            "pages/clm/AdminClm.jsx:171"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/clients-integration",
+          "methode": "POST",
+          "chemin": "/clm/admin/clients-integration",
+          "type": "ajouter",
+          "fonction": "creer",
+          "sources": [
+            "pages/clm/AdminClm.jsx:182"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/clients-integration/{}/revoquer",
+          "methode": "POST",
+          "chemin": "/clm/admin/clients-integration/{}/revoquer",
+          "type": "ajouter",
+          "fonction": "revoquer",
+          "sources": [
+            "pages/clm/AdminClm.jsx:191"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/integrations/salesforce/evenements/{}/relancer",
+          "methode": "POST",
+          "chemin": "/clm/admin/integrations/salesforce/evenements/{}/relancer",
+          "type": "relancer",
+          "fonction": "relancer",
+          "sources": [
+            "pages/clm/AdminClm.jsx:297"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/integrations/salesforce/relayer",
+          "methode": "POST",
+          "chemin": "/clm/admin/integrations/salesforce/relayer",
+          "type": "ajouter",
+          "fonction": "gestionnaire en ligne (onClick)",
+          "sources": [
+            "pages/clm/AdminClm.jsx:311"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/integrations/salesforce/tester",
+          "methode": "POST",
+          "chemin": "/clm/admin/integrations/salesforce/tester",
+          "type": "ajouter",
+          "fonction": "gestionnaire en ligne (onClick)",
+          "sources": [
+            "pages/clm/AdminClm.jsx:310"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/rappels/{}/relancer",
+          "methode": "POST",
+          "chemin": "/clm/admin/rappels/{}/relancer",
+          "type": "relancer",
+          "fonction": "relancer",
+          "sources": [
+            "pages/clm/AdminClm.jsx:195"
+          ]
+        },
+        {
+          "id": "PUT /clm/admin/integrations/salesforce/configuration",
+          "methode": "PUT",
+          "chemin": "/clm/admin/integrations/salesforce/configuration",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/clm/AdminClm.jsx:299"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/admin/parametres",
+      "espace": "clm",
+      "composant": "ParametresClm",
+      "fichiers": [
+        "pages/clm/AdminClm.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /clm/admin/parametres",
+          "methode": "DELETE",
+          "chemin": "/clm/admin/parametres",
+          "type": "supprimer",
+          "fonction": "retablir",
+          "sources": [
+            "pages/clm/AdminClm.jsx:524"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/parametres",
+          "methode": "GET",
+          "chemin": "/clm/admin/parametres",
+          "type": "lister",
+          "fonction": "Parametres",
+          "sources": [
+            "pages/clm/AdminClm.jsx:502"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "PUT /clm/admin/parametres",
+          "methode": "PUT",
+          "chemin": "/clm/admin/parametres",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/clm/AdminClm.jsx:523"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/admin/listes",
+      "espace": "clm",
+      "composant": "ListesClm",
+      "fichiers": [
+        "pages/clm/AdminClm.jsx",
+        "auth.jsx",
+        "components/ReferenceManager.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /admin/reference/{}",
+          "methode": "DELETE",
+          "chemin": "/admin/reference/{}",
+          "variantes": [
+            "/admin/reference/{}",
+            "/superadmin/reference/{}"
+          ],
+          "type": "supprimer",
+          "fonction": "supprimer",
+          "sources": [
+            "components/ReferenceManager.jsx:71"
+          ]
+        },
+        {
+          "id": "GET /admin/reference",
+          "methode": "GET",
+          "chemin": "/admin/reference",
+          "variantes": [
+            "/admin/reference",
+            "/superadmin/reference"
+          ],
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/ReferenceManager.jsx:42"
+          ]
+        },
+        {
+          "id": "GET /admin/reference/categories",
+          "methode": "GET",
+          "chemin": "/admin/reference/categories",
+          "variantes": [
+            "/admin/reference/categories",
+            "/superadmin/reference/categories"
+          ],
+          "type": "lister",
+          "fonction": "ReferenceManager",
+          "sources": [
+            "components/ReferenceManager.jsx:31"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "POST /admin/reference",
+          "methode": "POST",
+          "chemin": "/admin/reference",
+          "variantes": [
+            "/admin/reference",
+            "/superadmin/reference"
+          ],
+          "type": "ajouter",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/ReferenceManager.jsx:65",
+            "components/ReferenceManager.jsx:69"
+          ]
+        },
+        {
+          "id": "PUT /admin/reference/{}",
+          "methode": "PUT",
+          "chemin": "/admin/reference/{}",
+          "variantes": [
+            "/admin/reference/{}",
+            "/superadmin/reference/{}"
+          ],
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/ReferenceManager.jsx:65",
+            "components/ReferenceManager.jsx:69"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/admin/utilisateurs",
+      "espace": "clm",
+      "composant": "UtilisateursClm",
+      "fichiers": [
+        "pages/clm/UtilisateursClm.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/Users.jsx",
+        "auth.jsx",
+        "components/Modal.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /admin/users/{}",
+          "methode": "DELETE",
+          "chemin": "/admin/users/{}",
+          "type": "supprimer",
+          "fonction": "supprimer",
+          "sources": [
+            "pages/Users.jsx:41"
+          ]
+        },
+        {
+          "id": "GET /admin/users",
+          "methode": "GET",
+          "chemin": "/admin/users",
+          "type": "lister",
+          "fonction": "modifier",
+          "sources": [
+            "pages/clm/UtilisateursClm.jsx:32",
+            "pages/Users.jsx:22"
+          ]
+        },
+        {
+          "id": "GET /admin/users/roles",
+          "methode": "GET",
+          "chemin": "/admin/users/roles",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Users.jsx:26"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "POST /admin/users",
+          "methode": "POST",
+          "chemin": "/admin/users",
+          "type": "ajouter",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/Users.jsx:36"
+          ]
+        },
+        {
+          "id": "PUT /admin/users/{}",
+          "methode": "PUT",
+          "chemin": "/admin/users/{}",
+          "type": "modifier",
+          "fonction": "modifier",
+          "sources": [
+            "pages/clm/UtilisateursClm.jsx:35",
+            "pages/Users.jsx:35"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/admin/groupes",
+      "espace": "clm",
+      "composant": "GroupesClm",
+      "fichiers": [
+        "pages/clm/UtilisateursClm.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js",
+        "pages/clm/commun.jsx",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /clm/admin/groupes/{}",
+          "methode": "DELETE",
+          "chemin": "/clm/admin/groupes/{}",
+          "type": "supprimer",
+          "fonction": "choisirUnite",
+          "sources": [
+            "pages/clm/UtilisateursClm.jsx:212"
+          ]
+        },
+        {
+          "id": "DELETE /clm/admin/groupes/{}/membres/{}",
+          "methode": "DELETE",
+          "chemin": "/clm/admin/groupes/{}/membres/{}",
+          "type": "supprimer",
+          "fonction": "gestionnaire en ligne (onClick)",
+          "sources": [
+            "pages/clm/UtilisateursClm.jsx:194"
+          ]
+        },
+        {
+          "id": "GET /clm/groupes",
+          "methode": "GET",
+          "chemin": "/clm/groupes",
+          "type": "lister",
+          "fonction": "Groupes",
+          "sources": [
+            "pages/clm/UtilisateursClm.jsx:149"
+          ]
+        },
+        {
+          "id": "GET /clm/membres",
+          "methode": "GET",
+          "chemin": "/clm/membres",
+          "type": "lister",
+          "fonction": "Groupes",
+          "sources": [
+            "pages/clm/UtilisateursClm.jsx:150"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/commun.jsx:149"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_UNITE",
+          "methode": "GET",
+          "chemin": "/reference/CLM_UNITE",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/UtilisateursClm.jsx:151"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/groupes",
+          "methode": "POST",
+          "chemin": "/clm/admin/groupes",
+          "type": "ajouter",
+          "fonction": "creer",
+          "sources": [
+            "pages/clm/UtilisateursClm.jsx:163"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/groupes/{}/membres",
+          "methode": "POST",
+          "chemin": "/clm/admin/groupes/{}/membres",
+          "type": "ajouter",
+          "fonction": "choisirUnite",
+          "sources": [
+            "pages/clm/UtilisateursClm.jsx:201"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/admin/journal",
+      "espace": "clm",
+      "composant": "JournalClm",
+      "fichiers": [
+        "pages/clm/JournalClm.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /clm/admin/journal",
+          "methode": "GET",
+          "chemin": "/clm/admin/journal",
+          "type": "lister",
+          "fonction": "Contenu",
+          "sources": [
+            "pages/clm/JournalClm.jsx:50"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/journal/export",
+          "methode": "GET",
+          "chemin": "/clm/admin/journal/export",
+          "type": "télécharger",
+          "fonction": "exporter",
+          "sources": [
+            "pages/clm/JournalClm.jsx:55"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/utilisation",
+          "methode": "GET",
+          "chemin": "/clm/admin/utilisation",
+          "type": "lister",
+          "fonction": "Utilisation",
+          "sources": [
+            "pages/clm/JournalClm.jsx:17"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/admin/conservation",
+      "espace": "clm",
+      "composant": "ConservationClm",
+      "fichiers": [
+        "pages/clm/ConservationClm.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /clm/admin/conservation/regles/{}",
+          "methode": "DELETE",
+          "chemin": "/clm/admin/conservation/regles/{}",
+          "type": "supprimer",
+          "fonction": "gestionnaire en ligne (onClick)",
+          "sources": [
+            "pages/clm/ConservationClm.jsx:83"
+          ]
+        },
+        {
+          "id": "DELETE /clm/admin/conservation/trousses/{}/gel",
+          "methode": "DELETE",
+          "chemin": "/clm/admin/conservation/trousses/{}/gel",
+          "type": "supprimer",
+          "fonction": "gestionnaire en ligne (onClick)",
+          "sources": [
+            "pages/clm/ConservationClm.jsx:158"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/conservation/detruites",
+          "methode": "GET",
+          "chemin": "/clm/admin/conservation/detruites",
+          "type": "lister",
+          "fonction": "EcranConservation",
+          "sources": [
+            "pages/clm/ConservationClm.jsx:20"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/conservation/exportation",
+          "methode": "GET",
+          "chemin": "/clm/admin/conservation/exportation",
+          "type": "télécharger",
+          "fonction": "exporter",
+          "sources": [
+            "pages/clm/ConservationClm.jsx:50"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/conservation/regles",
+          "methode": "GET",
+          "chemin": "/clm/admin/conservation/regles",
+          "type": "lister",
+          "fonction": "EcranConservation",
+          "sources": [
+            "pages/clm/ConservationClm.jsx:18"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/conservation/trousses",
+          "methode": "GET",
+          "chemin": "/clm/admin/conservation/trousses",
+          "type": "lister",
+          "fonction": "EcranConservation",
+          "sources": [
+            "pages/clm/ConservationClm.jsx:21"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/conservation/trousses/{}/certificat-destruction",
+          "methode": "GET",
+          "chemin": "/clm/admin/conservation/trousses/{}/certificat-destruction",
+          "type": "lister",
+          "fonction": "certificat",
+          "sources": [
+            "pages/clm/ConservationClm.jsx:57"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/commun.jsx:149"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_TYPE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/CLM_TYPE_CONTRAT",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/ConservationClm.jsx:17"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/conservation/trousses/{}/detruire",
+          "methode": "POST",
+          "chemin": "/clm/admin/conservation/trousses/{}/detruire",
+          "type": "ajouter",
+          "fonction": "detruire",
+          "sources": [
+            "pages/clm/ConservationClm.jsx:42"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/conservation/trousses/{}/gel",
+          "methode": "POST",
+          "chemin": "/clm/admin/conservation/trousses/{}/gel",
+          "type": "ajouter",
+          "fonction": "geler",
+          "sources": [
+            "pages/clm/ConservationClm.jsx:38"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/conservation/trousses/{}/versee",
+          "methode": "POST",
+          "chemin": "/clm/admin/conservation/trousses/{}/versee",
+          "type": "ajouter",
+          "fonction": "gestionnaire en ligne (onClick)",
+          "sources": [
+            "pages/clm/ConservationClm.jsx:162"
+          ]
+        },
+        {
+          "id": "PUT /clm/admin/conservation/regles",
+          "methode": "PUT",
+          "chemin": "/clm/admin/conservation/regles",
+          "type": "modifier",
+          "fonction": "definir",
+          "sources": [
+            "pages/clm/ConservationClm.jsx:34"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/admin/departs",
+      "espace": "clm",
+      "composant": "DepartEmploye",
+      "fichiers": [
+        "pages/clm/DepartEmploye.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /clm/admin/departs",
+          "methode": "GET",
+          "chemin": "/clm/admin/departs",
+          "type": "lister",
+          "fonction": "consulter",
+          "sources": [
+            "pages/clm/DepartEmploye.jsx:25",
+            "pages/clm/DepartEmploye.jsx:34"
+          ]
+        },
+        {
+          "id": "GET /clm/membres",
+          "methode": "GET",
+          "chemin": "/clm/membres",
+          "type": "lister",
+          "fonction": "EcranDepart",
+          "sources": [
+            "pages/clm/DepartEmploye.jsx:14"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/departs",
+          "methode": "POST",
+          "chemin": "/clm/admin/departs",
+          "type": "ajouter",
+          "fonction": "transferer",
+          "sources": [
+            "pages/clm/DepartEmploye.jsx:32"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/options",
+      "espace": "clm",
+      "composant": "OptionsClm",
+      "fichiers": [
+        "pages/clm/OptionsClm.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js",
+        "pages/clm/commun.jsx",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /clm/analyses",
+          "methode": "GET",
+          "chemin": "/clm/analyses",
+          "type": "lister",
+          "fonction": "Contenu",
+          "sources": [
+            "pages/clm/OptionsClm.jsx:16"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/commun.jsx:149"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_TYPE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/CLM_TYPE_CONTRAT",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/OptionsClm.jsx:17"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/profil",
+      "espace": "clm",
+      "composant": "Profil",
+      "fichiers": [
+        "pages/Profil.jsx",
+        "components/RepertoireDepotManager.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /profil/repertoires/{}",
+          "methode": "DELETE",
+          "chemin": "/profil/repertoires/{}",
+          "type": "supprimer",
+          "fonction": "retirer",
+          "sources": [
+            "components/RepertoireDepotManager.jsx:32"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /profil",
+          "methode": "GET",
+          "chemin": "/profil",
+          "type": "lister",
+          "fonction": "Profil",
+          "sources": [
+            "pages/Profil.jsx:19"
+          ]
+        },
+        {
+          "id": "GET /profil/repertoires",
+          "methode": "GET",
+          "chemin": "/profil/repertoires",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/RepertoireDepotManager.jsx:16"
+          ]
+        },
+        {
+          "id": "POST /profil/repertoires",
+          "methode": "POST",
+          "chemin": "/profil/repertoires",
+          "type": "ajouter",
+          "fonction": "ajouter",
+          "sources": [
+            "components/RepertoireDepotManager.jsx:23"
+          ]
+        },
+        {
+          "id": "PUT /profil",
+          "methode": "PUT",
+          "chemin": "/profil",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/Profil.jsx:28"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/securite",
+      "espace": "clm",
+      "composant": "Securite",
+      "fichiers": [
+        "pages/Securite.jsx",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /auth/me",
+          "methode": "GET",
+          "chemin": "/auth/me",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Securite.jsx:14"
+          ]
+        },
+        {
+          "id": "POST /auth/mfa/disable",
+          "methode": "POST",
+          "chemin": "/auth/mfa/disable",
+          "type": "ajouter",
+          "fonction": "desactiver",
+          "sources": [
+            "pages/Securite.jsx:36"
+          ]
+        },
+        {
+          "id": "POST /auth/mfa/question/setup",
+          "methode": "POST",
+          "chemin": "/auth/mfa/question/setup",
+          "type": "ajouter",
+          "fonction": "activerQuestion",
+          "sources": [
+            "pages/Securite.jsx:32"
+          ]
+        },
+        {
+          "id": "POST /auth/mfa/totp/enable",
+          "methode": "POST",
+          "chemin": "/auth/mfa/totp/enable",
+          "type": "ajouter",
+          "fonction": "activerTotp",
+          "sources": [
+            "pages/Securite.jsx:25"
+          ]
+        },
+        {
+          "id": "POST /auth/mfa/totp/setup",
+          "methode": "POST",
+          "chemin": "/auth/mfa/totp/setup",
+          "type": "ajouter",
+          "fonction": "demarrerTotp",
+          "sources": [
+            "pages/Securite.jsx:19"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/admin/sso",
+      "espace": "clm",
+      "composant": "SsoClm",
+      "fichiers": [
+        "pages/clm/UtilisateursClm.jsx",
+        "i18n/I18nContext.jsx",
+        "components/IntegrationOidcManager.jsx",
+        "components/IntegrationSamlManager.jsx",
+        "components/AnnuaireManager.jsx",
+        "pages/clm/commun.jsx",
+        "pages/clm/gabarit.jsx",
+        "components/ConnexionLocaleManager.jsx",
+        "components/PolitiqueSessionManager.jsx",
+        "hooks/useModules.js"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /admin/annuaire/correspondances/{}",
+          "methode": "DELETE",
+          "chemin": "/admin/annuaire/correspondances/{}",
+          "type": "supprimer",
+          "fonction": "gestionnaire en ligne (onClick)",
+          "sources": [
+            "components/AnnuaireManager.jsx:61"
+          ]
+        },
+        {
+          "id": "GET /admin/annuaire/correspondances",
+          "methode": "GET",
+          "chemin": "/admin/annuaire/correspondances",
+          "type": "lister",
+          "fonction": "AnnuaireManager",
+          "sources": [
+            "components/AnnuaireManager.jsx:17"
+          ]
+        },
+        {
+          "id": "GET /admin/annuaire/scim",
+          "methode": "GET",
+          "chemin": "/admin/annuaire/scim",
+          "type": "lister",
+          "fonction": "AnnuaireManager",
+          "sources": [
+            "components/AnnuaireManager.jsx:18"
+          ]
+        },
+        {
+          "id": "GET /admin/connexion-locale",
+          "methode": "GET",
+          "chemin": "/admin/connexion-locale",
+          "type": "lister",
+          "fonction": "ConnexionLocaleManager",
+          "sources": [
+            "components/ConnexionLocaleManager.jsx:14"
+          ]
+        },
+        {
+          "id": "GET /admin/session",
+          "methode": "GET",
+          "chemin": "/admin/session",
+          "type": "lister",
+          "fonction": "PolitiqueSessionManager",
+          "sources": [
+            "components/PolitiqueSessionManager.jsx:14"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /parametres/integration-oidc",
+          "methode": "GET",
+          "chemin": "/parametres/integration-oidc",
+          "type": "lister",
+          "fonction": "IntegrationOidcManager",
+          "sources": [
+            "components/IntegrationOidcManager.jsx:28"
+          ]
+        },
+        {
+          "id": "GET /parametres/integration-saml",
+          "methode": "GET",
+          "chemin": "/parametres/integration-saml",
+          "type": "lister",
+          "fonction": "IntegrationSamlManager",
+          "sources": [
+            "components/IntegrationSamlManager.jsx:28"
+          ]
+        },
+        {
+          "id": "POST /admin/annuaire/correspondances",
+          "methode": "POST",
+          "chemin": "/admin/annuaire/correspondances",
+          "type": "ajouter",
+          "fonction": "ajouter",
+          "sources": [
+            "components/AnnuaireManager.jsx:31"
+          ]
+        },
+        {
+          "id": "POST /admin/annuaire/scim/jeton",
+          "methode": "POST",
+          "chemin": "/admin/annuaire/scim/jeton",
+          "type": "ajouter",
+          "fonction": "genererJeton",
+          "sources": [
+            "components/AnnuaireManager.jsx:35"
+          ]
+        },
+        {
+          "id": "POST /parametres/integration-oidc/test",
+          "methode": "POST",
+          "chemin": "/parametres/integration-oidc/test",
+          "type": "ajouter",
+          "fonction": "testerDecouverte",
+          "sources": [
+            "components/IntegrationOidcManager.jsx:50"
+          ]
+        },
+        {
+          "id": "POST /parametres/integration-saml/test",
+          "methode": "POST",
+          "chemin": "/parametres/integration-saml/test",
+          "type": "ajouter",
+          "fonction": "testerConfig",
+          "sources": [
+            "components/IntegrationSamlManager.jsx:50"
+          ]
+        },
+        {
+          "id": "PUT /admin/connexion-locale",
+          "methode": "PUT",
+          "chemin": "/admin/connexion-locale",
+          "type": "modifier",
+          "fonction": "reserver",
+          "sources": [
+            "components/ConnexionLocaleManager.jsx:23"
+          ]
+        },
+        {
+          "id": "PUT /admin/connexion-locale/comptes/{}",
+          "methode": "PUT",
+          "chemin": "/admin/connexion-locale/comptes/{}",
+          "type": "modifier",
+          "fonction": "gestionnaire en ligne (onChange)",
+          "sources": [
+            "components/ConnexionLocaleManager.jsx:45"
+          ]
+        },
+        {
+          "id": "PUT /admin/session",
+          "methode": "PUT",
+          "chemin": "/admin/session",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/PolitiqueSessionManager.jsx:29"
+          ]
+        },
+        {
+          "id": "PUT /parametres/integration-oidc",
+          "methode": "PUT",
+          "chemin": "/parametres/integration-oidc",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/IntegrationOidcManager.jsx:39"
+          ]
+        },
+        {
+          "id": "PUT /parametres/integration-saml",
+          "methode": "PUT",
+          "chemin": "/parametres/integration-saml",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/IntegrationSamlManager.jsx:39"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/admin/audit",
+      "espace": "clm",
+      "composant": "Audit",
+      "fichiers": [
+        "pages/Audit.jsx",
+        "auth.jsx",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /audit",
+          "methode": "GET",
+          "chemin": "/audit",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Audit.jsx:18"
+          ]
+        },
+        {
+          "id": "GET /audit/export",
+          "methode": "GET",
+          "chemin": "/audit/export",
+          "type": "télécharger",
+          "fonction": "exporter",
+          "sources": [
+            "pages/Audit.jsx:30"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/accueil",
+      "espace": "clm",
+      "composant": "Vitrine",
+      "fichiers": [
+        "pages/Vitrine.jsx",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": []
+    },
+    {
+      "route": "/login",
+      "espace": "socle",
+      "composant": "Login",
+      "fichiers": [
+        "pages/Login.jsx",
+        "auth.jsx",
+        "i18n/I18nContext.jsx",
+        "components/LangSwitcher.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /auth/config",
+          "methode": "GET",
+          "chemin": "/auth/config",
+          "type": "lister",
+          "fonction": "Login",
+          "sources": [
+            "pages/Login.jsx:32"
+          ]
+        },
+        {
+          "id": "GET /tenants/{}/public",
+          "methode": "GET",
+          "chemin": "/tenants/{}/public",
+          "type": "lister",
+          "fonction": "Login",
+          "sources": [
+            "pages/Login.jsx:41"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/signature/:jeton",
+      "espace": "socle",
+      "composant": "SignaturePublique",
+      "fichiers": [
+        "pages/SignaturePublique.jsx",
+        "components/SignaturePad.jsx",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /signature/{}",
+          "methode": "GET",
+          "chemin": "/signature/{}",
+          "type": "consulter",
+          "fonction": "SignaturePublique",
+          "sources": [
+            "pages/SignaturePublique.jsx:21"
+          ]
+        },
+        {
+          "id": "POST /signature/{}/signer",
+          "methode": "POST",
+          "chemin": "/signature/{}/signer",
+          "type": "signer",
+          "fonction": "signer",
+          "sources": [
+            "pages/SignaturePublique.jsx:32"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/",
+      "espace": "socle",
+      "composant": "RacineRoute",
+      "fichiers": [
+        "App.jsx",
+        "auth.jsx",
+        "hooks/useModules.js",
+        "pages/Dashboard.jsx",
+        "components/RichText.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useReference.js"
+      ],
+      "operations": [
+        {
+          "id": "GET /documents",
+          "methode": "GET",
+          "chemin": "/documents",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Dashboard.jsx:22"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useReference",
+          "sources": [
+            "hooks/useReference.js:12"
+          ]
+        },
+        {
+          "id": "GET /reference/MODE_SOLLICITATION",
+          "methode": "GET",
+          "chemin": "/reference/MODE_SOLLICITATION",
+          "type": "lister",
+          "fonction": "useReference",
+          "sources": [
+            "pages/Dashboard.jsx:11"
+          ]
+        },
+        {
+          "id": "GET /reference/TYPE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/TYPE_CONTRAT",
+          "type": "lister",
+          "fonction": "useReference",
+          "sources": [
+            "pages/Dashboard.jsx:10"
+          ]
+        },
+        {
+          "id": "GET /templates",
+          "methode": "GET",
+          "chemin": "/templates",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Dashboard.jsx:25"
+          ]
+        },
+        {
+          "id": "POST /documents",
+          "methode": "POST",
+          "chemin": "/documents",
+          "type": "ajouter",
+          "fonction": "creer",
+          "sources": [
+            "pages/Dashboard.jsx:31"
+          ]
+        },
+        {
+          "id": "POST /templates/{}/instancier",
+          "methode": "POST",
+          "chemin": "/templates/{}/instancier",
+          "type": "ajouter",
+          "fonction": "instancier",
+          "sources": [
+            "pages/Dashboard.jsx:38"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clauses",
+      "espace": "socle",
+      "composant": "Clauses",
+      "fichiers": [
+        "pages/Clauses.jsx",
+        "auth.jsx",
+        "components/AiAssistant.jsx",
+        "i18n/I18nContext.jsx",
+        "components/ClauseHistorique.jsx",
+        "components/Modal.jsx",
+        "components/RichText.jsx",
+        "hooks/useReference.js"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /clauses/{}",
+          "methode": "DELETE",
+          "chemin": "/clauses/{}",
+          "type": "supprimer",
+          "fonction": "supprimer",
+          "sources": [
+            "pages/Clauses.jsx:121"
+          ]
+        },
+        {
+          "id": "GET /clauses/{}",
+          "methode": "GET",
+          "chemin": "/clauses/{}",
+          "type": "consulter",
+          "fonction": "charger",
+          "sources": [
+            "pages/Clauses.jsx:54"
+          ]
+        },
+        {
+          "id": "GET /clauses/{}/versions",
+          "methode": "GET",
+          "chemin": "/clauses/{}/versions",
+          "type": "lister",
+          "fonction": "ClauseHistorique",
+          "sources": [
+            "components/ClauseHistorique.jsx:18"
+          ]
+        },
+        {
+          "id": "GET /clauses/recherche",
+          "methode": "GET",
+          "chemin": "/clauses/recherche",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Clauses.jsx:45"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useReference",
+          "sources": [
+            "hooks/useReference.js:12"
+          ]
+        },
+        {
+          "id": "GET /reference/CATEGORIE_CLAUSE",
+          "methode": "GET",
+          "chemin": "/reference/CATEGORIE_CLAUSE",
+          "type": "lister",
+          "fonction": "useReference",
+          "sources": [
+            "pages/Clauses.jsx:31"
+          ]
+        },
+        {
+          "id": "GET /reference/MODE_SOLLICITATION",
+          "methode": "GET",
+          "chemin": "/reference/MODE_SOLLICITATION",
+          "type": "lister",
+          "fonction": "useReference",
+          "sources": [
+            "pages/Clauses.jsx:33"
+          ]
+        },
+        {
+          "id": "GET /reference/TYPE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/TYPE_CONTRAT",
+          "type": "lister",
+          "fonction": "useReference",
+          "sources": [
+            "pages/Clauses.jsx:32"
+          ]
+        },
+        {
+          "id": "POST /clauses",
+          "methode": "POST",
+          "chemin": "/clauses",
+          "type": "ajouter",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/Clauses.jsx:113"
+          ]
+        },
+        {
+          "id": "POST /clauses/{}/versions/{}/restaurer",
+          "methode": "POST",
+          "chemin": "/clauses/{}/versions/{}/restaurer",
+          "type": "restaurer",
+          "fonction": "restaurer",
+          "sources": [
+            "components/ClauseHistorique.jsx:25"
+          ]
+        },
+        {
+          "id": "POST /ia/rediger",
+          "methode": "POST",
+          "chemin": "/ia/rediger",
+          "type": "ajouter",
+          "fonction": "generer",
+          "sources": [
+            "components/AiAssistant.jsx:23"
+          ]
+        },
+        {
+          "id": "PUT /clauses/{}",
+          "methode": "PUT",
+          "chemin": "/clauses/{}",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/Clauses.jsx:112"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/dossiers",
+      "espace": "socle",
+      "composant": "Dossiers",
+      "fichiers": [
+        "pages/Dossiers.jsx",
+        "hooks/useReference.js",
+        "components/Modal.jsx",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /dossiers/{}",
+          "methode": "DELETE",
+          "chemin": "/dossiers/{}",
+          "type": "supprimer",
+          "fonction": "supprimerDossier",
+          "sources": [
+            "pages/Dossiers.jsx:88"
+          ]
+        },
+        {
+          "id": "DELETE /dossiers/{}/documents/{}",
+          "methode": "DELETE",
+          "chemin": "/dossiers/{}/documents/{}",
+          "type": "supprimer",
+          "fonction": "detacher",
+          "sources": [
+            "pages/Dossiers.jsx:110"
+          ]
+        },
+        {
+          "id": "GET /documents",
+          "methode": "GET",
+          "chemin": "/documents",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Dossiers.jsx:41"
+          ]
+        },
+        {
+          "id": "GET /dossiers",
+          "methode": "GET",
+          "chemin": "/dossiers",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Dossiers.jsx:38"
+          ]
+        },
+        {
+          "id": "GET /dossiers/{}/documents",
+          "methode": "GET",
+          "chemin": "/dossiers/{}/documents",
+          "type": "lister",
+          "fonction": "ouvrir",
+          "sources": [
+            "pages/Dossiers.jsx:47",
+            "pages/Dossiers.jsx:52"
+          ]
+        },
+        {
+          "id": "GET /dossiers/{}/rapport",
+          "methode": "GET",
+          "chemin": "/dossiers/{}/rapport",
+          "type": "lister",
+          "fonction": "ouvrir",
+          "sources": [
+            "pages/Dossiers.jsx:48",
+            "pages/Dossiers.jsx:53"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useReference",
+          "sources": [
+            "hooks/useReference.js:12"
+          ]
+        },
+        {
+          "id": "GET /reference/MODE_SOLLICITATION",
+          "methode": "GET",
+          "chemin": "/reference/MODE_SOLLICITATION",
+          "type": "lister",
+          "fonction": "useReference",
+          "sources": [
+            "pages/Dossiers.jsx:25"
+          ]
+        },
+        {
+          "id": "POST /dossiers",
+          "methode": "POST",
+          "chemin": "/dossiers",
+          "type": "ajouter",
+          "fonction": "soumettre",
+          "sources": [
+            "pages/Dossiers.jsx:65"
+          ]
+        },
+        {
+          "id": "POST /dossiers/{}/documents/{}",
+          "methode": "POST",
+          "chemin": "/dossiers/{}/documents/{}",
+          "type": "ajouter",
+          "fonction": "rattacher",
+          "sources": [
+            "pages/Dossiers.jsx:104"
+          ]
+        },
+        {
+          "id": "POST /dossiers/{}/reference-sap",
+          "methode": "POST",
+          "chemin": "/dossiers/{}/reference-sap",
+          "type": "ajouter",
+          "fonction": "transmettreSap",
+          "sources": [
+            "pages/Dossiers.jsx:115"
+          ]
+        },
+        {
+          "id": "POST /dossiers/{}/statut",
+          "methode": "POST",
+          "chemin": "/dossiers/{}/statut",
+          "type": "ajouter",
+          "fonction": "changerStatut",
+          "sources": [
+            "pages/Dossiers.jsx:96"
+          ]
+        },
+        {
+          "id": "PUT /dossiers/{}",
+          "methode": "PUT",
+          "chemin": "/dossiers/{}",
+          "type": "modifier",
+          "fonction": "soumettre",
+          "sources": [
+            "pages/Dossiers.jsx:60"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/assistant",
+      "espace": "socle",
+      "composant": "Assistant",
+      "fichiers": [
+        "pages/Assistant.jsx",
+        "hooks/useReference.js",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /dossiers",
+          "methode": "GET",
+          "chemin": "/dossiers",
+          "type": "lister",
+          "fonction": "Assistant",
+          "sources": [
+            "pages/Assistant.jsx:28"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useReference",
+          "sources": [
+            "hooks/useReference.js:12"
+          ]
+        },
+        {
+          "id": "GET /reference/TYPE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/TYPE_CONTRAT",
+          "type": "lister",
+          "fonction": "useReference",
+          "sources": [
+            "pages/Assistant.jsx:9"
+          ]
+        },
+        {
+          "id": "POST /assistant/analyser",
+          "methode": "POST",
+          "chemin": "/assistant/analyser",
+          "type": "ajouter",
+          "fonction": "analyser",
+          "sources": [
+            "pages/Assistant.jsx:32"
+          ]
+        },
+        {
+          "id": "POST /assistant/generer",
+          "methode": "POST",
+          "chemin": "/assistant/generer",
+          "type": "generer",
+          "fonction": "generer",
+          "sources": [
+            "pages/Assistant.jsx:50"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/workflows",
+      "espace": "socle",
+      "composant": "Workflows",
+      "fichiers": [
+        "pages/Workflows.jsx",
+        "auth.jsx",
+        "components/Toast.jsx",
+        "hooks/useReference.js",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /workflows/{}",
+          "methode": "DELETE",
+          "chemin": "/workflows/{}",
+          "type": "supprimer",
+          "fonction": "supprimer",
+          "sources": [
+            "pages/Workflows.jsx:65"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useReference",
+          "sources": [
+            "hooks/useReference.js:12"
+          ]
+        },
+        {
+          "id": "GET /reference/TYPE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/TYPE_CONTRAT",
+          "type": "lister",
+          "fonction": "useReference",
+          "sources": [
+            "pages/Workflows.jsx:16"
+          ]
+        },
+        {
+          "id": "GET /workflows",
+          "methode": "GET",
+          "chemin": "/workflows",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Workflows.jsx:22"
+          ]
+        },
+        {
+          "id": "POST /workflows",
+          "methode": "POST",
+          "chemin": "/workflows",
+          "type": "ajouter",
+          "fonction": "soumettre",
+          "sources": [
+            "pages/Workflows.jsx:45"
+          ]
+        },
+        {
+          "id": "PUT /workflows/{}",
+          "methode": "PUT",
+          "chemin": "/workflows/{}",
+          "type": "modifier",
+          "fonction": "soumettre",
+          "sources": [
+            "pages/Workflows.jsx:42"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/audit",
+      "espace": "socle",
+      "composant": "Audit",
+      "fichiers": [
+        "pages/Audit.jsx",
+        "auth.jsx",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /audit",
+          "methode": "GET",
+          "chemin": "/audit",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Audit.jsx:18"
+          ]
+        },
+        {
+          "id": "GET /audit/export",
+          "methode": "GET",
+          "chemin": "/audit/export",
+          "type": "télécharger",
+          "fonction": "exporter",
+          "sources": [
+            "pages/Audit.jsx:30"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/donnees",
+      "espace": "socle",
+      "composant": "DonneesIA",
+      "fichiers": [
+        "pages/DonneesIA.jsx",
+        "auth.jsx",
+        "i18n/I18nContext.jsx",
+        "components/Toast.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /ia/parametres",
+          "methode": "GET",
+          "chemin": "/ia/parametres",
+          "type": "lister",
+          "fonction": "chargerIa",
+          "sources": [
+            "pages/DonneesIA.jsx:23"
+          ]
+        },
+        {
+          "id": "GET /ia/suggestions",
+          "methode": "GET",
+          "chemin": "/ia/suggestions",
+          "type": "lister",
+          "fonction": "chargerIa",
+          "sources": [
+            "pages/DonneesIA.jsx:24"
+          ]
+        },
+        {
+          "id": "GET /reversibilite/export",
+          "methode": "GET",
+          "chemin": "/reversibilite/export",
+          "type": "télécharger",
+          "fonction": "exporterReversibilite",
+          "sources": [
+            "pages/DonneesIA.jsx:56"
+          ]
+        },
+        {
+          "id": "POST /import/clauses",
+          "methode": "POST",
+          "chemin": "/import/clauses",
+          "type": "ajouter",
+          "fonction": "importer",
+          "sources": [
+            "pages/DonneesIA.jsx:34"
+          ]
+        },
+        {
+          "id": "POST /import/word",
+          "methode": "POST",
+          "chemin": "/import/word",
+          "type": "ajouter",
+          "fonction": "importerWord",
+          "sources": [
+            "pages/DonneesIA.jsx:48"
+          ]
+        },
+        {
+          "id": "PUT /ia/parametres",
+          "methode": "PUT",
+          "chemin": "/ia/parametres",
+          "type": "modifier",
+          "fonction": "basculerIa",
+          "sources": [
+            "pages/DonneesIA.jsx:66"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/documents/:id",
+      "espace": "socle",
+      "composant": "DocumentEditor",
+      "fichiers": [
+        "pages/DocumentEditor.jsx",
+        "components/AiAssistant.jsx",
+        "i18n/I18nContext.jsx",
+        "components/DropdownMenu.jsx",
+        "components/Modal.jsx",
+        "components/RichText.jsx",
+        "components/SignaturePad.jsx",
+        "components/Toast.jsx",
+        "hooks/useReference.js"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /documents/{}/annexes/{}",
+          "methode": "DELETE",
+          "chemin": "/documents/{}/annexes/{}",
+          "type": "supprimer",
+          "fonction": "supprimerAnnexe",
+          "sources": [
+            "pages/DocumentEditor.jsx:143"
+          ]
+        },
+        {
+          "id": "DELETE /documents/{}/clauses/{}",
+          "methode": "DELETE",
+          "chemin": "/documents/{}/clauses/{}",
+          "type": "supprimer",
+          "fonction": "supprimerSection",
+          "sources": [
+            "pages/DocumentEditor.jsx:283"
+          ]
+        },
+        {
+          "id": "GET /documents/{}",
+          "methode": "GET",
+          "chemin": "/documents/{}",
+          "type": "consulter",
+          "fonction": "recharger",
+          "sources": [
+            "pages/DocumentEditor.jsx:91"
+          ]
+        },
+        {
+          "id": "GET /documents/{}/addendas",
+          "methode": "GET",
+          "chemin": "/documents/{}/addendas",
+          "type": "lister",
+          "fonction": "recharger",
+          "sources": [
+            "pages/DocumentEditor.jsx:96"
+          ]
+        },
+        {
+          "id": "GET /documents/{}/annexes",
+          "methode": "GET",
+          "chemin": "/documents/{}/annexes",
+          "type": "lister",
+          "fonction": "recharger",
+          "sources": [
+            "pages/DocumentEditor.jsx:100"
+          ]
+        },
+        {
+          "id": "GET /documents/{}/approbation",
+          "methode": "GET",
+          "chemin": "/documents/{}/approbation",
+          "type": "lister",
+          "fonction": "recharger",
+          "sources": [
+            "pages/DocumentEditor.jsx:95"
+          ]
+        },
+        {
+          "id": "GET /documents/{}/bordereau",
+          "methode": "GET",
+          "chemin": "/documents/{}/bordereau",
+          "type": "lister",
+          "fonction": "recharger",
+          "sources": [
+            "pages/DocumentEditor.jsx:101"
+          ]
+        },
+        {
+          "id": "GET /documents/{}/clauses-disponibles",
+          "methode": "GET",
+          "chemin": "/documents/{}/clauses-disponibles",
+          "type": "lister",
+          "fonction": "recharger",
+          "sources": [
+            "pages/DocumentEditor.jsx:92"
+          ]
+        },
+        {
+          "id": "GET /documents/{}/commentaires",
+          "methode": "GET",
+          "chemin": "/documents/{}/commentaires",
+          "type": "lister",
+          "fonction": "recharger",
+          "sources": [
+            "pages/DocumentEditor.jsx:93"
+          ]
+        },
+        {
+          "id": "GET /documents/{}/export/{}",
+          "methode": "GET",
+          "chemin": "/documents/{}/export/{}",
+          "type": "télécharger",
+          "fonction": "exporter",
+          "sources": [
+            "pages/DocumentEditor.jsx:199"
+          ]
+        },
+        {
+          "id": "GET /documents/{}/export/pdf/apercu-image",
+          "methode": "GET",
+          "chemin": "/documents/{}/export/pdf/apercu-image",
+          "type": "télécharger",
+          "fonction": "ouvrirApercu",
+          "sources": [
+            "pages/DocumentEditor.jsx:230"
+          ]
+        },
+        {
+          "id": "GET /documents/{}/export/seao",
+          "methode": "GET",
+          "chemin": "/documents/{}/export/seao",
+          "type": "télécharger",
+          "fonction": "exporterSeao",
+          "sources": [
+            "pages/DocumentEditor.jsx:216"
+          ]
+        },
+        {
+          "id": "GET /documents/{}/obligations",
+          "methode": "GET",
+          "chemin": "/documents/{}/obligations",
+          "type": "lister",
+          "fonction": "recharger",
+          "sources": [
+            "pages/DocumentEditor.jsx:98"
+          ]
+        },
+        {
+          "id": "GET /documents/{}/publications",
+          "methode": "GET",
+          "chemin": "/documents/{}/publications",
+          "type": "lister",
+          "fonction": "recharger",
+          "sources": [
+            "pages/DocumentEditor.jsx:94"
+          ]
+        },
+        {
+          "id": "GET /documents/{}/signataires",
+          "methode": "GET",
+          "chemin": "/documents/{}/signataires",
+          "type": "lister",
+          "fonction": "recharger",
+          "sources": [
+            "pages/DocumentEditor.jsx:99"
+          ]
+        },
+        {
+          "id": "GET /documents/{}/versions",
+          "methode": "GET",
+          "chemin": "/documents/{}/versions",
+          "type": "lister",
+          "fonction": "recharger",
+          "sources": [
+            "pages/DocumentEditor.jsx:97"
+          ]
+        },
+        {
+          "id": "GET /gabarits",
+          "methode": "GET",
+          "chemin": "/gabarits",
+          "type": "lister",
+          "fonction": "enregistrerChangement",
+          "sources": [
+            "pages/DocumentEditor.jsx:257"
+          ]
+        },
+        {
+          "id": "GET /profil/repertoires",
+          "methode": "GET",
+          "chemin": "/profil/repertoires",
+          "type": "lister",
+          "fonction": "chargerRepertoires",
+          "sources": [
+            "pages/DocumentEditor.jsx:301"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useReference",
+          "sources": [
+            "hooks/useReference.js:12"
+          ]
+        },
+        {
+          "id": "GET /reference/TYPE_OBLIGATION",
+          "methode": "GET",
+          "chemin": "/reference/TYPE_OBLIGATION",
+          "type": "lister",
+          "fonction": "useReference",
+          "sources": [
+            "pages/DocumentEditor.jsx:41"
+          ]
+        },
+        {
+          "id": "GET /versions/comparer",
+          "methode": "GET",
+          "chemin": "/versions/comparer",
+          "type": "lister",
+          "fonction": "comparer",
+          "sources": [
+            "pages/DocumentEditor.jsx:165"
+          ]
+        },
+        {
+          "id": "POST /addendas/{}/changements",
+          "methode": "POST",
+          "chemin": "/addendas/{}/changements",
+          "type": "ajouter",
+          "fonction": "enregistrerChangement",
+          "sources": [
+            "pages/DocumentEditor.jsx:249"
+          ]
+        },
+        {
+          "id": "POST /addendas/{}/reintegrer",
+          "methode": "POST",
+          "chemin": "/addendas/{}/reintegrer",
+          "type": "ajouter",
+          "fonction": "reintegrerAddenda",
+          "sources": [
+            "pages/DocumentEditor.jsx:240"
+          ]
+        },
+        {
+          "id": "POST /documents/{}/addendas",
+          "methode": "POST",
+          "chemin": "/documents/{}/addendas",
+          "type": "ajouter",
+          "fonction": "soumettreModale",
+          "sources": [
+            "pages/DocumentEditor.jsx:133"
+          ]
+        },
+        {
+          "id": "POST /documents/{}/annexes",
+          "methode": "POST",
+          "chemin": "/documents/{}/annexes",
+          "type": "ajouter",
+          "fonction": "soumettreModale",
+          "sources": [
+            "pages/DocumentEditor.jsx:134"
+          ]
+        },
+        {
+          "id": "POST /documents/{}/approbation",
+          "methode": "POST",
+          "chemin": "/documents/{}/approbation",
+          "type": "ajouter",
+          "fonction": "demarrerApprobation",
+          "sources": [
+            "pages/DocumentEditor.jsx:328"
+          ]
+        },
+        {
+          "id": "POST /documents/{}/assembler",
+          "methode": "POST",
+          "chemin": "/documents/{}/assembler",
+          "type": "assembler",
+          "fonction": "assembler",
+          "sources": [
+            "pages/DocumentEditor.jsx:263"
+          ]
+        },
+        {
+          "id": "POST /documents/{}/clauses",
+          "methode": "POST",
+          "chemin": "/documents/{}/clauses",
+          "type": "ajouter",
+          "fonction": "enregistrerRedaction",
+          "sources": [
+            "pages/DocumentEditor.jsx:277"
+          ]
+        },
+        {
+          "id": "POST /documents/{}/commentaires",
+          "methode": "POST",
+          "chemin": "/documents/{}/commentaires",
+          "type": "ajouter",
+          "fonction": "commenter",
+          "sources": [
+            "pages/DocumentEditor.jsx:290"
+          ]
+        },
+        {
+          "id": "POST /documents/{}/commentaires/{}/resolution",
+          "methode": "POST",
+          "chemin": "/documents/{}/commentaires/{}/resolution",
+          "type": "ajouter",
+          "fonction": "resoudreCommentaire",
+          "sources": [
+            "pages/DocumentEditor.jsx:296"
+          ]
+        },
+        {
+          "id": "POST /documents/{}/obligations",
+          "methode": "POST",
+          "chemin": "/documents/{}/obligations",
+          "type": "ajouter",
+          "fonction": "soumettreModale",
+          "sources": [
+            "pages/DocumentEditor.jsx:131"
+          ]
+        },
+        {
+          "id": "POST /documents/{}/publications",
+          "methode": "POST",
+          "chemin": "/documents/{}/publications",
+          "type": "ajouter",
+          "fonction": "publier",
+          "sources": [
+            "pages/DocumentEditor.jsx:320"
+          ]
+        },
+        {
+          "id": "POST /documents/{}/signataires",
+          "methode": "POST",
+          "chemin": "/documents/{}/signataires",
+          "type": "ajouter",
+          "fonction": "soumettreModale",
+          "sources": [
+            "pages/DocumentEditor.jsx:132"
+          ]
+        },
+        {
+          "id": "POST /documents/{}/signature/demarrer",
+          "methode": "POST",
+          "chemin": "/documents/{}/signature/demarrer",
+          "type": "demarrer",
+          "fonction": "demarrerSignature",
+          "sources": [
+            "pages/DocumentEditor.jsx:172"
+          ]
+        },
+        {
+          "id": "POST /documents/{}/versions",
+          "methode": "POST",
+          "chemin": "/documents/{}/versions",
+          "type": "ajouter",
+          "fonction": "soumettreModale",
+          "sources": [
+            "pages/DocumentEditor.jsx:130"
+          ]
+        },
+        {
+          "id": "POST /documents/approbation/{}/decision",
+          "methode": "POST",
+          "chemin": "/documents/approbation/{}/decision",
+          "type": "ajouter",
+          "fonction": "decider",
+          "sources": [
+            "pages/DocumentEditor.jsx:332"
+          ]
+        },
+        {
+          "id": "POST /ia/rediger",
+          "methode": "POST",
+          "chemin": "/ia/rediger",
+          "type": "ajouter",
+          "fonction": "generer",
+          "sources": [
+            "components/AiAssistant.jsx:23"
+          ]
+        },
+        {
+          "id": "POST /obligations/{}/completer",
+          "methode": "POST",
+          "chemin": "/obligations/{}/completer",
+          "type": "ajouter",
+          "fonction": "completerObligation",
+          "sources": [
+            "pages/DocumentEditor.jsx:169"
+          ]
+        },
+        {
+          "id": "POST /profil/repertoires",
+          "methode": "POST",
+          "chemin": "/profil/repertoires",
+          "type": "ajouter",
+          "fonction": "enregistrerRepertoire",
+          "sources": [
+            "pages/DocumentEditor.jsx:307"
+          ]
+        },
+        {
+          "id": "POST /signature/{}/signer",
+          "methode": "POST",
+          "chemin": "/signature/{}/signer",
+          "type": "signer",
+          "fonction": "signerManuel",
+          "sources": [
+            "pages/DocumentEditor.jsx:182"
+          ]
+        },
+        {
+          "id": "PUT /documents/{}/bordereau",
+          "methode": "PUT",
+          "chemin": "/documents/{}/bordereau",
+          "type": "modifier",
+          "fonction": "enregistrerBordereau",
+          "sources": [
+            "pages/DocumentEditor.jsx:155"
+          ]
+        },
+        {
+          "id": "PUT /documents/{}/clauses/{}",
+          "methode": "PUT",
+          "chemin": "/documents/{}/clauses/{}",
+          "type": "modifier",
+          "fonction": "enregistrerRedaction",
+          "sources": [
+            "pages/DocumentEditor.jsx:276"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/recherche",
+      "espace": "socle",
+      "composant": "Search",
+      "fichiers": [
+        "pages/Search.jsx",
+        "auth.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useReference.js",
+        "components/Modal.jsx",
+        "components/RichText.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /clauses/{}",
+          "methode": "DELETE",
+          "chemin": "/clauses/{}",
+          "type": "supprimer",
+          "fonction": "supprimer",
+          "sources": [
+            "pages/Search.jsx:47"
+          ]
+        },
+        {
+          "id": "DELETE /documents/{}",
+          "methode": "DELETE",
+          "chemin": "/documents/{}",
+          "type": "supprimer",
+          "fonction": "supprimer",
+          "sources": [
+            "pages/Search.jsx:47"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useReference",
+          "sources": [
+            "hooks/useReference.js:12"
+          ]
+        },
+        {
+          "id": "GET /reference/TYPE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/TYPE_CONTRAT",
+          "type": "lister",
+          "fonction": "useReference",
+          "sources": [
+            "pages/Search.jsx:15"
+          ]
+        },
+        {
+          "id": "GET /search",
+          "methode": "GET",
+          "chemin": "/search",
+          "type": "lister",
+          "fonction": "rechercher",
+          "sources": [
+            "pages/Search.jsx:41"
+          ]
+        },
+        {
+          "id": "GET /search/thematiques",
+          "methode": "GET",
+          "chemin": "/search/thematiques",
+          "type": "lister",
+          "fonction": "Search",
+          "sources": [
+            "pages/Search.jsx:31"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/tableau-de-bord",
+      "espace": "socle",
+      "composant": "Stats",
+      "fichiers": [
+        "pages/Stats.jsx",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /obligations/a-venir",
+          "methode": "GET",
+          "chemin": "/obligations/a-venir",
+          "type": "lister",
+          "fonction": "Stats",
+          "sources": [
+            "pages/Stats.jsx:31"
+          ]
+        },
+        {
+          "id": "GET /stats",
+          "methode": "GET",
+          "chemin": "/stats",
+          "type": "lister",
+          "fonction": "Stats",
+          "sources": [
+            "pages/Stats.jsx:30"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/rapports",
+      "espace": "socle",
+      "composant": "Rapports",
+      "fichiers": [
+        "pages/Rapports.jsx",
+        "auth.jsx",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /rapports/suivi",
+          "methode": "GET",
+          "chemin": "/rapports/suivi",
+          "type": "lister",
+          "fonction": "Rapports",
+          "sources": [
+            "pages/Rapports.jsx:12"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/chat-ia",
+      "espace": "socle",
+      "composant": "ChatIA",
+      "fichiers": [
+        "pages/ChatIA.jsx",
+        "components/RichText.jsx",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /ia/knowledge/{}",
+          "methode": "DELETE",
+          "chemin": "/ia/knowledge/{}",
+          "type": "supprimer",
+          "fonction": "supprimerDoc",
+          "sources": [
+            "pages/ChatIA.jsx:42"
+          ]
+        },
+        {
+          "id": "GET /ia/knowledge",
+          "methode": "GET",
+          "chemin": "/ia/knowledge",
+          "type": "lister",
+          "fonction": "chargerKnowledge",
+          "sources": [
+            "pages/ChatIA.jsx:17"
+          ]
+        },
+        {
+          "id": "POST /ia/chat",
+          "methode": "POST",
+          "chemin": "/ia/chat",
+          "type": "ajouter",
+          "fonction": "envoyer",
+          "sources": [
+            "pages/ChatIA.jsx:28"
+          ]
+        },
+        {
+          "id": "POST /ia/knowledge",
+          "methode": "POST",
+          "chemin": "/ia/knowledge",
+          "type": "ajouter",
+          "fonction": "ajouterDoc",
+          "sources": [
+            "pages/ChatIA.jsx:38"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/simulateur",
+      "espace": "socle",
+      "composant": "SimulateurDepots",
+      "fichiers": [
+        "pages/SimulateurDepots.jsx",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /simulateur/depots",
+          "methode": "GET",
+          "chemin": "/simulateur/depots",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/SimulateurDepots.jsx:26"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/utilisateurs",
+      "espace": "socle",
+      "composant": "Users",
+      "fichiers": [
+        "pages/Users.jsx",
+        "auth.jsx",
+        "components/Modal.jsx",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /admin/users/{}",
+          "methode": "DELETE",
+          "chemin": "/admin/users/{}",
+          "type": "supprimer",
+          "fonction": "supprimer",
+          "sources": [
+            "pages/Users.jsx:41"
+          ]
+        },
+        {
+          "id": "GET /admin/users",
+          "methode": "GET",
+          "chemin": "/admin/users",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Users.jsx:22"
+          ]
+        },
+        {
+          "id": "GET /admin/users/roles",
+          "methode": "GET",
+          "chemin": "/admin/users/roles",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Users.jsx:26"
+          ]
+        },
+        {
+          "id": "POST /admin/users",
+          "methode": "POST",
+          "chemin": "/admin/users",
+          "type": "ajouter",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/Users.jsx:36"
+          ]
+        },
+        {
+          "id": "PUT /admin/users/{}",
+          "methode": "PUT",
+          "chemin": "/admin/users/{}",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/Users.jsx:35"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/vie-privee",
+      "espace": "socle",
+      "composant": "VieePrivee",
+      "fichiers": [
+        "pages/VieePrivee.jsx",
+        "components/Modal.jsx",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /loi25/demandes",
+          "methode": "GET",
+          "chemin": "/loi25/demandes",
+          "type": "lister",
+          "fonction": "chargerRegistre",
+          "sources": [
+            "pages/VieePrivee.jsx:24"
+          ]
+        },
+        {
+          "id": "POST /loi25/acces",
+          "methode": "POST",
+          "chemin": "/loi25/acces",
+          "type": "ajouter",
+          "fonction": "consulter",
+          "sources": [
+            "pages/VieePrivee.jsx:30"
+          ]
+        },
+        {
+          "id": "POST /loi25/effacement",
+          "methode": "POST",
+          "chemin": "/loi25/effacement",
+          "type": "ajouter",
+          "fonction": "effacer",
+          "sources": [
+            "pages/VieePrivee.jsx:42"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/messagerie",
+      "espace": "socle",
+      "composant": "Messagerie",
+      "fichiers": [
+        "pages/Messagerie.jsx",
+        "auth.jsx",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /messagerie/conversations",
+          "methode": "GET",
+          "chemin": "/messagerie/conversations",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Messagerie.jsx:24"
+          ]
+        },
+        {
+          "id": "GET /messagerie/conversations/{}",
+          "methode": "GET",
+          "chemin": "/messagerie/conversations/{}",
+          "type": "consulter",
+          "fonction": "ouvrir",
+          "sources": [
+            "pages/Messagerie.jsx:34"
+          ]
+        },
+        {
+          "id": "POST /messagerie/conversations",
+          "methode": "POST",
+          "chemin": "/messagerie/conversations",
+          "type": "ajouter",
+          "fonction": "creer",
+          "sources": [
+            "pages/Messagerie.jsx:38"
+          ]
+        },
+        {
+          "id": "POST /messagerie/conversations/{}/messages",
+          "methode": "POST",
+          "chemin": "/messagerie/conversations/{}/messages",
+          "type": "ajouter",
+          "fonction": "repondre",
+          "sources": [
+            "pages/Messagerie.jsx:42"
+          ]
+        },
+        {
+          "id": "POST /messagerie/conversations/{}/participants",
+          "methode": "POST",
+          "chemin": "/messagerie/conversations/{}/participants",
+          "type": "ajouter",
+          "fonction": "ajouter",
+          "sources": [
+            "pages/Messagerie.jsx:46"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/tableaux-de-bord",
+      "espace": "socle",
+      "composant": "TableauxBord",
+      "fichiers": [
+        "pages/TableauxBord.jsx",
+        "components/GraphiqueIndicateur.jsx",
+        "i18n/I18nContext.jsx",
+        "components/Modal.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /rapport/tableaux-de-bord/{}",
+          "methode": "DELETE",
+          "chemin": "/rapport/tableaux-de-bord/{}",
+          "type": "supprimer",
+          "fonction": "supprimer",
+          "sources": [
+            "pages/TableauxBord.jsx:43"
+          ]
+        },
+        {
+          "id": "GET /catalogue",
+          "methode": "GET",
+          "chemin": "/catalogue",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/TableauxBord.jsx:27"
+          ]
+        },
+        {
+          "id": "GET /rapport/tableaux-de-bord",
+          "methode": "GET",
+          "chemin": "/rapport/tableaux-de-bord",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/TableauxBord.jsx:24"
+          ]
+        },
+        {
+          "id": "GET /rapport/tableaux-de-bord/{}",
+          "methode": "GET",
+          "chemin": "/rapport/tableaux-de-bord/{}",
+          "type": "consulter",
+          "fonction": "ouvrir",
+          "sources": [
+            "pages/TableauxBord.jsx:32"
+          ]
+        },
+        {
+          "id": "POST /rapport/tableaux-de-bord",
+          "methode": "POST",
+          "chemin": "/rapport/tableaux-de-bord",
+          "type": "ajouter",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/TableauxBord.jsx:38"
+          ]
+        },
+        {
+          "id": "PUT /rapport/tableaux-de-bord/{}",
+          "methode": "PUT",
+          "chemin": "/rapport/tableaux-de-bord/{}",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/TableauxBord.jsx:38"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/banque-heures",
+      "espace": "socle",
+      "composant": "BanqueHeures",
+      "fichiers": [
+        "pages/BanqueHeures.jsx",
+        "components/ReleveBanque.jsx",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /soutien/banque-heures",
+          "methode": "GET",
+          "chemin": "/soutien/banque-heures",
+          "type": "lister",
+          "fonction": "BanqueHeures",
+          "sources": [
+            "pages/BanqueHeures.jsx:14"
+          ]
+        },
+        {
+          "id": "GET /soutien/banque-heures/{}",
+          "methode": "GET",
+          "chemin": "/soutien/banque-heures/{}",
+          "type": "consulter",
+          "fonction": "BanqueHeures",
+          "sources": [
+            "pages/BanqueHeures.jsx:16",
+            "pages/BanqueHeures.jsx:38"
+          ]
+        },
+        {
+          "id": "GET /soutien/banque-heures/{}/releve.csv",
+          "methode": "GET",
+          "chemin": "/soutien/banque-heures/{}/releve.csv",
+          "type": "télécharger",
+          "fonction": "releve",
+          "sources": [
+            "pages/BanqueHeures.jsx:22"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/gabarits",
+      "espace": "socle",
+      "composant": "Gabarits",
+      "fichiers": [
+        "pages/Gabarits.jsx",
+        "auth.jsx",
+        "components/GabaritManager.jsx",
+        "components/Modal.jsx",
+        "i18n/I18nContext.jsx",
+        "components/Toast.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /gabarits/{}",
+          "methode": "DELETE",
+          "chemin": "/gabarits/{}",
+          "type": "supprimer",
+          "fonction": "confirmerSuppression",
+          "sources": [
+            "components/GabaritManager.jsx:69"
+          ]
+        },
+        {
+          "id": "GET /gabarits",
+          "methode": "GET",
+          "chemin": "/gabarits",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/GabaritManager.jsx:42"
+          ]
+        },
+        {
+          "id": "POST /gabarits",
+          "methode": "POST",
+          "chemin": "/gabarits",
+          "type": "ajouter",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/GabaritManager.jsx:96"
+          ]
+        },
+        {
+          "id": "POST /gabarits/{}/cloner",
+          "methode": "POST",
+          "chemin": "/gabarits/{}/cloner",
+          "type": "ajouter",
+          "fonction": "cloner",
+          "sources": [
+            "components/GabaritManager.jsx:61"
+          ]
+        },
+        {
+          "id": "PUT /gabarits/{}",
+          "methode": "PUT",
+          "chemin": "/gabarits/{}",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/GabaritManager.jsx:95"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/templates",
+      "espace": "socle",
+      "composant": "Templates",
+      "fichiers": [
+        "pages/Templates.jsx",
+        "auth.jsx",
+        "components/TemplateManager.jsx",
+        "components/Modal.jsx",
+        "i18n/I18nContext.jsx",
+        "components/RichText.jsx",
+        "components/Toast.jsx",
+        "hooks/useReference.js"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /templates/{}",
+          "methode": "DELETE",
+          "chemin": "/templates/{}",
+          "type": "supprimer",
+          "fonction": "confirmerSuppression",
+          "sources": [
+            "components/TemplateManager.jsx:56"
+          ]
+        },
+        {
+          "id": "GET /gabarits",
+          "methode": "GET",
+          "chemin": "/gabarits",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/TemplateManager.jsx:42"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useReference",
+          "sources": [
+            "hooks/useReference.js:12"
+          ]
+        },
+        {
+          "id": "GET /reference/MODE_SOLLICITATION",
+          "methode": "GET",
+          "chemin": "/reference/MODE_SOLLICITATION",
+          "type": "lister",
+          "fonction": "useReference",
+          "sources": [
+            "components/TemplateManager.jsx:31"
+          ]
+        },
+        {
+          "id": "GET /reference/TYPE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/TYPE_CONTRAT",
+          "type": "lister",
+          "fonction": "useReference",
+          "sources": [
+            "components/TemplateManager.jsx:30"
+          ]
+        },
+        {
+          "id": "GET /templates",
+          "methode": "GET",
+          "chemin": "/templates",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/TemplateManager.jsx:38"
+          ]
+        },
+        {
+          "id": "POST /templates",
+          "methode": "POST",
+          "chemin": "/templates",
+          "type": "ajouter",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/TemplateManager.jsx:74"
+          ]
+        },
+        {
+          "id": "PUT /templates/{}",
+          "methode": "PUT",
+          "chemin": "/templates/{}",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/TemplateManager.jsx:73"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/parametres",
+      "espace": "socle",
+      "composant": "Parametres",
+      "fichiers": [
+        "pages/Parametres.jsx",
+        "auth.jsx",
+        "hooks/useModules.js",
+        "i18n/I18nContext.jsx",
+        "components/ReferenceManager.jsx",
+        "components/ModeleDocumentManager.jsx",
+        "components/IntegrationM365Manager.jsx",
+        "components/IntegrationSapManager.jsx",
+        "components/IntegrationOidcManager.jsx",
+        "components/IntegrationSamlManager.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /admin/reference/{}",
+          "methode": "DELETE",
+          "chemin": "/admin/reference/{}",
+          "variantes": [
+            "/admin/reference/{}",
+            "/superadmin/reference/{}"
+          ],
+          "type": "supprimer",
+          "fonction": "supprimer",
+          "sources": [
+            "components/ReferenceManager.jsx:71"
+          ]
+        },
+        {
+          "id": "GET /admin/reference",
+          "methode": "GET",
+          "chemin": "/admin/reference",
+          "variantes": [
+            "/admin/reference",
+            "/superadmin/reference"
+          ],
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/ReferenceManager.jsx:42"
+          ]
+        },
+        {
+          "id": "GET /admin/reference/categories",
+          "methode": "GET",
+          "chemin": "/admin/reference/categories",
+          "variantes": [
+            "/admin/reference/categories",
+            "/superadmin/reference/categories"
+          ],
+          "type": "lister",
+          "fonction": "ReferenceManager",
+          "sources": [
+            "components/ReferenceManager.jsx:31"
+          ]
+        },
+        {
+          "id": "GET /modele-document",
+          "methode": "GET",
+          "chemin": "/modele-document",
+          "variantes": [
+            "/modele-document",
+            "/superadmin/tenants/{}/modele-document"
+          ],
+          "type": "lister",
+          "fonction": "baseUrl",
+          "sources": [
+            "components/ModeleDocumentManager.jsx:34"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /parametres/integration-m365",
+          "methode": "GET",
+          "chemin": "/parametres/integration-m365",
+          "type": "lister",
+          "fonction": "IntegrationM365Manager",
+          "sources": [
+            "components/IntegrationM365Manager.jsx:25"
+          ]
+        },
+        {
+          "id": "GET /parametres/integration-oidc",
+          "methode": "GET",
+          "chemin": "/parametres/integration-oidc",
+          "type": "lister",
+          "fonction": "IntegrationOidcManager",
+          "sources": [
+            "components/IntegrationOidcManager.jsx:28"
+          ]
+        },
+        {
+          "id": "GET /parametres/integration-saml",
+          "methode": "GET",
+          "chemin": "/parametres/integration-saml",
+          "type": "lister",
+          "fonction": "IntegrationSamlManager",
+          "sources": [
+            "components/IntegrationSamlManager.jsx:28"
+          ]
+        },
+        {
+          "id": "GET /parametres/integration-sap",
+          "methode": "GET",
+          "chemin": "/parametres/integration-sap",
+          "type": "lister",
+          "fonction": "IntegrationSapManager",
+          "sources": [
+            "components/IntegrationSapManager.jsx:24"
+          ]
+        },
+        {
+          "id": "GET /superadmin/tenants",
+          "methode": "GET",
+          "chemin": "/superadmin/tenants",
+          "type": "lister",
+          "fonction": "baseUrl",
+          "sources": [
+            "components/ModeleDocumentManager.jsx:29"
+          ]
+        },
+        {
+          "id": "POST /admin/reference",
+          "methode": "POST",
+          "chemin": "/admin/reference",
+          "variantes": [
+            "/admin/reference",
+            "/superadmin/reference"
+          ],
+          "type": "ajouter",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/ReferenceManager.jsx:65",
+            "components/ReferenceManager.jsx:69"
+          ]
+        },
+        {
+          "id": "POST /parametres/integration-m365/test",
+          "methode": "POST",
+          "chemin": "/parametres/integration-m365/test",
+          "type": "ajouter",
+          "fonction": "testerConnexion",
+          "sources": [
+            "components/IntegrationM365Manager.jsx:47"
+          ]
+        },
+        {
+          "id": "POST /parametres/integration-oidc/test",
+          "methode": "POST",
+          "chemin": "/parametres/integration-oidc/test",
+          "type": "ajouter",
+          "fonction": "testerDecouverte",
+          "sources": [
+            "components/IntegrationOidcManager.jsx:50"
+          ]
+        },
+        {
+          "id": "POST /parametres/integration-saml/test",
+          "methode": "POST",
+          "chemin": "/parametres/integration-saml/test",
+          "type": "ajouter",
+          "fonction": "testerConfig",
+          "sources": [
+            "components/IntegrationSamlManager.jsx:50"
+          ]
+        },
+        {
+          "id": "POST /parametres/integration-sap/test",
+          "methode": "POST",
+          "chemin": "/parametres/integration-sap/test",
+          "type": "ajouter",
+          "fonction": "testerConnexion",
+          "sources": [
+            "components/IntegrationSapManager.jsx:46"
+          ]
+        },
+        {
+          "id": "PUT /admin/reference/{}",
+          "methode": "PUT",
+          "chemin": "/admin/reference/{}",
+          "variantes": [
+            "/admin/reference/{}",
+            "/superadmin/reference/{}"
+          ],
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/ReferenceManager.jsx:65",
+            "components/ReferenceManager.jsx:69"
+          ]
+        },
+        {
+          "id": "PUT /modele-document",
+          "methode": "PUT",
+          "chemin": "/modele-document",
+          "variantes": [
+            "/modele-document",
+            "/superadmin/tenants/{}/modele-document"
+          ],
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/ModeleDocumentManager.jsx:52"
+          ]
+        },
+        {
+          "id": "PUT /parametres/integration-m365",
+          "methode": "PUT",
+          "chemin": "/parametres/integration-m365",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/IntegrationM365Manager.jsx:36"
+          ]
+        },
+        {
+          "id": "PUT /parametres/integration-oidc",
+          "methode": "PUT",
+          "chemin": "/parametres/integration-oidc",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/IntegrationOidcManager.jsx:39"
+          ]
+        },
+        {
+          "id": "PUT /parametres/integration-saml",
+          "methode": "PUT",
+          "chemin": "/parametres/integration-saml",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/IntegrationSamlManager.jsx:39"
+          ]
+        },
+        {
+          "id": "PUT /parametres/integration-sap",
+          "methode": "PUT",
+          "chemin": "/parametres/integration-sap",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/IntegrationSapManager.jsx:35"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/securite",
+      "espace": "socle",
+      "composant": "Securite",
+      "fichiers": [
+        "pages/Securite.jsx",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /auth/me",
+          "methode": "GET",
+          "chemin": "/auth/me",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Securite.jsx:14"
+          ]
+        },
+        {
+          "id": "POST /auth/mfa/disable",
+          "methode": "POST",
+          "chemin": "/auth/mfa/disable",
+          "type": "ajouter",
+          "fonction": "desactiver",
+          "sources": [
+            "pages/Securite.jsx:36"
+          ]
+        },
+        {
+          "id": "POST /auth/mfa/question/setup",
+          "methode": "POST",
+          "chemin": "/auth/mfa/question/setup",
+          "type": "ajouter",
+          "fonction": "activerQuestion",
+          "sources": [
+            "pages/Securite.jsx:32"
+          ]
+        },
+        {
+          "id": "POST /auth/mfa/totp/enable",
+          "methode": "POST",
+          "chemin": "/auth/mfa/totp/enable",
+          "type": "ajouter",
+          "fonction": "activerTotp",
+          "sources": [
+            "pages/Securite.jsx:25"
+          ]
+        },
+        {
+          "id": "POST /auth/mfa/totp/setup",
+          "methode": "POST",
+          "chemin": "/auth/mfa/totp/setup",
+          "type": "ajouter",
+          "fonction": "demarrerTotp",
+          "sources": [
+            "pages/Securite.jsx:19"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/profil",
+      "espace": "socle",
+      "composant": "Profil",
+      "fichiers": [
+        "pages/Profil.jsx",
+        "components/RepertoireDepotManager.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /profil/repertoires/{}",
+          "methode": "DELETE",
+          "chemin": "/profil/repertoires/{}",
+          "type": "supprimer",
+          "fonction": "retirer",
+          "sources": [
+            "components/RepertoireDepotManager.jsx:32"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /profil",
+          "methode": "GET",
+          "chemin": "/profil",
+          "type": "lister",
+          "fonction": "Profil",
+          "sources": [
+            "pages/Profil.jsx:19"
+          ]
+        },
+        {
+          "id": "GET /profil/repertoires",
+          "methode": "GET",
+          "chemin": "/profil/repertoires",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/RepertoireDepotManager.jsx:16"
+          ]
+        },
+        {
+          "id": "POST /profil/repertoires",
+          "methode": "POST",
+          "chemin": "/profil/repertoires",
+          "type": "ajouter",
+          "fonction": "ajouter",
+          "sources": [
+            "components/RepertoireDepotManager.jsx:23"
+          ]
+        },
+        {
+          "id": "PUT /profil",
+          "methode": "PUT",
+          "chemin": "/profil",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/Profil.jsx:28"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/api-docs",
+      "espace": "socle",
+      "composant": "ApiDocs",
+      "fichiers": [
+        "pages/ApiDocs.jsx",
+        "auth.jsx",
+        "i18n/I18nContext.jsx"
+      ],
+      "operations": []
+    },
+    {
+      "route": "/superadmin",
+      "espace": "socle",
+      "composant": "Superadmin",
+      "fichiers": [
+        "pages/Superadmin.jsx",
+        "auth.jsx",
+        "components/ReferenceManager.jsx",
+        "i18n/I18nContext.jsx",
+        "components/ModeleDocumentManager.jsx",
+        "components/TarifTenantManager.jsx",
+        "components/GabaritManager.jsx",
+        "components/Modal.jsx",
+        "components/Toast.jsx",
+        "components/ModuleManager.jsx",
+        "components/BanqueHeuresManager.jsx",
+        "components/ReleveBanque.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /admin/reference/{}",
+          "methode": "DELETE",
+          "chemin": "/admin/reference/{}",
+          "variantes": [
+            "/admin/reference/{}",
+            "/superadmin/reference/{}"
+          ],
+          "type": "supprimer",
+          "fonction": "supprimer",
+          "sources": [
+            "components/ReferenceManager.jsx:71"
+          ]
+        },
+        {
+          "id": "DELETE /gabarits/{}",
+          "methode": "DELETE",
+          "chemin": "/gabarits/{}",
+          "type": "supprimer",
+          "fonction": "confirmerSuppression",
+          "sources": [
+            "components/GabaritManager.jsx:69"
+          ]
+        },
+        {
+          "id": "GET /admin/reference",
+          "methode": "GET",
+          "chemin": "/admin/reference",
+          "variantes": [
+            "/admin/reference",
+            "/superadmin/reference"
+          ],
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/ReferenceManager.jsx:42"
+          ]
+        },
+        {
+          "id": "GET /admin/reference/categories",
+          "methode": "GET",
+          "chemin": "/admin/reference/categories",
+          "variantes": [
+            "/admin/reference/categories",
+            "/superadmin/reference/categories"
+          ],
+          "type": "lister",
+          "fonction": "ReferenceManager",
+          "sources": [
+            "components/ReferenceManager.jsx:31"
+          ]
+        },
+        {
+          "id": "GET /gabarits",
+          "methode": "GET",
+          "chemin": "/gabarits",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/GabaritManager.jsx:42"
+          ]
+        },
+        {
+          "id": "GET /modele-document",
+          "methode": "GET",
+          "chemin": "/modele-document",
+          "variantes": [
+            "/modele-document",
+            "/superadmin/tenants/{}/modele-document"
+          ],
+          "type": "lister",
+          "fonction": "baseUrl",
+          "sources": [
+            "components/ModeleDocumentManager.jsx:34"
+          ]
+        },
+        {
+          "id": "GET /superadmin/tenants",
+          "methode": "GET",
+          "chemin": "/superadmin/tenants",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Superadmin.jsx:25",
+            "components/ModeleDocumentManager.jsx:29",
+            "components/TarifTenantManager.jsx:29",
+            "components/ModuleManager.jsx:20"
+          ]
+        },
+        {
+          "id": "GET /superadmin/tenants/{}/banques-heures",
+          "methode": "GET",
+          "chemin": "/superadmin/tenants/{}/banques-heures",
+          "type": "lister",
+          "fonction": "choisirTenant",
+          "sources": [
+            "components/BanqueHeuresManager.jsx:22",
+            "components/BanqueHeuresManager.jsx:26"
+          ]
+        },
+        {
+          "id": "GET /superadmin/tenants/{}/banques-heures/{}",
+          "methode": "GET",
+          "chemin": "/superadmin/tenants/{}/banques-heures/{}",
+          "type": "consulter",
+          "fonction": "gestionnaire en ligne (onClick)",
+          "sources": [
+            "components/BanqueHeuresManager.jsx:45"
+          ]
+        },
+        {
+          "id": "GET /superadmin/tenants/{}/modules",
+          "methode": "GET",
+          "chemin": "/superadmin/tenants/{}/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/ModuleManager.jsx:24"
+          ]
+        },
+        {
+          "id": "GET /superadmin/tenants/{}/tarif",
+          "methode": "GET",
+          "chemin": "/superadmin/tenants/{}/tarif",
+          "type": "lister",
+          "fonction": "TarifTenantManager",
+          "sources": [
+            "components/TarifTenantManager.jsx:35"
+          ]
+        },
+        {
+          "id": "POST /admin/reference",
+          "methode": "POST",
+          "chemin": "/admin/reference",
+          "variantes": [
+            "/admin/reference",
+            "/superadmin/reference"
+          ],
+          "type": "ajouter",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/ReferenceManager.jsx:65",
+            "components/ReferenceManager.jsx:69"
+          ]
+        },
+        {
+          "id": "POST /gabarits",
+          "methode": "POST",
+          "chemin": "/gabarits",
+          "type": "ajouter",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/GabaritManager.jsx:96"
+          ]
+        },
+        {
+          "id": "POST /gabarits/{}/cloner",
+          "methode": "POST",
+          "chemin": "/gabarits/{}/cloner",
+          "type": "ajouter",
+          "fonction": "cloner",
+          "sources": [
+            "components/GabaritManager.jsx:61"
+          ]
+        },
+        {
+          "id": "POST /superadmin/tenants",
+          "methode": "POST",
+          "chemin": "/superadmin/tenants",
+          "type": "ajouter",
+          "fonction": "creerTenant",
+          "sources": [
+            "pages/Superadmin.jsx:33"
+          ]
+        },
+        {
+          "id": "POST /superadmin/tenants/{}/admin",
+          "methode": "POST",
+          "chemin": "/superadmin/tenants/{}/admin",
+          "type": "ajouter",
+          "fonction": "creerAdmin",
+          "sources": [
+            "pages/Superadmin.jsx:40"
+          ]
+        },
+        {
+          "id": "POST /superadmin/tenants/{}/banques-heures",
+          "methode": "POST",
+          "chemin": "/superadmin/tenants/{}/banques-heures",
+          "type": "ajouter",
+          "fonction": "gestionnaire en ligne (onSubmit)",
+          "sources": [
+            "components/BanqueHeuresManager.jsx:51"
+          ]
+        },
+        {
+          "id": "POST /superadmin/tenants/{}/banques-heures/{}/mouvements",
+          "methode": "POST",
+          "chemin": "/superadmin/tenants/{}/banques-heures/{}/mouvements",
+          "type": "ajouter",
+          "fonction": "gestionnaire en ligne (onSubmit)",
+          "sources": [
+            "components/BanqueHeuresManager.jsx:67"
+          ]
+        },
+        {
+          "id": "PUT /admin/reference/{}",
+          "methode": "PUT",
+          "chemin": "/admin/reference/{}",
+          "variantes": [
+            "/admin/reference/{}",
+            "/superadmin/reference/{}"
+          ],
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/ReferenceManager.jsx:65",
+            "components/ReferenceManager.jsx:69"
+          ]
+        },
+        {
+          "id": "PUT /gabarits/{}",
+          "methode": "PUT",
+          "chemin": "/gabarits/{}",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/GabaritManager.jsx:95"
+          ]
+        },
+        {
+          "id": "PUT /modele-document",
+          "methode": "PUT",
+          "chemin": "/modele-document",
+          "variantes": [
+            "/modele-document",
+            "/superadmin/tenants/{}/modele-document"
+          ],
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/ModeleDocumentManager.jsx:52"
+          ]
+        },
+        {
+          "id": "PUT /superadmin/tenants/{}",
+          "methode": "PUT",
+          "chemin": "/superadmin/tenants/{}",
+          "type": "modifier",
+          "fonction": "basculerActif",
+          "sources": [
+            "pages/Superadmin.jsx:47",
+            "pages/Superadmin.jsx:52"
+          ]
+        },
+        {
+          "id": "PUT /superadmin/tenants/{}/modules/{}/{}",
+          "methode": "PUT",
+          "chemin": "/superadmin/tenants/{}/modules/{}/{}",
+          "type": "modifier",
+          "fonction": "basculer",
+          "sources": [
+            "components/ModuleManager.jsx:33"
+          ]
+        },
+        {
+          "id": "PUT /superadmin/tenants/{}/tarif",
+          "methode": "PUT",
+          "chemin": "/superadmin/tenants/{}/tarif",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/TarifTenantManager.jsx:44"
+          ]
+        },
+        {
+          "id": "PUT /superadmin/tenants/{}/theme",
+          "methode": "PUT",
+          "chemin": "/superadmin/tenants/{}/theme",
+          "type": "modifier",
+          "fonction": "enregistrerTheme",
+          "sources": [
+            "pages/Superadmin.jsx:80"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/formulaires",
+      "espace": "socle",
+      "composant": "Formulaires",
+      "fichiers": [
+        "pages/Formulaires.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js",
+        "components/FormulaireBuilder.jsx",
+        "components/FormulaireRenderer.jsx",
+        "components/WorkflowBuilder.jsx",
+        "components/VersionsPanel.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /formulaires/{}",
+          "methode": "DELETE",
+          "chemin": "/formulaires/{}",
+          "type": "supprimer",
+          "fonction": "supprimer",
+          "sources": [
+            "pages/Formulaires.jsx:43"
+          ]
+        },
+        {
+          "id": "GET /formulaires",
+          "methode": "GET",
+          "chemin": "/formulaires",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Formulaires.jsx:24"
+          ]
+        },
+        {
+          "id": "GET /formulaires/{}/historique",
+          "methode": "GET",
+          "chemin": "/formulaires/{}/historique",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/VersionsPanel.jsx:15"
+          ]
+        },
+        {
+          "id": "GET /formulaires/{}/version",
+          "methode": "GET",
+          "chemin": "/formulaires/{}/version",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/FormulaireBuilder.jsx:44",
+            "components/WorkflowBuilder.jsx:29"
+          ]
+        },
+        {
+          "id": "GET /formulaires/{}/workflow",
+          "methode": "GET",
+          "chemin": "/formulaires/{}/workflow",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/WorkflowBuilder.jsx:26"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/DOMAINE",
+          "methode": "GET",
+          "chemin": "/reference/DOMAINE",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Formulaires.jsx:27"
+          ]
+        },
+        {
+          "id": "GET /reference/TYPE_CHAMP",
+          "methode": "GET",
+          "chemin": "/reference/TYPE_CHAMP",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/FormulaireBuilder.jsx:54"
+          ]
+        },
+        {
+          "id": "POST /formulaires",
+          "methode": "POST",
+          "chemin": "/formulaires",
+          "type": "ajouter",
+          "fonction": "creer",
+          "sources": [
+            "pages/Formulaires.jsx:37"
+          ]
+        },
+        {
+          "id": "POST /formulaires/{}/{}",
+          "methode": "POST",
+          "chemin": "/formulaires/{}/{}",
+          "type": "ajouter",
+          "fonction": "cycle",
+          "sources": [
+            "components/FormulaireBuilder.jsx:107"
+          ]
+        },
+        {
+          "id": "POST /formulaires/{}/regles/evaluer",
+          "methode": "POST",
+          "chemin": "/formulaires/{}/regles/evaluer",
+          "type": "ajouter",
+          "fonction": "majValeurApercu",
+          "sources": [
+            "components/FormulaireBuilder.jsx:117"
+          ]
+        },
+        {
+          "id": "POST /formulaires/{}/revenir/{}",
+          "methode": "POST",
+          "chemin": "/formulaires/{}/revenir/{}",
+          "type": "ajouter",
+          "fonction": "revenir",
+          "sources": [
+            "components/VersionsPanel.jsx:23"
+          ]
+        },
+        {
+          "id": "PUT /formulaires/{}/structure",
+          "methode": "PUT",
+          "chemin": "/formulaires/{}/structure",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/FormulaireBuilder.jsx:101"
+          ]
+        },
+        {
+          "id": "PUT /formulaires/{}/workflow",
+          "methode": "PUT",
+          "chemin": "/formulaires/{}/workflow",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/WorkflowBuilder.jsx:50"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/formulaires/:id/remplir",
+      "espace": "socle",
+      "composant": "FormulaireRemplir",
+      "fichiers": [
+        "pages/FormulaireRemplir.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js",
+        "components/FormulaireRenderer.jsx",
+        "components/DefiAntiRobot.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /formulaires/{}/places",
+          "methode": "GET",
+          "chemin": "/formulaires/{}/places",
+          "type": "lister",
+          "fonction": "FormulaireRemplir",
+          "sources": [
+            "pages/FormulaireRemplir.jsx:53"
+          ]
+        },
+        {
+          "id": "GET /formulaires/{}/saisies/{}",
+          "methode": "GET",
+          "chemin": "/formulaires/{}/saisies/{}",
+          "type": "consulter",
+          "fonction": "FormulaireRemplir",
+          "sources": [
+            "pages/FormulaireRemplir.jsx:41"
+          ]
+        },
+        {
+          "id": "GET /formulaires/{}/saisies/structure",
+          "methode": "GET",
+          "chemin": "/formulaires/{}/saisies/structure",
+          "type": "lister",
+          "fonction": "FormulaireRemplir",
+          "sources": [
+            "pages/FormulaireRemplir.jsx:37"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /saisie/captcha",
+          "methode": "GET",
+          "chemin": "/saisie/captcha",
+          "type": "lister",
+          "fonction": "DefiAntiRobot",
+          "sources": [
+            "components/DefiAntiRobot.jsx:34"
+          ]
+        },
+        {
+          "id": "PATCH /formulaires/{}/saisies/{}",
+          "methode": "PATCH",
+          "chemin": "/formulaires/{}/saisies/{}",
+          "type": "modifier",
+          "fonction": "changer",
+          "sources": [
+            "pages/FormulaireRemplir.jsx:73"
+          ]
+        },
+        {
+          "id": "POST /formulaires/{}/regles/evaluer",
+          "methode": "POST",
+          "chemin": "/formulaires/{}/regles/evaluer",
+          "type": "ajouter",
+          "fonction": "changer",
+          "sources": [
+            "pages/FormulaireRemplir.jsx:80"
+          ]
+        },
+        {
+          "id": "POST /formulaires/{}/saisies",
+          "methode": "POST",
+          "chemin": "/formulaires/{}/saisies",
+          "type": "ajouter",
+          "fonction": "FormulaireRemplir",
+          "sources": [
+            "pages/FormulaireRemplir.jsx:45"
+          ]
+        },
+        {
+          "id": "POST /formulaires/{}/saisies/{}/soumettre",
+          "methode": "POST",
+          "chemin": "/formulaires/{}/saisies/{}/soumettre",
+          "type": "soumettre",
+          "fonction": "soumettre",
+          "sources": [
+            "pages/FormulaireRemplir.jsx:90"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/formulaires/:id/fiches",
+      "espace": "socle",
+      "composant": "Saisies",
+      "fichiers": [
+        "pages/Saisies.jsx",
+        "components/InventairePlaces.jsx",
+        "i18n/I18nContext.jsx",
+        "components/RapportPdfFiches.jsx",
+        "components/DocumentFiche.jsx",
+        "components/Modal.jsx",
+        "auth.jsx",
+        "hooks/useModules.js",
+        "components/DemandeAnnexes.jsx",
+        "components/RechercheFiches.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /rapport/criteres/{}",
+          "methode": "DELETE",
+          "chemin": "/rapport/criteres/{}",
+          "type": "supprimer",
+          "fonction": "supprimer",
+          "sources": [
+            "components/RechercheFiches.jsx:49"
+          ]
+        },
+        {
+          "id": "GET /documents/{}/download",
+          "methode": "GET",
+          "chemin": "/documents/{}/download",
+          "type": "télécharger",
+          "fonction": "lien",
+          "sources": [
+            "components/DemandeAnnexes.jsx:71"
+          ]
+        },
+        {
+          "id": "GET /formulaires/{}/inventaire",
+          "methode": "GET",
+          "chemin": "/formulaires/{}/inventaire",
+          "type": "lister",
+          "fonction": "InventairePlaces",
+          "sources": [
+            "components/InventairePlaces.jsx:16"
+          ]
+        },
+        {
+          "id": "GET /formulaires/{}/inventaire.csv",
+          "methode": "GET",
+          "chemin": "/formulaires/{}/inventaire.csv",
+          "type": "télécharger",
+          "fonction": "exporter",
+          "sources": [
+            "components/InventairePlaces.jsx:21"
+          ]
+        },
+        {
+          "id": "GET /formulaires/{}/saisies",
+          "methode": "GET",
+          "chemin": "/formulaires/{}/saisies",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Saisies.jsx:36"
+          ]
+        },
+        {
+          "id": "GET /formulaires/{}/saisies/{}/commentaires",
+          "methode": "GET",
+          "chemin": "/formulaires/{}/saisies/{}/commentaires",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/DemandeAnnexes.jsx:28"
+          ]
+        },
+        {
+          "id": "GET /formulaires/{}/saisies/{}/document.pdf",
+          "methode": "GET",
+          "chemin": "/formulaires/{}/saisies/{}/document.pdf",
+          "type": "télécharger",
+          "fonction": "ouvrir",
+          "sources": [
+            "components/DocumentFiche.jsx:11"
+          ]
+        },
+        {
+          "id": "GET /formulaires/{}/saisies/{}/documents",
+          "methode": "GET",
+          "chemin": "/formulaires/{}/saisies/{}/documents",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/DemandeAnnexes.jsx:27"
+          ]
+        },
+        {
+          "id": "GET /formulaires/{}/saisies/structure",
+          "methode": "GET",
+          "chemin": "/formulaires/{}/saisies/structure",
+          "type": "lister",
+          "fonction": "RapportPdfFiches",
+          "sources": [
+            "components/RapportPdfFiches.jsx:16"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /rapport/criteres",
+          "methode": "GET",
+          "chemin": "/rapport/criteres",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/RechercheFiches.jsx:33"
+          ]
+        },
+        {
+          "id": "GET /rapport/formulaires/{}/export.xlsx",
+          "methode": "GET",
+          "chemin": "/rapport/formulaires/{}/export.xlsx",
+          "type": "télécharger",
+          "fonction": "exporter",
+          "sources": [
+            "pages/Saisies.jsx:55"
+          ]
+        },
+        {
+          "id": "GET /rapport/formulaires/{}/rapport.pdf",
+          "methode": "GET",
+          "chemin": "/rapport/formulaires/{}/rapport.pdf",
+          "type": "télécharger",
+          "fonction": "produire",
+          "sources": [
+            "components/RapportPdfFiches.jsx:31"
+          ]
+        },
+        {
+          "id": "GET /rapport/formulaires/{}/resume",
+          "methode": "GET",
+          "chemin": "/rapport/formulaires/{}/resume",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Saisies.jsx:41"
+          ]
+        },
+        {
+          "id": "POST /formulaires/{}/saisies/{}/{}",
+          "methode": "POST",
+          "chemin": "/formulaires/{}/saisies/{}/{}",
+          "type": "ajouter",
+          "fonction": "statuer",
+          "sources": [
+            "pages/Saisies.jsx:50"
+          ]
+        },
+        {
+          "id": "POST /formulaires/{}/saisies/{}/commentaires",
+          "methode": "POST",
+          "chemin": "/formulaires/{}/saisies/{}/commentaires",
+          "type": "ajouter",
+          "fonction": "ajouterCommentaire",
+          "sources": [
+            "components/DemandeAnnexes.jsx:48"
+          ]
+        },
+        {
+          "id": "POST /formulaires/{}/saisies/{}/document/transmettre",
+          "methode": "POST",
+          "chemin": "/formulaires/{}/saisies/{}/document/transmettre",
+          "type": "ajouter",
+          "fonction": "envoyer",
+          "sources": [
+            "components/DocumentFiche.jsx:33"
+          ]
+        },
+        {
+          "id": "POST /formulaires/{}/saisies/{}/documents",
+          "methode": "POST",
+          "chemin": "/formulaires/{}/saisies/{}/documents",
+          "type": "ajouter",
+          "fonction": "televerser",
+          "sources": [
+            "components/DemandeAnnexes.jsx:39"
+          ]
+        },
+        {
+          "id": "POST /rapport/criteres",
+          "methode": "POST",
+          "chemin": "/rapport/criteres",
+          "type": "ajouter",
+          "fonction": "sauvegarder",
+          "sources": [
+            "components/RechercheFiches.jsx:42"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/mes-demandes",
+      "espace": "socle",
+      "composant": "MesDemandes",
+      "fichiers": [
+        "pages/MesDemandes.jsx",
+        "components/DocumentFiche.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js"
+      ],
+      "operations": [
+        {
+          "id": "GET /formulaires/{}/saisies/{}/document.pdf",
+          "methode": "GET",
+          "chemin": "/formulaires/{}/saisies/{}/document.pdf",
+          "type": "télécharger",
+          "fonction": "ouvrir",
+          "sources": [
+            "components/DocumentFiche.jsx:11"
+          ]
+        },
+        {
+          "id": "GET /mes-demandes",
+          "methode": "GET",
+          "chemin": "/mes-demandes",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/MesDemandes.jsx:27"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "POST /formulaires/{}/saisies/{}/annuler",
+          "methode": "POST",
+          "chemin": "/formulaires/{}/saisies/{}/annuler",
+          "type": "annuler",
+          "fonction": "annuler",
+          "sources": [
+            "pages/MesDemandes.jsx:37"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/nouvelle-demande",
+      "espace": "socle",
+      "composant": "Catalogue",
+      "fichiers": [
+        "pages/Catalogue.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js"
+      ],
+      "operations": [
+        {
+          "id": "GET /catalogue",
+          "methode": "GET",
+          "chemin": "/catalogue",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Catalogue.jsx:17"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/DOMAINE",
+          "methode": "GET",
+          "chemin": "/reference/DOMAINE",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Catalogue.jsx:20"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/taches",
+      "espace": "socle",
+      "composant": "Taches",
+      "fichiers": [
+        "pages/Taches.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js",
+        "components/Modal.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /taches/mine",
+          "methode": "GET",
+          "chemin": "/taches/mine",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Taches.jsx:19"
+          ]
+        },
+        {
+          "id": "POST /taches/{}/decisions",
+          "methode": "POST",
+          "chemin": "/taches/{}/decisions",
+          "type": "ajouter",
+          "fonction": "decider",
+          "sources": [
+            "pages/Taches.jsx:29"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/applications",
+      "espace": "socle",
+      "composant": "Applications",
+      "fichiers": [
+        "pages/Applications.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js"
+      ],
+      "operations": [
+        {
+          "id": "GET /applications",
+          "methode": "GET",
+          "chemin": "/applications",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Applications.jsx:23"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/DOMAINE",
+          "methode": "GET",
+          "chemin": "/reference/DOMAINE",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Applications.jsx:26"
+          ]
+        },
+        {
+          "id": "POST /applications",
+          "methode": "POST",
+          "chemin": "/applications",
+          "type": "ajouter",
+          "fonction": "soumettre",
+          "sources": [
+            "pages/Applications.jsx:35"
+          ]
+        },
+        {
+          "id": "PUT /applications/{}",
+          "methode": "PUT",
+          "chemin": "/applications/{}",
+          "type": "modifier",
+          "fonction": "soumettre",
+          "sources": [
+            "pages/Applications.jsx:34"
+          ]
+        },
+        {
+          "id": "PUT /applications/{}/archiver",
+          "methode": "PUT",
+          "chemin": "/applications/{}/archiver",
+          "type": "modifier",
+          "fonction": "archiver",
+          "sources": [
+            "pages/Applications.jsx:40"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/paie",
+      "espace": "socle",
+      "composant": "Paie",
+      "fichiers": [
+        "pages/Paie.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js"
+      ],
+      "operations": [
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /paie/frequences",
+          "methode": "GET",
+          "chemin": "/paie/frequences",
+          "type": "lister",
+          "fonction": "Paie",
+          "sources": [
+            "pages/Paie.jsx:22"
+          ]
+        },
+        {
+          "id": "POST /paie/apercu",
+          "methode": "POST",
+          "chemin": "/paie/apercu",
+          "type": "ajouter",
+          "fonction": "calculer",
+          "sources": [
+            "pages/Paie.jsx:30"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/impot",
+      "espace": "socle",
+      "composant": "Impot",
+      "fichiers": [
+        "pages/Impot.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js"
+      ],
+      "operations": [
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "POST /paie/impot/apercu",
+          "methode": "POST",
+          "chemin": "/paie/impot/apercu",
+          "type": "ajouter",
+          "fonction": "calculer",
+          "sources": [
+            "pages/Impot.jsx:30"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/declarations",
+      "espace": "socle",
+      "composant": "Declarations",
+      "fichiers": [
+        "pages/Declarations.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js"
+      ],
+      "operations": [
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "POST /paie/declarations/fin-annee",
+          "methode": "POST",
+          "chemin": "/paie/declarations/fin-annee",
+          "type": "ajouter",
+          "fonction": "appeler",
+          "sources": [
+            "pages/Declarations.jsx:27"
+          ]
+        },
+        {
+          "id": "POST /paie/declarations/retenues",
+          "methode": "POST",
+          "chemin": "/paie/declarations/retenues",
+          "type": "ajouter",
+          "fonction": "appeler",
+          "sources": [
+            "pages/Declarations.jsx:27"
+          ]
+        },
+        {
+          "id": "POST /paie/declarations/taxes",
+          "methode": "POST",
+          "chemin": "/paie/declarations/taxes",
+          "type": "ajouter",
+          "fonction": "appeler",
+          "sources": [
+            "pages/Declarations.jsx:27"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/rh/personnel",
+      "espace": "socle",
+      "composant": "Personnel",
+      "fichiers": [
+        "pages/Personnel.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js"
+      ],
+      "operations": [
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /rh/employes",
+          "methode": "GET",
+          "chemin": "/rh/employes",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Personnel.jsx:22"
+          ]
+        },
+        {
+          "id": "POST /rh/employes",
+          "methode": "POST",
+          "chemin": "/rh/employes",
+          "type": "ajouter",
+          "fonction": "soumettre",
+          "sources": [
+            "pages/Personnel.jsx:33"
+          ]
+        },
+        {
+          "id": "PUT /rh/employes/{}",
+          "methode": "PUT",
+          "chemin": "/rh/employes/{}",
+          "type": "modifier",
+          "fonction": "soumettre",
+          "sources": [
+            "pages/Personnel.jsx:32"
+          ]
+        },
+        {
+          "id": "PUT /rh/employes/{}/archiver",
+          "methode": "PUT",
+          "chemin": "/rh/employes/{}/archiver",
+          "type": "modifier",
+          "fonction": "archiver",
+          "sources": [
+            "pages/Personnel.jsx:41"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/rh/employes/:id",
+      "espace": "socle",
+      "composant": "DossierEmploye",
+      "fichiers": [
+        "pages/DossierEmploye.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js"
+      ],
+      "operations": [
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /rh/employes/{}",
+          "methode": "GET",
+          "chemin": "/rh/employes/{}",
+          "type": "consulter",
+          "fonction": "charger",
+          "sources": [
+            "pages/DossierEmploye.jsx:21"
+          ]
+        },
+        {
+          "id": "POST /paie/apercu",
+          "methode": "POST",
+          "chemin": "/paie/apercu",
+          "type": "ajouter",
+          "fonction": "calculerPaie",
+          "sources": [
+            "pages/DossierEmploye.jsx:34"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/approbations",
+      "espace": "socle",
+      "composant": "Approbations",
+      "fichiers": [
+        "pages/Approbations.jsx",
+        "i18n/I18nContext.jsx",
+        "auth.jsx",
+        "hooks/useModules.js"
+      ],
+      "operations": [
+        {
+          "id": "GET /approbations/demandes",
+          "methode": "GET",
+          "chemin": "/approbations/demandes",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Approbations.jsx:25"
+          ]
+        },
+        {
+          "id": "GET /approbations/mes-etapes",
+          "methode": "GET",
+          "chemin": "/approbations/mes-etapes",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Approbations.jsx:23"
+          ]
+        },
+        {
+          "id": "GET /approbations/regles",
+          "methode": "GET",
+          "chemin": "/approbations/regles",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/Approbations.jsx:24"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "POST /approbations/demandes",
+          "methode": "POST",
+          "chemin": "/approbations/demandes",
+          "type": "ajouter",
+          "fonction": "creerDemande",
+          "sources": [
+            "pages/Approbations.jsx:39"
+          ]
+        },
+        {
+          "id": "POST /approbations/etapes/{}/decider",
+          "methode": "POST",
+          "chemin": "/approbations/etapes/{}/decider",
+          "type": "ajouter",
+          "fonction": "decider",
+          "sources": [
+            "pages/Approbations.jsx:44"
+          ]
+        },
+        {
+          "id": "POST /approbations/regles",
+          "methode": "POST",
+          "chemin": "/approbations/regles",
+          "type": "ajouter",
+          "fonction": "creerRegle",
+          "sources": [
+            "pages/Approbations.jsx:34"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/rh/feuilles-temps",
+      "espace": "socle",
+      "composant": "FeuilleTemps",
+      "fichiers": [
+        "pages/FeuilleTemps.jsx",
+        "i18n/I18nContext.jsx",
+        "auth.jsx",
+        "hooks/useModules.js"
+      ],
+      "operations": [
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /rh/feuilles-temps/a-approuver",
+          "methode": "GET",
+          "chemin": "/rh/feuilles-temps/a-approuver",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/FeuilleTemps.jsx:24"
+          ]
+        },
+        {
+          "id": "GET /rh/feuilles-temps/mine",
+          "methode": "GET",
+          "chemin": "/rh/feuilles-temps/mine",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/FeuilleTemps.jsx:23"
+          ]
+        },
+        {
+          "id": "POST /rh/feuilles-temps",
+          "methode": "POST",
+          "chemin": "/rh/feuilles-temps",
+          "type": "ajouter",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/FeuilleTemps.jsx:42"
+          ]
+        },
+        {
+          "id": "POST /rh/feuilles-temps/{}/{}",
+          "methode": "POST",
+          "chemin": "/rh/feuilles-temps/{}/{}",
+          "type": "ajouter",
+          "fonction": "action",
+          "sources": [
+            "pages/FeuilleTemps.jsx:48"
+          ]
+        },
+        {
+          "id": "PUT /rh/feuilles-temps/{}",
+          "methode": "PUT",
+          "chemin": "/rh/feuilles-temps/{}",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/FeuilleTemps.jsx:41"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/rh/projets-taches",
+      "espace": "socle",
+      "composant": "ProjetsTaches",
+      "fichiers": [
+        "pages/ProjetsTaches.jsx",
+        "i18n/I18nContext.jsx",
+        "auth.jsx",
+        "hooks/useModules.js"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /rh/taches/{}",
+          "methode": "DELETE",
+          "chemin": "/rh/taches/{}",
+          "type": "supprimer",
+          "fonction": "supprimer",
+          "sources": [
+            "pages/ProjetsTaches.jsx:53"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /rh/employes",
+          "methode": "GET",
+          "chemin": "/rh/employes",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/ProjetsTaches.jsx:29"
+          ]
+        },
+        {
+          "id": "GET /rh/projets",
+          "methode": "GET",
+          "chemin": "/rh/projets",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/ProjetsTaches.jsx:28"
+          ]
+        },
+        {
+          "id": "GET /rh/taches",
+          "methode": "GET",
+          "chemin": "/rh/taches",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/ProjetsTaches.jsx:30"
+          ]
+        },
+        {
+          "id": "GET /rh/taches/mine",
+          "methode": "GET",
+          "chemin": "/rh/taches/mine",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/ProjetsTaches.jsx:31"
+          ]
+        },
+        {
+          "id": "POST /rh/projets",
+          "methode": "POST",
+          "chemin": "/rh/projets",
+          "type": "ajouter",
+          "fonction": "creerProjet",
+          "sources": [
+            "pages/ProjetsTaches.jsx:40"
+          ]
+        },
+        {
+          "id": "POST /rh/taches",
+          "methode": "POST",
+          "chemin": "/rh/taches",
+          "type": "ajouter",
+          "fonction": "soumettreTache",
+          "sources": [
+            "pages/ProjetsTaches.jsx:48"
+          ]
+        },
+        {
+          "id": "PUT /rh/taches/{}",
+          "methode": "PUT",
+          "chemin": "/rh/taches/{}",
+          "type": "modifier",
+          "fonction": "soumettreTache",
+          "sources": [
+            "pages/ProjetsTaches.jsx:47"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/notifications",
+      "espace": "socle",
+      "composant": "NotificationsAdmin",
+      "fichiers": [
+        "pages/NotificationsAdmin.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js"
+      ],
+      "operations": [
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /notification/journal",
+          "methode": "GET",
+          "chemin": "/notification/journal",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/NotificationsAdmin.jsx:24"
+          ]
+        },
+        {
+          "id": "GET /notification/modeles",
+          "methode": "GET",
+          "chemin": "/notification/modeles",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/NotificationsAdmin.jsx:22"
+          ]
+        },
+        {
+          "id": "GET /notification/regles",
+          "methode": "GET",
+          "chemin": "/notification/regles",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/NotificationsAdmin.jsx:23"
+          ]
+        },
+        {
+          "id": "POST /notification/modeles",
+          "methode": "POST",
+          "chemin": "/notification/modeles",
+          "type": "ajouter",
+          "fonction": "creerModele",
+          "sources": [
+            "pages/NotificationsAdmin.jsx:33"
+          ]
+        },
+        {
+          "id": "POST /notification/regles",
+          "methode": "POST",
+          "chemin": "/notification/regles",
+          "type": "ajouter",
+          "fonction": "creerRegle",
+          "sources": [
+            "pages/NotificationsAdmin.jsx:39"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/securite-avancee",
+      "espace": "socle",
+      "composant": "SecuriteAvancee",
+      "fichiers": [
+        "pages/SecuriteAvancee.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /securite/permissions/{}",
+          "methode": "DELETE",
+          "chemin": "/securite/permissions/{}",
+          "type": "supprimer",
+          "fonction": "supprimerPermission",
+          "sources": [
+            "pages/SecuriteAvancee.jsx:35"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /securite/groupes",
+          "methode": "GET",
+          "chemin": "/securite/groupes",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/SecuriteAvancee.jsx:23"
+          ]
+        },
+        {
+          "id": "GET /securite/permissions",
+          "methode": "GET",
+          "chemin": "/securite/permissions",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/SecuriteAvancee.jsx:22"
+          ]
+        },
+        {
+          "id": "POST /securite/groupes",
+          "methode": "POST",
+          "chemin": "/securite/groupes",
+          "type": "ajouter",
+          "fonction": "ajouterGroupe",
+          "sources": [
+            "pages/SecuriteAvancee.jsx:38"
+          ]
+        },
+        {
+          "id": "POST /securite/groupes/{}/membres",
+          "methode": "POST",
+          "chemin": "/securite/groupes/{}/membres",
+          "type": "ajouter",
+          "fonction": "u",
+          "sources": [
+            "pages/SecuriteAvancee.jsx:44"
+          ]
+        },
+        {
+          "id": "POST /securite/permissions",
+          "methode": "POST",
+          "chemin": "/securite/permissions",
+          "type": "ajouter",
+          "fonction": "ajouterPermission",
+          "sources": [
+            "pages/SecuriteAvancee.jsx:32"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/interop",
+      "espace": "socle",
+      "composant": "InteropAdmin",
+      "fichiers": [
+        "pages/InteropAdmin.jsx",
+        "i18n/I18nContext.jsx",
+        "hooks/useModules.js",
+        "components/EchangesHerites.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /formulaires",
+          "methode": "GET",
+          "chemin": "/formulaires",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/EchangesHerites.jsx:37"
+          ]
+        },
+        {
+          "id": "GET /interop/clients",
+          "methode": "GET",
+          "chemin": "/interop/clients",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "pages/InteropAdmin.jsx:17"
+          ]
+        },
+        {
+          "id": "GET /interop/echanges",
+          "methode": "GET",
+          "chemin": "/interop/echanges",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "components/EchangesHerites.jsx:33"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "POST /interop/clients",
+          "methode": "POST",
+          "chemin": "/interop/clients",
+          "type": "ajouter",
+          "fonction": "creer",
+          "sources": [
+            "pages/InteropAdmin.jsx:27"
+          ]
+        },
+        {
+          "id": "POST /interop/echanges",
+          "methode": "POST",
+          "chemin": "/interop/echanges",
+          "type": "ajouter",
+          "fonction": "declarer",
+          "sources": [
+            "components/EchangesHerites.jsx:43"
+          ]
+        },
+        {
+          "id": "POST /interop/echanges/{}/desactivation",
+          "methode": "POST",
+          "chemin": "/interop/echanges/{}/desactivation",
+          "type": "ajouter",
+          "fonction": "desactiver",
+          "sources": [
+            "components/EchangesHerites.jsx:50"
+          ]
+        },
+        {
+          "id": "POST /interop/echanges/{}/reprise",
+          "methode": "POST",
+          "chemin": "/interop/echanges/{}/reprise",
+          "type": "ajouter",
+          "fonction": "reprendre",
+          "sources": [
+            "components/EchangesHerites.jsx:59"
+          ]
+        }
+      ]
+    }
+  ],
+  "coquille": [
+    {
+      "id": "GET /auth/me",
+      "methode": "GET",
+      "chemin": "/auth/me",
+      "type": "lister",
+      "fonction": "AuthProvider",
+      "source": "auth.jsx:12"
+    },
+    {
+      "id": "POST /auth/login",
+      "methode": "POST",
+      "chemin": "/auth/login",
+      "type": "ajouter",
+      "fonction": "login",
+      "source": "auth.jsx:25"
+    },
+    {
+      "id": "POST /auth/logout",
+      "methode": "POST",
+      "chemin": "/auth/logout",
+      "type": "ajouter",
+      "fonction": "logout",
+      "source": "auth.jsx:48"
+    }
+  ]
+}

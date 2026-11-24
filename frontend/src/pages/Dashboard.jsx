@@ -88,7 +88,7 @@ export default function Dashboard() {
                    onChange={(e) => setForm({ ...form, valeurEstimee: e.target.value })} />
           </label>
           <label>{t('dashboard.projectContext')}
-            <RichText value={form.contexte} rows={3}
+            <RichText value={form.contexte} rows={3} libelle={t('dashboard.projectContext')}
                       onChange={(contexte) => setForm((f) => ({ ...f, contexte }))} />
           </label>
           <label>{t('dashboard.tenderNumber')}

@@ -1,0 +1,104 @@
+# Campagne de performance JMeter (perf/run.sh) — verdict SLO de perf/SLI-SLO-SLA.md : le job échoue si un objectif est
+# manqué. Toujours lancée à la main : une campagne charge un serveur, elle ne part jamais seule.
+#
+#   cible « ephemere »     : le serveur (profil par défaut, base H2 et comptes de développement) démarré DANS
+#                            l'exécuteur, puis détruit — tous les plans s'y jouent.
+#   cible « environnement » : un environnement GitHub déployé (variable APP_URL). Le VPS est partagé : charge réduite par
+#                            défaut ; seuls les plans dont les comptes y existent s'y jouent (clm-trousses-load.jmx
+#                            avec les comptes publiés de la démonstration IQ).
+# Rapports : artefact « perf-<cible> » (tableau de bord HTML JMeter, journal, latences).
+name: Performance (JMeter)
+
+on:
+  workflow_dispatch:
+    inputs:
+      cible:
+        type: choice
+        options: [ephemere, environnement]
+        default: ephemere
+      environnement:
+        description: "Environnement GitHub (cible « environnement » seulement)"
+        type: string
+        default: contrat-demo
+      plan:
+        description: "Plan JMeter (perf/*.jmx)"
+        type: string
+        default: clm-trousses-load.jmx
+      utilisateurs:
+        description: "Utilisateurs virtuels"
+        type: string
+        default: "5"
+      boucles:
+        type: string
+        default: "3"
+
+concurrency:
+  group: perf-${{ inputs.cible }}-${{ inputs.environnement }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  JMETER_VERSION: "5.6.3"
+
+jobs:
+  ephemere:
+    name: JMeter — pile éphémère
+    if: inputs.cible != 'environnement'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17", cache: maven }
+      - name: JMeter
+        run: |
+          curl -fsSL "https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${JMETER_VERSION}.tgz" | tar xz -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/apache-jmeter-${JMETER_VERSION}/bin" >> "$GITHUB_PATH"
+      - name: Serveur éphémère
+        run: |
+          (cd backend && mvn -B -q -DskipTests package)
+          SERVER_PORT=8080 nohup java -jar backend/target/contrat-backend-0.1.0.jar > "$RUNNER_TEMP/serveur.log" 2>&1 &
+          for i in $(seq 1 90); do curl -fs http://localhost:8080/api/health >/dev/null && break; sleep 2; done
+          sleep 20   # amorçage des comptes de démonstration
+      - name: Campagne et verdict SLO
+        env:
+          PLAN: ${{ inputs.plan }}
+          THREADS: ${{ inputs.utilisateurs }}
+          LOOPS: ${{ inputs.boucles }}
+          RAMPUP: "30"
+        run: perf/run.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: perf-ephemere, path: perf/results, if-no-files-found: ignore }
+
+  environnement:
+    name: JMeter — environnement déployé
+    if: inputs.cible == 'environnement'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    environment: ${{ inputs.environnement }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17", cache: maven }
+      - name: JMeter
+        run: |
+          curl -fsSL "https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${JMETER_VERSION}.tgz" | tar xz -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/apache-jmeter-${JMETER_VERSION}/bin" >> "$GITHUB_PATH"
+      - name: Adresse de l'environnement
+        run: |
+          [ -n "${{ vars.APP_URL }}" ] || { echo "::error::APP_URL absente de ${{ inputs.environnement }}"; exit 2; }
+          curl -fsS --retry 10 --retry-delay 5 --retry-all-errors "${{ vars.APP_URL }}/api/health"
+          node -e 'const u=new URL(process.argv[1]);console.log(`BASE_PROTOCOL=${u.protocol.slice(0,-1)}\nBASE_HOST=${u.hostname}\nBASE_PORT=${u.port||(u.protocol==="https:"?443:80)}`)' "${{ vars.APP_URL }}" >> "$GITHUB_ENV"
+      - name: Campagne et verdict SLO
+        env:
+          PLAN: ${{ inputs.plan }}
+          THREADS: ${{ inputs.utilisateurs }}
+          LOOPS: ${{ inputs.boucles }}
+          RAMPUP: "30"
+        run: perf/run.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: "perf-${{ inputs.environnement }}", path: perf/results, if-no-files-found: ignore }

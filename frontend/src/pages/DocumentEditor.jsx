@@ -11,9 +11,6 @@ import useReference from '../hooks/useReference.js'
 import { useI18n } from '../i18n/I18nContext'
 
 // Lien public de signature (partageable au signataire externe).
-function copierLienSignature(jeton) {
-  navigator.clipboard?.writeText(`${window.location.origin}/signature/${jeton}`)
-}
 
 
 export default function DocumentEditor() {
@@ -186,9 +183,13 @@ export default function DocumentEditor() {
       t('documenteditor.signatureApposee'))
     if (ok) setSignature(null)
   }
+  /** Le presse-papier peut être refusé par le navigateur : la réussite comme l'échec sont annoncés, jamais tus. */
+  function copier(texte, message) {
+    const ecriture = navigator.clipboard ? navigator.clipboard.writeText(texte) : Promise.reject(new Error('presse-papier'))
+    ecriture.then(() => toast.succes(message)).catch(() => toast.erreur(t('documenteditor.copieImpossible')))
+  }
   function copierLien(jeton) {
-    copierLienSignature(jeton)
-    toast.succes(t('documenteditor.lienCopie'))
+    copier(`${window.location.origin}/signature/${jeton}`, t('documenteditor.lienCopie'))
   }
 
   const suffixeGabarit = () => (gabarit ? `?gabarit=${gabarit}` : '')
@@ -598,11 +599,11 @@ export default function DocumentEditor() {
           </ul>
           {versions.length >= 2 && (
             <div className="cmp-row">
-              <select value={cmp.a} onChange={(e) => setCmp({ ...cmp, a: e.target.value })}>
+              <select value={cmp.a} onChange={(e) => setCmp({ ...cmp, a: e.target.value })} aria-label={t('documenteditor.versionA')}>
                 <option value="">{t('documenteditor.versionA')}</option>
                 {versions.map((v) => <option key={v.id} value={v.id}>v{v.numeroVersion}</option>)}
               </select>
-              <select value={cmp.b} onChange={(e) => setCmp({ ...cmp, b: e.target.value })}>
+              <select value={cmp.b} onChange={(e) => setCmp({ ...cmp, b: e.target.value })} aria-label={t('documenteditor.versionB')}>
                 <option value="">{t('documenteditor.versionB')}</option>
                 {versions.map((v) => <option key={v.id} value={v.id}>v{v.numeroVersion}</option>)}
               </select>
@@ -744,7 +745,7 @@ export default function DocumentEditor() {
       <div className="panel">
         <AiAssistant
           contexteParDefaut={`${doc.type} — ${doc.contexte || ''}`}
-          onInsertion={(t) => navigator.clipboard?.writeText(t)}
+          onInsertion={(texte) => copier(texte, t('documenteditor.iaCopie'))}
         />
         <p className="muted">{t('documenteditor.iaCopie')}</p>
       </div>

@@ -1,0 +1,139 @@
+{
+  "_lire": "Appels d'API dont l'adresse est calculée, déclarés pour l'inventaire (outils/inventaire-ecrans.mjs). Clé : « fichier|argument » tel que l'inventaire l'affiche. « relais » : le paramètre d'une aide, inventorié chez ses appelants. Les exclusions sont nominatives, avec leur motif. « variantes » : une seule opération, dont l'adresse dépend de l'écran hôte (administration ou superadmin) ; l'une ou l'autre la couvre.",
+  "dynamiques": {
+    "pages/clm/commun.jsx|url": {
+      "relais": true,
+      "motif": "paramètre de useRessource et de telecharger, relevés à chaque appel"
+    },
+    "pages/VieePrivee.jsx|": {
+      "relais": true,
+      "motif": "fonction locale telecharger() : fichier JSON produit dans le navigateur, sans appel d'API"
+    },
+    "pages/clm/Portail.jsx|base": {
+      "chemins": [
+        "/{}"
+      ]
+    },
+    "pages/clm/Portail.jsx|`${base}/verification`": {
+      "chemins": [
+        "/{}/verification"
+      ]
+    },
+    "pages/clm/Portail.jsx|`${base}/verification/reponse`": {
+      "chemins": [
+        "/{}/verification/reponse"
+      ]
+    },
+    "pages/clm/Portail.jsx|`${base}/documents/${doc.id}`": {
+      "chemins": [
+        "/{}/documents/{}"
+      ]
+    },
+    "pages/clm/Portail.jsx|`${base}/signer`": {
+      "chemins": [
+        "/{}/signer"
+      ]
+    },
+    "pages/clm/Portail.jsx|`${base}/refuser`": {
+      "chemins": [
+        "/{}/refuser"
+      ]
+    },
+    "pages/clm/commun.jsx|`${base}/contenu`": {
+      "chemins": [
+        "/clm/trousses/{}/documents/{}/contenu"
+      ]
+    },
+    "pages/clm/commun.jsx|`${base}/texte`": {
+      "chemins": [
+        "/clm/trousses/{}/documents/{}/texte"
+      ]
+    },
+    "pages/clm/OngletDocuments.jsx|url": {
+      "chemins": [
+        "/clm/trousses/{}/documents",
+        "/clm/trousses/{}/documents/{}/versions"
+      ]
+    },
+    "components/ReferenceManager.jsx|`${base}/categories`": {
+      "chemins": [
+        "/admin/reference/categories",
+        "/superadmin/reference/categories"
+      ],
+      "variantes": true
+    },
+    "components/ReferenceManager.jsx|base": {
+      "chemins": [
+        "/admin/reference",
+        "/superadmin/reference"
+      ],
+      "variantes": true
+    },
+    "components/ReferenceManager.jsx|`${base}/${form.id}`": {
+      "chemins": [
+        "/admin/reference/{}",
+        "/superadmin/reference/{}"
+      ],
+      "variantes": true
+    },
+    "components/ReferenceManager.jsx|`${base}/${v.id}`": {
+      "chemins": [
+        "/admin/reference/{}",
+        "/superadmin/reference/{}"
+      ],
+      "variantes": true
+    },
+    "components/ModeleDocumentManager.jsx|baseUrl()": {
+      "chemins": [
+        "/modele-document",
+        "/superadmin/tenants/{}/modele-document"
+      ],
+      "variantes": true
+    },
+    "components/BanqueHeuresManager.jsx|base(tid)": {
+      "chemins": [
+        "/superadmin/tenants/{}/banques-heures"
+      ]
+    },
+    "components/BanqueHeuresManager.jsx|base(tenant)": {
+      "chemins": [
+        "/superadmin/tenants/{}/banques-heures"
+      ]
+    },
+    "components/BanqueHeuresManager.jsx|`${base(tenant)}/${b.id}`": {
+      "chemins": [
+        "/superadmin/tenants/{}/banques-heures/{}"
+      ]
+    },
+    "components/BanqueHeuresManager.jsx|`${base(tenant)}/${courante.id}/mouvements`": {
+      "chemins": [
+        "/superadmin/tenants/{}/banques-heures/{}/mouvements"
+      ]
+    },
+    "components/DemandeAnnexes.jsx|`${base}/documents`": {
+      "chemins": [
+        "/formulaires/{}/saisies/{}/documents"
+      ]
+    },
+    "components/DemandeAnnexes.jsx|`${base}/commentaires`": {
+      "chemins": [
+        "/formulaires/{}/saisies/{}/commentaires"
+      ]
+    },
+    "pages/Declarations.jsx|url": {
+      "chemins": [
+        "/paie/declarations/taxes",
+        "/paie/declarations/retenues",
+        "/paie/declarations/fin-annee"
+      ]
+    }
+  },
+  "exclusions": {
+    "/clm/admin/conservation POST /clm/admin/conservation/trousses/{}/versee": "l'échéance de conservation (au moins un an après la clôture) ne s'atteint pas en e2e sans fausser l'horloge du serveur — couvert par ConservationServiceTest.sans_regle_rien_ne_se_detruit_et_un_versement_exige_le_sort_verser",
+    "/clm/admin/conservation POST /clm/admin/conservation/trousses/{}/detruire": "l'échéance de conservation (au moins un an après la clôture) ne s'atteint pas en e2e sans fausser l'horloge du serveur — couvert par ConservationServiceTest.echue_selon_la_regle_du_type_puis_detruite_avec_un_bordereau_sans_contenu",
+    "/clm/admin/conservation GET /clm/admin/conservation/trousses/{}/certificat-destruction": "n'existe qu'après une destruction (l'échéance de conservation (au moins un an après la clôture) ne s'atteint pas en e2e sans fausser l'horloge du serveur) — couvert par CertificatDestructionServiceTest et ClmIntegrationTest.relance_commentaire_delegation_certificat_et_journal",
+    "/clm/suivi POST /clm/admin/integrations/salesforce/trousses/{}/relancer": "n'apparaît qu'après l'échec réel d'un envoi vers un système externe (Salesforce, adresse de rappel d'un client) — couvert par ClmIntegrationTest (relance d'une trousse en erreur Salesforce)",
+    "/clm/admin/integrations POST /clm/admin/integrations/salesforce/evenements/{}/relancer": "n'apparaît qu'après l'échec réel d'un envoi vers un système externe (Salesforce, adresse de rappel d'un client) — couvert par ClmIntegrationTest et EntitesClmTest.message_sortant_reprises_puis_echec_et_relance",
+    "/clm/admin/integrations POST /clm/admin/rappels/{}/relancer": "n'apparaît qu'après l'échec réel d'un envoi vers un système externe (Salesforce, adresse de rappel d'un client) — couvert par IntegrationEntranteServicesTest.l_administrateur_consulte_et_relance_les_rappels et IntegrationEntranteControleursTest.l_administration_relance_un_rappel"
+  }
+}

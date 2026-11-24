@@ -1,0 +1,89 @@
+# Tests d'intrusion (securite/lancer.sh) : chaque point d'accès de l'inventaire OpenAPI (OWASP Top 10, isolation entre
+# organisations, rôles), OWASP ZAP authentifié, Trivy, npm audit ; rapport docs/securite/rapport-tests-intrusion.md.
+#
+#   cible « ephemere » (défaut) : le serveur démarré DANS l'exécuteur (base H2, comptes de développement), puis détruit.
+#                                 Aucune cible réelle n'est touchée ; aucun secret n'est requis.
+#   cible « environnement »     : un environnement GitHub déployé (APP_URL, SUPERADMIN_EMAIL, SUPERADMIN_PASSWORD). La
+#                                 suite CRÉE des organisations « intrusion-* » et des comptes, et ZAP mène un balayage
+#                                 actif : il faut cocher « autorisation » — on n'attaque pas un serveur sans accord écrit.
+# Hebdomadaire sur la pile éphémère ; réutilisable (workflow_call) ; lançable à la main.
+name: Tests d'intrusion
+
+on:
+  workflow_dispatch:
+    inputs:
+      cible:
+        type: choice
+        options: [ephemere, environnement]
+        default: ephemere
+      environnement:
+        description: "Environnement GitHub (cible « environnement » seulement)"
+        type: string
+        default: contrat-demo
+      autorisation:
+        description: "J'ai l'autorisation d'attaquer cet environnement (cible « environnement »)"
+        type: boolean
+        default: false
+  workflow_call:
+    inputs:
+      cible: { type: string, default: ephemere }
+  schedule:
+    - cron: "23 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  ephemere:
+    name: Intrusion — pile éphémère
+    if: inputs.cible != 'environnement'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17", cache: maven }
+      - uses: actions/setup-node@v4
+        with: { node-version: "22", cache: npm, cache-dependency-path: securite/package-lock.json }
+      - name: Serveur éphémère
+        run: |
+          (cd backend && mvn -B -q -DskipTests package)
+          SERVER_PORT=8100 nohup java -jar backend/target/contrat-backend-0.1.0.jar > "$RUNNER_TEMP/serveur.log" 2>&1 &
+          for i in $(seq 1 90); do curl -fs http://localhost:8100/api/health >/dev/null && break; sleep 2; done
+          sleep 20
+      - name: Campagne
+        working-directory: securite
+        run: |
+          npm ci && npx playwright install --with-deps chromium
+          # ZAP tourne en conteneur : il joint le serveur de l'hôte par la passerelle Docker.
+          SECURITE_API_URL=http://localhost:8100 ./lancer.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: intrusion-ephemere, path: "securite/resultats\ndocs/securite/rapport-tests-intrusion.md", if-no-files-found: ignore }
+
+  environnement:
+    name: Intrusion — environnement déployé
+    if: inputs.cible == 'environnement'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    environment: ${{ inputs.environnement }}
+    steps:
+      - name: Cible autorisée
+        run: |
+          [ "${{ inputs.autorisation }}" = "true" ] || { echo "::error::autorisation non cochée : la suite écrit et ZAP attaque, refus"; exit 2; }
+          [ -n "${{ vars.APP_URL }}" ] || { echo "::error::APP_URL absente"; exit 2; }
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22", cache: npm, cache-dependency-path: securite/package-lock.json }
+      - name: Campagne contre l'environnement déployé
+        working-directory: securite
+        env:
+          SECURITE_API_URL: ${{ vars.APP_URL }}
+          SECURITE_SUPERADMIN_EMAIL: ${{ secrets.SUPERADMIN_EMAIL }}
+          SECURITE_SUPERADMIN_PASSWORD: ${{ secrets.SUPERADMIN_PASSWORD }}
+        run: |
+          npm ci && npx playwright install --with-deps chromium
+          ./lancer.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: "intrusion-${{ inputs.environnement }}", path: securite/resultats, if-no-files-found: ignore }

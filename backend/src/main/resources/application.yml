@@ -111,6 +111,8 @@ app:
     ollama:
       base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
       model: ${OLLAMA_MODEL:llama3.1}
+      # Jetons produits au plus par réponse (num_predict) : borne la durée d'une génération sur processeur.
+      longueur-max: ${OLLAMA_LONGUEUR_MAX:512}
   publication:
     # Répertoire de dépôt par défaut (SharePoint/OneDrive/Teams) quand aucun n'est saisi.
     dossier-defaut: ${PUBLICATION_DOSSIER_DEFAUT:Contrats}

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Chaîne d'intégration continue des bacs à sable (GitHub Actions et Azure DevOps l'appellent tels quels) :
-#  1. démarre les applications externes (ICP, pyHanko, Gotenberg, veraPDF, Mailpit, ClamAV) ;
+#  1. démarre les applications externes (ICP, pyHanko, Gotenberg, veraPDF, Mailpit, ClamAV, Ollama) ;
 #  2. démarre le serveur branché dessus, avec les mêmes variables qu'en production, et le frontend de recette ;
 #  3. exécute les scénarios e2e BS-01 à BS-08, puis les scénarios de validation et la contre-épreuve de révocation ;
 #  4. exécute les scénarios BDD de tous les appels d'offres (bdd/) et vérifie qu'aucune exigence n'est sans scénario ;
@@ -36,6 +36,14 @@ export CLM_CACHET_MAGASIN="$B/icp/etat/cachet.p12" CLM_CACHET_MOT_DE_PASSE="$(ca
 export CLM_CACHET_TSA_URL=http://localhost:18090/tsa CLM_CONVERSION_MODE=service CLM_CONVERSION_URL=http://localhost:18030
 export CLM_SIGNATURE_FOURNISSEUR=cachet NOTIFICATION_COURRIEL_MODE=smtp MAIL_HOST=localhost MAIL_PORT=11025
 export ANTIVIRUS_MODE=clamav ANTIVIRUS_CLAMAV_HOTE=localhost ANTIVIRUS_CLAMAV_PORT=13310
+# IA générative (Ollama du bac à sable) : petit modèle, tiré avant le démarrage du serveur.
+export OLLAMA_BASE_URL=http://localhost:11435 OLLAMA_MODEL=contrat-banc OLLAMA_LONGUEUR_MAX=120
+"${COMPOSE[@]}" up -d ia
+for _ in $(seq 1 60); do docker exec iq-bac-ia ollama list >/dev/null 2>&1 && break; sleep 2; done
+docker exec iq-bac-ia ollama pull qwen2.5:0.5b >/dev/null
+# Modèle du banc : 4 fils de calcul. Laissé à son défaut (tous les processeurs), le calcul s'étouffe sous la charge des
+# autres services et tombe à environ un jeton par seconde.
+docker exec iq-bac-ia sh -c 'printf "FROM qwen2.5:0.5b\nPARAMETER num_thread 4\n" > /tmp/Modelfile && ollama create contrat-banc -f /tmp/Modelfile' >/dev/null
 # clamd ne parle pas HTTP : on attend qu'il réponde « PONG » (signatures chargées).
 for _ in $(seq 1 90); do [[ "$( (printf 'PING\n'; sleep 1) | nc localhost 13310 2>/dev/null)" == PONG* ]] && break; sleep 2; done
 # Jar lancé directement : « mvn spring-boot:run » délègue à un processus Java qu'arrêter Maven ne tue pas.
@@ -70,10 +78,12 @@ if (cd "$RACINE/bdd" && npx playwright test); then bdd=0; else bdd=$?; fi
 [[ $bdd -eq 0 ]] || { echo "Scénarios BDD : écart relevé (bdd/playwright-report/)."; exit "$bdd"; }
 
 echo "== Scénarios e2e d'interface par exigence (bdd/e2e/)"
-(cd "$RACINE/bdd" && npm run e2e:couverture)
+(cd "$RACINE/bdd" && npm run e2e:couverture && node outils/inventaire-ecrans.mjs)
 if (cd "$RACINE/bdd" && npx playwright test -c playwright.e2e.config.ts); then e2e=0; else e2e=$?; fi
 (cd "$RACINE/bdd" && node outils/documenter-e2e.mjs)
 [[ $e2e -eq 0 ]] || { echo "Scénarios e2e : écart relevé (bdd/playwright-report-e2e/)."; exit "$e2e"; }
+# Chaque écran ouvert et chaque fonctionnalité d'écran (opération d'API tirée du code) déclenchée depuis l'interface.
+(cd "$RACINE/bdd" && npm run e2e:ecrans)
 
 echo "== Tests d'intrusion (securite/)"
 # Le rapport docs/securite/rapport-tests-intrusion.md est régénéré même en cas d'écart ; le verdict suit.

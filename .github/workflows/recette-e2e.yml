@@ -1,0 +1,50 @@
+# Recette de bout en bout contre un environnement DÉPLOYÉ — indépendante de l'hébergeur (OVH aujourd'hui, Azure demain).
+#
+# L'environnement GitHub (Settings › Environments) porte ce qui lui est propre :
+#   variable APP_URL         l'adresse publique (https://contrat.vinaitsolution.com…)
+#   secret   DEMO_PASSWORD   (facultatif) le mot de passe des comptes publiés, s'il diffère de data/tenants-demo.json
+#
+# Lecture seule (bdd/deploiement/recette.spec.ts) : chaque compte publié se connecte et ouvre chaque écran de son espace ;
+# aucune erreur JavaScript, aucune réponse 5xx, et pour l'administrateur le contrôle d'écran complet (WCAG 2.2 AA).
+# Les scénarios qui écrivent (bdd/, bdd/e2e/) tournent dans ci.yml contre une pile éphémère — jamais ici.
+name: Recette e2e (environnement déployé)
+
+on:
+  workflow_dispatch:
+    inputs:
+      environnement:
+        description: "Environnement GitHub visé"
+        type: string
+        default: contrat-demo
+  workflow_call:
+    inputs:
+      environnement: { type: string, required: true }
+
+permissions:
+  contents: read
+
+jobs:
+  recette:
+    name: Recette e2e — ${{ inputs.environnement }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: ${{ inputs.environnement }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: L'environnement est complet et répond
+        run: |
+          [ -n "${{ vars.APP_URL }}" ] || { echo "::error::variable APP_URL absente de l'environnement ${{ inputs.environnement }}"; exit 2; }
+          curl -fsS --retry 10 --retry-delay 5 --retry-all-errors "${{ vars.APP_URL }}/api/health"
+      - uses: actions/setup-node@v4
+        with: { node-version: "22", cache: npm, cache-dependency-path: bdd/package-lock.json }
+      - run: npm ci --no-audit --no-fund && npx playwright install --with-deps chromium
+        working-directory: bdd
+      - run: npx playwright test -c playwright.deploiement.config.ts
+        working-directory: bdd
+        env:
+          CI: "1"
+          E2E_BASE_URL: ${{ vars.APP_URL }}
+          E2E_DEMO_PASSWORD: ${{ secrets.DEMO_PASSWORD }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: "recette-e2e-${{ inputs.environnement }}", path: bdd/playwright-report-deploiement, if-no-files-found: ignore }

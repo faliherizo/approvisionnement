@@ -65,6 +65,14 @@ class FormulaireServiceTest {
         assertEquals(1, service.lister("RH").size());
     }
 
+    @Test void lister_ecarte_les_formulaires_supprimes() {
+        when(repo.findByTenantIdOrderByNomAsc(1L)).thenReturn(List.of(form(1, null, true), form(2, null, false)));
+        when(versions.findTopByFormulaireIdOrderByNumeroDesc(1L)).thenReturn(Optional.of(version(1, StatutFormulaire.BROUILLON)));
+        var liste = service.lister(null);
+        assertEquals(1, liste.size());
+        assertEquals(1L, liste.get(0).id());
+    }
+
     @Test void catalogue_ne_garde_que_les_publies_actifs() {
         when(repo.findByTenantIdOrderByNomAsc(1L)).thenReturn(List.of(form(1, null, true), form(2, null, true)));
         when(versions.findTopByFormulaireIdOrderByNumeroDesc(1L)).thenReturn(Optional.of(version(1, StatutFormulaire.PUBLIE)));

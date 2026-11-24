@@ -9644,5 +9644,30 @@
     "fr": "Supprimer les critères « {nom} »",
     "en": "Delete criteria “{nom}”",
     "mg": "Fafao ny fepetra « {nom} »"
+  },
+  "chat.retirerDocument": {
+    "fr": "Retirer « {titre} » de la base de connaissances",
+    "en": "Remove “{titre}” from the knowledge base",
+    "mg": "Esory amin'ny tahirin-kevitra ny « {titre} »"
+  },
+  "temps.retirerLigne": {
+    "fr": "Retirer la ligne {n}",
+    "en": "Remove line {n}",
+    "mg": "Esory ny andalana {n}"
+  },
+  "decl.retirerLigne": {
+    "fr": "Retirer la ligne {n}",
+    "en": "Remove line {n}",
+    "mg": "Esory ny andalana {n}"
+  },
+  "documenteditor.copieImpossible": {
+    "fr": "Copie impossible : le navigateur refuse l'accès au presse-papier.",
+    "en": "Copy failed: the browser denied clipboard access.",
+    "mg": "Tsy afaka nadika : nolavin'ny mpitety tranonkala ny fidirana amin'ny fitehirizana vonjimaika."
+  },
+  "signaturepad.zone": {
+    "fr": "Zone de signature manuscrite",
+    "en": "Handwritten signature area",
+    "mg": "Faritra fanaovana sonia an-tanana"
   }
 }

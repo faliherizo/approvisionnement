@@ -73,7 +73,7 @@ export default function ChatIA() {
               <header>
                 <strong>{k.titre}</strong>
                 {k.source && <span className="tag">{k.source}</span>}
-                <button className="danger" style={{ marginLeft: 'auto' }} onClick={() => supprimerDoc(k.id)}>×</button>
+                <button className="danger" style={{ marginLeft: 'auto' }} onClick={() => supprimerDoc(k.id)} aria-label={t('chat.retirerDocument', { titre: k.titre })}>×</button>
               </header>
               <p>{k.contenu.slice(0, 180)}{k.contenu.length > 180 ? '…' : ''}</p>
             </article>
@@ -84,7 +84,7 @@ export default function ChatIA() {
           <label>{t('chatia.labelTitre')}<input value={doc.titre} required onChange={(e) => setDoc({ ...doc, titre: e.target.value })} /></label>
           <label>{t('chatia.labelSource')}<input value={doc.source} onChange={(e) => setDoc({ ...doc, source: e.target.value })} /></label>
           <label>{t('chatia.labelContenu')}
-            <RichText value={doc.contenu} rows={5} onChange={(contenu) => setDoc((d) => ({ ...d, contenu }))} />
+            <RichText value={doc.contenu} rows={5} libelle={t('chatia.labelContenu')} onChange={(contenu) => setDoc((d) => ({ ...d, contenu }))} />
           </label>
           <button type="submit">{t('chatia.ajouter')}</button>
         </form>

@@ -173,7 +173,7 @@ export default function TemplateManager() {
               </label>
             </div>
             <label>{t('templatemanager.labelContexte')}
-              <RichText value={edition.contexte} onChange={(v) => setEdition({ ...edition, contexte: v })}
+              <RichText value={edition.contexte} libelle={t('templatemanager.labelContexte')} onChange={(v) => setEdition({ ...edition, contexte: v })}
                         rows={6} placeholder={t('templatemanager.placeholderContexte')} />
             </label>
             <div className="modal-actions">

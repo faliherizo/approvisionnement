@@ -91,6 +91,7 @@ export default function SignaturePad({ onChange, width = 460, height = 160 }) {
         width={width}
         height={height}
         className="sign-canvas"
+        role="img" aria-label={t('signaturepad.zone')}
         onMouseDown={commencer} onMouseMove={tracer} onMouseUp={finir} onMouseLeave={finir}
         onTouchStart={commencer} onTouchMove={tracer} onTouchEnd={finir}
       />

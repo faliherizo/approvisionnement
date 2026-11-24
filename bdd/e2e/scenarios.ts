@@ -9,7 +9,7 @@ import type { Cas, Fichier } from '../outils/cas'
  */
 export type Etape =
   | { aller: string }
-  | { connecter: string }
+  | { connecter: string | { email: string; motDePasse: string } }
   | { langue: 'fr' | 'en' | 'mg' }
   | { cliquer: string | { role: 'button' | 'link' | 'tab' | 'menuitem' | 'checkbox' | 'radio'; nom: string } }
   | { dansLaLigne: { texte: string; cliquer: string } }
@@ -26,6 +26,13 @@ export type Etape =
   | { preparer: string | Cas }
   | { telecharger: string }
   | { ecranConforme: true }
+  | { cliquerTexte: string }
+  | { dansLaFenetre: string }
+  | { dansLaSection: { titre: string; cliquer: string } }
+  | { repondre: string }
+  | { tracer: true }
+  | { lire: { selecteur: string; variable: string } }
+  | { remplirTotp: Record<string, string> }
 
 export type Scenario = {
   id: string

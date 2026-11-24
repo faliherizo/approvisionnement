@@ -1,0 +1,123 @@
+# Plateforme contractuelle — déploiement continu de la démonstration https://contrat.vinaitsolution.com (VPS OVH partagé).
+#
+#   secrets           : _gabarit-secrets.yml — gitleaks (historique) et Trivy (arborescence), avant toute construction.
+#   qualite           : tests du serveur et portes de couverture JaCoCo (mvn verify), construction du frontend.
+#   construire-livrer : les deux images construites ici (jamais sur le VPS, qui héberge une douzaine d'applications),
+#                       analysées par Trivy (bloquant) avec leur SBOM, chargées sur le serveur par SSH (docker save |
+#                       docker load : aucun registre à ouvrir), puis deploy/ovh/deployer.sh — sauvegarde pg_dump,
+#                       démarrage, santé, retour arrière automatique avec restauration de la base.
+#   recette           : recette-e2e.yml — la pile déployée, en lecture seule : chaque compte publié, chaque écran.
+# Performance (perf.yml) et intrusion contre l'environnement (intrusion.yml) se lancent à part : elles chargent ou
+# écrivent sur un serveur partagé. La campagne complète BDD + e2e + intrusion sur bacs à sable tourne dans ci.yml.
+#
+# Déclenché à chaque poussée sur develop, ou à la main (Actions › Run).
+# Secrets du dépôt : DEPLOY_HOST, DEPLOY_USER, DEPLOY_SSH_KEY, DEPLOY_KNOWN_HOSTS.
+# Environnement GitHub contrat-demo : APP_URL ; DEMO_PASSWORD (facultatif). Détail : docs/deploiement-ovh.md.
+name: Déployer contrat (démonstration)
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+concurrency:
+  group: deployer-contrat
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  secrets:
+    uses: ./.github/workflows/_gabarit-secrets.yml
+
+  qualite:
+    name: Tests et couverture
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17", cache: maven }
+      - name: Tests du serveur et portes de couverture (global et par classe)
+        working-directory: backend
+        run: mvn -B verify
+      - uses: actions/setup-node@v4
+        with: { node-version: "20", cache: npm, cache-dependency-path: frontend/package-lock.json }
+      - name: Construction du frontend
+        working-directory: frontend
+        run: npm ci && npm run build
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: couverture-serveur, path: backend/target/site/jacoco, if-no-files-found: ignore }
+
+  construire-livrer:
+    name: Construire, analyser, livrer, déployer
+    needs: [secrets, qualite]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment:
+      name: contrat-demo
+      url: https://contrat.vinaitsolution.com
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: version
+        run: echo "version=${GITHUB_SHA::12}" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@v3
+      - name: Image du serveur
+        uses: docker/build-push-action@v6
+        with:
+          context: backend
+          load: true
+          tags: contrat/backend:${{ steps.version.outputs.version }}
+          cache-from: type=gha,scope=contrat-backend
+          cache-to: type=gha,scope=contrat-backend,mode=max
+      - name: Image de l'interface (nginx)
+        uses: docker/build-push-action@v6
+        with:
+          context: frontend
+          load: true
+          tags: contrat/web:${{ steps.version.outputs.version }}
+          cache-from: type=gha,scope=contrat-web
+          cache-to: type=gha,scope=contrat-web,mode=max
+      # Une image dont une vulnérabilité élevée ou critique a un correctif ne quitte pas l'exécuteur.
+      - name: Analyse de l'image du serveur (Trivy, SBOM)
+        uses: ./.github/actions/trivy
+        with: { commande: image, cible: "contrat/backend:${{ steps.version.outputs.version }}", sbom: sbom-backend.cdx.json }
+      - name: Analyse de l'image de l'interface (Trivy, SBOM)
+        uses: ./.github/actions/trivy
+        with: { commande: image, cible: "contrat/web:${{ steps.version.outputs.version }}", sbom: sbom-web.cdx.json }
+      - uses: actions/upload-artifact@v4
+        with: { name: "sbom-${{ steps.version.outputs.version }}", path: "*.cdx.json" }
+      - name: Clé SSH du déploiement
+        env:
+          CLE: ${{ secrets.DEPLOY_SSH_KEY }}
+          HOTES: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$CLE" > ~/.ssh/ovh && chmod 600 ~/.ssh/ovh
+          printf '%s\n' "$HOTES" > ~/.ssh/known_hosts
+          printf 'Host ovh\n  HostName %s\n  User %s\n  IdentityFile ~/.ssh/ovh\n  IdentitiesOnly yes\n  StrictHostKeyChecking yes\n  ServerAliveInterval 30\n' \
+            "${{ secrets.DEPLOY_HOST }}" "${{ secrets.DEPLOY_USER }}" > ~/.ssh/config
+      - name: Livrer les images au serveur
+        run: |
+          V=${{ steps.version.outputs.version }}
+          docker save "contrat/backend:$V" "contrat/web:$V" | gzip -1 | ssh ovh 'gunzip | docker load'
+      # Le serveur ne prend du dépôt que deploy/ovh (composition et scripts) ; les images viennent d'ici.
+      - name: Déployer
+        run: |
+          ssh ovh "set -e; cd ~/projets/VINA-DOC/approvisionnement && git fetch --quiet origin && git checkout --quiet --force --detach ${GITHUB_SHA} \
+            && deploy/ovh/deployer.sh ${{ steps.version.outputs.version }}"
+      - name: La version servie répond
+        run: |
+          for i in $(seq 1 30); do curl -fsS "${{ vars.APP_URL }}/api/health" && exit 0; sleep 5; done; exit 1
+
+  recette:
+    name: Recette
+    needs: construire-livrer
+    uses: ./.github/workflows/recette-e2e.yml
+    with:
+      environnement: contrat-demo
+    secrets: inherit

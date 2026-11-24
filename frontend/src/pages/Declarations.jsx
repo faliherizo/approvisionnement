@@ -67,7 +67,7 @@ export default function Declarations() {
                 <input type="date" value={d.date} onChange={(e) => majDepense(i, 'date', e.target.value)} />
                 <input value={d.category} onChange={(e) => majDepense(i, 'category', e.target.value)} placeholder={t('decl.categorie')} />
                 <input type="number" value={d.amountHT} onChange={(e) => majDepense(i, 'amountHT', e.target.value)} placeholder="HT" />
-                <button type="button" className="danger" onClick={() => setDepenses(depenses.filter((_, j) => j !== i))}>×</button>
+                <button type="button" className="danger" onClick={() => setDepenses(depenses.filter((_, j) => j !== i))} aria-label={t('decl.retirerLigne', { n: i + 1 })}>×</button>
               </div>
             ))}
             <button type="button" className="secondary" onClick={() => setDepenses([...depenses, { date: periode.start, category: 'office', amountHT: 0 }])}>+ {t('decl.ajouterDepense')}</button>
@@ -101,7 +101,7 @@ export default function Declarations() {
                 <select value={b.frequency} onChange={(e) => majBulletin(i, 'frequency', e.target.value)}>
                   {['weekly', 'biweekly', 'semimonthly', 'monthly'].map((f) => <option key={f} value={f}>{f}</option>)}
                 </select>
-                <button type="button" className="danger" onClick={() => setBulletins(bulletins.filter((_, j) => j !== i))}>×</button>
+                <button type="button" className="danger" onClick={() => setBulletins(bulletins.filter((_, j) => j !== i))} aria-label={t('decl.retirerLigne', { n: i + 1 })}>×</button>
               </div>
             ))}
             <button type="button" className="secondary" onClick={() => setBulletins([...bulletins, { employeeId: 'e1', payDate: periode.start, grossSalary: 2000, frequency: 'biweekly' }])}>+ {t('decl.ajouterBulletin')}</button>

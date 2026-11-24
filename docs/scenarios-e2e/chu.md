@@ -61,6 +61,52 @@
 3. Voir « Applications »
 4. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
+### E2E-ECR-CHU-06 — Administration de la plateforme : applications, gabarits et règles de notification, approbations multi-niveaux, échanges hérités, permissions et groupes
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-1.04, CHU-5.01, CHU-4.07, CHU-8.04, CHU-7.03, CHU-7.04
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié (cible des notifications et des échanges)
+2. Ouvrir l'écran `/applications`
+3. Saisir « Code (ex. portail_appro) » : `app_${unique}` ; « Nom de l’application » : `Application E2E ${unique}`
+4. Activer « Créer »
+5. Dans la ligne « Application E2E ${unique} », activer « Éditer »
+6. Saisir « Description » : `Décrite par l'e2e`
+7. Activer « Enregistrer »
+8. Dans la ligne « Application E2E ${unique} », activer « Archiver »
+9. Ouvrir l'écran `/notifications`
+10. Saisir « Code (ex. accuse_reception) » : `avis_${unique}` ; « Sujet » : `Avis E2E` ; « Corps du message » : `Bonjour {{nom}}`
+11. Activer « Ajouter le gabarit »
+12. Saisir « Id du formulaire » : `${formulaire}`
+13. Choisir « Gabarit » : `avis_${unique}`
+14. Saisir « Destinataires (courriels, rôles…) » : `notif.${unique}@chu.example`
+15. Activer « Ajouter la règle »
+16. Ouvrir l'écran `/approbations`
+17. Saisir « Règles d’approbation » Type de document » : `BON_${UNIQUE}` ; « Champ » : `montant` ; « Valeur » : `1000` ; « Approbateur » : `ADMIN`
+18. Activer « Ajouter la règle »
+19. Saisir « Nouvelle demande d’approbation » Type de document » : `BON_${UNIQUE}` ; « Montant » : `5000`
+20. Activer « Créer la demande »
+21. Dans la section « Mes approbations en attente », activer « Approuver »
+22. Ouvrir l'écran `/interop`
+23. Saisir « Code d'échange » : `ech-${unique}` ; « Correspondances » : `NOM_EMPLOYE=nom`
+24. Choisir « Formulaire cible » : `(premier)`
+25. Activer « Déclarer l'échange »
+26. Choisir « Échange » : `ech-${unique}`
+27. Saisir « Export JSON » : `[{"NOM_EMPLOYE": "Alice"}]`
+28. Activer « Essayer (n'écrit rien) »
+29. Activer « Reprendre les lignes valides »
+30. Activer « Désactiver l'échange ech-${unique} » (button)
+31. Ouvrir l'écran `/securite-avancee`
+32. Saisir « Rôle / groupe / utilisateur » : `LECTEUR` ; « Code du champ / de la fiche / du bouton » : `cible_${unique}`
+33. Activer « Ajouter la permission »
+34. Dans la ligne « cible_${unique} », activer « Supprimer »
+35. Saisir « Code du groupe » : `grp_${unique}` ; « Nom du groupe » : `Groupe E2E ${unique}`
+36. Activer « Ajouter le groupe »
+37. Saisir « Identifiant / courriel — grp_${unique} » : `membre.${unique}@chu.example`
+38. Dans la ligne « grp_${unique} », activer « Ajouter »
+
 ## CHU-1.05 — Disponibilité 99,8 % en tout temps
 
 - **Source** : Avis d'intention CHU § 1
@@ -262,6 +308,25 @@
 11. Voir « Pièce justificative »
 12. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
+### E2E-ECR-CHU-01 — Le concepteur évalue les règles dans l'aperçu, revient à une version antérieure puis supprime un brouillon de formulaire
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-3.03, CHU-3.09, CHU-4.01
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié en deux versions, et un brouillon à supprimer
+2. Ouvrir l'écran `/formulaires`
+3. Dans la ligne « VERS ${unique} », activer « Concevoir »
+4. Activer « Aperçu »
+5. Saisir « Nom complet » : `Essai d'aperçu`
+6. Voir « Aperçu du formulaire »
+7. Activer « Versions » (tab)
+8. Activer « Revenir à cette version »
+9. Activer « ← Retour à la liste »
+10. Dans la ligne « SUPPR ${unique} », activer « Supprimer »
+11. Ne pas voir « SUPPR ${unique} »
+
 ## CHU-3.04 — Sauvegarde automatique + reprise ultérieure
 
 - **Source** : Avis d'intention CHU § 3
@@ -286,6 +351,45 @@
 10. Choisir « Activité » : `Formation`
 11. Voir « Pièce justificative »
 12. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-ECR-CHU-02 — Une fiche se dépose depuis le catalogue, puis se traite : pièce jointe et téléchargement, commentaire, document PDF, transmission, validation, critères sauvegardés ; un brouillon s'annule depuis « Mes demandes »
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-5.04, CHU-6.01, CHU-3.04, CHU-4.07
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié
+2. Ouvrir l'écran `/nouvelle-demande`
+3. Voir « FICH ${unique} »
+4. Ouvrir l'écran `/formulaires/${formulaire}/remplir`
+5. Saisir « Nom » : `Fiche traitée ${unique}`
+6. Activer « Soumettre »
+7. Ouvrir l'écran `/formulaires/${formulaire}/fiches`
+8. Activer « Détails »
+9. Joindre « piece-${unique}.pdf » au champ « Ajouter un document »
+10. Voir « piece-${unique}.pdf »
+11. Télécharger par « Télécharger » et obtenir un fichier non vide
+12. Saisir « Votre commentaire… » : `Commentaire de traitement ${unique}`
+13. Activer « Commenter »
+14. Voir « Commentaire de traitement ${unique} »
+15. Télécharger par « Document PDF de la fiche » et obtenir un fichier non vide
+16. Activer « Transmettre »
+17. Saisir « Courriel du destinataire » : `destinataire.${unique}@chu.example`
+18. Dans la fenêtre ouverte, activer « Envoyer le document »
+19. Activer « Valider »
+20. Saisir « Nom des critères » : `Critères ${unique}`
+21. Activer « Sauvegarder ces critères »
+22. Activer « Supprimer les critères « Critères ${unique} » » (button)
+23. Ouvrir l'écran `/formulaires/${formulaire}/fiches`
+24. Ne pas voir « Critères ${unique} »
+25. Ouvrir l'écran `/mes-demandes`
+26. Télécharger par « Document PDF de la fiche » et obtenir un fichier non vide
+27. Ouvrir l'écran `/formulaires/${formulaire}/remplir`
+28. Saisir « Nom » : `Brouillon ${unique}`
+29. Voir « Enregistré »
+30. Ouvrir l'écran `/mes-demandes`
+31. Activer « Annuler »
 
 ## CHU-3.05 — Activation/désactivation selon date, nb max de répondants, plage réseau
 
@@ -395,6 +499,25 @@
 16. Activer « Versions » (tab)
 17. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
+### E2E-ECR-CHU-01 — Le concepteur évalue les règles dans l'aperçu, revient à une version antérieure puis supprime un brouillon de formulaire
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-3.03, CHU-3.09, CHU-4.01
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié en deux versions, et un brouillon à supprimer
+2. Ouvrir l'écran `/formulaires`
+3. Dans la ligne « VERS ${unique} », activer « Concevoir »
+4. Activer « Aperçu »
+5. Saisir « Nom complet » : `Essai d'aperçu`
+6. Voir « Aperçu du formulaire »
+7. Activer « Versions » (tab)
+8. Activer « Revenir à cette version »
+9. Activer « ← Retour à la liste »
+10. Dans la ligne « SUPPR ${unique} », activer « Supprimer »
+11. Ne pas voir « SUPPR ${unique} »
+
 ## CHU-3.10 — Duplication / export / réimport de structure
 
 - **Source** : Avis d'intention CHU § 3
@@ -437,6 +560,25 @@
 10. Choisir « Activité » : `Formation`
 11. Voir « Pièce justificative »
 12. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-ECR-CHU-01 — Le concepteur évalue les règles dans l'aperçu, revient à une version antérieure puis supprime un brouillon de formulaire
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-3.03, CHU-3.09, CHU-4.01
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié en deux versions, et un brouillon à supprimer
+2. Ouvrir l'écran `/formulaires`
+3. Dans la ligne « VERS ${unique} », activer « Concevoir »
+4. Activer « Aperçu »
+5. Saisir « Nom complet » : `Essai d'aperçu`
+6. Voir « Aperçu du formulaire »
+7. Activer « Versions » (tab)
+8. Activer « Revenir à cette version »
+9. Activer « ← Retour à la liste »
+10. Dans la ligne « SUPPR ${unique} », activer « Supprimer »
+11. Ne pas voir « SUPPR ${unique} »
 
 ## CHU-4.02 — Obligatoire/facultatif selon le contexte
 
@@ -539,6 +681,28 @@
 12. Télécharger par « ⬇ Exporter en Excel » et obtenir un fichier non vide
 13. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
+### E2E-ECR-CHU-03 — Le concepteur donne un circuit à un formulaire ; la fiche soumise devient une tâche que l'administration examine et approuve
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-4.07, CHU-4.05
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié
+2. Ouvrir l'écran `/formulaires`
+3. Dans la ligne « CIRC ${unique} », activer « Concevoir »
+4. Activer « Workflow » (tab)
+5. Activer « + Ajouter une étape »
+6. Choisir « Responsable (rôle) » : `ADMIN`
+7. Activer « Enregistrer »
+8. Ouvrir l'écran `/formulaires/${formulaire}/remplir`
+9. Saisir « Nom » : `Demande à approuver ${unique}`
+10. Activer « Soumettre »
+11. Ouvrir l'écran `/taches`
+12. Dans la ligne « CIRC ${unique} », activer « Examiner »
+13. Saisir « Commentaire » : `Conforme`
+14. Dans la fenêtre ouverte, activer « Approuver »
+
 ## CHU-4.06 — Déclenchement d'événements selon données / modif de fiche
 
 - **Source** : Avis d'intention CHU § 4
@@ -582,6 +746,158 @@
 12. Télécharger par « ⬇ Exporter en Excel » et obtenir un fichier non vide
 13. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
+### E2E-ECR-CHU-02 — Une fiche se dépose depuis le catalogue, puis se traite : pièce jointe et téléchargement, commentaire, document PDF, transmission, validation, critères sauvegardés ; un brouillon s'annule depuis « Mes demandes »
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-5.04, CHU-6.01, CHU-3.04, CHU-4.07
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié
+2. Ouvrir l'écran `/nouvelle-demande`
+3. Voir « FICH ${unique} »
+4. Ouvrir l'écran `/formulaires/${formulaire}/remplir`
+5. Saisir « Nom » : `Fiche traitée ${unique}`
+6. Activer « Soumettre »
+7. Ouvrir l'écran `/formulaires/${formulaire}/fiches`
+8. Activer « Détails »
+9. Joindre « piece-${unique}.pdf » au champ « Ajouter un document »
+10. Voir « piece-${unique}.pdf »
+11. Télécharger par « Télécharger » et obtenir un fichier non vide
+12. Saisir « Votre commentaire… » : `Commentaire de traitement ${unique}`
+13. Activer « Commenter »
+14. Voir « Commentaire de traitement ${unique} »
+15. Télécharger par « Document PDF de la fiche » et obtenir un fichier non vide
+16. Activer « Transmettre »
+17. Saisir « Courriel du destinataire » : `destinataire.${unique}@chu.example`
+18. Dans la fenêtre ouverte, activer « Envoyer le document »
+19. Activer « Valider »
+20. Saisir « Nom des critères » : `Critères ${unique}`
+21. Activer « Sauvegarder ces critères »
+22. Activer « Supprimer les critères « Critères ${unique} » » (button)
+23. Ouvrir l'écran `/formulaires/${formulaire}/fiches`
+24. Ne pas voir « Critères ${unique} »
+25. Ouvrir l'écran `/mes-demandes`
+26. Télécharger par « Document PDF de la fiche » et obtenir un fichier non vide
+27. Ouvrir l'écran `/formulaires/${formulaire}/remplir`
+28. Saisir « Nom » : `Brouillon ${unique}`
+29. Voir « Enregistré »
+30. Ouvrir l'écran `/mes-demandes`
+31. Activer « Annuler »
+
+### E2E-ECR-CHU-03 — Le concepteur donne un circuit à un formulaire ; la fiche soumise devient une tâche que l'administration examine et approuve
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-4.07, CHU-4.05
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié
+2. Ouvrir l'écran `/formulaires`
+3. Dans la ligne « CIRC ${unique} », activer « Concevoir »
+4. Activer « Workflow » (tab)
+5. Activer « + Ajouter une étape »
+6. Choisir « Responsable (rôle) » : `ADMIN`
+7. Activer « Enregistrer »
+8. Ouvrir l'écran `/formulaires/${formulaire}/remplir`
+9. Saisir « Nom » : `Demande à approuver ${unique}`
+10. Activer « Soumettre »
+11. Ouvrir l'écran `/taches`
+12. Dans la ligne « CIRC ${unique} », activer « Examiner »
+13. Saisir « Commentaire » : `Conforme`
+14. Dans la fenêtre ouverte, activer « Approuver »
+
+### E2E-ECR-CHU-04 — Ressources humaines : un employé est créé, modifié, consulté avec son aperçu de paie, puis archivé ; une feuille de temps est saisie, soumise et approuvée ; un projet et ses tâches se gèrent
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-9.01, CHU-4.07
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/rh/personnel`
+2. Saisir « Prénom » : `Camille` ; « Nom » : `E2E ${unique}` ; « Poste » : `Analyste` ; « Salaire annuel ($) » : `65000`
+3. Activer « Créer »
+4. Voir « Camille E2E ${unique} »
+5. Dans la ligne « E2E ${unique} », activer « Éditer »
+6. Saisir « Département » : `Ressources humaines`
+7. Activer « Enregistrer »
+8. Activer « Camille E2E ${unique} »
+9. Activer « Paie » (tab)
+10. Activer « Calculer le bulletin »
+11. Ouvrir l'écran `/rh/personnel`
+12. Dans la ligne « E2E ${unique} », activer « Archiver »
+13. Dans la ligne « E2E ${unique} », activer « Réactiver »
+14. Ouvrir l'écran `/rh/feuilles-temps`
+15. Activer « + Nouvelle feuille »
+16. Activer « + Ajouter une ligne »
+17. Saisir « Heures » : `7`
+18. Activer « Enregistrer »
+19. Activer « Ouvrir »
+20. Saisir « Heures » : `7.5`
+21. Activer « Enregistrer »
+22. Activer « Ouvrir »
+23. Activer « Soumettre »
+24. Ouvrir l'écran `/rh/feuilles-temps`
+25. Activer « Approuver »
+26. Ouvrir l'écran `/rh/projets-taches`
+27. Saisir « Code » : `PRJ-${UNIQUE}` ; « Nom du projet » : `Projet E2E ${unique}`
+28. Activer « Créer le projet »
+29. Ouvrir l'écran `/rh/projets-taches`
+30. Choisir « Projet » : `Projet E2E ${unique}`
+31. Saisir « Nom de la tâche » : `Tâche E2E ${unique}`
+32. Activer « Créer la tâche »
+33. Dans la ligne « Tâche E2E ${unique} », activer « Éditer »
+34. Saisir « Nom de la tâche » : `Tâche E2E modifiée ${unique}`
+35. Activer « Enregistrer »
+36. Dans la ligne « Tâche E2E modifiée ${unique} », activer « Supprimer »
+37. Ne pas voir « Tâche E2E modifiée ${unique} »
+
+### E2E-ECR-CHU-06 — Administration de la plateforme : applications, gabarits et règles de notification, approbations multi-niveaux, échanges hérités, permissions et groupes
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-1.04, CHU-5.01, CHU-4.07, CHU-8.04, CHU-7.03, CHU-7.04
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié (cible des notifications et des échanges)
+2. Ouvrir l'écran `/applications`
+3. Saisir « Code (ex. portail_appro) » : `app_${unique}` ; « Nom de l’application » : `Application E2E ${unique}`
+4. Activer « Créer »
+5. Dans la ligne « Application E2E ${unique} », activer « Éditer »
+6. Saisir « Description » : `Décrite par l'e2e`
+7. Activer « Enregistrer »
+8. Dans la ligne « Application E2E ${unique} », activer « Archiver »
+9. Ouvrir l'écran `/notifications`
+10. Saisir « Code (ex. accuse_reception) » : `avis_${unique}` ; « Sujet » : `Avis E2E` ; « Corps du message » : `Bonjour {{nom}}`
+11. Activer « Ajouter le gabarit »
+12. Saisir « Id du formulaire » : `${formulaire}`
+13. Choisir « Gabarit » : `avis_${unique}`
+14. Saisir « Destinataires (courriels, rôles…) » : `notif.${unique}@chu.example`
+15. Activer « Ajouter la règle »
+16. Ouvrir l'écran `/approbations`
+17. Saisir « Règles d’approbation » Type de document » : `BON_${UNIQUE}` ; « Champ » : `montant` ; « Valeur » : `1000` ; « Approbateur » : `ADMIN`
+18. Activer « Ajouter la règle »
+19. Saisir « Nouvelle demande d’approbation » Type de document » : `BON_${UNIQUE}` ; « Montant » : `5000`
+20. Activer « Créer la demande »
+21. Dans la section « Mes approbations en attente », activer « Approuver »
+22. Ouvrir l'écran `/interop`
+23. Saisir « Code d'échange » : `ech-${unique}` ; « Correspondances » : `NOM_EMPLOYE=nom`
+24. Choisir « Formulaire cible » : `(premier)`
+25. Activer « Déclarer l'échange »
+26. Choisir « Échange » : `ech-${unique}`
+27. Saisir « Export JSON » : `[{"NOM_EMPLOYE": "Alice"}]`
+28. Activer « Essayer (n'écrit rien) »
+29. Activer « Reprendre les lignes valides »
+30. Activer « Désactiver l'échange ech-${unique} » (button)
+31. Ouvrir l'écran `/securite-avancee`
+32. Saisir « Rôle / groupe / utilisateur » : `LECTEUR` ; « Code du champ / de la fiche / du bouton » : `cible_${unique}`
+33. Activer « Ajouter la permission »
+34. Dans la ligne « cible_${unique} », activer « Supprimer »
+35. Saisir « Code du groupe » : `grp_${unique}` ; « Nom du groupe » : `Groupe E2E ${unique}`
+36. Activer « Ajouter le groupe »
+37. Saisir « Identifiant / courriel — grp_${unique} » : `membre.${unique}@chu.example`
+38. Dans la ligne « grp_${unique} », activer « Ajouter »
+
 ## CHU-4.08 — Gestion d'inventaire / capacité (inscriptions à des activités)
 
 - **Source** : Avis d'intention CHU § 4
@@ -616,6 +932,52 @@
 2. Ouvrir l'écran `/notifications`
 3. Voir « Gabarits », « Règles d’envoi », « Journal des envois »
 4. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-ECR-CHU-06 — Administration de la plateforme : applications, gabarits et règles de notification, approbations multi-niveaux, échanges hérités, permissions et groupes
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-1.04, CHU-5.01, CHU-4.07, CHU-8.04, CHU-7.03, CHU-7.04
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié (cible des notifications et des échanges)
+2. Ouvrir l'écran `/applications`
+3. Saisir « Code (ex. portail_appro) » : `app_${unique}` ; « Nom de l’application » : `Application E2E ${unique}`
+4. Activer « Créer »
+5. Dans la ligne « Application E2E ${unique} », activer « Éditer »
+6. Saisir « Description » : `Décrite par l'e2e`
+7. Activer « Enregistrer »
+8. Dans la ligne « Application E2E ${unique} », activer « Archiver »
+9. Ouvrir l'écran `/notifications`
+10. Saisir « Code (ex. accuse_reception) » : `avis_${unique}` ; « Sujet » : `Avis E2E` ; « Corps du message » : `Bonjour {{nom}}`
+11. Activer « Ajouter le gabarit »
+12. Saisir « Id du formulaire » : `${formulaire}`
+13. Choisir « Gabarit » : `avis_${unique}`
+14. Saisir « Destinataires (courriels, rôles…) » : `notif.${unique}@chu.example`
+15. Activer « Ajouter la règle »
+16. Ouvrir l'écran `/approbations`
+17. Saisir « Règles d’approbation » Type de document » : `BON_${UNIQUE}` ; « Champ » : `montant` ; « Valeur » : `1000` ; « Approbateur » : `ADMIN`
+18. Activer « Ajouter la règle »
+19. Saisir « Nouvelle demande d’approbation » Type de document » : `BON_${UNIQUE}` ; « Montant » : `5000`
+20. Activer « Créer la demande »
+21. Dans la section « Mes approbations en attente », activer « Approuver »
+22. Ouvrir l'écran `/interop`
+23. Saisir « Code d'échange » : `ech-${unique}` ; « Correspondances » : `NOM_EMPLOYE=nom`
+24. Choisir « Formulaire cible » : `(premier)`
+25. Activer « Déclarer l'échange »
+26. Choisir « Échange » : `ech-${unique}`
+27. Saisir « Export JSON » : `[{"NOM_EMPLOYE": "Alice"}]`
+28. Activer « Essayer (n'écrit rien) »
+29. Activer « Reprendre les lignes valides »
+30. Activer « Désactiver l'échange ech-${unique} » (button)
+31. Ouvrir l'écran `/securite-avancee`
+32. Saisir « Rôle / groupe / utilisateur » : `LECTEUR` ; « Code du champ / de la fiche / du bouton » : `cible_${unique}`
+33. Activer « Ajouter la permission »
+34. Dans la ligne « cible_${unique} », activer « Supprimer »
+35. Saisir « Code du groupe » : `grp_${unique}` ; « Nom du groupe » : `Groupe E2E ${unique}`
+36. Activer « Ajouter le groupe »
+37. Saisir « Identifiant / courriel — grp_${unique} » : `membre.${unique}@chu.example`
+38. Dans la ligne « grp_${unique} », activer « Ajouter »
 
 ## CHU-5.02 — Confirmation à la soumission
 
@@ -676,6 +1038,45 @@
 3. Voir « Transmettre »
 4. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
+### E2E-ECR-CHU-02 — Une fiche se dépose depuis le catalogue, puis se traite : pièce jointe et téléchargement, commentaire, document PDF, transmission, validation, critères sauvegardés ; un brouillon s'annule depuis « Mes demandes »
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-5.04, CHU-6.01, CHU-3.04, CHU-4.07
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié
+2. Ouvrir l'écran `/nouvelle-demande`
+3. Voir « FICH ${unique} »
+4. Ouvrir l'écran `/formulaires/${formulaire}/remplir`
+5. Saisir « Nom » : `Fiche traitée ${unique}`
+6. Activer « Soumettre »
+7. Ouvrir l'écran `/formulaires/${formulaire}/fiches`
+8. Activer « Détails »
+9. Joindre « piece-${unique}.pdf » au champ « Ajouter un document »
+10. Voir « piece-${unique}.pdf »
+11. Télécharger par « Télécharger » et obtenir un fichier non vide
+12. Saisir « Votre commentaire… » : `Commentaire de traitement ${unique}`
+13. Activer « Commenter »
+14. Voir « Commentaire de traitement ${unique} »
+15. Télécharger par « Document PDF de la fiche » et obtenir un fichier non vide
+16. Activer « Transmettre »
+17. Saisir « Courriel du destinataire » : `destinataire.${unique}@chu.example`
+18. Dans la fenêtre ouverte, activer « Envoyer le document »
+19. Activer « Valider »
+20. Saisir « Nom des critères » : `Critères ${unique}`
+21. Activer « Sauvegarder ces critères »
+22. Activer « Supprimer les critères « Critères ${unique} » » (button)
+23. Ouvrir l'écran `/formulaires/${formulaire}/fiches`
+24. Ne pas voir « Critères ${unique} »
+25. Ouvrir l'écran `/mes-demandes`
+26. Télécharger par « Document PDF de la fiche » et obtenir un fichier non vide
+27. Ouvrir l'écran `/formulaires/${formulaire}/remplir`
+28. Saisir « Nom » : `Brouillon ${unique}`
+29. Voir « Enregistré »
+30. Ouvrir l'écran `/mes-demandes`
+31. Activer « Annuler »
+
 ## CHU-5.05 — Messagerie interne sécurisée
 
 - **Source** : Avis d'intention CHU § 5
@@ -692,6 +1093,37 @@
 2. Ouvrir l'écran `/messagerie`
 3. Voir « Messagerie interne », « Conversations »
 4. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-ECR-CHU-07 — Un tableau de bord est créé, ouvert, modifié puis supprimé ; une conversation est ouverte, reçoit une réponse et un participant
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-6.04, CHU-5.05
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié (source des indicateurs) ; deux membres de l'organisation
+2. Ouvrir l'écran `/tableaux-de-bord`
+3. Activer « Nouveau tableau de bord »
+4. Saisir « Nom » : `Tableau E2E ${unique}` ; « Titre de l'indicateur » : `Fiches par activité`
+5. Choisir « Formulaire » : `TDB ${unique}`
+6. Activer « Enregistrer »
+7. Choisir « Tableau de bord » : `Tableau E2E ${unique}`
+8. Voir « Fiches par activité »
+9. Activer « Modifier »
+10. Saisir « Nom » : `Tableau E2E modifié ${unique}`
+11. Activer « Enregistrer »
+12. Activer « Supprimer le tableau de bord »
+13. Dans la fenêtre ouverte, activer « Confirmer »
+14. Ouvrir l'écran `/messagerie`
+15. Activer « Nouvelle conversation »
+16. Saisir « Sujet » : `Conversation E2E ${unique}` ; « Participants (courriels) » : `participant.${unique}@chu.example` ; « Message » : `Premier message`
+17. Activer « Envoyer »
+18. Activer « Conversation E2E ${unique} »
+19. Saisir « Votre réponse » : `Réponse E2E`
+20. Activer « Envoyer »
+21. Voir « Réponse E2E »
+22. Saisir « Ajouter un participant (courriel) » : `invite.${unique}@chu.example`
+23. Activer « Ajouter »
 
 ## CHU-6.01 — Recherche multicritère + critères sauvegardés
 
@@ -718,6 +1150,45 @@
 11. Voir « ${ficheNumero} »
 12. Télécharger par « ⬇ Exporter en Excel » et obtenir un fichier non vide
 13. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-ECR-CHU-02 — Une fiche se dépose depuis le catalogue, puis se traite : pièce jointe et téléchargement, commentaire, document PDF, transmission, validation, critères sauvegardés ; un brouillon s'annule depuis « Mes demandes »
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-5.04, CHU-6.01, CHU-3.04, CHU-4.07
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié
+2. Ouvrir l'écran `/nouvelle-demande`
+3. Voir « FICH ${unique} »
+4. Ouvrir l'écran `/formulaires/${formulaire}/remplir`
+5. Saisir « Nom » : `Fiche traitée ${unique}`
+6. Activer « Soumettre »
+7. Ouvrir l'écran `/formulaires/${formulaire}/fiches`
+8. Activer « Détails »
+9. Joindre « piece-${unique}.pdf » au champ « Ajouter un document »
+10. Voir « piece-${unique}.pdf »
+11. Télécharger par « Télécharger » et obtenir un fichier non vide
+12. Saisir « Votre commentaire… » : `Commentaire de traitement ${unique}`
+13. Activer « Commenter »
+14. Voir « Commentaire de traitement ${unique} »
+15. Télécharger par « Document PDF de la fiche » et obtenir un fichier non vide
+16. Activer « Transmettre »
+17. Saisir « Courriel du destinataire » : `destinataire.${unique}@chu.example`
+18. Dans la fenêtre ouverte, activer « Envoyer le document »
+19. Activer « Valider »
+20. Saisir « Nom des critères » : `Critères ${unique}`
+21. Activer « Sauvegarder ces critères »
+22. Activer « Supprimer les critères « Critères ${unique} » » (button)
+23. Ouvrir l'écran `/formulaires/${formulaire}/fiches`
+24. Ne pas voir « Critères ${unique} »
+25. Ouvrir l'écran `/mes-demandes`
+26. Télécharger par « Document PDF de la fiche » et obtenir un fichier non vide
+27. Ouvrir l'écran `/formulaires/${formulaire}/remplir`
+28. Saisir « Nom » : `Brouillon ${unique}`
+29. Voir « Enregistré »
+30. Ouvrir l'écran `/mes-demandes`
+31. Activer « Annuler »
 
 ## CHU-6.02 — Export Excel (toutes/sélection)
 
@@ -780,6 +1251,37 @@
 2. Ouvrir l'écran `/tableaux-de-bord`
 3. Voir « Tableaux de bord »
 4. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-ECR-CHU-07 — Un tableau de bord est créé, ouvert, modifié puis supprimé ; une conversation est ouverte, reçoit une réponse et un participant
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-6.04, CHU-5.05
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié (source des indicateurs) ; deux membres de l'organisation
+2. Ouvrir l'écran `/tableaux-de-bord`
+3. Activer « Nouveau tableau de bord »
+4. Saisir « Nom » : `Tableau E2E ${unique}` ; « Titre de l'indicateur » : `Fiches par activité`
+5. Choisir « Formulaire » : `TDB ${unique}`
+6. Activer « Enregistrer »
+7. Choisir « Tableau de bord » : `Tableau E2E ${unique}`
+8. Voir « Fiches par activité »
+9. Activer « Modifier »
+10. Saisir « Nom » : `Tableau E2E modifié ${unique}`
+11. Activer « Enregistrer »
+12. Activer « Supprimer le tableau de bord »
+13. Dans la fenêtre ouverte, activer « Confirmer »
+14. Ouvrir l'écran `/messagerie`
+15. Activer « Nouvelle conversation »
+16. Saisir « Sujet » : `Conversation E2E ${unique}` ; « Participants (courriels) » : `participant.${unique}@chu.example` ; « Message » : `Premier message`
+17. Activer « Envoyer »
+18. Activer « Conversation E2E ${unique} »
+19. Saisir « Votre réponse » : `Réponse E2E`
+20. Activer « Envoyer »
+21. Voir « Réponse E2E »
+22. Saisir « Ajouter un participant (courriel) » : `invite.${unique}@chu.example`
+23. Activer « Ajouter »
 
 ## CHU-6.05 — Pages listes/dashboards/rapports selon les droits
 
@@ -888,6 +1390,52 @@
 5. Voir « Groupe E2E ${unique} »
 6. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
+### E2E-ECR-CHU-06 — Administration de la plateforme : applications, gabarits et règles de notification, approbations multi-niveaux, échanges hérités, permissions et groupes
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-1.04, CHU-5.01, CHU-4.07, CHU-8.04, CHU-7.03, CHU-7.04
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié (cible des notifications et des échanges)
+2. Ouvrir l'écran `/applications`
+3. Saisir « Code (ex. portail_appro) » : `app_${unique}` ; « Nom de l’application » : `Application E2E ${unique}`
+4. Activer « Créer »
+5. Dans la ligne « Application E2E ${unique} », activer « Éditer »
+6. Saisir « Description » : `Décrite par l'e2e`
+7. Activer « Enregistrer »
+8. Dans la ligne « Application E2E ${unique} », activer « Archiver »
+9. Ouvrir l'écran `/notifications`
+10. Saisir « Code (ex. accuse_reception) » : `avis_${unique}` ; « Sujet » : `Avis E2E` ; « Corps du message » : `Bonjour {{nom}}`
+11. Activer « Ajouter le gabarit »
+12. Saisir « Id du formulaire » : `${formulaire}`
+13. Choisir « Gabarit » : `avis_${unique}`
+14. Saisir « Destinataires (courriels, rôles…) » : `notif.${unique}@chu.example`
+15. Activer « Ajouter la règle »
+16. Ouvrir l'écran `/approbations`
+17. Saisir « Règles d’approbation » Type de document » : `BON_${UNIQUE}` ; « Champ » : `montant` ; « Valeur » : `1000` ; « Approbateur » : `ADMIN`
+18. Activer « Ajouter la règle »
+19. Saisir « Nouvelle demande d’approbation » Type de document » : `BON_${UNIQUE}` ; « Montant » : `5000`
+20. Activer « Créer la demande »
+21. Dans la section « Mes approbations en attente », activer « Approuver »
+22. Ouvrir l'écran `/interop`
+23. Saisir « Code d'échange » : `ech-${unique}` ; « Correspondances » : `NOM_EMPLOYE=nom`
+24. Choisir « Formulaire cible » : `(premier)`
+25. Activer « Déclarer l'échange »
+26. Choisir « Échange » : `ech-${unique}`
+27. Saisir « Export JSON » : `[{"NOM_EMPLOYE": "Alice"}]`
+28. Activer « Essayer (n'écrit rien) »
+29. Activer « Reprendre les lignes valides »
+30. Activer « Désactiver l'échange ech-${unique} » (button)
+31. Ouvrir l'écran `/securite-avancee`
+32. Saisir « Rôle / groupe / utilisateur » : `LECTEUR` ; « Code du champ / de la fiche / du bouton » : `cible_${unique}`
+33. Activer « Ajouter la permission »
+34. Dans la ligne « cible_${unique} », activer « Supprimer »
+35. Saisir « Code du groupe » : `grp_${unique}` ; « Nom du groupe » : `Groupe E2E ${unique}`
+36. Activer « Ajouter le groupe »
+37. Saisir « Identifiant / courriel — grp_${unique} » : `membre.${unique}@chu.example`
+38. Dans la ligne « grp_${unique} », activer « Ajouter »
+
 ## CHU-7.04 — Contrôle d'accès par utilisateur/groupe/rôle/formulaire/champ/page/fiche/bouton
 
 - **Source** : Avis d'intention CHU § 7
@@ -906,6 +1454,52 @@
 4. Activer « Ajouter le groupe »
 5. Voir « Groupe E2E ${unique} »
 6. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-ECR-CHU-06 — Administration de la plateforme : applications, gabarits et règles de notification, approbations multi-niveaux, échanges hérités, permissions et groupes
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-1.04, CHU-5.01, CHU-4.07, CHU-8.04, CHU-7.03, CHU-7.04
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié (cible des notifications et des échanges)
+2. Ouvrir l'écran `/applications`
+3. Saisir « Code (ex. portail_appro) » : `app_${unique}` ; « Nom de l’application » : `Application E2E ${unique}`
+4. Activer « Créer »
+5. Dans la ligne « Application E2E ${unique} », activer « Éditer »
+6. Saisir « Description » : `Décrite par l'e2e`
+7. Activer « Enregistrer »
+8. Dans la ligne « Application E2E ${unique} », activer « Archiver »
+9. Ouvrir l'écran `/notifications`
+10. Saisir « Code (ex. accuse_reception) » : `avis_${unique}` ; « Sujet » : `Avis E2E` ; « Corps du message » : `Bonjour {{nom}}`
+11. Activer « Ajouter le gabarit »
+12. Saisir « Id du formulaire » : `${formulaire}`
+13. Choisir « Gabarit » : `avis_${unique}`
+14. Saisir « Destinataires (courriels, rôles…) » : `notif.${unique}@chu.example`
+15. Activer « Ajouter la règle »
+16. Ouvrir l'écran `/approbations`
+17. Saisir « Règles d’approbation » Type de document » : `BON_${UNIQUE}` ; « Champ » : `montant` ; « Valeur » : `1000` ; « Approbateur » : `ADMIN`
+18. Activer « Ajouter la règle »
+19. Saisir « Nouvelle demande d’approbation » Type de document » : `BON_${UNIQUE}` ; « Montant » : `5000`
+20. Activer « Créer la demande »
+21. Dans la section « Mes approbations en attente », activer « Approuver »
+22. Ouvrir l'écran `/interop`
+23. Saisir « Code d'échange » : `ech-${unique}` ; « Correspondances » : `NOM_EMPLOYE=nom`
+24. Choisir « Formulaire cible » : `(premier)`
+25. Activer « Déclarer l'échange »
+26. Choisir « Échange » : `ech-${unique}`
+27. Saisir « Export JSON » : `[{"NOM_EMPLOYE": "Alice"}]`
+28. Activer « Essayer (n'écrit rien) »
+29. Activer « Reprendre les lignes valides »
+30. Activer « Désactiver l'échange ech-${unique} » (button)
+31. Ouvrir l'écran `/securite-avancee`
+32. Saisir « Rôle / groupe / utilisateur » : `LECTEUR` ; « Code du champ / de la fiche / du bouton » : `cible_${unique}`
+33. Activer « Ajouter la permission »
+34. Dans la ligne « cible_${unique} », activer « Supprimer »
+35. Saisir « Code du groupe » : `grp_${unique}` ; « Nom du groupe » : `Groupe E2E ${unique}`
+36. Activer « Ajouter le groupe »
+37. Saisir « Identifiant / courriel — grp_${unique} » : `membre.${unique}@chu.example`
+38. Dans la ligne « grp_${unique} », activer « Ajouter »
 
 ## CHU-7.05 — Classification public/interne/confidentiel/secret
 
@@ -1078,6 +1672,52 @@
 2. Ouvrir l'écran `/interop`
 3. Voir « Échanges hérités », « Reprise de l'historique »
 4. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-ECR-CHU-06 — Administration de la plateforme : applications, gabarits et règles de notification, approbations multi-niveaux, échanges hérités, permissions et groupes
+
+- **Profil** : administrateur CHU (organisation CHU)
+- **Exigences démontrées** : CHU-1.04, CHU-5.01, CHU-4.07, CHU-8.04, CHU-7.03, CHU-7.04
+- **Données** : `bdd/e2e/donnees/ecrans-chu.json`
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Formulaire publié (cible des notifications et des échanges)
+2. Ouvrir l'écran `/applications`
+3. Saisir « Code (ex. portail_appro) » : `app_${unique}` ; « Nom de l’application » : `Application E2E ${unique}`
+4. Activer « Créer »
+5. Dans la ligne « Application E2E ${unique} », activer « Éditer »
+6. Saisir « Description » : `Décrite par l'e2e`
+7. Activer « Enregistrer »
+8. Dans la ligne « Application E2E ${unique} », activer « Archiver »
+9. Ouvrir l'écran `/notifications`
+10. Saisir « Code (ex. accuse_reception) » : `avis_${unique}` ; « Sujet » : `Avis E2E` ; « Corps du message » : `Bonjour {{nom}}`
+11. Activer « Ajouter le gabarit »
+12. Saisir « Id du formulaire » : `${formulaire}`
+13. Choisir « Gabarit » : `avis_${unique}`
+14. Saisir « Destinataires (courriels, rôles…) » : `notif.${unique}@chu.example`
+15. Activer « Ajouter la règle »
+16. Ouvrir l'écran `/approbations`
+17. Saisir « Règles d’approbation » Type de document » : `BON_${UNIQUE}` ; « Champ » : `montant` ; « Valeur » : `1000` ; « Approbateur » : `ADMIN`
+18. Activer « Ajouter la règle »
+19. Saisir « Nouvelle demande d’approbation » Type de document » : `BON_${UNIQUE}` ; « Montant » : `5000`
+20. Activer « Créer la demande »
+21. Dans la section « Mes approbations en attente », activer « Approuver »
+22. Ouvrir l'écran `/interop`
+23. Saisir « Code d'échange » : `ech-${unique}` ; « Correspondances » : `NOM_EMPLOYE=nom`
+24. Choisir « Formulaire cible » : `(premier)`
+25. Activer « Déclarer l'échange »
+26. Choisir « Échange » : `ech-${unique}`
+27. Saisir « Export JSON » : `[{"NOM_EMPLOYE": "Alice"}]`
+28. Activer « Essayer (n'écrit rien) »
+29. Activer « Reprendre les lignes valides »
+30. Activer « Désactiver l'échange ech-${unique} » (button)
+31. Ouvrir l'écran `/securite-avancee`
+32. Saisir « Rôle / groupe / utilisateur » : `LECTEUR` ; « Code du champ / de la fiche / du bouton » : `cible_${unique}`
+33. Activer « Ajouter la permission »
+34. Dans la ligne « cible_${unique} », activer « Supprimer »
+35. Saisir « Code du groupe » : `grp_${unique}` ; « Nom du groupe » : `Groupe E2E ${unique}`
+36. Activer « Ajouter le groupe »
+37. Saisir « Identifiant / courriel — grp_${unique} » : `membre.${unique}@chu.example`
+38. Dans la ligne « grp_${unique} », activer « Ajouter »
 
 ## CHU-9.01 — Licences 2 secteurs (RH + Appro) + 4 apps Web
 

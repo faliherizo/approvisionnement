@@ -106,7 +106,8 @@ export function substituer<T>(valeur: T, variables: Record<string, unknown>): T 
   }
   if (Array.isArray(valeur)) return valeur.map((v) => substituer(v, variables)) as T
   if (valeur && typeof valeur === 'object') {
-    return Object.fromEntries(Object.entries(valeur).map(([k, v]) => [k, substituer(v, variables)])) as T
+    // Une clé peut porter une variable (libellé d'un champ qui contient un code unique) : elle est substituée aussi.
+    return Object.fromEntries(Object.entries(valeur).map(([k, v]) => [k.includes('${') ? String(substituer(k, variables)) : k, substituer(v, variables)])) as T
   }
   return valeur
 }

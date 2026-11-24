@@ -10,9 +10,12 @@
     "documenter": "node outils/documenter.mjs",
     "couverture": "node outils/documenter.mjs --verifier",
     "rapport": "playwright show-report",
-    "e2e": "playwright test -c playwright.e2e.config.ts; node outils/documenter-e2e.mjs",
+    "e2e": "node outils/inventaire-ecrans.mjs && playwright test -c playwright.e2e.config.ts; node outils/documenter-e2e.mjs; node outils/couverture-ecrans.mjs",
     "e2e:documenter": "node outils/documenter-e2e.mjs",
-    "e2e:couverture": "node outils/documenter-e2e.mjs --verifier"
+    "e2e:couverture": "node outils/documenter-e2e.mjs --verifier",
+    "e2e:inventaire": "node outils/inventaire-ecrans.mjs",
+    "e2e:ecrans": "node outils/couverture-ecrans.mjs --verifier",
+    "recette": "playwright test -c playwright.deploiement.config.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",

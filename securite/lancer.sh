@@ -21,7 +21,7 @@ echo "== 1. Tests d'intrusion automatisés"
 echo "== 2. OWASP ZAP (API, authentifié)"
 JETON=$(curl -s -i -X POST "$API/api/auth/login" -H 'Content-Type: application/json' \
   -d '{"email":"admin@intrusion-a.example","motDePasse":"Intrusion!2026x"}' | sed -n 's/^[Ss]et-[Cc]ookie: ACCESS_TOKEN=\([^;]*\).*/\1/p')
-docker run --rm -v "$R:/zap/wrk:rw" zaproxy/zap-stable:2.16.1 zap-api-scan.py -t "$API_DOCKER/v3/api-docs" -f openapi \
+docker run --rm --add-host=host.docker.internal:host-gateway -v "$R:/zap/wrk:rw" zaproxy/zap-stable:2.16.1 zap-api-scan.py -t "$API_DOCKER/v3/api-docs" -f openapi \
   -J zap.json -r zap.html -I -z "-config scanner.maxScanDurationInMins=25 \
   -config globalexcludeurl.url_list.url(0).regex=.*/api/auth/logout.* -config globalexcludeurl.url_list.url(0).enabled=true \
   -config globalexcludeurl.url_list.url(0).description=deconnexion \

@@ -1,0 +1,57 @@
+# Intégration continue — la chaîne complète contre une pile ÉPHÉMÈRE, construite puis détruite dans l'exécuteur :
+# infra/bacs-a-sable/ci.sh démarre les applications externes (ICP, pyHanko, Gotenberg, veraPDF, Mailpit, ClamAV) et le
+# serveur branché dessus, puis joue les scénarios e2e des bacs à sable, la BDD de tous les appels d'offres, les scénarios
+# e2e d'interface par exigence avec la couverture des fonctionnalités écran par écran, et les tests d'intrusion.
+# Le déploiement de la démonstration (deployer-contrat.yml) ne l'attend pas : il a ses propres portes (tests du serveur,
+# secrets, images) ; une démonstration de develop peut donc montrer un écart que cette chaîne relève ensuite.
+name: CI
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  serveur:
+    name: Tests du serveur et couverture
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17", cache: maven }
+      - run: mvn -B verify
+        working-directory: backend
+
+  chaine-complete:
+    name: Bacs à sable — BDD, e2e par exigence et par écran, intrusion
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17", cache: maven }
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - run: sudo apt-get update && sudo apt-get install -y netcat-openbsd
+      - run: infra/bacs-a-sable/ci.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chaine-complete
+          if-no-files-found: ignore
+          path: |
+            infra/bacs-a-sable/resultats
+            bdd/playwright-report
+            bdd/playwright-report-e2e
+            docs/scenarios-bdd
+            docs/scenarios-e2e
+            securite/resultats

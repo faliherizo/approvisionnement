@@ -14,8 +14,8 @@ export default function AiAssistant({ contexteParDefaut = '', texteExistant = ''
   const [chargement, setChargement] = useState(false)
   const [erreur, setErreur] = useState(null)
 
-  async function generer(e) {
-    e.preventDefault()
+  async function generer() {
+    if (!instruction.trim()) return
     setErreur(null)
     setChargement(true)
     setProposition('')
@@ -35,18 +35,21 @@ export default function AiAssistant({ contexteParDefaut = '', texteExistant = ''
     <div className="ai-card">
       <h2>🤖 {t('aiassistant.titre')}</h2>
       <p className="muted">{t('aiassistant.description')}</p>
-      <form onSubmit={generer} className="form">
+      {/* Pas de <form> : l'assistant s'insère aussi DANS un formulaire (édition d'une clause), où un formulaire imbriqué
+          soumettait le formulaire parent au lieu de générer. Entrée dans l'instruction lance la génération. */}
+      <div className="form" role="group" aria-label={t('aiassistant.titre')}>
         <label>{t('aiassistant.instruction')}
-          <input value={instruction} required placeholder={t('aiassistant.instructionPlaceholder')}
-                 onChange={(e) => setInstruction(e.target.value)} />
+          <input value={instruction} placeholder={t('aiassistant.instructionPlaceholder')}
+                 onChange={(e) => setInstruction(e.target.value)}
+                 onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); generer() } }} />
         </label>
         <label>{t('aiassistant.contexte')}
           <input value={contexte} onChange={(e) => setContexte(e.target.value)} />
         </label>
-        <button type="submit" disabled={chargement}>
+        <button type="button" onClick={generer} disabled={chargement || !instruction.trim()}>
           {chargement ? t('aiassistant.generation') : t('aiassistant.proposerTexte')}
         </button>
-      </form>
+      </div>
 
       {erreur && <div className="erreur">{erreur}</div>}
 
@@ -55,7 +58,7 @@ export default function AiAssistant({ contexteParDefaut = '', texteExistant = ''
           <textarea rows="8" value={proposition}
                     onChange={(e) => setProposition(e.target.value)} />
           {onInsertion && (
-            <button className="secondary" onClick={() => onInsertion(proposition)}>
+            <button type="button" className="secondary" onClick={() => onInsertion(proposition)}>
               {t('aiassistant.insererFormulaire')}
             </button>
           )}

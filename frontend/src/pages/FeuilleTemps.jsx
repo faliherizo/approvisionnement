@@ -65,14 +65,14 @@ export default function FeuilleTemps() {
           <tbody>
             {edition.lignes.map((l, i) => (
               <tr key={i}>
-                <td><input type="date" value={l.date} disabled={!modifiable} onChange={(e) => majLigne(i, 'date', e.target.value)} /></td>
+                <td><input type="date" value={l.date} disabled={!modifiable} aria-label={t('temps.colDate')} onChange={(e) => majLigne(i, 'date', e.target.value)} /></td>
                 <td>
                   <select value={l.categorie} disabled={!modifiable} onChange={(e) => majLigne(i, 'categorie', e.target.value)} aria-label={t('temps.colCategorie')}>
                     {CATEGORIES.map((c) => <option key={c} value={c}>{t(`temps.cat.${c}`)}</option>)}
                   </select>
                 </td>
-                <td><input type="number" min="0" step="0.25" value={l.heures} disabled={!modifiable} style={{ width: 90 }} onChange={(e) => majLigne(i, 'heures', e.target.value)} /></td>
-                <td>{modifiable && <button className="danger" onClick={() => setEdition({ ...edition, lignes: edition.lignes.filter((_, j) => j !== i) })}>×</button>}</td>
+                <td><input type="number" min="0" step="0.25" value={l.heures} disabled={!modifiable} style={{ width: 90 }} aria-label={t('temps.colHeures')} onChange={(e) => majLigne(i, 'heures', e.target.value)} /></td>
+                <td>{modifiable && <button className="danger" onClick={() => setEdition({ ...edition, lignes: edition.lignes.filter((_, j) => j !== i) })} aria-label={t('temps.retirerLigne', { n: i + 1 })}>×</button>}</td>
               </tr>
             ))}
           </tbody>

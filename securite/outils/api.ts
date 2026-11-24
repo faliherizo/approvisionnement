@@ -4,7 +4,11 @@ import publique from '../donnees/surface-publique.json' with { type: 'json' }
 /** Outils communs des tests d'intrusion : sessions, inventaire OpenAPI, organisations d'essai et objets « canari ». */
 
 export const BASE = process.env.SECURITE_API_URL ?? 'http://localhost:8100'
-export const SUPERADMIN = { courriel: 'superadmin@plateforme.ca', motDePasse: 'SuperPassw0rd!' }
+// Compte de développement par défaut ; un environnement déployé fournit le sien (secrets de l'environnement GitHub).
+export const SUPERADMIN = {
+  courriel: process.env.SECURITE_SUPERADMIN_EMAIL || 'superadmin@plateforme.ca',
+  motDePasse: process.env.SECURITE_SUPERADMIN_PASSWORD || 'SuperPassw0rd!',
+}
 export const MOT_DE_PASSE = 'Intrusion!2026x'
 
 export type Operation = { methode: string; chemin: string; parametres: string[]; corps?: unknown; operationId?: string }

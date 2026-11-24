@@ -1,0 +1,17 @@
+# Détection de secrets (gitleaks 8.21) — gabarit .github/workflows/_gabarit-secrets.yml.
+#
+# Règles par défaut, plus des exemptions de CHEMIN, chacune justifiée. Aucune exemption par motif : un vrai secret collé
+# ailleurs dans ces fichiers serait aussi exempté, et on préfère le voir.
+# Les constats de l'HISTORIQUE sont figés dans securite/gitleaks-reference.json (13 faux positifs vérifiés le
+# 2026-11-23 : noms de scènes « o365… » des chronologies vidéo, valeurs fictives VOTRE_CLE / ma-cle des tutoriels SAP,
+# clé RSA générée à l'exécution par SalesforceRestTest) : la porte n'échoue que sur une fuite nouvelle.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Fixtures d'essai : clés générées par les tests, comptes et charges des tests d'intrusion"
+paths = [
+  '''backend/src/test/''',
+  '''securite/tests/''',
+  '''securite/donnees/charges\.json''',
+]
