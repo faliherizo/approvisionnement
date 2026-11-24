@@ -23,7 +23,7 @@ class DocumentServiceTest {
     @Mock CommentaireDemandeRepository commentaires;
     DocumentService service;
 
-    @BeforeEach void avant() { service = new DocumentService(documents, commentaires); TenantContext.set(1L); }
+    @BeforeEach void avant() { service = new DocumentService(documents, commentaires, contenu -> !new String(contenu).contains("VIRUS")); TenantContext.set(1L); }
     @AfterEach void apres() { TenantContext.clear(); }
 
     @Test void ajouter_refuse_un_fichier_vide() {
@@ -44,6 +44,14 @@ class DocumentServiceTest {
         assertEquals("contrat.pdf", v.nomOriginal());
         assertEquals(3, v.tailleOctets());
         assertEquals("confidentiel", v.classification());
+    }
+
+    /** CHU 7.08 : un fichier où l'antivirus détecte un maliciel n'est jamais conservé. */
+    @Test void ajouter_refuse_un_fichier_infecte_sans_l_enregistrer() {
+        var e = assertThrows(qc.levis.contrat.commun.antivirus.application.Antivirus.FichierInfecte.class,
+                () -> service.ajouter(1L, 2L, "piege.pdf", "application/pdf", "VIRUS".getBytes(), "interne", "u"));
+        assertTrue(e.getMessage().contains("piege.pdf"));
+        org.mockito.Mockito.verifyNoInteractions(documents);
     }
 
     @Test void commentaire_vide_refuse() {

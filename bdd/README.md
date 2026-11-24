@@ -65,7 +65,7 @@ bdd/
 ### Prérequis
 
 - Les bacs à sable démarrés : `docker compose -f infra/bacs-a-sable/docker-compose.yml up -d`. Ils fournissent l'ICP,
-  l'horodatage, pyHanko, Gotenberg, veraPDF et Mailpit (voir
+  l'horodatage, pyHanko, Gotenberg, veraPDF, Mailpit et ClamAV (voir
   [`guide_bacs_a_sable.md`](../docs/Dossier_IQ_2026-6370-0005/12-Bacs-a-sable/guide_bacs_a_sable.md)).
 - Le serveur sur le port 8100, branché sur les bacs à sable avec les mêmes variables qu'en production :
 
@@ -74,7 +74,8 @@ bdd/
   export SERVER_PORT=8100 \
     CLM_CACHET_MAGASIN=$PWD/$B/icp/etat/cachet.p12 CLM_CACHET_MOT_DE_PASSE="$(cat $B/icp/etat/mot-de-passe.txt)" \
     CLM_CACHET_TSA_URL=http://localhost:18090/tsa CLM_CONVERSION_MODE=service CLM_CONVERSION_URL=http://localhost:18030 \
-    CLM_SIGNATURE_FOURNISSEUR=cachet NOTIFICATION_COURRIEL_MODE=smtp MAIL_HOST=localhost MAIL_PORT=11025
+    CLM_SIGNATURE_FOURNISSEUR=cachet NOTIFICATION_COURRIEL_MODE=smtp MAIL_HOST=localhost MAIL_PORT=11025 \
+    ANTIVIRUS_MODE=clamav ANTIVIRUS_CLAMAV_HOTE=localhost ANTIVIRUS_CLAMAV_PORT=13310
   (cd backend && mvn -q -DskipTests package && java -jar target/contrat-backend-*.jar)
   ```
 
@@ -212,7 +213,15 @@ Aucun. Les dix écarts déclarés jusqu'ici sont comblés et éprouvés par leur
 | CHU | 6.04 | tableaux de bord configurables (compteurs, histogrammes, évolutions), partageables |
 | CHU | 9.05 | banque d'heures de services professionnels (achats, consommations, solde, relevé) |
 
-## 8. Défauts révélés par ces scénarios et corrigés dans la plateforme
+## 8. Scénarios e2e d'interface par exigence
+
+`bdd/e2e/` démontre chaque exigence fonctionnelle depuis l'interface : connexion du profil, gestes à l'écran, résultat
+constaté, contrôle d'accessibilité et de mise en page aux quatre largeurs. Les scénarios et leurs données sont en JSON
+(`bdd/e2e/donnees/<appel d'offres>.json`) ; le moteur `bdd/e2e/exigences.spec.ts` ne contient aucune donnée.
+`npm run e2e` les exécute et régénère [`docs/scenarios-e2e/`](../docs/scenarios-e2e/README.md) ;
+`npm run e2e:couverture` échoue si une exigence fonctionnelle n'a aucun scénario e2e.
+
+## 9. Défauts révélés par ces scénarios et corrigés dans la plateforme
 
 | Défaut | Correction |
 |---|---|
@@ -226,6 +235,10 @@ Aucun. Les dix écarts déclarés jusqu'ici sont comblés et éprouvés par leur
 | Accessibilité : zone d'édition sans nom, cibles trop petites, contraste insuffisant (statut approuvé, commentaire résolu), champ de recherche sans libellé | `RichText` `aria-label`, cibles de 24 à 28 px, couleurs recalculées, `type=search` libellé |
 | Une fenêtre modale laissait la page dessous atteignable (focus, clic) | modale rendue au niveau du document, page dessous `inert` le temps de son ouverture |
 | `{{numero}}` restait vide dans les notifications | le numéro de la fiche est fourni aux gabarits |
+| Débordement horizontal à 390 px : éditeur du document (cases des clauses), sécurité fine (tableaux), remplissage d'un formulaire (`<fieldset>`) | `.check-row` passe à la ligne, tableaux dans `table-wrap`, `fieldset { min-inline-size: 0 }` |
+| Une structure de formulaire de l'API (`cle`, types en majuscules) s'affichait mal : tous les libellés visaient le premier champ, types ignorés | le rendu lit les deux dialectes, comme le serveur (`normaliserChamp`) |
+| Recherche multicritère des fiches et critères sauvegardés offerts par l'API seulement | écran « Rechercher dans les fiches » (`RechercheFiches`) |
+| `/api-docs` partait vers le serveur en développement (page d'erreur) | proxy Vite sur « /api/ » et non « /api » |
 
 Les failles de sécurité relevées par les tests d'intrusion sont décrites dans
 [`docs/securite/rapport-tests-intrusion.md`](../docs/securite/rapport-tests-intrusion.md).

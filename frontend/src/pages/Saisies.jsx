@@ -8,6 +8,7 @@ import { useI18n } from '../i18n/I18nContext'
 import { useAuth } from '../auth.jsx'
 import { useModules } from '../hooks/useModules.js'
 import DemandeAnnexes from '../components/DemandeAnnexes.jsx'
+import RechercheFiches, { CRITERES_VIDES, retenue } from '../components/RechercheFiches.jsx'
 
 function parseDonnees(json) {
   if (!json) return {}
@@ -27,6 +28,7 @@ export default function Saisies() {
   const [err, setErr] = useState(null)
   const [msg, setMsg] = useState(null)
   const [aTransmettre, setATransmettre] = useState(null)
+  const [criteres, setCriteres] = useState(CRITERES_VIDES)
 
   const peutStatuer = hasRole('ADMIN') || hasRole('APPRO') || hasRole('DIRECTION') || hasRole('SUPERADMIN')
 
@@ -84,6 +86,8 @@ export default function Saisies() {
       {(peutStatuer || hasRole('REDACTEUR')) && <InventairePlaces formulaireId={id} rafraichir={fiches} />}
       {(peutStatuer || hasRole('REDACTEUR')) && actif('rapport') && <RapportPdfFiches formulaireId={id} />}
 
+      {actif('rapport') && <RechercheFiches formulaireId={id} fiches={fiches} criteres={criteres} onChange={setCriteres} />}
+
       <section className="panel">
         <h2>{t('fiches.liste')}</h2>
         <table className="table">
@@ -95,7 +99,7 @@ export default function Saisies() {
             <th scope="col"><span className="sr-only">{t('fiches.colActions')}</span></th>
           </tr></thead>
           <tbody>
-            {fiches.map((f) => {
+            {fiches.filter((f) => retenue(f, criteres)).map((f) => {
               const d = parseDonnees(f.donneesJson)
               return (
                 <Fragment key={f.id}>
@@ -132,7 +136,7 @@ export default function Saisies() {
                 </Fragment>
               )
             })}
-            {fiches.length === 0 && <tr><td colSpan="5" className="muted">{t('fiches.aucune')}</td></tr>}
+            {fiches.filter((f) => retenue(f, criteres)).length === 0 && <tr><td colSpan="5" className="muted">{t('fiches.aucune')}</td></tr>}
           </tbody>
         </table>
       </section>

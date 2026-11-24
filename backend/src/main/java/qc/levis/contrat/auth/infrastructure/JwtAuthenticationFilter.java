@@ -28,10 +28,60 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
 
     private final qc.levis.contrat.auth.application.RevocationJetons revocation;
+    private final qc.levis.contrat.auth.application.PolitiqueSessionService politiqueSession;
+    private final CookiesSession cookies;
+    private final java.time.Clock horloge;
 
-    public JwtAuthenticationFilter(JwtService jwtService, qc.levis.contrat.auth.application.RevocationJetons revocation) {
+    /** Une session active n'est réémise qu'au plus une fois par minute : la limite d'inactivité reste exacte à la minute. */
+    static final java.time.Duration RENOUVELLEMENT = java.time.Duration.ofMinutes(1);
+    private static final org.slf4j.Logger LOG = org.slf4j.LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
+    public JwtAuthenticationFilter(JwtService jwtService, qc.levis.contrat.auth.application.RevocationJetons revocation,
+                                   qc.levis.contrat.auth.application.PolitiqueSessionService politiqueSession,
+                                   CookiesSession cookies, java.time.Clock horloge) {
         this.revocation = revocation;
         this.jwtService = jwtService;
+        this.politiqueSession = politiqueSession;
+        this.cookies = cookies;
+        this.horloge = horloge;
+    }
+
+    /** Jeton porté par le cookie de session (navigateur) : seul celui-là se renouvelle par la réponse. */
+    private static boolean parCookie(HttpServletRequest request, String token) {
+        if (request.getCookies() == null) {
+            return false;
+        }
+        for (Cookie c : request.getCookies()) {
+            if (COOKIE_NAME.equals(c.getName()) && token.equals(c.getValue())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Politique de session (ST-01) : refuse une session inactive ou au-delà de sa durée maximale ; sinon, renouvelle le
+     * cookie d'une session active, sans jamais dépasser la durée maximale. Rend vrai si la session est valide.
+     */
+    private boolean appliquerPolitique(Claims claims, Long tenant, String token, HttpServletRequest request, HttpServletResponse response) {
+        java.time.Instant maintenant = horloge.instant();
+        java.time.Instant emis = claims.getIssuedAt().toInstant();
+        Number debutBrut = claims.get(JwtService.DEBUT_SESSION, Number.class);
+        java.time.Instant debut = debutBrut == null ? emis : java.time.Instant.ofEpochSecond(debutBrut.longValue());
+        qc.levis.contrat.auth.domain.LimitesSession limites = politiqueSession.limites(tenant);
+        qc.levis.contrat.auth.domain.LimitesSession.Verdict verdict = limites.verifier(debut, emis, maintenant);
+        if (verdict != qc.levis.contrat.auth.domain.LimitesSession.Verdict.VALIDE) {
+            LOG.info("Session terminée ({}) pour l'organisation {}", verdict, tenant);
+            return false;
+        }
+        if (parCookie(request, token) && !maintenant.isBefore(emis.plus(RENOUVELLEMENT))) {
+            java.time.Duration validite = limites.validiteRenouvelee(debut, maintenant);
+            @SuppressWarnings("unchecked")
+            List<String> roles = claims.get("roles", List.class);
+            String renouvele = jwtService.genererToken(claims.getSubject(), roles == null ? List.of() : roles, tenant, debut, validite);
+            response.addHeader(org.springframework.http.HttpHeaders.SET_COOKIE, cookies.session(renouvele, validite).toString());
+        }
+        return true;
     }
 
     /** Jeton depuis le cookie httpOnly (SPA) ou l'en-tête Bearer (API/tests). */
@@ -60,6 +110,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token != null && !revocation.estRevoque(token)) {
             try {
                 Claims claims = jwtService.parser(token);
+                Number tenantRevendique = claims.get("tenant", Number.class);
+                Long tenantJeton = tenantRevendique != null ? tenantRevendique.longValue() : null;
+                if (!appliquerPolitique(claims, tenantJeton, token, request, response)) {
+                    throw new IllegalStateException("Session terminée.");
+                }
                 String email = claims.getSubject();
                 @SuppressWarnings("unchecked")
                 List<String> roles = claims.get("roles", List.class);

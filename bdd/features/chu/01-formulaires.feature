@@ -20,6 +20,11 @@ Fonctionnalité: Conception et remplissage des formulaires (avis d'intention CHU
     Quand j'ouvre l'écran "CHU — mes demandes"
     Alors l'écran est accessible, sans débordement ni superposition
 
+  @CHU-6.06
+  Scénario: L'organisation récupère en une archive toutes ses données, module par module, avec un manifeste
+    Quand j'exécute le cas "chu.reversibilite.export-integral"
+    Alors la plateforme se comporte comme attendu
+
   @CHU-3.05 @CHU-3.07
   Scénario: L'ouverture dépend de la date, du nombre de répondants, du réseau et de la vérification anti-robot
     Quand j'exécute le cas "chu.activation"

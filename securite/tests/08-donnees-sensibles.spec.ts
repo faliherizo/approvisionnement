@@ -26,6 +26,24 @@ test.describe('INT-08 Données sensibles et affectation de masse', () => {
     expect([...new Set(ecarts)]).toEqual([])
   })
 
+  test('aucune opération d\'écriture n\'accepte un numéro de carte de paiement (PCI DSS hors périmètre)', async () => {
+    // IQ-D-14 (ADR-022) : le numéro est refusé à la frontière, avant toute logique métier, et n'est jamais renvoyé.
+    const a = await organisation('intrusion-donnees')
+    const sa = await session(SUPERADMIN.courriel, SUPERADMIN.motDePasse)
+    const { operations } = await inventaire()
+    const ecritures = operations.filter((o) => ['POST', 'PUT', 'PATCH'].includes(o.methode) && !estPublique(o))
+    const ecarts: string[] = []
+    for (const op of ecritures) {
+      // Les opérations de la plateforme se refusent à l'administrateur d'organisation avant la garde : on les éprouve en superadministrateur.
+      const qui = op.chemin.startsWith('/api/superadmin/') ? sa : a.admin
+      const r = await appeler(qui, op.methode, remplir(op, { '*': 1 }), { nom: 'Carte 4111 1111 1111 1111', note: '5555-5555-5555-4444' })
+      if (r.statut !== 422) ecarts.push(`${cle(op)} → ${r.statut}`)
+      else if (r.texte.includes('4111')) ecarts.push(`${cle(op)} renvoie le numéro`)
+    }
+    consigner('08-cartes-paiement', { eprouvees: ecritures.length, ecarts })
+    expect(ecarts).toEqual([])
+  })
+
   test('un administrateur d\'organisation ne se donne ni ne donne de privilège de plateforme', async () => {
     const a = await organisation('intrusion-donnees')
     const courriel = `masse.${Date.now()}@intrusion-donnees.example`

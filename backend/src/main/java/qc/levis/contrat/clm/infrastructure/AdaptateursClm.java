@@ -88,22 +88,18 @@ public final class AdaptateursClm {
     }
 
     /** Détecte la signature de test EICAR ; à remplacer par l'antivirus d'IQ (ClamAV/ICAP) en production. */
+    /** Analyse des fichiers du CLM par l'antivirus de la plateforme (signatures sur un poste, ClamAV en exploitation). */
     @Component
     public static class AntivirusSignatures implements AnalyseAntivirus {
-        private static final byte[] EICAR = "EICAR-STANDARD-ANTIVIRUS-TEST-FILE".getBytes(StandardCharsets.US_ASCII);
+        private final qc.levis.contrat.commun.antivirus.application.Antivirus antivirus;
+
+        public AntivirusSignatures(qc.levis.contrat.commun.antivirus.application.Antivirus antivirus) {
+            this.antivirus = antivirus;
+        }
 
         @Override
         public boolean estSain(byte[] contenu) {
-            outer:
-            for (int i = 0; i <= contenu.length - EICAR.length; i++) {
-                for (int j = 0; j < EICAR.length; j++) {
-                    if (contenu[i + j] != EICAR[j]) {
-                        continue outer;
-                    }
-                }
-                return false;
-            }
-            return true;
+            return antivirus.estSain(contenu);
         }
     }
 

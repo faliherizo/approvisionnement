@@ -1,0 +1,848 @@
+{
+  "appelOffres": "Santé Québec — CHU, avis d'intention",
+  "catalogue": "chu",
+  "scenarios": [
+    {
+      "id": "E2E-CHU-01",
+      "titre": "Concevoir un formulaire : création, pages et champs, enregistrement, approbation puis publication",
+      "exigences": [
+        "CHU-3.01",
+        "CHU-3.02",
+        "CHU-3.09",
+        "CHU-2.01"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "aller": "/formulaires"
+        },
+        {
+          "remplir": {
+            "Code (ex. demande_acces)": "e2e_${unique}",
+            "Nom du formulaire": "Inscription E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Créer"
+        },
+        {
+          "voir": "Inscription E2E ${unique}"
+        },
+        {
+          "voirTitre": "Inscription E2E ${unique}"
+        },
+        {
+          "cliquer": "+ Ajouter une page"
+        },
+        {
+          "remplir": {
+            "Titre de la page": "Identité"
+          }
+        },
+        {
+          "cliquer": "+ Ajouter un champ"
+        },
+        {
+          "valeur": {
+            "Libellé": "Nouveau champ"
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "voir": "Structure enregistrée."
+        },
+        {
+          "cliquer": "Soumettre à l’approbation"
+        },
+        {
+          "voir": "Formulaire soumis à l’approbation."
+        },
+        {
+          "cliquer": "Publier"
+        },
+        {
+          "voir": "Formulaire publié."
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Versions"
+          }
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-02",
+      "titre": "Le répondant remplit en anglais : titres, libellés et options traduits",
+      "exigences": [
+        "CHU-2.02"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Formulaire publié « LANGUE »",
+            "etapes": [
+              {
+                "appel": "POST /api/formulaires",
+                "corps": {
+                  "code": "LANGUE_${UNIQUE}",
+                  "nom": "LANGUE ${unique}",
+                  "domaine": "RH",
+                  "conservationJours": 365
+                },
+                "capturer": {
+                  "formulaire": "$.id"
+                }
+              },
+              {
+                "appel": "PUT /api/formulaires/${formulaire}/structure",
+                "corps": {
+                  "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"libelleI18n\": {\"fr\": \"Nom\", \"en\": \"Name\"}, \"type\": \"TEXTE\", \"obligatoire\": true}, {\"cle\": \"courriel\", \"libelle\": \"Courriel\", \"type\": \"COURRIEL\"}, {\"cle\": \"naissance\", \"libelle\": \"Date de naissance\", \"type\": \"DATE\"}, {\"cle\": \"site\", \"libelle\": \"Site Web\", \"type\": \"HYPERLIEN\"}, {\"cle\": \"commentaire\", \"libelle\": \"Commentaire\", \"type\": \"ZONE_TEXTE\"}], \"titreI18n\": {\"en\": \"Identity\"}}, {\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Formation\", \"Atelier\"], \"optionsI18n\": {\"en\": [\"Training\", \"Workshop\"]}, \"libelleI18n\": {\"fr\": \"Activité\", \"en\": \"Activity\"}}, {\"cle\": \"mode\", \"libelle\": \"Mode\", \"type\": \"RADIO\", \"options\": [\"Présentiel\", \"Virtuel\"]}, {\"cle\": \"accepte\", \"libelle\": \"J'accepte\", \"type\": \"CASE\"}, {\"cle\": \"heures\", \"libelle\": \"Heures\", \"type\": \"NOMBRE\"}, {\"cle\": \"taux\", \"libelle\": \"Taux horaire\", \"type\": \"MONTANT\"}, {\"cle\": \"remise\", \"libelle\": \"Remise\", \"type\": \"POURCENTAGE\"}, {\"cle\": \"poids\", \"libelle\": \"Poids\", \"type\": \"DECIMAL\"}, {\"cle\": \"total\", \"libelle\": \"Total\", \"type\": \"CALCULE\"}, {\"cle\": \"piece\", \"libelle\": \"Pièce justificative\", \"type\": \"FICHIER\"}, {\"cle\": \"grille\", \"libelle\": \"Disponibilités\", \"type\": \"MATRICE\", \"lignes\": [\"Lundi\", \"Mardi\"], \"colonnes\": [\"AM\", \"PM\"]}, {\"cle\": \"service\", \"libelle\": \"Service\", \"type\": \"VALEURS_DYNAMIQUES\", \"source\": \"SERVICES\"}]}], \"regles\": [{\"type\": \"CALCUL\", \"cible\": \"total\", \"valeur\": \"produit:heures,taux\"}, {\"type\": \"VALIDATION\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"60\"}], \"valeur\": \"60 heures au plus\"}, {\"type\": \"VISIBILITE\", \"conditions\": [{\"champ\": \"mode\", \"operateur\": \"EGAL\", \"valeur\": \"Présentiel\"}], \"cible\": \"grille\"}, {\"type\": \"OBLIGATION\", \"conditions\": [{\"champ\": \"activite\", \"operateur\": \"EGAL\", \"valeur\": \"Formation\"}], \"cible\": \"piece\"}, {\"type\": \"ROUTAGE\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"40\"}], \"cible\": \"GESTIONNAIRE\"}]}"
+                }
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/soumettre"
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/publier"
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/formulaires/${formulaire}/remplir"
+        },
+        {
+          "voir": [
+            "Identité",
+            "Nom"
+          ]
+        },
+        {
+          "langue": "en"
+        },
+        {
+          "voir": [
+            "Identity",
+            "Name"
+          ]
+        },
+        {
+          "voir": "Activity"
+        },
+        {
+          "langue": "fr"
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-03",
+      "titre": "Remplir : règles en direct (visibilité, obligation, validation, calcul), sauvegarde automatique, confirmation",
+      "exigences": [
+        "CHU-3.03",
+        "CHU-3.04",
+        "CHU-4.01",
+        "CHU-4.02",
+        "CHU-4.03",
+        "CHU-4.04",
+        "CHU-5.02"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Formulaire publié « REGLES »",
+            "etapes": [
+              {
+                "appel": "POST /api/formulaires",
+                "corps": {
+                  "code": "REGLES_${UNIQUE}",
+                  "nom": "REGLES ${unique}",
+                  "domaine": "RH",
+                  "conservationJours": 365
+                },
+                "capturer": {
+                  "formulaire": "$.id"
+                }
+              },
+              {
+                "appel": "PUT /api/formulaires/${formulaire}/structure",
+                "corps": {
+                  "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"libelleI18n\": {\"fr\": \"Nom\", \"en\": \"Name\"}, \"type\": \"TEXTE\", \"obligatoire\": true}, {\"cle\": \"courriel\", \"libelle\": \"Courriel\", \"type\": \"COURRIEL\"}, {\"cle\": \"naissance\", \"libelle\": \"Date de naissance\", \"type\": \"DATE\"}, {\"cle\": \"site\", \"libelle\": \"Site Web\", \"type\": \"HYPERLIEN\"}, {\"cle\": \"commentaire\", \"libelle\": \"Commentaire\", \"type\": \"ZONE_TEXTE\"}], \"titreI18n\": {\"en\": \"Identity\"}}, {\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Formation\", \"Atelier\"], \"optionsI18n\": {\"en\": [\"Training\", \"Workshop\"]}, \"libelleI18n\": {\"fr\": \"Activité\", \"en\": \"Activity\"}}, {\"cle\": \"mode\", \"libelle\": \"Mode\", \"type\": \"RADIO\", \"options\": [\"Présentiel\", \"Virtuel\"]}, {\"cle\": \"accepte\", \"libelle\": \"J'accepte\", \"type\": \"CASE\"}, {\"cle\": \"heures\", \"libelle\": \"Heures\", \"type\": \"NOMBRE\"}, {\"cle\": \"taux\", \"libelle\": \"Taux horaire\", \"type\": \"MONTANT\"}, {\"cle\": \"remise\", \"libelle\": \"Remise\", \"type\": \"POURCENTAGE\"}, {\"cle\": \"poids\", \"libelle\": \"Poids\", \"type\": \"DECIMAL\"}, {\"cle\": \"total\", \"libelle\": \"Total\", \"type\": \"CALCULE\"}, {\"cle\": \"piece\", \"libelle\": \"Pièce justificative\", \"type\": \"FICHIER\"}, {\"cle\": \"grille\", \"libelle\": \"Disponibilités\", \"type\": \"MATRICE\", \"lignes\": [\"Lundi\", \"Mardi\"], \"colonnes\": [\"AM\", \"PM\"]}, {\"cle\": \"service\", \"libelle\": \"Service\", \"type\": \"VALEURS_DYNAMIQUES\", \"source\": \"SERVICES\"}]}], \"regles\": [{\"type\": \"CALCUL\", \"cible\": \"total\", \"valeur\": \"produit:heures,taux\"}, {\"type\": \"VALIDATION\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"60\"}], \"valeur\": \"60 heures au plus\"}, {\"type\": \"VISIBILITE\", \"conditions\": [{\"champ\": \"mode\", \"operateur\": \"EGAL\", \"valeur\": \"Présentiel\"}], \"cible\": \"grille\"}, {\"type\": \"OBLIGATION\", \"conditions\": [{\"champ\": \"activite\", \"operateur\": \"EGAL\", \"valeur\": \"Formation\"}], \"cible\": \"piece\"}, {\"type\": \"ROUTAGE\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"40\"}], \"cible\": \"GESTIONNAIRE\"}]}"
+                }
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/soumettre"
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/publier"
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/formulaires/${formulaire}/remplir"
+        },
+        {
+          "remplir": {
+            "Nom": "Alice Roy",
+            "Heures": "70",
+            "Taux horaire": "20"
+          }
+        },
+        {
+          "voir": [
+            "Enregistré",
+            "60 heures au plus"
+          ]
+        },
+        {
+          "remplir": {
+            "Heures": "30"
+          }
+        },
+        {
+          "nePasVoir": "60 heures au plus"
+        },
+        {
+          "valeur": {
+            "Total": "600"
+          }
+        },
+        {
+          "cocher": "Présentiel"
+        },
+        {
+          "voir": "Disponibilités"
+        },
+        {
+          "choisir": {
+            "Activité": "Formation"
+          }
+        },
+        {
+          "voir": "Pièce justificative"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-04",
+      "titre": "Défi anti-robot exigé avant la soumission ; ouverture bornée par la date, le nombre de répondants et le réseau",
+      "exigences": [
+        "CHU-3.07",
+        "CHU-3.05"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Formulaire publié « DEFI »",
+            "etapes": [
+              {
+                "appel": "POST /api/formulaires",
+                "corps": {
+                  "code": "DEFI_${UNIQUE}",
+                  "nom": "DEFI ${unique}",
+                  "domaine": "RH",
+                  "conservationJours": 365
+                },
+                "capturer": {
+                  "formulaire": "$.id"
+                }
+              },
+              {
+                "appel": "PUT /api/formulaires/${formulaire}/structure",
+                "corps": {
+                  "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"libelleI18n\": {\"fr\": \"Nom\", \"en\": \"Name\"}, \"type\": \"TEXTE\", \"obligatoire\": true}, {\"cle\": \"courriel\", \"libelle\": \"Courriel\", \"type\": \"COURRIEL\"}, {\"cle\": \"naissance\", \"libelle\": \"Date de naissance\", \"type\": \"DATE\"}, {\"cle\": \"site\", \"libelle\": \"Site Web\", \"type\": \"HYPERLIEN\"}, {\"cle\": \"commentaire\", \"libelle\": \"Commentaire\", \"type\": \"ZONE_TEXTE\"}], \"titreI18n\": {\"en\": \"Identity\"}}, {\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Formation\", \"Atelier\"], \"optionsI18n\": {\"en\": [\"Training\", \"Workshop\"]}, \"libelleI18n\": {\"fr\": \"Activité\", \"en\": \"Activity\"}}, {\"cle\": \"mode\", \"libelle\": \"Mode\", \"type\": \"RADIO\", \"options\": [\"Présentiel\", \"Virtuel\"]}, {\"cle\": \"accepte\", \"libelle\": \"J'accepte\", \"type\": \"CASE\"}, {\"cle\": \"heures\", \"libelle\": \"Heures\", \"type\": \"NOMBRE\"}, {\"cle\": \"taux\", \"libelle\": \"Taux horaire\", \"type\": \"MONTANT\"}, {\"cle\": \"remise\", \"libelle\": \"Remise\", \"type\": \"POURCENTAGE\"}, {\"cle\": \"poids\", \"libelle\": \"Poids\", \"type\": \"DECIMAL\"}, {\"cle\": \"total\", \"libelle\": \"Total\", \"type\": \"CALCULE\"}, {\"cle\": \"piece\", \"libelle\": \"Pièce justificative\", \"type\": \"FICHIER\"}, {\"cle\": \"grille\", \"libelle\": \"Disponibilités\", \"type\": \"MATRICE\", \"lignes\": [\"Lundi\", \"Mardi\"], \"colonnes\": [\"AM\", \"PM\"]}, {\"cle\": \"service\", \"libelle\": \"Service\", \"type\": \"VALEURS_DYNAMIQUES\", \"source\": \"SERVICES\"}]}], \"regles\": [{\"type\": \"CALCUL\", \"cible\": \"total\", \"valeur\": \"produit:heures,taux\"}, {\"type\": \"VALIDATION\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"60\"}], \"valeur\": \"60 heures au plus\"}, {\"type\": \"VISIBILITE\", \"conditions\": [{\"champ\": \"mode\", \"operateur\": \"EGAL\", \"valeur\": \"Présentiel\"}], \"cible\": \"grille\"}, {\"type\": \"OBLIGATION\", \"conditions\": [{\"champ\": \"activite\", \"operateur\": \"EGAL\", \"valeur\": \"Formation\"}], \"cible\": \"piece\"}, {\"type\": \"ROUTAGE\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"40\"}], \"cible\": \"GESTIONNAIRE\"}], \"activation\": {\"captchaRequis\": true}}"
+                }
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/soumettre"
+              },
+              {
+                "appel": "POST /api/formulaires/${formulaire}/publier"
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/formulaires/${formulaire}/remplir"
+        },
+        {
+          "remplir": {
+            "Nom": "Alice Roy"
+          }
+        },
+        {
+          "voir": "Je ne suis pas un robot"
+        },
+        {
+          "cocher": "Je ne suis pas un robot"
+        },
+        {
+          "cliquer": "Soumettre"
+        },
+        {
+          "voir": "Votre fiche a été soumise avec succès."
+        },
+        {
+          "preparer": "chu.activation"
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-05",
+      "titre": "Traitement des fiches : recherche multicritère, critères sauvegardés et réappliqués, export Excel",
+      "exigences": [
+        "CHU-6.01",
+        "CHU-6.02",
+        "CHU-4.07",
+        "CHU-4.05"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": "chu.traitement"
+        },
+        {
+          "aller": "/formulaires/${formulaire}/fiches"
+        },
+        {
+          "voir": "${ficheNumero}"
+        },
+        {
+          "remplir": {
+            "Numéro ou réponse": "${ficheNumero}"
+          }
+        },
+        {
+          "remplir": {
+            "Nom des critères": "Ma fiche ${unique}"
+          }
+        },
+        {
+          "cliquer": "Sauvegarder ces critères"
+        },
+        {
+          "voir": "Critères « Ma fiche ${unique} » sauvegardés."
+        },
+        {
+          "cliquer": "Effacer les critères"
+        },
+        {
+          "cliquer": "Appliquer « Ma fiche ${unique} »"
+        },
+        {
+          "valeur": {
+            "Numéro ou réponse": "${ficheNumero}"
+          }
+        },
+        {
+          "voir": "${ficheNumero}"
+        },
+        {
+          "telecharger": "⬇ Exporter en Excel"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-06",
+      "titre": "Pièces jointes d'une fiche : classification, analyse antivirus (maliciel refusé), commentaires internes",
+      "exigences": [
+        "CHU-7.05",
+        "CHU-7.08"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": "chu.antivirus.pieces-jointes"
+        },
+        {
+          "aller": "/formulaires/${formulaire}/fiches"
+        },
+        {
+          "cliquer": "Détails"
+        },
+        {
+          "voir": [
+            "Documents",
+            "sain.pdf"
+          ]
+        },
+        {
+          "nePasVoir": "piege.txt"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-07",
+      "titre": "Notifications : gabarits, règles d'envoi par déclencheur, journal des envois",
+      "exigences": [
+        "CHU-5.01",
+        "CHU-5.03",
+        "CHU-4.06"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": "chu.notifications"
+        },
+        {
+          "aller": "/notifications"
+        },
+        {
+          "voir": [
+            "Gabarits",
+            "Règles d’envoi",
+            "Journal des envois"
+          ]
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-08",
+      "titre": "Document d'une fiche produit puis transmis par courriel",
+      "exigences": [
+        "CHU-5.04"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": "chu.document.fiche"
+        },
+        {
+          "aller": "/formulaires/${formulaire}/fiches"
+        },
+        {
+          "voir": "Transmettre"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-09",
+      "titre": "Messagerie interne : une conversation visible de ses seuls participants",
+      "exigences": [
+        "CHU-5.05"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": "chu.messagerie"
+        },
+        {
+          "aller": "/messagerie"
+        },
+        {
+          "voir": [
+            "Messagerie interne",
+            "Conversations"
+          ]
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-10",
+      "titre": "Rapport PDF personnalisé sur les fiches d'un formulaire",
+      "exigences": [
+        "CHU-6.03"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": "chu.rapport.pdf"
+        },
+        {
+          "aller": "/formulaires/${formulaire}/fiches"
+        },
+        {
+          "voir": "Rapport PDF personnalisé"
+        },
+        {
+          "remplir": {
+            "Titre du rapport (facultatif)": "Rapport E2E ${unique}"
+          }
+        },
+        {
+          "telecharger": "Produire le rapport PDF"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-11",
+      "titre": "Tableaux de bord configurables, partagés selon les droits",
+      "exigences": [
+        "CHU-6.04",
+        "CHU-6.05"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": "chu.tableaux-de-bord"
+        },
+        {
+          "aller": "/tableaux-de-bord"
+        },
+        {
+          "voir": "Tableaux de bord"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-12",
+      "titre": "Banque d'heures de services professionnels tenue et suivie",
+      "exigences": [
+        "CHU-9.05"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": "chu.banque-heures"
+        },
+        {
+          "aller": "/banque-heures"
+        },
+        {
+          "voir": "Banque d'heures de services professionnels"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-13",
+      "titre": "API : un client d'intégration est créé avec ses portées, son secret montré une seule fois",
+      "exigences": [
+        "CHU-8.01",
+        "CHU-8.02",
+        "CHU-8.03"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "aller": "/interop"
+        },
+        {
+          "remplir": {
+            "Nom du client": "Client E2E ${unique}",
+            "Portées (ex. fiches:ecrire)": "fiches:lire"
+          }
+        },
+        {
+          "cliquer": "Créer le client"
+        },
+        {
+          "voir": "Identifiants du client"
+        },
+        {
+          "cliquer": "J’ai copié le secret"
+        },
+        {
+          "voir": "Client E2E ${unique}"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-14",
+      "titre": "Échanges hérités : un échange déjà en place est déclaré et son historique repris",
+      "exigences": [
+        "CHU-8.04"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": "chu.echanges.herites"
+        },
+        {
+          "aller": "/interop"
+        },
+        {
+          "voir": [
+            "Échanges hérités",
+            "Reprise de l'historique"
+          ]
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-15",
+      "titre": "Applications par environnement (production, développement, acceptation)",
+      "exigences": [
+        "CHU-1.04",
+        "CHU-1.01"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": "chu.applications"
+        },
+        {
+          "aller": "/applications"
+        },
+        {
+          "voir": "Applications"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-16",
+      "titre": "Sécurité fine : groupes, membres, permissions par champ, fiche ou bouton ; masquage et journal",
+      "exigences": [
+        "CHU-7.03",
+        "CHU-7.04",
+        "CHU-7.06",
+        "CHU-7.07",
+        "CHU-7.09",
+        "CHU-7.01"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": "chu.securite"
+        },
+        {
+          "aller": "/securite-avancee"
+        },
+        {
+          "remplir": {
+            "Code du groupe": "e2e_${unique}",
+            "Nom du groupe": "Groupe E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Ajouter le groupe"
+        },
+        {
+          "voir": "Groupe E2E ${unique}"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-17",
+      "titre": "Second facteur et politique de mots de passe pour l'accès administrateur",
+      "exigences": [
+        "CHU-7.02"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "aller": "/securite"
+        },
+        {
+          "voir": [
+            "Authentification TOTP",
+            "Question secrète dynamique"
+          ]
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-18",
+      "titre": "Les formulaires d'une organisation restent invisibles des autres",
+      "exigences": [
+        "CHU-1.03"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Formulaire du CHU",
+            "etapes": [
+              {
+                "appel": "POST /api/formulaires",
+                "corps": {
+                  "code": "CLOISON_${UNIQUE}",
+                  "nom": "Cloison ${unique}",
+                  "domaine": "RH",
+                  "conservationJours": 365
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/formulaires"
+        },
+        {
+          "voir": "Cloison ${unique}"
+        },
+        {
+          "connecter": "administrateur de Lévis"
+        },
+        {
+          "aller": "/formulaires"
+        },
+        {
+          "nePasVoir": "Cloison ${unique}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-19",
+      "titre": "Thème institutionnel appliqué à l'organisation",
+      "exigences": [
+        "CHU-2.03"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": "chu.theme"
+        },
+        {
+          "aller": "/formulaires"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-20",
+      "titre": "Places par choix et inventaire des inscriptions",
+      "exigences": [
+        "CHU-3.06",
+        "CHU-4.08"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": "chu.places.inventaire"
+        },
+        {
+          "aller": "/formulaires/${formulaire}/fiches"
+        },
+        {
+          "voir": [
+            "Inventaire des inscriptions",
+            "Restantes"
+          ]
+        },
+        {
+          "telecharger": "⬇ Exporter l'inventaire (CSV)"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-21",
+      "titre": "Formulaires liés parent-enfant, duplication, export et réimport de structure, conservation",
+      "exigences": [
+        "CHU-3.08",
+        "CHU-3.10",
+        "CHU-6.07",
+        "CHU-6.06"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "preparer": "chu.formulaire.conception"
+        },
+        {
+          "aller": "/formulaires"
+        },
+        {
+          "voir": [
+            "INSCR ${unique}",
+            "Copie ${unique}",
+            "Import ${unique}"
+          ]
+        },
+        {
+          "aller": "/donnees"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-CHU-22",
+      "titre": "Durée de session et affichage sur ordinateur, tablette et téléphone ; accessibilité",
+      "exigences": [
+        "CHU-1.08",
+        "CHU-2.04"
+      ],
+      "profil": "administrateur CHU",
+      "organisation": "CHU",
+      "etapes": [
+        {
+          "aller": "/mes-demandes"
+        },
+        {
+          "voirTitre": "Mes demandes"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    }
+  ]
+}

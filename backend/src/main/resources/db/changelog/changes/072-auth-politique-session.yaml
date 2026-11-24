@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 072-1-auth-politique-session
+      author: levis
+      comment: "ST-01 (IQ) — politique de session par organisation : délai d'inactivité et durée maximale, fixés par l'administration technique."
+      changes:
+        - createTable:
+            tableName: politique_session
+            columns:
+              - column: { name: tenant_id, type: BIGINT, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: inactivite_minutes, type: INT, constraints: { nullable: false } }
+              - column: { name: duree_max_minutes, type: INT, constraints: { nullable: false } }
+              - column: { name: modifie_par, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: modifie_le, type: TIMESTAMP, constraints: { nullable: false } }

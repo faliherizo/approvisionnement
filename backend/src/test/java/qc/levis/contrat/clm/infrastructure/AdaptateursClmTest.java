@@ -106,7 +106,7 @@ class AdaptateursClmTest {
         assertTrue(alea.code().matches("\\d{6}"));
         assertEquals(36, alea.uuid().length());
 
-        AdaptateursClm.AntivirusSignatures av = new AdaptateursClm.AntivirusSignatures();
+        AdaptateursClm.AntivirusSignatures av = new AdaptateursClm.AntivirusSignatures(new qc.levis.contrat.commun.antivirus.infrastructure.AntivirusSignatures());
         assertTrue(av.estSain("%PDF-1.7 contenu".getBytes()));
         assertFalse(av.estSain("X5O!P%@AP EICAR-STANDARD-ANTIVIRUS-TEST-FILE!".getBytes()));
         assertTrue(av.estSain(new byte[0]));

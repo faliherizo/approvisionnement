@@ -11,7 +11,8 @@ export default defineConfig({
     port,
     strictPort: Boolean(process.env.VITE_PORT),
     proxy: {
-      '/api': backend,
+      // « /api/ » et non « /api » : la page /api-docs de l'application ne doit pas partir vers le serveur.
+      '/api/': backend,
       // Provisionnement SCIM 2.0 (Saviynt, Entra ID).
       '/scim': backend,
       // Flux SSO OIDC (Entra ID) servi par le backend.

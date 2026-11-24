@@ -12,8 +12,8 @@ garde son scénario en attente. La démarche est décrite dans [`bdd/README.md`]
 |---|---|---|---|---|---|---|---|
 | Ville de Lévis — avis d'appel d'intérêt 2026-50-92 | [levis.md](levis.md) | 41 | 34 | 34 | 7 | 0 | 0 |
 | Ville de Trois-Rivières — appel d'offres 7000017905 | [trois-rivieres.md](trois-rivieres.md) | 37 | 20 | 20 | 17 | 0 | 0 |
-| Investissement Québec — AO 2026-6370-0005 | [iq.md](iq.md) | 140 | 130 | 130 | 8 | 0 | 2 |
-| Santé Québec — CHU, avis d'intention | [chu.md](chu.md) | 60 | 50 | 50 | 9 | 0 | 1 |
+| Investissement Québec — AO 2026-6370-0005 | [iq.md](iq.md) | 140 | 132 | 132 | 8 | 0 | 0 |
+| Santé Québec — CHU, avis d'intention | [chu.md](chu.md) | 60 | 52 | 52 | 8 | 0 | 0 |
 
-Scénarios : 83 dans 19 fonctionnalités ; cas exécutables : 79.
+Scénarios : 89 dans 19 fonctionnalités ; cas exécutables : 85.
 Résultats : dernière exécution de `bdd/test-results/resultats.json`.

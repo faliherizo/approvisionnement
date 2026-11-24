@@ -7,11 +7,13 @@
     { "motif": "^(GET|POST) /api/auth/(oidc|saml)/", "raison": "Flux d'authentification unique OIDC et SAML.", "protection": "PKCE, état et nonce (OIDC), signature des assertions (SAML)." },
     { "motif": "^(GET|POST) /api/signature/", "raison": "Signature externe par lien.", "protection": "Jeton à usage limité, imprévisible, expirant." },
     { "motif": "^(GET|POST|PUT) /api/clm/portail/", "raison": "Portail du signataire externe (IQ).", "protection": "Jeton d'invitation et vérification d'identité (code)." },
+    { "motif": "^(GET|POST) /api/clm/integration/mcp$", "raison": "Connecteur MCP d'un assistant d'IA (IQ-A-09, ADR-023).", "protection": "Jeton client credentials d'un client d'intégration ; outils en lecture seule bornés à ce client ; origine étrangère refusée." },
     { "motif": " /api/clm/integration/", "raison": "API d'intégration entrante (Workday, Salesforce).", "protection": "Jeton OAuth client credentials vérifié par le contrôleur." },
     { "motif": " /scim/v2/", "raison": "Provisionnement SCIM 2.0.", "protection": "Jeton porteur propre à l'organisation." },
     { "motif": "^GET /api/tenants$", "raison": "Sélecteur d'organisation de la page de connexion.", "protection": "Slug et titre seulement." },
     { "motif": "^GET /api/tenants/[^/]+/public$", "raison": "Titre et thème de la page de connexion.", "protection": "Données de présentation seulement." },
     { "motif": "^GET /api/health$", "raison": "Sonde de disponibilité.", "protection": "État seulement." },
+    { "motif": "^(GET|POST) /api/public/v1/echanges/", "raison": "Échanges hérités de la plateforme précédente (CHU-8.04, ADR-021).", "protection": "Jeton d'API vérifié par le contrôleur, module interop requis, nom de champ inconnu refusé." },
     { "motif": " /api/public/", "raison": "API publique par jeton d'API.", "protection": "Jeton d'API ou OAuth vérifié par le contrôleur." }
   ]
 }

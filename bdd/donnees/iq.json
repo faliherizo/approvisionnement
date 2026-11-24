@@ -3759,6 +3759,311 @@
           ]
         }
       ]
+    },
+    "iq.cartes.pci": {
+      "description": "Aucun numéro de carte de paiement n'entre dans la plateforme : il est refusé à la frontière (422), sans être renvoyé ; la même requête sans numéro est acceptée",
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/admin/clients-integration",
+          "statut": 422,
+          "corps": {
+            "nom": "Carte 4111 1111 1111 1111",
+            "systeme": "AUTRE"
+          },
+          "verifier": [
+            {
+              "chemin": "$.error",
+              "egal": "carte_paiement_refusee"
+            },
+            {
+              "texteAbsent": "4111"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/admin/clients-integration",
+          "statut": 422,
+          "corps": {
+            "nom": "Amex 378282246310005",
+            "systeme": "AUTRE"
+          }
+        },
+        {
+          "appel": "GET /api/clm/admin/clients-integration?q=5555-5555-5555-4444",
+          "statut": 422,
+          "note": "la chaîne de requête aussi"
+        },
+        {
+          "appel": "POST /api/clm/admin/clients-integration",
+          "statut": 201,
+          "corps": {
+            "nom": "Système ${unique} 2026-4471",
+            "systeme": "AUTRE"
+          },
+          "note": "un numéro qui n'est pas une carte passe"
+        },
+        {
+          "appel": "GET /api/clm/admin/clients-integration",
+          "verifier": [
+            {
+              "texteAbsent": "4111"
+            },
+            {
+              "texte": "Système ${unique}"
+            }
+          ]
+        }
+      ]
+    },
+    "iq.mcp": {
+      "description": "Connecteur MCP : un assistant d'IA s'authentifie avec le jeton d'un client d'intégration, liste des outils en lecture seule, lit le statut d'une trousse de ce client ; une origine étrangère et un jeton absent sont refusés",
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "appel": "POST /api/clm/admin/clients-integration",
+          "corps": {
+            "nom": "Assistant IA ${unique}",
+            "systeme": "AUTRE"
+          },
+          "capturer": {
+            "clientId": "$.client.clientId",
+            "secret": "$.secret"
+          }
+        },
+        {
+          "appel": "POST /api/clm/integration/oauth/token",
+          "anonyme": true,
+          "formulaire": {
+            "grant_type": "client_credentials",
+            "client_id": "${clientId}",
+            "client_secret": "${secret}"
+          },
+          "capturer": {
+            "jeton": "$.access_token"
+          }
+        },
+        {
+          "appel": "POST /api/clm/integration/mcp",
+          "anonyme": true,
+          "statut": 401,
+          "corps": {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "ping"
+          }
+        },
+        {
+          "appel": "POST /api/clm/integration/mcp",
+          "anonyme": true,
+          "statut": 403,
+          "entetes": {
+            "Authorization": "Bearer ${jeton}",
+            "Origin": "https://attaquant.example"
+          },
+          "corps": {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "ping"
+          },
+          "note": "DNS rebinding"
+        },
+        {
+          "appel": "POST /api/clm/integration/mcp",
+          "anonyme": true,
+          "entetes": {
+            "Authorization": "Bearer ${jeton}"
+          },
+          "corps": {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "initialize",
+            "params": {
+              "protocolVersion": "2025-06-18",
+              "capabilities": {},
+              "clientInfo": {
+                "name": "bdd",
+                "version": "1"
+              }
+            }
+          },
+          "verifier": [
+            {
+              "chemin": "$.result.protocolVersion",
+              "egal": "2025-06-18"
+            },
+            {
+              "chemin": "$.result.serverInfo.name",
+              "egal": "vina-clm"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/integration/mcp",
+          "anonyme": true,
+          "entetes": {
+            "Authorization": "Bearer ${jeton}"
+          },
+          "corps": {
+            "jsonrpc": "2.0",
+            "id": 2,
+            "method": "tools/list"
+          },
+          "verifier": [
+            {
+              "chemin": "$.result.tools[*].name",
+              "inclut": "lire_trousse"
+            },
+            {
+              "chemin": "$.result.tools[*].annotations.readOnlyHint",
+              "exclut": false
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/integration/v1/trousses",
+          "anonyme": true,
+          "statut": 201,
+          "entetes": {
+            "Authorization": "Bearer ${jeton}"
+          },
+          "corps": {
+            "titre": "Entente MCP ${unique}",
+            "referenceExterne": "MCP-${UNIQUE}",
+            "initiateur": "initiateur@iq.example",
+            "documents": [
+              {
+                "nom": "entente.pdf",
+                "contenuBase64": "JVBERi0xLjQKMSAwIG9iajw8L1R5cGUvQ2F0YWxvZy9QYWdlcyAyIDAgUj4+ZW5kb2JqCjIgMCBvYmo8PC9UeXBlL1BhZ2VzL0tpZHNbMyAwIFJdL0NvdW50IDE+PmVuZG9iagozIDAgb2JqPDwvVHlwZS9QYWdlL1BhcmVudCAyIDAgUi9NZWRpYUJveFswIDAgNjEyIDc5Ml0+PmVuZG9iagp0cmFpbGVyPDwvUm9vdCAxIDAgUj4+CiUlRU9GCg=="
+              }
+            ],
+            "signataires": [
+              {
+                "nom": "Alex Candidat",
+                "courriel": "alex@exemple.ca",
+                "roleContrat": "SIGNATAIRE_1",
+                "telephone": "+15145550101",
+                "externe": true
+              }
+            ],
+            "lancer": false
+          },
+          "capturer": {
+            "trousse": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/clm/integration/mcp",
+          "anonyme": true,
+          "entetes": {
+            "Authorization": "Bearer ${jeton}"
+          },
+          "corps": {
+            "jsonrpc": "2.0",
+            "id": 3,
+            "method": "tools/call",
+            "params": {
+              "name": "lire_trousse",
+              "arguments": {
+                "trousseId": "${trousse}"
+              }
+            }
+          },
+          "verifier": [
+            {
+              "chemin": "$.result.isError",
+              "egal": false
+            },
+            {
+              "chemin": "$.result.structuredContent.referenceExterne",
+              "egal": "MCP-${UNIQUE}"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/clm/integration/mcp",
+          "anonyme": true,
+          "entetes": {
+            "Authorization": "Bearer ${jeton}"
+          },
+          "corps": {
+            "jsonrpc": "2.0",
+            "id": 4,
+            "method": "tools/call",
+            "params": {
+              "name": "supprimer_trousse",
+              "arguments": {}
+            }
+          },
+          "verifier": [
+            {
+              "chemin": "$.error.code",
+              "egal": -32602
+            }
+          ],
+          "note": "aucun outil d'écriture"
+        }
+      ]
+    },
+    "iq.session.politique": {
+      "description": "L'administration technique fixe la politique de session de l'organisation (inactivité, durée maximale) ; un réglage dangereux est refusé ; l'administration d'affaires n'y a pas accès",
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "appel": "GET /api/admin/session",
+          "verifier": [
+            {
+              "chemin": "$.inactiviteMinutes",
+              "existe": true
+            },
+            {
+              "chemin": "$.dureeMaxMinutes",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/admin/session?inactiviteMinutes=30&dureeMaxMinutes=480",
+          "verifier": [
+            {
+              "chemin": "$.propre",
+              "egal": true
+            },
+            {
+              "chemin": "$.inactiviteMinutes",
+              "egal": 30
+            },
+            {
+              "chemin": "$.dureeMaxMinutes",
+              "egal": 480
+            }
+          ]
+        },
+        {
+          "appel": "PUT /api/admin/session?inactiviteMinutes=1&dureeMaxMinutes=480",
+          "statut": 400,
+          "verifier": [
+            {
+              "texte": "inactivité"
+            }
+          ],
+          "note": "session sans fin ou inutilisable : refusée"
+        },
+        {
+          "appel": "PUT /api/admin/session?inactiviteMinutes=120&dureeMaxMinutes=60",
+          "statut": 400
+        },
+        {
+          "appel": "GET /api/admin/session",
+          "profil": "administration d'affaires IQ",
+          "statut": 403,
+          "note": "séparation des administrations (ADR-017)"
+        },
+        {
+          "appel": "PUT /api/admin/session?inactiviteMinutes=60&dureeMaxMinutes=480",
+          "note": "rétablit la politique par défaut des démonstrations"
+        }
+      ]
     }
   }
 }

@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import qc.levis.contrat.commun.module.infrastructure.web.ModuleRequis;
 import qc.levis.contrat.tenant.application.ExportTenantService;
 
-/** Réversibilité : export complet des données du tenant en formats ouverts (art. 20). Admin. Exporte les données du socle. */
+/**
+ * Réversibilité : export complet des données du tenant en formats ouverts (Lévis art. 20, CHU 6.06). Admin. Ouvert à toute
+ * organisation qui a souscrit la rédaction, les formulaires ou la saisie ; chaque module souscrit y verse ses données.
+ */
 @RestController
-@ModuleRequis("redaction")
+@ModuleRequis({"redaction", "formulaire", "saisie"})
 @RequestMapping("/api/reversibilite")
 @PreAuthorize("hasRole('ADMIN')")
 public class ReversibiliteController {

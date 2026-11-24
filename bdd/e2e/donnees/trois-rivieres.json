@@ -1,0 +1,373 @@
+{
+  "appelOffres": "Ville de Trois-Rivières — appel d'offres 7000017905",
+  "catalogue": "trois-rivieres",
+  "scenarios": [
+    {
+      "id": "E2E-TR-01",
+      "titre": "Un modèle Word existant est analysé puis importé comme modèle de la plateforme",
+      "exigences": [
+        "TR-03"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/donnees"
+        },
+        {
+          "remplir": {
+            "Nom du modèle": "Modèle Word E2E ${unique}"
+          }
+        },
+        {
+          "televerser": {
+            "champ": "Fichier Word",
+            "fichier": {
+              "fichier": "chemin:donnees/fichiers/gabarit-iq.docx",
+              "nom": "gabarit.docx",
+              "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            }
+          }
+        },
+        {
+          "cliquer": "Analyser (essai)"
+        },
+        {
+          "voir": "section(s) détectée(s)"
+        },
+        {
+          "cliquer": "Importer le modèle"
+        },
+        {
+          "voir": "Modèle importé"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-TR-02",
+      "titre": "Un document approuvé se génère en Word modifiable et se publie vers Microsoft 365",
+      "exigences": [
+        "TR-02",
+        "TR-04",
+        "TR-20"
+      ],
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "preparer": "tr.document.approuve"
+        },
+        {
+          "aller": "/documents/${document}"
+        },
+        {
+          "voir": "Publication (Microsoft 365 / SAP)"
+        },
+        {
+          "cliquer": "Générer"
+        },
+        {
+          "telecharger": "Export DOCX"
+        }
+      ]
+    },
+    {
+      "id": "E2E-TR-03",
+      "titre": "Accès sécurisés : second facteur au choix de l'utilisateur, rôles administrés, responsabilités séparées",
+      "exigences": [
+        "TR-05",
+        "TR-06",
+        "TR-07",
+        "TR-13"
+      ],
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "aller": "/securite"
+        },
+        {
+          "voirTitre": "Sécurité du compte"
+        },
+        {
+          "voir": [
+            "Authentification TOTP",
+            "Question secrète dynamique"
+          ]
+        },
+        {
+          "nePasVoir": "Circuits d’approbation"
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "connecter": "administrateur de Lévis"
+        },
+        {
+          "aller": "/utilisateurs"
+        },
+        {
+          "voir": [
+            "juriste@levis.qc.ca",
+            "JURIDIQUE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E2E-TR-04",
+      "titre": "Le secret d'intégration est stocké chiffré, jamais réaffiché ; les règles internes se paramètrent",
+      "exigences": [
+        "TR-08",
+        "TR-10"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/parametres"
+        },
+        {
+          "voirTitre": "Paramètres du tenant — valeurs des sélecteurs"
+        },
+        {
+          "voir": [
+            "Secret client",
+            "stocké chiffré et n’est jamais réaffiché"
+          ]
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-TR-05",
+      "titre": "Le journal d'audit se filtre et s'exporte ; versions et validations du document restent tracées",
+      "exigences": [
+        "TR-09",
+        "TR-11",
+        "TR-12"
+      ],
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "preparer": "tr.document.approuve"
+        },
+        {
+          "aller": "/documents/${document}"
+        },
+        {
+          "cliquer": "Capturer une version"
+        },
+        {
+          "remplir": {
+            "Note de version": "Version E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Valider"
+        },
+        {
+          "voir": "Version E2E ${unique}"
+        },
+        {
+          "connecter": "administrateur de Lévis"
+        },
+        {
+          "aller": "/audit"
+        },
+        {
+          "cliquer": "Filtrer"
+        },
+        {
+          "voir": "Événements du journal d’audit"
+        },
+        {
+          "telecharger": "Exporter en CSV"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-TR-06",
+      "titre": "L'assistant IA est encadré : suggestions tracées, désactivable puis réactivable par l'administration",
+      "exigences": [
+        "TR-15",
+        "TR-24"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/donnees"
+        },
+        {
+          "voir": [
+            "Encadrement de l'assistant IA",
+            "Suggestions récentes"
+          ]
+        },
+        {
+          "cliquer": "Désactiver l'assistant IA"
+        },
+        {
+          "voir": "Assistant IA désactivé"
+        },
+        {
+          "cliquer": "Activer l'assistant IA"
+        },
+        {
+          "voir": "Assistant IA activé"
+        }
+      ]
+    },
+    {
+      "id": "E2E-TR-07",
+      "titre": "En fin de contrat, l'administration exporte toutes les données en une archive",
+      "exigences": [
+        "TR-19"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/donnees"
+        },
+        {
+          "voir": "Réversibilité"
+        },
+        {
+          "telecharger": "Exporter toutes les données (ZIP)"
+        }
+      ]
+    },
+    {
+      "id": "E2E-TR-08",
+      "titre": "Un dossier d'approvisionnement regroupe ses documents",
+      "exigences": [
+        "TR-21"
+      ],
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "aller": "/dossiers"
+        },
+        {
+          "remplir": {
+            "Titre": "Dossier E2E ${unique}",
+            "N° d’appel d’offres": "AO-E2E-${UNIQUE}",
+            "Objet du dossier": "Réfection de la chaussée"
+          }
+        },
+        {
+          "cliquer": "Créer le dossier"
+        },
+        {
+          "voir": "Dossier E2E ${unique}"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-TR-09",
+      "titre": "Rapports de suivi : indicateurs, documents par statut et par type, activité par utilisateur",
+      "exigences": [
+        "TR-22"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/rapports"
+        },
+        {
+          "voir": [
+            "Documents par statut",
+            "Documents par type",
+            "Activité par utilisateur"
+          ]
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "aller": "/tableau-de-bord"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-TR-10",
+      "titre": "Les étapes de validation se définissent par type de document",
+      "exigences": [
+        "TR-23"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/workflows"
+        },
+        {
+          "remplir": {
+            "Nom": "Circuit services E2E ${unique}"
+          }
+        },
+        {
+          "choisir": {
+            "Type de document": "Contrat de services"
+          }
+        },
+        {
+          "cocher": "JURIDIQUE"
+        },
+        {
+          "cocher": "DIRECTION"
+        },
+        {
+          "cliquer": "Créer le circuit"
+        },
+        {
+          "voir": "Circuit services E2E ${unique}"
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Supprimer le circuit Circuit services E2E ${unique}"
+          }
+        },
+        {
+          "voir": "Circuit supprimé"
+        },
+        {
+          "nePasVoir": "Circuit services E2E ${unique}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-TR-11",
+      "titre": "L'API est documentée et testable (OpenAPI 3.0)",
+      "exigences": [
+        "TR-29"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/api-docs"
+        },
+        {
+          "voirTitre": "API — Documentation & tests (OpenAPI 3.0)"
+        },
+        {
+          "voir": "Swagger UI interactif"
+        }
+      ]
+    }
+  ]
+}

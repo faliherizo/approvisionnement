@@ -2,15 +2,15 @@
 
 > Document généré par `securite/outils/rapport.mjs` à partir des résultats de `securite/lancer.sh` ; ne pas le modifier à la main.
 
-Version éprouvée : `580c09d + modifications locales non commitées` · produit le 2026-11-21 15:21 UTC · cible : serveur de recette branché sur les bacs à sable.
+Version éprouvée : `54c96e3 + modifications locales non commitées` · produit le 2026-11-22 14:05 UTC · cible : serveur de recette branché sur les bacs à sable.
 
 ## 1. Verdict
 
-**Aucune vulnérabilité exploitable n'est ouverte.** Les 25 tests d'intrusion réussissent, aucune alerte ZAP de risque élevé ni aucune vulnérabilité de dépendance haute ou critique ne reste sans correction ou sans acceptation motivée. Les constats relevés pendant la campagne ont été corrigés et chacun est verrouillé par un test de non-régression (section 4).
+**Aucune vulnérabilité exploitable n'est ouverte.** Les 26 tests d'intrusion réussissent, aucune alerte ZAP de risque élevé ni aucune vulnérabilité de dépendance haute ou critique ne reste sans correction ou sans acceptation motivée. Les constats relevés pendant la campagne ont été corrigés et chacun est verrouillé par un test de non-régression (section 4).
 
 ## 2. Périmètre et méthode
 
-- **Inventaire** : 431 opérations d'API lues dans la spécification OpenAPI que publie le serveur ; 42 sont publiques par conception (tableau 2.1), toutes les autres exigent une session.
+- **Inventaire** : 439 opérations d'API lues dans la spécification OpenAPI que publie le serveur ; 46 sont publiques par conception (tableau 2.1), toutes les autres exigent une session.
 - **Tests automatisés** (`securite/tests/`) : balayages génériques de **chaque** opération (accès anonyme, moindre privilège, étanchéité entre organisations par la méthode du canari) et tests ciblés OWASP Top 10 2021 (authentification, injection, configuration, données sensibles, fichiers, SSRF).
 - **Balayage dynamique** : OWASP ZAP 2.16 (règles passives et actives) sur toute l'API, avec une session authentifiée.
 - **Analyse de composition et de secrets** : Trivy (dépendances Maven et npm, secrets, Dockerfile, Terraform, Kubernetes) et `npm audit`.
@@ -26,11 +26,13 @@ Version éprouvée : `580c09d + modifications locales non commitées` · produit
 | `^(GET|POST) /api/auth/(oidc|saml)/` | Flux d'authentification unique OIDC et SAML. | PKCE, état et nonce (OIDC), signature des assertions (SAML). |
 | `^(GET|POST) /api/signature/` | Signature externe par lien. | Jeton à usage limité, imprévisible, expirant. |
 | `^(GET|POST|PUT) /api/clm/portail/` | Portail du signataire externe (IQ). | Jeton d'invitation et vérification d'identité (code). |
+| `^(GET|POST) /api/clm/integration/mcp$` | Connecteur MCP d'un assistant d'IA (IQ-A-09, ADR-023). | Jeton client credentials d'un client d'intégration ; outils en lecture seule bornés à ce client ; origine étrangère refusée. |
 | ` /api/clm/integration/` | API d'intégration entrante (Workday, Salesforce). | Jeton OAuth client credentials vérifié par le contrôleur. |
 | ` /scim/v2/` | Provisionnement SCIM 2.0. | Jeton porteur propre à l'organisation. |
 | `^GET /api/tenants$` | Sélecteur d'organisation de la page de connexion. | Slug et titre seulement. |
 | `^GET /api/tenants/[^/]+/public$` | Titre et thème de la page de connexion. | Données de présentation seulement. |
 | `^GET /api/health$` | Sonde de disponibilité. | État seulement. |
+| `^(GET|POST) /api/public/v1/echanges/` | Échanges hérités de la plateforme précédente (CHU-8.04, ADR-021). | Jeton d'API vérifié par le contrôleur, module interop requis, nom de champ inconnu refusé. |
 | ` /api/public/` | API publique par jeton d'API. | Jeton d'API ou OAuth vérifié par le contrôleur. |
 
 ## 3. Résultats des tests d'intrusion automatisés
@@ -58,6 +60,7 @@ Version éprouvée : `580c09d + modifications locales non commitées` · produit
 | INT-07 | A05 | les erreurs ne divulguent aucune trace et les méthodes dangereuses sont fermées | ✅ réussi |
 | INT-07 | A05 | le profil de production refuse les réglages de développement | ✅ réussi |
 | INT-08 | A02 · A04 · A08 | aucune réponse ne contient d'empreinte de mot de passe, de secret TOTP ni de secret client | ✅ réussi |
+| INT-08 | A02 · A04 · A08 | aucune opération d'écriture n'accepte un numéro de carte de paiement (PCI DSS hors périmètre) | ✅ réussi |
 | INT-08 | A02 · A04 · A08 | un administrateur d'organisation ne se donne ni ne donne de privilège de plateforme | ✅ réussi |
 | INT-09 | A04 · A05 | un fichier trop volumineux est refusé par un 413 | ✅ réussi |
 | INT-09 | A04 · A05 | un faux document Word (HTML ou script) est refusé | ✅ réussi |
@@ -65,15 +68,16 @@ Version éprouvée : `580c09d + modifications locales non commitées` · produit
 
 Volume éprouvé :
 
-- 389 opérations éprouvées sans session
-- 205 modifications tentées par un lecteur
+- 393 opérations éprouvées sans session
+- 208 modifications tentées par un lecteur
 - 22 opérations de plateforme tentées par un administrateur d'organisation
-- 138 lectures de l'organisation B balayées à la recherche du canari de A
+- 139 lectures de l'organisation B balayées à la recherche du canari de A
 - 88 opérations de B dirigées sur les identifiants de A
-- 376 charges d'injection SQL envoyées
-- 276 réponses inspectées à la recherche de secrets
+- 380 charges d'injection SQL envoyées
+- 278 réponses inspectées à la recherche de secrets
+- 197 opérations d'écriture éprouvées avec un numéro de carte
 
-Opérations à paramètre de chemin sans canari dans l'organisation A (116) : leur étanchéité repose sur les tests d'intégration de leur module (organisation d'essai distincte) et sur le balayage de lecture ci-dessus.
+Opérations à paramètre de chemin sans canari dans l'organisation A (118) : leur étanchéité repose sur les tests d'intégration de leur module (organisation d'essai distincte) et sur le balayage de lecture ci-dessus.
 
 ## 4. Constats et corrections
 
@@ -115,10 +119,11 @@ Opérations à paramètre de chemin sans canari dans l'organisation A (116) : le
 
 | Alerte | Risque | Instances | Décision |
 |---|---|---|---|
-| A Client Error response code was returned by the server (100000) | Informational | 15370 | acceptée : 503 volontaire de l'assistant de rédaction quand le moteur d'IA local (Ollama) est arrêté dans l'environnement d'essai ; la réponse ne divulgue plus aucun détail technique (constat SEC-22). |
+| A Client Error response code was returned by the server (100000) | Informational | 15631 | acceptée : 503 volontaire de l'assistant de rédaction quand le moteur d'IA local (Ollama) est arrêté dans l'environnement d'essai ; la réponse ne divulgue plus aucun détail technique (constat SEC-22). |
 | Authentication Request Identified (10111) | Informational | 4 | information |
-| Non-Storable Content (10049) | Informational | 13 | information |
-| Session Management Response Identified (10112) | Informational | 2 | information |
+| Content-Type Header Missing (10019) | Informational | 1 | information |
+| Non-Storable Content (10049) | Informational | 12 | information |
+| Session Management Response Identified (10112) | Informational | 1 | information |
 | A Server Error response code was returned by the server (100000) | Low | 1 | acceptée : 503 volontaire de l'assistant de rédaction quand le moteur d'IA local (Ollama) est arrêté dans l'environnement d'essai ; la réponse ne divulgue plus aucun détail technique (constat SEC-22). |
 | ZAP is Out of Date (10116) | Low | 1 | acceptée : Avertissement sur la version de l'outil ZAP lui-même, sans rapport avec l'application ; l'image est mise à jour à chaque révision de la campagne. |
 

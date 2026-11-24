@@ -60,16 +60,46 @@ springdoc:
 app:
   # Canal COURRIEL (ADR-002) : « simulation » (journal seulement) ou « smtp » (spring.mail.*, ex. relais de
   # l'organisation ; bac à sable : Mailpit). L'expéditeur appartient au domaine configuré (SPF, DKIM).
+  # Antivirus des fichiers reçus (CHU 7.08, ADR-027) : « signatures » (EICAR) sur un poste ; « clamav » en exploitation,
+  # avec le démon clamd joignable à ANTIVIRUS_CLAMAV_HOTE:ANTIVIRUS_CLAMAV_PORT.
+  antivirus:
+    mode: ${ANTIVIRUS_MODE:signatures}
+    clamav:
+      hote: ${ANTIVIRUS_CLAMAV_HOTE:}
+      port: ${ANTIVIRUS_CLAMAV_PORT:3310}
+      delai-ms: ${ANTIVIRUS_CLAMAV_DELAI_MS:30000}
+  # Défi anti-robot des formulaires (CHU 3.07, ADR-026) : « simulation » par défaut ; « siteverify » en exploitation,
+  # avec Cloudflare Turnstile ou hCaptcha. La clé secrète vient de l'environnement seulement, jamais d'ici.
+  saisie:
+    captcha:
+      mode: ${CAPTCHA_MODE:simulation}
+      fournisseur: ${CAPTCHA_FOURNISSEUR:TURNSTILE}
+      cle-site: ${CAPTCHA_CLE_SITE:}
+      secret: ${CAPTCHA_SECRET:}
+      url: ${CAPTCHA_URL:}
   notification:
     courriel:
       mode: ${NOTIFICATION_COURRIEL_MODE:simulation}
       expediteur: ${NOTIFICATION_COURRIEL_EXPEDITEUR:no-reply@contrats.example}
+    # SMS (code de vérification du signataire, RST-17) : « twilio » en exploitation, avec le compte Vina lu dans
+    # l'environnement (TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM) ; jamais de valeur ici.
+    sms:
+      mode: ${NOTIFICATION_SMS_MODE:simulation}
+      twilio:
+        url: ${TWILIO_URL:https://api.twilio.com}
+        account-sid: ${TWILIO_ACCOUNT_SID:}
+        auth-token: ${TWILIO_AUTH_TOKEN:}
+        from: ${TWILIO_FROM:}
   amorcage:
     # Organisations de démonstration (data/tenants-demo.json : tenant IQ et un compte par profil client). Faux en production.
     tenants-demo: ${APP_TENANTS_DEMO:true}
   jwt:
     secret: ${JWT_SECRET:changez-moi-cette-cle-secrete-de-256-bits-minimum-pour-la-ville-de-levis}
     expiration-ms: 3600000   # 1 heure
+  # Politique de session par défaut (ST-01) ; chaque organisation peut fixer la sienne (administration technique).
+  session:
+    inactivite-minutes: ${APP_SESSION_INACTIVITE_MINUTES:60}
+    duree-max-minutes: ${APP_SESSION_DUREE_MAX_MINUTES:480}
   cookie:
     secure: ${COOKIE_SECURE:false}      # true en production (HTTPS)
     same-site: ${COOKIE_SAMESITE:Lax}

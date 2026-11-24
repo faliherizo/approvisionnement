@@ -1,0 +1,163 @@
+#!/usr/bin/env node
+/**
+ * Documentation et couverture des scénarios e2e d'interface, générées depuis les sources de vérité :
+ *   - bdd/exigences/*.json          catalogue des exigences de chaque appel d'offres ;
+ *   - bdd/e2e/donnees/*.json        scénarios e2e : profil, exigences démontrées, gestes d'interface, données ;
+ *   - bdd/test-results-e2e/resultats.json  dernier résultat d'exécution (rapport JSON de Playwright), s'il existe.
+ * Écrit docs/scenarios-e2e/README.md et un document par appel d'offres. Avec --verifier, sort en erreur si une exigence
+ * fonctionnelle (vérification « bdd ») n'a aucun scénario e2e, ou si un scénario cite une exigence inconnue.
+ */
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'fs'
+import { basename, dirname, join, resolve } from 'path'
+import { fileURLToPath } from 'url'
+
+const BDD = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const RACINE = resolve(BDD, '..')
+const SORTIE = join(RACINE, 'docs/scenarios-e2e')
+const verifier = process.argv.includes('--verifier')
+const lireJson = (f) => JSON.parse(readFileSync(f, 'utf8'))
+
+const ORDRE = ['levis', 'trois-rivieres', 'iq', 'chu']
+const catalogues = readdirSync(join(BDD, 'exigences')).filter((f) => f.endsWith('.json'))
+  .sort((a, b) => ORDRE.indexOf(basename(a, '.json')) - ORDRE.indexOf(basename(b, '.json')))
+  .map((f) => ({ cle: basename(f, '.json'), ...lireJson(join(BDD, 'exigences', f)) }))
+const jeux = readdirSync(join(BDD, 'e2e/donnees')).filter((f) => f.endsWith('.json'))
+  .map((f) => ({ fichier: f, ...lireJson(join(BDD, 'e2e/donnees', f)) }))
+
+// --- Résultats : statut de chaque scénario, d'après son identifiant en tête du titre du test -----------------------
+const resultats = {}
+const RAPPORT = join(BDD, 'test-results-e2e/resultats.json')
+if (existsSync(RAPPORT)) {
+  const parcourir = (suite) => {
+    for (const spec of suite.specs ?? []) {
+      const id = spec.title.split(' — ')[0]
+      const r = spec.tests?.[0]?.results?.at(-1)
+      if (r) resultats[id] = r.status === 'passed' ? 'réussi' : r.status === 'skipped' ? 'non exécuté' : 'échoué'
+    }
+    for (const s of suite.suites ?? []) parcourir(s)
+  }
+  for (const s of lireJson(RAPPORT).suites ?? []) parcourir(s)
+}
+const etat = (id) => ({ 'réussi': '✅ réussi', 'échoué': '❌ échoué', 'non exécuté': '⏸ non exécuté' }[resultats[id]] ?? '— pas encore exécuté')
+
+// --- Étapes en langage d'analyste -----------------------------------------------------------------------------------
+const liste = (v) => [v].flat().map((x) => `« ${x} »`).join(', ')
+const paires = (o) => Object.entries(o).map(([k, v]) => `« ${k} » : ${v === '' ? '(vide)' : `\`${v}\``}`).join(' ; ')
+function phrase(e) {
+  if ('aller' in e) return `Ouvrir l'écran \`${e.aller}\``
+  if ('connecter' in e) return `Se connecter en tant que ${e.connecter}`
+  if ('langue' in e) return `Passer l'interface en ${{ fr: 'français', en: 'anglais', mg: 'malgache' }[e.langue]}`
+  if ('cliquer' in e) return typeof e.cliquer === 'string' ? `Activer « ${e.cliquer} »` : `Activer « ${e.cliquer.nom} » (${e.cliquer.role})`
+  if ('dansLaLigne' in e) return `Dans la ligne « ${e.dansLaLigne.texte} », activer « ${e.dansLaLigne.cliquer} »`
+  if ('remplir' in e) return `Saisir ${paires(e.remplir)}`
+  if ('choisir' in e) return `Choisir ${paires(e.choisir)}`
+  if ('cocher' in e) return `Cocher « ${e.cocher} »`
+  if ('decocher' in e) return `Décocher « ${e.decocher} »`
+  if ('televerser' in e) return `Joindre « ${e.televerser.fichier.nom} » au champ « ${e.televerser.champ} »`
+  if ('voir' in e) return `Voir ${liste(e.voir)}`
+  if ('nePasVoir' in e) return `Ne pas voir ${liste(e.nePasVoir)}`
+  if ('valeur' in e) return `Constater la valeur ${paires(e.valeur)}`
+  if ('voirTitre' in e) return `Voir le titre « ${e.voirTitre} »`
+  if ('url' in e) return `Arriver sur une adresse de la forme \`${e.url}\``
+  if ('preparer' in e) return typeof e.preparer === 'string' ? `Préparer par l'API : cas \`${e.preparer}\``
+    : `Préparer par l'API : ${e.preparer.description}`
+  if ('telecharger' in e) return `Télécharger par « ${e.telecharger} » et obtenir un fichier non vide`
+  if ('ecranConforme' in e) return "Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px"
+  return JSON.stringify(e)
+}
+
+// --- Couverture ------------------------------------------------------------------------------------------------------
+const parExigence = {}
+const inconnues = []
+const connues = new Set(catalogues.flatMap((c) => c.exigences.map((e) => e.id)))
+for (const j of jeux) for (const s of j.scenarios) for (const x of s.exigences) {
+  if (!connues.has(x)) inconnues.push(`${s.id} cite ${x}, absente des catalogues`)
+  ;(parExigence[x] ??= []).push({ ...s, fichier: j.fichier })
+}
+const fonctionnelles = (c) => c.exigences.filter((e) => e.verification === 'bdd')
+const sansScenario = catalogues.flatMap((c) => fonctionnelles(c).filter((e) => !parExigence[e.id]).map((e) => e.id))
+
+if (verifier) {
+  for (const m of inconnues) console.error(`✗ ${m}`)
+  for (const id of sansScenario) console.error(`✗ ${id} : exigence fonctionnelle sans scénario e2e`)
+  if (inconnues.length || sansScenario.length) process.exit(1)
+  console.log(`✓ couverture e2e : ${catalogues.reduce((n, c) => n + fonctionnelles(c).length, 0)} exigences fonctionnelles, toutes couvertes`)
+  process.exit(0)
+}
+
+// --- Documents --------------------------------------------------------------------------------------------------------
+mkdirSync(SORTIE, { recursive: true })
+const cellule = (t) => String(t ?? '').replace(/\|/g, '\\|').replace(/\n/g, ' ')
+const lignesReadme = [
+  '# Scénarios e2e d\'interface, par exigence', '',
+  '> Document généré par `bdd/outils/documenter-e2e.mjs` depuis `bdd/exigences/*.json` (exigences),',
+  '> `bdd/e2e/donnees/*.json` (scénarios et données de test) et le dernier résultat d\'exécution. Ne pas modifier à la main.', '',
+  '## Principe', '',
+  '- **Ce qui est vérifié** : chaque exigence fonctionnelle est démontrée depuis l\'interface, comme un utilisateur du',
+  '  profil concerné la vivrait. Il se connecte, ouvre l\'écran, saisit, choisit, active, joint un fichier, puis constate',
+  '  le résultat à l\'écran.',
+  '- **Préparation par l\'API** : seule la mise en place que l\'exigence ne vise pas passe par l\'API (ex. un devis à',
+  '  commenter). Elle est marquée « Préparer » dans les étapes.',
+  '- **Contrôle d\'écran** : chaque écran visité est contrôlé selon WCAG 2.2 AA et SGQRI 008 (axe-core), avec des cibles',
+  '  ≥ 24 px, sans débordement ni superposition, aux quatre largeurs de référence.',
+  '- **Données** : les données de test sont dans les fichiers JSON, jamais dans le code du moteur',
+  '  (`bdd/e2e/exigences.spec.ts`). `${unique}` rend chaque exécution indépendante des précédentes.',
+  '- **Complément de la suite BDD** : la suite BDD (`docs/scenarios-bdd/`) vérifie les règles par l\'API sur tous les',
+  '  cas limites ; les scénarios e2e vérifient le parcours d\'interface.', '',
+  '## Vocabulaire des étapes (JSON)', '',
+  '| Clé | Geste | Exemple |', '|---|---|---|',
+  '| `aller` | ouvrir un écran | `{ "aller": "/recherche" }` |',
+  '| `connecter` | changer d\'utilisateur | `{ "connecter": "juriste de Lévis" }` |',
+  '| `langue` | changer la langue de l\'interface | `{ "langue": "en" }` |',
+  '| `cliquer` | activer un bouton ou un lien, par son nom accessible | `{ "cliquer": "Rechercher" }` |',
+  '| `dansLaLigne` | agir sur une ligne de tableau | `{ "dansLaLigne": { "texte": "Inscription", "cliquer": "Concevoir" } }` |',
+  '| `remplir` | saisir des champs, par leur libellé | `{ "remplir": { "Terme": "garantie" } }` |',
+  '| `choisir` | choisir dans une liste, par libellé ou par code | `{ "choisir": { "Catégorie": "OPTIONNELLE" } }` |',
+  '| `cocher` / `decocher` | case à cocher, par son libellé | `{ "cocher": "Clauses normatives seulement" }` |',
+  '| `televerser` | joindre un fichier | `{ "televerser": { "champ": "Pièce", "fichier": { "fichier": "pdf", "nom": "a.pdf" } } }` |',
+  '| `voir` / `nePasVoir` | constater un texte à l\'écran | `{ "voir": ["Circuit créé"] }` |',
+  '| `valeur` | constater la valeur d\'un champ (ex. calculé) | `{ "valeur": { "Total": "600" } }` |',
+  '| `voirTitre` / `url` | constater le titre ou l\'adresse | `{ "url": "/documents/\\\\d+" }` |',
+  '| `telecharger` | télécharger un fichier et vérifier qu\'il n\'est pas vide | `{ "telecharger": "Exporter en CSV" }` |',
+  '| `preparer` | mise en place par l\'API (cas BDD nommé ou étapes en ligne) | `{ "preparer": "lev.clauses.recherche-multicritere" }` |',
+  '| `ecranConforme` | contrôle d\'accessibilité et de mise en page | `{ "ecranConforme": true }` |', '',
+  '## Exécution', '',
+  'Même plateforme que la suite BDD : serveur :8100 branché sur les bacs à sable, frontend de recette :5175 (`bdd/README.md`).', '',
+  '```bash', 'cd bdd', 'npm run e2e              # exécute les scénarios, puis régénère ce dossier', 'npm run e2e:couverture   # échoue si une exigence fonctionnelle n\'a aucun scénario e2e',
+  'npx playwright test -c playwright.e2e.config.ts --grep @LEV-C-02   # les scénarios d\'une exigence', '```', '',
+  '## Couverture', '',
+  '| Appel d\'offres | Document | Exigences fonctionnelles | Couvertes en e2e | Scénarios | Réussis |', '|---|---|---:|---:|---:|---:|']
+for (const c of catalogues) {
+  const f = fonctionnelles(c)
+  const scenarios = new Set(f.flatMap((e) => (parExigence[e.id] ?? []).map((s) => s.id)))
+  const reussis = [...scenarios].filter((id) => resultats[id] === 'réussi').length
+  lignesReadme.push(`| ${cellule(c.appelOffres)} | [${c.cle}.md](${c.cle}.md) | ${f.length} | ${f.filter((e) => parExigence[e.id]).length} | ${scenarios.size} | ${reussis} |`)
+}
+writeFileSync(join(SORTIE, 'README.md'), lignesReadme.join('\n') + '\n')
+
+for (const c of catalogues) {
+  const l = [`# ${c.appelOffres} — scénarios e2e par exigence`, '',
+    '> Généré par `bdd/outils/documenter-e2e.mjs`. Méthode et vocabulaire : [README](README.md).', '']
+  for (const e of c.exigences) {
+    l.push(`## ${e.id} — ${e.libelle.replace(/\*/g, '')}`, '')
+    l.push(`- **Source** : ${e.source}`, `- **Conformité déclarée** : ${e.conformiteDeclaree ?? '—'}`)
+    const s = parExigence[e.id] ?? []
+    if (e.verification !== 'bdd') {
+      l.push(`- **Vérification** : ${e.verification}${e.justification ? ` — ${e.justification}` : ''}`, '')
+      continue
+    }
+    if (!s.length) { l.push('- **Scénario e2e** : aucun (écart de couverture)', ''); continue }
+    l.push('')
+    for (const sc of s) {
+      l.push(`### ${sc.id} — ${sc.titre}`, '',
+        `- **Profil** : ${sc.profil}${sc.organisation ? ` (organisation ${sc.organisation})` : ''}`,
+        `- **Exigences démontrées** : ${sc.exigences.join(', ')}`,
+        `- **Données** : \`bdd/e2e/donnees/${sc.fichier}\``,
+        `- **Dernier résultat** : ${etat(sc.id)}`, '')
+      sc.etapes.forEach((x, i) => l.push(`${i + 1}. ${phrase(x)}`))
+      l.push('')
+    }
+  }
+  writeFileSync(join(SORTIE, `${c.cle}.md`), l.join('\n'))
+}
+console.log(`docs/scenarios-e2e : ${catalogues.length} documents ; ${sansScenario.length} exigence(s) fonctionnelle(s) sans scénario e2e`)

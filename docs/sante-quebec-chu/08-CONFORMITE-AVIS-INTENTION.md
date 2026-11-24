@@ -27,16 +27,16 @@ au-delà de l'avis ; utile en démonstration, non exigé ici.)*
 | Disponibilité **99,8 %** en tout temps | ✅ (contractuel/infra) | plans de reprise RPO/RTO |
 | Sauvegardes redondantes locales+externes **quotidiennes** | ✅ (infra) | docs DR |
 | Hébergement, entretien, correctifs, MAJ, migrations | ✅ (service) | offre de service |
-| Gestion durée des sessions + **affichage ordi/tablette/mobile** | 🟡 | sessions JWT ok ; responsive présent, **à valider par tests visuels aux largeurs de référence** |
+| Gestion durée des sessions + **affichage ordi/tablette/mobile** | 🟡 → ✅ | politique de session par organisation ([ADR-024](../adr/ADR-024-politique-de-session.md)) ; chaque écran vérifié à 390, 768, 1280 et 1680 px, sans débordement ni superposition |
 
 ## 2. Langues, accessibilité, présentation
 
 | Besoin | Statut | Où |
 |---|---|---|
 | Interface d'administration **FR/EN** | ✅ | i18n (FR/EN/MGA, 1500+ clés) |
-| **Formulaires multilingues** (contenu) | ❌ → 🟡 traité | libellés de champ multilingues **ajoutés** (voir Traitement G1) |
+| **Formulaires multilingues** (contenu) | ❌ → ✅ traité | libellés des champs, titres des pages, aides et options traduisibles, affichés dans la langue de l'utilisateur (G1) |
 | Gabarits, images, feuilles de style institutionnels | ✅ | thème par tenant (couleurs, logo) |
-| **Accessibilité** sites Web gouv. QC (SGQRI 008 / WCAG 2.2 AA) | 🟡 | règles respectées à la conception ; **axe-core non câblé en CI** (voir questions) |
+| **Accessibilité** sites Web gouv. QC (SGQRI 008 / WCAG 2.2 AA) | 🟡 → ✅ | axe-core sur chaque écran des scénarios BDD, aux largeurs 390, 768, 1280 et 1680 px, cibles ≥ 24 px, sans débordement ni superposition ; exécuté en intégration continue |
 
 ## 3. Création et gestion des formulaires
 
@@ -48,7 +48,7 @@ au-delà de l'avis ; utile en démonstration, non exigé ici.)*
 | **Sauvegarde automatique** + reprise ultérieure | ✅ | autosave + reprise `?saisie=` |
 | Activation/désactivation selon **date**, **nb max de répondants**, **plage réseau** | 🟡 → ✅ traité | date + maxRépondants déjà ; **plage réseau (IP) ajoutée** (G2) |
 | **Restriction de choix selon capacité maximale** | ❌ → ✅ traité | capacité par choix **ajoutée** (G3) |
-| Mécanisme **anti-automatisation** (formulaires publics) | 🟡 | port `CaptchaVerifier` + simulation ; adaptateur réel (hCaptcha/reCAPTCHA) à activer |
+| Mécanisme **anti-automatisation** (formulaires publics) | 🟡 → ✅ | défi réel Cloudflare Turnstile ou hCaptcha par le protocole siteverify, choisi par configuration ([ADR-026](../adr/ADR-026-defi-anti-robot-siteverify.md)) |
 | Formulaires liés **parent-enfant** | ✅ | `Formulaire.parentId`, `Saisie.parentSaisieId` |
 | Versions, **approbation des modifs**, retour à une version | ✅ | `StatutFormulaire` + historique + `revenirA` + onglet Versions |
 | Duplication / export / réimport de structure | ✅ | `dupliquer` / `exporter` / `importer` |
@@ -77,8 +77,8 @@ au-delà de l'avis ; utile en démonstration, non exigé ici.)*
 | Notifications **courriel / SMS / interne** selon déclencheur | ✅ | contexte `notification` (3 canaux, simulation ; adaptateurs réels Twilio/ACS à activer) |
 | Confirmation à la soumission | ✅ | écran de remplissage |
 | Notification aux administrateurs à la création/modif d'une fiche | ✅ | règles de notification sur événements |
-| **Production d'un document à partir des données + transmission** | 🟡 | infra PDF existante (contrats) ; **génération PDF depuis une fiche à câbler** (voir questions) |
-| Messagerie interne sécurisée | 🟡 | canal INTERNE + commentaires de demande ; messagerie complète → question |
+| **Production d'un document à partir des données + transmission** | 🟡 → ✅ | document PDF/A d'une fiche, transmissible par courriel en pièce jointe (CHU 5.04) |
+| Messagerie interne sécurisée | 🟡 → ✅ | messagerie visible des seuls participants, messages chiffrés en base (CHU 5.05) |
 
 ## 6. Gestion, recherche, rapports, données
 
@@ -86,10 +86,10 @@ au-delà de l'avis ; utile en démonstration, non exigé ici.)*
 |---|---|---|
 | Recherche multicritère + **critères sauvegardés** | ✅ | contexte `rapport` (`CritereRechercheSauve`) |
 | Export **Excel** (toutes/sélection) | ✅ | export POI |
-| **Rapports PDF personnalisés** | 🟡 | à câbler sur le moteur de fiches (voir questions) |
+| **Rapports PDF personnalisés** | 🟡 → ✅ | rapport PDF personnalisé d'un formulaire (CHU 6.03) |
 | **Graphiques + tableaux de bord configurables** | ❌ | écart documenté (voir questions / plan) |
-| Pages listes/dashboards/rapports **selon les droits** | 🟡 | listes/rapports ok ; dashboards à construire |
-| **Export intégral structuré** (réversibilité) | 🟡 | export structure (JSON) + données (Excel) ; export intégral unifié à formaliser |
+| Pages listes/dashboards/rapports **selon les droits** | 🟡 → ✅ | listes et rapports selon les droits ; tableaux de bord configurables et partageables (CHU 6.04) |
+| **Export intégral structuré** (réversibilité) | 🟡 → ✅ | une archive ZIP JSON + manifeste où chaque module souscrit (rédaction, formulaires, fiches) verse ses données (`/api/reversibilite/export`) ; en plus, structure JSON et données Excel par formulaire |
 | **Durée de conservation** des données | ❌ → ✅ traité | politique de rétention par formulaire **ajoutée** (G7) |
 
 ## 7. Sécurité, confidentialité, contrôle des accès
@@ -101,9 +101,9 @@ au-delà de l'avis ; utile en démonstration, non exigé ici.)*
 | Groupes avec droits lecture/modif/suppression | ✅ | `securite` (Groupe/GroupeMembre/PermissionAcces) |
 | Contrôle d'accès par utilisateur/groupe/rôle/formulaire/**champ/page/fiche/bouton** | ✅ | `MoteurAcces` (portée champ/fiche/bouton, refus par défaut) |
 | Classification **public/interne/confidentiel/secret** | ✅ | `CLASSIFICATION` + `Masquage` |
-| Mesures renforcées (masquage, chiffrement, restriction affichage/export) | 🟡 | masquage + classification ok ; chiffrement au repos = infra |
+| Mesures renforcées (masquage, chiffrement, restriction affichage/export) | 🟡 → ✅ | masquage et classification ; secrets et messagerie chiffrés par l'application ; base chiffrée au repos par l'hébergement (PostgreSQL géré, AES-256) |
 | **Traçabilité** accès et modifications | ✅ | journal d'audit (Loi 25) |
-| Protection **DDoS / brute-force / maliciels** | 🟡 | `PareFeuFilter` (limiteur de débit) + WAF/anti-DDoS = infra |
+| Protection **DDoS / brute-force / maliciels** | 🟡 → ✅ | antivirus ClamAV sur tout fichier reçu ([ADR-027](../adr/ADR-027-antivirus-clamav.md)) ; limiteur de débit et verrouillage après échecs ; anti-DDoS Front Door et pare-feu OWASP à l'ingress |
 | Config pour obligations **Loi 25** | ✅ | masquage NAS, courriel masqué en journal |
 
 ## 8. Interopérabilité
@@ -112,8 +112,8 @@ au-delà de l'avis ; utile en démonstration, non exigé ici.)*
 |---|---|---|
 | **API** consulter/récupérer/créer/compléter des fiches | ✅ | `interop` (`/api/public/v1/formulaires/{code}/fiches`) |
 | Auth API par **jeton / OAuth** | ✅ | OAuth2 client_credentials (jetons SHA-256) |
-| Échanges formulaires/données/sites/systèmes externes | 🟡 | API publique ok ; connecteurs M365/SAP existants ; intégrations spécifiques sur demande |
-| Maintien des échanges déjà en place | n/a | nouvelle implémentation (pas de legacy chez nous) |
+| Échanges formulaires/données/sites/systèmes externes | 🟡 → ✅ | API publique, API d'intégration entrante, échanges hérités, connecteurs M365/SAP et MCP ; une intégration propre s'ajoute comme adaptateur |
+| Maintien des échanges déjà en place | ✅🆕 | correspondances d'échange : un système de la plateforme précédente écrit et lit des fiches sous ses anciens noms de champs (`/api/public/v1/echanges/{code}/fiches`), et l'historique exporté se reprend après un essai qui n'écrit rien ([ADR-021](../adr/ADR-021-continuite-des-echanges-herites.md)) |
 
 ## 9. Licences, soutien, services professionnels
 
@@ -121,7 +121,7 @@ au-delà de l'avis ; utile en démonstration, non exigé ici.)*
 |---|---|---|
 | Licences **2 secteurs (RH + Appro) + 4 apps Web** | ✅ | domaines RH/APPROVISIONNEMENT + catalogue d'`Application` |
 | Soutien 2e ligne **L-V 8 h–17 h** | n/a (service) | offre de service |
-| Tests applicatifs lors migrations/MAJ | 🟡 | e2e Playwright ; à étendre par application |
+| Tests applicatifs lors migrations/MAJ | 🟡 → ✅ | suite BDD par exigence et e2e Playwright, rejouées à chaque demande de fusion |
 | **Test d'intrusion** du portail RH (firme externe) | n/a (service) | à planifier |
 | **Banque d'heures** (analyse/formation/config/prog/rapports) | ❌ | modèle `Soutien`/banque d'heures portable de Nexu VINA (voir questions) |
 

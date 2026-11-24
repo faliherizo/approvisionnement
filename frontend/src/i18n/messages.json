@@ -9294,5 +9294,355 @@
     "fr": "Inscrire le mouvement",
     "en": "Record the movement",
     "mg": "Soraty ny fihetsiketsehana"
+  },
+  "echanges.titre": {
+    "fr": "Échanges hérités",
+    "en": "Legacy exchanges",
+    "mg": "Fifanakalozana taloha"
+  },
+  "echanges.intro": {
+    "fr": "Un système de la plateforme précédente garde ses noms de champs : il n'a qu'à changer d'adresse et de jeton. Les noms inconnus sont refusés, jamais ignorés.",
+    "en": "A system from the previous platform keeps its field names: it only changes its address and token. Unknown names are refused, never ignored.",
+    "mg": "Mitazona ny anaran'ny sahany ny rafitra avy amin'ny sehatra teo aloha : ny adiresy sy ny tapakevitra ihany no ovaina. Lavina ny anarana tsy fantatra, tsy adino mihitsy."
+  },
+  "echanges.code": {
+    "fr": "Code d'échange",
+    "en": "Exchange code",
+    "mg": "Kaody fifanakalozana"
+  },
+  "echanges.codeAide": {
+    "fr": "Minuscules, chiffres et tirets (ex. : inscriptions-formation).",
+    "en": "Lowercase letters, digits and hyphens (e.g. training-registrations).",
+    "mg": "Litera madinika, isa ary tsipika (ohatra : inscriptions-formation)."
+  },
+  "echanges.formulaire": {
+    "fr": "Formulaire cible",
+    "en": "Target form",
+    "mg": "Taratasy fenoina kendrena"
+  },
+  "echanges.correspondances": {
+    "fr": "Correspondances",
+    "en": "Field mapping",
+    "mg": "Fifandraisan'ny saha"
+  },
+  "echanges.correspondancesAide": {
+    "fr": "Une ligne par champ : ANCIEN_NOM=cle_du_formulaire.",
+    "en": "One line per field: OLD_NAME=form_field_key.",
+    "mg": "Andalana iray isaky ny saha : ANARANA_TALOHA=lakile_saha."
+  },
+  "echanges.adresse": {
+    "fr": "Adresse pour le système",
+    "en": "Address for the system",
+    "mg": "Adiresy ho an'ny rafitra"
+  },
+  "echanges.etat": {
+    "fr": "État",
+    "en": "Status",
+    "mg": "Toetra"
+  },
+  "echanges.actions": {
+    "fr": "Actions",
+    "en": "Actions",
+    "mg": "Asa"
+  },
+  "echanges.actif": {
+    "fr": "Actif",
+    "en": "Active",
+    "mg": "Mandeha"
+  },
+  "echanges.inactif": {
+    "fr": "Désactivé",
+    "en": "Disabled",
+    "mg": "Tsy mandeha"
+  },
+  "echanges.desactiver": {
+    "fr": "Désactiver",
+    "en": "Disable",
+    "mg": "Ajanony"
+  },
+  "echanges.desactiverCode": {
+    "fr": "Désactiver l'échange {code}",
+    "en": "Disable exchange {code}",
+    "mg": "Ajanony ny fifanakalozana {code}"
+  },
+  "echanges.aucun": {
+    "fr": "Aucun échange hérité déclaré.",
+    "en": "No legacy exchange declared.",
+    "mg": "Tsy misy fifanakalozana taloha voarakitra."
+  },
+  "echanges.declarer": {
+    "fr": "Déclarer un échange",
+    "en": "Declare an exchange",
+    "mg": "Hanambara fifanakalozana"
+  },
+  "echanges.declarerBouton": {
+    "fr": "Déclarer l'échange",
+    "en": "Declare exchange",
+    "mg": "Ambarao ny fifanakalozana"
+  },
+  "echanges.choisir": {
+    "fr": "— Choisir —",
+    "en": "— Choose —",
+    "mg": "— Safidio —"
+  },
+  "echanges.reprise": {
+    "fr": "Reprise de l'historique",
+    "en": "History migration",
+    "mg": "Famindrana ny tantara"
+  },
+  "echanges.repriseAide": {
+    "fr": "Collez l'export JSON de la plateforme précédente (un tableau d'enregistrements). L'essai valide chaque ligne sans rien écrire ; la reprise soumet ensuite les lignes valides.",
+    "en": "Paste the JSON export of the previous platform (an array of records). The trial validates each line without writing anything; the migration then submits the valid lines.",
+    "mg": "Apetaho ny JSON navoaka avy amin'ny sehatra teo aloha. Manamarina andalana tsirairay ny andrana nefa tsy manoratra na inona na inona ; avy eo alefan'ny famindrana ireo andalana marina."
+  },
+  "echanges.echange": {
+    "fr": "Échange",
+    "en": "Exchange",
+    "mg": "Fifanakalozana"
+  },
+  "echanges.export": {
+    "fr": "Export JSON",
+    "en": "JSON export",
+    "mg": "JSON navoaka"
+  },
+  "echanges.essayer": {
+    "fr": "Essayer (n'écrit rien)",
+    "en": "Trial (writes nothing)",
+    "mg": "Andramo (tsy manoratra)"
+  },
+  "echanges.reprendre": {
+    "fr": "Reprendre les lignes valides",
+    "en": "Migrate valid lines",
+    "mg": "Afindrao ireo andalana marina"
+  },
+  "echanges.exportIllisible": {
+    "fr": "L'export doit être un tableau JSON d'enregistrements.",
+    "en": "The export must be a JSON array of records.",
+    "mg": "Tokony ho tabilao JSON ny navoaka."
+  },
+  "echanges.bilan": {
+    "fr": "Bilan de la reprise",
+    "en": "Migration report",
+    "mg": "Tatitry ny famindrana"
+  },
+  "echanges.bilanEssai": {
+    "fr": "Essai : {acceptes} ligne(s) valide(s), {rejetes} rejetée(s) sur {total}. Rien n'a été écrit.",
+    "en": "Trial: {acceptes} valid line(s), {rejetes} rejected out of {total}. Nothing was written.",
+    "mg": "Andrana : {acceptes} marina, {rejetes} nolavina amin'ny {total}. Tsy nisy voasoratra."
+  },
+  "echanges.bilanReprise": {
+    "fr": "Reprise : {acceptes} fiche(s) créée(s), {rejetes} rejetée(s) sur {total}.",
+    "en": "Migration: {acceptes} record(s) created, {rejetes} rejected out of {total}.",
+    "mg": "Famindrana : {acceptes} noforonina, {rejetes} nolavina amin'ny {total}."
+  },
+  "echanges.rang": {
+    "fr": "Ligne",
+    "en": "Line",
+    "mg": "Andalana"
+  },
+  "echanges.statut": {
+    "fr": "Résultat",
+    "en": "Result",
+    "mg": "Vokatra"
+  },
+  "echanges.numero": {
+    "fr": "Numéro de fiche",
+    "en": "Record number",
+    "mg": "Laharana"
+  },
+  "echanges.motif": {
+    "fr": "Motif du rejet",
+    "en": "Rejection reason",
+    "mg": "Antony nandavana"
+  },
+  "echanges.statut.VALIDE": {
+    "fr": "Valide",
+    "en": "Valid",
+    "mg": "Marina"
+  },
+  "echanges.statut.REPRISE": {
+    "fr": "Reprise",
+    "en": "Migrated",
+    "mg": "Voafindra"
+  },
+  "echanges.statut.REJETEE": {
+    "fr": "Rejetée",
+    "en": "Rejected",
+    "mg": "Nolavina"
+  },
+  "echanges.declare": {
+    "fr": "Échange « {code} » déclaré.",
+    "en": "Exchange “{code}” declared.",
+    "mg": "Voarakitra ny fifanakalozana « {code} »."
+  },
+  "echanges.desactive": {
+    "fr": "Échange « {code} » désactivé.",
+    "en": "Exchange “{code}” disabled.",
+    "mg": "Najanona ny fifanakalozana « {code} »."
+  },
+  "echanges.erreur": {
+    "fr": "L'opération a échoué.",
+    "en": "The operation failed.",
+    "mg": "Tsy nahomby ny asa."
+  },
+  "ps.titre": {
+    "fr": "Politique de session",
+    "en": "Session policy",
+    "mg": "Fitsipika momba ny fidirana"
+  },
+  "ps.aide": {
+    "fr": "Une session se termine après le délai d'inactivité, et au plus tard après la durée maximale depuis la connexion, même active. Les changements prennent effet dans la minute.",
+    "en": "A session ends after the inactivity timeout, and at the latest after the maximum duration since sign-in, even if active. Changes take effect within a minute.",
+    "mg": "Mifarana ny fidirana rehefa tsy misy hetsika mandritra ny fotoana voafaritra, ary farafahakeliny rehefa tapitra ny faharetana ambony indrindra hatramin'ny fidirana."
+  },
+  "ps.etatPropre": {
+    "fr": "Politique de l'organisation, fixée par {par} le {le}.",
+    "en": "Organization policy, set by {par} on {le}.",
+    "mg": "Fitsipiky ny fikambanana, napetrak'i {par} tamin'ny {le}."
+  },
+  "ps.etatDefaut": {
+    "fr": "Politique par défaut de la plateforme.",
+    "en": "Platform default policy.",
+    "mg": "Fitsipika ankapoben'ny sehatra."
+  },
+  "ps.inactivite": {
+    "fr": "Délai d'inactivité (minutes)",
+    "en": "Inactivity timeout (minutes)",
+    "mg": "Fotoana tsy misy hetsika (minitra)"
+  },
+  "ps.inactiviteAide": {
+    "fr": "De 5 à 240 minutes, sans dépasser la durée maximale.",
+    "en": "From 5 to 240 minutes, no longer than the maximum duration.",
+    "mg": "5 ka hatramin'ny 240 minitra."
+  },
+  "ps.dureeMax": {
+    "fr": "Durée maximale de session (minutes)",
+    "en": "Maximum session duration (minutes)",
+    "mg": "Faharetana ambony indrindra (minitra)"
+  },
+  "ps.dureeMaxAide": {
+    "fr": "De 15 minutes à 24 heures (1 440 minutes).",
+    "en": "From 15 minutes to 24 hours (1,440 minutes).",
+    "mg": "15 minitra ka hatramin'ny 24 ora."
+  },
+  "ps.enregistrer": {
+    "fr": "Enregistrer la politique",
+    "en": "Save policy",
+    "mg": "Raketo ny fitsipika"
+  },
+  "ps.enregistree": {
+    "fr": "Politique de session enregistrée.",
+    "en": "Session policy saved.",
+    "mg": "Voaraikitra ny fitsipika."
+  },
+  "search.thematique": {
+    "fr": "Thématique (section)",
+    "en": "Theme (section)",
+    "mg": "Lohahevitra (fizarana)"
+  },
+  "search.toutesThematiques": {
+    "fr": "Toutes les thématiques",
+    "en": "All themes",
+    "mg": "Lohahevitra rehetra"
+  },
+  "search.normativesSeulement": {
+    "fr": "Clauses normatives seulement",
+    "en": "Mandatory clauses only",
+    "mg": "Fepetra tsy maintsy arahina ihany"
+  },
+  "search.facettesThematiqueAria": {
+    "fr": "Répartition des clauses par thématique",
+    "en": "Clauses by theme",
+    "mg": "Fizarana ny fepetra araka ny lohahevitra"
+  },
+  "remplir.captchaIndisponible": {
+    "fr": "Le défi anti-robot n'a pas pu être chargé. Rechargez la page ; si le problème persiste, communiquez avec le soutien.",
+    "en": "The anti-robot challenge could not be loaded. Reload the page; if the problem persists, contact support.",
+    "mg": "Tsy voasokatra ny fanamarinana fa tsy robot. Avereno sokafana ny pejy ; raha mbola misy olana, mifandraisa amin'ny mpanampy."
+  },
+  "remplir.captchaAria": {
+    "fr": "Vérification anti-robot",
+    "en": "Anti-robot verification",
+    "mg": "Fanamarinana fa tsy robot"
+  },
+  "builder.titrePageEn": {
+    "fr": "Titre de la page (anglais)",
+    "en": "Page title (English)",
+    "mg": "Lohatenin'ny pejy (anglisy)"
+  },
+  "builder.optionsEnLabel": {
+    "fr": "Options de « {champ} » en anglais, dans le même ordre",
+    "en": "Options of “{champ}” in English, in the same order",
+    "mg": "Safidy « {champ} » amin'ny teny anglisy, araka ny filaharana"
+  },
+  "builder.optionsEnPlaceholder": {
+    "fr": "Options en anglais, séparées par des virgules",
+    "en": "English options, comma-separated",
+    "mg": "Safidy amin'ny teny anglisy, sarahana faingo"
+  },
+  "rechfiches.titre": {
+    "fr": "Rechercher dans les fiches",
+    "en": "Search records",
+    "mg": "Hikaroka ao amin'ny taratasy"
+  },
+  "rechfiches.statut": {
+    "fr": "Statut",
+    "en": "Status",
+    "mg": "Sata"
+  },
+  "rechfiches.tousStatuts": {
+    "fr": "Tous les statuts",
+    "en": "All statuses",
+    "mg": "Sata rehetra"
+  },
+  "rechfiches.texte": {
+    "fr": "Numéro ou réponse",
+    "en": "Number or answer",
+    "mg": "Laharana na valiny"
+  },
+  "rechfiches.textePlaceholder": {
+    "fr": "Ex. : nom du demandeur",
+    "en": "E.g.: applicant name",
+    "mg": "Ohatra : anaran'ny mpangataka"
+  },
+  "rechfiches.nom": {
+    "fr": "Nom des critères",
+    "en": "Criteria name",
+    "mg": "Anaran'ny fepetra"
+  },
+  "rechfiches.sauvegarder": {
+    "fr": "Sauvegarder ces critères",
+    "en": "Save these criteria",
+    "mg": "Tehirizo ireo fepetra ireo"
+  },
+  "rechfiches.effacer": {
+    "fr": "Effacer les critères",
+    "en": "Clear criteria",
+    "mg": "Fafao ny fepetra"
+  },
+  "rechfiches.sauvegarde": {
+    "fr": "Critères « {nom} » sauvegardés.",
+    "en": "Criteria “{nom}” saved.",
+    "mg": "Voatahiry ny fepetra « {nom} »."
+  },
+  "rechfiches.sauves": {
+    "fr": "Critères sauvegardés",
+    "en": "Saved criteria",
+    "mg": "Fepetra voatahiry"
+  },
+  "rechfiches.appliquer": {
+    "fr": "Appliquer « {nom} »",
+    "en": "Apply “{nom}”",
+    "mg": "Ampiharo « {nom} »"
+  },
+  "rechfiches.supprimer": {
+    "fr": "Supprimer",
+    "en": "Delete",
+    "mg": "Fafao"
+  },
+  "rechfiches.supprimerAria": {
+    "fr": "Supprimer les critères « {nom} »",
+    "en": "Delete criteria “{nom}”",
+    "mg": "Fafao ny fepetra « {nom} »"
   }
 }

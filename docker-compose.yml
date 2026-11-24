@@ -77,6 +77,20 @@ services:
       CLM_SIGNATURE_FOURNISSEUR: cachet
       # Courriel : « smtp » avec MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD du relais de l'organisation.
       NOTIFICATION_COURRIEL_MODE: ${NOTIFICATION_COURRIEL_MODE:-simulation}
+      # SMS (ADR-025) : simulation par défaut ; « twilio » avec le compte Vina, lu dans .env (jamais versionné).
+      NOTIFICATION_SMS_MODE: ${NOTIFICATION_SMS_MODE:-simulation}
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID:-}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN:-}
+      TWILIO_FROM: ${TWILIO_FROM:-}
+      # Défi anti-robot des formulaires (ADR-026) : simulation par défaut ; « siteverify » avec Turnstile ou hCaptcha.
+      CAPTCHA_MODE: ${CAPTCHA_MODE:-simulation}
+      CAPTCHA_FOURNISSEUR: ${CAPTCHA_FOURNISSEUR:-TURNSTILE}
+      CAPTCHA_CLE_SITE: ${CAPTCHA_CLE_SITE:-}
+      CAPTCHA_SECRET: ${CAPTCHA_SECRET:-}
+      # Antivirus des fichiers reçus (ADR-027) : « clamav » avec le démon clamd de l'hébergement ; signatures de test sinon.
+      ANTIVIRUS_MODE: ${ANTIVIRUS_MODE:-signatures}
+      ANTIVIRUS_CLAMAV_HOTE: ${ANTIVIRUS_CLAMAV_HOTE:-}
+      ANTIVIRUS_CLAMAV_PORT: ${ANTIVIRUS_CLAMAV_PORT:-3310}
     ports:
       - "8080:8085"
     restart: unless-stopped
@@ -87,6 +101,9 @@ services:
     container_name: contrat-frontend
     depends_on:
       - backend
+    environment:
+      # Origine du fournisseur du défi anti-robot, admise par la politique de contenu (vide : aucune).
+      CSP_SOURCES_CAPTCHA: ${CSP_SOURCES_CAPTCHA:-}
     ports:
       - "${FRONTEND_PORT:-8082}:8080"
     restart: unless-stopped

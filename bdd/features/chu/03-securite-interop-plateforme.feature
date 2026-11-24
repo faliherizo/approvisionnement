@@ -30,6 +30,25 @@ Fonctionnalité: Sécurité, interopérabilité et plateforme (avis d'intention 
     Quand j'ouvre l'écran "CHU — interopérabilité"
     Alors l'écran est accessible, sans débordement ni superposition
 
+  @CHU-8.04
+  Scénario: Les échanges de la plateforme précédente sont maintenus sous leurs anciens noms, et l'historique est repris
+    Quand j'exécute le cas "chu.echanges.herites"
+    Alors la plateforme se comporte comme attendu
+    Quand j'ouvre l'écran "CHU — interopérabilité"
+    Alors je vois "Échanges hérités"
+    Et l'écran est accessible, sans débordement ni superposition
+    Quand je choisis "ui-${unique}" dans la liste "Échange"
+    Et je saisis '[{"NOM_EMPLOYE": "Zoé"}, {"MATRICULE": "7"}]' dans le champ "Export JSON"
+    Et je clique sur "Essayer"
+    Alors je vois "Rien n'a été écrit"
+    Et l'écran est accessible, sans débordement ni superposition
+    Quand j'ouvre l'écran "CHU — interopérabilité (téléphone)"
+    Alors l'écran est accessible, sans débordement ni superposition
+    Quand j'ouvre l'écran "CHU — interopérabilité (tablette)"
+    Alors l'écran est accessible, sans débordement ni superposition
+    Quand j'ouvre l'écran "CHU — interopérabilité (grand écran)"
+    Alors l'écran est accessible, sans débordement ni superposition
+
   @CHU-1.03
   Scénario: Les formulaires du CHU sont invisibles pour les autres clients
     Quand j'exécute le cas "chu.cloisonnement"
@@ -60,3 +79,8 @@ Fonctionnalité: Sécurité, interopérabilité et plateforme (avis d'intention 
     Et je choisis la langue "English"
     Alors l'écran est accessible, sans débordement ni superposition
     Quand je choisis la langue "Français"
+
+  @CHU-7.08
+  Scénario: Un fichier joint porteur d'un maliciel est refusé par l'antivirus, un fichier sain est conservé
+    Quand j'exécute le cas "chu.antivirus.pieces-jointes"
+    Alors la plateforme se comporte comme attendu

@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 071-1-interop-echange-herite
+      author: levis
+      comment: "CHU-8.04 (ADR-021) : correspondances d'échange, pour maintenir les échanges de la plateforme précédente."
+      changes:
+        - createTable:
+            tableName: interop_echange
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: code, type: VARCHAR(60), constraints: { nullable: false } }
+              - column: { name: formulaire_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: actif, type: BOOLEAN, defaultValueBoolean: true, constraints: { nullable: false } }
+              - column: { name: cree_par, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - addUniqueConstraint:
+            tableName: interop_echange
+            columnNames: tenant_id, code
+            constraintName: uk_interop_echange_code
+        - createTable:
+            tableName: interop_echange_champ
+            columns:
+              - column: { name: echange_id, type: BIGINT, constraints: { nullable: false, foreignKeyName: fk_echange_champ_echange, references: interop_echange(id), deleteCascade: true } }
+              - column: { name: ancien, type: VARCHAR(120), constraints: { nullable: false } }
+              - column: { name: cle, type: VARCHAR(120), constraints: { nullable: false } }
+        - addPrimaryKey:
+            tableName: interop_echange_champ
+            columnNames: echange_id, ancien
+            constraintName: pk_interop_echange_champ

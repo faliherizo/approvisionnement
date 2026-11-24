@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # Chaîne d'intégration continue des bacs à sable (GitHub Actions et Azure DevOps l'appellent tels quels) :
-#  1. démarre les applications externes (ICP, pyHanko, Gotenberg, veraPDF, Mailpit) ;
+#  1. démarre les applications externes (ICP, pyHanko, Gotenberg, veraPDF, Mailpit, ClamAV) ;
 #  2. démarre le serveur branché dessus, avec les mêmes variables qu'en production, et le frontend de recette ;
 #  3. exécute les scénarios e2e BS-01 à BS-08, puis les scénarios de validation et la contre-épreuve de révocation ;
 #  4. exécute les scénarios BDD de tous les appels d'offres (bdd/) et vérifie qu'aucune exigence n'est sans scénario ;
+#     puis les scénarios e2e d'interface par exigence (bdd/e2e/), avec le même contrôle de couverture ;
 #  5. exécute les tests d'intrusion (securite/) : chaque point d'accès de l'API, OWASP Top 10, ZAP et Trivy.
 # Sortie non nulle au premier écart ; journaux et rapports dans infra/bacs-a-sable/resultats/ et e2e/playwright-report/.
 set -euo pipefail
@@ -34,6 +35,9 @@ export SERVER_PORT=8100
 export CLM_CACHET_MAGASIN="$B/icp/etat/cachet.p12" CLM_CACHET_MOT_DE_PASSE="$(cat "$B/icp/etat/mot-de-passe.txt")"
 export CLM_CACHET_TSA_URL=http://localhost:18090/tsa CLM_CONVERSION_MODE=service CLM_CONVERSION_URL=http://localhost:18030
 export CLM_SIGNATURE_FOURNISSEUR=cachet NOTIFICATION_COURRIEL_MODE=smtp MAIL_HOST=localhost MAIL_PORT=11025
+export ANTIVIRUS_MODE=clamav ANTIVIRUS_CLAMAV_HOTE=localhost ANTIVIRUS_CLAMAV_PORT=13310
+# clamd ne parle pas HTTP : on attend qu'il réponde « PONG » (signatures chargées).
+for _ in $(seq 1 90); do [[ "$( (printf 'PING\n'; sleep 1) | nc localhost 13310 2>/dev/null)" == PONG* ]] && break; sleep 2; done
 # Jar lancé directement : « mvn spring-boot:run » délègue à un processus Java qu'arrêter Maven ne tue pas.
 mvn -B -q -f "$RACINE/backend/pom.xml" -DskipTests package
 JAR=$(ls "$RACINE"/backend/target/contrat-backend-*.jar | grep -v original | head -1)
@@ -65,8 +69,14 @@ if (cd "$RACINE/bdd" && npx playwright test); then bdd=0; else bdd=$?; fi
 (cd "$RACINE/bdd" && node outils/documenter.mjs)
 [[ $bdd -eq 0 ]] || { echo "Scénarios BDD : écart relevé (bdd/playwright-report/)."; exit "$bdd"; }
 
+echo "== Scénarios e2e d'interface par exigence (bdd/e2e/)"
+(cd "$RACINE/bdd" && npm run e2e:couverture)
+if (cd "$RACINE/bdd" && npx playwright test -c playwright.e2e.config.ts); then e2e=0; else e2e=$?; fi
+(cd "$RACINE/bdd" && node outils/documenter-e2e.mjs)
+[[ $e2e -eq 0 ]] || { echo "Scénarios e2e : écart relevé (bdd/playwright-report-e2e/)."; exit "$e2e"; }
+
 echo "== Tests d'intrusion (securite/)"
 # Le rapport docs/securite/rapport-tests-intrusion.md est régénéré même en cas d'écart ; le verdict suit.
 if SECURITE_API_URL=http://localhost:8100 "$RACINE/securite/lancer.sh"; then securite=0; else securite=$?; fi
 [[ $securite -eq 0 ]] || { echo "Tests d'intrusion : écart relevé (docs/securite/rapport-tests-intrusion.md)."; exit "$securite"; }
-echo "Bacs à sable, scénarios BDD et tests d'intrusion : tous les contrôles sont conformes."
+echo "Bacs à sable, scénarios BDD et e2e, tests d'intrusion : tous les contrôles sont conformes."

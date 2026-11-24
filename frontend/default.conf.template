@@ -5,9 +5,11 @@ server {
     index index.html;
 
     # Version de nginx masquée ; en-têtes de sécurité sur toutes les réponses (OWASP A05). La politique de contenu
-    # n'admet que les ressources de l'application elle-même : aucun script tiers, aucun script en ligne.
+    # n'admet que les ressources de l'application elle-même : aucun script tiers, aucun script en ligne. Seule exception,
+    # le défi anti-robot des formulaires (CHU 3.07, ADR-026) : CSP_SOURCES_CAPTCHA, vide par défaut, nomme l'origine du
+    # fournisseur retenu (https://challenges.cloudflare.com ou https://*.hcaptcha.com https://hcaptcha.com).
     server_tokens off;
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'self'" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' ${CSP_SOURCES_CAPTCHA}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ${CSP_SOURCES_CAPTCHA}; frame-src 'self' blob: ${CSP_SOURCES_CAPTCHA}; object-src 'none'; base-uri 'self'; frame-ancestors 'self'" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-Frame-Options "SAMEORIGIN" always;
     add_header Referrer-Policy "no-referrer" always;
@@ -65,7 +67,7 @@ server {
         expires 1y;
         # Un add_header dans un bloc location remplace ceux du serveur : on les répète ici.
         add_header Cache-Control "public, immutable";
-        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'self'" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self' ${CSP_SOURCES_CAPTCHA}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ${CSP_SOURCES_CAPTCHA}; frame-src 'self' blob: ${CSP_SOURCES_CAPTCHA}; object-src 'none'; base-uri 'self'; frame-ancestors 'self'" always;
         add_header X-Content-Type-Options "nosniff" always;
         add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
     }

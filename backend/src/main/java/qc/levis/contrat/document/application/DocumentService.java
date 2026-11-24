@@ -1,5 +1,6 @@
 package qc.levis.contrat.document.application;
 
+import qc.levis.contrat.commun.antivirus.application.Antivirus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -26,10 +27,12 @@ public class DocumentService {
 
     private final DocumentDemandeRepository documents;
     private final CommentaireDemandeRepository commentaires;
+    private final Antivirus antivirus;
 
-    public DocumentService(DocumentDemandeRepository documents, CommentaireDemandeRepository commentaires) {
+    public DocumentService(DocumentDemandeRepository documents, CommentaireDemandeRepository commentaires, Antivirus antivirus) {
         this.documents = documents;
         this.commentaires = commentaires;
+        this.antivirus = antivirus;
     }
 
     @Transactional
@@ -39,6 +42,9 @@ public class DocumentService {
             throw new IllegalArgumentException("Fichier vide.");
         if (contenu.length > TAILLE_MAX)
             throw new IllegalArgumentException("Fichier trop volumineux (max 10 Mo).");
+        // CHU 7.08 : un fichier reçu de l'extérieur n'est conservé qu'après analyse antivirus.
+        if (!antivirus.estSain(contenu))
+            throw new Antivirus.FichierInfecte(nom);
         DocumentDemande d = documents.save(new DocumentDemande(tenant(), saisieId, formulaireId, nom, mediaType,
                 contenu.length, classification != null ? classification : "interne", contenu, par));
         return vue(d);

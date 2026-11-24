@@ -193,8 +193,8 @@
                                     <element>BUNDLE</element>
                                     <limits>
                                         <limit><counter>LINE</counter><value>COVEREDRATIO</value><minimum>0.96</minimum></limit>
-                                        <!-- Cible 0,92 : 0,87 est le niveau atteint, plancher du cliquet. -->
-                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.87</minimum></limit>
+                                        <!-- 0,92 atteint le 2026-11-22 (standard du projet) : plancher du cliquet. -->
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.92</minimum></limit>
                                     </limits>
                                 </rule>
                                 <rule>
@@ -250,4 +250,44 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <!-- Tests de mutation du domaine CLM (PIT) : mvn -Pmutation-clm verify. Le domaine exige un MSI de 90 %. Seuls les
+             tests unitaires du domaine s'exécutent (sans contexte Spring), ce qui garde la mesure sous quelques minutes. -->
+        <profile>
+            <id>mutation-clm</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <version>1.20.1</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.pitest</groupId>
+                                <artifactId>pitest-junit5-plugin</artifactId>
+                                <version>1.2.2</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <targetClasses><param>qc.levis.contrat.clm.domain.*</param></targetClasses>
+                            <targetTests><param>qc.levis.contrat.clm.domain.*</param></targetTests>
+                            <!-- Accesseurs JPA get/set exclus : vérifié le 2026-11-22, tous rendent ou affectent un champ, sans
+                                 logique, à une exception près, GabaritWord.getContenu (copie défensive), éprouvée par
+                                 GabaritWordTest. Les méthodes is… restent mesurées : certaines portent une règle. -->
+                            <excludedMethods><param>get*</param><param>set*</param></excludedMethods>
+                            <mutationThreshold>90</mutationThreshold>
+                            <outputFormats><param>HTML</param><param>XML</param></outputFormats>
+                            <timestampedReports>false</timestampedReports>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals><goal>mutationCoverage</goal></goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

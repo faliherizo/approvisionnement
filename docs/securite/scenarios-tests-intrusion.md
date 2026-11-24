@@ -58,6 +58,7 @@ procède ainsi :
 | INT-07-f | A05 | — | revue du profil de production | console H2 active, documentation d'API publique par défaut, cookie non `Secure` par défaut |
 | INT-08-a | A02, A04 | administrateur, superadministrateur | lire toutes les réponses à la recherche d'empreintes de mot de passe, de secrets TOTP, de secrets clients, de clés privées | un secret dans une réponse |
 | INT-08-b | A08 (affectation de masse) | administrateur d'organisation | se créer un compte SUPERADMIN, ou créer un compte dans une autre organisation, en ajoutant des champs à la requête | le privilège ou l'organisation demandés sont accordés |
+| INT-08-c | A04, PCI DSS (IQ-D-14) | administrateur | envoyer à chaque opération d'écriture de l'inventaire un corps qui porte des numéros de carte (Visa, Mastercard) | une réponse autre que 422, ou une réponse qui renvoie le numéro |
 | INT-09-a | A04 | rédacteur | téléverser un fichier de 60 Mo | une réponse autre que 413 |
 | INT-09-b | A03, A04 | rédacteur | téléverser un faux document Word (script, nom `../../evil.docx`) | une réponse 2xx ou une erreur 500 |
 | INT-10 | A10 (SSRF) | administrateur | faire interroger par le serveur les métadonnées infonuagiques (169.254.169.254), le serveur lui-même, `file://` | la requête sortante est émise |

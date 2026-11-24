@@ -42,6 +42,29 @@ public class JwtService {
                 .compact();
     }
 
+    /** Revendication portant l'instant de connexion : elle traverse les renouvellements (durée maximale, ST-01). */
+    public static final String DEBUT_SESSION = "debut";
+
+    /**
+     * Jeton renouvelé d'une session en cours : même identité, même début de session, validité choisie par la politique
+     * de session (ST-01). Les jetons de connexion restent émis par {@link #genererToken(String, List, Long)}.
+     */
+    public String genererToken(String email, List<String> roles, Long tenantId, java.time.Instant debut, java.time.Duration validite) {
+        Date now = new Date();
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", roles);
+        claims.put("tenant", tenantId);
+        claims.put(DEBUT_SESSION, debut.getEpochSecond());
+        return Jwts.builder()
+                .setId(java.util.UUID.randomUUID().toString())
+                .setSubject(email)
+                .addClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + validite.toMillis()))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     public Claims parser(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build()
                 .parseClaimsJws(token).getBody();

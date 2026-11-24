@@ -28,9 +28,9 @@ Légende : ✅ conforme · ✅🆕 conforme depuis cette analyse (écart comblé
 | | Obligatoires | Non obligatoires (optionnelles, facultés, préférences, conditionnelles) |
 |---|---|---|
 | Exigences fonctionnelles relevées | **129** (107 + 8 de l'addenda 2 + 6 de l'addenda 3, dont A-08 devenue obligatoire, + 8 de l'addenda 4) | **11** |
-| Conformes | **129 (100 %)**, dont 13 rendues conformes par les 7 écarts comblés ci-dessous, 6 par l'addenda 2 ([impact_addenda_2.md](impact_addenda_2.md)), 6 par l'addenda 3 ([impact_addenda_3.md](impact_addenda_3.md)) et 6 par l'addenda 4 ([impact_addenda_4.md](impact_addenda_4.md)) ; A-29 et A-30 conformes avec des limites déclarées, comme ces exigences le permettent | 10 |
+| Conformes | **129 (100 %)**, dont 13 rendues conformes par les 7 écarts comblés ci-dessous, 6 par l'addenda 2 ([impact_addenda_2.md](impact_addenda_2.md)), 6 par l'addenda 3 ([impact_addenda_3.md](impact_addenda_3.md)) et 6 par l'addenda 4 ([impact_addenda_4.md](impact_addenda_4.md)) ; A-29 et A-30 conformes avec des limites déclarées, comme ces exigences le permettent | **11**, dont A-09 (connecteur MCP, [ADR-023](../../adr/ADR-023-connecteur-mcp-clm.md)) et D-14 (PCI DSS hors périmètre, vérifiable, [ADR-022](../../adr/ADR-022-cartes-de-paiement-hors-perimetre.md)) |
 | Non réalisées | 0 | 0 |
-| Sans objet | — | 1 : connecteur MCP, non exigé (A-09) |
+| Sans objet | — | 0 |
 
 ### Écarts trouvés et comblés
 
@@ -142,7 +142,7 @@ versement à l'échéance), `ConformiteDomaineTest`, `CachetX509Test` (CAdES, PA
 | D-11 | 3.1.1 | Conservation et exportation : documents, preuves, pistes, métadonnées | Obligatoire | ✅🆕 | C-65 |
 | D-12 | 3.1.1 | Intégration aux systèmes d'IQ | Obligatoire | ✅ | C-08, C-69 |
 | D-13 | 3.3.1 A | Accessibilité des interfaces, niveau maintenu aux mises à jour | Obligatoire | ✅ | WCAG 2.2 AA, axe-core sans violation dans chaque test e2e |
-| D-14 | 3.3.1 B | PCI DSS si des cartes de paiement sont traitées | Conditionnelle | ✅ s.o. | Aucune donnée de paiement traitée |
+| D-14 | 3.3.1 B | PCI DSS si des cartes de paiement sont traitées | Conditionnelle | ✅🆕 | Aucune carte traitée, et c'est vérifié : tout numéro de carte (préfixe de réseau, longueur, clé de Luhn) est refusé à la frontière par un 422, sans être journalisé ; la plateforme reste hors du périmètre PCI DSS ([ADR-022](../../adr/ADR-022-cartes-de-paiement-hors-perimetre.md)) |
 | D-15 | 3.3.2 | Gestion des rôles et des droits d'accès | Obligatoire | ✅🆕 | Rôles, groupes du module |
 | D-16 | 3.3.2 | Principe du moindre privilège | Obligatoire | ✅ | Refus par défaut ; contrôle serveur de chaque action (tests d'architecture) |
 | D-17 | 3.3.2 | Gestion distincte des utilisateurs et des administrateurs | Obligatoire | ✅ | Rôle `ADMIN` et espaces d'administration séparés |
@@ -177,7 +177,7 @@ versement à l'échéance), `ConformiteDomaineTest`, `CachetX509Test` (CAdES, PA
 | A-06 | Add. Q8 | Environ 30 champs Salesforce préremplis par modèle | Obligatoire (capacité) | ✅ | Correspondance par champ, sans plafond ; champs personnalisés lus |
 | A-07 | Add. Q3 | Intégrations Microsoft 365, Workday, Entra ID | Selon l'Annexe 10 | ✅ | C-69, A-01, C-60 |
 | A-08 | Add. Q3, add. 3 Q51 | Provisionnement et déprovisionnement SCIM 2.0 (Saviynt) | **Obligatoire** (add. 3 : « doit prendre en charge ») | ✅ | RST-26 : point `/scim/v2` ; [impact_addenda_3.md](impact_addenda_3.md) |
-| A-09 | Add. Q3 | Connecteur MCP | Non exigé | — | — |
+| A-09 | Add. Q3 | Connecteur MCP | Non exigé | ✅🆕 | Connecteur MCP en lecture seule (`/api/clm/integration/mcp`, outils `lister_modeles`, `lire_trousse`, `lire_lot`), authentifié par les clients d'intégration ([ADR-023](../../adr/ADR-023-connecteur-mcp-clm.md)). Connecteur additionnel hors de la portée de base : à décrire et à **tarifer séparément** dans l'offre (réponse à Q3) |
 | A-10 | Add. 2 Q11 | Authentification Salesforce de remplacement (JWT Bearer) décrite | Obligatoire (« doit également décrire ») | ✅ | RST-23 ; [impact_addenda_2.md](impact_addenda_2.md) |
 | A-11 | Add. 2 Q13 | Exportation ou transfert des documents et métadonnées vers un référentiel désigné par IQ | Obligatoire (« doit également permettre ») | ✅ | RST-24 : exportation en lot ZIP + index |
 | A-12 | Add. 2 Q14 | Retour des statuts lancée, retournée, rejetée, annulée, terminée | Obligatoire (« doit notamment permettre ») | ✅ | RST-20 (retour d'étape), RST-21 (correspondance configurable) |

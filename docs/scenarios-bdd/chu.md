@@ -9,7 +9,7 @@
 
 | Exigences | Éprouvées par scénario | Dont réussies à la dernière exécution | Documentaires | Écarts déclarés | Sans objet |
 |---|---|---|---|---|---|
-| 60 | 50 | 50 | 9 | 0 | 1 |
+| 60 | 52 | 52 | 8 | 0 | 0 |
 
 ## Matrice des exigences
 
@@ -55,7 +55,7 @@
 | `CHU-6.03` | Rapports PDF personnalisés | Besoin exprimé | Scénario BDD exécuté | ✅ [Un rapport PDF personnalisé se produit sur les fiches d'un formulaire](#un-rapport-pdf-personnalise-se-produit-sur-les-fiches-dun-formulaire) |
 | `CHU-6.04` | Graphiques + tableaux de bord configurables | Besoin exprimé | Scénario BDD exécuté | ✅ [Des tableaux de bord et graphiques se configurent et se partagent](#des-tableaux-de-bord-et-graphiques-se-configurent-et-se-partagent) |
 | `CHU-6.05` | Pages listes/dashboards/rapports selon les droits | Besoin exprimé | Scénario BDD exécuté | ✅ [Comptes sans limite de nombre, rôles distincts et politique de mot de passe](#comptes-sans-limite-de-nombre-roles-distincts-et-politique-de-mot-de-passe) |
-| `CHU-6.06` | Export intégral structuré (réversibilité) | Besoin exprimé | Scénario BDD exécuté | ✅ [Un formulaire multipage, bilingue, avec tous les types de champs, versionné, dupliqué, exporté et réimporté](#un-formulaire-multipage-bilingue-avec-tous-les-types-de-champs-versionne-duplique-exporte-et-reimporte) |
+| `CHU-6.06` | Export intégral structuré (réversibilité) | Besoin exprimé | Scénario BDD exécuté | ✅ [Un formulaire multipage, bilingue, avec tous les types de champs, versionné, dupliqué, exporté et réimporté](#un-formulaire-multipage-bilingue-avec-tous-les-types-de-champs-versionne-duplique-exporte-et-reimporte)<br>✅ [L'organisation récupère en une archive toutes ses données, module par module, avec un manifeste](#lorganisation-recupere-en-une-archive-toutes-ses-donnees-module-par-module-avec-un-manifeste) |
 | `CHU-6.07` | Durée de conservation des données | Besoin exprimé | Scénario BDD exécuté | ✅ [Un formulaire multipage, bilingue, avec tous les types de champs, versionné, dupliqué, exporté et réimporté](#un-formulaire-multipage-bilingue-avec-tous-les-types-de-champs-versionne-duplique-exporte-et-reimporte) |
 | `CHU-7.01` | SSO identité org + méthodes normalisées | Besoin exprimé | Scénario BDD exécuté | ✅ [Groupes et droits fins, NAS masqué (Loi 25), journal des accès, authentification unique configurable](#groupes-et-droits-fins-nas-masque-loi-25-journal-des-acces-authentification-unique-configurable) |
 | `CHU-7.02` | 2FA accès admin + politique de mots de passe | Besoin exprimé | Scénario BDD exécuté | ✅ [Second facteur exigé et vérifié (question secrète, TOTP RFC 6238)](#second-facteur-exige-et-verifie-question-secrete-totp-rfc-6238)<br>✅ [Comptes sans limite de nombre, rôles distincts et politique de mot de passe](#comptes-sans-limite-de-nombre-roles-distincts-et-politique-de-mot-de-passe) |
@@ -64,12 +64,12 @@
 | `CHU-7.05` | Classification public/interne/confidentiel/secret | Besoin exprimé | Scénario BDD exécuté | ✅ [Une fiche est prise en charge, complétée, commentée, documentée, validée et clôturée ; synthèse et export Excel](#une-fiche-est-prise-en-charge-completee-commentee-documentee-validee-et-cloturee-synthese-et-export-excel) |
 | `CHU-7.06` | Mesures renforcées (masquage, chiffrement, restriction affichage/export) | Besoin exprimé | Scénario BDD exécuté | ✅ [Groupes et droits fins, NAS masqué (Loi 25), journal des accès, authentification unique configurable](#groupes-et-droits-fins-nas-masque-loi-25-journal-des-acces-authentification-unique-configurable) |
 | `CHU-7.07` | Traçabilité accès et modifications | Besoin exprimé | Scénario BDD exécuté | ✅ [Groupes et droits fins, NAS masqué (Loi 25), journal des accès, authentification unique configurable](#groupes-et-droits-fins-nas-masque-loi-25-journal-des-acces-authentification-unique-configurable) |
-| `CHU-7.08` | Protection DDoS / brute-force / maliciels | Besoin exprimé | Documentaire | Limiteur de débit applicatif (PareFeuFilter) ; protection DDoS et pare-feu applicatif assurés par l'infrastructure (Front Door, WAF). |
+| `CHU-7.08` | Protection DDoS / brute-force / maliciels | Besoin exprimé | Scénario BDD exécuté | ✅ [Un fichier joint porteur d'un maliciel est refusé par l'antivirus, un fichier sain est conservé](#un-fichier-joint-porteur-dun-maliciel-est-refuse-par-lantivirus-un-fichier-sain-est-conserve) |
 | `CHU-7.09` | Config pour obligations Loi 25 | Besoin exprimé | Scénario BDD exécuté | ✅ [Groupes et droits fins, NAS masqué (Loi 25), journal des accès, authentification unique configurable](#groupes-et-droits-fins-nas-masque-loi-25-journal-des-acces-authentification-unique-configurable) |
 | `CHU-8.01` | API consulter/récupérer/créer/compléter des fiches | Besoin exprimé | Scénario BDD exécuté | ✅ [Un système externe crée une fiche par l'API publique avec un jeton OAuth](#un-systeme-externe-cree-une-fiche-par-lapi-publique-avec-un-jeton-oauth) |
 | `CHU-8.02` | Auth API par jeton / OAuth | Besoin exprimé | Scénario BDD exécuté | ✅ [Un système externe crée une fiche par l'API publique avec un jeton OAuth](#un-systeme-externe-cree-une-fiche-par-lapi-publique-avec-un-jeton-oauth) |
 | `CHU-8.03` | Échanges formulaires/données/sites/systèmes externes | Besoin exprimé | Scénario BDD exécuté | ✅ [Un système externe crée une fiche par l'API publique avec un jeton OAuth](#un-systeme-externe-cree-une-fiche-par-lapi-publique-avec-un-jeton-oauth) |
-| `CHU-8.04` | Maintien des échanges déjà en place | Besoin exprimé | Sans objet | n/a — nouvelle implémentation (pas de legacy chez nous) |
+| `CHU-8.04` | Maintien des échanges déjà en place | Besoin exprimé | Scénario BDD exécuté | ✅ [Les échanges de la plateforme précédente sont maintenus sous leurs anciens noms, et l'historique est repris](#les-echanges-de-la-plateforme-precedente-sont-maintenus-sous-leurs-anciens-noms-et-lhistorique-est-repris) |
 | `CHU-9.01` | Licences 2 secteurs (RH + Appro) + 4 apps Web | Besoin exprimé | Documentaire | Licences : modèle commercial (domaines RH et approvisionnement, applications). |
 | `CHU-9.02` | Soutien 2e ligne L-V 8 h–17 h | Besoin exprimé | Documentaire | n/a (service) — offre de service |
 | `CHU-9.03` | Tests applicatifs lors migrations/MAJ | Besoin exprimé | Documentaire | Démontré par cette suite BDD et les e2e Playwright, rejoués à chaque demande de fusion. |
@@ -82,8 +82,6 @@
 - `CHU-1.05` — Disponibilité 99,8 % en tout temps : **Documentaire.** Engagement d'infrastructure et de service (disponibilité, sauvegardes, exploitation). Référence : `infra/dr/README.md`.
 - `CHU-1.06` — Sauvegardes redondantes locales+externes quotidiennes : **Documentaire.** Engagement d'infrastructure et de service (disponibilité, sauvegardes, exploitation). Référence : `infra/dr/README.md`.
 - `CHU-1.07` — Hébergement, entretien, correctifs, MAJ, migrations : **Documentaire.** Engagement d'infrastructure et de service (disponibilité, sauvegardes, exploitation). Référence : `infra/dr/README.md`.
-- `CHU-7.08` — Protection DDoS / brute-force / maliciels : **Documentaire.** Limiteur de débit applicatif (PareFeuFilter) ; protection DDoS et pare-feu applicatif assurés par l'infrastructure (Front Door, WAF). Référence : `infra/terraform/azure`.
-- `CHU-8.04` — Maintien des échanges déjà en place : **Sans objet.** n/a — nouvelle implémentation (pas de legacy chez nous)
 - `CHU-9.01` — Licences 2 secteurs (RH + Appro) + 4 apps Web : **Documentaire.** Licences : modèle commercial (domaines RH et approvisionnement, applications).
 - `CHU-9.02` — Soutien 2e ligne L-V 8 h–17 h : **Documentaire.** n/a (service) — offre de service
 - `CHU-9.03` — Tests applicatifs lors migrations/MAJ : **Documentaire.** Démontré par cette suite BDD et les e2e Playwright, rejoués à chaque demande de fusion. Référence : `bdd/ ; e2e/ ; infra/cicd`.
@@ -157,6 +155,26 @@ Alors l'écran est accessible, sans débordement ni superposition
 | 11 | `POST /api/formulaires/${formulaire}/saisies/${fiche}/soumettre` |  | 2xx | `$.statut` egal "SOUMIS" ; `$.soumisLe` existe true ; `$.numero` contient "RH-" |
 | 12 | `GET /api/mes-demandes` |  | 2xx | `$[*].numero` inclut "${ficheNumero}" |
 
+#### L'organisation récupère en une archive toutes ses données, module par module, avec un manifeste
+
+- **Résultat de la dernière exécution :** ✅ réussi
+- **Fonctionnalité :** Conception et remplissage des formulaires (avis d'intention CHU, § 2 à 4) (`bdd/features/chu/01-formulaires.feature`)
+- **Exigences éprouvées :** `CHU-6.06`
+
+```gherkin
+Et je suis connecté en tant que "administrateur CHU"   ⟵ contexte
+Quand j'exécute le cas "chu.reversibilite.export-integral"
+Alors la plateforme se comporte comme attendu
+```
+
+**Cas `chu.reversibilite.export-integral`** — Export intégral unifié de l'organisation : formulaires, versions et fiches de chaque module souscrit, en une archive avec manifeste *(données : `bdd/donnees/chu.json`)*
+
+| # | Appel | Profil | Statut attendu | Vérifications et captures |
+|---|---|---|---|---|
+| 1 | `POST /api/formulaires` |  | 2xx | capture `formulaire` ← `$.id` |
+| 2 | `POST /api/formulaires/${formulaire}/saisies` |  | 2xx | — |
+| 3 | `GET /api/reversibilite/export` |  | 2xx | contient « PK » ; contient « formulaire/formulaires.json » ; contient « formulaire/formulaire-versions.json » ; contient « saisie/fiches.json » ; contient « manifeste.json » |
+
 #### L'ouverture dépend de la date, du nombre de répondants, du réseau et de la vérification anti-robot
 
 - **Résultat de la dernière exécution :** ✅ réussi
@@ -199,6 +217,8 @@ Alors la plateforme se comporte comme attendu
 | 24 | `POST /api/formulaires/${fRobot}/publier` |  | 2xx | `$.statut` egal "PUBLIE" |
 | 25 | `POST /api/formulaires/${fRobot}/saisies` |  | 2xx | `$.statut` egal "BROUILLON" ; capture `f5` ← `$.id` ; capture `f5Numero` ← `$.numero` |
 | 26 | `POST /api/formulaires/${fRobot}/saisies/${f5}/soumettre` |  | 400 | contient « anti-robot » |
+| 27 | `GET /api/saisie/captcha` |  | 2xx | `$.fournisseur` existe true ; `$.cleSite` existe true |
+| 28 | `POST /api/formulaires/${fRobot}/saisies/${f5}/soumettre` |  | 2xx | — |
 
 #### Un choix dont la capacité est atteinte n'est plus proposé ni accepté
 
@@ -604,6 +624,57 @@ Alors l'écran est accessible, sans débordement ni superposition
 | 8 | `POST /api/public/v1/formulaires/API_${UNIQUE}/fiches` | anonyme | 200, 201 | contient « Carl Externe » |
 | 9 | `GET /api/formulaires/${formulaire}/saisies` |  | 2xx | contient « Carl Externe » |
 
+#### Les échanges de la plateforme précédente sont maintenus sous leurs anciens noms, et l'historique est repris
+
+- **Résultat de la dernière exécution :** ✅ réussi
+- **Fonctionnalité :** Sécurité, interopérabilité et plateforme (avis d'intention CHU, § 1, 2, 7 et 8) (`bdd/features/chu/03-securite-interop-plateforme.feature`)
+- **Exigences éprouvées :** `CHU-8.04`
+
+```gherkin
+Et je suis connecté en tant que "administrateur CHU"   ⟵ contexte
+Quand j'exécute le cas "chu.echanges.herites"
+Alors la plateforme se comporte comme attendu
+Quand j'ouvre l'écran "CHU — interopérabilité"
+Alors je vois "Échanges hérités"
+Et l'écran est accessible, sans débordement ni superposition
+Quand je choisis "ui-${unique}" dans la liste "Échange"
+Et je saisis '[{"NOM_EMPLOYE": "Zoé"}, {"MATRICULE": "7"}]' dans le champ "Export JSON"
+Et je clique sur "Essayer"
+Alors je vois "Rien n'a été écrit"
+Et l'écran est accessible, sans débordement ni superposition
+Quand j'ouvre l'écran "CHU — interopérabilité (téléphone)"
+Alors l'écran est accessible, sans débordement ni superposition
+Quand j'ouvre l'écran "CHU — interopérabilité (tablette)"
+Alors l'écran est accessible, sans débordement ni superposition
+Quand j'ouvre l'écran "CHU — interopérabilité (grand écran)"
+Alors l'écran est accessible, sans débordement ni superposition
+```
+
+**Cas `chu.echanges.herites`** — Un système de la plateforme précédente garde ses noms de champs : il écrit et lit des fiches sous ses anciens noms ; l'historique exporté se reprend après un essai qui n'écrit rien ; un nom inconnu est refusé *(données : `bdd/donnees/chu.json` ; profil : administrateur CHU)*
+
+| # | Appel | Profil | Statut attendu | Vérifications et captures |
+|---|---|---|---|---|
+| 1 | `POST /api/formulaires` |  | 2xx | capture `formulaire` ← `$.id` |
+| 2 | `PUT /api/formulaires/${formulaire}/structure` |  | 2xx | — |
+| 3 | `POST /api/formulaires/${formulaire}/soumettre` |  | 2xx | — |
+| 4 | `POST /api/formulaires/${formulaire}/publier` |  | 2xx | `$.statut` egal "PUBLIE" |
+| 5 | `POST /api/interop/echanges` |  | 201 | `$.formulaireCode` egal "HER_${UNIQUE}" ; `$.correspondances.NOM_EMPLOYE` egal "nom" ; capture `echange` ← `$.id` |
+| 6 | `POST /api/interop/echanges` |  | 400 | contient « absent » |
+| 7 | `POST /api/interop/clients?nom=Ancien%20portail%20${unique}` |  | 2xx | capture `clientId` ← `$.clientId` ; capture `secret` ← `$.secret` |
+| 8 | `POST /api/public/oauth/token?client_id=${clientId}&client_secret=${secret}` | anonyme | 2xx | capture `jeton` ← `$.accessToken` |
+| 9 | `POST /api/public/v1/echanges/portail-${unique}/fiches` | anonyme | 401 | — |
+| 10 | `POST /api/public/v1/echanges/portail-${unique}/fiches` | anonyme | 201 | `$.statut` egal "SOUMIS" ; capture `numero` ← `$.numero` |
+| 11 | `GET /api/formulaires/${formulaire}/saisies` |  | 2xx | contient « Alex Tremblay » ; contient « \"nom\" » |
+| 12 | `GET /api/public/v1/echanges/portail-${unique}/fiches` | anonyme | 2xx | `$[0].numero` egal "${numero}" ; `$[0].donnees.NOM_EMPLOYE` egal "Alex Tremblay" |
+| 13 | `POST /api/public/v1/echanges/portail-${unique}/fiches` | anonyme | 400 | contient « MATRICULE » |
+| 14 | `POST /api/interop/echanges/${echange}/reprise` |  | 2xx | `$.essai` egal true ; `$.acceptes` egal 1 ; `$.rejetes` egal 2 ; `$.lignes[2].motif` contient "Le nom est requis" |
+| 15 | `GET /api/formulaires/${formulaire}/saisies` |  | 2xx | ne contient pas « Alice » |
+| 16 | `POST /api/interop/echanges/${echange}/reprise?essai=false` |  | 2xx | `$.essai` egal false ; `$.lignes[0].statut` egal "REPRISE" ; `$.lignes[1].statut` egal "REJETEE" |
+| 17 | `GET /api/formulaires/${formulaire}/saisies` |  | 2xx | contient « Alice » ; ne contient pas « Bruno » |
+| 18 | `POST /api/interop/echanges/${echange}/desactivation` |  | 2xx | `$.actif` egal false |
+| 19 | `POST /api/public/v1/echanges/portail-${unique}/fiches` | anonyme | 404 | — |
+| 20 | `POST /api/interop/echanges` |  | 201 | — |
+
 #### Les formulaires du CHU sont invisibles pour les autres clients
 
 - **Résultat de la dernière exécution :** ✅ réussi
@@ -694,4 +765,29 @@ Et je choisis la langue "English"
 Alors l'écran est accessible, sans débordement ni superposition
 Quand je choisis la langue "Français"
 ```
+
+#### Un fichier joint porteur d'un maliciel est refusé par l'antivirus, un fichier sain est conservé
+
+- **Résultat de la dernière exécution :** ✅ réussi
+- **Fonctionnalité :** Sécurité, interopérabilité et plateforme (avis d'intention CHU, § 1, 2, 7 et 8) (`bdd/features/chu/03-securite-interop-plateforme.feature`)
+- **Exigences éprouvées :** `CHU-7.08`
+
+```gherkin
+Et je suis connecté en tant que "administrateur CHU"   ⟵ contexte
+Quand j'exécute le cas "chu.antivirus.pieces-jointes"
+Alors la plateforme se comporte comme attendu
+```
+
+**Cas `chu.antivirus.pieces-jointes`** — Les pièces jointes d'une fiche passent par l'antivirus : un fichier sain est conservé, un maliciel (signature de test EICAR) est refusé avec un message clair *(données : `bdd/donnees/chu.json`)*
+
+| # | Appel | Profil | Statut attendu | Vérifications et captures |
+|---|---|---|---|---|
+| 1 | `POST /api/formulaires` |  | 2xx | capture `formulaire` ← `$.id` |
+| 2 | `PUT /api/formulaires/${formulaire}/structure` |  | 2xx | — |
+| 3 | `POST /api/formulaires/${formulaire}/soumettre` |  | 2xx | — |
+| 4 | `POST /api/formulaires/${formulaire}/publier` |  | 2xx | — |
+| 5 | `POST /api/formulaires/${formulaire}/saisies` |  | 2xx | capture `fiche` ← `$.id` |
+| 6 | `POST /api/formulaires/${formulaire}/saisies/${fiche}/documents` |  | 2xx | `$[0].nomOriginal` egal "sain.pdf" ; envoi multipart (fichier) |
+| 7 | `POST /api/formulaires/${formulaire}/saisies/${fiche}/documents` |  | 400 | contient « maliciel » ; envoi multipart (fichier) |
+| 8 | `GET /api/formulaires/${formulaire}/saisies/${fiche}/documents` |  | 2xx | `$[*].nomOriginal` exclut "piege.txt" ; `$[*].nomOriginal` inclut "sain.pdf" |
 

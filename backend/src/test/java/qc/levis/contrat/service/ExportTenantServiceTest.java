@@ -110,4 +110,31 @@ class ExportTenantServiceTest {
 
         assertThrows(java.io.UncheckedIOException.class, () -> ko.exporterZip("admin"));
     }
+
+    /** CHU 6.06 : le socle n'est exporté que s'il est souscrit ; chaque module souscrit verse ses jeux, préfixés. */
+    @Test
+    void exportUnifie_neRetientQueLesModulesSouscrits() throws Exception {
+        var modules = mock(qc.levis.contrat.commun.module.application.ModuleService.class);
+        when(modules.estActif(TENANT, "formulaire")).thenReturn(true);
+        var formulaires = source("formulaire", "formulaires.json", List.of("F1", "F2"));
+        var rh = source("rh", "employes.json", List.of("E1"));
+        var unifie = new ExportTenantService(new ObjectMapper(),
+                new ExportTenantService.Socle(clauses, templates, gabarits, dossiers, documents, workflows), audit,
+                List.of(formulaires, rh), modules);
+
+        Map<String, String> entrees = lireZip(unifie.exporterZip("admin"));
+
+        assertTrue(entrees.containsKey("formulaire/formulaires.json"));
+        assertTrue(entrees.get("formulaire/formulaires.json").contains("F2"));
+        assertTrue(entrees.get("manifeste.json").contains("\"formulaire/formulaires.json\" : 2"));
+        assertTrue(!entrees.containsKey("rh/employes.json"), "module non souscrit");
+        assertTrue(!entrees.containsKey("clauses.json"), "socle de rédaction non souscrit");
+    }
+
+    private static qc.levis.contrat.commun.reversibilite.application.SourceReversibilite source(String module, String nom, List<?> jeu) {
+        return new qc.levis.contrat.commun.reversibilite.application.SourceReversibilite() {
+            @Override public String module() { return module; }
+            @Override public Map<String, List<?>> jeuxDeDonnees(Long tenant) { return Map.of(nom, jeu); }
+        };
+    }
 }

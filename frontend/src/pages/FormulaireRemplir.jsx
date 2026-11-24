@@ -4,6 +4,7 @@ import api from '../api'
 import { useI18n } from '../i18n/I18nContext'
 import { useModules } from '../hooks/useModules.js'
 import FormulaireRenderer from '../components/FormulaireRenderer.jsx'
+import DefiAntiRobot from '../components/DefiAntiRobot.jsx'
 
 /** Remplissage d'une fiche par un répondant : rendu dynamique, règles live, autosave, soumission. */
 export default function FormulaireRemplir() {
@@ -17,7 +18,7 @@ export default function FormulaireRemplir() {
   const [saisieId, setSaisieId] = useState(null)
   const [valeurs, setValeurs] = useState({})
   const [etat, setEtat] = useState({})
-  const [captcha, setCaptcha] = useState(false)
+  const [jetonCaptcha, setJetonCaptcha] = useState('')
   const [sauvegarde, setSauvegarde] = useState(null)
   const [msg, setMsg] = useState(null)
   const [err, setErr] = useState(null)
@@ -88,7 +89,7 @@ export default function FormulaireRemplir() {
     try {
       await api.post(`/formulaires/${id}/saisies/${saisieId}/soumettre`, {
         donneesJson: JSON.stringify(valeurs),
-        captchaToken: captchaRequis ? (captcha ? 'captcha-simule-ok' : '') : null,
+        captchaToken: captchaRequis ? jetonCaptcha : null,
       })
       setEnvoye(true); setMsg(t('remplir.merci'))
     } catch (e2) { setErr(e2.response?.data?.message || t('remplir.erreurSoumission')) }
@@ -120,12 +121,8 @@ export default function FormulaireRemplir() {
       {structure && <FormulaireRenderer structure={structure} valeurs={valeurs} etat={etat} places={places} onChange={changer} />}
 
       <div className="panel">
-        {captchaRequis && (
-          <label className="check-row">
-            <input type="checkbox" checked={captcha} onChange={(e) => setCaptcha(e.target.checked)} /> {t('remplir.captcha')}
-          </label>
-        )}
-        <button type="submit" disabled={!saisieId || (etat.erreurs && etat.erreurs.length > 0) || (captchaRequis && !captcha)}>
+        {captchaRequis && <DefiAntiRobot onJeton={setJetonCaptcha} />}
+        <button type="submit" disabled={!saisieId || (etat.erreurs && etat.erreurs.length > 0) || (captchaRequis && !jetonCaptcha)}>
           {t('remplir.soumettre')}
         </button>
       </div>

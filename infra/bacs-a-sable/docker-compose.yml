@@ -75,3 +75,11 @@ services:
     image: axllent/mailpit:v1.21.8
     container_name: iq-bac-courriel
     ports: ["11025:1025", "18025:8025"]
+
+  # Antivirus : ClamAV officiel, démon clamd sur :13310 (protocole INSTREAM), signatures incluses dans l'image et mises à
+  # jour au démarrage. Le serveur y envoie les fichiers reçus comme à l'antivirus d'exploitation (ANTIVIRUS_MODE=clamav).
+  antivirus:
+    image: clamav/clamav:1.4
+    container_name: iq-bac-antivirus
+    ports: ["13310:3310"]
+    healthcheck: { test: ["CMD", "clamdcheck.sh"], interval: 10s, retries: 30, start_period: 120s }

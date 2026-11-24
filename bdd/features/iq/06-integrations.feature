@@ -35,3 +35,11 @@ Fonctionnalité: Intégrations Salesforce, Workday et signature en lot (Cahier �
     Étant donné que je suis connecté en tant que "administration technique IQ"
     Quand j'exécute le cas "iq.api.documentee"
     Alors la plateforme se comporte comme attendu
+
+  @IQ-A-09
+  Scénario: Un assistant d'IA se connecte au connecteur MCP et lit, en lecture seule, le statut d'une trousse de son client
+    Étant donné que je suis connecté en tant que "administration technique IQ"
+    Quand j'exécute le cas "iq.mcp"
+    Alors la plateforme se comporte comme attendu
+    Quand un assistant MCP de référence se connecte avec le jeton capturé
+    Alors l'assistant voit des outils en lecture seule et lit la trousse de son client

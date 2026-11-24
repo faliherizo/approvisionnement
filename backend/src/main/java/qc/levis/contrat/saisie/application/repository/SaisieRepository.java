@@ -8,6 +8,7 @@ import qc.levis.contrat.saisie.domain.StatutSaisie;
 
 public interface SaisieRepository extends JpaRepository<Saisie, Long> {
     List<Saisie> findByTenantIdAndFormulaireIdOrderByMajLeDesc(Long tenantId, Long formulaireId);
+    List<Saisie> findByTenantIdOrderByIdAsc(Long tenantId);
     List<Saisie> findByTenantIdAndCreeParOrderByMajLeDesc(Long tenantId, String creePar);
     Optional<Saisie> findByIdAndTenantId(Long id, Long tenantId);
     List<Saisie> findByTenantIdAndCreeParIgnoreCase(Long tenantId, String creePar);

@@ -162,6 +162,9 @@ export default function FormulaireBuilder({ id, onChange }) {
                 <legend>
                   <input aria-label={t('builder.titrePage')} value={p.titre} disabled={lectureSeule}
                          onChange={(e) => renommerPage(pi, e.target.value)} />
+                  <input aria-label={t('builder.titrePageEn')} placeholder={t('builder.titrePageEn')} value={p.titreI18n?.en || ''}
+                         disabled={lectureSeule} style={{ marginLeft: 8 }}
+                         onChange={(e) => majStructure((s) => { s.pages[pi].titreI18n = { ...(s.pages[pi].titreI18n || {}), en: e.target.value }; return s })} />
                   <button className="danger" disabled={lectureSeule} style={{ marginLeft: 8 }} onClick={() => retirerPage(pi)}>{t('builder.retirerPage')}</button>
                 </legend>
                 <table className="table">
@@ -194,6 +197,10 @@ export default function FormulaireBuilder({ id, onChange }) {
                                      aria-label={t('builder.optionsLabel', { champ: c.libelle })}
                                      placeholder={t('builder.optionsPlaceholder')}
                                      onChange={(e) => majChamp(pi, ci, { options: e.target.value.split(',').map((x) => x.trim()).filter(Boolean) })} />
+                              <input value={(c.optionsI18n?.en || []).join(', ')} disabled={lectureSeule}
+                                     aria-label={t('builder.optionsEnLabel', { champ: c.libelle })}
+                                     placeholder={t('builder.optionsEnPlaceholder')}
+                                     onChange={(e) => majChamp(pi, ci, { optionsI18n: { ...(c.optionsI18n || {}), en: e.target.value.split(',').map((x) => x.trim()) } })} />
                               <input value={capacitesTexte(c.capacites)} disabled={lectureSeule}
                                      aria-label={t('builder.capacitesLabel', { champ: c.libelle })}
                                      placeholder={t('builder.capacitesPlaceholder')}

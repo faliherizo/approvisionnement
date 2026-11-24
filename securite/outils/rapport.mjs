@@ -89,7 +89,8 @@ const chiffres = [['01-surface-anonyme', 'opérations éprouvées sans session',
   ['02-roles-plateforme', 'opérations de plateforme tentées par un administrateur d\'organisation', (d) => d.eprouvees],
   ['03-isolation-lecture', 'lectures de l\'organisation B balayées à la recherche du canari de A', (d) => d.eprouvees],
   ['03-isolation-ecriture', 'opérations de B dirigées sur les identifiants de A', (d) => d.eprouvees],
-  ['06-injection-sql', 'charges d\'injection SQL envoyées', (d) => d.essais], ['08-secrets', 'réponses inspectées à la recherche de secrets', (d) => d.eprouvees]]
+  ['06-injection-sql', 'charges d\'injection SQL envoyées', (d) => d.essais], ['08-secrets', 'réponses inspectées à la recherche de secrets', (d) => d.eprouvees],
+  ['08-cartes-paiement', 'opérations d\'écriture éprouvées avec un numéro de carte', (d) => d.eprouvees]]
 l.push('', 'Volume éprouvé :', '')
 for (const [n, libelle, f] of chiffres) { const d = res(n); if (d) l.push(`- ${f(d)} ${libelle}`) }
 const nc = res('03-isolation-ecriture')?.nonCouvertes ?? []

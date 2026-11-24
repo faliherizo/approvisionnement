@@ -53,6 +53,21 @@
     "CHU — banque d'heures": {
       "chemin": "/banque-heures",
       "titre": "Banque d'heures"
+    },
+    "CHU — interopérabilité (téléphone)": {
+      "chemin": "/interop",
+      "titre": "API|Interop",
+      "largeur": 390
+    },
+    "CHU — interopérabilité (tablette)": {
+      "chemin": "/interop",
+      "titre": "API|Interop",
+      "largeur": 768
+    },
+    "CHU — interopérabilité (grand écran)": {
+      "chemin": "/interop",
+      "titre": "API|Interop",
+      "largeur": 1680
     }
   },
   "cas": {
@@ -685,6 +700,26 @@
               "texte": "anti-robot"
             }
           ]
+        },
+        {
+          "appel": "GET /api/saisie/captcha",
+          "verifier": [
+            {
+              "chemin": "$.fournisseur",
+              "existe": true
+            },
+            {
+              "chemin": "$.cleSite",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${fRobot}/saisies/${f5}/soumettre",
+          "corps": {
+            "donneesJson": "{\"nom\":\"Alice Roy\",\"activite\":\"Atelier\",\"mode\":\"Virtuel\",\"heures\":\"30\",\"taux\":\"20\"}",
+            "captchaToken": "captcha-simule-ok"
+          }
         }
       ]
     },
@@ -2185,6 +2220,408 @@
           },
           "statut": 403,
           "note": "l'organisation ne s'ajoute pas d'heures"
+        }
+      ]
+    },
+    "chu.echanges.herites": {
+      "description": "Un système de la plateforme précédente garde ses noms de champs : il écrit et lit des fiches sous ses anciens noms ; l'historique exporté se reprend après un essai qui n'écrit rien ; un nom inconnu est refusé",
+      "profil": "administrateur CHU",
+      "etapes": [
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "HER_${UNIQUE}",
+            "nom": "Inscriptions ${unique}",
+            "domaine": "RH"
+          },
+          "capturer": {
+            "formulaire": "$.id"
+          }
+        },
+        {
+          "appel": "PUT /api/formulaires/${formulaire}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"type\": \"TEXTE\"}, {\"cle\": \"courriel\", \"libelle\": \"Courriel\", \"type\": \"COURRIEL\"}, {\"cle\": \"service\", \"libelle\": \"Service\", \"type\": \"TEXTE\"}]}], \"regles\": [{\"type\": \"VALIDATION\", \"conditions\": [{\"champ\": \"nom\", \"operateur\": \"VIDE\"}], \"valeur\": \"Le nom est requis.\"}]}",
+            "note": "Version initiale"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/soumettre"
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/publier",
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "PUBLIE"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/interop/echanges",
+          "statut": 201,
+          "corps": {
+            "code": "portail-${unique}",
+            "formulaireCode": "HER_${UNIQUE}",
+            "correspondances": {
+              "NOM_EMPLOYE": "nom",
+              "COURRIEL_PRO": "courriel",
+              "DIRECTION": "service"
+            }
+          },
+          "capturer": {
+            "echange": "$.id"
+          },
+          "verifier": [
+            {
+              "chemin": "$.formulaireCode",
+              "egal": "HER_${UNIQUE}"
+            },
+            {
+              "chemin": "$.correspondances.NOM_EMPLOYE",
+              "egal": "nom"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/interop/echanges",
+          "statut": 400,
+          "note": "une cible absente du formulaire est refusée",
+          "corps": {
+            "code": "autre-${unique}",
+            "formulaireCode": "HER_${UNIQUE}",
+            "correspondances": {
+              "MATRICULE": "absent"
+            }
+          },
+          "verifier": [
+            {
+              "texte": "absent"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/interop/clients?nom=Ancien%20portail%20${unique}",
+          "capturer": {
+            "clientId": "$.clientId",
+            "secret": "$.secret"
+          }
+        },
+        {
+          "appel": "POST /api/public/oauth/token?client_id=${clientId}&client_secret=${secret}",
+          "anonyme": true,
+          "capturer": {
+            "jeton": "$.accessToken"
+          }
+        },
+        {
+          "appel": "POST /api/public/v1/echanges/portail-${unique}/fiches",
+          "anonyme": true,
+          "statut": 401,
+          "corps": {
+            "NOM_EMPLOYE": "Sans jeton"
+          }
+        },
+        {
+          "appel": "POST /api/public/v1/echanges/portail-${unique}/fiches",
+          "anonyme": true,
+          "entetes": {
+            "Authorization": "Bearer ${jeton}"
+          },
+          "statut": 201,
+          "corps": {
+            "NOM_EMPLOYE": "Alex Tremblay",
+            "COURRIEL_PRO": "alex@chu.example"
+          },
+          "capturer": {
+            "numero": "$.numero"
+          },
+          "verifier": [
+            {
+              "chemin": "$.statut",
+              "egal": "SOUMIS"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/formulaires/${formulaire}/saisies",
+          "verifier": [
+            {
+              "texte": "Alex Tremblay"
+            },
+            {
+              "texte": "\\\"nom\\\""
+            }
+          ],
+          "note": "la fiche porte les clés du formulaire"
+        },
+        {
+          "appel": "GET /api/public/v1/echanges/portail-${unique}/fiches",
+          "anonyme": true,
+          "entetes": {
+            "Authorization": "Bearer ${jeton}"
+          },
+          "verifier": [
+            {
+              "chemin": "$[0].numero",
+              "egal": "${numero}"
+            },
+            {
+              "chemin": "$[0].donnees.NOM_EMPLOYE",
+              "egal": "Alex Tremblay"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/public/v1/echanges/portail-${unique}/fiches",
+          "anonyme": true,
+          "entetes": {
+            "Authorization": "Bearer ${jeton}"
+          },
+          "statut": 400,
+          "corps": {
+            "NOM_EMPLOYE": "B",
+            "MATRICULE": "42"
+          },
+          "verifier": [
+            {
+              "texte": "MATRICULE"
+            }
+          ],
+          "note": "un nom inconnu est refusé, jamais ignoré"
+        },
+        {
+          "appel": "POST /api/interop/echanges/${echange}/reprise",
+          "corps": [
+            {
+              "NOM_EMPLOYE": "Alice",
+              "DIRECTION": "Soins"
+            },
+            {
+              "NOM_EMPLOYE": "Bruno",
+              "INCONNU": "x"
+            },
+            {
+              "COURRIEL_PRO": "c@chu.example"
+            }
+          ],
+          "verifier": [
+            {
+              "chemin": "$.essai",
+              "egal": true
+            },
+            {
+              "chemin": "$.acceptes",
+              "egal": 1
+            },
+            {
+              "chemin": "$.rejetes",
+              "egal": 2
+            },
+            {
+              "chemin": "$.lignes[2].motif",
+              "contient": "Le nom est requis"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/formulaires/${formulaire}/saisies",
+          "verifier": [
+            {
+              "texteAbsent": "Alice"
+            }
+          ],
+          "note": "l'essai n'écrit rien"
+        },
+        {
+          "appel": "POST /api/interop/echanges/${echange}/reprise?essai=false",
+          "corps": [
+            {
+              "NOM_EMPLOYE": "Alice",
+              "DIRECTION": "Soins"
+            },
+            {
+              "NOM_EMPLOYE": "Bruno",
+              "INCONNU": "x"
+            }
+          ],
+          "verifier": [
+            {
+              "chemin": "$.essai",
+              "egal": false
+            },
+            {
+              "chemin": "$.lignes[0].statut",
+              "egal": "REPRISE"
+            },
+            {
+              "chemin": "$.lignes[1].statut",
+              "egal": "REJETEE"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/formulaires/${formulaire}/saisies",
+          "verifier": [
+            {
+              "texte": "Alice"
+            },
+            {
+              "texteAbsent": "Bruno"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/interop/echanges/${echange}/desactivation",
+          "verifier": [
+            {
+              "chemin": "$.actif",
+              "egal": false
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/public/v1/echanges/portail-${unique}/fiches",
+          "anonyme": true,
+          "entetes": {
+            "Authorization": "Bearer ${jeton}"
+          },
+          "statut": 404,
+          "corps": {
+            "NOM_EMPLOYE": "Après"
+          }
+        },
+        {
+          "appel": "POST /api/interop/echanges",
+          "statut": 201,
+          "note": "échange actif, repris depuis l'écran",
+          "corps": {
+            "code": "ui-${unique}",
+            "formulaireCode": "HER_${UNIQUE}",
+            "correspondances": {
+              "NOM_EMPLOYE": "nom"
+            }
+          }
+        }
+      ]
+    },
+    "chu.reversibilite.export-integral": {
+      "description": "Export intégral unifié de l'organisation : formulaires, versions et fiches de chaque module souscrit, en une archive avec manifeste",
+      "etapes": [
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "REV_${UNIQUE}",
+            "nom": "Réversibilité ${unique}",
+            "domaine": "RH",
+            "conservationJours": 365
+          },
+          "capturer": {
+            "formulaire": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies"
+        },
+        {
+          "appel": "GET /api/reversibilite/export",
+          "verifier": [
+            {
+              "texte": "PK"
+            },
+            {
+              "texte": "formulaire/formulaires.json"
+            },
+            {
+              "texte": "formulaire/formulaire-versions.json"
+            },
+            {
+              "texte": "saisie/fiches.json"
+            },
+            {
+              "texte": "manifeste.json"
+            }
+          ]
+        }
+      ]
+    },
+    "chu.antivirus.pieces-jointes": {
+      "description": "Les pièces jointes d'une fiche passent par l'antivirus : un fichier sain est conservé, un maliciel (signature de test EICAR) est refusé avec un message clair",
+      "etapes": [
+        {
+          "appel": "POST /api/formulaires",
+          "corps": {
+            "code": "AV_${UNIQUE}",
+            "nom": "Antivirus ${unique}",
+            "domaine": "RH",
+            "conservationJours": 365
+          },
+          "capturer": {
+            "formulaire": "$.id"
+          }
+        },
+        {
+          "appel": "PUT /api/formulaires/${formulaire}/structure",
+          "corps": {
+            "structureJson": "{\"pages\": [{\"titre\": \"Identité\", \"champs\": [{\"cle\": \"nom\", \"libelle\": \"Nom\", \"libelleI18n\": {\"fr\": \"Nom\", \"en\": \"Name\"}, \"type\": \"TEXTE\", \"obligatoire\": true}, {\"cle\": \"courriel\", \"libelle\": \"Courriel\", \"type\": \"COURRIEL\"}, {\"cle\": \"naissance\", \"libelle\": \"Date de naissance\", \"type\": \"DATE\"}, {\"cle\": \"site\", \"libelle\": \"Site Web\", \"type\": \"HYPERLIEN\"}, {\"cle\": \"commentaire\", \"libelle\": \"Commentaire\", \"type\": \"ZONE_TEXTE\"}]}, {\"titre\": \"Inscription\", \"champs\": [{\"cle\": \"activite\", \"libelle\": \"Activité\", \"type\": \"LISTE\", \"options\": [\"Formation\", \"Atelier\"]}, {\"cle\": \"mode\", \"libelle\": \"Mode\", \"type\": \"RADIO\", \"options\": [\"Présentiel\", \"Virtuel\"]}, {\"cle\": \"accepte\", \"libelle\": \"J'accepte\", \"type\": \"CASE\"}, {\"cle\": \"heures\", \"libelle\": \"Heures\", \"type\": \"NOMBRE\"}, {\"cle\": \"taux\", \"libelle\": \"Taux horaire\", \"type\": \"MONTANT\"}, {\"cle\": \"remise\", \"libelle\": \"Remise\", \"type\": \"POURCENTAGE\"}, {\"cle\": \"poids\", \"libelle\": \"Poids\", \"type\": \"DECIMAL\"}, {\"cle\": \"total\", \"libelle\": \"Total\", \"type\": \"CALCULE\"}, {\"cle\": \"piece\", \"libelle\": \"Pièce justificative\", \"type\": \"FICHIER\"}, {\"cle\": \"grille\", \"libelle\": \"Disponibilités\", \"type\": \"MATRICE\", \"lignes\": [\"Lundi\", \"Mardi\"], \"colonnes\": [\"AM\", \"PM\"]}, {\"cle\": \"service\", \"libelle\": \"Service\", \"type\": \"VALEURS_DYNAMIQUES\", \"source\": \"SERVICES\"}]}], \"regles\": [{\"type\": \"CALCUL\", \"cible\": \"total\", \"valeur\": \"produit:heures,taux\"}, {\"type\": \"VALIDATION\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"60\"}], \"valeur\": \"60 heures au plus\"}, {\"type\": \"VISIBILITE\", \"conditions\": [{\"champ\": \"mode\", \"operateur\": \"EGAL\", \"valeur\": \"Présentiel\"}], \"cible\": \"grille\"}, {\"type\": \"OBLIGATION\", \"conditions\": [{\"champ\": \"activite\", \"operateur\": \"EGAL\", \"valeur\": \"Formation\"}], \"cible\": \"piece\"}, {\"type\": \"ROUTAGE\", \"conditions\": [{\"champ\": \"heures\", \"operateur\": \"SUP\", \"valeur\": \"40\"}], \"cible\": \"GESTIONNAIRE\"}]}"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/soumettre"
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/publier"
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies",
+          "capturer": {
+            "fiche": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/documents",
+          "multipart": {
+            "fichiers": {
+              "fichier": "pdf",
+              "nom": "sain.pdf",
+              "type": "application/pdf"
+            }
+          },
+          "verifier": [
+            {
+              "chemin": "$[0].nomOriginal",
+              "egal": "sain.pdf"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/formulaires/${formulaire}/saisies/${fiche}/documents",
+          "multipart": {
+            "fichiers": {
+              "fichier": "texte:X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*",
+              "nom": "piege.txt",
+              "type": "text/plain"
+            }
+          },
+          "statut": 400,
+          "verifier": [
+            {
+              "texte": "maliciel"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/formulaires/${formulaire}/saisies/${fiche}/documents",
+          "verifier": [
+            {
+              "chemin": "$[*].nomOriginal",
+              "exclut": "piege.txt"
+            },
+            {
+              "chemin": "$[*].nomOriginal",
+              "inclut": "sain.pdf"
+            }
+          ]
         }
       ]
     }

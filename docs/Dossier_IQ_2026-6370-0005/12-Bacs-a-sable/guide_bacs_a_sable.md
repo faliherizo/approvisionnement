@@ -22,6 +22,7 @@ Lancer les bacs à sable locaux (aucune donnée ni aucun secret réels) :
 docker compose -f infra/bacs-a-sable/docker-compose.yml up -d --build --wait
 # Keycloak :8180, Salesforce imité :8099, ICP :18090, pyHanko :18093, conversion (Gotenberg) :18030, veraPDF :18092,
 # courriel (Mailpit) : SMTP :11025, boîte et API :18025
+# antivirus (ClamAV) : clamd :13310 (INSTREAM)
 docker compose -f infra/bacs-a-sable/docker-compose.yml down      # arrêt
 ```
 
@@ -143,6 +144,7 @@ protocoles des services réels. Aucune n'est une imitation : ce sont les logicie
 | `verapdf` :18092 | veraPDF REST officiel | `POST /api/validate/2b` | Contrôle de conformité de la recette |
 | `pyhanko` :18093 | pyHanko 0.25 (validation sans logique ajoutée) | `POST /valider?profil=pades-lta` | Validateur indépendant (Adobe, EU DSS) |
 | `courriel` :11025 / :18025 | Mailpit | SMTP ; boîte consultable (`/api/v1`) | Relais SMTP de l'organisation (SPF, DKIM) |
+| `antivirus` :13310 | ClamAV (clamd officiel) | Analyse des fichiers reçus, protocole INSTREAM (`ANTIVIRUS_MODE=clamav`, ADR-027) | Démon clamd de l'hébergement, signatures à jour |
 
 Les certificats de l'ICP publient leurs points d'accès à `http://localhost:18090`, comme une autorité à son adresse
 publique. Le magasin du cachet (PKCS#12) et son mot de passe, propres au bac à sable, sont créés au premier démarrage

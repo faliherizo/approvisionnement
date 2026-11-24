@@ -9,7 +9,7 @@
 
 | Exigences | Éprouvées par scénario | Dont réussies à la dernière exécution | Documentaires | Écarts déclarés | Sans objet |
 |---|---|---|---|---|---|
-| 140 | 130 | 130 | 8 | 0 | 2 |
+| 140 | 132 | 132 | 8 | 0 | 0 |
 
 ## Matrice des exigences
 
@@ -74,7 +74,7 @@
 | `IQ-C-57` | Expérience simple pour initiateurs, signataires internes et externes | Obligatoire | Scénario BDD exécuté | ✅ [L'initiateur constitue une trousse : documents PDF et Word, versions, signataires internes et externes, copie](#linitiateur-constitue-une-trousse-documents-pdf-et-word-versions-signataires-internes-et-externes-copie)<br>✅ [Un signataire externe reçoit l'invitation par courriel, prouve son identité, consent et signe](#un-signataire-externe-recoit-linvitation-par-courriel-prouve-son-identite-consent-et-signe) |
 | `IQ-C-58` | Personnalisation : image de marque, messages, parcours | Obligatoire (à préciser) | Scénario BDD exécuté | ✅ [Messages désactivés puis réactivés, invitation et rappel manuel reçus par courriel](#messages-desactives-puis-reactives-invitation-et-rappel-manuel-recus-par-courriel) |
 | `IQ-C-59` | Automatisation et IA (extraction, classification, anomalies) | Optionnelle | Scénario BDD exécuté | ✅ [L'analyse automatisée d'un document est soumise à une révision humaine obligatoire](#lanalyse-automatisee-dun-document-est-soumise-a-une-revision-humaine-obligatoire) |
-| `IQ-C-60` | Identification et authentification des utilisateurs (SSO) | Obligatoire | Scénario BDD exécuté | ✅ [Authentification unique configurable et connexion locale réservable aux comptes de secours](#authentification-unique-configurable-et-connexion-locale-reservable-aux-comptes-de-secours) |
+| `IQ-C-60` | Identification et authentification des utilisateurs (SSO) | Obligatoire | Scénario BDD exécuté | ✅ [Authentification unique configurable et connexion locale réservable aux comptes de secours](#authentification-unique-configurable-et-connexion-locale-reservable-aux-comptes-de-secours)<br>✅ [La session se termine après l'inactivité et au plus tard à sa durée maximale, réglées par l'administration technique](#la-session-se-termine-apres-linactivite-et-au-plus-tard-a-sa-duree-maximale-reglees-par-ladministration-technique) |
 | `IQ-C-61` | Authentification et vérification d'identité selon profil, document et risque | Obligatoire | Scénario BDD exécuté | ✅ [Un signataire externe reçoit l'invitation par courriel, prouve son identité, consent et signe](#un-signataire-externe-recoit-linvitation-par-courriel-prouve-son-identite-consent-et-signe)<br>✅ [Le niveau d'identité exigé se configure par l'organisation](#le-niveau-didentite-exige-se-configure-par-lorganisation) |
 | `IQ-C-62` | Méthodes internes et externes, authentification renforcée | Obligatoire | Scénario BDD exécuté | ✅ [Un signataire externe reçoit l'invitation par courriel, prouve son identité, consent et signe](#un-signataire-externe-recoit-linvitation-par-courriel-prouve-son-identite-consent-et-signe) |
 | `IQ-C-63` | Standards reconnus de signature électronique, validité juridique | Obligatoire | Scénario BDD exécuté | ✅ [Un signataire externe reçoit l'invitation par courriel, prouve son identité, consent et signe](#un-signataire-externe-recoit-linvitation-par-courriel-prouve-son-identite-consent-et-signe) |
@@ -98,7 +98,7 @@
 | `IQ-D-11` | Conservation et exportation : documents, preuves, pistes, métadonnées | Obligatoire | Scénario BDD exécuté | ✅ [Le dossier de preuve d'une trousse signée se consulte, se vérifie, s'exporte ; le journal se consulte et s'exporte](#le-dossier-de-preuve-dune-trousse-signee-se-consulte-se-verifie-sexporte-le-journal-se-consulte-et-sexporte) |
 | `IQ-D-12` | Intégration aux systèmes d'IQ | Obligatoire | Scénario BDD exécuté | ✅ [Un système externe (Workday) obtient un jeton OAuth, crée une trousse par l'API, en lit le statut, puis est révoqué](#un-systeme-externe-workday-obtient-un-jeton-oauth-cree-une-trousse-par-lapi-en-lit-le-statut-puis-est-revoque) |
 | `IQ-D-13` | Accessibilité des interfaces, niveau maintenu aux mises à jour | Obligatoire | Scénario BDD exécuté | ✅ [Consultation et décision sur téléphone, sans débordement ni violation d'accessibilité](#consultation-et-decision-sur-telephone-sans-debordement-ni-violation-daccessibilite)<br>✅ [Les interfaces et la console d'administration sont en français, offertes en anglais](#les-interfaces-et-la-console-dadministration-sont-en-francais-offertes-en-anglais) |
-| `IQ-D-14` | PCI DSS si des cartes de paiement sont traitées | Conditionnelle | Sans objet | Aucune carte de paiement n'est traitée par la plateforme. |
+| `IQ-D-14` | PCI DSS si des cartes de paiement sont traitées | Conditionnelle | Scénario BDD exécuté | ✅ [Aucune carte de paiement n'entre dans la plateforme, qui reste hors du périmètre PCI DSS](#aucune-carte-de-paiement-nentre-dans-la-plateforme-qui-reste-hors-du-perimetre-pci-dss) |
 | `IQ-D-15` | Gestion des rôles et des droits d'accès | Obligatoire | Scénario BDD exécuté | ✅ [Moindre privilège : administrations séparées, auditeur en lecture seule, module cloisonné](#moindre-privilege-administrations-separees-auditeur-en-lecture-seule-module-cloisonne) |
 | `IQ-D-16` | Principe du moindre privilège | Obligatoire | Scénario BDD exécuté | ✅ [Moindre privilège : administrations séparées, auditeur en lecture seule, module cloisonné](#moindre-privilege-administrations-separees-auditeur-en-lecture-seule-module-cloisonne) |
 | `IQ-D-17` | Gestion distincte des utilisateurs et des administrateurs | Obligatoire | Scénario BDD exécuté | ✅ [Moindre privilège : administrations séparées, auditeur en lecture seule, module cloisonné](#moindre-privilege-administrations-separees-auditeur-en-lecture-seule-module-cloisonne) |
@@ -133,7 +133,7 @@
 | `IQ-A-06` | Environ 30 champs Salesforce préremplis par modèle | Obligatoire (capacité) | Scénario BDD exécuté | ✅ [Le contrat se génère depuis le dossier Salesforce, prérempli, en PDF puis en Word modifiable, avec le parcours du modèle](#le-contrat-se-genere-depuis-le-dossier-salesforce-prerempli-en-pdf-puis-en-word-modifiable-avec-le-parcours-du-modele) |
 | `IQ-A-07` | Intégrations Microsoft 365, Workday, Entra ID | Selon l'Annexe 10 | Scénario BDD exécuté | ✅ [Un système externe (Workday) obtient un jeton OAuth, crée une trousse par l'API, en lit le statut, puis est révoqué](#un-systeme-externe-workday-obtient-un-jeton-oauth-cree-une-trousse-par-lapi-en-lit-le-statut-puis-est-revoque) |
 | `IQ-A-08` | Provisionnement et déprovisionnement SCIM 2.0 (Saviynt) | Obligatoire (add. 3 : « doit prendre en charge ») | Scénario BDD exécuté | ✅ [Correspondance d'annuaire et provisionnement SCIM 2.0, puis désactivation immédiate](#correspondance-dannuaire-et-provisionnement-scim-20-puis-desactivation-immediate) |
-| `IQ-A-09` | Connecteur MCP | Non exigé | Sans objet | Connecteur MCP non exigé (addenda 1, Q3). |
+| `IQ-A-09` | Connecteur MCP | Non exigé | Scénario BDD exécuté | ✅ [Un assistant d'IA se connecte au connecteur MCP et lit, en lecture seule, le statut d'une trousse de son client](#un-assistant-dia-se-connecte-au-connecteur-mcp-et-lit-en-lecture-seule-le-statut-dune-trousse-de-son-client) |
 | `IQ-A-10` | Authentification Salesforce de remplacement (JWT Bearer) décrite | Obligatoire (« doit également décrire ») | Scénario BDD exécuté | ✅ [Les statuts reviennent vers Salesforce, résistent à une panne et se relancent ; le JWT Bearer exige sa clé](#les-statuts-reviennent-vers-salesforce-resistent-a-une-panne-et-se-relancent-le-jwt-bearer-exige-sa-cle) |
 | `IQ-A-11` | Exportation ou transfert des documents et métadonnées vers un référentiel désigné par IQ | Obligatoire (« doit également permettre ») | Scénario BDD exécuté | ✅ [Conservation par type de contrat, gel légal, exportation en lot et relevé d'utilisation par enveloppe](#conservation-par-type-de-contrat-gel-legal-exportation-en-lot-et-releve-dutilisation-par-enveloppe) |
 | `IQ-A-12` | Retour des statuts lancée, retournée, rejetée, annulée, terminée | Obligatoire (« doit notamment permettre ») | Scénario BDD exécuté | ✅ [Les statuts reviennent vers Salesforce, résistent à une panne et se relancent ; le JWT Bearer exige sa clé](#les-statuts-reviennent-vers-salesforce-resistent-a-une-panne-et-se-relancent-le-jwt-bearer-exige-sa-cle) |
@@ -162,11 +162,9 @@
 - `IQ-C-05` — Offerte en infonuagique, connectable aux SaaS : **Documentaire.** Mode infonuagique : hébergement Azure (infrastructure). Référence : `docs/adr/ADR-020-region-hebergement-et-niveaux-de-service.md`.
 - `IQ-C-68` — Compatible postes Windows, mobiles, navigateurs Edge, Chrome, Safari : **Documentaire.** Compatibilité navigateurs : Chromium éprouvé par la suite ; Edge partage le moteur ; Safari et postes mobiles à confirmer en recette.
 - `IQ-C-70` — Compatibilité maintenue avec l'évolution de l'environnement : **Documentaire.** Compatibilité maintenue avec l'évolution de l'environnement : engagement de maintenance et versions d'API paramétrables.
-- `IQ-D-14` — PCI DSS si des cartes de paiement sont traitées : **Sans objet.** Aucune carte de paiement n'est traitée par la plateforme.
 - `IQ-D-24` — Mode SaaS principalement : **Documentaire.** Mode SaaS : modèle de service.
 - `IQ-D-25` — Fonctionnalités natives privilégiées, peu de développements spécifiques : **Documentaire.** Préférence pour les fonctionnalités natives : configuration par l'organisation, démontrée par les scénarios de paramétrage.
 - `IQ-A-04` — SIG-07/08 : méthodes d'authentification standard et renforcée décrites : **Documentaire.** Méthodes d'authentification décrites dans la soumission ; leur comportement est éprouvé par IQ-C-61 et IQ-C-62. Référence : `docs/Dossier_IQ_2026-6370-0005/02-Analyse/impact_addenda_1.md`.
-- `IQ-A-09` — Connecteur MCP : **Sans objet.** Connecteur MCP non exigé (addenda 1, Q3).
 - `IQ-A-16` — Démontrer la volumétrie (55 000 à 65 000 documents par an) et des variations raisonnables : **Documentaire.** Volumétrie démontrée par le harnais de performance JMeter (plans, seuils SLI/SLO). Référence : `perf/README.md`.
 
 ## Scénarios détaillés
@@ -859,6 +857,33 @@ Alors la plateforme se comporte comme attendu
 |---|---|---|---|---|
 | 1 | `GET /v3/api-docs` |  | 2xx | `$.paths./api/clm/integration/v1/trousses` existe true ; `$.paths./scim/v2/Users` existe true |
 
+#### Un assistant d'IA se connecte au connecteur MCP et lit, en lecture seule, le statut d'une trousse de son client
+
+- **Résultat de la dernière exécution :** ✅ réussi
+- **Fonctionnalité :** Intégrations Salesforce, Workday et signature en lot (Cahier § 1.4.3 à 1.4.5, § 1.7.1 ; DAO § 3.3.5-3.3.6 ; addenda 1 et 2) (`bdd/features/iq/06-integrations.feature`)
+- **Exigences éprouvées :** `IQ-A-09`
+
+```gherkin
+Quand j'exécute le cas "iq.mcp"
+Alors la plateforme se comporte comme attendu
+Quand un assistant MCP de référence se connecte avec le jeton capturé
+Alors l'assistant voit des outils en lecture seule et lit la trousse de son client
+```
+
+**Cas `iq.mcp`** — Connecteur MCP : un assistant d'IA s'authentifie avec le jeton d'un client d'intégration, liste des outils en lecture seule, lit le statut d'une trousse de ce client ; une origine étrangère et un jeton absent sont refusés *(données : `bdd/donnees/iq.json` ; profil : administration technique IQ)*
+
+| # | Appel | Profil | Statut attendu | Vérifications et captures |
+|---|---|---|---|---|
+| 1 | `POST /api/clm/admin/clients-integration` |  | 2xx | capture `clientId` ← `$.client.clientId` ; capture `secret` ← `$.secret` |
+| 2 | `POST /api/clm/integration/oauth/token` | anonyme | 2xx | capture `jeton` ← `$.access_token` |
+| 3 | `POST /api/clm/integration/mcp` | anonyme | 401 | — |
+| 4 | `POST /api/clm/integration/mcp` | anonyme | 403 | — |
+| 5 | `POST /api/clm/integration/mcp` | anonyme | 2xx | `$.result.protocolVersion` egal "2025-06-18" ; `$.result.serverInfo.name` egal "vina-clm" |
+| 6 | `POST /api/clm/integration/mcp` | anonyme | 2xx | `$.result.tools[*].name` inclut "lire_trousse" ; `$.result.tools[*].annotations.readOnlyHint` exclut false |
+| 7 | `POST /api/clm/integration/v1/trousses` | anonyme | 201 | capture `trousse` ← `$.id` |
+| 8 | `POST /api/clm/integration/mcp` | anonyme | 2xx | `$.result.isError` egal false ; `$.result.structuredContent.referenceExterne` egal "MCP-${UNIQUE}" |
+| 9 | `POST /api/clm/integration/mcp` | anonyme | 2xx | `$.error.code` egal -32602 |
+
 ### Accès, rôles, annuaire et protection des données (Cahier § 1.4.10, § 1.4.12 ; DAO § 3.3.2 ; addenda 3 et 4)
 
 
@@ -954,6 +979,31 @@ Alors l'écran est accessible, sans débordement ni superposition
 | 1 | `GET /api/auth/config?slug=iq` | anonyme | 2xx | `$` existe true |
 | 2 | `GET /api/admin/connexion-locale` |  | 2xx | `$.comptes` longueurMin 1 ; `$.reservee` existe true |
 
+#### La session se termine après l'inactivité et au plus tard à sa durée maximale, réglées par l'administration technique
+
+- **Résultat de la dernière exécution :** ✅ réussi
+- **Fonctionnalité :** Accès, rôles, annuaire et protection des données (Cahier § 1.4.10, § 1.4.12 ; DAO § 3.3.2 ; addenda 3 et 4) (`bdd/features/iq/07-acces-securite.feature`)
+- **Exigences éprouvées :** `IQ-C-60`
+
+```gherkin
+Quand j'exécute le cas "iq.session.politique"
+Alors la plateforme se comporte comme attendu
+Quand j'ouvre l'écran "IQ — authentification unique"
+Alors je vois "Politique de session"
+Et l'écran est accessible, sans débordement ni superposition
+```
+
+**Cas `iq.session.politique`** — L'administration technique fixe la politique de session de l'organisation (inactivité, durée maximale) ; un réglage dangereux est refusé ; l'administration d'affaires n'y a pas accès *(données : `bdd/donnees/iq.json` ; profil : administration technique IQ)*
+
+| # | Appel | Profil | Statut attendu | Vérifications et captures |
+|---|---|---|---|---|
+| 1 | `GET /api/admin/session` |  | 2xx | `$.inactiviteMinutes` existe true ; `$.dureeMaxMinutes` existe true |
+| 2 | `PUT /api/admin/session?inactiviteMinutes=30&dureeMaxMinutes=480` |  | 2xx | `$.propre` egal true ; `$.inactiviteMinutes` egal 30 ; `$.dureeMaxMinutes` egal 480 |
+| 3 | `PUT /api/admin/session?inactiviteMinutes=1&dureeMaxMinutes=480` |  | 400 | contient « inactivité » |
+| 4 | `PUT /api/admin/session?inactiviteMinutes=120&dureeMaxMinutes=60` |  | 400 | — |
+| 5 | `GET /api/admin/session` | administration d'affaires IQ | 403 | — |
+| 6 | `PUT /api/admin/session?inactiviteMinutes=60&dureeMaxMinutes=480` |  | 2xx | — |
+
 #### Les données d'IQ sont introuvables pour une autre organisation
 
 - **Résultat de la dernière exécution :** ✅ réussi
@@ -971,6 +1021,27 @@ Alors la plateforme se comporte comme attendu
 |---|---|---|---|---|
 | 1 | `POST /api/clm/trousses` |  | 2xx | `$.resume.statut` egal "BROUILLON" ; capture `trousse` ← `$.resume.id` ; capture `trousseRef` ← `$.resume.reference` |
 | 2 | `GET /api/clm/trousses/${trousse}` | administrateur de Lévis | 403, 404 | — |
+
+#### Aucune carte de paiement n'entre dans la plateforme, qui reste hors du périmètre PCI DSS
+
+- **Résultat de la dernière exécution :** ✅ réussi
+- **Fonctionnalité :** Accès, rôles, annuaire et protection des données (Cahier § 1.4.10, § 1.4.12 ; DAO § 3.3.2 ; addenda 3 et 4) (`bdd/features/iq/07-acces-securite.feature`)
+- **Exigences éprouvées :** `IQ-D-14`
+
+```gherkin
+Quand j'exécute le cas "iq.cartes.pci"
+Alors la plateforme se comporte comme attendu
+```
+
+**Cas `iq.cartes.pci`** — Aucun numéro de carte de paiement n'entre dans la plateforme : il est refusé à la frontière (422), sans être renvoyé ; la même requête sans numéro est acceptée *(données : `bdd/donnees/iq.json` ; profil : administration technique IQ)*
+
+| # | Appel | Profil | Statut attendu | Vérifications et captures |
+|---|---|---|---|---|
+| 1 | `POST /api/clm/admin/clients-integration` |  | 422 | `$.error` egal "carte_paiement_refusee" ; ne contient pas « 4111 » |
+| 2 | `POST /api/clm/admin/clients-integration` |  | 422 | — |
+| 3 | `GET /api/clm/admin/clients-integration?q=5555-5555-5555-4444` |  | 422 | — |
+| 4 | `POST /api/clm/admin/clients-integration` |  | 201 | — |
+| 5 | `GET /api/clm/admin/clients-integration` |  | 2xx | ne contient pas « 4111 » ; contient « Système ${unique} » |
 
 ### Interface, mobilité, langues, accessibilité et IA (Cahier § 1.4.8, § 1.4.9 ; DAO § 3.3.3 ; scénario 8)
 

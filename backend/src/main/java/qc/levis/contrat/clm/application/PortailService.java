@@ -3,12 +3,10 @@ package qc.levis.contrat.clm.application;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import qc.levis.contrat.clm.application.dto.ClmDto;
@@ -255,25 +253,7 @@ public class PortailService {
     }
 
     private Map<String, String> validerChamps(Session s, Map<String, String> saisis) {
-        Map<String, String> retenus = new HashMap<>();
-        List<String> erreurs = new ArrayList<>();
-        for (Modele.Champ c : champsAssignes(s)) {
-            String v = saisis.get(c.cle());
-            boolean vide = v == null || v.isBlank();
-            if (vide && c.obligatoire()) {
-                erreurs.add("Champ obligatoire : " + c.libelle());
-            } else if (!vide && c.format() != null && !c.format().isBlank() && !Pattern.compile(c.format()).matcher(v).matches()) {
-                erreurs.add("Format invalide : " + c.libelle());
-            } else if (!vide && c.type() == Modele.TypeChamp.LISTE && !c.options().contains(v)) {
-                erreurs.add("Valeur non permise : " + c.libelle());
-            } else if (!vide) {
-                retenus.put(c.cle(), v.trim());
-            }
-        }
-        if (!erreurs.isEmpty()) {
-            throw new IllegalArgumentException(String.join(" ", erreurs));
-        }
-        return retenus;
+        return qc.levis.contrat.clm.domain.SaisieSignataire.valider(champsAssignes(s), saisis);
     }
 
     /** Qualité et entreprise représentée, et attestation d'autorité si elle a été donnée : versées à la preuve (addenda 4, Q6). */

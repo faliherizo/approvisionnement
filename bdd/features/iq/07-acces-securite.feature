@@ -30,8 +30,23 @@ Fonctionnalité: Accès, rôles, annuaire et protection des données (Cahier § 
     Quand j'ouvre l'écran "IQ — authentification unique"
     Alors l'écran est accessible, sans débordement ni superposition
 
+  @IQ-C-60
+  Scénario: La session se termine après l'inactivité et au plus tard à sa durée maximale, réglées par l'administration technique
+    Étant donné que je suis connecté en tant que "administration technique IQ"
+    Quand j'exécute le cas "iq.session.politique"
+    Alors la plateforme se comporte comme attendu
+    Quand j'ouvre l'écran "IQ — authentification unique"
+    Alors je vois "Politique de session"
+    Et l'écran est accessible, sans débordement ni superposition
+
   @IQ-C-07 @IQ-D-20
   Scénario: Les données d'IQ sont introuvables pour une autre organisation
     Étant donné que je suis connecté en tant que "initiateur IQ"
     Quand j'exécute le cas "iq.isolation"
+    Alors la plateforme se comporte comme attendu
+
+  @IQ-D-14
+  Scénario: Aucune carte de paiement n'entre dans la plateforme, qui reste hors du périmètre PCI DSS
+    Étant donné que je suis connecté en tant que "administration technique IQ"
+    Quand j'exécute le cas "iq.cartes.pci"
     Alors la plateforme se comporte comme attendu

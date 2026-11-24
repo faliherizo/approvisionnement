@@ -172,7 +172,7 @@
       ]
     },
     "lev.clauses.recherche-multicritere": {
-      "description": "Recherche multicritère : terme, catégorie et type de contrat",
+      "description": "Recherche multicritère : terme, portée (catégorie), thématique (section), type de contrat, clauses normatives",
       "etapes": [
         {
           "appel": "GET /api/search?q=contrat&categorie=STANDARD",
@@ -193,6 +193,41 @@
             {
               "chemin": "$.terme",
               "egal": "Objet"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/search/thematiques",
+          "verifier": [
+            {
+              "chemin": "$",
+              "contient": "Dispositions générales"
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/search?q=&thematique=dispositions%20g%C3%A9n%C3%A9rales",
+          "verifier": [
+            {
+              "chemin": "$.clauses",
+              "longueurMin": 1
+            },
+            {
+              "chemin": "$.facettesThematique.Dispositions générales",
+              "existe": true
+            }
+          ]
+        },
+        {
+          "appel": "GET /api/search?q=&normative=true",
+          "verifier": [
+            {
+              "chemin": "$.clauses",
+              "longueurMin": 1
+            },
+            {
+              "chemin": "$.clauses[*].normative",
+              "exclut": false
             }
           ]
         }
@@ -655,7 +690,7 @@
       ]
     },
     "lev.revision.workflow-configurable": {
-      "description": "Circuit d'approbation configurable par type de document",
+      "description": "Circuit d'approbation configurable par type de document : un document de ce type suit le circuit configuré, et non le circuit par défaut",
       "profil": "administrateur de Lévis",
       "etapes": [
         {
@@ -688,6 +723,29 @@
             {
               "chemin": "$[*].nom",
               "inclut": "Circuit bail BDD ${unique}"
+            }
+          ]
+        },
+        {
+          "appel": "POST /api/documents",
+          "corps": {
+            "titre": "Bail BDD ${unique}",
+            "type": "BAIL"
+          },
+          "capturer": {
+            "document": "$.id"
+          }
+        },
+        {
+          "appel": "POST /api/documents/${document}/approbation",
+          "corps": {},
+          "verifier": [
+            {
+              "chemin": "$[*].roleRequis",
+              "egal": [
+                "APPRO",
+                "DIRECTION"
+              ]
             }
           ]
         },

@@ -107,6 +107,8 @@ class ArchitectureClmTest {
                 .and().doNotHaveSimpleName("PortailController")
                 // API d'intégration : jeton client credentials vérifié par le contrôleur, module contrôlé pour le tenant du client.
                 .and().doNotHaveSimpleName("IntegrationEntranteController")
+                // Connecteur MCP (ADR-023) : même jeton client credentials, vérifié par le contrôleur.
+                .and().doNotHaveSimpleName("McpController")
                 .should().beAnnotatedWith(PreAuthorize.class)
                 .because("refus par défaut : masquer un bouton dans l'interface n'est pas un contrôle d'accès (ST-02)")
                 .check(CODE);

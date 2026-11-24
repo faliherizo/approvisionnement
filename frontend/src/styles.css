@@ -135,6 +135,8 @@ h3 { color: var(--bleu-fonce); font-size: clamp(15px, 0.95rem + 0.3vw, 17.5px); 
 
 /* --- Formulaires --- */
 .form { display: flex; flex-direction: column; gap: 14px; }
+/* Un <fieldset> ne rétrécit pas sous son contenu (min-inline-size: min-content) : il débordait sur téléphone. */
+fieldset { min-inline-size: 0; max-width: 100%; }
 label { display: flex; flex-direction: column; gap: 5px; font-size: 14px; font-weight: 600; color: var(--texte); }
 /* Libellé associé par id (le nom accessible n'inclut pas la valeur choisie) : même mise en page qu'un libellé englobant. */
 .champ-associe { display: flex; flex-direction: column; gap: 5px; }
@@ -385,8 +387,10 @@ th[scope="col"] { color: var(--bleu-fonce); }
 .gabarit-select__libelle { color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
 .gabarit-select select { padding: 8px 10px; border: 1px solid var(--border, #cbd5e1); border-radius: 8px; background: var(--card, #fff); color: inherit; font-size: 14px; }
 .gabarit-select select:focus-visible { outline: 2px solid var(--accent, #0B4A8A); outline-offset: 2px; }
-.check-row { flex-direction: row; align-items: center; gap: 8px; padding: 6px 0; font-weight: 400; }
+.check-row { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 0; font-weight: 400; min-width: 0; overflow-wrap: anywhere; }
 .actions-cell { display: flex; flex-wrap: wrap; gap: 8px; }
+.sans-coupure { white-space: nowrap; }
+.actions-cell > a { display: inline-flex; align-items: center; min-height: 24px; }
 .assembled { padding-left: 18px; }
 .assembled li { margin-bottom: 10px; }
 .assembled p { margin: 2px 0; font-size: 14px; color: #333; }

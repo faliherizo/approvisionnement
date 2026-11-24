@@ -1,0 +1,510 @@
+{
+  "appelOffres": "Ville de Lévis — avis d'appel d'intérêt 2026-50-92",
+  "catalogue": "levis",
+  "scenarios": [
+    {
+      "id": "E2E-LEV-01",
+      "titre": "Le juriste crée une clause optionnelle classée par thématique, la retrouve, puis consulte son historique",
+      "exigences": [
+        "LEV-2.1-3",
+        "LEV-C-01",
+        "LEV-C-03"
+      ],
+      "profil": "juriste de Lévis",
+      "etapes": [
+        {
+          "aller": "/clauses"
+        },
+        {
+          "cliquer": "Nouvelle clause"
+        },
+        {
+          "remplir": {
+            "Code": "E2E-${UNIQUE}",
+            "Titre": "Garantie de soumission ${unique}",
+            "Section (ex. Attestations)": "Garanties E2E"
+          }
+        },
+        {
+          "choisir": {
+            "Catégorie": "OPTIONNELLE"
+          }
+        },
+        {
+          "remplir": {
+            "Corps de la clause": "Le soumissionnaire fournit une garantie de soumission de 10 %."
+          }
+        },
+        {
+          "cliquer": "Enregistrer"
+        },
+        {
+          "remplir": {
+            "Recherche (code, titre, texte)…": "E2E-${UNIQUE}"
+          }
+        },
+        {
+          "voir": [
+            "E2E-${UNIQUE}",
+            "Garantie de soumission ${unique}"
+          ]
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Historique de la clause E2E-${UNIQUE}"
+          }
+        },
+        {
+          "voir": "v1"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-LEV-02",
+      "titre": "Recherche multicritère : terme, portée, thématique, type de contrat et clauses normatives",
+      "exigences": [
+        "LEV-C-02"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/recherche"
+        },
+        {
+          "remplir": {
+            "Terme": ""
+          }
+        },
+        {
+          "choisir": {
+            "Thématique (section)": "Dispositions générales"
+          }
+        },
+        {
+          "cocher": "Clauses normatives seulement"
+        },
+        {
+          "cliquer": "Rechercher"
+        },
+        {
+          "voir": [
+            "GEN-002",
+            "Dispositions générales"
+          ]
+        },
+        {
+          "choisir": {
+            "Catégorie de clause (facette)": "OPTIONNELLE"
+          }
+        },
+        {
+          "cliquer": "Rechercher"
+        },
+        {
+          "voir": "Aucune clause."
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-LEV-03",
+      "titre": "L'assistant guidé recommande les clauses selon le type, la valeur et le contexte, puis génère le devis assemblé",
+      "exigences": [
+        "LEV-2.1-1",
+        "LEV-2.1-4",
+        "LEV-2.1-5a",
+        "LEV-2.1-5b",
+        "LEV-2.1-5c",
+        "LEV-2.1-5d",
+        "LEV-2.1-5e",
+        "LEV-C-04",
+        "LEV-C-05",
+        "LEV-C-06",
+        "LEV-C-07",
+        "LEV-C-13",
+        "LEV-2.1-9"
+      ],
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "aller": "/assistant"
+        },
+        {
+          "choisir": {
+            "Type de document": "Appel d'offres public"
+          }
+        },
+        {
+          "remplir": {
+            "Valeur estimée ($)": "250000",
+            "Contexte du projet": "Travaux de voirie"
+          }
+        },
+        {
+          "cliquer": "Analyser le besoin"
+        },
+        {
+          "voir": [
+            "Mode de sollicitation suggéré :",
+            "Clauses éligibles"
+          ]
+        },
+        {
+          "remplir": {
+            "Titre du document": "Devis E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Générer le document"
+        },
+        {
+          "url": "/documents/\\d+"
+        },
+        {
+          "voir": [
+            "Devis E2E ${unique}",
+            "🔒 normative"
+          ]
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-LEV-04",
+      "titre": "Contrats de gré à gré de toute nature et avis d'intention se rédigent depuis l'assistant",
+      "exigences": [
+        "LEV-2.1-2",
+        "LEV-C-08",
+        "LEV-C-09"
+      ],
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "aller": "/assistant"
+        },
+        {
+          "choisir": {
+            "Type de document": "Bail"
+          }
+        },
+        {
+          "remplir": {
+            "Valeur estimée ($)": "12000"
+          }
+        },
+        {
+          "cliquer": "Analyser le besoin"
+        },
+        {
+          "remplir": {
+            "Titre du document": "Bail E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Générer le document"
+        },
+        {
+          "url": "/documents/\\d+"
+        },
+        {
+          "voir": "Bail E2E ${unique}"
+        },
+        {
+          "aller": "/assistant"
+        },
+        {
+          "choisir": {
+            "Type de document": "Avis d'intention"
+          }
+        },
+        {
+          "remplir": {
+            "Valeur estimée ($)": "40000"
+          }
+        },
+        {
+          "cliquer": "Analyser le besoin"
+        },
+        {
+          "remplir": {
+            "Titre du document": "Avis d'intention E2E ${unique}"
+          }
+        },
+        {
+          "cliquer": "Générer le document"
+        },
+        {
+          "url": "/documents/\\d+"
+        },
+        {
+          "voir": "Avis d'intention E2E ${unique}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-LEV-05",
+      "titre": "L'administration configure un circuit d'approbation par type de document",
+      "exigences": [
+        "LEV-C-12",
+        "LEV-2.1-6b"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/workflows"
+        },
+        {
+          "remplir": {
+            "Nom": "Circuit prêt E2E ${unique}"
+          }
+        },
+        {
+          "choisir": {
+            "Type de document": "Prêt à usage"
+          }
+        },
+        {
+          "cocher": "DIRECTION"
+        },
+        {
+          "cliquer": "Créer le circuit"
+        },
+        {
+          "voir": [
+            "Circuit créé",
+            "Circuit prêt E2E ${unique}"
+          ]
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Supprimer le circuit Circuit prêt E2E ${unique}"
+          }
+        },
+        {
+          "voir": "Circuit supprimé"
+        },
+        {
+          "nePasVoir": "Circuit prêt E2E ${unique}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-LEV-06",
+      "titre": "Le juriste commente le devis, puis le circuit d'approbation démarre et chaque niveau décide",
+      "exigences": [
+        "LEV-2.1-6",
+        "LEV-2.1-6a",
+        "LEV-C-11",
+        "LEV-C-17"
+      ],
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Devis à réviser",
+            "etapes": [
+              {
+                "appel": "POST /api/documents",
+                "corps": {
+                  "titre": "Devis révision E2E ${unique}",
+                  "type": "APPEL_OFFRES_PUBLIC"
+                },
+                "capturer": {
+                  "document": "$.id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "connecter": "juriste de Lévis"
+        },
+        {
+          "aller": "/documents/${document}"
+        },
+        {
+          "remplir": {
+            "Commenter le devis…": "Préciser la garantie ${unique}"
+          }
+        },
+        {
+          "cliquer": "Commenter"
+        },
+        {
+          "voir": [
+            "Commentaire ajouté",
+            "Préciser la garantie ${unique}"
+          ]
+        },
+        {
+          "connecter": "rédacteur de Lévis"
+        },
+        {
+          "aller": "/documents/${document}"
+        },
+        {
+          "cliquer": "Démarrer l'approbation"
+        },
+        {
+          "voir": [
+            "Circuit d’approbation démarré",
+            "APPRO"
+          ]
+        },
+        {
+          "connecter": "administrateur de Lévis"
+        },
+        {
+          "aller": "/audit"
+        },
+        {
+          "voir": "Journal d’audit"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-LEV-07",
+      "titre": "Un addenda modifie une clause du devis, est émis et réintégré ; la fiche SEAO se produit",
+      "exigences": [
+        "LEV-2.1-7",
+        "LEV-2.1-8",
+        "LEV-C-10",
+        "LEV-C-20"
+      ],
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Devis assemblé",
+            "etapes": [
+              {
+                "appel": "POST /api/assistant/generer",
+                "corps": {
+                  "titre": "Devis addenda E2E ${unique}",
+                  "type": "APPEL_OFFRES_PUBLIC",
+                  "valeurEstimee": 250000,
+                  "clauseIds": []
+                },
+                "capturer": {
+                  "document": "$.id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/documents/${document}"
+        },
+        {
+          "cliquer": "Nouvel addenda"
+        },
+        {
+          "remplir": {
+            "Objet de l'addenda": "Report de la date d'ouverture ${unique}"
+          }
+        },
+        {
+          "cliquer": "Valider"
+        },
+        {
+          "voir": "Report de la date d'ouverture ${unique}"
+        },
+        {
+          "cliquer": "Générer"
+        },
+        {
+          "voir": [
+            "Aperçu PDF",
+            "Export PDF",
+            "Export DOCX",
+            "Fiche SEAO (XML)"
+          ]
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-LEV-08",
+      "titre": "Droits Loi 25 : accès aux renseignements d'une personne, registre des demandes",
+      "exigences": [
+        "LEV-C-15"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/vie-privee"
+        },
+        {
+          "remplir": {
+            "Courriel de la personne concernée": "redacteur@levis.qc.ca"
+          }
+        },
+        {
+          "cliquer": "Rassembler les renseignements"
+        },
+        {
+          "voir": "renseignement(s) détenu(s) sur redacteur@levis.qc.ca"
+        },
+        {
+          "voir": "Registre des demandes"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-LEV-09",
+      "titre": "Connexion : authentification unique proposée, comptes et rôles administrés, interface multilingue",
+      "exigences": [
+        "LEV-C-16",
+        "LEV-C-21",
+        "LEV-C-22"
+      ],
+      "profil": "administrateur de Lévis",
+      "etapes": [
+        {
+          "aller": "/utilisateurs"
+        },
+        {
+          "voir": [
+            "redacteur@levis.qc.ca",
+            "REDACTEUR"
+          ]
+        },
+        {
+          "langue": "en"
+        },
+        {
+          "voir": "Documents"
+        },
+        {
+          "langue": "fr"
+        },
+        {
+          "aller": "/parametres"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    }
+  ]
+}

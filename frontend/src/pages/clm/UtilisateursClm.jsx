@@ -7,6 +7,7 @@ import IntegrationOidcManager from '../../components/IntegrationOidcManager.jsx'
 import IntegrationSamlManager from '../../components/IntegrationSamlManager.jsx'
 import AnnuaireManager from '../../components/AnnuaireManager.jsx'
 import ConnexionLocaleManager from '../../components/ConnexionLocaleManager.jsx'
+import PolitiqueSessionManager from '../../components/PolitiqueSessionManager.jsx'
 import Users from '../Users.jsx'
 import { ChoixListe, GardeModule, Message, useErreur, useListe, useRessource } from './commun.jsx'
 import { BarreActions, Bloc, Blocs, EcranClm } from './gabarit.jsx'
@@ -131,6 +132,7 @@ function Sso() {
       <IntegrationSamlManager />
       <AnnuaireManager />
       <ConnexionLocaleManager />
+      <PolitiqueSessionManager />
       <Link to="/clm/admin/utilisateurs">{t('clm.retour')}</Link>
     </EcranClm>
   )

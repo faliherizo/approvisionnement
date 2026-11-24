@@ -32,7 +32,7 @@ class SearchControllerTest {
         clauses = mock(ClauseRepository.class);
         documents = mock(DocumentRepository.class);
         templates = mock(DocumentTemplateRepository.class);
-        controller = new SearchController(clauses, documents, templates);
+        controller = new SearchController(new qc.levis.contrat.redaction.application.RechercheMulticritere(clauses, documents, templates));
         TenantContext.set(TENANT);
     }
 
@@ -77,7 +77,7 @@ class SearchControllerTest {
         when(documents.findByTenantIdAndActifTrue(TENANT)).thenReturn(List.of());
         when(templates.findByTenantId(TENANT)).thenReturn(List.of());
 
-        RechercheResultat r = controller.rechercher("alpha", null, null);
+        RechercheResultat r = controller.rechercher("alpha", null, null, null, false);
 
         assertEquals(3, r.clauses().size());
         assertEquals(2L, r.facettesCategorieClause().get("STANDARD"));
@@ -93,7 +93,7 @@ class SearchControllerTest {
         when(documents.findByTenantIdAndActifTrue(TENANT)).thenReturn(List.of());
         when(templates.findByTenantId(TENANT)).thenReturn(List.of());
 
-        RechercheResultat r = controller.rechercher("alpha", Enums.ClauseCategorie.OPTIONNELLE, null);
+        RechercheResultat r = controller.rechercher("alpha", Enums.ClauseCategorie.OPTIONNELLE, null, null, false);
 
         assertEquals(1, r.clauses().size());
         assertEquals(Enums.ClauseCategorie.OPTIONNELLE, r.clauses().get(0).getCategorie());
@@ -108,10 +108,10 @@ class SearchControllerTest {
                 document("sans", "sans", Enums.TypeContrat.APPEL_OFFRES_PUBLIC)));      // aucun match
         when(templates.findByTenantId(TENANT)).thenReturn(List.of());
 
-        RechercheResultat sansFiltre = controller.rechercher("beta", null, null);
+        RechercheResultat sansFiltre = controller.rechercher("beta", null, null, null, false);
         assertEquals(2, sansFiltre.documents().size());
 
-        RechercheResultat filtre = controller.rechercher("beta", null, Enums.TypeContrat.APPEL_OFFRES_PUBLIC);
+        RechercheResultat filtre = controller.rechercher("beta", null, Enums.TypeContrat.APPEL_OFFRES_PUBLIC, null, false);
         assertEquals(1, filtre.documents().size());
     }
 
@@ -125,10 +125,10 @@ class SearchControllerTest {
                 template("Y", "nom", "gamma inclus", Enums.TypeContrat.GRE_A_GRE),            // description, filtré
                 template("Z", "nom", "desc", Enums.TypeContrat.GRE_A_GRE)));                  // aucun match
 
-        RechercheResultat sansFiltre = controller.rechercher("gamma", null, null);
+        RechercheResultat sansFiltre = controller.rechercher("gamma", null, null, null, false);
         assertEquals(3, sansFiltre.templates().size());
 
-        RechercheResultat filtre = controller.rechercher("gamma", null, Enums.TypeContrat.APPEL_OFFRES_PUBLIC);
+        RechercheResultat filtre = controller.rechercher("gamma", null, Enums.TypeContrat.APPEL_OFFRES_PUBLIC, null, false);
         assertEquals(2, filtre.templates().size());
     }
 
@@ -141,7 +141,7 @@ class SearchControllerTest {
         when(templates.findByTenantId(TENANT)).thenReturn(List.of(
                 template("t", "n", "d", Enums.TypeContrat.GRE_A_GRE)));
 
-        RechercheResultat r = controller.rechercher(null, null, null);
+        RechercheResultat r = controller.rechercher(null, null, null, null, false);
         assertEquals(3, r.total());
         assertNull(r.terme(), "terme reflète la valeur brute reçue (null ici)");
     }
@@ -155,7 +155,7 @@ class SearchControllerTest {
         when(templates.findByTenantId(TENANT)).thenReturn(List.of(
                 template(null, null, null, Enums.TypeContrat.GRE_A_GRE)));
 
-        RechercheResultat r = controller.rechercher("introuvable", null, null);
+        RechercheResultat r = controller.rechercher("introuvable", null, null, null, false);
         assertEquals(0, r.total());
     }
 }

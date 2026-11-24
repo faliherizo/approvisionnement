@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../api'
 import { useAuth } from '../auth.jsx'
@@ -17,6 +17,9 @@ export default function Search() {
   const [q, setQ] = useState('')
   const [categorie, setCategorie] = useState('')
   const [type, setType] = useState('')
+  const [thematique, setThematique] = useState('')
+  const [normative, setNormative] = useState(false)
+  const [thematiques, setThematiques] = useState([])
   const [res, setRes] = useState(null)
   const [consulter, setConsulter] = useState(null)   // clause consultée (lecture seule)
   const [aSupprimer, setASupprimer] = useState(null) // { type, id, libelle }
@@ -24,11 +27,17 @@ export default function Search() {
   const peutSupprimerClause = hasRole('ADMIN') || hasRole('JURIDIQUE')
   const peutSupprimerDoc = hasRole('ADMIN') || hasRole('REDACTEUR')
 
+  useEffect(() => {
+    api.get('/search/thematiques').then(({ data }) => setThematiques(data)).catch(() => setThematiques([]))
+  }, [])
+
   async function rechercher(e) {
     e?.preventDefault()
     const params = { q }
     if (categorie) params.categorie = categorie
     if (type) params.type = type
+    if (thematique) params.thematique = thematique
+    if (normative) params.normative = true
     const { data } = await api.get('/search', { params })
     setRes(data)
   }
@@ -60,6 +69,16 @@ export default function Search() {
             {TYPES.map((tp) => <option key={tp.code} value={tp.code}>{tp.libelle}</option>)}
           </select>
         </label>
+        <label>{t('search.thematique')}
+          <select value={thematique} onChange={(e) => setThematique(e.target.value)}>
+            <option value="">{t('search.toutesThematiques')}</option>
+            {thematiques.map((th) => <option key={th} value={th}>{th}</option>)}
+          </select>
+        </label>
+        <label className="checkbox-inline">
+          <input type="checkbox" checked={normative} onChange={(e) => setNormative(e.target.checked)} />
+          {t('search.normativesSeulement')}
+        </label>
         <button type="submit">{t('search.rechercher')}</button>
       </form>
 
@@ -71,6 +90,14 @@ export default function Search() {
             <ul className="stats-inline" aria-label={t('search.facettesAria')}>
               {Object.entries(res.facettesCategorieClause).map(([cat, n]) => (
                 <li key={cat}><strong>{n}</strong> {cat}</li>
+              ))}
+            </ul>
+          )}
+
+          {res.facettesThematique && Object.keys(res.facettesThematique).length > 0 && (
+            <ul className="stats-inline" aria-label={t('search.facettesThematiqueAria')}>
+              {Object.entries(res.facettesThematique).map(([th, n]) => (
+                <li key={th}><strong>{n}</strong> {th}</li>
               ))}
             </ul>
           )}

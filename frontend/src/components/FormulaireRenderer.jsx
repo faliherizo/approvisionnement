@@ -4,7 +4,22 @@ import { useI18n } from '../i18n/I18nContext'
 function normOption(o) {
   if (o == null) return { valeur: '', libelle: '' }
   if (typeof o === 'string') return { valeur: o, libelle: o }
-  return { valeur: o.valeur ?? o.code ?? '', libelle: o.libelle ?? o.valeur ?? o.code ?? '' }
+  return { valeur: o.valeur ?? o.code ?? '', libelle: o.libelle ?? o.valeur ?? o.code ?? '', libelleI18n: o.libelleI18n }
+}
+
+/**
+ * Deux dialectes de structure coexistent : celui du concepteur (code, type en minuscules) et celui de l'API, de l'import
+ * et de l'interopérabilité (cle, type en majuscules). Le serveur lit les deux (cle ?? code) ; le rendu aussi.
+ */
+const TYPES_API = {
+  TEXTE: 'texte', ZONE_TEXTE: 'zone_texte', CASE: 'case_a_cocher', CASE_A_COCHER: 'case_a_cocher', RADIO: 'radio',
+  LISTE: 'liste', DATE: 'date', COURRIEL: 'courriel', HYPERLIEN: 'hyperlien', NOMBRE: 'nombre', DECIMAL: 'decimale',
+  DECIMALE: 'decimale', MONTANT: 'montant', POURCENTAGE: 'pourcentage', CALCULE: 'calcule', FICHIER: 'fichier',
+  VALEURS_DYNAMIQUES: 'dynamique', DYNAMIQUE: 'dynamique',
+}
+export function normaliserChamp(c) {
+  const type = String(c.type ?? 'texte')
+  return { ...c, code: c.code ?? c.cle, type: TYPES_API[type.toUpperCase()] ?? type.toLowerCase() }
 }
 
 /**
@@ -19,7 +34,10 @@ export default function FormulaireRenderer({ structure, valeurs = {}, etat = {},
   const { t, locale } = useI18n()
   // Libellé multilingue : le concepteur peut fournir champ.libelleI18n = {fr, en, mg} ; fallback sur libelle.
   const lang = (locale || 'fr').startsWith('en') ? 'en' : (locale || 'fr').startsWith('mg') ? 'mg' : 'fr'
-  const libelle = (c) => (c.libelleI18n && c.libelleI18n[lang]) || c.libelle || c.code
+  // Tout texte de la structure se traduit de même : titre de page (titreI18n), aide (aideI18n), options (optionsI18n,
+  // liste parallèle aux valeurs) ; la valeur enregistrée reste celle de la langue de conception.
+  const traduit = (objet, cle) => objet?.[`${cle}I18n`]?.[lang] || objet?.[cle]
+  const libelle = (c) => traduit(c, 'libelle') || c.code
   const pages = Array.isArray(structure?.pages) ? structure.pages : []
   const masques = new Set(etat.champsMasques || [])
   const requisDynamiques = new Set(etat.champsObligatoires || [])
@@ -48,7 +66,10 @@ export default function FormulaireRenderer({ structure, valeurs = {}, etat = {},
     const commun = { id, 'aria-required': requis || undefined, disabled: lectureSeule }
     const v = valeurChamp(c)
     const maj = (val) => onChange && onChange(c.code, val)
-    const options = Array.isArray(c.options) ? c.options.map(normOption) : []
+    const traductions = c.optionsI18n?.[lang] || []
+    const options = Array.isArray(c.options)
+      ? c.options.map(normOption).map((o, i) => ({ ...o, libelle: traductions[i] || traduit(o, 'libelle') }))
+      : []
 
     switch (c.type) {
       case 'zone_texte':
@@ -96,8 +117,8 @@ export default function FormulaireRenderer({ structure, valeurs = {}, etat = {},
     <div className="formulaire-rendu">
       {pages.map((p, i) => (
         <fieldset key={p.code || i} className="panel" style={{ marginBottom: 16 }}>
-          <legend><strong>{p.titre || t('rendu.pageN', { n: i + 1 })}</strong></legend>
-          {(p.champs || []).filter((c) => !masques.has(c.code)).map((c) => {
+          <legend><strong>{traduit(p, 'titre') || t('rendu.pageN', { n: i + 1 })}</strong></legend>
+          {(p.champs || []).map(normaliserChamp).filter((c) => !masques.has(c.code)).map((c) => {
             const requis = c.obligatoire || requisDynamiques.has(c.code)
             const estCase = c.type === 'case_a_cocher'
             return (
@@ -107,11 +128,11 @@ export default function FormulaireRenderer({ structure, valeurs = {}, etat = {},
                   <span>{libelle(c)}{requis && <span className="danger" aria-hidden="true"> *</span>}</span>
                 </label>
                 {!estCase && champInput(c)}
-                {c.aide && <small className="muted">{c.aide}</small>}
+                {traduit(c, 'aide') && <small className="muted">{traduit(c, 'aide')}</small>}
               </div>
             )
           })}
-          {(p.champs || []).filter((c) => !masques.has(c.code)).length === 0 && (
+          {(p.champs || []).map(normaliserChamp).filter((c) => !masques.has(c.code)).length === 0 && (
             <p className="muted">{t('rendu.pageVide')}</p>
           )}
         </fieldset>

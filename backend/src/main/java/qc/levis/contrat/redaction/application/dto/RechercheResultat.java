@@ -1,12 +1,17 @@
 package qc.levis.contrat.redaction.application.dto;
 
 import java.util.List;
+import java.util.Map;
+import qc.levis.contrat.redaction.domain.Clause;
+import qc.levis.contrat.redaction.domain.Document;
+import qc.levis.contrat.redaction.domain.DocumentTemplate;
 
-/** Résultat de recherche à facettes (contenus réutilisables + documents + templates). */
+/** Résultat de recherche à facettes (contenus réutilisables + documents + templates), facettes portée et thématique. */
 public record RechercheResultat(
             String terme,
-            List<qc.levis.contrat.redaction.domain.Clause> clauses,
-            List<qc.levis.contrat.redaction.domain.Document> documents,
-            List<qc.levis.contrat.redaction.domain.DocumentTemplate> templates,
-            java.util.Map<String, Long> facettesCategorieClause,
-            int total) {}
+            List<Clause> clauses,
+            List<Document> documents,
+            List<DocumentTemplate> templates,
+            Map<String, Long> facettesCategorieClause,
+            int total,
+            Map<String, Long> facettesThematique) {}

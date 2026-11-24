@@ -1,0 +1,991 @@
+{
+  "appelOffres": "Investissement Québec — AO 2026-6370-0005",
+  "catalogue": "iq",
+  "scenarios": [
+    {
+      "id": "E2E-IQ-01",
+      "titre": "Créer une trousse, déposer documents et annexes, inviter un participant externe",
+      "exigences": [
+        "IQ-C-44",
+        "IQ-C-45",
+        "IQ-C-46",
+        "IQ-C-50",
+        "IQ-D-03",
+        "IQ-D-09",
+        "IQ-S-01",
+        "IQ-C-42",
+        "IQ-C-57"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.trousse.creation"
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "voir": "${trousseRef}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Historique"
+          }
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-02",
+      "titre": "Dépôt de documents volumineux dans une trousse",
+      "exigences": [
+        "IQ-C-47"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.documents.taille"
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "voir": "${trousseRef}"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-03",
+      "titre": "Cycle de vie d'un modèle : rédaction, soumission, publication, nouvelle version",
+      "exigences": [
+        "IQ-C-32",
+        "IQ-C-33",
+        "IQ-C-34",
+        "IQ-C-35",
+        "IQ-C-36",
+        "IQ-C-37",
+        "IQ-C-38",
+        "IQ-D-06",
+        "IQ-C-17"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.modele.cycle"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "voir": "Modèles"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-04",
+      "titre": "Générer un contrat depuis un modèle, prérempli par Salesforce",
+      "exigences": [
+        "IQ-C-39"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.generation.salesforce"
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "voir": "${trousseRef}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Historique"
+          }
+        },
+        {
+          "voir": "Préremplissage Salesforce"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-05",
+      "titre": "Gabarit Word d'IQ fusionné en Word et en PDF",
+      "exigences": [
+        "IQ-A-30",
+        "IQ-A-18"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.gabarit.word"
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "voir": "Documents"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-06",
+      "titre": "Parcours de validation puis d'approbation, décisions tracées",
+      "exigences": [
+        "IQ-C-01",
+        "IQ-C-18",
+        "IQ-C-22",
+        "IQ-C-23",
+        "IQ-C-25",
+        "IQ-C-48",
+        "IQ-D-04",
+        "IQ-S-02",
+        "IQ-S-03",
+        "IQ-S-09",
+        "IQ-C-52"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.parcours.validation-approbation"
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Parcours"
+          }
+        },
+        {
+          "voir": "Résumé lisible du parcours"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Historique"
+          }
+        },
+        {
+          "voir": "Décision : approuvé"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-07",
+      "titre": "Rejet par un validateur et retour à l'initiateur",
+      "exigences": [
+        "IQ-C-22",
+        "IQ-S-09"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.parcours.rejet"
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Historique"
+          }
+        },
+        {
+          "voir": "Décision : rejeté"
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-08",
+      "titre": "Étapes parallèles et réassignation d'une tâche",
+      "exigences": [
+        "IQ-C-18",
+        "IQ-C-20",
+        "IQ-C-21",
+        "IQ-C-55",
+        "IQ-D-05",
+        "IQ-S-05"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.parcours.parallele-reassignation"
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Historique"
+          }
+        },
+        {
+          "voir": [
+            "Réassignation",
+            "Délégation"
+          ]
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Parcours"
+          }
+        },
+        {
+          "voir": "en parallèle"
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-09",
+      "titre": "Règles d'affaires : étape non requise selon les valeurs",
+      "exigences": [
+        "IQ-C-19",
+        "IQ-A-25",
+        "IQ-D-07"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.parcours.regles"
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Historique"
+          }
+        },
+        {
+          "voir": "Étape non requise (règle d’affaires)"
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-10",
+      "titre": "Modifier les signataires d'une trousse en cours",
+      "exigences": [
+        "IQ-C-30",
+        "IQ-C-31",
+        "IQ-S-05"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.signataires.en-cours"
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "aller": "/clm/trousses/${trousse}?onglet=participants"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-11",
+      "titre": "Signature externe : invitation, identité, consentement, signature, preuve",
+      "exigences": [
+        "IQ-S-04",
+        "IQ-C-61",
+        "IQ-C-62",
+        "IQ-C-63",
+        "IQ-C-64",
+        "IQ-C-03",
+        "IQ-C-57",
+        "IQ-S-07",
+        "IQ-A-04",
+        "IQ-C-54"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.signature.externe"
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Preuve"
+          }
+        },
+        {
+          "voir": "${trousseRef}"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-12",
+      "titre": "Signature séquentielle puis conjointe d'un groupe",
+      "exigences": [
+        "IQ-C-26",
+        "IQ-C-27",
+        "IQ-C-28",
+        "IQ-C-54"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.signature.sequentielle-parallele"
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Historique"
+          }
+        },
+        {
+          "voir": [
+            "Signature apposée",
+            "Signatures conjointes"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-13",
+      "titre": "Signature d'un représentant après attestation de son autorité",
+      "exigences": [
+        "IQ-A-24"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.signature.representant"
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Preuve"
+          }
+        },
+        {
+          "voir": "${trousseRef}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-14",
+      "titre": "Vérification d'identité proportionnée au risque",
+      "exigences": [
+        "IQ-A-23",
+        "IQ-C-61"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "preparer": "iq.identite.par-risque"
+        },
+        {
+          "aller": "/clm/admin/parametres"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-15",
+      "titre": "Messages désactivés puis réactivés, invitation et rappel reçus",
+      "exigences": [
+        "IQ-C-24",
+        "IQ-C-40",
+        "IQ-C-41",
+        "IQ-S-06",
+        "IQ-D-07",
+        "IQ-C-58"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "preparer": "iq.notifications"
+        },
+        {
+          "aller": "/clm/admin/notifications"
+        },
+        {
+          "voir": "Notifications"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-16",
+      "titre": "Suivi centralisé des trousses et des échéances",
+      "exigences": [
+        "IQ-C-43",
+        "IQ-C-25",
+        "IQ-D-08"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "preparer": "iq.suivi"
+        },
+        {
+          "aller": "/clm/suivi"
+        },
+        {
+          "voir": "Suivi"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-17",
+      "titre": "Dossier de preuve consulté, vérifié, exporté ; journal consulté et exporté",
+      "exigences": [
+        "IQ-C-49",
+        "IQ-C-51",
+        "IQ-C-64",
+        "IQ-C-65",
+        "IQ-D-10",
+        "IQ-D-11",
+        "IQ-D-19",
+        "IQ-S-07",
+        "IQ-S-10",
+        "IQ-A-29"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.signature.externe"
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Preuve"
+          }
+        },
+        {
+          "voir": "${trousseRef}"
+        },
+        {
+          "connecter": "administration d'affaires IQ"
+        },
+        {
+          "aller": "/clm/admin/journal"
+        },
+        {
+          "voir": "Journal"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-18",
+      "titre": "Conservation par type, gel légal, exportation en lot, relevé d'utilisation",
+      "exigences": [
+        "IQ-C-66",
+        "IQ-A-21",
+        "IQ-A-11",
+        "IQ-A-22"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "preparer": "iq.signature.externe"
+        },
+        {
+          "aller": "/clm/admin/conservation"
+        },
+        {
+          "voir": "Conservation et destruction"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-19",
+      "titre": "API d'intégration : client, jeton, création de trousse par un système",
+      "exigences": [
+        "IQ-A-01",
+        "IQ-A-02",
+        "IQ-C-06",
+        "IQ-C-16",
+        "IQ-C-69",
+        "IQ-D-12",
+        "IQ-D-26",
+        "IQ-D-27",
+        "IQ-D-28",
+        "IQ-A-07",
+        "IQ-C-03"
+      ],
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "preparer": "iq.integration.api"
+        },
+        {
+          "aller": "/clm/admin/integrations"
+        },
+        {
+          "voir": "Intégrations"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-20",
+      "titre": "Statuts renvoyés à Salesforce à chaque jalon",
+      "exigences": [
+        "IQ-C-08",
+        "IQ-C-13",
+        "IQ-C-15",
+        "IQ-A-05",
+        "IQ-A-10",
+        "IQ-A-12",
+        "IQ-A-14"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.salesforce.statuts"
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "voir": "${trousseRef}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Historique"
+          }
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-21",
+      "titre": "Minimisation des données échangées avec Salesforce",
+      "exigences": [
+        "IQ-A-13"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.salesforce.minimisation"
+        },
+        {
+          "aller": "/clm/trousses"
+        },
+        {
+          "voir": "Trousses"
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-22",
+      "titre": "Signature en lot et approbation globale",
+      "exigences": [
+        "IQ-A-03",
+        "IQ-A-28"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.lots"
+        },
+        {
+          "aller": "/clm/lots"
+        },
+        {
+          "voir": "Signature en lot"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-23",
+      "titre": "Interfaces standards et documentées (OpenAPI, SCIM)",
+      "exigences": [
+        "IQ-D-29",
+        "IQ-C-16"
+      ],
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "preparer": "iq.api.documentee"
+        },
+        {
+          "aller": "/clm/admin/integrations"
+        },
+        {
+          "voir": "Intégrations"
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-24",
+      "titre": "Connecteur MCP en lecture seule pour un assistant d'IA",
+      "exigences": [
+        "IQ-A-09"
+      ],
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "preparer": "iq.mcp"
+        },
+        {
+          "aller": "/clm/admin/integrations"
+        },
+        {
+          "voir": "Intégrations"
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-25",
+      "titre": "Moindre privilège : administrations séparées, auditeur en lecture seule",
+      "exigences": [
+        "IQ-D-15",
+        "IQ-D-16",
+        "IQ-D-17",
+        "IQ-A-26",
+        "IQ-C-67"
+      ],
+      "profil": "administration principale IQ",
+      "etapes": [
+        {
+          "preparer": "iq.acces.administrations"
+        },
+        {
+          "aller": "/clm/admin/utilisateurs"
+        },
+        {
+          "voir": "Utilisateurs"
+        },
+        {
+          "connecter": "auditeur IQ"
+        },
+        {
+          "aller": "/clm/admin/journal"
+        },
+        {
+          "voir": "Journal"
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-26",
+      "titre": "Comptes, groupes et rôles administrés",
+      "exigences": [
+        "IQ-D-05",
+        "IQ-D-18",
+        "IQ-C-67"
+      ],
+      "profil": "administration principale IQ",
+      "etapes": [
+        {
+          "preparer": "iq.acces.comptes"
+        },
+        {
+          "aller": "/clm/admin/utilisateurs"
+        },
+        {
+          "voir": "Utilisateurs"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-27",
+      "titre": "Annuaire SCIM 2.0 et correspondances de rôles",
+      "exigences": [
+        "IQ-A-08",
+        "IQ-A-19",
+        "IQ-A-20",
+        "IQ-A-27"
+      ],
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "preparer": "iq.annuaire.scim"
+        },
+        {
+          "aller": "/clm/admin/sso"
+        },
+        {
+          "voir": "Authentification unique"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-28",
+      "titre": "Authentification unique de l'organisation",
+      "exigences": [
+        "IQ-C-60"
+      ],
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "preparer": "iq.sso.connexion"
+        },
+        {
+          "aller": "/clm/admin/sso"
+        },
+        {
+          "voir": "Authentification unique"
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-29",
+      "titre": "Politique de session : l'administration technique fixe l'inactivité et la durée maximale",
+      "exigences": [
+        "IQ-C-60"
+      ],
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "aller": "/clm/admin/sso"
+        },
+        {
+          "voir": "Politique de session"
+        },
+        {
+          "remplir": {
+            "Délai d'inactivité (minutes)": "30",
+            "Durée maximale de session (minutes)": "480"
+          }
+        },
+        {
+          "cliquer": "Enregistrer la politique"
+        },
+        {
+          "voir": "Politique de session enregistrée."
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-30",
+      "titre": "Isolation des données entre organisations et modules",
+      "exigences": [
+        "IQ-C-07",
+        "IQ-D-20"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.isolation"
+        },
+        {
+          "aller": "/clm/trousses"
+        },
+        {
+          "voir": "${trousseRef}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-31",
+      "titre": "Aucune donnée de carte de paiement acceptée",
+      "exigences": [
+        "IQ-D-14"
+      ],
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "preparer": "iq.cartes.pci"
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-32",
+      "titre": "Analyse d'un document par l'IA encadrée, depuis l'accueil",
+      "exigences": [
+        "IQ-C-59",
+        "IQ-C-04",
+        "IQ-S-10b"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.ia.analyse"
+        },
+        {
+          "aller": "/clm"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-33",
+      "titre": "Générer le contrat d'un modèle publié, valeurs préremplies depuis Salesforce et corrigeables",
+      "exigences": [
+        "IQ-C-09",
+        "IQ-C-10",
+        "IQ-C-11",
+        "IQ-C-12",
+        "IQ-C-14",
+        "IQ-C-29",
+        "IQ-D-01",
+        "IQ-D-02",
+        "IQ-A-06",
+        "IQ-A-17",
+        "IQ-A-18",
+        "IQ-C-56"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": "iq.generation.salesforce"
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "voir": "${trousseRef}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Historique"
+          }
+        },
+        {
+          "voir": "Préremplissage Salesforce"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-34",
+      "titre": "Consulter ses tâches et ses trousses sur téléphone, sans débordement ni violation d'accessibilité",
+      "exigences": [
+        "IQ-C-53",
+        "IQ-S-08",
+        "IQ-D-13"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "aller": "/clm/trousses"
+        },
+        {
+          "voir": "Trousses"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-IQ-35",
+      "titre": "Interfaces et console d'administration en français, offertes en anglais",
+      "exigences": [
+        "IQ-D-21",
+        "IQ-D-22",
+        "IQ-D-23",
+        "IQ-A-15",
+        "IQ-D-13"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "aller": "/clm/admin/notifications"
+        },
+        {
+          "voir": "Notifications"
+        },
+        {
+          "langue": "en"
+        },
+        {
+          "voir": "Notifications"
+        },
+        {
+          "aller": "/clm/trousses"
+        },
+        {
+          "voir": "Packages"
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "langue": "fr"
+        }
+      ]
+    }
+  ]
+}

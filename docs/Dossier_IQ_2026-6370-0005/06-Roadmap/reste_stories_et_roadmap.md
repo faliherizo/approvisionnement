@@ -6,11 +6,20 @@
 > `contractuelle_contrat` fournit déjà, plus les stories **net-new** nécessaires. Effort = T-shirt
 > indicatif (S/M/L/XL), à confirmer en ateliers (P0/P1). Priorités MoSCoW du DAO conservées.
 
-## 00. État après les addenda 1 à 4 — à lire en premier (mis à jour le 2026-11-19)
+## 00. État après les addenda 1 à 4 — à lire en premier (mis à jour le 2026-11-22)
 
-Les quatre addenda d'IQ ont fait réaliser les stories RST-20 à RST-36, et quatre stories restent proposées. Le tableau
-du § 0 garde l'état des stories d'origine ; les lignes ci-dessous le complètent. Dépôt de la soumission :
-**4 décembre 2026, 11 h**.
+Les quatre addenda d'IQ ont fait réaliser les stories RST-20 à RST-41 : **toutes sont livrées**. Le 2026-11-22, la
+politique de session (ST-01, [ADR-024](../../adr/ADR-024-politique-de-session.md)) et le canal SMS réel (RST-17, Twilio,
+[ADR-025](../../adr/ADR-025-sms-par-twilio.md)) ont rejoint le code. Le tableau du § 0 garde l'état des stories
+d'origine ; les lignes ci-dessous le complètent.
+
+**Ce qui reste ne relève plus du code.** Ce sont des décisions ou des accès d'IQ :
+- RST-18 : choix de la région ;
+- recettes sur les systèmes réels (Entra ID, bac à sable Salesforce) ;
+- unités administratives à charger ;
+- approbation de Twilio comme sous-traitant (L8).
+
+Dépôt de la soumission : **4 décembre 2026, 11 h**.
 
 | Story | Origine | État | Repères |
 |---|---|---|---|
@@ -53,7 +62,7 @@ Légende : ✅ livrée et testée · ✅🔌 livrée et testée, recette sur le 
 
 | Story | État | Livré (repères code et tests) | Reste |
 |---|---|---|---|
-| ST-01 SSO & sessions | ✅🔌 | Socle OIDC/SAML/MFA/JWT ; signataires externes sans compte (RST-17) ; correspondances groupes et attributs Entra ID → rôles et domaines (RST-27) ; SCIM 2.0 (RST-26) | Recette avec l'inscription d'application Entra ID d'IQ ; politique de durée de session |
+| ST-01 SSO & sessions | ✅🔌 | Socle OIDC/SAML/MFA/JWT ; signataires externes sans compte (RST-17) ; correspondances groupes et attributs Entra ID → rôles et domaines (RST-27) ; SCIM 2.0 (RST-26) ; politique de session par organisation : délai d'inactivité et durée maximale, renouvellement glissant ([ADR-024](../../adr/ADR-024-politique-de-session.md), 2026-11-22) | Recette avec l'inscription d'application Entra ID d'IQ |
 | ST-02 Rôles, groupes, périmètres | ✅ | `Habilitations` (périmètre par unité/groupe, séparation initiateur/approbateur, consultation d'audit), rôle `AUDITEUR`, `@PreAuthorize` sur chaque API, garde de module par tenant (ADR-009), refus journalisés `CLM_ACCES_REFUSE`, `ArchitectureClmTest` et `ArchitectureModulesTest` ; organisation IQ et un compte par profil (`11-Tenant-IQ/`) | Charger la liste des unités administratives d'IQ (donnée d'atelier, pas de code). Rôles d'administration distincts : faits (RST-31) |
 | ST-03 Dossiers & trousses | ✅ | `Trousse`, `TrousseService`, journal scellé `EvenementTrousse` ; UI-02/03/04 | — |
 | ST-04 Documents & versions | ✅ | `DocumentClmService` (versions, remplacement, verrou après signature), `FormatDocument` ; UI-05/06 | — |
@@ -69,16 +78,20 @@ Légende : ✅ livrée et testée · ✅🔌 livrée et testée, recette sur le 
 | ST-14 Administration, audit, exploitation | ✅ | Audit lié à la trousse (journal scellé + audit du tenant), configuration UI-17/21/22, journal UI-23 et export CSV ; alertes d'exploitation (`AlertesExploitation` : altération détectée, file d'erreur Salesforce, échec du planificateur) relevées par Azure Monitor (`infra/terraform/azure/monitoring.tf`) ; runbook `04-Architecture/runbook_exploitation_clm.md` | Appliquer le Terraform sur l'abonnement retenu (RST-18) |
 | ST-15 CLM avancé & IA (option) | ✅ | `AnalyseService`/`AnalyseContrat` : métadonnées, classification, anomalies, validation humaine justifiée ; module `clm_ia` activable par le superadmin ; UI-24 | — |
 | RST-16 25 Mo + PDF/Word | ✅ | Taille configurable (`CLM_TAILLE_MAX_OCTETS`, 25 Mo), format vérifié sur les octets, analyse antivirus (port) | — |
-| RST-17 Identité du signataire selon le risque | ✅ | `Identite` : niveau minimal par risque (courriel, SMS, question, forte à double canal), blocage après 5 essais | Courriel : canal SMTP réel livré (ADR-019, Mailpit en bac à sable) ; SMS : passerelle à brancher quand le fournisseur sera désigné (H1) |
+| RST-17 Identité du signataire selon le risque | ✅ | `Identite` : niveau minimal par risque (courriel, SMS, question, forte à double canal), blocage après 5 essais | Courriel : canal SMTP réel livré (ADR-019, Mailpit en bac à sable) ; SMS : canal Twilio livré ([ADR-025](../../adr/ADR-025-sms-par-twilio.md), 2026-11-22), à faire approuver par IQ comme sous-traitant (H1, L8) |
 | RST-18 Résidence & SLA | ⏳ | Azure retenu : Terraform validé (AKS, PostgreSQL, Key Vault, Front Door, supervision), région `canadacentral` par défaut | Options A (Toronto, 3 zones) et B (Québec) livrées par variables Terraform (`location`, `zones`) ; grille SLA proposée ; [ADR-020](../../adr/ADR-020-region-hebergement-et-niveaux-de-service.md) **proposé**, en attente du choix d'IQ (E1, J1-J4) |
 | RST-19 Parcours mobile du signataire | ✅ | Portail UI-16 (cibles de 44 px) ; e2e à 390 et 768 px sur 8 états, de l'invitation au reçu, avec axe-core | — |
 
-**Qualité (au 2026-11-03)** : 130 tests backend CLM verts (unitaires, contrat, architecture, intégration) ; 23 tests e2e
-(vues CLM aux 4 largeurs, fidélité aux 24 maquettes, gestion superadmin, isolation du tenant IQ ; axe-core sans
-violation) ; couverture CLM de 99,36 % des lignes et de 87,88 % des branches, domaine à 100 %. Le build (`mvn verify`,
-règle `jacoco:check@check-clm`) échoue si la couverture repasse sous 96 % de lignes (agrégé et chaque classe), 87 % de
-branches ou 100 % sur le domaine. Reste transverse : porter les branches à 92 %, exécuter un test de mutation (PIT),
-pagination serveur et test de charge CLM (NF-06), politique de conservation et de destruction (F-09, NF-03).
+**Qualité (au 2026-11-22)** : 1 003 tests backend au vert ; couverture du module CLM de 99,35 % des lignes et de
+92 % des branches. Le build échoue sous 96 % de lignes (agrégé et chaque classe), 92 % de branches ou 100 % sur le
+domaine.
+
+Les tests de mutation du domaine CLM sont en place (`mvn -Pmutation-clm verify`, PIT) : 93 % des mutants sont tués,
+pour un seuil bloquant de 90 %. Seuls les accesseurs `get`/`set` en sont exclus, motivé dans le `pom.xml`. La
+pagination serveur, le test de charge et la politique de conservation sont livrés (RST-40, essai de 500 utilisateurs,
+ADR-012).
+
+Reste à refaire l'essai de 500 utilisateurs sur l'infrastructure cible.
 
 ## 1. Reste à implémenter par story existante
 

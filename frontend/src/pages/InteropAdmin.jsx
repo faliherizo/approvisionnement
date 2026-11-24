@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react'
 import api from '../api'
 import { useI18n } from '../i18n/I18nContext'
 import { useModules } from '../hooks/useModules.js'
+import EchangesHerites from '../components/EchangesHerites.jsx'
 
 /** Clients d'API (intégrations) : création d'identifiants OAuth2 client_credentials. Module « interop ». */
 export default function InteropAdmin() {
@@ -70,6 +71,8 @@ export default function InteropAdmin() {
           </div>
         </form>
       </section>
+
+      <EchangesHerites />
     </div>
   )
 }

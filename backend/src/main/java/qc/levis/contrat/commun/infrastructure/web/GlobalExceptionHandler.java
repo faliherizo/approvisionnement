@@ -44,6 +44,13 @@ public class GlobalExceptionHandler {
         return false;
     }
 
+    /** L'analyse antivirus n'a pas pu être menée : le fichier n'est pas accepté, l'utilisateur réessaiera plus tard. */
+    @ExceptionHandler(qc.levis.contrat.commun.antivirus.application.Antivirus.AntivirusIndisponible.class)
+    public ResponseEntity<Map<String, String>> antivirusIndisponible(RuntimeException e) {
+        log.error("Antivirus indisponible : {}", e.getMessage());
+        return corps(HttpStatus.SERVICE_UNAVAILABLE, "Analyse antivirus momentanément indisponible : réessayez plus tard.");
+    }
+
     /** Règle métier violée (ex. clause normative verrouillée). */
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Map<String, String>> conflit(IllegalStateException e) {

@@ -2,11 +2,13 @@ package qc.levis.contrat.notification.infrastructure;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import qc.levis.contrat.notification.application.port.CanalNotification;
 
-/** Canal SMS par défaut (simulation, ADR-002). Adaptateur réel (Twilio/Telnyx) via profil. */
+/** Canal SMS par défaut (simulation, ADR-002) ; l'adaptateur Twilio se choisit par NOTIFICATION_SMS_MODE=twilio. */
 @Component
+@ConditionalOnProperty(name = "app.notification.sms.mode", havingValue = "simulation", matchIfMissing = true)
 public class SmsSimulation implements CanalNotification {
     private static final Logger log = LoggerFactory.getLogger(SmsSimulation.class);
 

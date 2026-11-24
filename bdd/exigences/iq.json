@@ -677,9 +677,8 @@
       "source": "3.3.1 B",
       "libelle": "PCI DSS si des cartes de paiement sont traitées",
       "caractere": "Conditionnelle",
-      "conformiteDeclaree": "✅ s.o.",
-      "verification": "sans-objet",
-      "justification": "Aucune carte de paiement n'est traitée par la plateforme."
+      "conformiteDeclaree": "✅🆕 — hors périmètre PCI : numéro de carte refusé à la frontière — ADR-022",
+      "verification": "bdd"
     },
     {
       "id": "IQ-D-15",
@@ -962,9 +961,8 @@
       "source": "Add. Q3",
       "libelle": "Connecteur MCP",
       "caractere": "Non exigé",
-      "conformiteDeclaree": "—",
-      "verification": "sans-objet",
-      "justification": "Connecteur MCP non exigé (addenda 1, Q3)."
+      "conformiteDeclaree": "✅🆕 — connecteur MCP en lecture seule — ADR-023",
+      "verification": "bdd"
     },
     {
       "id": "IQ-A-10",

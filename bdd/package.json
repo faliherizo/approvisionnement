@@ -9,10 +9,14 @@
     "test": "bddgen && playwright test; node outils/documenter.mjs",
     "documenter": "node outils/documenter.mjs",
     "couverture": "node outils/documenter.mjs --verifier",
-    "rapport": "playwright show-report"
+    "rapport": "playwright show-report",
+    "e2e": "playwright test -c playwright.e2e.config.ts; node outils/documenter-e2e.mjs",
+    "e2e:documenter": "node outils/documenter-e2e.mjs",
+    "e2e:couverture": "node outils/documenter-e2e.mjs --verifier"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",
+    "@modelcontextprotocol/sdk": "1.32.2",
     "@playwright/test": "1.61.1",
     "playwright-bdd": "9.2.1"
   }

@@ -55,6 +55,7 @@ export default function SecuriteAvancee() {
 
       <section className="panel">
         <h2>{t('secf.permissions')}</h2>
+        <div className="table-wrap">
         <table className="table">
           <thead><tr><th scope="col">{t('secf.colSujet')}</th><th scope="col">{t('secf.colPortee')}</th><th scope="col">{t('secf.colCible')}</th><th scope="col">{t('secf.colAction')}</th><th scope="col"><span className="sr-only">{t('secf.colActions')}</span></th></tr></thead>
           <tbody>
@@ -68,6 +69,7 @@ export default function SecuriteAvancee() {
             {permissions.length === 0 && <tr><td colSpan="5" className="muted">{t('secf.aucunePermission')}</td></tr>}
           </tbody>
         </table>
+        </div>
         <form onSubmit={ajouterPermission} className="form" style={{ marginTop: 12 }}>
           <div className="cmp-row">
             <select value={pForm.sujetType} onChange={(e) => setPForm({ ...pForm, sujetType: e.target.value })} aria-label={t('secf.colSujet')}>
@@ -88,6 +90,7 @@ export default function SecuriteAvancee() {
 
       <section className="panel">
         <h2>{t('secf.groupes')}</h2>
+        <div className="table-wrap">
         <table className="table">
           <thead><tr><th scope="col">{t('secf.colCode')}</th><th scope="col">{t('secf.colNom')}</th><th scope="col">{t('secf.colMembre')}</th></tr></thead>
           <tbody>
@@ -96,7 +99,7 @@ export default function SecuriteAvancee() {
                 <td><code>{g.code}</code></td><td>{g.nom}</td>
                 <td>
                   <div className="cmp-row">
-                    <input placeholder={t('secf.phUtilisateur')} value={membre[g.code] || ''} onChange={(e) => setMembre({ ...membre, [g.code]: e.target.value })} />
+                    <input aria-label={`${t('secf.phUtilisateur')} — ${g.code}`} placeholder={t('secf.phUtilisateur')} value={membre[g.code] || ''} onChange={(e) => setMembre({ ...membre, [g.code]: e.target.value })} />
                     <button className="secondary" onClick={() => ajouterMembre(g.code)}>{t('secf.ajouterMembre')}</button>
                   </div>
                 </td>
@@ -105,6 +108,7 @@ export default function SecuriteAvancee() {
             {groupes.length === 0 && <tr><td colSpan="3" className="muted">{t('secf.aucunGroupe')}</td></tr>}
           </tbody>
         </table>
+        </div>
         <form onSubmit={ajouterGroupe} className="form" style={{ marginTop: 12 }}>
           <div className="cmp-row">
             <input placeholder={t('secf.phCodeGroupe')} value={gForm.code} required onChange={(e) => setGForm({ ...gForm, code: e.target.value })} />

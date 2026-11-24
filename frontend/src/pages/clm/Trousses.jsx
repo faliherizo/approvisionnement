@@ -126,8 +126,11 @@ function Contenu() {
                       <td data-label={t('clm.col.echeance')}>{date(tr.echeance)}</td>
                       <td data-label={t('clm.col.maj')}>{dateHeure(tr.majLe)}</td>
                       <td data-label={t('clm.col.actions')}>
-                        <Link to={`/clm/trousses/${tr.id}`} aria-label={t('clm.tr.ouvrirDe', { ref: tr.reference })}>{t('clm.tr.ouvrir')}</Link>
-                        {tr.statut === 'BROUILLON' && gere(tr) && <> · <Link to={`/clm/trousses/nouvelle?id=${tr.id}`} aria-label={t('clm.tr.modifierDe', { ref: tr.reference })}>{t('clm.dt.modifierBrouillon')}</Link></>}
+                        {/* Liens côte à côte sans se chevaucher, même quand un libellé plus long (anglais) passe à la ligne. */}
+                        <div className="actions-cell">
+                          <Link className="sans-coupure" to={`/clm/trousses/${tr.id}`} aria-label={t('clm.tr.ouvrirDe', { ref: tr.reference })}>{t('clm.tr.ouvrir')}</Link>
+                          {tr.statut === 'BROUILLON' && gere(tr) && <Link className="sans-coupure" to={`/clm/trousses/nouvelle?id=${tr.id}`} aria-label={t('clm.tr.modifierDe', { ref: tr.reference })}>{t('clm.dt.modifierBrouillon')}</Link>}
+                        </div>
                       </td>
                     </tr>
                   ))}

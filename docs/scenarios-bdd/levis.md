@@ -35,7 +35,7 @@
 | `LEV-2.1-12` | Formation en français, documentée, complète et détaillée | Obligatoire | Documentaire | Service (formation en français) : programme et documentation. |
 | `LEV-2.1-13` | Ensemble des fonctionnalités présentes et pleinement fonctionnelles | Obligatoire | Documentaire | Démontré par l'ensemble des scénarios BDD de Lévis (toutes les fonctionnalités exigées s'exécutent). |
 | `LEV-C-01` | EF1 Bibliothèque : création/modif/archivage standards/optionnelles/perso | Obligatoire | Scénario BDD exécuté | ✅ [Créer, modifier, retrouver puis archiver des clauses standards, optionnelles et personnalisées](#creer-modifier-retrouver-puis-archiver-des-clauses-standards-optionnelles-et-personnalisees) |
-| `LEV-C-02` | EF1 Recherche multicritère (thématique, portée, type) | Obligatoire | Scénario BDD exécuté | ✅ [Rechercher des clauses par terme, catégorie et type de contrat](#rechercher-des-clauses-par-terme-categorie-et-type-de-contrat) |
+| `LEV-C-02` | EF1 Recherche multicritère (thématique, portée, type) | Obligatoire | Scénario BDD exécuté | ✅ [Rechercher des clauses par terme, portée, thématique, type de contrat et caractère normatif](#rechercher-des-clauses-par-terme-portee-thematique-type-de-contrat-et-caractere-normatif) |
 | `LEV-C-03` | EF1 Historisation par clause (versions + auteur/date) | Obligatoire | Scénario BDD exécuté | ✅ [Consulter et restaurer chaque version d'une clause, avec son auteur et sa date](#consulter-et-restaurer-chaque-version-dune-clause-avec-son-auteur-et-sa-date) |
 | `LEV-C-04` | EF2 Génération dynamique par assemblage | Obligatoire | Scénario BDD exécuté | ✅ [Les clauses s'adaptent au type, au mode de sollicitation, à la valeur et au contexte, puis s'assemblent](#les-clauses-sadaptent-au-type-au-mode-de-sollicitation-a-la-valeur-et-au-contexte-puis-sassemblent) |
 | `LEV-C-05` | EF2 Adaptation type/mode/valeur/contexte | Obligatoire | Scénario BDD exécuté | ✅ [Les clauses s'adaptent au type, au mode de sollicitation, à la valeur et au contexte, puis s'assemblent](#les-clauses-sadaptent-au-type-au-mode-de-sollicitation-a-la-valeur-et-au-contexte-puis-sassemblent) |
@@ -52,7 +52,7 @@
 | `LEV-C-16` | ENF2 Auth SSO Azure AD + RBAC + MFA | Obligatoire | Scénario BDD exécuté | ✅ [Accès par rôle, second facteur et authentification unique de l'annuaire de la Ville](#acces-par-role-second-facteur-et-authentification-unique-de-lannuaire-de-la-ville) |
 | `LEV-C-17` | ENF2 Journal d'audit | Obligatoire | Scénario BDD exécuté | ✅ [Le juriste commente une clause du devis, puis l'approvisionnement, le juridique et la direction approuvent dans l'ordre](#le-juriste-commente-une-clause-du-devis-puis-lapprovisionnement-le-juridique-et-la-direction-approuvent-dans-lordre)<br>✅ [Le journal d'audit trace les actions et se consulte par l'administration](#le-journal-daudit-trace-les-actions-et-se-consulte-par-ladministration) |
 | `LEV-C-18` | ENF4 Solution clé en main, conteneurisée | Obligatoire | Documentaire | Livraison conteneurisée (Docker Compose, chart Helm). |
-| `LEV-C-19` | ENF4 Formation FR documentée | Obligatoire | Documentaire | Documentation technique en français ; guide utilisateur à produire (écart documentaire). |
+| `LEV-C-19` | ENF4 Formation FR documentée | Obligatoire | Documentaire | Guide de l'utilisateur en français : connexion, recherche multicritère, bibliothèque et historique, rédaction, révision et approbation, addendas, SEAO, administration, questions fréquentes. |
 | `LEV-C-20` | DAO 2.3 Intégration SEAO (format devis) | Obligatoire | Scénario BDD exécuté | ✅ [Exporter les métadonnées d'un devis au format SEAO](#exporter-les-metadonnees-dun-devis-au-format-seao) |
 | `LEV-C-21` | DAO 2.3 Intégration annuaire d'entreprise | Obligatoire | Scénario BDD exécuté | ✅ [Accès par rôle, second facteur et authentification unique de l'annuaire de la Ville](#acces-par-role-second-facteur-et-authentification-unique-de-lannuaire-de-la-ville) |
 | `LEV-C-22` | Multi-tenant / multilingue (au-delà du cahier) | Obligatoire | Scénario BDD exécuté | ✅ [Les données d'une organisation sont invisibles pour les autres](#les-donnees-dune-organisation-sont-invisibles-pour-les-autres) |
@@ -65,7 +65,7 @@
 - `LEV-2.1-13` — Ensemble des fonctionnalités présentes et pleinement fonctionnelles : **Documentaire.** Démontré par l'ensemble des scénarios BDD de Lévis (toutes les fonctionnalités exigées s'exécutent). Référence : `bdd/features/levis/`.
 - `LEV-C-14` — ENF1 Loi 25 — chiffrement transit : **Documentaire.** Chiffrement en transit assuré par l'infrastructure (TLS de l'entrée Kubernetes et de Front Door). Référence : `infra/k8s/chart/templates/ingress.yaml`.
 - `LEV-C-18` — ENF4 Solution clé en main, conteneurisée : **Documentaire.** Livraison conteneurisée (Docker Compose, chart Helm). Référence : `docker-compose.yml ; infra/k8s/chart`.
-- `LEV-C-19` — ENF4 Formation FR documentée : **Documentaire.** Documentation technique en français ; guide utilisateur à produire (écart documentaire). Référence : `docs/`.
+- `LEV-C-19` — ENF4 Formation FR documentée : **Documentaire.** Guide de l'utilisateur en français : connexion, recherche multicritère, bibliothèque et historique, rédaction, révision et approbation, addendas, SEAO, administration, questions fréquentes. Référence : `docs/guide-utilisateur.md`.
 
 ## Scénarios détaillés
 
@@ -100,7 +100,7 @@ Et l'écran est accessible, sans débordement ni superposition
 | 6 | `DELETE /api/clauses/${optionnelle}` | administrateur de Lévis | 2xx | — |
 | 7 | `GET /api/clauses` |  | 2xx | `$[*].code` exclut "OPT-${UNIQUE}" ; `$[*].code` inclut "STD-${UNIQUE}" |
 
-#### Rechercher des clauses par terme, catégorie et type de contrat
+#### Rechercher des clauses par terme, portée, thématique, type de contrat et caractère normatif
 
 - **Résultat de la dernière exécution :** ✅ réussi
 - **Fonctionnalité :** Bibliothèque centralisée de clauses (avis 2026-50-92, art. 2.1 ; cahier EF1) (`bdd/features/levis/01-bibliotheque-clauses.feature`)
@@ -113,12 +113,15 @@ Quand j'ouvre l'écran "Lévis — recherche"
 Alors l'écran est accessible, sans débordement ni superposition
 ```
 
-**Cas `lev.clauses.recherche-multicritere`** — Recherche multicritère : terme, catégorie et type de contrat *(données : `bdd/donnees/levis.json`)*
+**Cas `lev.clauses.recherche-multicritere`** — Recherche multicritère : terme, portée (catégorie), thématique (section), type de contrat, clauses normatives *(données : `bdd/donnees/levis.json`)*
 
 | # | Appel | Profil | Statut attendu | Vérifications et captures |
 |---|---|---|---|---|
 | 1 | `GET /api/search?q=contrat&categorie=STANDARD` |  | 2xx | `$.clauses` longueurMin 1 ; `$.clauses[*].categorie` exclut "OPTIONNELLE" |
 | 2 | `GET /api/search?q=Objet&type=APPEL_OFFRES_PUBLIC` |  | 2xx | `$.terme` egal "Objet" |
+| 3 | `GET /api/search/thematiques` |  | 2xx | `$` contient "Dispositions générales" |
+| 4 | `GET /api/search?q=&thematique=dispositions%20g%C3%A9n%C3%A9rales` |  | 2xx | `$.clauses` longueurMin 1 ; `$.facettesThematique.Dispositions générales` existe true |
+| 5 | `GET /api/search?q=&normative=true` |  | 2xx | `$.clauses` longueurMin 1 ; `$.clauses[*].normative` exclut false |
 
 #### Les clauses normatives exigées par la loi sont fournies et verrouillées
 
@@ -284,13 +287,15 @@ Quand j'ouvre l'écran "Lévis — circuits d'approbation"
 Alors l'écran est accessible, sans débordement ni superposition
 ```
 
-**Cas `lev.revision.workflow-configurable`** — Circuit d'approbation configurable par type de document *(données : `bdd/donnees/levis.json` ; profil : administrateur de Lévis)*
+**Cas `lev.revision.workflow-configurable`** — Circuit d'approbation configurable par type de document : un document de ce type suit le circuit configuré, et non le circuit par défaut *(données : `bdd/donnees/levis.json` ; profil : administrateur de Lévis)*
 
 | # | Appel | Profil | Statut attendu | Vérifications et captures |
 |---|---|---|---|---|
 | 1 | `POST /api/workflows` |  | 2xx | `$.etapes` egal ["APPRO","DIRECTION"] ; capture `workflow` ← `$.id` |
 | 2 | `GET /api/workflows` |  | 2xx | `$[*].nom` inclut "Circuit bail BDD ${unique}" |
-| 3 | `DELETE /api/workflows/${workflow}` |  | 2xx | — |
+| 3 | `POST /api/documents` |  | 2xx | capture `document` ← `$.id` |
+| 4 | `POST /api/documents/${document}/approbation` |  | 2xx | `$[*].roleRequis` egal ["APPRO","DIRECTION"] |
+| 5 | `DELETE /api/workflows/${workflow}` |  | 2xx | — |
 
 ### Addendas interactifs et documents finaux (avis 2026-50-92, art. 2.1 n° 7 et 8 ; cahier EF3)
 

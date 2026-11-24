@@ -581,6 +581,18 @@ class ApiIntegrationTest {
 
         // Filtre par type de document (facette documents/templates).
         assertNotNull(get("/api/search?q=" + terme + "&type=APPEL_OFFRES_PUBLIC", c).get("total"));
+
+        // LEV-C-02 : thématique (section), clauses normatives, applicabilité au type de contrat.
+        post("/api/clauses", c, "{\"code\":\"RX-2\",\"titre\":\"" + terme + " assurance\",\"categorie\":\"STANDARD\","
+                + "\"corps\":\"corps\",\"section\":\"Assurances" + terme + "\",\"normative\":true,"
+                + "\"conditions\":[{\"attribut\":\"TYPE_CONTRAT\",\"valeur\":\"APPEL_OFFRES_PUBLIC\"}]}");
+        JsonNode parTheme = get("/api/search?q=" + terme + "&thematique=ASSURANCES" + terme, c);
+        assertEquals(1, parTheme.get("clauses").size());
+        assertEquals(1, parTheme.get("facettesThematique").get("Assurances" + terme).asInt());
+        assertEquals(1, get("/api/search?q=" + terme + "&normative=true", c).get("clauses").size());
+        assertEquals(2, get("/api/search?q=" + terme + "&type=APPEL_OFFRES_PUBLIC", c).get("clauses").size());
+        assertEquals(1, get("/api/search?q=" + terme + "&type=GRE_A_GRE", c).get("clauses").size());
+        assertTrue(get("/api/search/thematiques", c).toString().contains("Assurances" + terme));
     }
 
     // --- Workflow configurable + résolution commentaires + journal d'audit (P3) ---

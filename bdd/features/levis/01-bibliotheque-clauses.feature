@@ -16,7 +16,7 @@ Fonctionnalité: Bibliothèque centralisée de clauses (avis 2026-50-92, art. 2.
     Et l'écran est accessible, sans débordement ni superposition
 
   @LEV-C-02
-  Scénario: Rechercher des clauses par terme, catégorie et type de contrat
+  Scénario: Rechercher des clauses par terme, portée, thématique, type de contrat et caractère normatif
     Quand j'exécute le cas "lev.clauses.recherche-multicritere"
     Alors la plateforme se comporte comme attendu
     Quand j'ouvre l'écran "Lévis — recherche"

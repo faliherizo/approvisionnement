@@ -139,3 +139,7 @@ databaseChangeLog:
       file: db/changelog/changes/069-soutien-banque-heures.yaml
   - include:
       file: db/changelog/changes/070-auth-jeton-revoque.yaml
+  - include:
+      file: db/changelog/changes/071-interop-echange-herite.yaml
+  - include:
+      file: db/changelog/changes/072-auth-politique-session.yaml
