@@ -24,6 +24,9 @@ attendre() { for _ in $(seq 1 "${2:-120}"); do curl -sf "$1" >/dev/null && retur
 
 echo "== Applications externes"
 mkdir -p "$B/icp/etat"
+# L'ICP s'exécute sous l'utilisateur 10001 (sans privilège) : le dossier d'état monté lui appartient. Sur un exécuteur Linux,
+# il appartiendrait sinon à l'utilisateur de la CI, et l'initialisation ne pourrait pas y écrire.
+docker run --rm -v "$B/icp/etat:/etat" alpine:3.20 chown -R 10001:10001 /etat
 "${COMPOSE[@]}" up -d --build --wait icp
 # pyHanko partage l'espace réseau de l'ICP : il est recréé pour suivre un éventuel redémarrage de celle-ci.
 "${COMPOSE[@]}" up -d --force-recreate pyhanko
