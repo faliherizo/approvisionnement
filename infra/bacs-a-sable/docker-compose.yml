@@ -85,7 +85,7 @@ services:
     healthcheck: { test: ["CMD", "clamdcheck.sh"], interval: 10s, retries: 30, start_period: 120s }
 
   # IA générative : Ollama officiel sur :11435, le même service que l'Ollama d'exploitation (vina_ollama), avec un petit
-  # modèle (qwen2.5:0.5b, tiré au premier démarrage par ci.sh et recette.sh, puis dérivé en « contrat-banc » à 4 fils de
+  # modèle (smollm2:135m, tiré au premier démarrage par ci.sh et recette.sh, puis dérivé en « contrat-banc » à 4 fils de
   # calcul) pour que la génération reste rapide sur processeur. Le serveur l'appelle comme en production
   # (/api/generate) : OLLAMA_BASE_URL, OLLAMA_MODEL.
   ia:

@@ -41,13 +41,14 @@ export CLM_CACHET_TSA_URL=http://localhost:18090/tsa CLM_CONVERSION_MODE=service
 export CLM_SIGNATURE_FOURNISSEUR=cachet NOTIFICATION_COURRIEL_MODE=smtp MAIL_HOST=localhost MAIL_PORT=11025
 export ANTIVIRUS_MODE=clamav ANTIVIRUS_CLAMAV_HOTE=localhost ANTIVIRUS_CLAMAV_PORT=13310
 # IA générative (Ollama du bac à sable) : petit modèle, tiré avant le démarrage du serveur.
-export OLLAMA_BASE_URL=http://localhost:11435 OLLAMA_MODEL=contrat-banc OLLAMA_LONGUEUR_MAX=120
+export OLLAMA_BASE_URL=http://localhost:11435 OLLAMA_MODEL=contrat-banc OLLAMA_LONGUEUR_MAX=48
 "${COMPOSE[@]}" up -d ia
 for _ in $(seq 1 60); do docker exec iq-bac-ia ollama list >/dev/null 2>&1 && break; sleep 2; done
-docker exec iq-bac-ia ollama pull qwen2.5:0.5b >/dev/null
-# Modèle du banc : 4 fils de calcul. Laissé à son défaut (tous les processeurs), le calcul s'étouffe sous la charge des
+docker exec iq-bac-ia ollama pull smollm2:135m >/dev/null
+# Modèle du banc : smollm2 (135 M de paramètres) à 4 fils de calcul ; sur un exécuteur de CI, qwen2.5:0.5b dépassait le
+# délai de lecture du serveur (120 s). Laissé à son défaut (tous les processeurs), le calcul s'étouffe aussi. Laissé à son défaut (tous les processeurs), le calcul s'étouffe sous la charge des
 # autres services et tombe à environ un jeton par seconde.
-docker exec iq-bac-ia sh -c 'printf "FROM qwen2.5:0.5b\nPARAMETER num_thread 4\n" > /tmp/Modelfile && ollama create contrat-banc -f /tmp/Modelfile' >/dev/null
+docker exec iq-bac-ia sh -c 'printf "FROM smollm2:135m\nPARAMETER num_thread 4\n" > /tmp/Modelfile && ollama create contrat-banc -f /tmp/Modelfile' >/dev/null
 # Essai de génération : un modèle absent ou un exécuteur trop lent se voit ici, et non à mi-campagne.
 essai_ia=$(curl -s -m 180 -w ' HTTP%{http_code}' http://localhost:11435/api/generate \
   -d '{"model":"contrat-banc","prompt":"Bonjour.","stream":false,"options":{"num_predict":8}}')

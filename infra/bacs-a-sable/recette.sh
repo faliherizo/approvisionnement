@@ -27,10 +27,11 @@ arreter
 docker compose -f "$B/docker-compose.yml" up -d >/dev/null
 for _ in $(seq 1 90); do [[ "$( (printf 'PING\n'; sleep 1) | nc localhost 13310 2>/dev/null)" == PONG* ]] && break; sleep 2; done
 # IA générative : le petit modèle du bac à sable, tiré une fois (le volume ia-modeles le garde).
-docker exec iq-bac-ia ollama pull qwen2.5:0.5b >/dev/null
-# Modèle du banc : 4 fils de calcul. Laissé à son défaut (tous les processeurs), le calcul s'étouffe sous la charge des
+docker exec iq-bac-ia ollama pull smollm2:135m >/dev/null
+# Modèle du banc : smollm2 (135 M de paramètres) à 4 fils de calcul ; sur un exécuteur de CI, qwen2.5:0.5b dépassait le
+# délai de lecture du serveur (120 s). Laissé à son défaut (tous les processeurs), le calcul s'étouffe aussi. Laissé à son défaut (tous les processeurs), le calcul s'étouffe sous la charge des
 # autres services et tombe à environ un jeton par seconde.
-docker exec iq-bac-ia sh -c 'printf "FROM qwen2.5:0.5b\nPARAMETER num_thread 4\n" > /tmp/Modelfile && ollama create contrat-banc -f /tmp/Modelfile' >/dev/null
+docker exec iq-bac-ia sh -c 'printf "FROM smollm2:135m\nPARAMETER num_thread 4\n" > /tmp/Modelfile && ollama create contrat-banc -f /tmp/Modelfile' >/dev/null
 
 (cd "$RACINE/backend" && mvn -q -o -DskipTests -Djacoco.skip=true package)
 JAR=$(ls "$RACINE"/backend/target/contrat-backend-*.jar | grep -v original | head -1)
@@ -39,7 +40,7 @@ SERVER_PORT=8100 \
   CLM_CACHET_TSA_URL=http://localhost:18090/tsa CLM_CONVERSION_MODE=service CLM_CONVERSION_URL=http://localhost:18030 \
   CLM_SIGNATURE_FOURNISSEUR=cachet NOTIFICATION_COURRIEL_MODE=smtp MAIL_HOST=localhost MAIL_PORT=11025 \
   ANTIVIRUS_MODE=clamav ANTIVIRUS_CLAMAV_HOTE=localhost ANTIVIRUS_CLAMAV_PORT=13310 \
-  OLLAMA_BASE_URL=http://localhost:11435 OLLAMA_MODEL=contrat-banc OLLAMA_LONGUEUR_MAX=120 \
+  OLLAMA_BASE_URL=http://localhost:11435 OLLAMA_MODEL=contrat-banc OLLAMA_LONGUEUR_MAX=48 \
   detacher "$JAVA_HOME/bin/java" -jar "$JAR" < /dev/null > "$R/serveur.log" 2>&1 &
 (cd "$RACINE/frontend" && detacher npx vite --config vite.tour.config.js < /dev/null > "$R/frontend.log" 2>&1 &)
 attendre http://localhost:8100/api/health 180
