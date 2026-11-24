@@ -7,12 +7,14 @@ import qc.levis.contrat.commun.domain.Enums;
 
 /** Template de document nommé : type, mode et liste de clauses pré-sélectionnées. */
 @Entity
+// Code unique dans son organisation (migration 073) : chaque organisation a sa bibliothèque de départ.
+@Table(uniqueConstraints = @UniqueConstraint(name = "uq_document_template_tenant_code", columnNames = {"tenant_id", "code"}))
 public class DocumentTemplate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String code;
 
     @Column(nullable = false)

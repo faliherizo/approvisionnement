@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import qc.levis.contrat.redaction.application.port.BibliothequeDeDepart;
 import org.springframework.stereotype.Component;
 import qc.levis.contrat.auth.application.repository.UserRepository;
 import qc.levis.contrat.auth.domain.User;
@@ -47,8 +48,9 @@ public class TenantsDemoSeeder implements CommandLineRunner {
     }
 
     /** Modules dans l'ordre d'application : activer une option tire ses prérequis, désactiver retire ses dépendants. */
+    /** {@code bibliotheque} : l'organisation reçoit à sa création la bibliothèque de départ (clauses et templates). */
     public record TenantDemo(String slug, String titre, String sousTitre, String motDePasse, Map<String, Boolean> modules,
-                             Map<String, List<ValeurDemo>> listes, List<CompteDemo> comptes) {
+                             Map<String, List<ValeurDemo>> listes, List<CompteDemo> comptes, Boolean bibliotheque) {
     }
 
     private final TenantRepository tenants;
@@ -56,21 +58,26 @@ public class TenantsDemoSeeder implements CommandLineRunner {
     private final ModuleService modules;
     private final ReferenceService references;
     private final PasswordEncoder encoder;
+    private final BibliothequeDeDepart bibliotheque;
     private final ObjectMapper json = new ObjectMapper();
 
     public TenantsDemoSeeder(TenantRepository tenants, UserRepository users, ModuleService modules, ReferenceService references,
-                             PasswordEncoder encoder) {
+                             PasswordEncoder encoder, BibliothequeDeDepart bibliotheque) {
         this.tenants = tenants;
         this.users = users;
         this.modules = modules;
         this.references = references;
         this.encoder = encoder;
+        this.bibliotheque = bibliotheque;
     }
 
     @Override
     public void run(String... args) throws IOException {
         for (TenantDemo demo : lire()) {
             Tenant t = tenants.findBySlug(demo.slug()).orElseGet(() -> creer(demo));
+            if (Boolean.TRUE.equals(demo.bibliotheque())) {
+                bibliotheque.amorcer(t.getId());
+            }
             for (CompteDemo c : demo.comptes()) {
                 if (!users.existsByEmail(c.email())) {
                     users.save(compte(c, demo.motDePasse(), t.getId()));

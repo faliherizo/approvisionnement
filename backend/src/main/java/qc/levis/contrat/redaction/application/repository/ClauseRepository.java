@@ -11,7 +11,6 @@ import qc.levis.contrat.redaction.domain.Clause;
 
 public interface ClauseRepository extends JpaRepository<Clause, Long> {
     List<Clause> findByActifTrue();
-    Optional<Clause> findByCode(String code);
 
     // --- Scopé par tenant ---
     List<Clause> findByActifTrueAndTenantId(Long tenantId);

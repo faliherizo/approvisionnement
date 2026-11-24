@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 073-1-code-unique-par-organisation
+      author: levis
+      comment: "Le code d'une clause ou d'un gabarit est unique dans son organisation, et non dans toute la plateforme : chaque organisation reçoit la même bibliothèque de départ (GEN-001…)."
+      changes:
+        - customChange:
+            class: qc.levis.contrat.commun.infrastructure.migration.RetirerUniciteColonne
+            table: clause
+            colonne: code
+        - customChange:
+            class: qc.levis.contrat.commun.infrastructure.migration.RetirerUniciteColonne
+            table: document_template
+            colonne: code
+        - addUniqueConstraint:
+            tableName: clause
+            columnNames: tenant_id, code
+            constraintName: uq_clause_tenant_code
+        - addUniqueConstraint:
+            tableName: document_template
+            columnNames: tenant_id, code
+            constraintName: uq_document_template_tenant_code

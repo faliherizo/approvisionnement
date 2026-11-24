@@ -1899,7 +1899,7 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 - **Source** : Cahier 2026-50-92 — Multi-tenant
 - **Conformité déclarée** : ✅ Bonus : isolation par tenant, i18n FR/EN/MG
 
-### E2E-ECR-LEV-12 — L'écran d'accueil public, la connexion à l'image de l'organisation et les dépôts simulés s'ouvrent
+### E2E-ECR-LEV-12 — L'écran d'accueil public propose le choix de l'organisation, la connexion à l'image de l'organisation et les dépôts simulés s'ouvrent
 
 - **Profil** : administrateur de Lévis
 - **Exigences démontrées** : LEV-C-22, LEV-2.1-13
@@ -1909,8 +1909,13 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 1. Ouvrir l'écran `/simulateur`
 2. Activer « Rafraîchir »
 3. Ouvrir l'écran `/accueil`
-4. Ouvrir l'écran `http://levis.e2e.localhost:5175/login`
-5. Voir « Ville de Lévis »
+4. Activer « Accéder à l’application »
+5. Voir « Choisir votre organisation »
+6. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+7. Choisir « Organisation » : `Ville de Lévis`
+8. Voir « Administration de la plateforme »
+9. Ouvrir l'écran `http://levis.e2e.localhost:5175/login`
+10. Voir « Ville de Lévis »
 
 ### E2E-ECR-LEV-15 — Le superadmin crée une organisation, la modifie, la désactive et la réactive, lui donne un administrateur, un thème, des modules, un tarif, un modèle de document et une banque d'heures
 

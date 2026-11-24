@@ -1,5 +1,17 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useI18n } from '../i18n/I18nContext.jsx'
+import ChoixOrganisation from '../components/ChoixOrganisation.jsx'
+import { slugTenant } from '../theme.js'
+
+/**
+ * Accès à l'application : sur le sous-domaine d'une organisation, lien direct vers sa connexion ; sur le domaine de la
+ * plateforme, ouverture du choix de l'organisation.
+ */
+function Acces({ className, children, onChoisir }) {
+  if (slugTenant()) return <Link className={className} to="/login">{children}</Link>
+  return <button type="button" className={className} aria-haspopup="dialog" onClick={onChoisir}>{children}</button>
+}
 
 /**
  * Site vitrine public (hors authentification) : présentation de la solution, vidéo de
@@ -8,6 +20,8 @@ import { useI18n } from '../i18n/I18nContext.jsx'
  */
 export default function Vitrine() {
   const { t } = useI18n()
+  const [choixOuvert, setChoixOuvert] = useState(false)
+  const choisir = () => setChoixOuvert(true)
 
   const fonctionnalites = [
     { titre: t('vitrine.feat1Title'), texte: t('vitrine.feat1Text') },
@@ -36,7 +50,7 @@ export default function Vitrine() {
           <a href="#demonstration">{t('vitrine.navDemo')}</a>
           <a href="#fonctionnalites">{t('vitrine.navFeatures')}</a>
           <a href="#atouts">{t('vitrine.navAtouts')}</a>
-          <Link className="vitrine-cta" to="/login">{t('vitrine.navAccess')}</Link>
+          <Acces className="vitrine-cta" onChoisir={choisir}>{t('vitrine.navAccess')}</Acces>
         </nav>
       </header>
 
@@ -47,7 +61,7 @@ export default function Vitrine() {
             {t('vitrine.heroAccrocheA')}<strong>{t('vitrine.heroAccrocheStrong')}</strong>{t('vitrine.heroAccrocheB')}
           </p>
           <div className="vitrine-actions">
-            <Link className="vitrine-bouton" to="/login">{t('vitrine.heroTryDemo')}</Link>
+            <Acces className="vitrine-bouton" onChoisir={choisir}>{t('vitrine.heroTryDemo')}</Acces>
             <a className="vitrine-bouton secondaire" href="#demonstration">{t('vitrine.heroSeeVideo')}</a>
           </div>
         </section>
@@ -112,7 +126,7 @@ export default function Vitrine() {
           <h2 id="titre-contact">{t('vitrine.finalTitle')}</h2>
           <p>{t('vitrine.finalText')}</p>
           <div className="vitrine-actions">
-            <Link className="vitrine-bouton" to="/login">{t('vitrine.finalAccess')}</Link>
+            <Acces className="vitrine-bouton" onChoisir={choisir}>{t('vitrine.finalAccess')}</Acces>
             <a className="vitrine-bouton secondaire" href="mailto:faliherizo@vinaitsolution.com">{t('vitrine.finalContact')}</a>
           </div>
         </section>
@@ -122,6 +136,7 @@ export default function Vitrine() {
         <p>© {new Date().getFullYear()} VINA IT Solutions inc. — <a href="https://vinaitsolution.com">vinaitsolution.com</a></p>
         <p className="vitrine-sub">{t('vitrine.footerTagline')}</p>
       </footer>
+      {choixOuvert && <ChoixOrganisation onClose={() => setChoixOuvert(false)} />}
     </div>
   )
 }

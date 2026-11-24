@@ -230,6 +230,8 @@ button.link:hover, button.link:focus-visible { background: none; text-decoration
 }
 .vitrine-nav a:hover, .vitrine-nav a:focus-visible { background: #eef3f8; }
 .vitrine-nav .vitrine-cta { background: var(--bleu); color: #fff; }
+.vitrine-nav button.vitrine-cta, button.vitrine-bouton { font: inherit; font-weight: 700; border: 0; cursor: pointer; }
+.vitrine-nav button.vitrine-cta { min-height: 44px; padding: 8px 14px; border-radius: 8px; font-weight: 600; }
 .vitrine-nav .vitrine-cta:hover, .vitrine-nav .vitrine-cta:focus-visible { background: var(--bleu-fonce); }
 
 .vitrine main { display: block; }

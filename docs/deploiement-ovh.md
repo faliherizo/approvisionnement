@@ -113,6 +113,31 @@ docker exec -i contrat-db pg_restore -U contrat -d contrat --clean --if-exists -
 ./deployer.sh "$(cat .version-courante)"
 ```
 
+## 4 bis. Sous-domaines des organisations
+
+Chaque organisation a son adresse : `levis.contrat.vinaitsolution.com`, `iq.contrat.vinaitsolution.com`,
+`v3r.contrat.vinaitsolution.com`. Le frontend déduit l'organisation du premier libellé de l'hôte, et le serveur refuse
+la connexion d'un compte d'une autre organisation. Le domaine nu (`contrat.vinaitsolution.com`) porte l'accueil public,
+dont « Accéder à l'application » ouvre le choix de l'organisation (`GET /api/tenants`), et la connexion du
+superadministrateur. Comptes de démonstration : [comptes-demo.md](comptes-demo.md).
+
+- **DNS** : enregistrement générique `*.contrat.vinaitsolution.com` → 51.222.86.37 (OVH).
+- **Nginx central** : `*.contrat.vinaitsolution.com` figure au bloc `listen 80` (défi ACME, redirection HTTPS) et au
+  bloc 443 du contrat (`deploy/ovh/nginx-contrat.conf`). Sauvegarde : `prod.conf.avant-sous-domaines-contrat`.
+- **Certificat** : lignée propre `contrat.vinaitsolution.com` (webroot, ECDSA), renouvelée par `vina_certbot`. Un
+  certificat générique demanderait un défi DNS ; la lignée énumère donc les sous-domaines. Ajouter une organisation :
+
+  ```bash
+  docker exec vina_certbot certbot certonly --webroot -w /var/www/certbot --cert-name contrat.vinaitsolution.com \
+    --key-type ecdsa --expand -d contrat.vinaitsolution.com -d levis.contrat.vinaitsolution.com \
+    -d iq.contrat.vinaitsolution.com -d v3r.contrat.vinaitsolution.com -d <nouveau>.contrat.vinaitsolution.com
+  docker exec vina_nginx nginx -s reload
+  ```
+
+  Reprendre **tous** les noms existants : `--expand` remplace la liste du certificat par celle donnée.
+- **CORS** : `APP_CORS_ALLOWED_ORIGINS=https://contrat.vinaitsolution.com,https://*.contrat.vinaitsolution.com`
+  (`.env.contrat`).
+
 ## 5. Première installation (faite le 23 novembre 2026)
 
 À refaire seulement pour réinstaller sur un autre serveur.

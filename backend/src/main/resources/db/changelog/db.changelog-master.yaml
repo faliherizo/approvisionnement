@@ -143,3 +143,5 @@ databaseChangeLog:
       file: db/changelog/changes/071-interop-echange-herite.yaml
   - include:
       file: db/changelog/changes/072-auth-politique-session.yaml
+  - include:
+      file: db/changelog/changes/073-code-unique-par-organisation.yaml

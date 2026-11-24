@@ -1854,7 +1854,7 @@
           "type": "supprimer",
           "fonction": "supprimer",
           "sources": [
-            "pages/Users.jsx:41"
+            "pages/Users.jsx:49"
           ]
         },
         {
@@ -1865,7 +1865,7 @@
           "fonction": "modifier",
           "sources": [
             "pages/clm/UtilisateursClm.jsx:32",
-            "pages/Users.jsx:22"
+            "pages/Users.jsx:26"
           ]
         },
         {
@@ -1875,7 +1875,7 @@
           "type": "lister",
           "fonction": "charger",
           "sources": [
-            "pages/Users.jsx:26"
+            "pages/Users.jsx:33"
           ]
         },
         {
@@ -1895,7 +1895,7 @@
           "type": "ajouter",
           "fonction": "enregistrer",
           "sources": [
-            "pages/Users.jsx:36"
+            "pages/Users.jsx:44"
           ]
         },
         {
@@ -1906,7 +1906,7 @@
           "fonction": "modifier",
           "sources": [
             "pages/clm/UtilisateursClm.jsx:35",
-            "pages/Users.jsx:35"
+            "pages/Users.jsx:43"
           ]
         }
       ]
@@ -2693,9 +2693,22 @@
       "composant": "Vitrine",
       "fichiers": [
         "pages/Vitrine.jsx",
-        "i18n/I18nContext.jsx"
+        "i18n/I18nContext.jsx",
+        "components/ChoixOrganisation.jsx",
+        "components/Modal.jsx"
       ],
-      "operations": []
+      "operations": [
+        {
+          "id": "GET /tenants",
+          "methode": "GET",
+          "chemin": "/tenants",
+          "type": "lister",
+          "fonction": "ChoixOrganisation",
+          "sources": [
+            "components/ChoixOrganisation.jsx:19"
+          ]
+        }
+      ]
     },
     {
       "route": "/login",
@@ -4038,7 +4051,7 @@
           "type": "supprimer",
           "fonction": "supprimer",
           "sources": [
-            "pages/Users.jsx:41"
+            "pages/Users.jsx:49"
           ]
         },
         {
@@ -4048,7 +4061,7 @@
           "type": "lister",
           "fonction": "charger",
           "sources": [
-            "pages/Users.jsx:22"
+            "pages/Users.jsx:26"
           ]
         },
         {
@@ -4058,7 +4071,7 @@
           "type": "lister",
           "fonction": "charger",
           "sources": [
-            "pages/Users.jsx:26"
+            "pages/Users.jsx:33"
           ]
         },
         {
@@ -4068,7 +4081,7 @@
           "type": "ajouter",
           "fonction": "enregistrer",
           "sources": [
-            "pages/Users.jsx:36"
+            "pages/Users.jsx:44"
           ]
         },
         {
@@ -4078,7 +4091,7 @@
           "type": "modifier",
           "fonction": "enregistrer",
           "sources": [
-            "pages/Users.jsx:35"
+            "pages/Users.jsx:43"
           ]
         }
       ]

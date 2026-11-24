@@ -27,5 +27,20 @@
       { "email": "admin.technique@iq.example", "nom": "Nadia Ouellet", "direction": "Technologies de l'information", "profil": "Administrateur technique", "roles": ["ADMIN_TECHNIQUE"] },
       { "email": "auditeur@iq.example", "nom": "Nadia Lavoie", "direction": "Conformité et audit interne", "profil": "Auditeur / conformité", "roles": ["AUDITEUR"] }
     ]
+  },
+  {
+    "slug": "v3r",
+    "titre": "Ville de Trois-Rivières",
+    "sousTitre": "Rédaction contractuelle · approvisionnement (V3R)",
+    "motDePasse": "Passw0rd!",
+    "modules": { "redaction": true },
+    "bibliotheque": true,
+    "comptes": [
+      { "email": "admin@v3r.example", "nom": "Isabelle Gagnon", "direction": "Technologies de l'information", "profil": "Administrateur", "roles": ["ADMIN"] },
+      { "email": "approvisionnement@v3r.example", "nom": "Marc Lemieux", "direction": "Service de l'approvisionnement", "profil": "Approvisionnement (rédaction)", "roles": ["REDACTEUR", "APPRO"] },
+      { "email": "juridique@v3r.example", "nom": "Sophie Bélanger", "direction": "Services juridiques", "profil": "Services juridiques", "roles": ["JURIDIQUE"] },
+      { "email": "direction@v3r.example", "nom": "Louis Tremblay", "direction": "Direction générale", "profil": "Direction (approbation)", "roles": ["DIRECTION"] },
+      { "email": "consultation@v3r.example", "nom": "Julie Pépin", "direction": "Direction requérante", "profil": "Consultation", "roles": ["LECTEUR"] }
+    ]
   }
 ]

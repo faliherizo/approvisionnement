@@ -5,6 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import qc.levis.contrat.redaction.domain.DocumentTemplate;
 
 public interface DocumentTemplateRepository extends JpaRepository<DocumentTemplate, Long> {
-    Optional<DocumentTemplate> findByCode(String code);
     java.util.List<DocumentTemplate> findByTenantId(Long tenantId);
 }

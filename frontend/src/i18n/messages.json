@@ -9674,5 +9674,40 @@
     "fr": "La liste des utilisateurs n'a pas pu être chargée.",
     "en": "The user list could not be loaded.",
     "mg": "Tsy afaka nampidirina ny lisitry ny mpampiasa."
+  },
+  "vitrine.choixTitre": {
+    "fr": "Choisir votre organisation",
+    "en": "Choose your organization",
+    "mg": "Safidio ny fikambananao"
+  },
+  "vitrine.choixAide": {
+    "fr": "Chaque organisation dispose de son propre espace et de sa propre adresse.",
+    "en": "Each organization has its own space and its own address.",
+    "mg": "Samy manana ny toerany sy ny adiresiny manokana ny fikambanana tsirairay."
+  },
+  "vitrine.choixOrganisation": {
+    "fr": "Organisation",
+    "en": "Organization",
+    "mg": "Fikambanana"
+  },
+  "vitrine.choixContinuer": {
+    "fr": "Continuer vers la connexion",
+    "en": "Continue to sign in",
+    "mg": "Hiditra"
+  },
+  "vitrine.choixPlateforme": {
+    "fr": "Administration de la plateforme",
+    "en": "Platform administration",
+    "mg": "Fitantanana ny sehatra"
+  },
+  "vitrine.choixChargement": {
+    "fr": "Chargement des organisations…",
+    "en": "Loading organizations…",
+    "mg": "Maka ny fikambanana…"
+  },
+  "vitrine.choixErreur": {
+    "fr": "La liste des organisations est indisponible. Réessayez plus tard.",
+    "en": "The list of organizations is unavailable. Please try again later.",
+    "mg": "Tsy azo alaina ny lisitry ny fikambanana. Andramo indray any aoriana."
   }
 }

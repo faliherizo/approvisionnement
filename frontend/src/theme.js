@@ -34,3 +34,14 @@ export async function chargerTheme() {
     return null
   }
 }
+
+/**
+ * Adresse de connexion d'une organisation : son sous-domaine sous le domaine de la plateforme
+ * (contrat.vinaitsolution.com → levis.contrat.vinaitsolution.com/login). Depuis un sous-domaine d'organisation, on
+ * remonte d'abord au domaine de la plateforme. Le port est conservé (recette locale).
+ */
+export function adresseOrganisation(slug, lieu = window.location) {
+  const hote = slugTenant() ? lieu.hostname.split('.').slice(1).join('.') : lieu.hostname
+  const port = lieu.port ? `:${lieu.port}` : ''
+  return `${lieu.protocol}//${encodeURIComponent(slug)}.${hote}${port}/login`
+}

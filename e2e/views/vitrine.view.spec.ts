@@ -32,8 +32,38 @@ test.describe('Site vitrine public', () => {
     await expect(page.locator('video track[kind="captions"]')).toHaveCount(0)
     await expect(page.locator('figcaption')).toContainText('Parcours filmé')
 
-    // Accès à l'application depuis la vitrine.
-    await expect(page.getByRole('link', { name: 'Accéder à l’application' })).toBeVisible()
+    // Accès à l'application depuis la vitrine : sur le domaine de la plateforme, il ouvre le choix de l'organisation.
+    await expect(page.getByRole('button', { name: 'Accéder à l’application' })).toBeVisible()
+  })
+
+  test('« Accéder à l’application » propose les organisations actives et mène au sous-domaine choisi', async ({ page }) => {
+    await page.route('**/api/tenants', (r) => r.fulfill({ json: [
+      { slug: 'levis', titre: 'Ville de Lévis' }, { slug: 'v3r', titre: 'Ville de Trois-Rivières' },
+    ] }))
+    await page.route(/\/\/v3r\./, (r) => r.fulfill({ contentType: 'text/html', body: '<title>v3r</title>' }))
+    await page.goto('/accueil')
+    await page.getByRole('button', { name: 'Accéder à l’application' }).first().click()
+
+    const fenetre = page.getByRole('dialog', { name: 'Choisir votre organisation' })
+    await expect(fenetre).toBeVisible()
+    const liste = fenetre.getByLabel('Organisation')
+    await expect(liste.locator('option')).toHaveText(['Ville de Lévis', 'Ville de Trois-Rivières'])
+    await liste.selectOption('v3r')
+    await fenetre.getByRole('button', { name: 'Continuer vers la connexion' }).click()
+    await expect(page).toHaveURL(/\/\/v3r\.localhost(:\d+)?\/login$/)
+  })
+
+  test('le choix de l’organisation se ferme par Échap et rend le focus', async ({ page }) => {
+    await page.route('**/api/tenants', (r) => r.fulfill({ status: 503 }))
+    await page.goto('/accueil')
+    const acces = page.getByRole('button', { name: 'Accéder à l’application' }).first()
+    await acces.click()
+    const fenetre = page.getByRole('dialog', { name: 'Choisir votre organisation' })
+    await expect(fenetre.getByRole('alert')).toContainText('indisponible')
+    await expect(fenetre.getByRole('button', { name: 'Continuer vers la connexion' })).toBeDisabled()
+    await page.keyboard.press('Escape')
+    await expect(fenetre).toBeHidden()
+    await expect(acces).toBeFocused()
   })
 
   test('tient dans la largeur sur mobile (390 px) et tablette 10 pouces (800 px)', async ({ page }) => {

@@ -742,7 +742,7 @@
     },
     {
       "id": "E2E-ECR-LEV-12",
-      "titre": "L'écran d'accueil public, la connexion à l'image de l'organisation et les dépôts simulés s'ouvrent",
+      "titre": "L'écran d'accueil public propose le choix de l'organisation, la connexion à l'image de l'organisation et les dépôts simulés s'ouvrent",
       "exigences": [
         "LEV-C-22",
         "LEV-2.1-13"
@@ -757,6 +757,23 @@
         },
         {
           "aller": "/accueil"
+        },
+        {
+          "cliquer": "Accéder à l’application"
+        },
+        {
+          "voir": "Choisir votre organisation"
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "choisir": {
+            "Organisation": "Ville de Lévis"
+          }
+        },
+        {
+          "voir": "Administration de la plateforme"
         },
         {
           "aller": "http://levis.e2e.localhost:5175/login"

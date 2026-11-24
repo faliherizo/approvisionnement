@@ -8,12 +8,14 @@ import qc.levis.contrat.commun.domain.Enums;
 
 /** Clause de la bibliothèque centralisée. */
 @Entity
+// Code unique dans son organisation (migration 073) : chaque organisation a sa bibliothèque de départ.
+@Table(uniqueConstraints = @UniqueConstraint(name = "uq_clause_tenant_code", columnNames = {"tenant_id", "code"}))
 public class Clause {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String code;
 
     @Column(nullable = false)

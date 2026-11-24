@@ -12,8 +12,8 @@ déclarée à la main. Une fonctionnalité est couverte quand un scénario e2e l
 | Mesure | Valeur |
 |---|---|
 | Écrans | 71, dont **71 ouverts** par au moins un scénario |
-| Fonctionnalités (écran × opération) | 550 |
-| Couvertes par un scénario | **544** |
+| Fonctionnalités (écran × opération) | 551 |
+| Couvertes par un scénario | **545** |
 | Sans objet (exclusion nominative et motivée) | 6 |
 | **Taux** | **100.0 %** |
 
@@ -36,15 +36,15 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 ## `/clm` — ClmTableauBord
 
-- **Ouvert par** : E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04, E2E-ECR-IQ-05, E2E-ECR-IQ-06, E2E-ECR-IQ-07, E2E-IQ-01 (+33)
+- **Ouvert par** : E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04, E2E-ECR-IQ-05, E2E-ECR-IQ-06, E2E-ECR-IQ-07, E2E-IQ-01 (+34)
 - **Fichiers** : `pages/clm/ClmTableauBord.jsx`, `auth.jsx`, `i18n/I18nContext.jsx`, `pages/clm/commun.jsx`, `hooks/useModules.js`, `pages/clm/gabarit.jsx`
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
-| `Contenu` | lister | `GET /clm/tableau-de-bord` | ✅ E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04, E2E-ECR-IQ-05 (+33) |
+| `Contenu` | lister | `GET /clm/tableau-de-bord` | ✅ E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04, E2E-ECR-IQ-05 (+34) |
 | `charger` | lister | `GET /modules` | ✅ E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+98) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+36) |
-| `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04, E2E-ECR-IQ-05 (+33) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+37) |
+| `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04, E2E-ECR-IQ-05 (+34) |
 
 ## `/clm/trousses` — Trousses
 
@@ -56,7 +56,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `exporter` | télécharger | `GET /clm/suivi/export` | ✅ E2E-ECR-IQ-06 |
 | `Contenu` | lister | `GET /clm/trousses` | ✅ E2E-ECR-IQ-06, E2E-IQ-21, E2E-IQ-30, E2E-IQ-34 (+1) |
 | `charger` | lister | `GET /modules` | ✅ E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+98) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+36) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+37) |
 | `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-ECR-IQ-06, E2E-IQ-21, E2E-IQ-30, E2E-IQ-34 (+1) |
 
 ## `/clm/trousses/nouvelle` — TrousseCreer
@@ -78,11 +78,11 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `Visionneuse` | lister | `GET /clm/trousses/{}/documents/{}/texte` | ✅ E2E-ECR-IQ-02 |
 | `libelle` | consulter | `GET /clm/trousses/{}/suggestions/{}` | ✅ E2E-ECR-IQ-02 |
 | `charger` | lister | `GET /modules` | ✅ E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+98) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+36) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+37) |
 | `useListe` | lister | `GET /reference/CLM_CHAMP_SALESFORCE` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02 |
 | `useListe` | lister | `GET /reference/CLM_CLAUSE_ATTENDUE` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-06 |
 | `useListe` | lister | `GET /reference/CLM_ROLE_CONTRAT` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-04, E2E-ECR-IQ-06 (+2) |
-| `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-06, E2E-IQ-01 (+13) |
+| `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-06, E2E-IQ-01 (+14) |
 | `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02 |
 | `reviser` | ajouter | `POST /clm/analyses/{}/revision` | ✅ E2E-ECR-IQ-06 |
 | `enregistrer` | ajouter | `POST /clm/trousses` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02 |
@@ -102,7 +102,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 ## `/clm/trousses/:id` — TrousseDetail
 
-- **Ouvert par** : E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-06, E2E-IQ-01, E2E-IQ-02, E2E-IQ-04, E2E-IQ-05, E2E-IQ-06 (+9)
+- **Ouvert par** : E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-06, E2E-IQ-01, E2E-IQ-02, E2E-IQ-04, E2E-IQ-05, E2E-IQ-06 (+10)
 - **Fichiers** : `pages/clm/TrousseDetail.jsx`, `auth.jsx`, `i18n/I18nContext.jsx`, `hooks/useModules.js`, `pages/clm/commun.jsx`, `pages/clm/gabarit.jsx`, `pages/clm/TrousseCreer.jsx`, `pages/clm/ValeursTrousse.jsx`, `pages/clm/OngletDocuments.jsx`, `pages/clm/OngletParticipants.jsx`, `pages/clm/OngletParcours.jsx`, `pages/clm/OngletPreuve.jsx`
 
 | Fonctionnalité | Type | Opération | Couverte par |
@@ -111,21 +111,21 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `retirer` | supprimer | `DELETE /clm/trousses/{}/participants/{}` | ✅ E2E-ECR-IQ-01 |
 | `OngletParticipants` | consulter | `GET /clm/modeles/{}` | ✅ E2E-ECR-IQ-02 |
 | `OngletParticipants` | lister | `GET /clm/parametres` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-IQ-10 |
-| `setOnglet` | consulter | `GET /clm/trousses/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-06, E2E-IQ-01 (+13) |
+| `setOnglet` | consulter | `GET /clm/trousses/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-06, E2E-IQ-01 (+14) |
 | `OngletDocuments` | lister | `GET /clm/trousses/{}/analyses` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-06 |
 | `charger` | télécharger | `GET /clm/trousses/{}/documents/{}/contenu` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-06 |
 | `Visionneuse` | lister | `GET /clm/trousses/{}/documents/{}/texte` | ✅ E2E-ECR-IQ-02 |
 | `setOnglet` | lister | `GET /clm/trousses/{}/historique` | ✅ E2E-IQ-01, E2E-IQ-04, E2E-IQ-06, E2E-IQ-07 (+5) |
-| `OngletPreuve` | télécharger | `GET /clm/trousses/{}/preuve` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-06, E2E-IQ-13, E2E-IQ-17 |
+| `OngletPreuve` | télécharger | `GET /clm/trousses/{}/preuve` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-06, E2E-IQ-11, E2E-IQ-13 (+1) |
 | `charger` | télécharger | `GET /clm/trousses/{}/preuve/{}` | ✅ E2E-ECR-IQ-06 |
 | `libelle` | consulter | `GET /clm/trousses/{}/suggestions/{}` | ✅ E2E-ECR-IQ-02 |
 | `charger` | lister | `GET /modules` | ✅ E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+98) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+36) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+37) |
 | `useListe` | lister | `GET /reference/CLM_CHAMP_SALESFORCE` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02 |
 | `useListe` | lister | `GET /reference/CLM_CLAUSE_ATTENDUE` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-06 |
 | `useListe` | lister | `GET /reference/CLM_ROLE_CONTRAT` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-04, E2E-ECR-IQ-06 (+2) |
-| `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-06, E2E-IQ-01 (+13) |
-| `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-06, E2E-IQ-01 (+13) |
+| `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-06, E2E-IQ-01 (+14) |
+| `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-06, E2E-IQ-01 (+14) |
 | `reviser` | ajouter | `POST /clm/analyses/{}/revision` | ✅ E2E-ECR-IQ-06 |
 | `relancerEtape` | relancer | `POST /clm/etapes/{}/relancer` | ✅ E2E-ECR-IQ-06 |
 | `action` | ajouter | `POST /clm/trousses/{}/{}` | ✅ E2E-ECR-IQ-06 |
@@ -170,7 +170,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `Visionneuse` | lister | `GET /clm/trousses/{}/documents/{}/texte` | ✅ E2E-ECR-IQ-02 |
 | `Decision` | lister | `GET /clm/trousses/{}/historique` | ✅ E2E-ECR-IQ-02, E2E-ECR-IQ-06 |
 | `charger` | lister | `GET /modules` | ✅ E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+98) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+36) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+37) |
 | `useListe` | lister | `GET /reference/CLM_PRIORITE_TACHE` | ✅ E2E-ECR-IQ-02, E2E-ECR-IQ-06, E2E-IQ-31, E2E-IQ-34 |
 | `commenter` | ajouter | `POST /clm/etapes/{}/commentaires` | ✅ E2E-ECR-IQ-02 |
 | `decider` | ajouter | `POST /clm/etapes/{}/decider` | ✅ E2E-ECR-IQ-02 |
@@ -190,7 +190,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `Contenu` | lister | `GET /clm/suivi` | ✅ E2E-ECR-IQ-06, E2E-IQ-16 |
 | `exporter` | télécharger | `GET /clm/suivi/export` | ✅ E2E-ECR-IQ-06 |
 | `charger` | lister | `GET /modules` | ✅ E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+98) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+36) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+37) |
 | `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-ECR-IQ-06, E2E-IQ-16 |
 | `relancerIntegration` | relancer | `POST /clm/admin/integrations/salesforce/trousses/{}/relancer` | ➖ n'apparaît qu'après l'échec réel d'un envoi vers un système externe (Salesforce, adresse de rappel d'un client) — couvert par ClmIntegrationTest (relance d'une trousse en erreur Salesforce) |
 
@@ -203,7 +203,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 |---|---|---|---|
 | `Contenu` | lister | `GET /clm/modeles` | ✅ E2E-ECR-IQ-04, E2E-IQ-03 |
 | `charger` | lister | `GET /modules` | ✅ E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+98) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+36) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+37) |
 | `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-ECR-IQ-04, E2E-IQ-03 |
 | `creer` | ajouter | `POST /clm/modeles` | ✅ E2E-ECR-IQ-04 |
 | `transition` | ajouter | `POST /clm/modeles/{}/{}` | ✅ E2E-ECR-IQ-04 |
@@ -220,7 +220,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `charger` | lister | `GET /clm/modeles/{}/gabarit-word` | ✅ E2E-ECR-IQ-04 |
 | `valider` | lister | `GET /clm/modeles/{}/validation` | ✅ E2E-ECR-IQ-04 |
 | `charger` | lister | `GET /modules` | ✅ E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+98) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+36) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+37) |
 | `useListe` | lister | `GET /reference/CLM_CHAMP_SALESFORCE` | ✅ E2E-ECR-IQ-04 |
 | `useListe` | lister | `GET /reference/CLM_ROLE_CONTRAT` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-04, E2E-ECR-IQ-06 (+2) |
 | `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-ECR-IQ-04 |
@@ -321,7 +321,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `Groupes` | lister | `GET /clm/groupes` | ✅ E2E-ECR-IQ-05 |
 | `Groupes` | lister | `GET /clm/membres` | ✅ E2E-ECR-IQ-05 |
 | `charger` | lister | `GET /modules` | ✅ E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+98) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+36) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+37) |
 | `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-ECR-IQ-05 |
 | `creer` | ajouter | `POST /clm/admin/groupes` | ✅ E2E-ECR-IQ-05 |
 | `choisirUnite` | ajouter | `POST /clm/admin/groupes/{}/membres` | ✅ E2E-ECR-IQ-05 |
@@ -353,7 +353,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `EcranConservation` | lister | `GET /clm/admin/conservation/trousses` | ✅ E2E-ECR-IQ-07, E2E-IQ-18 |
 | `certificat` | lister | `GET /clm/admin/conservation/trousses/{}/certificat-destruction` | ➖ n'existe qu'après une destruction (l'échéance de conservation (au moins un an après la clôture) ne s'atteint pas en e2e sans fausser l'horloge du serveur) — couvert par CertificatDestructionServiceTest et ClmIntegrationTest.relance_commentaire_delegation_certificat_et_journal |
 | `charger` | lister | `GET /modules` | ✅ E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+98) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+36) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+37) |
 | `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-ECR-IQ-07, E2E-IQ-18 |
 | `detruire` | ajouter | `POST /clm/admin/conservation/trousses/{}/detruire` | ➖ l'échéance de conservation (au moins un an après la clôture) ne s'atteint pas en e2e sans fausser l'horloge du serveur — couvert par ConservationServiceTest.echue_selon_la_regle_du_type_puis_detruite_avec_un_bordereau_sans_contenu |
 | `geler` | ajouter | `POST /clm/admin/conservation/trousses/{}/gel` | ✅ E2E-ECR-IQ-07 |
@@ -381,7 +381,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 |---|---|---|---|
 | `Contenu` | lister | `GET /clm/analyses` | ✅ E2E-ECR-IQ-05 |
 | `charger` | lister | `GET /modules` | ✅ E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+98) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+36) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-ECR-IQ-01, E2E-ECR-IQ-02, E2E-ECR-IQ-03, E2E-ECR-IQ-04 (+37) |
 | `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-ECR-IQ-05 |
 
 ## `/clm/profil` — Profil
@@ -449,17 +449,20 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 ## `/accueil` — Vitrine
 
 - **Ouvert par** : E2E-ECR-LEV-12
-- **Fichiers** : `pages/Vitrine.jsx`, `i18n/I18nContext.jsx`
-- Aucune opération d'API : écran d'affichage seul.
+- **Fichiers** : `pages/Vitrine.jsx`, `i18n/I18nContext.jsx`, `components/ChoixOrganisation.jsx`, `components/Modal.jsx`
+
+| Fonctionnalité | Type | Opération | Couverte par |
+|---|---|---|---|
+| `ChoixOrganisation` | lister | `GET /tenants` | ✅ E2E-ECR-LEV-12 |
 
 ## `/login` — Login
 
-- **Ouvert par** : E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04, E2E-CHU-05, E2E-CHU-06, E2E-CHU-07, E2E-CHU-08 (+99)
+- **Ouvert par** : E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04, E2E-CHU-05, E2E-CHU-06, E2E-CHU-07, E2E-CHU-08 (+100)
 - **Fichiers** : `pages/Login.jsx`, `auth.jsx`, `i18n/I18nContext.jsx`, `components/LangSwitcher.jsx`
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
-| `Login` | lister | `GET /auth/config` | ✅ E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+103) |
+| `Login` | lister | `GET /auth/config` | ✅ E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+104) |
 | `Login` | lister | `GET /tenants/{}/public` | ✅ E2E-ECR-LEV-12 |
 
 ## `/signature/:jeton` — SignaturePublique
@@ -474,7 +477,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 ## `/` — RacineRoute
 
-- **Ouvert par** : E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04, E2E-CHU-05, E2E-CHU-06, E2E-CHU-07, E2E-CHU-08 (+99)
+- **Ouvert par** : E2E-CHU-01, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04, E2E-CHU-05, E2E-CHU-06, E2E-CHU-07, E2E-CHU-08 (+100)
 - **Fichiers** : `App.jsx`, `auth.jsx`, `hooks/useModules.js`, `pages/Dashboard.jsx`, `components/RichText.jsx`, `i18n/I18nContext.jsx`, `hooks/useReference.js`
 
 | Fonctionnalité | Type | Opération | Couverte par |
