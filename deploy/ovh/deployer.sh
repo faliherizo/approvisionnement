@@ -19,6 +19,9 @@ DELAI_SANTE_S=300
 PROJET=contractuelle_contrat
 
 [ -f .env.contrat ] || { echo "❌ deploy/ovh/.env.contrat absent — lancer deploy/ovh/preparer-serveur.sh"; exit 2; }
+# Adresse publique du portail de signature : sans elle, invitations et « Signer maintenant » renvoient vers localhost.
+grep -Eq '^CLM_PORTAIL_URL=https://' .env.contrat \
+  || { echo "❌ CLM_PORTAIL_URL (https) absente de .env.contrat — voir env.contrat.exemple"; exit 2; }
 PRECEDENTE="$(cat .version-courante 2>/dev/null || true)"
 
 if [ "${1:-}" = "--retour-arriere" ]; then

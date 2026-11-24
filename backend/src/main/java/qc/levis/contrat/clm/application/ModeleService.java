@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.security.access.AccessDeniedException;
@@ -16,6 +17,7 @@ import qc.levis.contrat.clm.application.dto.ClmDto;
 import qc.levis.contrat.clm.application.port.ReferencesClm;
 import qc.levis.contrat.clm.application.port.SourceAleatoire;
 import qc.levis.contrat.clm.application.repository.GabaritWordRepository;
+import qc.levis.contrat.clm.domain.GabaritWord;
 import qc.levis.contrat.clm.application.repository.ModeleContratRepository;
 import qc.levis.contrat.clm.application.repository.TrousseRepository;
 import qc.levis.contrat.clm.domain.Habilitations;
@@ -76,7 +78,7 @@ public class ModeleService {
             throw new IllegalStateException("Conflit de version : le modèle a été modifié entre-temps.");
         }
         appliquer(m, req);
-        return vue(modeles.save(m));
+        return vue(modeles.saveAndFlush(m));
     }
 
     /** La catégorie vient de la liste des types de contrat ; une catégorie inchangée reste admise même retirée depuis. */
@@ -96,8 +98,12 @@ public class ModeleService {
     ClmDto.Validation validation(ModeleContrat m) {
         List<String> erreurs = new ArrayList<>(Modele.valider(m.getCorps(), champs(m), clauses(m)));
         Set<String> cles = champs(m).stream().map(Modele.Champ::cle).collect(Collectors.toSet());
-        gabarits.findByModeleIdAndTenantId(m.getId(), m.getTenantId()).ifPresent(g -> g.inconnues(cles)
-                .forEach(v -> erreurs.add("Variable source inconnue dans le gabarit Word : " + v)));
+        Optional<GabaritWord> gabarit = gabarits.findByModeleIdAndTenantId(m.getId(), m.getTenantId());
+        gabarit.ifPresent(g -> g.inconnues(cles).forEach(v -> erreurs.add("Variable source inconnue dans le gabarit Word : " + v)));
+        // Le contrat se génère depuis le gabarit Word s'il existe, sinon depuis le corps : sans l'un ni l'autre, rien à générer.
+        if (gabarit.isEmpty() && (m.getCorps() == null || m.getCorps().isBlank())) {
+            erreurs.add(0, "Le corps du contrat est vide.");
+        }
         erreurs.addAll(rolesHorsListe(champs(m)));
         List<ClmDto.EtapeRequest> parcours = ctx.lire(m.getParcoursJson(), TrousseService.PARCOURS, List.of());
         if (!parcours.isEmpty()) {

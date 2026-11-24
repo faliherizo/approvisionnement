@@ -9,6 +9,9 @@ server {
     # le défi anti-robot des formulaires (CHU 3.07, ADR-026) : CSP_SOURCES_CAPTCHA, vide par défaut, nomme l'origine du
     # fournisseur retenu (https://challenges.cloudflare.com ou https://*.hcaptcha.com https://hcaptcha.com).
     server_tokens off;
+    # Pièces des trousses : au moins 25 Mo (cahier IQ 1.4.7) ; aligné sur Spring (30 Mo par fichier, 32 Mo par requête).
+    # Sans cette directive, nginx refuse tout corps de plus de 1 Mo (413).
+    client_max_body_size 32m;
     add_header Content-Security-Policy "default-src 'self'; script-src 'self' ${CSP_SOURCES_CAPTCHA}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ${CSP_SOURCES_CAPTCHA}; frame-src 'self' blob: ${CSP_SOURCES_CAPTCHA}; object-src 'none'; base-uri 'self'; frame-ancestors 'self'" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-Frame-Options "SAMEORIGIN" always;

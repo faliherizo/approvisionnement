@@ -280,6 +280,13 @@ class Addenda4IntegrationTest {
         assertEquals(200, fichier.getStatus());
         assertTrue(fichier.getHeader("Content-Disposition").contains("IQ.docx"), fichier.getHeader("Content-Disposition"));
         assertTrue(corps(appel("GET", "/api/clm/modeles/" + modele + "/validation", initiateur, null), 200).get("valide").asBoolean());
+        long wordSeul = corps(appel("POST", "/api/clm/modeles", initiateur, "{\"nom\":\"Word seul\",\"corps\":\"\",\"champs\":" + champs
+                + ",\"clauses\":[],\"parcours\":[]}"), 200).get("id").asLong();
+        assertEquals("[\"Le corps du contrat est vide.\"]",
+                corps(appel("GET", "/api/clm/modeles/" + wordSeul + "/validation", initiateur, null), 200).get("erreurs").toString());
+        corps(deposer(wordSeul, initiateur, "Word seul.docx", gabaritWord("montant")), 200);
+        assertTrue(corps(appel("GET", "/api/clm/modeles/" + wordSeul + "/validation", initiateur, null), 200).get("valide").asBoolean(),
+                "le gabarit Word tient lieu de corps");
 
         corps(appel("POST", "/api/clm/modeles/" + modele + "/soumettre", initiateur, "{}"), 200);
         assertEquals(409, appel("DELETE", "/api/clm/modeles/" + modele + "/gabarit-word", initiateur, null).getStatus(), "modèle hors brouillon");

@@ -138,10 +138,15 @@ function Contenu() {
         clauses: m.clauses.map((c) => ({ ...c, conditions: (c.conditions || []).filter((x) => x.champ) })), parcours: versRequete(parcours), verrou: m.verrou }
       const { data } = await api.put(`/clm/modeles/${id}`, corps)
       setM(data); setParcours(depuisRequete(data.parcours)); setInfo(t('clm.mo.enregistre'))
-    } catch (e) { setErreur(versErreur(e)) }
+      return true
+    } catch (e) { setErreur(versErreur(e)); return false }
   }
+  // Vérifier, tester et soumettre portent sur ce qui est à l'écran : un brouillon modifié est d'abord enregistré, sans quoi
+  // le serveur jugerait la dernière version enregistrée (corps « vide » alors qu'il vient d'être saisi).
+  const enregistrerSiBrouillon = async () => !modifiable || enregistrer()
   async function valider() {
     setErreur(null)
+    if (!(await enregistrerSiBrouillon())) return
     try {
       const { data } = await api.get(`/clm/modeles/${id}/validation`)
       if (data.valide) setInfo(t('clm.mo.valide'))
@@ -150,10 +155,12 @@ function Contenu() {
   }
   async function previsualiser() {
     setErreur(null)
+    if (!(await enregistrerSiBrouillon())) return
     try { const { data } = await api.post(`/clm/modeles/${id}/apercu`, essai); setApercu(data) } catch (e) { setErreur(t('clm.mo.apercuIndispo') + ' ' + versErreur(e)) }
   }
   async function soumettre() {
     setErreur(null)
+    if (!(await enregistrerSiBrouillon())) return
     try { const { data } = await api.post(`/clm/modeles/${id}/soumettre`); setM(data); setInfo(t('clm.mo.ok.soumettre', { nom: data.nom })) } catch (e) { setErreur(versErreur(e)) }
   }
 

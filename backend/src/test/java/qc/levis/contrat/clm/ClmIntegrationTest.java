@@ -354,6 +354,13 @@ class ClmIntegrationTest {
                 + "\"clauses\":[],\"parcours\":[],\"verrou\":" + (lu.get("verrou").asLong() + 7) + "}"), status().isConflict());
         appel(put("/api/clm/modeles/" + m, redacteur, "{\"nom\":\"Bail\",\"categorie\":\"BAIL\",\"groupes\":\"Immeubles\",\"corps\":\"Loyer {{loyer}}\","
                 + "\"champs\":[{\"cle\":\"loyer\",\"libelle\":\"Loyer\",\"type\":\"TEXTE\"}],\"clauses\":[],\"parcours\":[]}"), status().isOk());
+        // Deux enregistrements successifs de l'éditeur : chacun porte la version que le précédent a renvoyée.
+        long verrou = appel(get("/api/clm/modeles/" + m, redacteur), status().isOk()).get("verrou").asLong();
+        String brouillon = "{\"nom\":\"Bail\",\"categorie\":\"BAIL\",\"groupes\":\"Immeubles\",\"corps\":\"Loyer {{loyer}}\","
+                + "\"champs\":[{\"cle\":\"loyer\",\"libelle\":\"Loyer\",\"type\":\"TEXTE\"}],\"clauses\":[],\"parcours\":[],\"verrou\":";
+        long renvoye = appel(put("/api/clm/modeles/" + m, redacteur, brouillon + verrou + "}"), status().isOk()).get("verrou").asLong();
+        assertEquals(verrou + 1, renvoye, "la version renvoyée est celle enregistrée");
+        appel(put("/api/clm/modeles/" + m, redacteur, brouillon + renvoye + "}"), status().isOk());
         assertTrue(appel(post("/api/clm/modeles/" + m + "/apercu", redacteur, "{\"loyer\":\"1200\"}"), status().isOk()).get("texte").asText().contains("1200"));
         appel(get("/api/clm/modeles/" + m, direction), status().isNotFound());
         appel(post("/api/clm/modeles/" + m + "/soumettre", redacteur, "{}"), status().isOk());
@@ -373,6 +380,12 @@ class ClmIntegrationTest {
         assertTrue(appel(get("/api/clm/modeles?statut=RETIRE", redacteur), status().isOk()).size() >= 2);
 
         appel(post("/api/clm/modeles", admin, "{\"nom\":\" \"}"), status().isBadRequest());
+        long vide = appel(post("/api/clm/modeles", redacteur, "{\"nom\":\"Vide\",\"corps\":\" \",\"champs\":[],\"clauses\":[],\"parcours\":[]}"),
+                status().isOk()).get("id").asLong();
+        assertEquals("[\"Le corps du contrat est vide.\"]",
+                appel(get("/api/clm/modeles/" + vide + "/validation", redacteur), status().isOk()).get("erreurs").toString(),
+                "un modèle sans corps ni gabarit Word n'a rien à générer");
+        appel(post("/api/clm/modeles/" + vide + "/soumettre", redacteur, "{}"), status().isBadRequest());
         long regleOrpheline = appel(post("/api/clm/modeles", redacteur, "{\"nom\":\"Règle orpheline\",\"corps\":\"Texte\",\"champs\":[],\"clauses\":[],"
                 + "\"parcours\":[{\"cle\":\"a\",\"phase\":1,\"type\":\"APPROBATION\",\"affectations\":[{\"type\":\"ROLE\",\"valeur\":\"DIRECTION\"}],"
                 + "\"conditions\":[{\"champ\":\"montant\",\"operateur\":\"SUP\",\"valeur\":\"1\"}]}]}"), status().isOk()).get("id").asLong();
