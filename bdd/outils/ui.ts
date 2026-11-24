@@ -73,9 +73,24 @@ export async function ecartsEcran(page: Page): Promise<string[]> {
         return !enLigne && (r.width < 24 || r.height < 24) && !(e as HTMLInputElement).type?.match(/checkbox|radio/)
       }).map((e) => e.outerHTML.slice(0, 80))
       const chevauchements: string[] = []
+      // Partie réellement visible d'un élément : sa boîte rognée par chaque ancêtre qui masque son débordement (liste
+      // défilante). Une ligne défilée hors d'une liste n'est pas « sous » le bouton qui suit la liste : elle est cachée.
+      const boiteVisible = (e: HTMLElement) => {
+        const r = e.getBoundingClientRect()
+        let { left, top, right, bottom } = r
+        for (let p = e.parentElement; p && p !== document.body; p = p.parentElement) {
+          const st = getComputedStyle(p)
+          if (st.overflowX === 'visible' && st.overflowY === 'visible') continue
+          const c = p.getBoundingClientRect()
+          left = Math.max(left, c.left); top = Math.max(top, c.top)
+          right = Math.min(right, c.right); bottom = Math.min(bottom, c.bottom)
+        }
+        return { left, top, right, bottom }
+      }
       // Balayage par ordonnée : seules les paires qui se recouvrent verticalement sont comparées (une page à des
       // centaines de lignes restait sinon quadratique, aux quatre largeurs).
-      const boites = interactifs.map((e) => ({ e, r: e.getBoundingClientRect() })).sort((x, y) => x.r.top - y.r.top)
+      const boites = interactifs.map((e) => ({ e, r: boiteVisible(e) }))
+        .filter(({ r }) => r.right - r.left > 0 && r.bottom - r.top > 0).sort((x, y) => x.r.top - y.r.top)
       for (let i = 0; i < boites.length; i++) {
         const { e: a, r: ra } = boites[i]
         for (let j = i + 1; j < boites.length && boites[j].r.top < ra.bottom - 2; j++) {
