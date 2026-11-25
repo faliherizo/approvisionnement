@@ -61,6 +61,8 @@ class ArchitectureModulesTest {
             entry("DroitsVieePriveeController", "droits Loi 25 de toute personne : obligation légale de toute organisation, quels que soient ses modules"),
             entry("BanqueHeuresController", "banque d'heures de services professionnels : contrat de service avec le fournisseur, hors modules"),
             entry("SuperadminBanqueHeuresController", "console superadmin, hors tenant"),
+            entry("VitrineController", "site vitrine public de l'organisation (avant connexion) et son édition par la console superadmin, hors tenant"),
+            entry("MediaController", "médiathèque publique : vidéos d'aide et de présentation, communes à toutes les organisations"),
             entry("IntegrationEntranteController", "jeton d'un client d'intégration (Workday, Salesforce) : le tenant n'est connu qu'après le jeton ; le contrôleur vérifie alors le module"));
 
     private static final JavaClasses CODE = new ClassFileImporter()

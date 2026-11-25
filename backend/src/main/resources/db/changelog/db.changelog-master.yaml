@@ -147,3 +147,5 @@ databaseChangeLog:
       file: db/changelog/changes/073-code-unique-par-organisation.yaml
   - include:
       file: db/changelog/changes/074-clm-document-statut-analyse.yaml
+  - include:
+      file: db/changelog/changes/075-vitrine-tenant.yaml

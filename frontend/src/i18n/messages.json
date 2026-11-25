@@ -9709,5 +9709,275 @@
     "fr": "La liste des organisations est indisponible. Réessayez plus tard.",
     "en": "The list of organizations is unavailable. Please try again later.",
     "mg": "Tsy azo alaina ny lisitry ny fikambanana. Andramo indray any aoriana."
+  },
+  "vitrine.orgSous": {
+    "fr": "Site de présentation",
+    "en": "Presentation site",
+    "mg": "Tranonkala fampahafantarana"
+  },
+  "vitrine.orgConnexion": {
+    "fr": "Se connecter",
+    "en": "Sign in",
+    "mg": "Hiditra"
+  },
+  "vitrine.orgVideo": {
+    "fr": "Présentation des fonctionnalités",
+    "en": "Feature overview",
+    "mg": "Fanazavana ny asa"
+  },
+  "vitrine.orgVideoAlt": {
+    "fr": "Vidéo narrée et sous-titrée : chaque fonctionnalité est montrée dans l'application, telle qu'un utilisateur l'emploie.",
+    "en": "Narrated, captioned video: each feature is shown in the application, as a user would use it.",
+    "mg": "Horonan-tsary misy fitantarana sy dikanteny : aseho ao amin'ny rindranasa ny asa tsirairay."
+  },
+  "vitrine.orgPropulse": {
+    "fr": "Propulsé par",
+    "en": "Powered by",
+    "mg": "Natolotry ny"
+  },
+  "vitrine.chargement": {
+    "fr": "Chargement…",
+    "en": "Loading…",
+    "mg": "Maka…"
+  },
+  "vitrineAdmin.titre": {
+    "fr": "Site vitrine des organisations",
+    "en": "Organization showcase sites",
+    "mg": "Tranonkalan'ny fikambanana"
+  },
+  "vitrineAdmin.aide": {
+    "fr": "Contenu de https://<organisation>.contrat.vinaitsolution.com/accueil : titre, accroche, fonctionnalités et vidéo de présentation. Une vitrine non publiée laisse place à celle de la plateforme.",
+    "en": "Content of https://<organization>.contrat.vinaitsolution.com/accueil: title, tagline, features and presentation video. An unpublished site falls back to the platform's.",
+    "mg": "Votoatin'ny https://<fikambanana>.contrat.vinaitsolution.com/accueil."
+  },
+  "vitrineAdmin.organisation": {
+    "fr": "Organisation",
+    "en": "Organization",
+    "mg": "Fikambanana"
+  },
+  "vitrineAdmin.choisir": {
+    "fr": "— Choisir une organisation —",
+    "en": "— Choose an organization —",
+    "mg": "— Misafidiana fikambanana —"
+  },
+  "vitrineAdmin.formulaire": {
+    "fr": "Site vitrine de {organisation}",
+    "en": "Showcase site of {organisation}",
+    "mg": "Tranonkalan'i {organisation}"
+  },
+  "vitrineAdmin.titreSite": {
+    "fr": "Titre du site",
+    "en": "Site title",
+    "mg": "Lohatenin'ny tranonkala"
+  },
+  "vitrineAdmin.accroche": {
+    "fr": "Accroche",
+    "en": "Tagline",
+    "mg": "Teny fanombohana"
+  },
+  "vitrineAdmin.fonctionnalites": {
+    "fr": "Fonctionnalités présentées",
+    "en": "Featured capabilities",
+    "mg": "Asa aseho"
+  },
+  "vitrineAdmin.aucuneFonctionnalite": {
+    "fr": "Aucune fonctionnalité présentée.",
+    "en": "No featured capability.",
+    "mg": "Tsy misy asa aseho."
+  },
+  "vitrineAdmin.fonctionnaliteTitre": {
+    "fr": "Titre de la fonctionnalité {n}",
+    "en": "Feature {n} title",
+    "mg": "Lohatenin'ny asa {n}"
+  },
+  "vitrineAdmin.fonctionnaliteTexte": {
+    "fr": "Description de la fonctionnalité {n}",
+    "en": "Feature {n} description",
+    "mg": "Fanazavana ny asa {n}"
+  },
+  "vitrineAdmin.monter": {
+    "fr": "Monter la fonctionnalité {n}",
+    "en": "Move feature {n} up",
+    "mg": "Akarina ny asa {n}"
+  },
+  "vitrineAdmin.descendre": {
+    "fr": "Descendre la fonctionnalité {n}",
+    "en": "Move feature {n} down",
+    "mg": "Ampidinina ny asa {n}"
+  },
+  "vitrineAdmin.retirer": {
+    "fr": "Retirer la fonctionnalité {n}",
+    "en": "Remove feature {n}",
+    "mg": "Esorina ny asa {n}"
+  },
+  "vitrineAdmin.ajouter": {
+    "fr": "Ajouter une fonctionnalité",
+    "en": "Add a feature",
+    "mg": "Hanampy asa"
+  },
+  "vitrineAdmin.video": {
+    "fr": "Vidéo de présentation",
+    "en": "Presentation video",
+    "mg": "Horonan-tsary fampahafantarana"
+  },
+  "vitrineAdmin.videoChoisie": {
+    "fr": "Vidéo (médiathèque)",
+    "en": "Video (media library)",
+    "mg": "Horonan-tsary"
+  },
+  "vitrineAdmin.sansVideo": {
+    "fr": "— Aucune vidéo —",
+    "en": "— No video —",
+    "mg": "— Tsy misy —"
+  },
+  "vitrineAdmin.sousTitres": {
+    "fr": "Sous-titres (WebVTT)",
+    "en": "Captions (WebVTT)",
+    "mg": "Dikanteny (WebVTT)"
+  },
+  "vitrineAdmin.sansSousTitres": {
+    "fr": "— Aucun sous-titre —",
+    "en": "— No captions —",
+    "mg": "— Tsy misy —"
+  },
+  "vitrineAdmin.absente": {
+    "fr": "absente de la médiathèque",
+    "en": "missing from media library",
+    "mg": "tsy hita"
+  },
+  "vitrineAdmin.televerser": {
+    "fr": "Téléverser une vidéo",
+    "en": "Upload a video",
+    "mg": "Hampiditra horonan-tsary"
+  },
+  "vitrineAdmin.televerserAide": {
+    "fr": "(MP4 ou WebM, 30 Mo au plus ; les vidéos plus longues sont publiées dans la médiathèque par le script de publication)",
+    "en": "(MP4 or WebM, 30 MB max; longer videos are published to the media library by the publishing script)",
+    "mg": "(MP4 na WebM, 30 Mo farafahabetsany)"
+  },
+  "vitrineAdmin.apercuVideo": {
+    "fr": "Aperçu de la vidéo choisie",
+    "en": "Selected video preview",
+    "mg": "Topimaso"
+  },
+  "vitrineAdmin.publiee": {
+    "fr": "Publiée (visible sur le site de l'organisation)",
+    "en": "Published (visible on the organization's site)",
+    "mg": "Navoaka"
+  },
+  "vitrineAdmin.enregistrer": {
+    "fr": "Enregistrer la vitrine",
+    "en": "Save showcase",
+    "mg": "Tehirizina"
+  },
+  "vitrineAdmin.voir": {
+    "fr": "Voir le site de l'organisation",
+    "en": "View the organization's site",
+    "mg": "Jereo ny tranonkala"
+  },
+  "vitrineAdmin.enregistree": {
+    "fr": "Vitrine de {organisation} enregistrée.",
+    "en": "{organisation} showcase saved.",
+    "mg": "Voatahiry."
+  },
+  "vitrineAdmin.videoDeposee": {
+    "fr": "Vidéo déposée : {chemin}. Enregistrez la vitrine pour la publier.",
+    "en": "Video uploaded: {chemin}. Save the showcase to publish it.",
+    "mg": "Voapetraka : {chemin}."
+  },
+  "vitrineAdmin.erreur": {
+    "fr": "La vitrine n'a pas pu être enregistrée.",
+    "en": "The showcase could not be saved.",
+    "mg": "Tsy voatahiry."
+  },
+  "vitrineAdmin.erreurVideo": {
+    "fr": "La vidéo n'a pas pu être déposée (MP4 ou WebM, 30 Mo au plus).",
+    "en": "The video could not be uploaded (MP4 or WebM, 30 MB max).",
+    "mg": "Tsy voapetraka."
+  },
+  "vitrineAdmin.erreurChargement": {
+    "fr": "La vitrine de cette organisation est illisible.",
+    "en": "This organization's showcase could not be loaded.",
+    "mg": "Tsy azo vakiana."
+  },
+  "aide.bouton": {
+    "fr": "Aide",
+    "en": "Help",
+    "mg": "Fanampiana"
+  },
+  "aide.titre": {
+    "fr": "Aide et tutoriels",
+    "en": "Help and tutorials",
+    "mg": "Fanampiana sy torolalana"
+  },
+  "aide.chargement": {
+    "fr": "Chargement des tutoriels…",
+    "en": "Loading tutorials…",
+    "mg": "Maka ny torolalana…"
+  },
+  "aide.aucun": {
+    "fr": "Les tutoriels vidéo ne sont pas encore publiés pour cet espace.",
+    "en": "Video tutorials are not yet published for this space.",
+    "mg": "Tsy mbola navoaka ny torolalana."
+  },
+  "aide.miseEnRoute": {
+    "fr": "Mise en route de l’organisation",
+    "en": "Getting the organization started",
+    "mg": "Fanombohana"
+  },
+  "aide.cetEcran": {
+    "fr": "Pour cet écran",
+    "en": "For this screen",
+    "mg": "Ho an'ity efijery ity"
+  },
+  "aide.aucunEcran": {
+    "fr": "Aucun tutoriel ne passe par cet écran ; voyez la liste complète ci-dessous.",
+    "en": "No tutorial goes through this screen; see the full list below.",
+    "mg": "Tsy misy torolalana ho an'ity efijery ity."
+  },
+  "aide.rechercher": {
+    "fr": "Rechercher un tutoriel",
+    "en": "Search tutorials",
+    "mg": "Hikaroka torolalana"
+  },
+  "aide.tous": {
+    "fr": "Tous les tutoriels ({n})",
+    "en": "All tutorials ({n})",
+    "mg": "Torolalana rehetra ({n})"
+  },
+  "aide.aucunResultat": {
+    "fr": "Aucun tutoriel ne correspond.",
+    "en": "No matching tutorial.",
+    "mg": "Tsy misy mifanaraka."
+  },
+  "aide.profil": {
+    "fr": "profil : {profil}",
+    "en": "profile: {profil}",
+    "mg": "mombamomba : {profil}"
+  },
+  "aide.retour": {
+    "fr": "← Retour à la liste",
+    "en": "← Back to list",
+    "mg": "← Hiverina"
+  },
+  "aide.duree": {
+    "fr": "Durée : {duree}",
+    "en": "Duration: {duree}",
+    "mg": "Faharetana : {duree}"
+  },
+  "aide.exigences": {
+    "fr": "exigences : {liste}",
+    "en": "requirements: {liste}",
+    "mg": "fepetra : {liste}"
+  },
+  "aide.videoIndisponible": {
+    "fr": "Votre navigateur ne lit pas cette vidéo ; les étapes sont décrites ci-dessous.",
+    "en": "Your browser cannot play this video; the steps are listed below.",
+    "mg": "Tsy vakian'ny navigateur ity horonan-tsary ity."
+  },
+  "aide.etapes": {
+    "fr": "Étapes",
+    "en": "Steps",
+    "mg": "Dingana"
   }
 }

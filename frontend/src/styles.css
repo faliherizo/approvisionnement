@@ -137,7 +137,11 @@ h3 { color: var(--bleu-fonce); font-size: clamp(15px, 0.95rem + 0.3vw, 17.5px); 
 .form { display: flex; flex-direction: column; gap: 14px; }
 /* Un <fieldset> ne rétrécit pas sous son contenu (min-inline-size: min-content) : il débordait sur téléphone. */
 fieldset { min-inline-size: 0; max-width: 100%; }
-label { display: flex; flex-direction: column; gap: 5px; font-size: 14px; font-weight: 600; color: var(--texte); }
+/* Libellé en bloc : son texte, l'astérisque d'un champ obligatoire et l'aide entre parenthèses restent sur la même ligne,
+   le champ dessous. En colonne flexible, chacun de ces morceaux prenait sa propre ligne : le champ d'un libellé marqué
+   « * » descendait d'une ligne sous son voisin de rangée (signature en lot, « Modèle de contrat »). */
+label { display: block; font-size: 14px; font-weight: 600; color: var(--texte); }
+label > input:not([type=checkbox]):not([type=radio]), label > select, label > textarea { display: block; width: 100%; margin-top: 5px; }
 /* Libellé associé par id (le nom accessible n'inclut pas la valeur choisie) : même mise en page qu'un libellé englobant. */
 .champ-associe { display: flex; flex-direction: column; gap: 5px; }
 input, select, textarea {
@@ -155,7 +159,8 @@ input[type=file] { padding: 8px 10px; background: var(--bg); cursor: pointer; }
 input[type=color] { padding: 3px; height: 40px; cursor: pointer; }
 
 /* Grille de formulaire responsive : deux colonnes alignées, une seule sur mobile. */
-.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; }
+/* Champs d'une même rangée alignés sur leur bord inférieur, même si un libellé passe sur deux lignes. */
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; align-items: end; }
 .form-grid > .col-2 { grid-column: 1 / -1; }
 .form-grid > label { min-width: 0; }
 .form-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -301,6 +306,8 @@ button.link:hover, button.link:focus-visible { background: none; text-decoration
 
 /* --- Cibles tactiles suffisantes (WCAG 2.5.5) --- */
 button, input, select, textarea { min-height: 40px; }
+/* Même hauteur pour une zone de texte et une liste déroulante : posées côte à côte, leurs libellés partent du même bord. */
+input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=file]), select { min-height: 44px; }
 button.modal-x { min-height: 32px; }
 
 /* Liens de contenu : couleur contrastée + soulignement au focus/survol */
@@ -389,7 +396,7 @@ th[scope="col"] { color: var(--bleu-fonce); }
 .gabarit-select__libelle { color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
 .gabarit-select select { padding: 8px 10px; border: 1px solid var(--border, #cbd5e1); border-radius: 8px; background: var(--card, #fff); color: inherit; font-size: 14px; }
 .gabarit-select select:focus-visible { outline: 2px solid var(--accent, #0B4A8A); outline-offset: 2px; }
-.check-row { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 0; font-weight: 400; min-width: 0; overflow-wrap: anywhere; }
+.check-row { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 0; font-weight: 400; min-width: 0; overflow-wrap: anywhere; }
 .actions-cell { display: flex; flex-wrap: wrap; gap: 8px; }
 .sans-coupure { white-space: nowrap; }
 .actions-cell > a { display: inline-flex; align-items: center; min-height: 24px; }
@@ -685,3 +692,19 @@ a.btn-lien:hover, a.btn-lien:focus-visible { background: #e0e7f1; text-decoratio
 
 /* Banque d'heures : barre proportionnelle à côté de la valeur écrite (la valeur porte l'information, la barre la situe). */
 .barre-inline { display: inline-block; height: 10px; min-width: 2px; max-width: 60%; background: #1f5fa6; border-radius: 0 4px 4px 0; vertical-align: middle; }
+
+/* Éditeur de vitrine (superadministrateur) et chargement de la vitrine d'une organisation. */
+.vitrine-admin-liste { list-style: decimal; padding-left: 1.4rem; display: flex; flex-direction: column; gap: 12px; }
+.vitrine-admin-apercu { width: 100%; max-width: 640px; border-radius: 8px; background: #000; }
+.vitrine-chargement { padding: 2rem 1rem; text-align: center; }
+
+/* Menu d'aide : bouton du bandeau, tutoriels vidéo et leurs étapes. */
+.aide-bouton { min-height: 44px; }
+.aide-contenu { display: flex; flex-direction: column; gap: 16px; }
+.aide-section h4 { margin: 0 0 6px; }
+.aide-liste { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.aide-liste button.lien { min-height: 32px; text-align: left; }
+.aide-video { width: 100%; max-height: 60vh; background: #000; border-radius: 8px; margin: 8px 0; }
+.aide-etapes { padding-left: 1.4rem; display: flex; flex-direction: column; gap: 4px; }
+.aide-tutoriel { display: flex; flex-direction: column; gap: 8px; }
+.aide-tutoriel > button { align-self: flex-start; }

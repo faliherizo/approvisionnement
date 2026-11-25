@@ -151,6 +151,7 @@ function Groupes() {
   const unites = useListe('CLM_UNITE')
   const [f, setF] = useState({ code: '', libelle: '' })
   const [ajout, setAjout] = useState({})
+  const [libelles, setLibelles] = useState({})
   const [erreur, setErreur] = useState(null)
   const [info, setInfo] = useState('')
 
@@ -186,6 +187,15 @@ function Groupes() {
               {groupes.map((g) => (
                 <li key={g.id}>
                   <p><strong>{g.libelle}</strong> <code>{g.code}</code>{g.unite && <span className="muted"> · {t('clm.gr.unite')}</span>}</p>
+                  <form className="cmp-row" aria-label={t('clm.gr.renommerA', { code: g.code })} onSubmit={(e) => {
+                    e.preventDefault()
+                    faire(() => api.put(`/clm/admin/groupes/${g.id}`, { libelle: libelles[g.id] ?? g.libelle }), t('clm.gr.renomme', { code: g.code }))
+                  }}>
+                    <label>{t('clm.gr.nouveauLibelle')}
+                      <input value={libelles[g.id] ?? g.libelle} maxLength={120} required onChange={(e) => setLibelles({ ...libelles, [g.id]: e.target.value })} />
+                    </label>
+                    <button type="submit" className="secondary">{t('clm.gr.renommer')}</button>
+                  </form>
                   {g.membres.length === 0 ? <p className="muted">{t('clm.gr.sansMembre')}</p> : (
                     <ul aria-label={t('clm.gr.membresDe', { code: g.code })}>
                       {g.membres.map((m) => (

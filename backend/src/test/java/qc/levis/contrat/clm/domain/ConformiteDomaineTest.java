@@ -26,6 +26,11 @@ class ConformiteDomaineTest {
         }
         assertThrows(IllegalArgumentException.class, () -> GroupeClm.creer(7L, "A", null, "a", T0));
         assertThrows(IllegalArgumentException.class, () -> GroupeClm.creer(7L, "A", "x".repeat(121), "a", T0));
+        g.renommer("  Affaires juridiques ");
+        assertEquals("Affaires juridiques", g.getLibelle(), "le libellé se renomme");
+        assertEquals("JURIDIQUE_IQ", g.getCode(), "le code ne change pas");
+        assertThrows(IllegalArgumentException.class, () -> g.renommer(" "));
+        assertEquals("Affaires juridiques", g.getLibelle(), "un libellé refusé laisse l'ancien");
         ReflectionTestUtils.setField(g, "id", 3L);
         MembreGroupeClm m = new MembreGroupeClm(g, " Validateur@IQ.example ");
         assertEquals("validateur@iq.example", m.getCourriel());

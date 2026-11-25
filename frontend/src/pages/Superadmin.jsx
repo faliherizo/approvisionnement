@@ -8,6 +8,7 @@ import GabaritManager from '../components/GabaritManager.jsx'
 import ModuleManager from '../components/ModuleManager.jsx'
 import BanqueHeuresManager from '../components/BanqueHeuresManager.jsx'
 import Modal from '../components/Modal.jsx'
+import EditeurVitrine from '../components/EditeurVitrine.jsx'
 import { useI18n } from '../i18n/I18nContext'
 
 export default function Superadmin() {
@@ -190,6 +191,8 @@ export default function Superadmin() {
           <button type="submit" disabled={!theme.tenantId}>{tr('superadmin.enregistrerTheme')}</button>
         </form>
       </section>
+
+      <EditeurVitrine tenants={tenants} />
 
       <section className="panel">
         <h2>⚙️ {tr('superadmin.valeursSelecteurs')}</h2>

@@ -49,3 +49,7 @@ application-local.properties
 # ===== Exports générés =====
 gitnexus-export.zip
 *.pdf.tmp
+
+# Vidéos générées (bdd/outils/videos.mjs), publiées dans la médiathèque du serveur : jamais versionnées.
+bdd/medias/
+bdd/test-results-e2e/videos*/

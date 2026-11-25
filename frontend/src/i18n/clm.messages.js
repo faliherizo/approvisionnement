@@ -546,6 +546,8 @@ const LIBELLES = {
   'clm.ut.introuvable': ['Aucun compte pour {courriel}.', 'No account for {courriel}.'],
   'clm.ut.roleAttribue': ['Rôle « {role} » attribué à {nom}.', 'Role “{role}” assigned to {nom}.'], 'clm.ut.accesRetire': ['Accès de {nom} retiré (compte désactivé).', 'Access of {nom} removed (account disabled).'],
   // Listes de référence et paramètres de l'organisation (« rien n'est figé »)
+  'clm.nav.groupesAdmin': ['Groupes', 'Groups'], 'clm.nav.sso': ['Annuaire et authentification', 'Directory and sign-in'],
+  'clm.nav.audit': ['Audit des accès', 'Access audit'],
   'clm.nav.listes': ['Listes de référence', 'Reference lists'], 'clm.ad.listes': ['Listes de référence', 'Reference lists'],
   'clm.ad.listesObjectif': ['Adapter les valeurs que propose le module : types de contrat, unités, rôles des signataires, champs Salesforce et clauses attendues.',
     'Adapt the values the module offers: contract types, units, signer roles, Salesforce fields and expected clauses.'],
@@ -651,6 +653,8 @@ const LIBELLES = {
   'clm.gr.nouveau': ['Nouveau groupe', 'New group'], 'clm.gr.creer': ['Créer le groupe', 'Create group'],
   'clm.gr.depuisUnite': ['À partir d’une unité', 'From a unit'], 'clm.gr.depuisUniteAide': ['(ses membres verront les trousses de l’unité)', '(members will see the unit’s packages)'],
   'clm.gr.aucuneUnite': ['— Aucune —', '— None —'], 'clm.gr.code': ['Code', 'Code'], 'clm.gr.codeAide': ['(majuscules, chiffres, soulignés)', '(capitals, digits, underscores)'],
+  'clm.gr.renommerA': ['Renommer le groupe {code}', 'Rename group {code}'], 'clm.gr.nouveauLibelle': ['Libellé du groupe', 'Group label'],
+  'clm.gr.renommer': ['Renommer', 'Rename'], 'clm.gr.renomme': ['Groupe {code} renommé.', 'Group {code} renamed.'],
   'clm.gr.libelle': ['Libellé', 'Label'], 'clm.gr.liste': ['Groupes de l’organisation', 'Organization groups'], 'clm.gr.aucun': ['Aucun groupe.', 'No group.'],
   'clm.gr.unite': ['unité administrative', 'administrative unit'], 'clm.gr.sansMembre': ['Aucun membre.', 'No member.'],
   'clm.gr.membresDe': ['Membres du groupe {code}', 'Members of group {code}'], 'clm.gr.membre': ['Membre', 'Member'],

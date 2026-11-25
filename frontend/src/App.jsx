@@ -6,6 +6,7 @@ import { useModules } from './hooks/useModules.js'
 import { accueilSansSocle, equivalentClm, espaceClmSeul } from './espaces.js'
 import { chargerTheme } from './theme.js'
 import LangSwitcher from './components/LangSwitcher.jsx'
+import AideMenu from './components/AideMenu.jsx'
 import DropdownMenu from './components/DropdownMenu.jsx'
 import Login from './pages/Login.jsx'
 import Dashboard from './pages/Dashboard.jsx'
@@ -231,6 +232,7 @@ function Layout({ children }) {
           <NavLink to="/profil">{t('nav.profile')}</NavLink>
         </nav>
         <div className="userbox">
+          <AideMenu espace="socle" />
           <LangSwitcher compact />
           <span>{user.nom}</span>
           <span className="roles">{user.roles?.join(', ')}</span>

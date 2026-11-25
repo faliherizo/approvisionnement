@@ -54,40 +54,7 @@ if (existsSync(SORTIE)) {
 const etat = (id) => ({ 'réussi': '✅ réussi', 'échoué': '❌ échoué', 'non exécuté': '⏸ non exécuté' }[resultats[id]]
   ?? precedents[id] ?? '— pas encore exécuté')
 
-// --- Étapes en langage d'analyste -----------------------------------------------------------------------------------
-const liste = (v) => [v].flat().map((x) => `« ${x} »`).join(', ')
-const paires = (o) => Object.entries(o).map(([k, v]) => `« ${k} » : ${v === '' ? '(vide)' : `\`${v}\``}`).join(' ; ')
-function phrase(e) {
-  if ('aller' in e) return `Ouvrir l'écran \`${e.aller}\``
-  if ('connecter' in e) return typeof e.connecter === 'string' ? `Se connecter en tant que ${e.connecter}` : `Se connecter avec le compte \`${e.connecter.email}\``
-  if ('lire' in e) return `Relever le texte affiché (\`${e.lire.selecteur}\`) sous le nom \`${e.lire.variable}\``
-  if ('remplirTotp' in e) return `Saisir le code TOTP courant dans ${Object.keys(e.remplirTotp).map((k) => `« ${k} »`).join(', ')}`
-  if ('largeur' in e) return `Afficher l'écran à ${e.largeur} px de large${e.largeur < 600 ? ' (téléphone)' : ''}`
-  if ('langue' in e) return `Passer l'interface en ${{ fr: 'français', en: 'anglais', mg: 'malgache' }[e.langue]}`
-  if ('cliquer' in e) return typeof e.cliquer === 'string' ? `Activer « ${e.cliquer} »` : `Activer « ${e.cliquer.nom} » (${e.cliquer.role})`
-  if ('dansLaLigne' in e) return `Dans la ligne « ${e.dansLaLigne.texte} », activer « ${e.dansLaLigne.cliquer} »`
-  if ('remplir' in e) return `Saisir ${paires(e.remplir)}`
-  if ('choisir' in e) return `Choisir ${paires(e.choisir)}`
-  if ('options' in e) return Object.entries(e.options).map(([k, v]) => `Constater que « ${k} »${v.contient ? ` propose ${liste(v.contient)}` : ''}${v.contient && v.exclut ? ' et' : ''}${v.exclut ? ` ne propose plus ${liste(v.exclut)}` : ''}`).join(' ; ')
-  if ('cocher' in e) return `Cocher « ${e.cocher} »`
-  if ('decocher' in e) return `Décocher « ${e.decocher} »`
-  if ('televerser' in e) return `Joindre « ${e.televerser.fichier.nom} » au champ « ${e.televerser.champ} »`
-  if ('voir' in e) return `Voir ${liste(e.voir)}`
-  if ('nePasVoir' in e) return `Ne pas voir ${liste(e.nePasVoir)}`
-  if ('valeur' in e) return `Constater la valeur ${paires(e.valeur)}`
-  if ('voirTitre' in e) return `Voir le titre « ${e.voirTitre} »`
-  if ('url' in e) return `Arriver sur une adresse de la forme \`${e.url}\``
-  if ('preparer' in e) return typeof e.preparer === 'string' ? `Préparer par l'API : cas \`${e.preparer}\``
-    : `Préparer par l'API : ${e.preparer.description}`
-  if ('telecharger' in e) return `Télécharger par « ${e.telecharger} » et obtenir un fichier non vide`
-  if ('dansLaFenetre' in e) return `Dans la fenêtre ouverte, activer « ${e.dansLaFenetre} »`
-  if ('dansLaSection' in e) return `Dans la section « ${e.dansLaSection.titre} », activer « ${e.dansLaSection.cliquer} »`
-  if ('cliquerTexte' in e) return `Activer l'élément « ${e.cliquerTexte} » (ligne ou carte cliquable)`
-  if ('tracer' in e) return 'Tracer une signature manuscrite sur le pavé de signature'
-  if ('repondre' in e) return `Répondre « ${e.repondre} » à la prochaine saisie demandée par le navigateur`
-  if ('ecranConforme' in e) return "Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px"
-  return JSON.stringify(e)
-}
+import { phrase } from './phrases.mjs'
 
 // --- Nature d'un scénario : parcours d'interface, ou préparation par l'API dont l'écran ne fait que constater ------------
 // Au moins trois gestes d'utilisateur (saisir, choisir, activer, joindre…) : l'exigence est vécue à l'écran.

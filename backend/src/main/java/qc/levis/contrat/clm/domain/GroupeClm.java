@@ -49,17 +49,26 @@ public class GroupeClm {
         if (!c.matches("[A-Z][A-Z0-9_]{0,59}")) {
             throw new IllegalArgumentException("Code du groupe : lettre puis lettres, chiffres ou soulignés (60 au plus).");
         }
+        GroupeClm g = new GroupeClm();
+        g.tenantId = tenantId;
+        g.code = c;
+        g.libelle = libelleValide(libelle);
+        g.creePar = par;
+        g.creeLe = le;
+        return g;
+    }
+
+    /** Le code, repris par les parcours et le partage des modèles, ne change pas ; seul le libellé se renomme. */
+    public void renommer(String libelle) {
+        this.libelle = libelleValide(libelle);
+    }
+
+    private static String libelleValide(String libelle) {
         String l = libelle == null ? "" : libelle.strip();
         if (l.isEmpty() || l.length() > LIBELLE_MAX) {
             throw new IllegalArgumentException("Libellé du groupe : 1 à " + LIBELLE_MAX + " caractères.");
         }
-        GroupeClm g = new GroupeClm();
-        g.tenantId = tenantId;
-        g.code = c;
-        g.libelle = l;
-        g.creePar = par;
-        g.creeLe = le;
-        return g;
+        return l;
     }
 
     public Long getId() { return id; }

@@ -33,6 +33,7 @@ services:
     env_file: .env.contrat
     environment:
       SPRING_PROFILES_ACTIVE: prod
+      APP_MEDIA_REPERTOIRE: /app/data/media
       DB_URL: jdbc:postgresql://db:5432/contrat
       DB_USER: contrat
       # Sans plafond, la JVM dimensionne son tas sur la mémoire de l'hôte, partagée par une douzaine d'applications.
@@ -45,6 +46,8 @@ services:
       retries: 8
     volumes:
       - ./donnees/simulateur:/app/data/simulateur
+      # Médiathèque (vidéos des vitrines et de l'aide) : publiée par bdd/outils/videos.mjs publier, servie par /api/media/.
+      - ./donnees/media:/app/data/media
     networks:
       - contrat-network   # la base
       - web               # l'Ollama mutualisé (vina_ollama)

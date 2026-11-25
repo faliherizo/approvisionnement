@@ -6,6 +6,7 @@ import { useModules } from '../../hooks/useModules.js'
 import { useI18n } from '../../i18n/I18nContext'
 import { chargerTheme } from '../../theme.js'
 import LangSwitcher from '../../components/LangSwitcher.jsx'
+import AideMenu from '../../components/AideMenu.jsx'
 import './clm.css'
 import { usePeutInitier } from './commun.jsx'
 
@@ -30,9 +31,12 @@ const ADMINISTRATION = [
   ['/clm/admin/parametres', 'clm.nav.parametres', [AFF]],
   ['/clm/admin/listes', 'clm.nav.listes', [AFF]],
   ['/clm/admin/utilisateurs', 'clm.nav.utilisateurs', [AFF, TEC]],
+  ['/clm/admin/groupes', 'clm.nav.groupesAdmin', [AFF]],
+  ['/clm/admin/sso', 'clm.nav.sso', [TEC]],
   ['/clm/admin/conservation', 'clm.nav.conservation', [AFF]],
   ['/clm/admin/departs', 'clm.nav.departs', [AFF]],
   ['/clm/admin/journal', 'clm.nav.journal', [AFF, 'AUDITEUR']],
+  ['/clm/admin/audit', 'clm.nav.audit', [AFF, TEC]],
   ['/clm/options', 'clm.nav.options', [AFF]],
 ]
 
@@ -79,6 +83,7 @@ export default function ClmShell({ children }) {
           <button type="submit">{t('clm.rechercher')}</button>
         </form>
         <div className="clm-shell__profil">
+          <AideMenu espace="clm" />
           <LangSwitcher compact />
           <span className="clm-shell__avatar" aria-hidden="true">{initiales(user?.nom)}</span>
           <span className="clm-shell__nom">{user?.nom}</span>

@@ -16,4 +16,14 @@ test.describe("Contrôle d'écran (outils/ui.ts)", () => {
       <button style="display:block;height:44px">Suivant</button>`))
     expect((await ecartsEcran(p)).filter((e) => e.includes('superposés'))).toEqual([])
   })
+
+  test('relève deux champs d’une même rangée dont les bords ne s’alignent pas, accepte ceux qui s’alignent', async ({ page: p }) => {
+    const grille = (style: string) => page(`<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;width:600px">
+      <label style="${style}">Libellé du lot<input style="height:40px;box-sizing:border-box"></label>
+      <label style="${style}">Modèle de contrat <span>*</span><select style="height:40px;box-sizing:border-box"><option>—</option></select></label></div>`)
+    await p.setContent(grille('display:flex;flex-direction:column'))
+    expect((await ecartsEcran(p)).join()).toContain('champs désalignés')
+    await p.setContent(grille('display:block'))
+    expect((await ecartsEcran(p)).filter((e) => e.includes('désalignés'))).toEqual([])
+  })
 })

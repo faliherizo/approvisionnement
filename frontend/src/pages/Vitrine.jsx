@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import api from '../api.js'
 import { useI18n } from '../i18n/I18nContext.jsx'
 import ChoixOrganisation from '../components/ChoixOrganisation.jsx'
 import { slugTenant } from '../theme.js'
@@ -18,10 +19,80 @@ function Acces({ className, children, onChoisir }) {
  * démonstration et appels à l'action. Responsive et conforme WCAG 2.2 AA (landmarks,
  * ordre des titres, cibles ≥ 24 px, focus visible, alternative textuelle à la vidéo).
  */
+/**
+ * Vitrine d'une organisation (https://<organisation>.contrat.vinaitsolution.com/accueil) : son titre, ses fonctionnalités
+ * et sa vidéo de présentation sous-titrée, tels que le superadministrateur les a publiés.
+ */
+function VitrineOrganisation({ v }) {
+  const { t } = useI18n()
+  return (
+    <div className="vitrine">
+      <a className="skip-link" href="#contenu">{t('vitrine.skipLink')}</a>
+      <header className="vitrine-topbar">
+        <div className="vitrine-brand">
+          <span className="crest" aria-hidden="true">⚜️</span>
+          <div><strong>{v.titre}</strong><span className="vitrine-sub">{t('vitrine.orgSous')}</span></div>
+        </div>
+        <nav aria-label={t('vitrine.navLabel')} className="vitrine-nav">
+          {v.video && <a href="#demonstration">{t('vitrine.navDemo')}</a>}
+          <a href="#fonctionnalites">{t('vitrine.navFeatures')}</a>
+          <Link className="vitrine-cta" to="/login">{t('vitrine.orgConnexion')}</Link>
+        </nav>
+      </header>
+      <main id="contenu">
+        <section className="vitrine-hero" aria-labelledby="titre-hero">
+          <h1 id="titre-hero">{v.titre}</h1>
+          {v.accroche && <p className="vitrine-accroche">{v.accroche}</p>}
+          <div className="vitrine-actions">
+            <Link className="vitrine-bouton" to="/login">{t('vitrine.orgConnexion')}</Link>
+            {v.video && <a className="vitrine-bouton secondaire" href="#demonstration">{t('vitrine.heroSeeVideo')}</a>}
+          </div>
+        </section>
+        {v.video && (
+          <section id="demonstration" className="vitrine-section" aria-labelledby="titre-demo">
+            <h2 id="titre-demo">{t('vitrine.orgVideo')}</h2>
+            <figure className="vitrine-video">
+              <video controls preload="metadata" playsInline width="1280" height="720" aria-describedby="video-org-alt"
+                poster={v.affiche ? `/api/media/${v.affiche}` : undefined}>
+                <source src={`/api/media/${v.video}`} type={v.video.endsWith('.webm') ? 'video/webm' : 'video/mp4'} />
+                {v.sousTitres && <track kind="captions" srcLang="fr" label="Français" src={`/api/media/${v.sousTitres}`} default />}
+                {t('vitrine.videoFallback')}
+              </video>
+              <figcaption id="video-org-alt">{t('vitrine.orgVideoAlt')}</figcaption>
+            </figure>
+          </section>
+        )}
+        {v.fonctionnalites.length > 0 && (
+          <section id="fonctionnalites" className="vitrine-section" aria-labelledby="titre-fonc">
+            <h2 id="titre-fonc">{t('vitrine.featuresTitle')}</h2>
+            <ul className="vitrine-grille" role="list">
+              {v.fonctionnalites.map((f) => (
+                <li key={f.titre} className="vitrine-carte"><h3>{f.titre}</h3>{f.texte && <p>{f.texte}</p>}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </main>
+      <footer className="vitrine-footer">
+        <p>{t('vitrine.orgPropulse')} <a href="https://vinaitsolution.com">VINA IT Solutions inc.</a></p>
+      </footer>
+    </div>
+  )
+}
+
 export default function Vitrine() {
   const { t } = useI18n()
   const [choixOuvert, setChoixOuvert] = useState(false)
   const choisir = () => setChoixOuvert(true)
+  // Sur le sous-domaine d'une organisation : sa vitrine publiée, sinon celle de la plateforme.
+  const organisation = slugTenant()
+  const [vitrine, setVitrine] = useState(organisation ? undefined : null)
+  useEffect(() => {
+    if (!organisation) return
+    api.get(`/vitrines/${organisation}`).then((r) => setVitrine(r.data)).catch(() => setVitrine(null))
+  }, [organisation])
+  if (vitrine === undefined) return <p className="vitrine-chargement" role="status">{t('vitrine.chargement')}</p>
+  if (vitrine) return <VitrineOrganisation v={vitrine} />
 
   const fonctionnalites = [
     { titre: t('vitrine.feat1Title'), texte: t('vitrine.feat1Text') },

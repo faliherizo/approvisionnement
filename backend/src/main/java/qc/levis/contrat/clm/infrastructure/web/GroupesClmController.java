@@ -35,6 +35,13 @@ public class GroupesClmController {
         return groupes.creer(req, auth.getName());
     }
 
+    /** Renommer un groupe : le libellé change, le code (repris par les parcours et les modèles) reste. */
+    @PutMapping("/admin/groupes/{id}")
+    @PreAuthorize(ADMIN)
+    public ClmDto.GroupeVue renommer(@PathVariable Long id, @RequestBody ClmDto.GroupeRequest req, Authentication auth) {
+        return groupes.renommer(id, req, auth.getName());
+    }
+
     @DeleteMapping("/admin/groupes/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize(ADMIN)

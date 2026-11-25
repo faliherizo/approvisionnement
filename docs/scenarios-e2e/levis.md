@@ -2074,3 +2074,38 @@ IMP-${UNIQUE},Clause importée ${unique},STANDARD,Texte importé.`
 6. Passer l'interface en français
 7. Ouvrir l'écran `/parametres`
 8. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-VIT-01 — Le superadministrateur modifie la vitrine d'Investissement Québec, y dépose une vidéo, la publie puis la retire ; le site de l'organisation suit
+
+- **Profil** : superadmin
+- **Exigences démontrées** : LEV-C-22, IQ-C-58
+- **Données** : `bdd/e2e/donnees/vitrines-aide.json`
+- **Nature** : parcours d'interface (13 gestes)
+- **Dernier résultat** : — pas encore exécuté
+
+1. Ouvrir l'écran `/superadmin`
+2. Choisir « Site vitrine des organisations » Organisation » : `Investissement Québec`
+3. Saisir « Titre du site » : `IQ — vitrine ${unique}` ; « Accroche » : `Contrats et signature, de bout en bout (${unique}).`
+4. Activer « Ajouter une fonctionnalité »
+5. Saisir « Titre de la fonctionnalité 11 » : `Fonctionnalité ${unique}` ; « Description de la fonctionnalité 11 » : `Présentée par l'e2e.`
+6. Activer « Monter la fonctionnalité 11 »
+7. Joindre « presentation-${unique}.mp4 » au champ « Téléverser une vidéo »
+8. Voir « Vidéo déposée : vitrines/iq/televersee- »
+9. Activer « Enregistrer la vitrine »
+10. Voir « Vitrine de Investissement Québec enregistrée. »
+11. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+12. Ouvrir l'écran `http://iq.e2e.localhost:5175/accueil`
+13. Voir « IQ — vitrine ${unique} », « Fonctionnalité ${unique} », « Présentation des fonctionnalités »
+14. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+15. Ouvrir l'écran `/superadmin`
+16. Choisir « Site vitrine des organisations » Organisation » : `Investissement Québec`
+17. Décocher « Publiée (visible sur le site de l'organisation) »
+18. Activer « Enregistrer la vitrine »
+19. Voir « Vitrine de Investissement Québec enregistrée. »
+20. Ouvrir l'écran `http://iq.e2e.localhost:5175/accueil`
+21. Ne pas voir « IQ — vitrine ${unique} »
+22. Ouvrir l'écran `/superadmin`
+23. Choisir « Site vitrine des organisations » Organisation » : `Investissement Québec`
+24. Cocher « Publiée (visible sur le site de l'organisation) »
+25. Activer « Enregistrer la vitrine »
+26. Voir « Vitrine de Investissement Québec enregistrée. »

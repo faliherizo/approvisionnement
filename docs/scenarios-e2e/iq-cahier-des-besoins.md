@@ -101,8 +101,8 @@ besoin par besoin, sans préparation par l'API.
 | IQ-C-54 | Limiter les dépendances entre signataires | E2E-CB-IQ-09 ✅, E2E-CB-IQ-10 ✅ | E2E-IQ-11 ✅, E2E-IQ-12 ✅ |
 | IQ-C-55 | Flexibilité des workflows en cours de processus | E2E-CB-IQ-06 ✅, E2E-CB-IQ-07 ✅, E2E-CB-IQ-11 ✅, E2E-CB-IQ-23 ✅ | E2E-IQ-08 ✅ |
 | IQ-C-56 | Minimiser les interventions manuelles | E2E-CB-IQ-17 ✅, E2E-CB-IQ-22 ✅ | E2E-IQ-33 ✅ |
-| IQ-C-57 | Expérience simple pour initiateurs, signataires internes et externes | E2E-CB-IQ-17 ✅ | E2E-IQ-01 ✅, E2E-IQ-11 ✅ |
-| IQ-C-58 | Personnalisation : image de marque, messages, parcours | E2E-CB-IQ-12 ✅ | E2E-IQ-15 ✅ |
+| IQ-C-57 | Expérience simple pour initiateurs, signataires internes et externes | E2E-CB-IQ-17 ✅, E2E-AIDE-01 | E2E-IQ-01 ✅, E2E-IQ-11 ✅ |
+| IQ-C-58 | Personnalisation : image de marque, messages, parcours | E2E-CB-IQ-12 ✅, E2E-VIT-01 | E2E-IQ-15 ✅ |
 
 ## Section 1.4.9
 

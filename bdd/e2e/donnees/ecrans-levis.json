@@ -9,6 +9,7 @@
         "LEV-C-16"
       ],
       "profil": "administrateur de Lévis",
+      "miseEnRoute": 1,
       "etapes": [
         {
           "aller": "/utilisateurs"
@@ -245,6 +246,7 @@
         "LEV-2.1-6b"
       ],
       "profil": "administrateur de Lévis",
+      "miseEnRoute": 3,
       "etapes": [
         {
           "aller": "/workflows"
@@ -400,6 +402,7 @@
         "LEV-C-04"
       ],
       "profil": "administrateur de Lévis",
+      "miseEnRoute": 4,
       "etapes": [
         {
           "aller": "/templates"
@@ -462,6 +465,7 @@
         "LEV-2.1-8"
       ],
       "profil": "administrateur de Lévis",
+      "miseEnRoute": 5,
       "etapes": [
         {
           "aller": "/gabarits"
@@ -682,6 +686,7 @@
         "LEV-C-15"
       ],
       "profil": "administrateur de Lévis",
+      "miseEnRoute": 6,
       "etapes": [
         {
           "preparer": {
@@ -1093,6 +1098,7 @@
         "LEV-C-21"
       ],
       "profil": "administrateur de Lévis",
+      "miseEnRoute": 2,
       "etapes": [
         {
           "aller": "/parametres"

@@ -73,6 +73,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/clm/integration/**").permitAll() // API d'intégration : jeton client credentials vérifié par le contrôleur
                 .requestMatchers("/scim/v2/**").permitAll() // SCIM 2.0 (addenda 3, Q51) : jeton porteur de l'organisation vérifié par le contrôleur
                 .requestMatchers(HttpMethod.GET, "/api/tenants", "/api/tenants/*/public").permitAll() // sélecteur & titre de connexion
+                .requestMatchers(HttpMethod.GET, "/api/vitrines/*", "/api/media/**").permitAll() // sites vitrines et médiathèque publique (vidéos, aide)
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/health").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()

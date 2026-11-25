@@ -64,7 +64,12 @@ export const PDF_MINIMAL = Buffer.from('%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2
 const sessions = new Map<string, APIRequestContext>()
 
 /** Contexte d'API authentifié par profil, réutilisé pendant toute l'exécution. */
+// Node ne résout pas les sous-domaines de localhost (Chromium, si) : les appels d'API d'une organisation tournée sur
+// <org>.e2e.localhost passent par le même serveur, sous localhost ; le compte connecté désigne l'organisation.
+export const hoteApi = (baseURL: string) => baseURL.replace(/\/\/[^/:]+\.localhost(?=[:/]|$)/, '//localhost')
+
 export async function session(playwright: Playwright, baseURL: string, profil: string): Promise<APIRequestContext> {
+  baseURL = hoteApi(baseURL)
   const cle = `${baseURL}|${profil}`
   const existante = sessions.get(cle)
   if (existante) return existante
@@ -78,7 +83,7 @@ export async function session(playwright: Playwright, baseURL: string, profil: s
 }
 
 export function oublierSession(baseURL: string, profil: string) {
-  sessions.delete(`${baseURL}|${profil}`)
+  sessions.delete(`${hoteApi(baseURL)}|${profil}`)
 }
 
 /** Code TOTP (RFC 6238 : HMAC-SHA1, 30 s, 6 chiffres) du secret base32, comme une application d'authentification. */
@@ -199,7 +204,7 @@ export async function executer(playwright: Playwright, baseURL: string, profilPa
       continue
     }
     const [methode, chemin] = e.appel!.split(' ')
-    const api = e.anonyme ? await playwright.request.newContext({ baseURL }) : await session(playwright, baseURL, e.profil ?? cas.profil ?? profilParDefaut)
+    const api = e.anonyme ? await playwright.request.newContext({ baseURL: hoteApi(baseURL) }) : await session(playwright, baseURL, e.profil ?? cas.profil ?? profilParDefaut)
     const options: Parameters<APIRequestContext['fetch']>[1] = { method: methode, headers: e.entetes, failOnStatusCode: false, timeout: 60_000 }
     if (e.multipart) {
       options.multipart = Object.fromEntries(Object.entries(e.multipart).map(([k, v]) => [k, typeof v === 'string' ? v

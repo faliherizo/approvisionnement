@@ -17,6 +17,7 @@
         "IQ-D-02"
       ],
       "profil": "administration d'affaires IQ",
+      "miseEnRoute": 6,
       "etapes": [
         {
           "aller": "/clm/modeles"
@@ -888,16 +889,26 @@
     },
     {
       "id": "E2E-CB-IQ-08",
-      "titre": "Attribution par groupe : l'administration crée le groupe et y place le validateur, qui reçoit l'étape",
+      "titre": "Attribution par groupe : l'administration ouvre « Groupes » depuis son menu, crée le groupe, y place le validateur et le renomme ; le validateur reçoit l'étape",
       "exigences": [
         "IQ-C-19",
         "IQ-C-67",
         "IQ-D-05"
       ],
       "profil": "administration principale IQ",
+      "miseEnRoute": 2,
       "etapes": [
         {
-          "aller": "/clm/admin/groupes"
+          "aller": "/clm/admin/notifications"
+        },
+        {
+          "cliquer": {
+            "role": "link",
+            "nom": "Groupes"
+          }
+        },
+        {
+          "url": "/clm/admin/groupes"
         },
         {
           "remplir": {
@@ -921,6 +932,23 @@
         },
         {
           "voir": "validateur@iq.example"
+        },
+        {
+          "remplir": {
+            "Renommer le groupe JUR_${UNIQUE} » Libellé du groupe": "Affaires juridiques ${unique}"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Renommer le groupe JUR_${UNIQUE}",
+            "cliquer": "Renommer"
+          }
+        },
+        {
+          "voir": [
+            "Groupe JUR_${UNIQUE} renommé.",
+            "Affaires juridiques ${unique}"
+          ]
         },
         {
           "ecranConforme": true
@@ -1858,6 +1886,7 @@
         "IQ-S-06"
       ],
       "profil": "administration d'affaires IQ",
+      "miseEnRoute": 3,
       "etapes": [
         {
           "aller": "/clm/admin/notifications"
@@ -2063,6 +2092,7 @@
         "IQ-S-01"
       ],
       "profil": "administration d'affaires IQ",
+      "miseEnRoute": 5,
       "etapes": [
         {
           "aller": "/clm/modeles"
@@ -3279,6 +3309,7 @@
         "IQ-D-06"
       ],
       "profil": "administration principale IQ",
+      "miseEnRoute": 4,
       "etapes": [
         {
           "aller": "/clm/admin/listes"
@@ -3472,6 +3503,7 @@
         "IQ-D-05"
       ],
       "profil": "administration principale IQ",
+      "miseEnRoute": 1,
       "etapes": [
         {
           "aller": "/clm/admin/listes"

@@ -57,6 +57,15 @@ public class GroupesClmService {
     }
 
     @Transactional
+    public ClmDto.GroupeVue renommer(Long id, ClmDto.GroupeRequest req, String acteur) {
+        GroupeClm g = exiger(id);
+        String avant = g.getLibelle();
+        g.renommer(req.libelle());
+        journal.configuration(acteur, "GROUPE", g.getCode() + " : renommé « " + avant + " » → « " + g.getLibelle() + " »");
+        return vue(groupes.save(g), unites());
+    }
+
+    @Transactional
     public void supprimer(Long id, String acteur) {
         GroupeClm g = exiger(id);
         membres.deleteByTenantIdAndGroupeId(g.getTenantId(), g.getId());

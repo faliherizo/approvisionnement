@@ -1,0 +1,51 @@
+{
+  "iq": {
+    "titre": "Investissement Québec — contrats et signature électronique",
+    "accroche": "Générez vos ententes depuis Salesforce Grantmaking, faites-les valider, approuver et signer en ligne, puis conservez une preuve probante : une seule plateforme, conforme au cahier des besoins 2026-6370-0005.",
+    "fonctionnalites": [
+      { "titre": "Génération depuis Salesforce", "texte": "Le dossier Grantmaking préremplit le modèle approuvé ; le contrat est généré en PDF ou en Word et reste traçable jusqu'au dossier source." },
+      { "titre": "Modèles administrés", "texte": "Champs, clauses conditionnelles, zones de signature par rôle et parcours : créés par l'administration d'affaires, publiés par une autre administration." },
+      { "titre": "Validation et approbation", "texte": "Circuits séquentiels, parallèles ou mixtes, par utilisateur, groupe ou règle d'affaires ; rejet, retour pour correction, réassignation sans redémarrer." },
+      { "titre": "Signature électronique", "texte": "Signataires internes et externes, vérification d'identité proportionnée au risque, signature sur ordinateur ou téléphone." },
+      { "titre": "Signature en lot", "texte": "Un modèle, un dossier par ligne : une trousse par dossier, chaque échec isolé et expliqué." },
+      { "titre": "Suivi centralisé", "texte": "Tâches, échéances, rappels configurables et exceptions d'intégration, dans une même vue." },
+      { "titre": "Preuve et journal d'audit", "texte": "Dossier de preuve scellé, intégrité vérifiable, certificat et export complet ; journal d'audit filtrable et exportable." },
+      { "titre": "Conservation et destruction", "texte": "Calendrier par type de contrat, gel légal, versement ou destruction avec certificat." },
+      { "titre": "Intégrations", "texte": "API documentée, Workday, annuaire SCIM 2.0, Microsoft 365 et retour des statuts vers Salesforce." },
+      { "titre": "Accessible et bilingue", "texte": "WCAG 2.2 AA et SGQRI 008 sur tous les écrans, en français et en anglais." }
+    ],
+    "video": "vitrines/iq/presentation.mp4",
+    "sousTitres": "vitrines/iq/presentation.vtt",
+    "publiee": true
+  },
+  "levis": {
+    "titre": "Ville de Lévis — rédaction contractuelle",
+    "accroche": "Du dossier d'approvisionnement au contrat signé : rédaction assistée, clauses normatives, révision juridique, approbation et publication, dans un espace propre à la Ville.",
+    "fonctionnalites": [
+      { "titre": "Dossiers et devis", "texte": "Chaque besoin devient un dossier : devis, documents et versions au même endroit." },
+      { "titre": "Bibliothèque de clauses", "texte": "Clauses normatives verrouillées, clauses optionnelles et conditionnelles, recherche multicritère." },
+      { "titre": "Rédaction assistée", "texte": "Gabarits par mode de sollicitation et assistant d'intelligence artificielle encadré." },
+      { "titre": "Révision et approbation", "texte": "Commentaires, révision juridique, circuits d'approbation configurables et signature." },
+      { "titre": "Publication", "texte": "Dépôt vers Microsoft 365 et SAP, exports PDF et Word." },
+      { "titre": "Pilotage", "texte": "Tableau de bord, journal d'audit et rapports." }
+    ],
+    "video": "vitrines/levis/presentation.mp4",
+    "sousTitres": "vitrines/levis/presentation.vtt",
+    "publiee": true
+  },
+  "v3r": {
+    "titre": "Ville de Trois-Rivières — rédaction contractuelle",
+    "accroche": "Un assistant guidé pour rédiger les contrats d'approvisionnement de la Ville, avec traçabilité, publication et réversibilité, conforme à l'appel d'offres 7000017905.",
+    "fonctionnalites": [
+      { "titre": "Dossier unique", "texte": "Le besoin, le devis, les documents et leurs versions, réunis dans un dossier." },
+      { "titre": "Assistant guidé", "texte": "Le contrat se construit pas à pas, à partir des gabarits et des clauses de la Ville." },
+      { "titre": "Audit et circuits", "texte": "Chaque action est tracée ; les circuits d'approbation se configurent sans développement." },
+      { "titre": "Publication", "texte": "Publication vers Microsoft 365 et SAP depuis le dossier." },
+      { "titre": "Réversibilité", "texte": "Export complet des données et documents, dans des formats ouverts." },
+      { "titre": "IA encadrée", "texte": "Suggestions de rédaction sous contrôle humain, sans donnée qui quitte l'environnement." }
+    ],
+    "video": "vitrines/v3r/presentation.mp4",
+    "sousTitres": "vitrines/v3r/presentation.vtt",
+    "publiee": true
+  }
+}

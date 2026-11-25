@@ -70,6 +70,12 @@ class ConformiteExigencesIntegrationTest {
                 "{\"code\":\"FINANCEMENT_ENTREPRISES\",\"libelle\":\"Financement des entreprises\"}"), 201);
         assertTrue(unite.get("unite").asBoolean(), "le code est celui d'une unité de l'organisation");
         assertEquals(409, appel("POST", "/api/clm/admin/groupes", admin, "{\"code\":\"JURIDIQUE_IQ\",\"libelle\":\"Doublon\"}").getStatus());
+        JsonNode renomme = corps(appel("PUT", "/api/clm/admin/groupes/" + juridique.get("id").asLong(), admin,
+                "{\"libelle\":\"Affaires juridiques IQ\"}"), 200);
+        assertEquals("Affaires juridiques IQ", renomme.get("libelle").asText());
+        assertEquals("JURIDIQUE_IQ", renomme.get("code").asText(), "renommer garde le code");
+        assertEquals(400, appel("PUT", "/api/clm/admin/groupes/" + juridique.get("id").asLong(), admin, "{\"libelle\":\" \"}").getStatus());
+        assertEquals(403, appel("PUT", "/api/clm/admin/groupes/" + juridique.get("id").asLong(), initiateur, "{\"libelle\":\"Intrus\"}").getStatus());
         assertEquals(400, appel("POST", "/api/clm/admin/groupes/" + juridique.get("id").asLong() + "/membres", admin,
                 "{\"courriel\":\"inconnu@ailleurs.example\"}").getStatus(), "seul un compte de l'organisation devient membre");
         corps(appel("POST", "/api/clm/admin/groupes/" + juridique.get("id").asLong() + "/membres", admin, "{\"courriel\":\"validateur@iq.example\"}"), 200);

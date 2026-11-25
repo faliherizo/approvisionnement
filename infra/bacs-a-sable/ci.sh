@@ -35,7 +35,9 @@ docker run --rm -v "$B/icp/etat:/etat" alpine:3.20 chown -R 10001:10001 /etat
 for u in http://localhost:18093/sante http://localhost:18030/health http://localhost:18092/api/info http://localhost:18025/api/v1/info; do attendre "$u"; done
 
 echo "== Serveur branché sur les bacs à sable"
-export SERVER_PORT=8100 CLM_PORTAIL_URL=http://localhost:5175/portail
+export SERVER_PORT=8100 CLM_PORTAIL_URL=http://localhost:5175/portail APP_MEDIA_REPERTOIRE="$RACINE/bdd/medias" APP_CORS_ALLOWED_ORIGINS="http://localhost:*,http://*.e2e.localhost:*"
+# Médiathèque d'essai (aide) quand aucune vidéo n'a été tournée sur l'exécuteur : le menu d'aide a de quoi s'afficher.
+[[ -f "$RACINE/bdd/medias/aide/index.json" ]] || { mkdir -p "$RACINE/bdd/medias"; cp -R "$RACINE/bdd/donnees/medias-essai/." "$RACINE/bdd/medias/"; }
 export CLM_CACHET_MAGASIN="$B/icp/etat/cachet.p12" CLM_CACHET_MOT_DE_PASSE="$(cat "$B/icp/etat/mot-de-passe.txt")"
 export CLM_CACHET_TSA_URL=http://localhost:18090/tsa CLM_CONVERSION_MODE=service CLM_CONVERSION_URL=http://localhost:18030
 export CLM_SIGNATURE_FOURNISSEUR=cachet NOTIFICATION_COURRIEL_MODE=smtp MAIL_HOST=localhost MAIL_PORT=11025

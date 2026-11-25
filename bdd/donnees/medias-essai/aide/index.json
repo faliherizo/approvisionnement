@@ -1,0 +1,12 @@
+[
+ {"id": "E2E-CB-IQ-12", "titre": "Notifications configurables : l'administration désactive puis réactive l'invitation à signer par courriel",
+  "exigences": ["IQ-C-40"], "profil": "administration d'affaires IQ", "organisation": "iq", "espace": "clm", "routes": ["/clm/admin/notifications"],
+  "miseEnRoute": 3, "etapes": ["Ouvrir l'écran /clm/admin/notifications", "Activer « Désactiver — Invitation à signer Courriel »"], "duree": 1,
+  "video": "aide/e2e-cb-iq-12.mp4", "sousTitres": "aide/e2e-cb-iq-12.vtt"},
+ {"id": "MISE-EN-ROUTE-IQ", "titre": "Mise en route de l’organisation : paramétrer l’application avec le compte administrateur",
+  "exigences": ["IQ-C-17"], "profil": "administration", "organisation": "iq", "espace": "clm", "routes": [], "miseEnRoute": 0,
+  "etapes": ["1. Notifications configurables"], "duree": 1, "video": "aide/e2e-cb-iq-12.mp4", "sousTitres": "aide/e2e-cb-iq-12.vtt", "assemblage": true},
+ {"id": "E2E-ECR-LEV-01", "titre": "L'administration crée un compte, le modifie puis le supprime depuis l'écran des utilisateurs",
+  "exigences": ["LEV-2.1-10"], "profil": "administrateur de Lévis", "organisation": "levis", "espace": "socle", "routes": ["/utilisateurs"],
+  "miseEnRoute": 1, "etapes": ["Ouvrir l'écran /utilisateurs"], "duree": 1, "video": "aide/e2e-ecr-lev-01.mp4", "sousTitres": "aide/e2e-ecr-lev-01.vtt"}
+]

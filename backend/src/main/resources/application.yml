@@ -108,6 +108,9 @@ app:
   cookie:
     secure: ${COOKIE_SECURE:false}      # true en production (HTTPS)
     same-site: ${COOKIE_SAMESITE:Lax}
+  # Médiathèque (vidéos des vitrines et de l'aide, sous-titres) : un répertoire monté en production (volume).
+  media:
+    repertoire: ${APP_MEDIA_REPERTOIRE:./data/media}
   cors:
     # Motifs d'origines autorisées (compatibles allowCredentials). En dev/Docker,
     # tout localhost est accepté ; en production, restreindre via APP_CORS_ALLOWED_ORIGINS.

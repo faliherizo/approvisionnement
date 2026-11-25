@@ -50,7 +50,7 @@ export async function preparerOrganisation(playwright: Playwright, baseURL: stri
 }
 
 /**
- * SGQRI 008 3.0 / WCAG 2.2 AA : axe-core sans violation, cibles ≥ 24 px, aucun débordement ni superposition, à chacune des
+ * SGQRI 008 3.0 / WCAG 2.2 AA : axe-core sans violation, cibles ≥ 24 px, aucun débordement, superposition ni champ désaligné, à chacune des
  * largeurs de référence. La largeur courante est rétablie à la fin. Rend la liste des écarts (vide : conforme).
  */
 export async function ecartsEcran(page: Page): Promise<string[]> {
@@ -105,11 +105,28 @@ export async function ecartsEcran(page: Page): Promise<string[]> {
           chevauchements.push(`${a.textContent?.trim().slice(0, 30)} / ${b.textContent?.trim().slice(0, 30)}`)
         }
       }
-      return { deborde: document.documentElement.scrollWidth > window.innerWidth + 1, petits, chevauchements }
+      // Alignement : deux champs voisins (même conteneur) posés sur la même rangée partagent leur bord inférieur. Un libellé
+      // dont l'astérisque ou l'aide prenait sa propre ligne faisait descendre son champ sous celui du voisin.
+      const SIMPLE = ':scope > input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=color]), :scope > select'
+      const champs = visibles('label').map((l) => ({ l, c: l.querySelector<HTMLElement>(SIMPLE) })).filter((x) => x.c)
+      const desalignes: string[] = []
+      for (let i = 0; i < champs.length; i++) {
+        for (let j = i + 1; j < champs.length; j++) {
+          const a = champs[i], b = champs[j]
+          if (a.l.parentElement !== b.l.parentElement) continue
+          const ra = a.l.getBoundingClientRect(), rb = b.l.getBoundingClientRect()
+          if (ra.top >= rb.bottom || rb.top >= ra.bottom) continue
+          const ca = a.c!.getBoundingClientRect(), cb = b.c!.getBoundingClientRect()
+          if (Math.abs(ca.height - cb.height) > 3 || Math.abs(ca.bottom - cb.bottom) <= 3) continue
+          desalignes.push(`${a.l.textContent?.trim().slice(0, 25)} / ${b.l.textContent?.trim().slice(0, 25)}`)
+        }
+      }
+      return { deborde: document.documentElement.scrollWidth > window.innerWidth + 1, petits, chevauchements, desalignes }
     }, COUCHES)
     if (bilan.deborde) ecarts.push(`${largeur} px : débordement horizontal`)
     if (bilan.petits.length) ecarts.push(`${largeur} px : cibles < 24 px ${JSON.stringify(bilan.petits)}`)
     if (bilan.chevauchements.length) ecarts.push(`${largeur} px : éléments superposés ${JSON.stringify(bilan.chevauchements)}`)
+    if (bilan.desalignes.length) ecarts.push(`${largeur} px : champs désalignés ${JSON.stringify(bilan.desalignes)}`)
     const { violations } = await new AxeBuilder({ page }).withTags(AXE_NORMES).analyze()
     for (const v of violations) ecarts.push(`${largeur} px : axe ${v.id} (${v.nodes.length}) : ${v.nodes[0]?.target.join(' ')}`)
   }

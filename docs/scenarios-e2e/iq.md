@@ -1674,45 +1674,51 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅🆕
 - **Démontrée à l'écran** : oui
 
-### E2E-CB-IQ-08 — Attribution par groupe : l'administration crée le groupe et y place le validateur, qui reçoit l'étape
+### E2E-CB-IQ-08 — Attribution par groupe : l'administration ouvre « Groupes » depuis son menu, crée le groupe, y place le validateur et le renomme ; le validateur reçoit l'étape
 
 - **Profil** : administration principale IQ
 - **Exigences démontrées** : IQ-C-19, IQ-C-67, IQ-D-05
 - **Données** : `bdd/e2e/donnees/cahier-iq.json`
-- **Nature** : parcours d'interface (21 gestes)
+- **Nature** : parcours d'interface (24 gestes)
 - **Dernier résultat** : ✅ réussi
 
-1. Ouvrir l'écran `/clm/admin/groupes`
-2. Saisir « Nouveau groupe » Code » : `JUR_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Juridique ${unique}`
-3. Activer « Créer le groupe »
-4. Choisir « Ajouter un membre au groupe JUR_${UNIQUE} » Membre » : `validateur@iq.example`
-5. Dans la section « Ajouter un membre au groupe JUR_${UNIQUE} », activer « Ajouter »
-6. Voir « validateur@iq.example »
-7. Se connecter en tant que initiateur IQ
-8. Ouvrir l'écran `/clm/trousses/nouvelle`
-9. Saisir « Titre » : `Groupe CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-GRP`
-10. Activer « Enregistrer le brouillon »
-11. Activer « Continuer »
-12. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
-13. Voir « entente-${unique}.pdf »
-14. Activer « Continuer »
-15. Activer « Continuer »
-16. Activer « Ajouter une étape »
-17. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
-18. Choisir « Type » : `VALIDATION`
-19. Activer « Affecter un groupe »
-20. Saisir « Responsable 1 » : `JUR_${UNIQUE}`
-21. Activer « Tester le parcours »
-22. Voir « Parcours valide. »
-23. Activer « Enregistrer »
-24. Activer « Continuer »
-25. Activer « Lancer le parcours »
-26. Arriver sur une adresse de la forme `/clm/trousses/\d+`
-27. Se connecter en tant que validateur IQ
-28. Ouvrir l'écran `/clm/taches`
-29. Activer « Traiter — CB${UNIQUE}-GRP Validation juridique »
-30. Activer « Valider »
-31. Voir « Décision enregistrée »
+1. Ouvrir l'écran `/clm/admin/notifications`
+2. Activer « Groupes » (link)
+3. Arriver sur une adresse de la forme `/clm/admin/groupes`
+4. Saisir « Nouveau groupe » Code » : `JUR_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Juridique ${unique}`
+5. Activer « Créer le groupe »
+6. Choisir « Ajouter un membre au groupe JUR_${UNIQUE} » Membre » : `validateur@iq.example`
+7. Dans la section « Ajouter un membre au groupe JUR_${UNIQUE} », activer « Ajouter »
+8. Voir « validateur@iq.example »
+9. Saisir « Renommer le groupe JUR_${UNIQUE} » Libellé du groupe » : `Affaires juridiques ${unique}`
+10. Dans la section « Renommer le groupe JUR_${UNIQUE} », activer « Renommer »
+11. Voir « Groupe JUR_${UNIQUE} renommé. », « Affaires juridiques ${unique} »
+12. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+13. Se connecter en tant que initiateur IQ
+14. Ouvrir l'écran `/clm/trousses/nouvelle`
+15. Saisir « Titre » : `Groupe CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-GRP`
+16. Activer « Enregistrer le brouillon »
+17. Activer « Continuer »
+18. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+19. Voir « entente-${unique}.pdf »
+20. Activer « Continuer »
+21. Activer « Continuer »
+22. Activer « Ajouter une étape »
+23. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+24. Choisir « Type » : `VALIDATION`
+25. Activer « Affecter un groupe »
+26. Saisir « Responsable 1 » : `JUR_${UNIQUE}`
+27. Activer « Tester le parcours »
+28. Voir « Parcours valide. »
+29. Activer « Enregistrer »
+30. Activer « Continuer »
+31. Activer « Lancer le parcours »
+32. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+33. Se connecter en tant que validateur IQ
+34. Ouvrir l'écran `/clm/taches`
+35. Activer « Traiter — CB${UNIQUE}-GRP Validation juridique »
+36. Activer « Valider »
+37. Voir « Décision enregistrée »
 
 ### E2E-IQ-09 — Règles d'affaires : étape non requise selon les valeurs
 
@@ -5832,6 +5838,25 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 4. Voir « ${trousseRef} »
 5. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
+### E2E-AIDE-01 — L'administration d'IQ ouvre l'aide : la mise en route, le tutoriel de l'écran courant avec sa vidéo et ses étapes, puis la recherche
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-57, LEV-2.1-10
+- **Données** : `bdd/e2e/donnees/vitrines-aide.json`
+- **Nature** : parcours d'interface (4 gestes)
+- **Dernier résultat** : — pas encore exécuté
+
+1. Ouvrir l'écran `/clm/admin/notifications`
+2. Activer « Aide »
+3. Voir « Aide et tutoriels », « Mise en route de l’organisation », « Pour cet écran »
+4. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+5. Activer « Notifications configurables : l'administration désactive puis réactive l'invitation à signer par courriel »
+6. Voir « Étapes »
+7. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+8. Activer « ← Retour à la liste »
+9. Saisir « Rechercher un tutoriel » : `Notifications`
+10. Voir « Tous les tutoriels »
+
 ## IQ-C-58 — Personnalisation : image de marque, messages, parcours
 
 - **Source** : 1.4.8
@@ -5869,6 +5894,41 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 2. Ouvrir l'écran `/clm/admin/notifications`
 3. Voir « Notifications »
 4. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-VIT-01 — Le superadministrateur modifie la vitrine d'Investissement Québec, y dépose une vidéo, la publie puis la retire ; le site de l'organisation suit
+
+- **Profil** : superadmin
+- **Exigences démontrées** : LEV-C-22, IQ-C-58
+- **Données** : `bdd/e2e/donnees/vitrines-aide.json`
+- **Nature** : parcours d'interface (13 gestes)
+- **Dernier résultat** : — pas encore exécuté
+
+1. Ouvrir l'écran `/superadmin`
+2. Choisir « Site vitrine des organisations » Organisation » : `Investissement Québec`
+3. Saisir « Titre du site » : `IQ — vitrine ${unique}` ; « Accroche » : `Contrats et signature, de bout en bout (${unique}).`
+4. Activer « Ajouter une fonctionnalité »
+5. Saisir « Titre de la fonctionnalité 11 » : `Fonctionnalité ${unique}` ; « Description de la fonctionnalité 11 » : `Présentée par l'e2e.`
+6. Activer « Monter la fonctionnalité 11 »
+7. Joindre « presentation-${unique}.mp4 » au champ « Téléverser une vidéo »
+8. Voir « Vidéo déposée : vitrines/iq/televersee- »
+9. Activer « Enregistrer la vitrine »
+10. Voir « Vitrine de Investissement Québec enregistrée. »
+11. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+12. Ouvrir l'écran `http://iq.e2e.localhost:5175/accueil`
+13. Voir « IQ — vitrine ${unique} », « Fonctionnalité ${unique} », « Présentation des fonctionnalités »
+14. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+15. Ouvrir l'écran `/superadmin`
+16. Choisir « Site vitrine des organisations » Organisation » : `Investissement Québec`
+17. Décocher « Publiée (visible sur le site de l'organisation) »
+18. Activer « Enregistrer la vitrine »
+19. Voir « Vitrine de Investissement Québec enregistrée. »
+20. Ouvrir l'écran `http://iq.e2e.localhost:5175/accueil`
+21. Ne pas voir « IQ — vitrine ${unique} »
+22. Ouvrir l'écran `/superadmin`
+23. Choisir « Site vitrine des organisations » Organisation » : `Investissement Québec`
+24. Cocher « Publiée (visible sur le site de l'organisation) »
+25. Activer « Enregistrer la vitrine »
+26. Voir « Vitrine de Investissement Québec enregistrée. »
 
 ## IQ-C-59 — Automatisation et IA (extraction, classification, anomalies)
 
@@ -6566,45 +6626,51 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 13. Dans la ligne « Auteur CB ${unique} », activer « Renvoyer en brouillon »
 14. Voir « « Auteur CB ${unique} » renvoyé en brouillon. »
 
-### E2E-CB-IQ-08 — Attribution par groupe : l'administration crée le groupe et y place le validateur, qui reçoit l'étape
+### E2E-CB-IQ-08 — Attribution par groupe : l'administration ouvre « Groupes » depuis son menu, crée le groupe, y place le validateur et le renomme ; le validateur reçoit l'étape
 
 - **Profil** : administration principale IQ
 - **Exigences démontrées** : IQ-C-19, IQ-C-67, IQ-D-05
 - **Données** : `bdd/e2e/donnees/cahier-iq.json`
-- **Nature** : parcours d'interface (21 gestes)
+- **Nature** : parcours d'interface (24 gestes)
 - **Dernier résultat** : ✅ réussi
 
-1. Ouvrir l'écran `/clm/admin/groupes`
-2. Saisir « Nouveau groupe » Code » : `JUR_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Juridique ${unique}`
-3. Activer « Créer le groupe »
-4. Choisir « Ajouter un membre au groupe JUR_${UNIQUE} » Membre » : `validateur@iq.example`
-5. Dans la section « Ajouter un membre au groupe JUR_${UNIQUE} », activer « Ajouter »
-6. Voir « validateur@iq.example »
-7. Se connecter en tant que initiateur IQ
-8. Ouvrir l'écran `/clm/trousses/nouvelle`
-9. Saisir « Titre » : `Groupe CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-GRP`
-10. Activer « Enregistrer le brouillon »
-11. Activer « Continuer »
-12. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
-13. Voir « entente-${unique}.pdf »
-14. Activer « Continuer »
-15. Activer « Continuer »
-16. Activer « Ajouter une étape »
-17. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
-18. Choisir « Type » : `VALIDATION`
-19. Activer « Affecter un groupe »
-20. Saisir « Responsable 1 » : `JUR_${UNIQUE}`
-21. Activer « Tester le parcours »
-22. Voir « Parcours valide. »
-23. Activer « Enregistrer »
-24. Activer « Continuer »
-25. Activer « Lancer le parcours »
-26. Arriver sur une adresse de la forme `/clm/trousses/\d+`
-27. Se connecter en tant que validateur IQ
-28. Ouvrir l'écran `/clm/taches`
-29. Activer « Traiter — CB${UNIQUE}-GRP Validation juridique »
-30. Activer « Valider »
-31. Voir « Décision enregistrée »
+1. Ouvrir l'écran `/clm/admin/notifications`
+2. Activer « Groupes » (link)
+3. Arriver sur une adresse de la forme `/clm/admin/groupes`
+4. Saisir « Nouveau groupe » Code » : `JUR_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Juridique ${unique}`
+5. Activer « Créer le groupe »
+6. Choisir « Ajouter un membre au groupe JUR_${UNIQUE} » Membre » : `validateur@iq.example`
+7. Dans la section « Ajouter un membre au groupe JUR_${UNIQUE} », activer « Ajouter »
+8. Voir « validateur@iq.example »
+9. Saisir « Renommer le groupe JUR_${UNIQUE} » Libellé du groupe » : `Affaires juridiques ${unique}`
+10. Dans la section « Renommer le groupe JUR_${UNIQUE} », activer « Renommer »
+11. Voir « Groupe JUR_${UNIQUE} renommé. », « Affaires juridiques ${unique} »
+12. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+13. Se connecter en tant que initiateur IQ
+14. Ouvrir l'écran `/clm/trousses/nouvelle`
+15. Saisir « Titre » : `Groupe CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-GRP`
+16. Activer « Enregistrer le brouillon »
+17. Activer « Continuer »
+18. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+19. Voir « entente-${unique}.pdf »
+20. Activer « Continuer »
+21. Activer « Continuer »
+22. Activer « Ajouter une étape »
+23. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+24. Choisir « Type » : `VALIDATION`
+25. Activer « Affecter un groupe »
+26. Saisir « Responsable 1 » : `JUR_${UNIQUE}`
+27. Activer « Tester le parcours »
+28. Voir « Parcours valide. »
+29. Activer « Enregistrer »
+30. Activer « Continuer »
+31. Activer « Lancer le parcours »
+32. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+33. Se connecter en tant que validateur IQ
+34. Ouvrir l'écran `/clm/taches`
+35. Activer « Traiter — CB${UNIQUE}-GRP Validation juridique »
+36. Activer « Valider »
+37. Voir « Décision enregistrée »
 
 ### E2E-CB-IQ-14 — Modèle partagé avec un seul groupe : ses membres le voient, les autres non
 
@@ -7535,45 +7601,51 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 30. Activer « Valider »
 31. Voir « Décision enregistrée »
 
-### E2E-CB-IQ-08 — Attribution par groupe : l'administration crée le groupe et y place le validateur, qui reçoit l'étape
+### E2E-CB-IQ-08 — Attribution par groupe : l'administration ouvre « Groupes » depuis son menu, crée le groupe, y place le validateur et le renomme ; le validateur reçoit l'étape
 
 - **Profil** : administration principale IQ
 - **Exigences démontrées** : IQ-C-19, IQ-C-67, IQ-D-05
 - **Données** : `bdd/e2e/donnees/cahier-iq.json`
-- **Nature** : parcours d'interface (21 gestes)
+- **Nature** : parcours d'interface (24 gestes)
 - **Dernier résultat** : ✅ réussi
 
-1. Ouvrir l'écran `/clm/admin/groupes`
-2. Saisir « Nouveau groupe » Code » : `JUR_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Juridique ${unique}`
-3. Activer « Créer le groupe »
-4. Choisir « Ajouter un membre au groupe JUR_${UNIQUE} » Membre » : `validateur@iq.example`
-5. Dans la section « Ajouter un membre au groupe JUR_${UNIQUE} », activer « Ajouter »
-6. Voir « validateur@iq.example »
-7. Se connecter en tant que initiateur IQ
-8. Ouvrir l'écran `/clm/trousses/nouvelle`
-9. Saisir « Titre » : `Groupe CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-GRP`
-10. Activer « Enregistrer le brouillon »
-11. Activer « Continuer »
-12. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
-13. Voir « entente-${unique}.pdf »
-14. Activer « Continuer »
-15. Activer « Continuer »
-16. Activer « Ajouter une étape »
-17. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
-18. Choisir « Type » : `VALIDATION`
-19. Activer « Affecter un groupe »
-20. Saisir « Responsable 1 » : `JUR_${UNIQUE}`
-21. Activer « Tester le parcours »
-22. Voir « Parcours valide. »
-23. Activer « Enregistrer »
-24. Activer « Continuer »
-25. Activer « Lancer le parcours »
-26. Arriver sur une adresse de la forme `/clm/trousses/\d+`
-27. Se connecter en tant que validateur IQ
-28. Ouvrir l'écran `/clm/taches`
-29. Activer « Traiter — CB${UNIQUE}-GRP Validation juridique »
-30. Activer « Valider »
-31. Voir « Décision enregistrée »
+1. Ouvrir l'écran `/clm/admin/notifications`
+2. Activer « Groupes » (link)
+3. Arriver sur une adresse de la forme `/clm/admin/groupes`
+4. Saisir « Nouveau groupe » Code » : `JUR_${UNIQUE}` ; « Nouveau groupe » Libellé » : `Juridique ${unique}`
+5. Activer « Créer le groupe »
+6. Choisir « Ajouter un membre au groupe JUR_${UNIQUE} » Membre » : `validateur@iq.example`
+7. Dans la section « Ajouter un membre au groupe JUR_${UNIQUE} », activer « Ajouter »
+8. Voir « validateur@iq.example »
+9. Saisir « Renommer le groupe JUR_${UNIQUE} » Libellé du groupe » : `Affaires juridiques ${unique}`
+10. Dans la section « Renommer le groupe JUR_${UNIQUE} », activer « Renommer »
+11. Voir « Groupe JUR_${UNIQUE} renommé. », « Affaires juridiques ${unique} »
+12. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+13. Se connecter en tant que initiateur IQ
+14. Ouvrir l'écran `/clm/trousses/nouvelle`
+15. Saisir « Titre » : `Groupe CB ${unique}` ; « Référence externe » : `CB${UNIQUE}-GRP`
+16. Activer « Enregistrer le brouillon »
+17. Activer « Continuer »
+18. Joindre « entente-${unique}.pdf » au champ « Téléverser un document »
+19. Voir « entente-${unique}.pdf »
+20. Activer « Continuer »
+21. Activer « Continuer »
+22. Activer « Ajouter une étape »
+23. Saisir « Clé » : `v1` ; « Libellé » : `Validation juridique`
+24. Choisir « Type » : `VALIDATION`
+25. Activer « Affecter un groupe »
+26. Saisir « Responsable 1 » : `JUR_${UNIQUE}`
+27. Activer « Tester le parcours »
+28. Voir « Parcours valide. »
+29. Activer « Enregistrer »
+30. Activer « Continuer »
+31. Activer « Lancer le parcours »
+32. Arriver sur une adresse de la forme `/clm/trousses/\d+`
+33. Se connecter en tant que validateur IQ
+34. Ouvrir l'écran `/clm/taches`
+35. Activer « Traiter — CB${UNIQUE}-GRP Validation juridique »
+36. Activer « Valider »
+37. Voir « Décision enregistrée »
 
 ### E2E-CB-IQ-24 — Listes de référence configurées par l'administration de l'organisation : chaque valeur ajoutée, renommée ou retirée se répercute aussitôt dans les listes déroulantes des écrans d'affaires
 

@@ -1,4 +1,5 @@
 import { mkdirSync, readFileSync, statSync, writeFileSync } from 'fs'
+import { phrase, narration } from '../outils/phrases.mjs'
 import { dirname, join, resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { expect, Page, test } from '@playwright/test'
@@ -11,7 +12,8 @@ import { Etape, jeux } from './scenarios'
  * Exigences fonctionnelles de tous les appels d'offres, vérifiées depuis l'interface (docs/scenarios-e2e/). Un scénario par
  * fonctionnalité d'écran ; il porte les identifiants des exigences qu'il démontre, que le contrôle de couverture relit.
  */
-test.describe.configure({ timeout: 240_000 })
+// Un tournage narre chaque geste : il prend le délai de la configuration (playwright.e2e.config.ts).
+test.describe.configure({ timeout: process.env.E2E_VIDEO ? 1_200_000 : 240_000 })
 
 const RACINE = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -303,11 +305,20 @@ function journaliser(page: Page) {
   }
 }
 
+// Mode « tournage » (E2E_VIDEO=1, bdd/outils/videos.mjs) : chaque geste est précédé de sa narration (le temps du clip
+// vocal, durées préparées dans E2E_VIDEO_DUREES) et suivi d'une pause ; la chronologie sert à poser la voix et les
+// sous-titres sur la vidéo. Le contrôle d'écran, qui change la taille de la fenêtre, n'est pas filmé.
+const VIDEO = !!process.env.E2E_VIDEO
+const DUREES: Record<string, number> = VIDEO && process.env.E2E_VIDEO_DUREES ? JSON.parse(readFileSync(process.env.E2E_VIDEO_DUREES, 'utf8')) : {}
+const VIDEOS = join(dirname(fileURLToPath(import.meta.url)), '../test-results-e2e/videos')
+type Moment = { t: number; voix: string; texte: string }
+
 for (const jeu of jeux) {
   test.describe(jeu.appelOffres, () => {
     for (const s of jeu.scenarios) {
       test(`${s.id} — ${s.titre} ${s.exigences.map((x) => '@' + x).join(' ')}`, async ({ page, playwright, baseURL }) => {
-        const unique = Date.now().toString(36) + Math.random().toString(36).slice(2, 6)
+        // Tournage : un suffixe court, lisible à l'écran et dans la narration ; base neuve à chaque tournage.
+        const unique = VIDEO ? 'v' + (Date.now() % 46_656).toString(36) : Date.now().toString(36) + Math.random().toString(36).slice(2, 6)
         const jour = (n: number) => new Date(Date.now() + n * 86_400_000).toISOString().slice(0, 10)
         const ctx: Contexte = {
           variables: { unique, UNIQUE: unique.toUpperCase(), aujourdhui: jour(0), demain: jour(1), dansUnMois: jour(30) },
@@ -320,23 +331,40 @@ for (const jeu of jeux) {
         const trace = journaliser(page)
         // Confirmations et saisies natives (window.confirm, window.prompt) : acceptées, avec la réponse fixée par « repondre ».
         page.on('dialog', (d) => void d.accept(d.type() === 'prompt' ? (ctx.variables.reponseDialogue ?? 'Motif E2E') : undefined).catch(() => {}))
+        const t0 = Date.now()
+        const chronologie: Moment[] = []
+        const dire = async (voix: string | null, texte: string) => {
+          if (!VIDEO || !voix) return
+          chronologie.push({ t: Date.now() - t0, voix, texte })
+          await page.waitForTimeout(Math.round((DUREES[voix] ?? 2.5) * 1000) + 250)
+        }
         if (s.organisation) await preparerOrganisation(playwright, baseURL!, s.organisation)
         await connecterUi(page, s.profil)
+        await dire(s.titre, s.titre)
         let reussi = false
         try {
           for (const [i, brute] of s.etapes.entries()) {
+            if (VIDEO && 'ecranConforme' in brute) continue
             // Une préparation substitue elle-même ses étapes, au fil de ses captures.
             const e = ('preparer' in brute ? brute : substituer(brute, ctx.variables)) as Etape
+            await dire(narration(brute), phrase(e))
             await test.step(`${i + 1}. ${JSON.stringify(e).slice(0, 120)}`, async () => {
               await jouer(page, e, ctx, { playwright, baseURL: baseURL!, profil: s.profil })
               await trace.calme()
             })
+            if (VIDEO) await page.waitForTimeout(700)
             expect(erreurs, `erreur JavaScript après l'étape ${i + 1}`).toEqual([])
           }
           reussi = true
         } finally {
           // Écrite aussi en cas d'échec (diagnostic) ; seule une trace réussie compte pour la couverture.
           trace.ecrire(s.id, reussi)
+          if (VIDEO) {
+            // Playwright range la vidéo dans le dossier du test, sous ce nom, à la fermeture de la page.
+            mkdirSync(VIDEOS, { recursive: true })
+            writeFileSync(join(VIDEOS, `${s.id}${process.env.E2E_COMPTES ? '-' + process.env.E2E_COMPTES : ''}.json`), JSON.stringify({ id: s.id, titre: s.titre, exigences: s.exigences, profil: s.profil,
+              appelOffres: jeu.appelOffres, organisation: process.env.E2E_COMPTES ?? null, miseEnRoute: s.miseEnRoute ?? null, reussi, video: join(test.info().outputDir, 'video.webm'), chronologie }, null, 1))
+          }
         }
       })
     }

@@ -1,0 +1,72 @@
+{
+  "appelOffres": "Plateforme — sites vitrines des organisations et aide en ligne",
+  "catalogue": "levis",
+  "description": "Le superadministrateur administre la vitrine de chaque organisation ; chaque espace offre un menu d'aide aux tutoriels vidéo.",
+  "scenarios": [
+    {
+      "id": "E2E-VIT-01",
+      "titre": "Le superadministrateur modifie la vitrine d'Investissement Québec, y dépose une vidéo, la publie puis la retire ; le site de l'organisation suit",
+      "exigences": ["LEV-C-22", "IQ-C-58"],
+      "profil": "superadmin",
+      "etapes": [
+        { "aller": "/superadmin" },
+        { "choisir": { "Site vitrine des organisations » Organisation": "Investissement Québec" } },
+        { "remplir": { "Titre du site": "IQ — vitrine ${unique}", "Accroche": "Contrats et signature, de bout en bout (${unique})." } },
+        { "cliquer": "Ajouter une fonctionnalité" },
+        { "remplir": { "Titre de la fonctionnalité 11": "Fonctionnalité ${unique}", "Description de la fonctionnalité 11": "Présentée par l'e2e." } },
+        { "cliquer": "Monter la fonctionnalité 11" },
+        { "televerser": { "champ": "Téléverser une vidéo", "fichier": { "fichier": "chemin:donnees/medias-essai/aide/e2e-cb-iq-12.mp4", "nom": "presentation-${unique}.mp4", "type": "video/mp4" } } },
+        { "voir": "Vidéo déposée : vitrines/iq/televersee-" },
+        { "cliquer": "Enregistrer la vitrine" },
+        { "voir": "Vitrine de Investissement Québec enregistrée." },
+        { "ecranConforme": true },
+        { "aller": "http://iq.e2e.localhost:5175/accueil" },
+        { "voir": ["IQ — vitrine ${unique}", "Fonctionnalité ${unique}", "Présentation des fonctionnalités"] },
+        { "ecranConforme": true },
+        { "aller": "/superadmin" },
+        { "choisir": { "Site vitrine des organisations » Organisation": "Investissement Québec" } },
+        { "decocher": "Publiée (visible sur le site de l'organisation)" },
+        { "cliquer": "Enregistrer la vitrine" },
+        { "voir": "Vitrine de Investissement Québec enregistrée." },
+        { "aller": "http://iq.e2e.localhost:5175/accueil" },
+        { "nePasVoir": "IQ — vitrine ${unique}" },
+        { "aller": "/superadmin" },
+        { "choisir": { "Site vitrine des organisations » Organisation": "Investissement Québec" } },
+        { "cocher": "Publiée (visible sur le site de l'organisation)" },
+        { "cliquer": "Enregistrer la vitrine" },
+        { "voir": "Vitrine de Investissement Québec enregistrée." }
+      ]
+    },
+    {
+      "id": "E2E-AIDE-01",
+      "titre": "L'administration d'IQ ouvre l'aide : la mise en route, le tutoriel de l'écran courant avec sa vidéo et ses étapes, puis la recherche",
+      "exigences": ["IQ-C-57", "LEV-2.1-10"],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        { "aller": "/clm/admin/notifications" },
+        { "cliquer": "Aide" },
+        { "voir": ["Aide et tutoriels", "Mise en route de l’organisation", "Pour cet écran"] },
+        { "ecranConforme": true },
+        { "cliquer": "Notifications configurables : l'administration désactive puis réactive l'invitation à signer par courriel" },
+        { "voir": "Étapes" },
+        { "ecranConforme": true },
+        { "cliquer": "← Retour à la liste" },
+        { "remplir": { "Rechercher un tutoriel": "Notifications" } },
+        { "voir": "Tous les tutoriels" }
+      ]
+    },
+    {
+      "id": "E2E-AIDE-02",
+      "titre": "Dans l'espace de rédaction, le rédacteur de Lévis ouvre l'aide et ses tutoriels",
+      "exigences": ["LEV-2.1-10"],
+      "profil": "rédacteur de Lévis",
+      "etapes": [
+        { "aller": "/" },
+        { "cliquer": "Aide" },
+        { "voir": ["Aide et tutoriels", "Tous les tutoriels"] },
+        { "nePasVoir": "Mise en route de l’organisation" },
+        { "ecranConforme": true }
+      ]
+    }
+  ]
+}

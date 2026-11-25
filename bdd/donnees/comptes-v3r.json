@@ -1,0 +1,9 @@
+{
+  "description": "Comptes de la Ville de Trois-Rivières (v3r), substitués à ceux de Lévis pour tourner les vidéos de sa vitrine (E2E_COMPTES=v3r, sous-domaine v3r.e2e.localhost).",
+  "comptes": {
+    "administrateur de Lévis": { "email": "admin@v3r.example", "motDePasse": "Passw0rd!" },
+    "rédacteur de Lévis": { "email": "approvisionnement@v3r.example", "motDePasse": "Passw0rd!" },
+    "juriste de Lévis": { "email": "juridique@v3r.example", "motDePasse": "Passw0rd!" },
+    "direction de Lévis": { "email": "direction@v3r.example", "motDePasse": "Passw0rd!" }
+  }
+}

@@ -1930,7 +1930,7 @@
           "type": "supprimer",
           "fonction": "choisirUnite",
           "sources": [
-            "pages/clm/UtilisateursClm.jsx:212"
+            "pages/clm/UtilisateursClm.jsx:222"
           ]
         },
         {
@@ -1940,7 +1940,7 @@
           "type": "supprimer",
           "fonction": "gestionnaire en ligne (onClick)",
           "sources": [
-            "pages/clm/UtilisateursClm.jsx:194"
+            "pages/clm/UtilisateursClm.jsx:204"
           ]
         },
         {
@@ -2000,7 +2000,7 @@
           "type": "ajouter",
           "fonction": "creer",
           "sources": [
-            "pages/clm/UtilisateursClm.jsx:163"
+            "pages/clm/UtilisateursClm.jsx:164"
           ]
         },
         {
@@ -2010,7 +2010,17 @@
           "type": "ajouter",
           "fonction": "choisirUnite",
           "sources": [
-            "pages/clm/UtilisateursClm.jsx:201"
+            "pages/clm/UtilisateursClm.jsx:211"
+          ]
+        },
+        {
+          "id": "PUT /clm/admin/groupes/{}",
+          "methode": "PUT",
+          "chemin": "/clm/admin/groupes/{}",
+          "type": "modifier",
+          "fonction": "choisirUnite",
+          "sources": [
+            "pages/clm/UtilisateursClm.jsx:192"
           ]
         }
       ]
@@ -2706,6 +2716,16 @@
           "fonction": "ChoixOrganisation",
           "sources": [
             "components/ChoixOrganisation.jsx:19"
+          ]
+        },
+        {
+          "id": "GET /vitrines/{}",
+          "methode": "GET",
+          "chemin": "/vitrines/{}",
+          "type": "consulter",
+          "fonction": "choisir",
+          "sources": [
+            "pages/Vitrine.jsx:92"
           ]
         }
       ]
@@ -4898,7 +4918,8 @@
         "components/Toast.jsx",
         "components/ModuleManager.jsx",
         "components/BanqueHeuresManager.jsx",
-        "components/ReleveBanque.jsx"
+        "components/ReleveBanque.jsx",
+        "components/EditeurVitrine.jsx"
       ],
       "operations": [
         {
@@ -4978,13 +4999,23 @@
           ]
         },
         {
+          "id": "GET /superadmin/mediatheque",
+          "methode": "GET",
+          "chemin": "/superadmin/mediatheque",
+          "type": "lister",
+          "fonction": "chargerMediatheque",
+          "sources": [
+            "components/EditeurVitrine.jsx:23"
+          ]
+        },
+        {
           "id": "GET /superadmin/tenants",
           "methode": "GET",
           "chemin": "/superadmin/tenants",
           "type": "lister",
           "fonction": "charger",
           "sources": [
-            "pages/Superadmin.jsx:25",
+            "pages/Superadmin.jsx:26",
             "components/ModeleDocumentManager.jsx:29",
             "components/TarifTenantManager.jsx:29",
             "components/ModuleManager.jsx:20"
@@ -5032,6 +5063,16 @@
           ]
         },
         {
+          "id": "GET /superadmin/tenants/{}/vitrine",
+          "methode": "GET",
+          "chemin": "/superadmin/tenants/{}/vitrine",
+          "type": "lister",
+          "fonction": "chargerMediatheque",
+          "sources": [
+            "components/EditeurVitrine.jsx:28"
+          ]
+        },
+        {
           "id": "POST /admin/reference",
           "methode": "POST",
           "chemin": "/admin/reference",
@@ -5073,7 +5114,7 @@
           "type": "ajouter",
           "fonction": "creerTenant",
           "sources": [
-            "pages/Superadmin.jsx:33"
+            "pages/Superadmin.jsx:34"
           ]
         },
         {
@@ -5083,7 +5124,7 @@
           "type": "ajouter",
           "fonction": "creerAdmin",
           "sources": [
-            "pages/Superadmin.jsx:40"
+            "pages/Superadmin.jsx:41"
           ]
         },
         {
@@ -5104,6 +5145,16 @@
           "fonction": "gestionnaire en ligne (onSubmit)",
           "sources": [
             "components/BanqueHeuresManager.jsx:67"
+          ]
+        },
+        {
+          "id": "POST /superadmin/tenants/{}/vitrine/video",
+          "methode": "POST",
+          "chemin": "/superadmin/tenants/{}/vitrine/video",
+          "type": "ajouter",
+          "fonction": "televerser",
+          "sources": [
+            "components/EditeurVitrine.jsx:58"
           ]
         },
         {
@@ -5152,8 +5203,8 @@
           "type": "modifier",
           "fonction": "basculerActif",
           "sources": [
-            "pages/Superadmin.jsx:47",
-            "pages/Superadmin.jsx:52"
+            "pages/Superadmin.jsx:48",
+            "pages/Superadmin.jsx:53"
           ]
         },
         {
@@ -5183,7 +5234,17 @@
           "type": "modifier",
           "fonction": "enregistrerTheme",
           "sources": [
-            "pages/Superadmin.jsx:80"
+            "pages/Superadmin.jsx:81"
+          ]
+        },
+        {
+          "id": "PUT /superadmin/tenants/{}/vitrine",
+          "methode": "PUT",
+          "chemin": "/superadmin/tenants/{}/vitrine",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/EditeurVitrine.jsx:46"
           ]
         }
       ]

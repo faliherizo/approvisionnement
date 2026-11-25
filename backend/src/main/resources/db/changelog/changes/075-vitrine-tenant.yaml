@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 075-1-vitrine-tenant
+      author: levis
+      comment: "Site vitrine de chaque organisation (https://<organisation>.contrat.vinaitsolution.com/accueil), administré par le superadministrateur."
+      changes:
+        - createTable:
+            tableName: vitrine_tenant
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false, unique: true, uniqueConstraintName: uq_vitrine_tenant } }
+              - column: { name: titre, type: VARCHAR(160), constraints: { nullable: false } }
+              - column: { name: accroche, type: VARCHAR(600) }
+              - column: { name: fonctionnalites, type: VARCHAR(20000) }
+              - column: { name: video, type: VARCHAR(255) }
+              - column: { name: sous_titres, type: VARCHAR(255) }
+              - column: { name: affiche, type: VARCHAR(255) }
+              - column: { name: publiee, type: BOOLEAN, defaultValueBoolean: false, constraints: { nullable: false } }
+              - column: { name: maj_par, type: VARCHAR(200) }
+              - column: { name: maj_le, type: TIMESTAMP }
+        - addForeignKeyConstraint:
+            baseTableName: vitrine_tenant
+            baseColumnNames: tenant_id
+            referencedTableName: tenant
+            referencedColumnNames: id
+            constraintName: fk_vitrine_tenant_tenant

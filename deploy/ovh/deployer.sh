@@ -38,8 +38,8 @@ for image in backend web; do
 done
 
 # Le dossier des dépôts simulés appartient à l'utilisateur du serveur Java (uid 10001), sans droits de root sur l'hôte.
-mkdir -p donnees/simulateur
-docker run --rm -v "$ICI/donnees:/d" alpine chown -R 10001:10001 /d/simulateur
+mkdir -p donnees/simulateur donnees/media
+docker run --rm -v "$ICI/donnees:/d" alpine chown -R 10001:10001 /d/simulateur /d/media
 
 ARCHIVE=""
 sauvegarder() {

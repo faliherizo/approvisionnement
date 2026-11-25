@@ -42,6 +42,8 @@ export type Scenario = {
   exigences: string[]
   profil: string
   organisation?: string
+  /** Rang dans la vidéo « Mise en route de l'organisation » (paramétrage par l'administration), s'il y figure. */
+  miseEnRoute?: number
   etapes: Etape[]
 }
 
