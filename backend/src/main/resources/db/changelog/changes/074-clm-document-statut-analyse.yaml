@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 074-1-clm-document-statut-analyse
+      author: levis
+      comment: "« analyse » est un mot réservé de PostgreSQL : Hibernate l'écrit sans guillemets et tout dépôt de document échouait en production (H2 l'accepte)."
+      changes:
+        - renameColumn:
+            tableName: clm_document
+            oldColumnName: analyse
+            newColumnName: statut_analyse
+            columnDataType: VARCHAR(12)

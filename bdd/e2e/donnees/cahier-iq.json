@@ -923,6 +923,9 @@
           "voir": "validateur@iq.example"
         },
         {
+          "ecranConforme": true
+        },
+        {
           "connecter": "initiateur IQ"
         },
         {

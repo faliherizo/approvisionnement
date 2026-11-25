@@ -59,8 +59,9 @@ public class DocumentTrousse {
     @Column(nullable = false, length = 12)
     private Statut statut = Statut.BROUILLON;
 
+    // « analyse » est un mot réservé de PostgreSQL : la colonne s'appelle statut_analyse (migration 074).
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 12)
+    @Column(name = "statut_analyse", nullable = false, length = 12)
     private Analyse analyse = Analyse.EN_ATTENTE;
 
     @Column(nullable = false, length = 150)

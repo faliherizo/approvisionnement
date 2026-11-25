@@ -238,3 +238,7 @@ h3.clm-bloc__titre { font-size: 16px; }
 .clm-zone-attribution { align-items: flex-end; }
 .clm-zone-attribution label { flex: 1 1 14rem; min-width: 0; }
 .clm-zone-attribution select { width: 100%; }
+/* Même règle pour tout libellé d'une rangée d'actions (ex. « Membre » d'un groupe) : un élément flexible ne descend pas
+   sous la largeur de son contenu sans min-width: 0, et la liste déroulante l'entraînait hors de l'écran à 390 px. */
+.clm-ecran .cmp-row > label { flex: 1 1 14rem; min-width: 0; max-width: 100%; }
+.clm-ecran .cmp-row > label select { width: 100%; }

@@ -42,10 +42,15 @@ class DemonstrationClmTest {
     private final GroupeClmRepository groupesLus = mock(GroupeClmRepository.class);
     private final RegleConservationRepository reglesLues = mock(RegleConservationRepository.class);
     private final ContexteClm ctx = mock(ContexteClm.class);
+    private final TrousseService trousses = mock(TrousseService.class);
+    private final DocumentClmService documents = mock(DocumentClmService.class);
+    private final TrousseRepository troussesLues = mock(TrousseRepository.class);
+    private final qc.levis.contrat.clm.application.repository.DocumentTrousseRepository documentsLus =
+            mock(qc.levis.contrat.clm.application.repository.DocumentTrousseRepository.class);
 
     private DemonstrationClm avec(DemonstrationClm.DemoClm demo) {
-        DemonstrationClm.Moyens moyens = new DemonstrationClm.Moyens(modeles, mock(TrousseService.class), mock(DocumentClmService.class),
-                groupes, conservation, mock(ModeleContratRepository.class), mock(TrousseRepository.class), groupesLus, reglesLues);
+        DemonstrationClm.Moyens moyens = new DemonstrationClm.Moyens(modeles, trousses, documents,
+                groupes, conservation, mock(ModeleContratRepository.class), troussesLues, groupesLus, reglesLues, documentsLus);
         when(ctx.tenant()).thenReturn(5L);
         when(ctx.acteur(anyString(), anyList())).thenAnswer(i -> new Habilitations.Acteur(i.getArgument(0), Set.copyOf(i.<List<String>>getArgument(1)), Set.of()));
         return new DemonstrationClm(moyens, ctx) {
@@ -99,5 +104,34 @@ class DemonstrationClmTest {
         assertEquals(0, bilan.regles());
         verify(conservation, never()).definir(any(), anyString());
         assertEquals(1, bilan.ecarts().size(), "sans acteurs déclarés, le modèle est écarté");
+    }
+
+    private static DemonstrationClm.DemoClm demoTrousses(String... references) {
+        List<DemonstrationClm.TrousseDemo> liste = java.util.Arrays.stream(references).map(r -> new DemonstrationClm.TrousseDemo("init@org", null,
+                new ClmDto.TrousseRequest(r, "Titre " + r, null, null, "FAIBLE", null, null, null, null, null, null), Map.of(), List.of(), true)).toList();
+        return new DemonstrationClm.DemoClm("affaires@org", "principal@org", Map.of("init@org", List.of("REDACTEUR")),
+                List.of(), List.of(), List.of(), liste);
+    }
+
+    @Test
+    void une_trousse_laissee_en_brouillon_sans_document_est_reprise_les_autres_sont_laissees_telles_quelles() {
+        qc.levis.contrat.clm.domain.Trousse inachevee = mock(qc.levis.contrat.clm.domain.Trousse.class);
+        when(inachevee.getId()).thenReturn(21L);
+        when(inachevee.getStatut()).thenReturn(qc.levis.contrat.clm.domain.StatutTrousse.BROUILLON);
+        qc.levis.contrat.clm.domain.Trousse complete = mock(qc.levis.contrat.clm.domain.Trousse.class);
+        when(complete.getId()).thenReturn(22L);
+        when(complete.getStatut()).thenReturn(qc.levis.contrat.clm.domain.StatutTrousse.BROUILLON);
+        when(troussesLues.findByTenantIdAndReference(5L, "DEMO-A")).thenReturn(java.util.Optional.of(inachevee));
+        when(troussesLues.findByTenantIdAndReference(5L, "DEMO-B")).thenReturn(java.util.Optional.of(complete));
+        when(documentsLus.findByTenantIdAndTrousseIdOrderByCleDocumentAscVersionDesc(5L, 22L))
+                .thenReturn(List.of(mock(qc.levis.contrat.clm.domain.DocumentTrousse.class)));
+
+        ClmDto.BilanDemonstration bilan = avec(demoTrousses("demo-a", "demo-b")).charger("org");
+
+        assertEquals(1, bilan.trousses(), "seule la trousse inachevée est reprise");
+        verify(documents).generer(eq(21L), any(), eq(qc.levis.contrat.clm.domain.FormatDocument.Type.PDF));
+        verify(trousses).lancer(eq(21L), any());
+        verify(documents, never()).generer(eq(22L), any(), any());
+        verify(trousses, never()).creer(any(), any());
     }
 }

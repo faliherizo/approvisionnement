@@ -145,3 +145,5 @@ databaseChangeLog:
       file: db/changelog/changes/072-auth-politique-session.yaml
   - include:
       file: db/changelog/changes/073-code-unique-par-organisation.yaml
+  - include:
+      file: db/changelog/changes/074-clm-document-statut-analyse.yaml

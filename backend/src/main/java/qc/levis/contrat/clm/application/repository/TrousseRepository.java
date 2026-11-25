@@ -31,6 +31,8 @@ public interface TrousseRepository extends JpaRepository<Trousse, Long>,
 
     boolean existsByTenantIdAndReference(Long tenantId, String reference);
 
+    Optional<Trousse> findByTenantIdAndReference(Long tenantId, String reference);
+
     long countByTenantIdAndStatut(Long tenantId, StatutTrousse statut);
 
     long countByTenantIdAndModeleId(Long tenantId, Long modeleId);

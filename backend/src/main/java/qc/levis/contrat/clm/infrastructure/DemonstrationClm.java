@@ -18,6 +18,7 @@ import qc.levis.contrat.clm.application.GroupesClmService;
 import qc.levis.contrat.clm.application.ModeleService;
 import qc.levis.contrat.clm.application.TrousseService;
 import qc.levis.contrat.clm.application.dto.ClmDto;
+import qc.levis.contrat.clm.application.repository.DocumentTrousseRepository;
 import qc.levis.contrat.clm.application.repository.GroupeClmRepository;
 import qc.levis.contrat.clm.application.repository.ModeleContratRepository;
 import qc.levis.contrat.clm.application.repository.RegleConservationRepository;
@@ -25,6 +26,8 @@ import qc.levis.contrat.clm.application.repository.TrousseRepository;
 import qc.levis.contrat.clm.domain.FormatDocument;
 import qc.levis.contrat.clm.domain.Habilitations;
 import qc.levis.contrat.clm.domain.ModeleContrat;
+import qc.levis.contrat.clm.domain.StatutTrousse;
+import qc.levis.contrat.clm.domain.Trousse;
 import java.util.ArrayList;
 
 /**
@@ -53,13 +56,14 @@ public class DemonstrationClm {
         final GroupesClmService groupes; final ConservationService conservation;
         final ModeleContratRepository modelesLus; final TrousseRepository troussesLues;
         final GroupeClmRepository groupesLus; final RegleConservationRepository reglesLues;
+        final DocumentTrousseRepository documentsLus;
 
         Moyens(ModeleService modeles, TrousseService trousses, DocumentClmService documents, GroupesClmService groupes,
                ConservationService conservation, ModeleContratRepository modelesLus, TrousseRepository troussesLues,
-               GroupeClmRepository groupesLus, RegleConservationRepository reglesLues) {
+               GroupeClmRepository groupesLus, RegleConservationRepository reglesLues, DocumentTrousseRepository documentsLus) {
             this.modeles = modeles; this.trousses = trousses; this.documents = documents; this.groupes = groupes;
             this.conservation = conservation; this.modelesLus = modelesLus; this.troussesLues = troussesLues;
-            this.groupesLus = groupesLus; this.reglesLues = reglesLues;
+            this.groupesLus = groupesLus; this.reglesLues = reglesLues; this.documentsLus = documentsLus;
         }
     }
 
@@ -143,13 +147,33 @@ public class DemonstrationClm {
         return true;
     }
 
+    /**
+     * Trousse de démonstration : créée si elle manque ; reprise si un chargement précédent l'a laissée en brouillon sans
+     * document (ex. génération en échec) ; laissée telle quelle sinon.
+     */
     private boolean trousse(Long tenantId, TrousseDemo tr, Habilitations.Acteur initiateur) {
-        if (m.troussesLues.existsByTenantIdAndReference(tenantId, tr.requete().reference().toUpperCase(java.util.Locale.ROOT))) {
+        String reference = tr.requete().reference().toUpperCase(java.util.Locale.ROOT);
+        java.util.Optional<Trousse> existante = m.troussesLues.findByTenantIdAndReference(tenantId, reference);
+        if (existante.isPresent() && !aReprendre(tenantId, existante.get())) {
             return false;
         }
-        ModeleContrat modele = modeleNomme(tenantId, tr.modele());
-        Long id = m.trousses.creer(avecModele(tr.requete(), modele), initiateur).resume().id();
+        Long id = existante.map(Trousse::getId).orElseGet(() -> creer(tenantId, tr, initiateur));
+        completer(id, tr, initiateur);
+        return true;
+    }
+
+    private boolean aReprendre(Long tenantId, Trousse t) {
+        return t.getStatut() == StatutTrousse.BROUILLON
+                && m.documentsLus.findByTenantIdAndTrousseIdOrderByCleDocumentAscVersionDesc(tenantId, t.getId()).isEmpty();
+    }
+
+    private Long creer(Long tenantId, TrousseDemo tr, Habilitations.Acteur initiateur) {
+        Long id = m.trousses.creer(avecModele(tr.requete(), modeleNomme(tenantId, tr.modele())), initiateur).resume().id();
         m.trousses.saisirValeurs(id, new ClmDto.ValeursRequest(tr.valeurs()), initiateur);
+        return id;
+    }
+
+    private void completer(Long id, TrousseDemo tr, Habilitations.Acteur initiateur) {
         m.documents.generer(id, initiateur, FormatDocument.Type.PDF);
         for (ClmDto.ParticipantRequest p : tr.participants()) {
             Long participant = m.trousses.ajouterParticipant(id, p, initiateur).id();
@@ -158,7 +182,6 @@ public class DemonstrationClm {
         if (tr.lancer()) {
             m.trousses.lancer(id, initiateur);
         }
-        return true;
     }
 
     private static ClmDto.TrousseRequest avecModele(ClmDto.TrousseRequest r, ModeleContrat modele) {
