@@ -2256,7 +2256,7 @@
     },
     {
       "id": "E2E-CB-IQ-16",
-      "titre": "Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté",
+      "titre": "Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté ; le Word s'affiche dans la page, mise en page conservée",
       "exigences": [
         "IQ-C-44",
         "IQ-C-45",
@@ -2380,6 +2380,18 @@
             "Montant corrigé",
             "v2"
           ]
+        },
+        {
+          "cliquer": {
+            "role": "button",
+            "nom": "Prévisualiser — annexe-v2-${unique}.docx"
+          }
+        },
+        {
+          "voirCadre": "Aperçu : annexe-v2-${unique}.docx"
+        },
+        {
+          "ecranConforme": true
         }
       ]
     },

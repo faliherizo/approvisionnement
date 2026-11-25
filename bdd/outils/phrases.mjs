@@ -24,6 +24,7 @@ export function phrase(e) {
   if ('nePasVoir' in e) return `Ne pas voir ${liste(e.nePasVoir)}`
   if ('valeur' in e) return `Constater la valeur ${paires(e.valeur)}`
   if ('voirTitre' in e) return `Voir le titre « ${e.voirTitre} »`
+  if ('voirCadre' in e) return `Voir l'aperçu « ${e.voirCadre} » affiché dans la page`
   if ('url' in e) return `Arriver sur une adresse de la forme \`${e.url}\``
   if ('preparer' in e) return typeof e.preparer === 'string' ? `Préparer par l'API : cas \`${e.preparer}\``
     : `Préparer par l'API : ${e.preparer.description}`

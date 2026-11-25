@@ -39,11 +39,6 @@
         "/{}/refuser"
       ]
     },
-    "pages/clm/commun.jsx|`${base}/contenu`": {
-      "chemins": [
-        "/clm/trousses/{}/documents/{}/contenu"
-      ]
-    },
     "pages/clm/commun.jsx|`${base}/texte`": {
       "chemins": [
         "/clm/trousses/{}/documents/{}/texte"
@@ -125,6 +120,12 @@
         "/paie/declarations/taxes",
         "/paie/declarations/retenues",
         "/paie/declarations/fin-annee"
+      ]
+    },
+    "pages/clm/commun.jsx|doc.type === 'PDF' ? `${base}/contenu` : `${base}/apercu`": {
+      "chemins": [
+        "/clm/trousses/{}/documents/{}/contenu",
+        "/clm/trousses/{}/documents/{}/apercu"
       ]
     }
   },

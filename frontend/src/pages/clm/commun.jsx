@@ -171,7 +171,7 @@ export function ChoixListe({ liste, value, onChange, vide, ...attributs }) {
   )
 }
 
-/** Visionneuse (UI-05, UI-13) : PDF affiché par le navigateur, Word en texte extrait côté serveur. */
+/** Visionneuse (UI-05, UI-13) : PDF affiché par le navigateur ; Word converti en PDF côté serveur, à défaut son texte extrait. */
 export function Visionneuse({ trousseId, document: doc, onFermer }) {
   const { t } = useI18n()
   const versErreur = useErreur()
@@ -185,12 +185,15 @@ export function Visionneuse({ trousseId, document: doc, onFermer }) {
     setTexte(null)
     setErreur(null)
     const base = `/clm/trousses/${trousseId}/documents/${doc.id}`
-    const requete = doc.type === 'PDF'
-      ? api.get(`${base}/contenu`, { responseType: 'blob' }).then((r) => {
-        lien = URL.createObjectURL(new Blob([r.data], { type: 'application/pdf' }))
-        if (actif) setUrl(lien)
-      })
-      : api.get(`${base}/texte`, { responseType: 'text' }).then((r) => { if (actif) setTexte(r.data) })
+    const texteSeul = () => api.get(`${base}/texte`, { responseType: 'text' }).then((r) => { if (actif) setTexte(r.data) })
+    // Aperçu PDF (Word converti, mise en page conservée) ; sans convertisseur, le texte extrait du Word.
+    const requete = api.get(doc.type === 'PDF' ? `${base}/contenu` : `${base}/apercu`, { responseType: 'blob' }).then((r) => {
+      lien = URL.createObjectURL(new Blob([r.data], { type: 'application/pdf' }))
+      if (actif) setUrl(lien)
+    }, (e) => {
+      if (doc.type === 'PDF') throw e
+      return texteSeul()
+    })
     requete.catch((e) => { if (actif) setErreur(versErreur(e)) })
     return () => {
       actif = false

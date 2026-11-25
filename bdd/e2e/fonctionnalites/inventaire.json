@@ -292,6 +292,16 @@
           ]
         },
         {
+          "id": "GET /clm/trousses/{}/documents/{}/apercu",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/documents/{}/apercu",
+          "type": "lister",
+          "fonction": "texteSeul",
+          "sources": [
+            "pages/clm/commun.jsx:190"
+          ]
+        },
+        {
           "id": "GET /clm/trousses/{}/documents/{}/contenu",
           "methode": "GET",
           "chemin": "/clm/trousses/{}/documents/{}/contenu",
@@ -299,7 +309,7 @@
           "fonction": "charger",
           "sources": [
             "pages/clm/OngletDocuments.jsx:67",
-            "pages/clm/commun.jsx:189"
+            "pages/clm/commun.jsx:190"
           ]
         },
         {
@@ -307,9 +317,9 @@
           "methode": "GET",
           "chemin": "/clm/trousses/{}/documents/{}/texte",
           "type": "lister",
-          "fonction": "Visionneuse",
+          "fonction": "texteSeul",
           "sources": [
-            "pages/clm/commun.jsx:193"
+            "pages/clm/commun.jsx:188"
           ]
         },
         {
@@ -630,6 +640,16 @@
           ]
         },
         {
+          "id": "GET /clm/trousses/{}/documents/{}/apercu",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/documents/{}/apercu",
+          "type": "lister",
+          "fonction": "texteSeul",
+          "sources": [
+            "pages/clm/commun.jsx:190"
+          ]
+        },
+        {
           "id": "GET /clm/trousses/{}/documents/{}/contenu",
           "methode": "GET",
           "chemin": "/clm/trousses/{}/documents/{}/contenu",
@@ -637,7 +657,7 @@
           "fonction": "charger",
           "sources": [
             "pages/clm/OngletDocuments.jsx:67",
-            "pages/clm/commun.jsx:189"
+            "pages/clm/commun.jsx:190"
           ]
         },
         {
@@ -645,9 +665,9 @@
           "methode": "GET",
           "chemin": "/clm/trousses/{}/documents/{}/texte",
           "type": "lister",
-          "fonction": "Visionneuse",
+          "fonction": "texteSeul",
           "sources": [
-            "pages/clm/commun.jsx:193"
+            "pages/clm/commun.jsx:188"
           ]
         },
         {
@@ -1034,13 +1054,23 @@
           ]
         },
         {
+          "id": "GET /clm/trousses/{}/documents/{}/apercu",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/documents/{}/apercu",
+          "type": "lister",
+          "fonction": "texteSeul",
+          "sources": [
+            "pages/clm/commun.jsx:190"
+          ]
+        },
+        {
           "id": "GET /clm/trousses/{}/documents/{}/contenu",
           "methode": "GET",
           "chemin": "/clm/trousses/{}/documents/{}/contenu",
           "type": "télécharger",
-          "fonction": "Visionneuse",
+          "fonction": "texteSeul",
           "sources": [
-            "pages/clm/commun.jsx:189"
+            "pages/clm/commun.jsx:190"
           ]
         },
         {
@@ -1048,9 +1078,9 @@
           "methode": "GET",
           "chemin": "/clm/trousses/{}/documents/{}/texte",
           "type": "lister",
-          "fonction": "Visionneuse",
+          "fonction": "texteSeul",
           "sources": [
-            "pages/clm/commun.jsx:193"
+            "pages/clm/commun.jsx:188"
           ]
         },
         {

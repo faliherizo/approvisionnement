@@ -24,6 +24,8 @@ export type Etape =
   | { nePasVoir: string | string[] }
   | { valeur: Record<string, string> }
   | { voirTitre: string }
+  /** Cadre affiché (iframe) portant ce titre : aperçu d'un document rendu en PDF dans la page. */
+  | { voirCadre: string }
   | { url: string }
   | { preparer: string | Cas }
   | { telecharger: string }

@@ -158,6 +158,22 @@ public class DocumentClmService {
                 .stream().map(LectureTrousse::document).toList();
     }
 
+    /**
+     * Aperçu fidèle : un PDF tel quel ; un Word converti en PDF, mise en page conservée. Sans convertisseur, conflit (409)
+     * et l'interface retombe sur le texte extrait ({@link #apercuTexte}).
+     */
+    public byte[] apercuPdf(Long trousseId, Long documentId, Habilitations.Acteur acteur) {
+        Trousse t = lecture.exigerVisible(trousseId, acteur);
+        DocumentTrousse d = exiger(t, documentId);
+        if (d.getType() == FormatDocument.Type.PDF) {
+            return d.getContenu();
+        }
+        if (!conversion.disponible()) {
+            throw new IllegalStateException("Aperçu Word indisponible : convertisseur PDF hors service ; le texte du document reste lisible.");
+        }
+        return conversion.versPdf(d.getContenu());
+    }
+
     public String apercuTexte(Long trousseId, Long documentId, Habilitations.Acteur acteur) {
         Trousse t = lecture.exigerVisible(trousseId, acteur);
         DocumentTrousse d = exiger(t, documentId);

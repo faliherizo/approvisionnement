@@ -160,6 +160,13 @@ public class TrousseController {
         return fichier(d.getContenu(), d.getType().mime(), d.getNom());
     }
 
+    /** Aperçu en PDF, Word compris (converti, mise en page conservée) ; affiché dans la page, jamais téléchargé. */
+    @GetMapping(value = "/{id}/documents/{documentId}/apercu", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> apercuPdf(@PathVariable Long id, @PathVariable Long documentId, Authentication auth) {
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).header("Content-Disposition", "inline")
+                .header("Cache-Control", "no-store").body(documents.apercuPdf(id, documentId, acteurs.de(auth)));
+    }
+
     @GetMapping(value = "/{id}/documents/{documentId}/texte", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8")
     public String apercu(@PathVariable Long id, @PathVariable Long documentId, Authentication auth) {
         return documents.apercuTexte(id, documentId, acteurs.de(auth));

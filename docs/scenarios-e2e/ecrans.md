@@ -12,8 +12,8 @@ déclarée à la main. Une fonctionnalité est couverte quand un scénario e2e l
 | Mesure | Valeur |
 |---|---|
 | Écrans | 71, dont **71 ouverts** par au moins un scénario |
-| Fonctionnalités (écran × opération) | 557 |
-| Couvertes par un scénario | **551** |
+| Fonctionnalités (écran × opération) | 560 |
+| Couvertes par un scénario | **554** |
 | Sans objet (exclusion nominative et motivée) | 6 |
 | **Taux** | **100.0 %** |
 
@@ -36,15 +36,15 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 ## `/clm` — ClmTableauBord
 
-- **Ouvert par** : E2E-AIDE-01, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+58)
+- **Ouvert par** : E2E-AIDE-01, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+57)
 - **Fichiers** : `pages/clm/ClmTableauBord.jsx`, `auth.jsx`, `i18n/I18nContext.jsx`, `pages/clm/commun.jsx`, `hooks/useModules.js`, `pages/clm/gabarit.jsx`
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
-| `Contenu` | lister | `GET /clm/tableau-de-bord` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+59) |
+| `Contenu` | lister | `GET /clm/tableau-de-bord` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+58) |
 | `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
 | `useListe` | consulter | `GET /reference/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+61) |
-| `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+59) |
+| `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+58) |
 
 ## `/clm/trousses` — Trousses
 
@@ -74,8 +74,9 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `rechercherSf` | consulter | `GET /clm/salesforce/dossiers/{}` | ✅ E2E-CB-IQ-17, E2E-ECR-IQ-02 |
 | `Contenu` | consulter | `GET /clm/trousses/{}` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+15) |
 | `OngletDocuments` | lister | `GET /clm/trousses/{}/analyses` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+12) |
+| `texteSeul` | lister | `GET /clm/trousses/{}/documents/{}/apercu` | ✅ E2E-CB-IQ-16 |
 | `charger` | télécharger | `GET /clm/trousses/{}/documents/{}/contenu` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+7) |
-| `Visionneuse` | lister | `GET /clm/trousses/{}/documents/{}/texte` | ✅ E2E-ECR-IQ-02 |
+| `texteSeul` | lister | `GET /clm/trousses/{}/documents/{}/texte` | ✅ E2E-ECR-IQ-02 |
 | `libelle` | consulter | `GET /clm/trousses/{}/suggestions/{}` | ✅ E2E-CB-IQ-22, E2E-ECR-IQ-02 |
 | `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
 | `useListe` | consulter | `GET /reference/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+61) |
@@ -113,8 +114,9 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `OngletParticipants` | lister | `GET /clm/parametres` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+16) |
 | `setOnglet` | consulter | `GET /clm/trousses/{}` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+27) |
 | `OngletDocuments` | lister | `GET /clm/trousses/{}/analyses` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+12) |
+| `texteSeul` | lister | `GET /clm/trousses/{}/documents/{}/apercu` | ✅ E2E-CB-IQ-16 |
 | `charger` | télécharger | `GET /clm/trousses/{}/documents/{}/contenu` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+7) |
-| `Visionneuse` | lister | `GET /clm/trousses/{}/documents/{}/texte` | ✅ E2E-ECR-IQ-02 |
+| `texteSeul` | lister | `GET /clm/trousses/{}/documents/{}/texte` | ✅ E2E-ECR-IQ-02 |
 | `setOnglet` | lister | `GET /clm/trousses/{}/historique` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-06, E2E-CB-IQ-16, E2E-CB-IQ-17 (+9) |
 | `OngletPreuve` | télécharger | `GET /clm/trousses/{}/preuve` | ✅ E2E-CB-IQ-18, E2E-ECR-IQ-01, E2E-ECR-IQ-06, E2E-IQ-11 (+2) |
 | `charger` | télécharger | `GET /clm/trousses/{}/preuve/{}` | ✅ E2E-CB-IQ-18, E2E-ECR-IQ-06 |
@@ -166,8 +168,9 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `TachesAssignees` | lister | `GET /clm/taches-assignees` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+11) |
 | `NouvelleTache` | lister | `GET /clm/trousses` | ✅ E2E-CB-IQ-24, E2E-ECR-IQ-06 |
 | `Decision` | consulter | `GET /clm/trousses/{}` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+7) |
-| `Visionneuse` | télécharger | `GET /clm/trousses/{}/documents/{}/contenu` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+7) |
-| `Visionneuse` | lister | `GET /clm/trousses/{}/documents/{}/texte` | ✅ E2E-ECR-IQ-02 |
+| `texteSeul` | lister | `GET /clm/trousses/{}/documents/{}/apercu` | ✅ E2E-CB-IQ-16 |
+| `texteSeul` | télécharger | `GET /clm/trousses/{}/documents/{}/contenu` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+7) |
+| `texteSeul` | lister | `GET /clm/trousses/{}/documents/{}/texte` | ✅ E2E-ECR-IQ-02 |
 | `Decision` | lister | `GET /clm/trousses/{}/historique` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+7) |
 | `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
 | `useListe` | consulter | `GET /reference/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+61) |

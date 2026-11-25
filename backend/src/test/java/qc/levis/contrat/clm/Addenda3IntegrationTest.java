@@ -170,10 +170,22 @@ class Addenda3IntegrationTest {
         assertTrue(word.get("nom").asText().endsWith(".docx"));
         assertTrue(appel("GET", "/api/clm/trousses/" + id + "/documents/" + word.get("id").asLong() + "/texte", initiateur, null)
                 .getContentAsString(StandardCharsets.UTF_8).contains("Convention entre IQ"), "Word lisible et modifiable");
+        // Aperçu fidèle du Word : PDF converti si le convertisseur répond, sinon 409 et l'interface affiche le texte.
+        var apercuWord = appel("GET", "/api/clm/trousses/" + id + "/documents/" + word.get("id").asLong() + "/apercu", initiateur, null);
+        if (apercuWord.getStatus() == 200) {
+            assertTrue(new String(apercuWord.getContentAsByteArray(), 0, 5, StandardCharsets.US_ASCII).startsWith("%PDF-"));
+        } else {
+            assertEquals(409, apercuWord.getStatus());
+            assertTrue(apercuWord.getContentAsString(StandardCharsets.UTF_8).contains("texte du document reste lisible"));
+        }
 
         long signee = corps(appel("POST", "/api/clm/trousses", initiateur, "{\"titre\":\"Enveloppe\",\"risque\":\"FAIBLE\"}"), 200).get("resume").get("id").asLong();
-        assertEquals(200, mvc.perform(MockMvcRequestBuilders.multipart("/api/clm/trousses/" + signee + "/documents")
-                .file(new MockMultipartFile("fichier", "c.pdf", "application/pdf", PDF)).cookie(initiateur)).andReturn().getResponse().getStatus());
+        var depot = mvc.perform(MockMvcRequestBuilders.multipart("/api/clm/trousses/" + signee + "/documents")
+                .file(new MockMultipartFile("fichier", "c.pdf", "application/pdf", PDF)).cookie(initiateur)).andReturn().getResponse();
+        long pdfId = corps(depot, 200).get("id").asLong();
+        var apercuPdf = appel("GET", "/api/clm/trousses/" + signee + "/documents/" + pdfId + "/apercu", initiateur, null);
+        assertEquals("inline", apercuPdf.getHeader("Content-Disposition"));
+        org.junit.jupiter.api.Assertions.assertArrayEquals(PDF, apercuPdf.getContentAsByteArray(), "un PDF s'affiche tel quel");
         long p = corps(appel("POST", "/api/clm/trousses/" + signee + "/participants", initiateur, "{\"nom\":\"Ext\",\"courriel\":\"ext@example.com\","
                 + "\"telephone\":\"+15145550190\",\"roleContrat\":\"SIGNATAIRE_1\",\"externe\":true}"), 200).get("id").asLong();
         corps(appel("PUT", "/api/clm/trousses/" + signee + "/parcours", initiateur, "[{\"cle\":\"s1\",\"libelle\":\"Signature\",\"phase\":1,"

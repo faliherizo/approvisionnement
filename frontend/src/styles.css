@@ -165,7 +165,9 @@ input[type=color] { padding: 3px; height: 40px; cursor: pointer; }
 .form-grid > label { min-width: 0; }
 .form-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } .form-grid--4 { grid-template-columns: repeat(2, 1fr); } }
-.form-fieldset { border: 1px solid var(--bord); border-radius: 10px; padding: 12px 14px 14px; margin: 0; }
+.form-fieldset { border: 1px solid var(--bord); border-radius: 10px; padding: 12px 14px 14px; margin: 0; min-width: 0; }
+/* Un fieldset prend la largeur minimale de son contenu : une longue option ou un champ fichier débordaient à 390 px. */
+.form-fieldset select, .form-fieldset input[type=file] { max-width: 100%; min-width: 0; }
 .form-fieldset legend { font-size: 13px; font-weight: 700; color: var(--muted); padding: 0 6px; }
 
 /* Conteneur défilant pour les tableaux larges (évite le débordement horizontal). */

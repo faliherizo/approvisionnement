@@ -199,6 +199,7 @@ async function jouer(page: Page, e: Etape, ctx: Contexte, outils: { playwright: 
     for (const [nom, attendue] of Object.entries(e.valeur)) await expect(await champ(page, nom), `valeur de « ${nom} »`).toHaveValue(attendue)
     return
   }
+  if ('voirCadre' in e) return void await expect(page.locator('iframe').and(page.getByTitle(e.voirCadre, { exact: true })).first()).toBeVisible()
   if ('voirTitre' in e) return void await expect(page.getByRole('heading', { name: exact(e.voirTitre) }).first()).toBeVisible()
   if ('url' in e) return void await expect(page).toHaveURL(new RegExp(e.url))
   if ('preparer' in e) {

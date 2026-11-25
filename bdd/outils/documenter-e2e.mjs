@@ -118,6 +118,7 @@ const lignesReadme = [
   '| `voir` / `nePasVoir` | constater un texte à l\'écran | `{ "voir": ["Circuit créé"] }` |',
   '| `valeur` | constater la valeur d\'un champ (ex. calculé) | `{ "valeur": { "Total": "600" } }` |',
   '| `voirTitre` / `url` | constater le titre ou l\'adresse | `{ "url": "/documents/\\\\d+" }` |',
+  '| `voirCadre` | constater qu\'un aperçu (PDF, Word converti) s\'affiche dans la page | `{ "voirCadre": "Aperçu : contrat.docx" }` |',
   '| `telecharger` | télécharger un fichier et vérifier qu\'il n\'est pas vide | `{ "telecharger": "Exporter en CSV" }` |',
   '| `preparer` | mise en place par l\'API (cas BDD nommé ou étapes en ligne) | `{ "preparer": "lev.clauses.recherche-multicritere" }` |',
   '| `ecranConforme` | contrôle d\'accessibilité et de mise en page | `{ "ecranConforme": true }` |',

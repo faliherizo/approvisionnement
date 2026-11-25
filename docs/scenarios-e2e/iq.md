@@ -4134,12 +4134,12 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
-### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté
+### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté ; le Word s'affiche dans la page, mise en page conservée
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-47, IQ-C-50, IQ-D-03, IQ-D-09
 - **Données** : `bdd/e2e/donnees/cahier-iq.json`
-- **Nature** : parcours d'interface (14 gestes)
+- **Nature** : parcours d'interface (15 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/trousses/nouvelle`
@@ -4164,6 +4164,9 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 20. Activer « Versions — annexe-v2-${unique}.docx » (button)
 21. Activer « Consulter les métadonnées — version 2 » (button)
 22. Voir « Montant corrigé », « v2 »
+23. Activer « Prévisualiser — annexe-v2-${unique}.docx » (button)
+24. Voir l'aperçu « Aperçu : annexe-v2-${unique}.docx » affiché dans la page
+25. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-ECR-IQ-01 — L'initiateur crée une trousse à l'écran : documents déposés, remplacés et retirés, signataires ajoutés et retirés, parcours testé puis enregistré, lancement ; la preuve se vérifie
 
@@ -4232,12 +4235,12 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
-### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté
+### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté ; le Word s'affiche dans la page, mise en page conservée
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-47, IQ-C-50, IQ-D-03, IQ-D-09
 - **Données** : `bdd/e2e/donnees/cahier-iq.json`
-- **Nature** : parcours d'interface (14 gestes)
+- **Nature** : parcours d'interface (15 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/trousses/nouvelle`
@@ -4262,6 +4265,9 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 20. Activer « Versions — annexe-v2-${unique}.docx » (button)
 21. Activer « Consulter les métadonnées — version 2 » (button)
 22. Voir « Montant corrigé », « v2 »
+23. Activer « Prévisualiser — annexe-v2-${unique}.docx » (button)
+24. Voir l'aperçu « Aperçu : annexe-v2-${unique}.docx » affiché dans la page
+25. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-ECR-IQ-01 — L'initiateur crée une trousse à l'écran : documents déposés, remplacés et retirés, signataires ajoutés et retirés, parcours testé puis enregistré, lancement ; la preuve se vérifie
 
@@ -4360,12 +4366,12 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
-### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté
+### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté ; le Word s'affiche dans la page, mise en page conservée
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-47, IQ-C-50, IQ-D-03, IQ-D-09
 - **Données** : `bdd/e2e/donnees/cahier-iq.json`
-- **Nature** : parcours d'interface (14 gestes)
+- **Nature** : parcours d'interface (15 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/trousses/nouvelle`
@@ -4390,6 +4396,9 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 20. Activer « Versions — annexe-v2-${unique}.docx » (button)
 21. Activer « Consulter les métadonnées — version 2 » (button)
 22. Voir « Montant corrigé », « v2 »
+23. Activer « Prévisualiser — annexe-v2-${unique}.docx » (button)
+24. Voir l'aperçu « Aperçu : annexe-v2-${unique}.docx » affiché dans la page
+25. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-01 — Créer une trousse, déposer documents et annexes, inviter un participant externe
 
@@ -4411,12 +4420,12 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
-### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté
+### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté ; le Word s'affiche dans la page, mise en page conservée
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-47, IQ-C-50, IQ-D-03, IQ-D-09
 - **Données** : `bdd/e2e/donnees/cahier-iq.json`
-- **Nature** : parcours d'interface (14 gestes)
+- **Nature** : parcours d'interface (15 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/trousses/nouvelle`
@@ -4441,6 +4450,9 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 20. Activer « Versions — annexe-v2-${unique}.docx » (button)
 21. Activer « Consulter les métadonnées — version 2 » (button)
 22. Voir « Montant corrigé », « v2 »
+23. Activer « Prévisualiser — annexe-v2-${unique}.docx » (button)
+24. Voir l'aperçu « Aperçu : annexe-v2-${unique}.docx » affiché dans la page
+25. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-02 — Dépôt de documents volumineux dans une trousse
 
@@ -4628,12 +4640,12 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
-### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté
+### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté ; le Word s'affiche dans la page, mise en page conservée
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-47, IQ-C-50, IQ-D-03, IQ-D-09
 - **Données** : `bdd/e2e/donnees/cahier-iq.json`
-- **Nature** : parcours d'interface (14 gestes)
+- **Nature** : parcours d'interface (15 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/trousses/nouvelle`
@@ -4658,6 +4670,9 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 20. Activer « Versions — annexe-v2-${unique}.docx » (button)
 21. Activer « Consulter les métadonnées — version 2 » (button)
 22. Voir « Montant corrigé », « v2 »
+23. Activer « Prévisualiser — annexe-v2-${unique}.docx » (button)
+24. Voir l'aperçu « Aperçu : annexe-v2-${unique}.docx » affiché dans la page
+25. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-ECR-IQ-06 — L'exploitation des trousses : étape relancée et réassignée, document analysé par l'IA et révisé, certificat téléchargé, trousse annulée, listes exportées, tâche confiée, démarrée et réassignée, lot créé et approuvé ; le validateur délègue, le signataire interne signe depuis sa tâche
 
@@ -7226,12 +7241,12 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
-### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté
+### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté ; le Word s'affiche dans la page, mise en page conservée
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-47, IQ-C-50, IQ-D-03, IQ-D-09
 - **Données** : `bdd/e2e/donnees/cahier-iq.json`
-- **Nature** : parcours d'interface (14 gestes)
+- **Nature** : parcours d'interface (15 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/trousses/nouvelle`
@@ -7256,6 +7271,9 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 20. Activer « Versions — annexe-v2-${unique}.docx » (button)
 21. Activer « Consulter les métadonnées — version 2 » (button)
 22. Voir « Montant corrigé », « v2 »
+23. Activer « Prévisualiser — annexe-v2-${unique}.docx » (button)
+24. Voir l'aperçu « Aperçu : annexe-v2-${unique}.docx » affiché dans la page
+25. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-01 — Créer une trousse, déposer documents et annexes, inviter un participant externe
 
@@ -8117,12 +8135,12 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 47. Activer « Historique » (tab)
 48. Voir « Clauses conformes au programme », « Approuvé selon la délégation »
 
-### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté
+### E2E-CB-IQ-16 — Documents d'une trousse : PDF de 25 Mo et document Word déposés, version remplacée avec motif, historique du document consulté ; le Word s'affiche dans la page, mise en page conservée
 
 - **Profil** : initiateur IQ
 - **Exigences démontrées** : IQ-C-44, IQ-C-45, IQ-C-46, IQ-C-47, IQ-C-50, IQ-D-03, IQ-D-09
 - **Données** : `bdd/e2e/donnees/cahier-iq.json`
-- **Nature** : parcours d'interface (14 gestes)
+- **Nature** : parcours d'interface (15 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Ouvrir l'écran `/clm/trousses/nouvelle`
@@ -8147,6 +8165,9 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 20. Activer « Versions — annexe-v2-${unique}.docx » (button)
 21. Activer « Consulter les métadonnées — version 2 » (button)
 22. Voir « Montant corrigé », « v2 »
+23. Activer « Prévisualiser — annexe-v2-${unique}.docx » (button)
+24. Voir l'aperçu « Aperçu : annexe-v2-${unique}.docx » affiché dans la page
+25. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-01 — Créer une trousse, déposer documents et annexes, inviter un participant externe
 
