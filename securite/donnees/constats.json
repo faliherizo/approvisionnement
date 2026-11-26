@@ -340,6 +340,16 @@
    "correction": "Racine sans chemin introuvable (404). Acceptation ZAP limitée par adresse (motifUrl) : une erreur serveur hors de /api/ia/ redevient bloquante.",
    "test": "VitrineIntegrationTest ; ZAP 100000 (acceptation limitée à /api/ia/)",
    "etat": "corrigé"
+  },
+  {
+   "id": "SEC-35",
+   "gravite": "Faible",
+   "owasp": "A04 · A05",
+   "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
+   "constat": "Une valeur plus longue que sa colonne, ou un doublon, provoquait une erreur interne 500 (DataIntegrityViolationException non traitée) sur huit opérations d'écriture (applications, dossiers, import de formulaire, base de connaissances, clients d'interopérabilité, modèles de notification, répertoires du profil). Relevé par le balayage actif de ZAP une fois sa session tenue jusqu'au bout (règles 30001, 30002, 100000).",
+   "correction": "Toute contrainte de la base violée répond 400 (valeur refusée) ou 409 (doublon), sans reprendre ni la valeur ni la contrainte ; le journal ne garde que le code SQLSTATE.",
+   "test": "ContraintesDonneesTest ; ZAP 30001, 30002 et 100000 (balayage actif authentifié)",
+   "etat": "corrigé"
   }
  ]
 }

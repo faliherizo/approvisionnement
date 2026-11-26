@@ -82,6 +82,32 @@ public class GlobalExceptionHandler {
         return corps(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
+    /**
+     * Contrainte de la base violée (SEC-35, relevé par le balayage actif de ZAP) : valeur plus longue que la colonne,
+     * doublon, référence absente. C'est une erreur du client, jamais une erreur interne ; le message ne reprend ni la
+     * valeur ni la contrainte (aucune fuite du schéma), le journal ne garde que le code SQLSTATE.
+     */
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, String>> contrainteViolee(org.springframework.dao.DataIntegrityViolationException e) {
+        String etat = etatSql(e);
+        log.warn("Contrainte de données violée (SQLSTATE {})", etat);
+        if (DOUBLON.equals(etat)) {
+            return corps(HttpStatus.CONFLICT, "Un enregistrement porte déjà cet identifiant.");
+        }
+        return corps(HttpStatus.BAD_REQUEST, "Valeur refusée : trop longue ou incompatible avec les données attendues.");
+    }
+
+    private static final String DOUBLON = "23505";
+
+    static String etatSql(Throwable e) {
+        for (Throwable c = e; c != null; c = c.getCause()) {
+            if (c instanceof java.sql.SQLException sql && sql.getSQLState() != null) {
+                return sql.getSQLState();
+            }
+        }
+        return "inconnu";
+    }
+
     private ResponseEntity<Map<String, String>> corps(HttpStatus statut, String message) {
         return ResponseEntity.status(statut).body(Map.of("message", message != null ? message : statut.getReasonPhrase()));
     }
