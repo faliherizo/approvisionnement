@@ -1,0 +1,221 @@
+# SEC-11 (IQ, AO 2026-6370-0005) — essai de relève exécutable et mesuré : perte totale du site primaire, reprise sur un
+# site secondaire neuf, vérification de la preuve et mesure du RTO et du RPO. Plan : document 20 de la réponse ;
+# décision d'architecture : docs/adr/ADR-039-strategie-de-releve-inter-regions.md ; scripts : infra/dr/essai.
+#
+# Tout se joue DANS l'exécuteur (conteneurs locaux) : aucun appel à Azure, à OVH ni à un hôte public. Deux scénarios :
+#   replique    réplique asynchrone en flux continu, promue à la perte (modèle de la réplique inter-régions Canada Est) ;
+#   sauvegarde  sauvegarde de base + journaux archivés en continu, rejoués sur une base neuve (modèle de la
+#               restauration géo / à un instant donné, voie de secours en cas de corruption logique).
+# Porte bloquante : RTO et RPO sous les niveaux annoncés (8 h / 4 h) ET sous les objectifs de conception (4 h / 15 min),
+# et tous les contrôles de données, de preuve et de parcours au vert.
+# Les mots de passe, la clé maîtresse et les clés de la pile sont générés à chaque exécution et masqués.
+name: Relève — essai de reprise après sinistre (SEC-11)
+
+on:
+  workflow_dispatch:
+    inputs:
+      trousses:
+        description: "Trousses du jeu de données"
+        type: string
+        default: "30"
+      duree_ecriture:
+        description: "Écritures continues avant le sinistre (s)"
+        type: string
+        default: "90"
+      archive_timeout:
+        description: "Bascule forcée des journaux archivés (s) — borne du RPO du scénario sauvegarde"
+        type: string
+        default: "60"
+  push:
+    branches: ["releve/**"]
+  # Restauration trimestrielle (document 05, § 3 ; politique P-05) : preuve récurrente pour SOC 2 (A1.3) et ISO 8.13.
+  schedule:
+    - cron: "0 7 1 1,4,7,10 *"
+
+concurrency:
+  group: releve-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  POSTGRES_IMAGE: "postgres:16"
+  IMAGE_SERVEUR: "contrat/backend:releve"
+  NB_TROUSSES: ${{ inputs.trousses || '30' }}
+  DUREE_ECRITURE: ${{ inputs.duree_ecriture || '90' }}
+  ARCHIVE_TIMEOUT: ${{ inputs.archive_timeout || '60' }}
+  RTO_ANNONCE_H: "8"
+  RPO_ANNONCE_H: "4"
+  RTO_OBJECTIF_H: "4"
+  RPO_OBJECTIF_H: "0.25"
+  RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+jobs:
+  infrastructure:
+    name: Terraform de reprise — format, validation, analyse statique
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: infra/terraform/azure
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: "1.12.0" }
+      - name: terraform fmt -check
+        run: terraform fmt -check -recursive
+      - name: terraform validate (sans état distant, aucun appel Azure)
+        run: |
+          terraform init -backend=false -input=false
+          terraform validate
+      - name: tflint (règles azurerm)
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          TFLINT_VERSION: v0.55.1
+        run: |
+          # Téléchargement direct de la version figée (l'action d'installation interroge l'API et subit ses quotas).
+          curl -fsSL -o "$RUNNER_TEMP/tflint.zip" \
+            "https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}/tflint_linux_amd64.zip"
+          unzip -q -o "$RUNNER_TEMP/tflint.zip" -d "$RUNNER_TEMP/bin"
+          export PATH="$RUNNER_TEMP/bin:$PATH"
+          tflint --version
+          tflint --init
+          tflint --format compact
+      - name: Checkov (rapport, non bloquant sur l'existant)
+        run: |
+          pipx run checkov==3.2.334 -d . --framework terraform --compact --quiet --soft-fail \
+            --output cli --output junitxml --output-file-path console,"$RUNNER_TEMP/checkov" || true
+          mkdir -p "$GITHUB_WORKSPACE/resultats-iac" && cp -r "$RUNNER_TEMP/checkov" "$GITHUB_WORKSPACE/resultats-iac/" || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: releve-iac-${{ github.run_id }}
+          path: resultats-iac
+          if-no-files-found: ignore
+
+  essai:
+    name: Relève — scénario ${{ matrix.scenario }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario: [replique, sauvegarde]
+    env:
+      SCENARIO: ${{ matrix.scenario }}
+      RESULTATS: ${{ github.workspace }}/resultats-releve/${{ matrix.scenario }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tests de l'outil de mesure
+        run: python3 -m unittest discover -s infra/dr/essai -p 'test_*.py' -v
+
+      # Même Dockerfile et même cache que le déploiement (deployer-contrat.yml) : l'image éprouvée est celle qu'on livre.
+      - uses: docker/setup-buildx-action@v3
+      - name: Image de production du serveur
+        uses: docker/build-push-action@v6
+        with:
+          context: backend
+          load: true
+          tags: ${{ env.IMAGE_SERVEUR }}
+          cache-from: type=gha,scope=contrat-backend
+
+      - name: Secrets éphémères (le coffre de la région de relève est simulé par l'environnement de l'exécuteur)
+        run: |
+          gen() { openssl rand -hex "$1"; }
+          declare -A S=(
+            [DB_PASSWORD]="$(gen 24)" [REPLICATION_PASSWORD]="$(gen 24)" [JWT_SECRET]="$(gen 48)"
+            [APP_CRYPTO_KEY]="$(gen 24)" [APP_CRYPTO_SALT]="$(gen 8)" [CLM_PREUVE_CLE]="$(gen 32)"
+            # Clé maîtresse du chiffrement par organisation (ADR-037) : 32 octets en Base64.
+            [CLM_CLE_MAITRESSE]="$(openssl rand -base64 32)"
+            [MOT_DE_PASSE_ESSAI]="Rel-$(gen 12)-Ve9"
+          )
+          for k in "${!S[@]}"; do echo "::add-mask::${S[$k]}"; echo "$k=${S[$k]}" >> "$GITHUB_ENV"; done
+
+      - name: Site primaire (PostgreSQL 16 avec archivage continu + serveur de production)
+        run: infra/dr/essai/releve.sh site-primaire
+      - name: Compte d'essai
+        run: infra/dr/essai/releve.sh comptes
+      - name: Jeu de données (trousses, documents chiffrés, versions, journal scellé)
+        run: infra/dr/essai/releve.sh jeu-de-donnees
+      - name: Protection en régime nominal (${{ matrix.scenario }})
+        run: infra/dr/essai/releve.sh protection
+      - name: Écritures continues
+        run: infra/dr/essai/releve.sh ecriture
+      - name: Sinistre — perte totale du site primaire
+        run: infra/dr/essai/releve.sh sinistre
+      - name: Reprise sur le site secondaire
+        run: infra/dr/essai/releve.sh restauration
+      - name: Vérification (données, preuve, chiffrement, parcours)
+        id: verification
+        run: infra/dr/essai/releve.sh verification
+
+      - name: Mesure du RTO et du RPO — porte bloquante
+        if: always() && steps.verification.outcome != 'skipped'
+        run: |
+          cat > "$RUNNER_TEMP/environnement.md" <<FIN
+          ### Environnement
+
+          | Élément | Valeur |
+          |---|---|
+          | Exécuteur | GitHub Actions \`ubuntu-24.04\`, $(nproc) vCPU, $(free -g | awk '/Mem/ {print $2}') Go |
+          | Serveur | image de production \`backend/Dockerfile\` (profil prod, \`CLM_ENVIRONNEMENT=PROD\`, clé maîtresse ADR-037), 2 vCPU / 2 Go par site |
+          | Base | \`${POSTGRES_IMAGE}\` par site, 1,5 vCPU / 3 Go ; archivage continu, \`archive_timeout=${ARCHIVE_TIMEOUT}\` s |
+          | Jeu de données | ${NB_TROUSSES} trousses, $(wc -l < "$RESULTATS/temoin/documents.csv") documents PDF chiffrés, écritures continues ${DUREE_ECRITURE} s avant la perte |
+          | Version | \`${GITHUB_SHA::12}\` |
+          FIN
+          sed -i 's/^          //' "$RUNNER_TEMP/environnement.md"
+          python3 infra/dr/essai/rapport_releve.py scenario "$RESULTATS" --scenario "$SCENARIO" \
+            --run "$RUN_URL" --environnement "$RUNNER_TEMP/environnement.md"
+          cat "$RESULTATS/rapport.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Journaux des conteneurs
+        if: always()
+        run: |
+          mkdir -p "$RESULTATS/journaux"
+          for c in secours-app secours-db primaire-app primaire-db; do
+            docker logs "$c" > "$RESULTATS/journaux/$c.log" 2>&1 || true
+          done
+          # Le témoin contient les sessions de l'essai : on ne publie que les fichiers de mesure.
+          rm -f "$RESULTATS"/temoin/session-* "$RESULTATS"/temoin/comptes.csv
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: releve-${{ matrix.scenario }}-${{ github.run_id }}
+          path: resultats-releve/${{ matrix.scenario }}
+          if-no-files-found: ignore
+          retention-days: 90
+
+      - name: Arrêt de la pile
+        if: always()
+        run: |
+          docker rm -f -v secours-app secours-app-autre-cle secours-db primaire-app primaire-db >/dev/null 2>&1 || true
+          docker volume rm primaire-pgdata primaire-stockage secours-sauvegardes secours-stockage secours-pgdata >/dev/null 2>&1 || true
+
+  rapport:
+    name: Rapport de relève (synthèse des scénarios)
+    needs: essai
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: releve-*-${{ github.run_id }}
+          path: resultats
+      - name: Synthèse — porte bloquante sur les deux scénarios
+        run: |
+          python3 infra/dr/essai/rapport_releve.py synthese resultats/rapport-releve.md \
+            resultats/releve-replique-${{ github.run_id }}/mesures.json \
+            resultats/releve-sauvegarde-${{ github.run_id }}/mesures.json --run "$RUN_URL"
+          head -n 12 resultats/rapport-releve.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rapport-releve-${{ github.run_id }}
+          path: resultats/rapport-releve.md
+          if-no-files-found: ignore
+          retention-days: 90

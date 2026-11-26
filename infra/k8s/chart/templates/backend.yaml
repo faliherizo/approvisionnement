@@ -36,11 +36,17 @@ spec:
             # Sans ce réglage, la JVM borne son tas au quart de la limite du pod (512 Mio sur 2 Gio) ; réglage éprouvé par
             # l'essai TI-12 de 500 utilisateurs (docs/performance/essai-500-utilisateurs.md) et par le déploiement OVH.
             - { name: JAVA_TOOL_OPTIONS, value: "-XX:MaxRAMPercentage=70 -XX:+ExitOnOutOfMemoryError" }
+          # Le serveur n'expose pas d'actuator : /api/health est sa sonde (publique, sans données). Le démarrage
+          # (migrations Liquibase comprises) peut dépasser 30 s : la sonde de démarrage laisse 150 s avant la vivacité.
+          startupProbe:
+            httpGet: { path: /api/health, port: {{ .Values.backend.port }} }
+            periodSeconds: 5
+            failureThreshold: 30
           readinessProbe:
-            httpGet: { path: /actuator/health/readiness, port: {{ .Values.backend.port }} }
+            httpGet: { path: /api/health, port: {{ .Values.backend.port }} }
             initialDelaySeconds: 20
           livenessProbe:
-            httpGet: { path: /actuator/health/liveness, port: {{ .Values.backend.port }} }
+            httpGet: { path: /api/health, port: {{ .Values.backend.port }} }
             initialDelaySeconds: 30
           # Racine en lecture seule : seuls /tmp et le journal sont inscriptibles.
           securityContext:

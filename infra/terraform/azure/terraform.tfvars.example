@@ -15,7 +15,18 @@ postgres_sku        = "GP_Standard_D4s_v3"
 postgres_storage_mb = 131072
 
 app_hostname          = "contrat.vinaitsolution.com"
-availability_test_url = "https://contrat.vinaitsolution.com/actuator/health"
+availability_test_url = "https://contrat.vinaitsolution.com/api/health"
+
+# Reprise inter-régions (SEC-11, ADR-039). Hébergement au Québec (option B) : dr_location = "canadacentral".
+dr_location                          = "canadaeast"
+dr_strategie_base                    = "replique"    # ou "geo_restauration" (RPO jusqu'à 1 h, sans réplique)
+dr_calcul                            = "pilot_light" # ou "veille_active" / "aucun"
+dr_postgres_sku                      = "GP_Standard_D4s_v3"
+postgres_backup_retention_days       = 35
+stockage_retention_suppression_jours = 30
+stockage_immutabilite_jours          = 0
+origine_primaire_hote                = "ingress-cc.contrat.vinaitsolution.com"
+origine_secours_hote                 = "ingress-ce.contrat.vinaitsolution.com"
 alert_email           = "faliherizo@vinaitsolution.com"
 
 # Adresses (CIDR) d'administration seules admises sur l'API du plan de contrôle et le coffre de secrets (obligatoire).
