@@ -1,5 +1,5 @@
 {
-  "description": "Alertes d'outils examinées et acceptées : choix d'architecture assumé, faux positif ou risque maîtrisé autrement. Chaque acceptation porte sa justification ; elle est revue à chaque campagne.",
+  "description": "Alertes d'outils examinées et acceptées : choix d'architecture assumé, faux positif ou risque maîtrisé autrement. Chaque acceptation porte sa justification ; elle est revue à chaque campagne. Une acceptation peut être limitée par « motifUrl » : elle ne vaut que si TOUTES les instances de l'alerte visent une adresse qui contient ce motif.",
   "zap": [
     {
       "pluginid": "10116",
@@ -7,7 +7,13 @@
     },
     {
       "pluginid": "100000",
-      "justification": "503 volontaire de l'assistant de rédaction quand le moteur d'IA local (Ollama) est arrêté dans l'environnement d'essai ; la réponse ne divulgue plus aucun détail technique (constat SEC-22)."
+      "justification": "503 volontaire de l'assistant de rédaction (/api/ia/) quand le moteur d'IA local (Ollama) est arrêté dans l'environnement d'essai ; la réponse ne divulgue aucun détail technique (constat SEC-22). Acceptation limitée à /api/ia/ : toute autre erreur serveur reste bloquante (c'est ainsi que SEC-34 a été relevé).",
+      "motifUrl": "/api/ia/"
+    },
+    {
+      "pluginid": "40018",
+      "motifUrl": "//",
+      "justification": "Faux positif : les seules instances visent une adresse dont un paramètre de chemin est vide (« //signer », « tenants//vitrine »). Le pare-feu HTTP de Spring Security (StrictHttpFirewall) rejette toute URL contenant « // » par un 400, avant le routage, l'authentification et tout accès à la base ; ZAP interprète la variation de ces 400 selon la charge comme une injection booléenne. Les requêtes sont paramétrées (JPA) et INT-06 éprouve l'injection sur chaque liste. Acceptation limitée aux URL contenant « // » : une alerte d'injection SQL sur toute autre adresse reste bloquante."
     }
   ],
   "trivy": [

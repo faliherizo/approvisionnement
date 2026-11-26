@@ -104,6 +104,9 @@ class VitrineIntegrationTest {
         assertEquals(200, appel(MockMvcRequestBuilders.get("/api/media/aide/index.json"), null).getStatus());
         assertEquals(404, appel(MockMvcRequestBuilders.get("/api/media/aide/notes.txt"), null).getStatus(), "type de fichier non servi");
         assertEquals(404, appel(MockMvcRequestBuilders.get("/api/media/aide/absent.mp4"), null).getStatus());
+        // SEC-34 : la racine de la médiathèque, sans chemin, est introuvable (et non une erreur 500 relevée par ZAP).
+        assertEquals(404, appel(MockMvcRequestBuilders.get("/api/media"), null).getStatus());
+        assertEquals(404, appel(MockMvcRequestBuilders.get("/api/media/"), null).getStatus());
         assertEquals(403, appel(MockMvcRequestBuilders.get("/api/superadmin/mediatheque"), login("admin.ti@iq.example", "Passw0rd!")).getStatus());
     }
 }

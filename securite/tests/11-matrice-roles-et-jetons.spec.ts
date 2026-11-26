@@ -1,11 +1,22 @@
 import { expect, test } from '@playwright/test'
-import { MOT_DE_PASSE, SUPERADMIN, anonyme, appeler, cle, estPublique, inventaire, organisation, remplir, session } from '../outils/api'
+import { MOT_DE_PASSE, Operation, SUPERADMIN, anonyme, appeler, cle, estPublique, inventaire, organisation, remplir, session } from '../outils/api'
 import { consigner } from '../outils/consigner'
 import matrice from '../donnees/matrice-roles.json' with { type: 'json' }
 import publique from '../donnees/surface-publique.json' with { type: 'json' }
 
 const ROLES = ['SUPERADMIN', 'ADMIN', 'REDACTEUR', 'JURIDIQUE', 'APPRO', 'DIRECTION', 'LECTEUR', 'AUDITEUR', 'ADMIN_AFFAIRES', 'ADMIN_TECHNIQUE']
 const permis = matrice.matrice as Record<string, string[]>
+
+/** Appel avec le type de corps que l'opération déclare (JSON, multipart, CSV…) : un refus doit être un 403, pas un 415. */
+async function essayer(ctx: Awaited<ReturnType<typeof session>>, op: Operation) {
+  const url = remplir(op)
+  const sansCorps = op.methode === 'GET' || op.methode === 'DELETE'
+  if (sansCorps || !op.typeCorps) return appeler(ctx, op.methode, url, sansCorps ? undefined : {})
+  const options = op.typeCorps.startsWith('multipart/') ? { multipart: { fichier: { name: 'x.txt', mimeType: 'text/plain', buffer: Buffer.from('x') } } }
+    : op.typeCorps === 'application/json' ? { data: {} } : { data: 'x', headers: { 'Content-Type': op.typeCorps } }
+  const r = await ctx.fetch(url, { method: op.methode, failOnStatusCode: false, maxRedirects: 0, ...options })
+  return { statut: r.status() }
+}
 
 /**
  * OWASP A01 / A07 — La matrice rôle × opération (DÉRIVÉE des @PreAuthorize par RoutesSecuriseesIntegrationTest, revue
@@ -30,7 +41,7 @@ test.describe('INT-11 Matrice des rôles, jetons et limitation de débit', () =>
       if (!roles) { sansMatrice++; ecarts.push(`${cle(op)} absente de la matrice revue`); continue }
       if (roles.includes('*')) continue
       for (const role of ROLES.filter((r) => !roles.includes(r))) {
-        const r = await appeler(sessions[role], op.methode, remplir(op), op.methode === 'GET' || op.methode === 'DELETE' ? undefined : {})
+        const r = await essayer(sessions[role], op)
         essais++
         if (r.statut !== 403) ecarts.push(`${cle(op)} [${role}] → ${r.statut}`)
       }
@@ -67,7 +78,7 @@ test.describe('INT-11 Matrice des rôles, jetons et limitation de débit', () =>
     for (let i = 0; i < limite + 1 && refus === 0; i++) {
       // Le client forge la première entrée ; le frontal (ici, la boucle locale) a ajouté l'adresse réelle en dernier.
       const r = await anon.get('/api/health', { failOnStatusCode: false, headers: { 'X-Forwarded-For': `203.0.113.${i % 250}, 198.51.100.77` } })
-      if (r.status() === 429) refus = i + 2
+      if (r.status() === 429) refus = i + 1
     }
     consigner('11-limitation-debit', { famille: '/api/health', limite, refuseApres: refus })
     expect(refus, 'la limite est atteinte malgré un X-Forwarded-For différent à chaque requête').toBeGreaterThan(0)

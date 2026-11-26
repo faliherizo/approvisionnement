@@ -49,8 +49,10 @@ function zap() {
   const z = lire('resultats/zap.json')
   if (!z) return null
   const alertes = (z.site ?? []).flatMap((s) => s.alerts ?? [])
+  // Une acceptation limitée par motifUrl ne couvre l'alerte que si TOUTES ses instances visent une adresse qui le contient.
+  const couvre = (x, a) => String(x.pluginid) === String(a.pluginid) && (!x.motifUrl || (a.instances ?? []).every((i) => String(i.uri).includes(x.motifUrl)))
   return alertes.map((a) => ({ id: a.pluginid, nom: a.name, risque: a.riskdesc?.split(' ')[0] ?? a.riskcode, instances: a.count ?? a.instances?.length ?? 0,
-    acceptation: acceptations.zap.find((x) => String(x.pluginid) === String(a.pluginid)) }))
+    acceptation: acceptations.zap.find((x) => couvre(x, a)) }))
 }
 
 /** Règles exécutées par ZAP, lues dans son journal (PASS / WARN / FAIL suivis de l'identifiant de règle). */

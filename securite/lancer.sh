@@ -24,12 +24,19 @@ echo "== 2. OWASP ZAP (API, authentifié, balayage ACTIF)"
 # zap-api-scan.py importe l'OpenAPI, explore chaque opération, puis exécute les règles PASSIVES et ACTIVES (injection SQL,
 # XSS, inclusion de fichiers, injection de commandes, SSRF, XXE…). Session : cookie de l'administrateur de l'organisation
 # d'essai intrusion-a (créée par les tests ci-dessus), posé sur chaque requête par le module « replacer ».
-# Seule exclusion, motivée : /api/auth/logout révoque le jeton (SEC-10) et mettrait fin à la session du balayage.
+# Exclusions, motivées : chacune mettrait fin à la session du balayage, que ZAP ne sait pas rouvrir seul ; leur
+# résistance aux attaques est éprouvée par les tests ciblés (INT-02, INT-05, INT-06, INT-08, RoutesSecurisees…) :
+#  - /api/auth/logout et /api/auth/mfa/ : révocation du jeton (SEC-10), second facteur du compte de balayage ;
+#  - /api/admin/session et /api/admin/connexion-locale : politique de session et de connexion de l'organisation
+#    (des valeurs aléatoires y rendent la session expirée) ;
+#  - /api/admin/users/ : désactivation ou changement de rôle du compte de balayage lui-même.
 # Les alertes acceptées (outil obsolète, 503 volontaire) sont motivées dans donnees/acceptations.json ; toute alerte de
 # risque élevé non acceptée, ou l'absence de rapport ZAP, fait échouer le rapport (outils/rapport.mjs).
 JETON=$(curl -s -i -X POST "$API/api/auth/login" -H 'Content-Type: application/json' \
   -d '{"email":"admin@intrusion-a.example","motDePasse":"Intrusion!2026x"}' | sed -n 's/^[Ss]et-[Cc]ookie: ACCESS_TOKEN=\([^;]*\).*/\1/p')
-rm -f "$R/zap.json"
+rm -f "$R/zap.json" "$R/zap.html"
+# Le conteneur ZAP écrit sous son propre compte (zap, 1000) : le dossier de résultats doit lui être inscriptible.
+chmod a+rwx "$R"
 if [[ -z "$JETON" ]]; then
   echo "ZAP : connexion du compte de balayage impossible ; un balayage sans session ne vaut rien." | tee "$R/zap.log"
   statut=1
@@ -38,6 +45,12 @@ else
     -J zap.json -r zap.html -I -z "-config scanner.maxScanDurationInMins=25 \
     -config globalexcludeurl.url_list.url(0).regex=.*/api/auth/logout.* -config globalexcludeurl.url_list.url(0).enabled=true \
     -config globalexcludeurl.url_list.url(0).description=deconnexion \
+    -config globalexcludeurl.url_list.url(1).regex=.*/api/auth/mfa/.* -config globalexcludeurl.url_list.url(1).enabled=true \
+    -config globalexcludeurl.url_list.url(1).description=second-facteur \
+    -config globalexcludeurl.url_list.url(2).regex=.*/api/admin/(session|connexion-locale).* -config globalexcludeurl.url_list.url(2).enabled=true \
+    -config globalexcludeurl.url_list.url(2).description=politiques-de-session \
+    -config globalexcludeurl.url_list.url(3).regex=.*/api/admin/users/.+ -config globalexcludeurl.url_list.url(3).enabled=true \
+    -config globalexcludeurl.url_list.url(3).description=compte-du-balayage \
     -config replacer.full_list(0).description=session -config replacer.full_list(0).enabled=true \
     -config replacer.full_list(0).matchtype=REQ_HEADER -config replacer.full_list(0).matchstr=Cookie \
     -config replacer.full_list(0).regex=false -config replacer.full_list(0).replacement=ACCESS_TOKEN=$JETON" > "$R/zap.log" 2>&1 || true

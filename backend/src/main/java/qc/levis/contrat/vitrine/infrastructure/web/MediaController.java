@@ -33,7 +33,12 @@ public class MediaController {
 
     @GetMapping(PREFIXE + "**")
     public ResponseEntity<Resource> lire(HttpServletRequest requete) {
-        String chemin = requete.getRequestURI().substring(requete.getContextPath().length() + PREFIXE.length());
+        int debut = requete.getContextPath().length() + PREFIXE.length();
+        // « /api/media » sans chemin correspond aussi au gabarit : introuvable, et non une erreur interne (SEC-34).
+        if (requete.getRequestURI().length() <= debut) {
+            return ResponseEntity.notFound().build();
+        }
+        String chemin = requete.getRequestURI().substring(debut);
         String extension = chemin.substring(chemin.lastIndexOf('.') + 1).toLowerCase(java.util.Locale.ROOT);
         MediaType type = TYPES.get(extension);
         if (type == null) {

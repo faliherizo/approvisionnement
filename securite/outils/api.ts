@@ -11,7 +11,7 @@ export const SUPERADMIN = {
 }
 export const MOT_DE_PASSE = 'Intrusion!2026x'
 
-export type Operation = { methode: string; chemin: string; parametres: string[]; corps?: unknown; operationId?: string }
+export type Operation = { methode: string; chemin: string; parametres: string[]; corps?: unknown; operationId?: string; typeCorps?: string }
 
 /** Session authentifiée : le cookie de session est conservé par le contexte. */
 export async function session(courriel: string, motDePasse: string): Promise<APIRequestContext> {
@@ -35,7 +35,8 @@ export async function inventaire(): Promise<{ operations: Operation[]; schemas: 
       if (!['get', 'post', 'put', 'patch', 'delete'].includes(methode)) continue
       const parametres = (op.parameters ?? []).filter((p: any) => p.in === 'path').map((p: any) => p.name)
       const schema = op.requestBody?.content?.['application/json']?.schema
-      operations.push({ methode: methode.toUpperCase(), chemin, parametres, corps: schema, operationId: op.operationId })
+      const typeCorps = Object.keys(op.requestBody?.content ?? {})[0]
+      operations.push({ methode: methode.toUpperCase(), chemin, parametres, corps: schema, operationId: op.operationId, typeCorps })
     }
   }
   return { operations, schemas: spec.components?.schemas ?? {} }
