@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 081-1-clm-cle-organisation
+      author: levis
+      comment: "Annexe 10 IQ, SEC-28 (RST-54, ADR-037) : clé de données dédiée à chaque organisation, enveloppée par la clé maîtresse (local ou Azure Key Vault), une version par rotation."
+      changes:
+        - createTable:
+            tableName: clm_cle_organisation
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: version, type: INT, constraints: { nullable: false } }
+              - column: { name: cle_maitresse, type: VARCHAR(300), constraints: { nullable: false } }
+              - column: { name: cle_enveloppee, type: VARCHAR(2048), constraints: { nullable: false } }
+              - column: { name: statut, type: VARCHAR(8), constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: retiree_le, type: TIMESTAMP }
+        - addUniqueConstraint:
+            tableName: clm_cle_organisation
+            columnNames: tenant_id, version
+            constraintName: uk_clm_cle_org_version
+  - changeSet:
+      id: 081-2-clm-document-cle-version
+      author: levis
+      comment: "Version de la clé qui chiffre le contenu d'un document ; nulle pour les documents antérieurs, en clair, lus tels quels jusqu'à leur réenveloppement."
+      changes:
+        - addColumn:
+            tableName: clm_document
+            columns:
+              - column: { name: cle_version, type: INT }
+        - createIndex:
+            tableName: clm_document
+            indexName: ix_clm_doc_cle_version
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: cle_version }

@@ -29,6 +29,8 @@ const ADMINISTRATION = [
   ['/clm/admin/notifications', 'clm.nav.notifications', [AFF]],
   ['/clm/admin/integrations', 'clm.nav.integrations', [TEC]],
   ['/clm/admin/microsoft-365', 'clm.nav.m365', [TEC]],
+  ['/clm/admin/chiffrement', 'clm.nav.chiffrement', [TEC]],
+  ['/clm/admin/purview', 'clm.nav.purview', [AFF, TEC]],
   ['/clm/admin/parametres', 'clm.nav.parametres', [AFF]],
   ['/clm/admin/listes', 'clm.nav.listes', [AFF]],
   ['/clm/admin/utilisateurs', 'clm.nav.utilisateurs', [AFF, TEC]],

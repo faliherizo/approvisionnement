@@ -172,7 +172,7 @@ public class ConservationService {
         });
         var ias = analyses.findByTenantIdAndTrousseIdOrderByCreeLeDesc(t.getTenantId(), t.getId());
         analyses.deleteAll(ias);
-        LocalDate echeance = r.echeance(t.getClotureLe(), ctx.fuseau());
+        LocalDate echeance = echeance(t, r);
         t.detruire(ctx.maintenant());
         t.consignerBordereau(ctx.ecrire(bordereau(t, titre, r, echeance, acteur, elements,
                 Map.of("participants", parts.size(), "invitations", invs.size(), "decisions", decs.size(), "analyses", ias.size()),
@@ -207,11 +207,24 @@ public class ConservationService {
     private RegleConservation exigerEchue(Trousse t) {
         RegleConservation r = regleApplicable(t).orElseThrow(() ->
                 new IllegalStateException("Aucune règle de conservation ne s'applique à ce type de contrat."));
-        LocalDate echeance = r.echeance(t.getClotureLe(), ctx.fuseau());
+        LocalDate echeance = echeance(t, r);
         if (echeance == null || ctx.aujourdhui().isBefore(echeance)) {
             throw new IllegalStateException("Échéance de conservation non atteinte" + (echeance == null ? " (conservation permanente)." : " : " + echeance + "."));
         }
         return r;
+    }
+
+    /**
+     * Échéance de conservation alignée sur Microsoft Purview (ADR-036) : jamais avant la fin de la rétention imposée par
+     * l'étiquette conservée avec un document de la trousse. Une conservation permanente le reste.
+     */
+    private LocalDate echeance(Trousse t, RegleConservation r) {
+        LocalDate regle = r.echeance(t.getClotureLe(), ctx.fuseau());
+        LocalDate purview = documents.findByTenantIdAndTrousseIdOrderByCleDocumentAscVersionDesc(t.getTenantId(), t.getId()).stream()
+                .map(DocumentTrousse::retention).filter(java.util.Objects::nonNull)
+                .map(e -> e.finRetention(t.getClotureLe(), ctx.fuseau())).filter(java.util.Objects::nonNull)
+                .max(LocalDate::compareTo).orElse(null);
+        return regle == null || purview == null || !purview.isAfter(regle) ? regle : purview;
     }
 
     private Optional<RegleConservation> regleApplicable(Trousse t) {
@@ -229,7 +242,7 @@ public class ConservationService {
     }
 
     private ClmDto.ConservationVue vue(Trousse t, Optional<RegleConservation> regle, LocalDate aujourdhui) {
-        LocalDate echeance = regle.map(r -> r.echeance(t.getClotureLe(), ctx.fuseau())).orElse(null);
+        LocalDate echeance = regle.map(r -> echeance(t, r)).orElse(null);
         boolean echue = echeance != null && !aujourdhui.isBefore(echeance) && !t.isGelLegal();
         return new ClmDto.ConservationVue(t.getId(), t.getReference(), t.getTitre(), t.getTypeContrat(), t.getStatut().name(),
                 t.getClotureLe(), echeance, regle.map(r -> r.getSortFinal().name()).orElse(null), echue, t.isGelLegal(),

@@ -169,6 +169,27 @@
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : non — seulement préparée par l'API
 
+### E2E-AX-IQ-25 — SEC-28 (RST-54) : les documents d'IQ sont chiffrés par une clé dédiée à l'organisation ; l'administration technique pivote la clé sans interruption puis réenveloppe les documents, qui restent lisibles
+
+- **Profil** : administration technique IQ
+- **Exigences démontrées** : IQ-C-07, IQ-D-20
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Un document déposé par l'initiateur : la première écriture crée la clé de données de l'organisation
+2. Ouvrir l'écran `/clm/admin/chiffrement`
+3. Voir le titre « Chiffrement au repos »
+4. Voir « Clé de l’organisation », « Clé maîtresse active », « Active »
+5. Activer « Pivoter la clé »
+6. Voir « Rotation effectuée »
+7. Voir « Retirée (lecture seule) »
+8. Préparer par l'API : Après la rotation, le document chiffré par l'ancienne version reste lisible
+9. Activer « Réenvelopper les documents »
+10. Voir « Réenveloppement : »
+11. Préparer par l'API : Après le réenveloppement, le document se lit toujours en clair par l'API
+12. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
 ### E2E-IQ-30 — Isolation des données entre organisations et modules
 
 - **Profil** : initiateur IQ
@@ -6645,6 +6666,27 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅🆕
 - **Démontrée à l'écran** : oui
 
+### E2E-AX-IQ-21 — SEC-27 (RST-53) : l'administration d'affaires choisit, dans le catalogue Purview du locataire, l'étiquette de sensibilité et de rétention d'un type de contrat ; le document déposé la porte et la conserve, puis la politique est retirée
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-66, IQ-D-20
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (5 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/purview`
+2. Voir le titre « Étiquettes Microsoft Purview »
+3. Choisir « Type de contrat » : `Convention d'aide financière`
+4. Choisir « Étiquette de sensibilité » : `Confidentiel`
+5. Choisir « Étiquette de rétention » : `Contrats - 7 ans (2557 jours)`
+6. Activer « Enregistrer la politique »
+7. Voir « Politique « Convention d'aide financière » enregistrée. »
+8. Voir « Confidentiel », « Contrats - 7 ans (2557 jours) »
+9. Préparer par l'API : L'initiateur dépose un document dans une trousse de ce type : il reçoit les étiquettes de la politique
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+11. Activer « Retirer — Convention d'aide financière »
+12. Voir « Politique « Convention d'aide financière » retirée. »
+
 ### E2E-ECR-IQ-07 — Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)
 
 - **Profil** : administration principale IQ
@@ -8917,7 +8959,49 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 
 - **Source** : 3.3.2
 - **Conformité déclarée** : ✅
-- **Démontrée à l'écran** : non — seulement préparée par l'API
+- **Démontrée à l'écran** : oui
+
+### E2E-AX-IQ-21 — SEC-27 (RST-53) : l'administration d'affaires choisit, dans le catalogue Purview du locataire, l'étiquette de sensibilité et de rétention d'un type de contrat ; le document déposé la porte et la conserve, puis la politique est retirée
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-66, IQ-D-20
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (5 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/purview`
+2. Voir le titre « Étiquettes Microsoft Purview »
+3. Choisir « Type de contrat » : `Convention d'aide financière`
+4. Choisir « Étiquette de sensibilité » : `Confidentiel`
+5. Choisir « Étiquette de rétention » : `Contrats - 7 ans (2557 jours)`
+6. Activer « Enregistrer la politique »
+7. Voir « Politique « Convention d'aide financière » enregistrée. »
+8. Voir « Confidentiel », « Contrats - 7 ans (2557 jours) »
+9. Préparer par l'API : L'initiateur dépose un document dans une trousse de ce type : il reçoit les étiquettes de la politique
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+11. Activer « Retirer — Convention d'aide financière »
+12. Voir « Politique « Convention d'aide financière » retirée. »
+
+### E2E-AX-IQ-25 — SEC-28 (RST-54) : les documents d'IQ sont chiffrés par une clé dédiée à l'organisation ; l'administration technique pivote la clé sans interruption puis réenveloppe les documents, qui restent lisibles
+
+- **Profil** : administration technique IQ
+- **Exigences démontrées** : IQ-C-07, IQ-D-20
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Un document déposé par l'initiateur : la première écriture crée la clé de données de l'organisation
+2. Ouvrir l'écran `/clm/admin/chiffrement`
+3. Voir le titre « Chiffrement au repos »
+4. Voir « Clé de l’organisation », « Clé maîtresse active », « Active »
+5. Activer « Pivoter la clé »
+6. Voir « Rotation effectuée »
+7. Voir « Retirée (lecture seule) »
+8. Préparer par l'API : Après la rotation, le document chiffré par l'ancienne version reste lisible
+9. Activer « Réenvelopper les documents »
+10. Voir « Réenveloppement : »
+11. Préparer par l'API : Après le réenveloppement, le document se lit toujours en clair par l'API
+12. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-30 — Isolation des données entre organisations et modules
 
@@ -10544,6 +10628,22 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Source** : Add. Q3, add. 3 Q51
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
+
+### E2E-AX-IQ-20 — TI-21 (RST-52) : l'administration technique crée le jeton SCIM ; Saviynt provisionne un compte, puis découvre par SCIM ses rôles effectifs (roles) et ses groupes du module (entitlements), en lecture seule
+
+- **Profil** : administration technique IQ
+- **Exigences démontrées** : IQ-A-08
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/sso`
+2. Voir « Provisionnement SCIM 2.0 », « Découverte des droits »
+3. Activer « Créer un jeton | Remplacer le jeton »
+4. Voir « Jeton créé. »
+5. Relever le texte affiché (`.clm-info-statique code`) sous le nom `jetonScim`
+6. Préparer par l'API : Saviynt provisionne un compte ; l'administration le place dans un groupe du module ; SCIM expose ses droits effectifs
+7. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-ECR-IQ-07 — Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)
 

@@ -112,8 +112,10 @@ public final class ClmDto {
                                 String prochaineAction, boolean enRetard) {
     }
 
+    /** {@code etiquetteSensibilite}, {@code etiquetteRetention} : étiquettes Purview conservées avec le document (ADR-036). */
     public record DocumentVue(Long id, String cleDocument, int version, String nom, String type, long taille, String empreinte,
-                              String statut, String analyse, String auteur, String motif, Instant creeLe) {
+                              String statut, String analyse, String auteur, String motif, Instant creeLe,
+                              String etiquetteSensibilite, String etiquetteRetention) {
     }
 
     public record ParticipantVue(Long id, String nom, String courriel, String telephone, String roleContrat, boolean externe,
@@ -353,8 +355,9 @@ public final class ClmDto {
                                    String modifiePar, Instant modifieLe) {
     }
 
+    /** {@code etiquette} : étiquettes Purview propagées au fichier déposé, ou motif de l'échec (ADR-036). */
     public record DepotM365Vue(Long id, Long trousseId, String reference, String nature, String statut, int tentatives, String url,
-                               String derniereErreur, Instant creeLe, Instant deposeLe, Instant prochainEssai) {
+                               String derniereErreur, Instant creeLe, Instant deposeLe, Instant prochainEssai, String etiquette) {
     }
 
     // --- Accès de soutien de l'exploitant (Annexe 10, SEC-17) ---
@@ -432,5 +435,34 @@ public final class ClmDto {
     }
 
     public record GelRequest(String motif) {
+    }
+
+    // --- Chiffrement au repos par organisation (Annexe 10, SEC-28 ; ADR-037) ---
+
+    /** {@code nonChiffres} : anciens documents en clair, à réenvelopper ; aucune clé n'est jamais exposée. */
+    public record ChiffrementVue(String cleMaitresseActive, long nonChiffres, List<CleOrganisationVue> versions) {
+    }
+
+    public record CleOrganisationVue(int version, String statut, String cleMaitresse, Instant creeLe, Instant retireeLe,
+                                     long documents, boolean aReenvelopper) {
+    }
+
+    /** {@code restants} : documents encore à réenvelopper après ce lot ; un nouvel appel les traite. */
+    public record ReenveloppementVue(int cles, int documents, long restants) {
+    }
+
+    // --- Microsoft Purview (Annexe 10, SEC-27 ; ADR-036) ---
+
+    /** Étiquette du locataire Microsoft 365 : {@code type} SENSIBILITE ou RETENTION ; {@code jours} : durée de rétention. */
+    public record EtiquettePurviewVue(String type, String id, String nom, Integer jours) {
+    }
+
+    /** {@code typeContrat} nul : politique par défaut de l'organisation. */
+    public record PolitiquePurviewVue(Long id, String typeContrat, String sensibiliteId, String sensibilite, String retention,
+                                      Integer retentionJours, String modifiePar, Instant modifieLe) {
+    }
+
+    /** {@code sensibiliteId} : identifiant MIP ; {@code retention} : nom de l'étiquette de rétention ; l'un ou l'autre au moins. */
+    public record PolitiquePurviewRequest(String typeContrat, String sensibiliteId, String retention) {
     }
 }

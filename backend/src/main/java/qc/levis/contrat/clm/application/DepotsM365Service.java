@@ -46,10 +46,12 @@ public class DepotsM365Service implements AbonneTransition {
     private final DepotMicrosoft365 port;
     private final JournalClm journal;
     private final ContexteClm ctx;
+    private final EtiquetagePurviewService purview;
 
     public DepotsM365Service(DiffusionM365Repository configurations, DepotM365Repository depots, DocumentTrousseRepository documents,
                              TrousseRepository trousses, PreuveService preuves, DepotMicrosoft365 port, JournalClm journal,
-                             ContexteClm ctx) {
+                             ContexteClm ctx, EtiquetagePurviewService purview) {
+        this.purview = purview;
         this.configurations = configurations;
         this.depots = depots;
         this.documents = documents;
@@ -123,9 +125,18 @@ public class DepotsM365Service implements AbonneTransition {
             return 0;
         }
         d.reussir(res.url(), maintenant);
+        if (d.getNature() == DepotM365.Nature.DOCUMENT_SIGNE) {
+            propagerEtiquettes(t, d);
+        }
         depots.save(d);
         journal.consigner(t, "DEPOT_M365", "systeme", libelle(d.getNature()) + " → " + res.url());
         return 1;
+    }
+
+    /** Les étiquettes Purview conservées avec le document suivent le fichier déposé (ADR-036). */
+    private void propagerEtiquettes(Trousse t, DepotM365 d) {
+        documents.findByIdAndTenantId(d.getDocumentId(), d.getTenantId())
+                .flatMap(doc -> purview.propager(t, doc, d.getUrl())).ifPresent(d::noterEtiquette);
     }
 
     private DepotMicrosoft365.Fichier document(Trousse t, DepotM365 d, DiffusionM365.Reglage r) {
@@ -219,6 +230,6 @@ public class DepotsM365Service implements AbonneTransition {
     private ClmDto.DepotM365Vue vue(DepotM365 d, Long tenant) {
         String reference = trousses.findByIdAndTenantId(d.getTrousseId(), tenant).map(Trousse::getReference).orElse("—");
         return new ClmDto.DepotM365Vue(d.getId(), d.getTrousseId(), reference, d.getNature().name(), d.getStatut().name(), d.getTentatives(),
-                d.getUrl(), d.getDerniereErreur(), d.getCreeLe(), d.getDeposeLe(), d.getProchainEssai());
+                d.getUrl(), d.getDerniereErreur(), d.getCreeLe(), d.getDeposeLe(), d.getProchainEssai(), d.getEtiquette());
     }
 }

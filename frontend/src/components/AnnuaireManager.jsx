@@ -90,6 +90,7 @@ export default function AnnuaireManager() {
         <dl className="clm-dl">
           <div><dt>{t('an.point')}</dt><dd><code className="clm-casse">{point}</code></dd></div>
           <div><dt>{t('an.jeton')}</dt><dd>{scim?.configure ? t('an.jetonConfigure', { par: scim.creePar, le: dateHeure(scim.creeLe) }) : t('an.jetonAbsent')}</dd></div>
+          <div><dt>{t('an.scimDroits')}</dt><dd>{t('an.scimDroitsAide')}</dd></div>
         </dl>
         {jeton && (
           <div role="note" className="clm-info-statique">

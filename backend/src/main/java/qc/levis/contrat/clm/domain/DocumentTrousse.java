@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 /**
  * Une version d'un document de trousse (ST-04, UI-05/UI-06). Les versions d'un même document partagent
@@ -70,9 +71,31 @@ public class DocumentTrousse {
     @Column(length = 500)
     private String motif;
 
+    /** Forme stockée : enveloppe chiffrée par la clé de l'organisation (ADR-037), ou ancien contenu en clair. */
     @Basic(fetch = FetchType.LAZY)
     @Column(name = "contenu", nullable = false)
     private byte[] contenu;
+
+    /** Version de la clé de données qui a chiffré le contenu ; nulle pour un ancien contenu en clair (migration 081). */
+    @Column(name = "cle_version")
+    private Integer cleVersion;
+
+    /** Étiquettes Microsoft Purview apposées au document (ADR-036), conservées avec lui. */
+    @Column(name = "etiquette_sensibilite_id", length = EtiquettePurview.ID_MAX)
+    private String etiquetteSensibiliteId;
+
+    @Column(name = "etiquette_sensibilite", length = EtiquettePurview.NOM_MAX)
+    private String etiquetteSensibilite;
+
+    @Column(name = "etiquette_retention", length = EtiquettePurview.NOM_MAX)
+    private String etiquetteRetention;
+
+    @Column(name = "etiquette_retention_jours")
+    private Integer etiquetteRetentionJours;
+
+    /** Contenu en clair, en mémoire seulement : déchiffré au chargement, jamais écrit en base. */
+    @Transient
+    private byte[] clair;
 
     @Column(name = "cree_le", nullable = false)
     private Instant creeLe;
@@ -107,6 +130,7 @@ public class DocumentTrousse {
     }
 
     public Long getId() { return id; }
+    public Long getTenantId() { return tenantId; }
     public Long getTrousseId() { return trousseId; }
     public String getCleDocument() { return cleDocument; }
     public int getVersion() { return version; }
@@ -120,11 +144,56 @@ public class DocumentTrousse {
     public void setAnalyse(Analyse analyse) { this.analyse = analyse; }
     public String getAuteur() { return auteur; }
     public String getMotif() { return motif; }
-    public byte[] getContenu() { return contenu; }
+    /** Contenu en clair : celui que l'on a déposé, ou celui déchiffré au chargement. */
+    public byte[] getContenu() { return clair != null ? clair : contenu; }
+
+    /** Forme stockée en base (enveloppe chiffrée ou ancien clair), pour le chiffrement au repos. */
+    public byte[] getStockage() { return contenu; }
+
+    public Integer getCleVersion() { return cleVersion; }
+
+    /**
+     * Chiffrement au repos (ADR-037) : la forme stockée devient l'enveloppe ; le clair reste en mémoire pour la suite de la
+     * transaction. L'empreinte et la taille, calculées sur le clair, ne changent pas.
+     */
+    public void stockerChiffre(byte[] enveloppe, int version) {
+        if (clair == null) {
+            clair = contenu;
+        }
+        contenu = enveloppe;
+        cleVersion = version;
+    }
+
+    /** Clair obtenu au chargement par le déchiffrement de la forme stockée. */
+    public void dechiffre(byte[] contenuClair) {
+        clair = contenuClair;
+    }
+
+    /** Étiquettes Purview de la politique applicable (ADR-036) ; nulles : l'étiquette correspondante est retirée. */
+    public void etiqueter(EtiquettePurview sensibilite, EtiquettePurview retention) {
+        etiquetteSensibiliteId = sensibilite == null ? null : sensibilite.id();
+        etiquetteSensibilite = sensibilite == null ? null : sensibilite.nom();
+        etiquetteRetention = retention == null ? null : retention.nom();
+        etiquetteRetentionJours = retention == null ? null : retention.retentionJours();
+    }
+
+    /** Une version produite (version signée) garde les étiquettes de sa source. */
+    public void reprendreEtiquettes(DocumentTrousse source) {
+        etiqueter(source.sensibilite(), source.retention());
+    }
+
+    public EtiquettePurview sensibilite() {
+        return etiquetteSensibiliteId == null ? null : EtiquettePurview.sensibilite(etiquetteSensibiliteId, etiquetteSensibilite);
+    }
+
+    public EtiquettePurview retention() {
+        return etiquetteRetention == null ? null : EtiquettePurview.retention(etiquetteRetention, etiquetteRetentionJours);
+    }
 
     /** Destruction à l'échéance de conservation : le contenu disparaît, l'empreinte demeure comme preuve de ce qui fut. */
     public void effacerContenu() {
         this.contenu = new byte[0];
+        this.clair = null;
     }
     public Instant getCreeLe() { return creeLe; }
 }

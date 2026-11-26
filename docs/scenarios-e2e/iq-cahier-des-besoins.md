@@ -26,7 +26,7 @@ besoin par besoin, sans préparation par l'API.
 |---|---|---|---|
 | IQ-C-05 | Offerte en infonuagique, connectable aux SaaS | — vérification documentaire | — |
 | IQ-C-06 | Connexion aux applications « on premise » par API | **aucun** | E2E-IQ-19 ✅ |
-| IQ-C-07 | Protection et confidentialité des données | **aucun** | E2E-IQ-30 ✅ |
+| IQ-C-07 | Protection et confidentialité des données | **aucun** | E2E-AX-IQ-25 ✅, E2E-IQ-30 ✅ |
 
 ## Section 1.4.4
 
@@ -130,7 +130,7 @@ besoin par besoin, sans préparation par l'API.
 
 | Exigence | Besoin | Parcours d'interface | Préparés par l'API |
 |---|---|---|---|
-| IQ-C-66 | Protection du cycle de vie, dont la destruction au moment opportun (Loi sur les archives) | E2E-ECR-IQ-07 ✅ | E2E-IQ-18 ✅ |
+| IQ-C-66 | Protection du cycle de vie, dont la destruction au moment opportun (Loi sur les archives) | E2E-AX-IQ-21 ✅, E2E-ECR-IQ-07 ✅ | E2E-IQ-18 ✅ |
 | IQ-C-67 | Accès, modèles, workflows, historiques selon rôles, groupes, unités, domaines | E2E-CB-IQ-03 ✅, E2E-CB-IQ-08 ✅, E2E-CB-IQ-14 ✅, E2E-CB-IQ-19 ✅, E2E-CB-IQ-24 ✅ | E2E-IQ-25 ✅, E2E-IQ-26 ✅ |
 
 ## Section 1.7.1
