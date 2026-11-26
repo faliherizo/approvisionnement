@@ -2003,7 +2003,7 @@
           "type": "supprimer",
           "fonction": "retablir",
           "sources": [
-            "pages/clm/AdminClm.jsx:526"
+            "pages/clm/AdminClm.jsx:528"
           ]
         },
         {
@@ -2013,7 +2013,7 @@
           "type": "lister",
           "fonction": "Parametres",
           "sources": [
-            "pages/clm/AdminClm.jsx:504"
+            "pages/clm/AdminClm.jsx:506"
           ]
         },
         {
@@ -2033,7 +2033,7 @@
           "type": "modifier",
           "fonction": "enregistrer",
           "sources": [
-            "pages/clm/AdminClm.jsx:525"
+            "pages/clm/AdminClm.jsx:527"
           ]
         }
       ]

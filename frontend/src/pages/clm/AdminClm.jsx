@@ -414,14 +414,16 @@ const enMo = (octets) => Math.round((octets / MO) * 10) / 10
 /** Paramètres du module propres à l'organisation (UI-22) ; chaque borne est vérifiée par le serveur. */
 function FormulaireParametres({ module, onEnregistrer, onAnnuler, onRetablir }) {
   const { t } = useI18n()
-  const premier = useRef(null)
+  const formulaire = useRef(null)
   const initial = enMo(module.tailleMaxOctets)
   const [f, setF] = useState(() => ({ tailleMo: initial, invitationValiditeJours: module.invitationValiditeJours, portailUrl: module.portailUrl,
     prefixeReference: module.prefixeReference, rappelFrequenceJours: module.rappelFrequenceJours, rappelsMax: module.rappelsMax,
     preavisEcheanceJours: module.preavisEcheanceJours,
     identiteExterne: { ...module.identiteExterne }, identiteInterne: { ...module.identiteInterne }, tentativesIdentite: module.tentativesIdentite,
     codeValiditeMinutes: module.codeValiditeMinutes, champMontant: module.champMontant }))
-  useEffect(() => { premier.current?.focus() }, [])
+  // Le focus va au formulaire ouvert, pas à son premier champ : sous WebKit mobile (iPhone, iPad), le toucher qui retire le
+  // focus d'un champ n'active pas le bouton touché — « Rétablir les paramètres » restait sans effet (recette WebKit, RST-47).
+  useEffect(() => { formulaire.current?.focus() }, [])
   const maj = (k) => (e) => setF({ ...f, [k]: e.target.type === 'number' ? Number(e.target.value) : e.target.value })
   const niveau = (cote, r) => (e) => setF({ ...f, [cote]: { ...f[cote], [r]: e.target.value } })
   const envoyer = (e) => {
@@ -431,13 +433,13 @@ function FormulaireParametres({ module, onEnregistrer, onAnnuler, onRetablir }) 
     onEnregistrer({ ...reste, tailleMaxOctets: Number(tailleMo) === initial ? null : Math.round(Number(tailleMo) * MO) })
   }
   return (
-    <form id="clm-parametres-module" className="form clm-sousform" onSubmit={envoyer} aria-label={t('clm.ad.pm.titre')}>
+    <form ref={formulaire} tabIndex={-1} id="clm-parametres-module" className="form clm-sousform" onSubmit={envoyer} aria-label={t('clm.ad.pm.titre')}>
       <p className="muted">{t('clm.ad.pm.aide')}</p>
       <fieldset className="form-fieldset">
         <legend>{t('clm.ad.pm.documents')}</legend>
         <div className="form-grid">
           <label>{t('clm.ad.pm.tailleMo')} <span className="muted">{t('clm.ad.pm.plafond', { n: enMo(module.plafondOctets) })}</span>
-            <input ref={premier} type="number" min={0.1} max={enMo(module.plafondOctets)} step={0.1} value={f.tailleMo} onChange={maj('tailleMo')} required /></label>
+            <input type="number" min={0.1} max={enMo(module.plafondOctets)} step={0.1} value={f.tailleMo} onChange={maj('tailleMo')} required /></label>
           <label>{t('clm.ad.pm.validiteJours')}<input type="number" min={1} max={90} value={f.invitationValiditeJours} onChange={maj('invitationValiditeJours')} required /></label>
           <label className="col-2">{t('clm.ad.pm.portail')} <span className="muted">{t('clm.ad.pm.portailAide')}</span>
             <input type="url" value={f.portailUrl} onChange={maj('portailUrl')} required /></label>

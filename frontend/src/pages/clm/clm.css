@@ -208,7 +208,8 @@ h3.clm-bloc__titre { font-size: 16px; }
 .clm-portail__main { max-width: 720px; margin: 0 auto; padding: 16px; }
 .clm-portail button, .clm-portail input, .clm-portail select, .clm-portail textarea { min-height: 44px; }
 /* Sélecteur de langue compact conçu pour un fond foncé : rétabli en texte foncé sur l'en-tête clair du portail (1.4.3). */
-.clm-portail .lang-switcher.compact select { background: #fff; color: var(--texte); border-color: #8a96a3; }
+.clm-portail .lang-switcher.compact select { background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2359636e' stroke-width='2'/%3E%3C/svg%3E"); color: var(--texte); border-color: #8a96a3; }
 .clm-portail__doc { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
 .clm-portail__doc > span { min-width: 0; overflow-wrap: anywhere; }
 .clm-consentement { align-items: flex-start; font-weight: 600; }
