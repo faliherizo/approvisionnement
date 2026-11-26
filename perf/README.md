@@ -14,6 +14,9 @@ définis dans [SLI-SLO-SLA.md](SLI-SLO-SLA.md).
 | `data/clm-initiateurs.csv`, `data/clm-trousses.csv`, `data/convention.pdf` | Données du plan CLM (comptes, trousses, document déposé) |
 | `run.sh` | Exécute en mode non-graphique, produit le rapport HTML et gate sur les SLO |
 | `profils/cible.env` | Profil « cible » : 500 utilisateurs sur l'infrastructure cible (voir « Profil cible ») |
+| `outils/amorcer-comptes.sh` | Crée les comptes d'essai (un par utilisateur virtuel) par l'API d'administration, localhost seulement |
+| `outils/releve-conteneurs.sh` | Relève UC et mémoire des conteneurs (`docker stats`) et la charge de l'hôte pendant l'essai |
+| `outils/synthese-essai.py` | Résumé Markdown (palier, débit, P50/P95/P99 par requête, erreurs, ressources) ; échoue si la simultanéité visée n'est pas atteinte |
 | `SLI-SLO-SLA.md` | Indicateurs, objectifs internes et engagement contractuel |
 
 Les **données de test sont dans des fichiers `.csv`** (lues par les *CSV Data Set Config* du plan),
@@ -62,8 +65,13 @@ PLAN=clm-trousses-load.jmx BASE_PORT=8100 THREADS=50 RAMPUP=10 LOOPS=20 ./run.sh
 PLAN=clm-trousses-load.jmx BASE_PORT=8100 THREADS=500 RAMPUP=60 LOOPS=1 ./run.sh    # 500 concurrents
 ```
 
-**Résultat après corrections (dernier essai) : 500 utilisateurs concurrents, 1 500 trousses en base, 8 000 requêtes,
-0 erreur.**
+**Résultat après corrections (dernier essai) : 500 utilisateurs, 1 500 trousses en base, 8 000 requêtes, 0 erreur.**
+
+> **Correction du 2026-11-26.** Relu avec `outils/synthese-essai.py` (colonne `allThreads` du JTL), cet essai n'a
+> jamais eu plus de **14 utilisateurs actifs en même temps** : avec une seule boucle courte par utilisateur, les premiers
+> avaient fini avant que les derniers ne démarrent. Il prouve 500 sessions successives sans erreur, pas 500 utilisateurs
+> concurrents. L'essai de simultanéité est celui du profil cible ci-dessous
+> ([rapport](../docs/performance/essai-500-utilisateurs.md)).
 
 | Requête | P95 |
 |---|---|
@@ -92,18 +100,36 @@ Azure Canada) : c'est là que la mesure engage la soumission, et IQ peut en exig
 
 ## Profil cible — 500 utilisateurs concurrents sur l'infrastructure cible (TI-12 d'IQ, RST-48)
 
-**Statut : plan prêt, essai sur l'infrastructure cible non réalisé.** Le résultat ci-dessus (Q38) vient d'un poste de
-développement ; il ne vaut pas mesure sur l'infrastructure cible.
+**Statut (2026-11-26) : essai de 500 utilisateurs concurrents réussi sur une pile de production conteneurisée, bornée
+comme la cible** (workflow [`perf-cible.yml`](../.github/workflows/perf-cible.yml), run
+[45896141636](https://github.com/faliherizo/approvisionnement/actions/runs/45896141636)) : palier de 599 s à 500
+utilisateurs actifs, 249 requêtes/s, 0,011 % d'erreur, lecture P95 25 ms, écriture P95 9 ms. Rapport, dimensionnement et
+limites : [`docs/performance/essai-500-utilisateurs.md`](../docs/performance/essai-500-utilisateurs.md). **Reste** :
+rejouer le même profil sur l'infrastructure Azure d'IQ avant la mise en production (procédure ci-dessous).
+
+### Essai reproductible en intégration continue (`perf-cible.yml`)
+
+Déclenché par `workflow_dispatch` (paramètres `utilisateurs`, `montee`, `duree`, `pause_ms`) ou par une poussée sur une
+branche `perf/**`. Dans l'exécuteur, sans aucune charge vers l'extérieur : image de production du serveur
+(`backend/Dockerfile`), PostgreSQL 16, un pod de la cible (2 vCPU, 2 Gio) et une base à 1,5 vCPU / 4 Gio, secrets
+générés, 500 comptes d'essai créés par `outils/amorcer-comptes.sh`, préchargement de 1 000 trousses, puis
+`PROFIL=cible ./run.sh` contre `localhost:8080`. Artefact `perf-cible-<run>` : rapport HTML, `resume.md`, `echecs.xml`,
+relevés des conteneurs, requêtes SQL les plus coûteuses, journal du serveur.
+
+### Sur l'infrastructure cible
 
 `PROFIL=cible ./run.sh` lit [`profils/cible.env`](profils/cible.env) : plan `clm-trousses-load.jmx`, **500 fils**, montée
-de 300 s, 3 boucles, pause de 2 s entre deux gestes, HTTPS sur 443, comptes dans `data/cible/comptes.csv`, résultats dans
+de 300 s puis palier jusqu'à 900 s (`DUREE`, boucles sans fin d'ici là), une connexion par utilisateur, pause de 2 s
+entre deux gestes, HTTPS sur 443, comptes dans `data/cible/comptes.csv`, résultats dans
 `results-cible/`. Toute variable d'environnement l'emporte sur le profil. Propriétés JMeter transmises (`-J`) :
 
 | Propriété | Variable de `run.sh` | Profil cible | Rôle |
 |---|---|---|---|
 | `BASE_HOST` | `BASE_HOST` | **obligatoire, sans défaut** | hôte de l'infrastructure cible |
 | `BASE_PORT`, `BASE_PROTOCOL` | idem | 443, https | point d'entrée (passerelle, répartiteur) |
-| `threads`, `rampup`, `loops` | `THREADS`, `RAMPUP`, `LOOPS` | 500, 300 s, 3 | utilisateurs simultanés, montée, cycles par utilisateur |
+| `threads`, `rampup`, `loops` | `THREADS`, `RAMPUP`, `LOOPS` | 500, 300 s, -1 | utilisateurs simultanés, montée, cycles par utilisateur (-1 : sans fin) |
+| `duree` | `DUREE` | 900 s | durée totale, montée comprise (0 : les boucles décident) |
+| `connexion.chaque.boucle` | `CONNEXION_CHAQUE_BOUCLE` | false | connexion à chaque cycle (`true`, défaut hors profil) ou une seule fois |
 | `pause.ms` | `PAUSE_MS` | 2000 | temps de réflexion entre deux requêtes (0 hors profil) |
 | `comptes` | `COMPTES` | `data/cible/comptes.csv` | comptes d'essai (`email,motDePasse`), un par utilisateur virtuel |
 | `trousses` | `TROUSSES` | `data/clm-trousses.csv` | jeux de trousses |
