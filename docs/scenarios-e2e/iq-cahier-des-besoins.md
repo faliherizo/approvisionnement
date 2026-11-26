@@ -8,7 +8,7 @@ gestes). **Préparé par l'API** : la situation est mise en place par l'API et l
 un tel scénario ne détecte pas un défaut de l'écran. Les scénarios `E2E-CB-IQ-*` (`cahier-iq.json`) sont écrits
 besoin par besoin, sans préparation par l'API.
 
-**Couverture** : 61 / 66 exigences fonctionnelles du cahier démontrées par un parcours d'interface ;
+**Couverture** : 62 / 66 exigences fonctionnelles du cahier démontrées par un parcours d'interface ;
 4 exigences à vérification documentaire.
 
 ## Section 1.3
@@ -82,13 +82,13 @@ besoin par besoin, sans préparation par l'API.
 | IQ-C-40 | Notifications activables et désactivables | E2E-CB-IQ-12 ✅, E2E-ECR-IQ-05 ✅ | E2E-IQ-15 ✅ |
 | IQ-C-41 | Rappels automatiques de non-réponse | E2E-CB-IQ-13 ✅ | E2E-IQ-15 ✅ |
 | IQ-C-42 | Destinataires en copie | E2E-CB-IQ-13 ✅ | E2E-IQ-01 ✅ |
-| IQ-C-43 | Vue de suivi centralisée : étapes, attentes, exceptions | E2E-CB-IQ-13 ✅, E2E-ECR-IQ-06 ✅ | E2E-IQ-16 ✅ |
+| IQ-C-43 | Vue de suivi centralisée : étapes, attentes, exceptions | E2E-AX-IQ-05 ✅, E2E-CB-IQ-13 ✅, E2E-ECR-IQ-06 ✅ | E2E-AX-IQ-06 ✅, E2E-IQ-16 ✅ |
 | IQ-C-44 | Plusieurs documents par trousse | E2E-CB-IQ-16 ✅, E2E-ECR-IQ-01 ✅ | E2E-IQ-01 ✅ |
 | IQ-C-45 | Dossiers, documents, versions, intervenants | E2E-CB-IQ-16 ✅, E2E-ECR-IQ-01 ✅, E2E-ECR-IQ-04 ✅ | E2E-IQ-01 ✅ |
 | IQ-C-46 | PDF et Word | E2E-CB-IQ-16 ✅ | E2E-IQ-01 ✅ |
 | IQ-C-47 | Téléversement d'au moins 25 Mo | E2E-CB-IQ-16 ✅ | E2E-IQ-02 ✅ |
 | IQ-C-48 | Historique des étapes de validation, d'approbation, de signature | E2E-CB-IQ-04 ✅ | E2E-IQ-06 ✅ |
-| IQ-C-49 | Journal d'audit des actions (consultation, validation, signature, rejet, annulation…) | E2E-CB-IQ-18 ✅ | E2E-IQ-17 ✅ |
+| IQ-C-49 | Journal d'audit des actions (consultation, validation, signature, rejet, annulation…) | E2E-AX-IQ-02 ✅, E2E-CB-IQ-18 ✅ | E2E-IQ-17 ✅ |
 | IQ-C-50 | État et historique des transactions d'un document | E2E-CB-IQ-16 ✅, E2E-ECR-IQ-06 ✅ | E2E-IQ-01 ✅ |
 | IQ-C-51 | Conservation et consultation du dossier de preuve | E2E-CB-IQ-18 ✅, E2E-ECR-IQ-01 ✅, E2E-ECR-IQ-03 ✅, E2E-ECR-IQ-07 ✅ | E2E-IQ-17 ✅ |
 
@@ -138,7 +138,7 @@ besoin par besoin, sans préparation par l'API.
 | Exigence | Besoin | Parcours d'interface | Préparés par l'API |
 |---|---|---|---|
 | IQ-C-68 | Compatible postes Windows, mobiles, navigateurs Edge, Chrome, Safari | — vérification documentaire | — |
-| IQ-C-69 | S'intégrer à Microsoft 365, Salesforce, Workday : API, connecteurs, protocoles | **aucun** | E2E-IQ-19 ✅ |
+| IQ-C-69 | S'intégrer à Microsoft 365, Salesforce, Workday : API, connecteurs, protocoles | E2E-AX-IQ-01 ✅ | E2E-IQ-19 ✅ |
 | IQ-C-70 | Compatibilité maintenue avec l'évolution de l'environnement | — vérification documentaire | — |
 
 ## Défauts et constats relevés par ces parcours

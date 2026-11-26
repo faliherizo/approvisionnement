@@ -4046,6 +4046,50 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
+### E2E-AX-IQ-05 — AF-37 (RST-42) : l'administration d'affaires crée un rapport de délais moyens, le modifie, puis l'exporte en CSV et en Excel
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-43, IQ-A-22
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (12 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Trousse d'un document validée par le validateur : lancée puis terminée, son délai de traitement est connu
+2. Ouvrir l'écran `/clm/admin/rapports`
+3. Voir le titre « Rapports personnalisables »
+4. Activer « Nouveau rapport »
+5. Saisir « Nom du rapport » : `Délais E2E ${unique}` ; « Période (jours glissants) » : `30`
+6. Choisir « Type de rapport » : `Délais de traitement (moyenne)`
+7. Cocher « Référence »
+8. Cocher « Lancée le »
+9. Cocher « Délai (h) »
+10. Activer « Enregistrer le rapport »
+11. Voir « Rapport « Délais E2E ${unique} » enregistré. »
+12. Voir « ${reference} », « Moyenne ( »
+13. Activer « Modifier — Délais E2E ${unique} »
+14. Cocher « Terminée le »
+15. Activer « Enregistrer le rapport »
+16. Voir « Rapport « Délais E2E ${unique} » enregistré. »
+17. Voir « Terminée le »
+18. Télécharger par « Exporter en CSV — Délais E2E ${unique} » et obtenir un fichier non vide
+19. Télécharger par « Exporter en Excel — Délais E2E ${unique} » et obtenir un fichier non vide
+20. Voir « exporté (XLSX). »
+21. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-AX-IQ-06 — AF-37 (RST-42) : le relevé d'utilisation s'exporte en CSV et en Excel
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-43
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/journal`
+2. Voir « Exporter le relevé (CSV) »
+3. Télécharger par « Exporter le relevé (CSV) » et obtenir un fichier non vide
+4. Télécharger par « Exporter le relevé (Excel) » et obtenir un fichier non vide
+5. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
 ### E2E-CB-IQ-13 — Rappels, copies et échéance réglés à la création d'une trousse, puis retrouvés au résumé
 
 - **Profil** : initiateur IQ
@@ -4551,6 +4595,48 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Source** : 1.4.7
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
+
+### E2E-AX-IQ-02 — AF-34 et SEC-15 (RST-43) : le modèle déclare les champs modifiables en cours ; en traitement, un champ figé est refusé, une modification permise relance le cycle et le journal nomme le champ, l'ancienne et la nouvelle valeur
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-S-05, IQ-A-18, IQ-C-49
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (19 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `AF34 E2E ${unique}` ; « Corps du contrat » : `Convention {{programme}} de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `programme` ; « Libellé » : `Programme`
+6. Activer « Ajouter un champ »
+7. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+8. Voir « Modification en cours de traitement »
+9. Cocher « Modifiable en cours de traitement »
+10. Choisir « Effet sur les approbations obtenues » : `Nouveau cycle : toutes les approbations sont invalidées`
+11. Activer « Enregistrer le brouillon »
+12. Voir « Brouillon enregistré. »
+13. Activer « Soumettre à publication »
+14. Voir « soumis à publication »
+15. Se connecter en tant que administration principale IQ
+16. Ouvrir l'écran `/clm/modeles`
+17. Dans la ligne « AF34 E2E ${unique} », activer « Publier »
+18. Voir « « AF34 E2E ${unique} » publié. »
+19. Se connecter en tant que initiateur IQ
+20. Préparer par l'API : Trousse issue du modèle, valeurs saisies en brouillon, document joint et parcours lancé (validation en cours)
+21. Ouvrir l'écran `/clm/trousses/${trousse}`
+22. Activer « Corriger la valeur — Programme »
+23. Saisir « Nouvelle valeur — Programme » : `Autre programme`
+24. Dans la section « Corriger la valeur — Programme », activer « Enregistrer »
+25. Voir « « Programme » n'est pas modifiable en cours de traitement. »
+26. Activer « Annuler »
+27. Activer « Corriger la valeur — Montant »
+28. Saisir « Nouvelle valeur — Montant » : `60000`
+29. Dans la section « Corriger la valeur — Montant », activer « Enregistrer »
+30. Voir « Valeur de « Montant » enregistrée. »
+31. Activer « Historique » (tab)
+32. Voir « Valeur modifiée (avant → après) », « « Montant » (montant) : « 50000 » → « 60000 » », « Nouveau cycle (modification en cours de parcours) »
+33. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-CB-IQ-18 — Dossier de preuve d'une trousse signée : intégrité vérifiée, signatures et consentements consultés, certificat et dossier complet exportés ; journal d'audit filtré par trousse
 
@@ -6849,7 +6935,36 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 
 - **Source** : 1.7.1
 - **Conformité déclarée** : ✅
-- **Démontrée à l'écran** : non — seulement préparée par l'API
+- **Démontrée à l'écran** : oui
+
+### E2E-AX-IQ-01 — TI-01 (RST-45) : l'administration technique règle le dépôt Microsoft 365 ; une trousse terminée est déposée dans SharePoint avec sa preuve, puis annoncée dans Teams
+
+- **Profil** : administration technique IQ
+- **Exigences démontrées** : IQ-C-69, IQ-A-07
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (9 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/microsoft-365`
+2. Voir le titre « Microsoft 365 : SharePoint, OneDrive et Teams »
+3. Voir « Connexion Microsoft 365 »
+4. Cocher « Déposer les trousses terminées dans Microsoft 365 »
+5. Choisir « Bibliothèque de dépôt » : `Site SharePoint de l’organisation`
+6. Saisir « Dossier de dépôt » : `Contrats signés E2E`
+7. Cocher « Déposer aussi le dossier de preuve (ZIP) »
+8. Cocher « Annoncer l’achèvement dans le canal Teams »
+9. Activer « Enregistrer le dépôt »
+10. Voir « Dépôt Microsoft 365 enregistré. »
+11. Préparer par l'API : Trousse d'un document validée par le validateur : terminée, son document est verrouillé en version signée
+12. Ouvrir l'écran `/clm/admin/microsoft-365`
+13. Activer « Déposer maintenant »
+14. Voir « dépôt(s) effectué(s). »
+15. Voir « ${reference} », « Document signé », « Dossier de preuve », « Avis Teams »
+16. Voir « sim://sharepoint/Contrats signés E2E/ »
+17. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+18. Décocher « Déposer les trousses terminées dans Microsoft 365 »
+19. Activer « Enregistrer le dépôt »
+20. Voir « Dépôt Microsoft 365 enregistré. »
 
 ### E2E-IQ-19 — API d'intégration : client, jeton, création de trousse par un système
 
@@ -8482,6 +8597,49 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
+### E2E-AX-IQ-03 — SEC-17 (RST-44) : l'administration d'affaires d'IQ accorde un accès de soutien à l'exploitant, voit sa consultation au journal de la trousse, puis le révoque ; sans accès, l'exploitant ne lit rien
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-D-16, IQ-A-26
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (3 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Une trousse d'IQ, et une demande d'accès de soutien de l'exploitant, refusée tant qu'elle n'est pas accordée
+2. Ouvrir l'écran `/clm/admin/soutien`
+3. Voir le titre « Accès de soutien de l’exploitant »
+4. Voir « Billet E2E ${unique} »
+5. Activer « Accorder l’accès à superadmin@plateforme.ca »
+6. Voir « Accès accordé à superadmin@plateforme.ca. »
+7. Préparer par l'API : Pendant l'accès accordé, l'exploitant consulte le diagnostic de la trousse, sans son contenu
+8. Ouvrir l'écran `/clm/trousses/${trousse}`
+9. Activer « Historique » (tab)
+10. Voir « Consultation de soutien de l’exploitant », « Billet E2E ${unique} »
+11. Ouvrir l'écran `/clm/admin/soutien`
+12. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+13. Activer « Révoquer l’accès de superadmin@plateforme.ca »
+14. Voir « Accès de superadmin@plateforme.ca révoqué. »
+15. Préparer par l'API : Révoqué : l'exploitant ne lit plus rien
+
+### E2E-AX-IQ-04 — SEC-17 (RST-44) : depuis son espace, l'exploitant demande un accès de soutien motivé et limité ; sans accord de l'organisation, le diagnostic lui est refusé
+
+- **Profil** : superadmin
+- **Exigences démontrées** : IQ-D-16
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (5 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/superadmin`
+2. Voir « Accès de soutien aux données CLM d'une organisation »
+3. Choisir « Accès de soutien aux données CLM d'une organisation » Organisation » : `Investissement Québec`
+4. Saisir « Motif (billet, symptôme) » : `Billet UI ${unique}` ; « Durée demandée (heures) » : `1`
+5. Activer « Demander l'accès de soutien »
+6. Voir « Demande transmise à l'organisation. », « Billet UI ${unique} », « En attente de l'organisation »
+7. Saisir « Référence de la trousse » : `TR-INCONNUE`
+8. Activer « Consulter le diagnostic »
+9. Voir « Aucun accès de soutien accordé par l'organisation, ou accès expiré. »
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
 ### E2E-CB-IQ-19 — Séparation des rôles : l'auditeur consulte une trousse sans pouvoir agir, l'administration technique n'accède pas aux trousses
 
 - **Profil** : initiateur IQ
@@ -8640,6 +8798,27 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Source** : 3.3.2
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
+
+### E2E-AX-IQ-07 — TI-04 (RST-46) : l'administration technique crée un client SIEM ; Microsoft Sentinel lit le journal d'audit par curseur (ASIM, CEF) avec son jeton, sans session, et ne peut rien d'autre
+
+- **Profil** : administration technique IQ
+- **Exigences démontrées** : IQ-D-19
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (4 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/integrations`
+2. Saisir « Nouveau client d’intégration » Nom » : `Sentinel E2E ${unique}`
+3. Choisir « Nouveau client d’intégration » Système » : `SIEM (Microsoft Sentinel) — lecture du journal seulement`
+4. Voir « ne déclenche aucune signature »
+5. Activer « Créer le client »
+6. Voir « Client « Sentinel E2E ${unique} » créé. »
+7. Relever le texte affiché (`.clm-info-statique .clm-dl div:nth-child(1) code`) sous le nom `clientId`
+8. Relever le texte affiché (`.clm-info-statique .clm-dl div:nth-child(2) code`) sous le nom `secret`
+9. Préparer par l'API : Le SIEM obtient un jeton (client credentials) puis lit le journal page par page ; il ne crée aucune trousse
+10. Activer « J’ai copié les valeurs »
+11. Voir « Sentinel E2E ${unique} »
+12. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-CB-IQ-18 — Dossier de preuve d'une trousse signée : intégrité vérifiée, signatures et consentements consultés, certificat et dossier complet exportés ; journal d'audit filtré par trousse
 
@@ -9433,6 +9612,48 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Source** : 7.3 sc. 5
 - **Conformité déclarée** : ✅🆕
 - **Démontrée à l'écran** : oui
+
+### E2E-AX-IQ-02 — AF-34 et SEC-15 (RST-43) : le modèle déclare les champs modifiables en cours ; en traitement, un champ figé est refusé, une modification permise relance le cycle et le journal nomme le champ, l'ancienne et la nouvelle valeur
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-S-05, IQ-A-18, IQ-C-49
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (19 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `AF34 E2E ${unique}` ; « Corps du contrat » : `Convention {{programme}} de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `programme` ; « Libellé » : `Programme`
+6. Activer « Ajouter un champ »
+7. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+8. Voir « Modification en cours de traitement »
+9. Cocher « Modifiable en cours de traitement »
+10. Choisir « Effet sur les approbations obtenues » : `Nouveau cycle : toutes les approbations sont invalidées`
+11. Activer « Enregistrer le brouillon »
+12. Voir « Brouillon enregistré. »
+13. Activer « Soumettre à publication »
+14. Voir « soumis à publication »
+15. Se connecter en tant que administration principale IQ
+16. Ouvrir l'écran `/clm/modeles`
+17. Dans la ligne « AF34 E2E ${unique} », activer « Publier »
+18. Voir « « AF34 E2E ${unique} » publié. »
+19. Se connecter en tant que initiateur IQ
+20. Préparer par l'API : Trousse issue du modèle, valeurs saisies en brouillon, document joint et parcours lancé (validation en cours)
+21. Ouvrir l'écran `/clm/trousses/${trousse}`
+22. Activer « Corriger la valeur — Programme »
+23. Saisir « Nouvelle valeur — Programme » : `Autre programme`
+24. Dans la section « Corriger la valeur — Programme », activer « Enregistrer »
+25. Voir « « Programme » n'est pas modifiable en cours de traitement. »
+26. Activer « Annuler »
+27. Activer « Corriger la valeur — Montant »
+28. Saisir « Nouvelle valeur — Montant » : `60000`
+29. Dans la section « Corriger la valeur — Montant », activer « Enregistrer »
+30. Voir « Valeur de « Montant » enregistrée. »
+31. Activer « Historique » (tab)
+32. Voir « Valeur modifiée (avant → après) », « « Montant » (montant) : « 50000 » → « 60000 » », « Nouveau cycle (modification en cours de parcours) »
+33. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-CB-IQ-07 — Réassignation en cours de processus : l'étape passe à un autre intervenant sans redémarrer le parcours
 
@@ -10263,7 +10484,36 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 
 - **Source** : Add. Q3
 - **Conformité déclarée** : ✅
-- **Démontrée à l'écran** : non — seulement préparée par l'API
+- **Démontrée à l'écran** : oui
+
+### E2E-AX-IQ-01 — TI-01 (RST-45) : l'administration technique règle le dépôt Microsoft 365 ; une trousse terminée est déposée dans SharePoint avec sa preuve, puis annoncée dans Teams
+
+- **Profil** : administration technique IQ
+- **Exigences démontrées** : IQ-C-69, IQ-A-07
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (9 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/microsoft-365`
+2. Voir le titre « Microsoft 365 : SharePoint, OneDrive et Teams »
+3. Voir « Connexion Microsoft 365 »
+4. Cocher « Déposer les trousses terminées dans Microsoft 365 »
+5. Choisir « Bibliothèque de dépôt » : `Site SharePoint de l’organisation`
+6. Saisir « Dossier de dépôt » : `Contrats signés E2E`
+7. Cocher « Déposer aussi le dossier de preuve (ZIP) »
+8. Cocher « Annoncer l’achèvement dans le canal Teams »
+9. Activer « Enregistrer le dépôt »
+10. Voir « Dépôt Microsoft 365 enregistré. »
+11. Préparer par l'API : Trousse d'un document validée par le validateur : terminée, son document est verrouillé en version signée
+12. Ouvrir l'écran `/clm/admin/microsoft-365`
+13. Activer « Déposer maintenant »
+14. Voir « dépôt(s) effectué(s). »
+15. Voir « ${reference} », « Document signé », « Dossier de preuve », « Avis Teams »
+16. Voir « sim://sharepoint/Contrats signés E2E/ »
+17. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+18. Décocher « Déposer les trousses terminées dans Microsoft 365 »
+19. Activer « Enregistrer le dépôt »
+20. Voir « Dépôt Microsoft 365 enregistré. »
 
 ### E2E-IQ-19 — API d'intégration : client, jeton, création de trousse par un système
 
@@ -10551,7 +10801,49 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 
 - **Source** : Add. 3 Q26
 - **Conformité déclarée** : ✅
-- **Démontrée à l'écran** : non — seulement préparée par l'API
+- **Démontrée à l'écran** : oui
+
+### E2E-AX-IQ-02 — AF-34 et SEC-15 (RST-43) : le modèle déclare les champs modifiables en cours ; en traitement, un champ figé est refusé, une modification permise relance le cycle et le journal nomme le champ, l'ancienne et la nouvelle valeur
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-S-05, IQ-A-18, IQ-C-49
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (19 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/modeles`
+2. Activer « Créer un modèle »
+3. Saisir « Nom » : `AF34 E2E ${unique}` ; « Corps du contrat » : `Convention {{programme}} de {{montant}} $. {{clauses}}`
+4. Activer « Ajouter un champ »
+5. Saisir « Nom technique » : `programme` ; « Libellé » : `Programme`
+6. Activer « Ajouter un champ »
+7. Saisir « Nom technique » : `montant` ; « Libellé » : `Montant`
+8. Voir « Modification en cours de traitement »
+9. Cocher « Modifiable en cours de traitement »
+10. Choisir « Effet sur les approbations obtenues » : `Nouveau cycle : toutes les approbations sont invalidées`
+11. Activer « Enregistrer le brouillon »
+12. Voir « Brouillon enregistré. »
+13. Activer « Soumettre à publication »
+14. Voir « soumis à publication »
+15. Se connecter en tant que administration principale IQ
+16. Ouvrir l'écran `/clm/modeles`
+17. Dans la ligne « AF34 E2E ${unique} », activer « Publier »
+18. Voir « « AF34 E2E ${unique} » publié. »
+19. Se connecter en tant que initiateur IQ
+20. Préparer par l'API : Trousse issue du modèle, valeurs saisies en brouillon, document joint et parcours lancé (validation en cours)
+21. Ouvrir l'écran `/clm/trousses/${trousse}`
+22. Activer « Corriger la valeur — Programme »
+23. Saisir « Nouvelle valeur — Programme » : `Autre programme`
+24. Dans la section « Corriger la valeur — Programme », activer « Enregistrer »
+25. Voir « « Programme » n'est pas modifiable en cours de traitement. »
+26. Activer « Annuler »
+27. Activer « Corriger la valeur — Montant »
+28. Saisir « Nouvelle valeur — Montant » : `60000`
+29. Dans la section « Corriger la valeur — Montant », activer « Enregistrer »
+30. Voir « Valeur de « Montant » enregistrée. »
+31. Activer « Historique » (tab)
+32. Voir « Valeur modifiée (avant → après) », « « Montant » (montant) : « 50000 » → « 60000 » », « Nouveau cycle (modification en cours de parcours) »
+33. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-05 — Gabarit Word d'IQ fusionné en Word et en PDF
 
@@ -10728,7 +11020,37 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 
 - **Source** : Add. 3 Q39
 - **Conformité déclarée** : ✅
-- **Démontrée à l'écran** : non — seulement préparée par l'API
+- **Démontrée à l'écran** : oui
+
+### E2E-AX-IQ-05 — AF-37 (RST-42) : l'administration d'affaires crée un rapport de délais moyens, le modifie, puis l'exporte en CSV et en Excel
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-43, IQ-A-22
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (12 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Trousse d'un document validée par le validateur : lancée puis terminée, son délai de traitement est connu
+2. Ouvrir l'écran `/clm/admin/rapports`
+3. Voir le titre « Rapports personnalisables »
+4. Activer « Nouveau rapport »
+5. Saisir « Nom du rapport » : `Délais E2E ${unique}` ; « Période (jours glissants) » : `30`
+6. Choisir « Type de rapport » : `Délais de traitement (moyenne)`
+7. Cocher « Référence »
+8. Cocher « Lancée le »
+9. Cocher « Délai (h) »
+10. Activer « Enregistrer le rapport »
+11. Voir « Rapport « Délais E2E ${unique} » enregistré. »
+12. Voir « ${reference} », « Moyenne ( »
+13. Activer « Modifier — Délais E2E ${unique} »
+14. Cocher « Terminée le »
+15. Activer « Enregistrer le rapport »
+16. Voir « Rapport « Délais E2E ${unique} » enregistré. »
+17. Voir « Terminée le »
+18. Télécharger par « Exporter en CSV — Délais E2E ${unique} » et obtenir un fichier non vide
+19. Télécharger par « Exporter en Excel — Délais E2E ${unique} » et obtenir un fichier non vide
+20. Voir « exporté (XLSX). »
+21. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-18 — Conservation par type, gel légal, exportation en lot, relevé d'utilisation
 
@@ -10827,6 +11149,30 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Source** : Add. 4 Q10
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
+
+### E2E-AX-IQ-03 — SEC-17 (RST-44) : l'administration d'affaires d'IQ accorde un accès de soutien à l'exploitant, voit sa consultation au journal de la trousse, puis le révoque ; sans accès, l'exploitant ne lit rien
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-D-16, IQ-A-26
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (3 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Une trousse d'IQ, et une demande d'accès de soutien de l'exploitant, refusée tant qu'elle n'est pas accordée
+2. Ouvrir l'écran `/clm/admin/soutien`
+3. Voir le titre « Accès de soutien de l’exploitant »
+4. Voir « Billet E2E ${unique} »
+5. Activer « Accorder l’accès à superadmin@plateforme.ca »
+6. Voir « Accès accordé à superadmin@plateforme.ca. »
+7. Préparer par l'API : Pendant l'accès accordé, l'exploitant consulte le diagnostic de la trousse, sans son contenu
+8. Ouvrir l'écran `/clm/trousses/${trousse}`
+9. Activer « Historique » (tab)
+10. Voir « Consultation de soutien de l’exploitant », « Billet E2E ${unique} »
+11. Ouvrir l'écran `/clm/admin/soutien`
+12. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+13. Activer « Révoquer l’accès de superadmin@plateforme.ca »
+14. Voir « Accès de superadmin@plateforme.ca révoqué. »
+15. Préparer par l'API : Révoqué : l'exploitant ne lit plus rien
 
 ### E2E-CB-IQ-19 — Séparation des rôles : l'auditeur consulte une trousse sans pouvoir agir, l'administration technique n'accède pas aux trousses
 
