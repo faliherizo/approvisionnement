@@ -336,9 +336,13 @@ verifier_documents() {
   done < "$TEMOIN/documents.csv"
   rm -f "$tmp"
   controle V2 "Documents déchiffrés par la clé de l'organisation, empreinte SHA-256 identique à l'original" "$total" "$ok"
-  local enveloppes
-  enveloppes=$(psql_site secours-db "SELECT count(*) FILTER (WHERE substring(contenu from 1 for 5) = '\\x0056434501'::bytea) || '/' || count(*) FROM clm_document")
-  controle V3 "Documents chiffrés au repos dans la base restaurée (enveloppe ADR-037)" "$total/$total" "$enveloppes"
+  # La base contient aussi les documents de l'organisation de démonstration : on exige qu'AUCUN document n'y soit en
+  # clair, et que tous ceux du manifeste y soient.
+  local en_clair presents
+  en_clair=$(psql_site secours-db "SELECT count(*) FROM clm_document WHERE substring(contenu from 1 for 5) <> '\\x0056434501'::bytea")
+  presents=$(psql_site secours-db "SELECT count(*) FROM clm_document WHERE id IN ($(cut -d, -f2 "$TEMOIN/documents.csv" | paste -sd, -))")
+  controle V3 "Documents du manifeste présents dans la base restaurée" "$total" "$presents"
+  controle V3b "Documents en clair dans la base restaurée (tous chiffrés par l'enveloppe ADR-037)" 0 "$en_clair"
 }
 
 verifier_integrite() {
@@ -405,6 +409,19 @@ verifier_ecritures() {
   controle V7 "Écritures continues restaurées sans trou (préfixe 1..n)" "${maximum:-0}" "$nombre"
 }
 
+verifier_cle_requise() {
+  local trousse id code url="http://127.0.0.1:8082" jar="$TEMOIN/session-autre-cle"
+  IFS=, read -r trousse id _ < "$TEMOIN/documents.csv"
+  CLM_CLE_MAITRESSE="$(openssl rand -base64 32)" demarrer_serveur secours-app-autre-cle secours-db 8082
+  attendre_sante "$url" 300 || { docker logs secours-app-autre-cle | tail -40; return 1; }
+  connexion "$url" "$COURRIEL_ESSAI" "$MOT_DE_PASSE_ESSAI" "$jar"
+  code=$(curl -sS -o /dev/null -w '%{http_code}' -b "$jar" "$url/api/clm/trousses/$trousse/documents/$id/contenu")
+  docker logs secours-app-autre-cle > "$RESULTATS/journaux/secours-app-autre-cle.log" 2>&1 || true
+  docker rm -f secours-app-autre-cle >/dev/null
+  controle V8 "Avec une autre clé maîtresse que celle du coffre, le document reste illisible (HTTP $code)" refus \
+    "$([ "$code" = 200 ] && echo lisible || echo refus)"
+}
+
 verification() {
   : > "$RESULTATS/controles.jsonl"
   local volet echecs=0
@@ -413,6 +430,8 @@ verification() {
     "$volet" || controle "${volet}" "$volet terminé sans erreur" ok erreur
   done
   marquer service_verifie
+  # Contrôle complémentaire, hors RTO : la clé maîtresse du coffre est indispensable (une autre clé n'ouvre rien).
+  verifier_cle_requise || controle V8 "verifier_cle_requise terminé sans erreur" ok erreur
   echecs=$(python3 -c 'import json,sys; print(sum(not json.loads(l)["ok"] for l in open(sys.argv[1])))' "$RESULTATS/controles.jsonl")
   [ "$echecs" -eq 0 ] || echec "$echecs contrôle(s) de vérification en échec"
 }

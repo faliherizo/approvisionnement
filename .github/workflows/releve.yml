@@ -28,6 +28,9 @@ on:
         default: "60"
   push:
     branches: ["releve/**"]
+  # Restauration trimestrielle (document 05, § 3 ; politique P-05) : preuve récurrente pour SOC 2 (A1.3) et ISO 8.13.
+  schedule:
+    - cron: "0 7 1 1,4,7,10 *"
 
 concurrency:
   group: releve-${{ github.ref }}
@@ -183,11 +186,12 @@ jobs:
           name: releve-${{ matrix.scenario }}-${{ github.run_id }}
           path: resultats-releve/${{ matrix.scenario }}
           if-no-files-found: ignore
+          retention-days: 90
 
       - name: Arrêt de la pile
         if: always()
         run: |
-          docker rm -f -v secours-app secours-db primaire-app primaire-db >/dev/null 2>&1 || true
+          docker rm -f -v secours-app secours-app-autre-cle secours-db primaire-app primaire-db >/dev/null 2>&1 || true
           docker volume rm primaire-pgdata primaire-stockage secours-sauvegardes secours-stockage secours-pgdata >/dev/null 2>&1 || true
 
   rapport:
@@ -214,3 +218,4 @@ jobs:
           name: rapport-releve-${{ github.run_id }}
           path: resultats/rapport-releve.md
           if-no-files-found: ignore
+          retention-days: 90
