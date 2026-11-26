@@ -31,7 +31,7 @@ source "$ICI/commun.sh"
 COURRIEL_ESSAI="essai-charge-001@${DOMAINE_ESSAI}"
 JAR_PRIMAIRE="$TEMOIN/session-primaire"
 JAR_SECOURS="$TEMOIN/session-secours"
-TYPES=(SUBVENTION PRET CAPITAL GARANTIE)
+TYPES=(SUBVENTION PRET SERVICES)
 
 case "$SCENARIO" in replique|sauvegarde) ;; *) echec "SCENARIO inconnu : $SCENARIO" ;; esac
 

@@ -78,6 +78,10 @@ output "dr_aks_name" {
   value = local.dr_avec_aks ? azurerm_kubernetes_cluster.dr[0].name : null
 }
 
+output "storage_account_name" {
+  value = azurerm_storage_account.this.name
+}
+
 output "storage_redondance" {
   value = azurerm_storage_account.this.account_replication_type
 }

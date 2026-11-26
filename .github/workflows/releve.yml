@@ -66,12 +66,17 @@ jobs:
         run: |
           terraform init -backend=false -input=false
           terraform validate
-      - uses: terraform-linters/setup-tflint@v4
-        with: { tflint_version: "v0.55.1" }
       - name: tflint (règles azurerm)
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          TFLINT_VERSION: v0.55.1
         run: |
+          # Téléchargement direct de la version figée (l'action d'installation interroge l'API et subit ses quotas).
+          curl -fsSL -o "$RUNNER_TEMP/tflint.zip" \
+            "https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}/tflint_linux_amd64.zip"
+          unzip -q -o "$RUNNER_TEMP/tflint.zip" -d "$RUNNER_TEMP/bin"
+          export PATH="$RUNNER_TEMP/bin:$PATH"
+          tflint --version
           tflint --init
           tflint --format compact
       - name: Checkov (rapport, non bloquant sur l'existant)
