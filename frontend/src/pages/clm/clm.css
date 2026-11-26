@@ -159,6 +159,8 @@ h3.clm-bloc__titre { font-size: 16px; }
 .clm-chrono { margin: 0 0 16px; padding-left: 1.3rem; display: flex; flex-direction: column; gap: 10px; }
 .clm-chrono--compact { gap: 6px; font-size: 14px; }
 .clm-liste { margin: 4px 0 12px; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 6px; }
+/* L'acteur d'un événement est souvent un courriel, sans coupure naturelle : il sortait de l'écran à 390 px. */
+.clm-chrono > li, .clm-liste > li { min-width: 0; overflow-wrap: anywhere; }
 .clm-dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px 16px; margin: 8px 0 16px; }
 .clm-dl > div { min-width: 0; }
 .clm-dl dt { font-weight: 600; font-size: 13px; color: var(--muted); }
