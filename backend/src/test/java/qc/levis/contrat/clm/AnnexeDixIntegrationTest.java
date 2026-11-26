@@ -67,6 +67,7 @@ class AnnexeDixIntegrationTest {
         assertTrue(corps(appel("PUT", url, technique, reglage(true, "SHAREPOINT", "../hors")), 400).get("message").asText().contains(".."));
         assertEquals(400, appel("PUT", url, technique, reglage(true, "DROPBOX", "Contrats")).getStatus(), "bibliothèque inconnue");
         try {
+            assertEquals("Contrats signés", corps(appel("GET", url, technique, null), 200).get("dossier").asText(), "réglage par défaut ou précédent");
             JsonNode r = corps(appel("PUT", url, technique, reglage(true, "SHAREPOINT", "Contrats signés/IQ")), 200);
             assertEquals("admin.technique@iq.example", r.get("modifiePar").asText());
             assertEquals(200, appel("GET", "/api/parametres/integration-m365", technique, null).getStatus(),

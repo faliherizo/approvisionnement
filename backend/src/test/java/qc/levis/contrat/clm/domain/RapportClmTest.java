@@ -34,6 +34,7 @@ class RapportClmTest {
                 new RapportClm.Definition(null, null, 0, null, null, null, null).erreurs());
         assertEquals(List.of("Nom du rapport : 1 à 120 caractères.", "Période : de 1 à 366 jours.", "Colonne « inconnue » inconnue pour ce type de rapport."),
                 new RapportClm.Definition("x".repeat(121), RapportClm.Type.INCIDENTS, 367, null, null, null, List.of("inconnue", "detail")).erreurs());
+        assertEquals(List.of("Période : de 1 à 366 jours."), new RapportClm.Definition("x", RapportClm.Type.DELAIS, 0, null, null, null, null).erreurs());
         assertEquals(List.of("Nom du rapport : 1 à 120 caractères."), new RapportClm.Definition(" ", RapportClm.Type.UTILISATION, 1, null, null, null, null).erreurs());
     }
 

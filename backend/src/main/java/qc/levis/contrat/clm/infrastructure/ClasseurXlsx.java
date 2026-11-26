@@ -4,11 +4,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.List;
+import java.util.function.Supplier;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
@@ -21,9 +23,20 @@ import qc.levis.contrat.clm.application.port.ClasseurTableur;
 @Component
 public class ClasseurXlsx implements ClasseurTableur {
 
+    private final Supplier<Workbook> fabrique;
+
+    public ClasseurXlsx() {
+        this(XSSFWorkbook::new);
+    }
+
+    /** Fabrique du classeur : POI en exploitation, un double en essai pour éprouver l'échec d'écriture. */
+    ClasseurXlsx(Supplier<Workbook> fabrique) {
+        this.fabrique = fabrique;
+    }
+
     @Override
     public byte[] xlsx(String feuille, List<String> entetes, List<List<String>> lignes) {
-        try (XSSFWorkbook classeur = new XSSFWorkbook(); ByteArrayOutputStream sortie = new ByteArrayOutputStream()) {
+        try (Workbook classeur = fabrique.get(); ByteArrayOutputStream sortie = new ByteArrayOutputStream()) {
             Sheet s = classeur.createSheet(WorkbookUtil.createSafeSheetName(feuille));
             CellStyle gras = classeur.createCellStyle();
             Font police = classeur.createFont();
