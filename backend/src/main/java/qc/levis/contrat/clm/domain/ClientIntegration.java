@@ -24,8 +24,11 @@ import java.time.Instant;
 @Table(name = "clm_client_integration", uniqueConstraints = @UniqueConstraint(name = "uk_clm_client_id", columnNames = "client_id"))
 public class ClientIntegration {
 
-    /** Système d'origine ; il donne aussi l'origine des trousses qu'il crée. */
-    public enum Systeme { SALESFORCE, WORKDAY, AUTRE }
+    /**
+     * Système d'origine ; il donne aussi l'origine des trousses qu'il crée. {@code SIEM} : collecteur d'événements de sécurité
+     * (Microsoft Sentinel, Annexe 10, TI-04), qui ne lit que le journal d'audit et ne déclenche aucune signature.
+     */
+    public enum Systeme { SALESFORCE, WORKDAY, AUTRE, SIEM }
 
     public static final int NOM_MAX = 120;
 
@@ -78,7 +81,7 @@ public class ClientIntegration {
             throw new IllegalArgumentException("Nom du client d'intégration : 1 à " + NOM_MAX + " caractères.");
         }
         if (systeme == null) {
-            throw new IllegalArgumentException("Système d'origine requis : SALESFORCE, WORKDAY ou AUTRE.");
+            throw new IllegalArgumentException("Système d'origine requis : SALESFORCE, WORKDAY, AUTRE ou SIEM.");
         }
         ClientIntegration c = new ClientIntegration();
         c.tenantId = tenantId;
@@ -105,6 +108,11 @@ public class ClientIntegration {
         }
         actif = false;
         revoqueLe = le;
+    }
+
+    /** Séparation des usages : un collecteur SIEM lit le journal et rien d'autre ; un système d'affaires ne le lit pas. */
+    public boolean lecteurJournal() {
+        return systeme == Systeme.SIEM;
     }
 
     public boolean rappelConfigure() {

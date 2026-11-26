@@ -12,7 +12,7 @@ import qc.levis.contrat.clm.application.dto.ClmDto;
 /** Administration des clients d'intégration entrants et de leurs rappels (UI-21, addenda 1). */
 @RestController
 @RequestMapping("/api/clm/admin")
-@PreAuthorize("@modules.actif('clm') and hasAnyRole('ADMIN_TECHNIQUE','SUPERADMIN')")
+@PreAuthorize("@modules.actif('clm') and hasAnyRole('ADMIN_TECHNIQUE')")
 public class IntegrationsEntrantesAdminController {
 
     private final ClientsIntegrationService clients;

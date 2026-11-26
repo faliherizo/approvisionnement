@@ -32,16 +32,16 @@ public final class AdministrationClmController {
 
     @RestController
     @RequestMapping("/api/clm/admin")
-    @PreAuthorize("@modules.actif('clm') and hasAnyRole('ADMIN_AFFAIRES','ADMIN_TECHNIQUE','SUPERADMIN')")
+    @PreAuthorize("@modules.actif('clm') and hasAnyRole('ADMIN_AFFAIRES','ADMIN_TECHNIQUE')")
     public static class Administration {
 
         /** Administration d'affaires : messages et paramètres du module (addenda 4, Q10). */
-        private static final String AFFAIRES = "@modules.actif('clm') and hasAnyRole('ADMIN_AFFAIRES','SUPERADMIN')";
+        private static final String AFFAIRES = "@modules.actif('clm') and hasAnyRole('ADMIN_AFFAIRES')";
         /** Administration technique : intégrations (addenda 4, Q10). */
-        private static final String TECHNIQUE = "@modules.actif('clm') and hasAnyRole('ADMIN_TECHNIQUE','SUPERADMIN')";
+        private static final String TECHNIQUE = "@modules.actif('clm') and hasAnyRole('ADMIN_TECHNIQUE')";
 
         /** UI-23 : auditeur et administrateur ; une annotation de méthode remplace celle de la classe, d'où le module répété. */
-        private static final String JOURNAL = "@modules.actif('clm') and hasAnyRole('ADMIN_AFFAIRES','SUPERADMIN','AUDITEUR')";
+        private static final String JOURNAL = "@modules.actif('clm') and hasAnyRole('ADMIN_AFFAIRES','AUDITEUR')";
 
         private final MessagerieClm messagerie;
         private final SalesforceService salesforce;

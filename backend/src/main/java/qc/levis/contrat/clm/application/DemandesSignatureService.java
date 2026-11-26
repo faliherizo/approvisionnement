@@ -221,7 +221,8 @@ public class DemandesSignatureService {
         return switch (client.getSysteme()) {
             case SALESFORCE -> Trousse.Source.SALESFORCE;
             case WORKDAY -> Trousse.Source.WORKDAY;
-            case AUTRE -> Trousse.Source.INTEGRATION;
+            // Un client SIEM ne crée aucune trousse (refusé par l'API) ; le cas complète seulement l'énumération.
+            case AUTRE, SIEM -> Trousse.Source.INTEGRATION;
         };
     }
 

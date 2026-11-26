@@ -30,7 +30,7 @@ import qc.levis.contrat.clm.domain.Trousse;
  * un changement d'état n'est jamais perdu si Salesforce est indisponible, et jamais publié deux fois.
  */
 @Service
-public class SalesforceService {
+public class SalesforceService implements AbonneTransition {
 
     private static final Logger log = LoggerFactory.getLogger(SalesforceService.class);
 

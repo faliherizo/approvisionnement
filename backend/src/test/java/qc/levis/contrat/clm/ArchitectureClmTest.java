@@ -50,7 +50,10 @@ class ArchitectureClmTest {
                     "identifiant client unique sur la plateforme : le tenant se lit sur le client authentifié (API d'intégration)"),
             Map.entry("RappelSortantRepository.existsByCleIdempotence", "la clé d'idempotence contient déjà le tenant"),
             Map.entry("RappelSortantRepository.findTop50ByStatutAndProchainEssaiLessThanEqualOrderByProchainEssaiAsc",
-                    "relais planifié tous tenants ; chaque rappel est ensuite livré dans son propre tenant"));
+                    "relais planifié tous tenants ; chaque rappel est ensuite livré dans son propre tenant"),
+            Map.entry("DepotM365Repository.existsByCleIdempotence", "la clé d'idempotence contient déjà le tenant"),
+            Map.entry("DepotM365Repository.findTop50ByStatutAndProchainEssaiLessThanEqualOrderByProchainEssaiAsc",
+                    "relais planifié tous tenants ; chaque dépôt Microsoft 365 est ensuite livré dans son propre tenant"));
 
     private static final JavaClasses CODE = new ClassFileImporter()
             .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)

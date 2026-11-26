@@ -48,6 +48,7 @@ class ArchitectureModulesTest {
             entry("TenantController", "console superadmin, hors tenant"),
             entry("SuperadminModuleController", "console superadmin, hors tenant"),
             entry("SuperadminReferenceController", "console superadmin, hors tenant"),
+            entry("ConsoleSoutienClm", "console superadmin, hors tenant : demande d'accès de soutien ; le diagnostic exige l'accord de l'organisation (ADR-031)"),
             entry("ReferenceController", "listes de référence de tous les modules : le service refuse celle d'un module non souscrit"),
             entry("AdminReferenceController", "listes de référence de tous les modules : le service refuse celle d'un module non souscrit"),
             entry("EchangesHeritesPublicController", "échanges hérités sur l'API publique : le tenant n'est connu qu'après le jeton ; le contrôleur vérifie alors le module"),

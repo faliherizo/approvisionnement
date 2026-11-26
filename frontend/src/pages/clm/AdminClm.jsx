@@ -158,7 +158,7 @@ function FormulaireConnexion({ config, secretRef, onEnregistrer, onAnnuler, onRe
 }
 
 /** UI-21 — Intégrations API (Salesforce) : connexion, identifiants masqués, journal avec corrélation, erreurs et reprises, version. */
-const SYSTEMES = ['WORKDAY', 'SALESFORCE', 'AUTRE']
+const SYSTEMES = ['WORKDAY', 'SALESFORCE', 'AUTRE', 'SIEM']
 
 /**
  * Clients d'intégration entrants (addenda 1 : Workday TI-22, lots Salesforce AF-47) : identifiant et secret remis une
@@ -240,6 +240,7 @@ function ClientsIntegration() {
             <label>{t('clm.ci.systeme')}
               <select value={f.systeme} onChange={maj('systeme')}>{SYSTEMES.map((x) => <option key={x} value={x}>{t(`clm.ci.systeme.${x}`)}</option>)}</select>
             </label>
+            {f.systeme === 'SIEM' && <p className="muted col-2" role="note">{t('clm.ci.siemAide')}</p>}
             <label className="col-2">{t('clm.ci.urlRappel')} <span className="muted">{t('clm.ci.urlRappelAide')}</span>
               <input type="url" value={f.urlRappel} onChange={maj('urlRappel')} /></label>
           </div>
@@ -314,6 +315,7 @@ function Integrations() {
         </>
       )}>
       <Message erreur={erreur} info={info} />
+      <p><Link to="/clm/admin/microsoft-365">{t('clm.m365.lien')}</Link></p>
       {procedure && <div id="clm-procedure-secret" className="clm-info-statique" role="note">{t('clm.ad.rotationProcedure')}</div>}
       <Blocs>
         <Bloc zone="01" titre={t('clm.ad.blocConnexion')}>

@@ -10,6 +10,9 @@ import qc.levis.contrat.audit.domain.AuditLog;
 public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
     long countByUtilisateurIgnoreCaseAndActionAndHorodatageAfter(String utilisateur, String action, Instant depuis);
 
+    /** Lecture par curseur (identifiant croissant) du journal d'une organisation, pour un SIEM (Annexe 10, TI-04). */
+    List<AuditLog> findByTenantIdAndIdGreaterThanOrderByIdAsc(Long tenantId, Long apres, org.springframework.data.domain.Pageable page);
+
     /** Entrées dont la personne est l'auteur ou que son courriel mentionne. */
     @Query("""
             select a from AuditLog a where a.tenantId = :tenantId

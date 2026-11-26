@@ -42,6 +42,16 @@ public class AuditQueryService {
         return csv.toString();
     }
 
+    /**
+     * Entrées d'une organisation postérieures au curseur, dans l'ordre d'écriture, pour une collecte continue par un SIEM
+     * (Annexe 10, TI-04). L'organisation est désignée par l'appelant, qui l'a authentifiée.
+     */
+    public List<EntreeAudit> depuis(Long tenantId, long curseur, int limite) {
+        return repo.findByTenantIdAndIdGreaterThanOrderByIdAsc(tenantId, curseur, org.springframework.data.domain.PageRequest.of(0, limite))
+                .stream().map(a -> new EntreeAudit(a.getId(), a.getHorodatage(), a.getUtilisateur(), a.getAction(), a.getEntite(),
+                        a.getEntiteId(), a.getDetails())).toList();
+    }
+
     private static String vide(String s) {
         return (s == null || s.isBlank()) ? null : s;
     }

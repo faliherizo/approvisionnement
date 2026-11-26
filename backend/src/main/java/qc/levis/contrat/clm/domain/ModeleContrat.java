@@ -51,6 +51,10 @@ public class ModeleContrat {
     @Column(name = "parcours_json", length = 50_000)
     private String parcoursJson = "[]";
 
+    /** Champs modifiables une fois le parcours lancé, et effet sur les décisions obtenues (Annexe 10, AF-34). */
+    @Column(name = "modifications_json", length = 20_000)
+    private String modificationsJson = "[]";
+
     @Column(name = "cree_le", nullable = false)
     private Instant creeLe;
 
@@ -95,6 +99,12 @@ public class ModeleContrat {
         this.majLe = maintenant;
     }
 
+    /** Règles de modification en cours de traitement, sérialisées en JSON ; versionnées avec le reste du brouillon. */
+    public void definirModificationsEnCours(String json, Instant maintenant) {
+        this.modificationsJson = json;
+        this.majLe = maintenant;
+    }
+
     /** Parties structurées d'un modèle, sérialisées en JSON. */
     public record Contenu(String champsJson, String clausesJson, String parcoursJson) {
     }
@@ -112,6 +122,7 @@ public class ModeleContrat {
     public String getChampsJson() { return champsJson; }
     public String getClausesJson() { return clausesJson; }
     public String getParcoursJson() { return parcoursJson; }
+    public String getModificationsJson() { return modificationsJson; }
     public Instant getMajLe() { return majLe; }
     public long getVerrou() { return verrou; }
 }

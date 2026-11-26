@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import qc.levis.contrat.clm.domain.Modele;
+import qc.levis.contrat.clm.domain.ModificationEnCours;
 import qc.levis.contrat.clm.domain.Preremplissage;
 
 /** Contrats d'échange de l'API CLM (requêtes et vues), regroupés pour rester lisibles d'un seul tenant. */
@@ -51,8 +52,10 @@ public final class ClmDto {
     public record ZoneRequest(String roleContrat) {
     }
 
+    /** {@code modificationsEnCours} : champs modifiables une fois le parcours lancé (Annexe 10, AF-34) ; absent = aucun. */
     public record ModeleRequest(String nom, String categorie, String groupes, String corps, List<Modele.Champ> champs,
-                                List<Modele.Clause> clauses, List<EtapeRequest> parcours, Long verrou) {
+                                List<Modele.Clause> clauses, List<EtapeRequest> parcours, Long verrou,
+                                List<ModificationEnCours.Regle> modificationsEnCours) {
     }
 
     public record MessageRequest(String evenement, String canal, String sujet, String corps, Boolean actif) {
@@ -165,7 +168,7 @@ public final class ClmDto {
     public record ModeleVue(Long id, String cleModele, int numero, String nom, String categorie, String statut,
                             String proprietaire, String groupes, String corps, List<Modele.Champ> champs,
                             List<Modele.Clause> clauses, List<EtapeRequest> parcours, Instant majLe, long verrou,
-                            long trousses, String gabaritWord) {
+                            long trousses, String gabaritWord, List<ModificationEnCours.Regle> modificationsEnCours) {
     }
 
     public record Validation(boolean valide, List<String> erreurs) {
@@ -340,6 +343,55 @@ public final class ClmDto {
 
     public record RappelVue(Long id, String client, Long trousseId, String evenement, String statut, int tentatives,
                             String derniereErreur, Instant creeLe, Instant envoyeLe) {
+    }
+
+    // --- Diffusion Microsoft 365 des trousses terminées (Annexe 10, TI-01) ---
+    public record DiffusionM365Request(boolean actif, String bibliotheque, String dossier, boolean deposerPreuve, boolean avisTeams) {
+    }
+
+    public record DiffusionM365Vue(boolean actif, String bibliotheque, String dossier, boolean deposerPreuve, boolean avisTeams,
+                                   String modifiePar, Instant modifieLe) {
+    }
+
+    public record DepotM365Vue(Long id, Long trousseId, String reference, String nature, String statut, int tentatives, String url,
+                               String derniereErreur, Instant creeLe, Instant deposeLe, Instant prochainEssai) {
+    }
+
+    // --- Accès de soutien de l'exploitant (Annexe 10, SEC-17) ---
+    public record DemandeSoutien(String motif, Integer dureeHeures) {
+    }
+
+    public record AccesSoutienVue(Long id, String demandeur, String motif, int dureeHeures, String statut, Instant demandeLe,
+                                  String decidePar, Instant decideLe, Instant expireLe, int consultations) {
+    }
+
+    /** Diagnostic de soutien : l'état d'une trousse sans son contenu (ni document, ni valeur, ni coordonnée, ni détail). */
+    public record DiagnosticSoutien(String reference, String statut, Instant majLe, List<EtapeDiagnostic> etapes,
+                                    List<EvenementDiagnostic> evenements, boolean journalIntegre) {
+    }
+
+    public record EtapeDiagnostic(String cle, String libelle, String type, String statut, Instant activeeLe) {
+    }
+
+    public record EvenementDiagnostic(long sequence, String type, Instant horodatage) {
+    }
+
+    // --- Rapports personnalisables (Annexe 10, AF-37) ---
+    public record TypeRapportVue(String type, List<String> colonnes) {
+    }
+
+    /** {@code periodeJours} : période glissante jusqu'à aujourd'hui ; {@code colonnes} vide = toutes celles du type. */
+    public record RapportRequest(String nom, String type, Integer periodeJours, String unite, String typeContrat, String statut,
+                                 List<String> colonnes) {
+    }
+
+    public record RapportVue(Long id, String nom, String type, int periodeJours, String unite, String typeContrat, String statut,
+                             List<String> colonnes, String proprietaire, Instant modifieLe) {
+    }
+
+    // --- Journal de sécurité pour le SIEM (Annexe 10, TI-04) ---
+    /** {@code curseurSuivant} : à repasser en {@code apres} ; {@code suite} : une page pleine, d'autres événements peuvent suivre. */
+    public record FluxSiem(List<Map<String, Object>> evenements, List<String> cef, long curseurSuivant, boolean suite) {
     }
 
     // --- Groupes du module (Cahier § 1.4.7, § 1.4.12) ---

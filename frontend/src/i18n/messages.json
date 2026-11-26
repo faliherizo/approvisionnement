@@ -9979,5 +9979,135 @@
     "fr": "Étapes",
     "en": "Steps",
     "mg": "Dingana"
+  },
+  "soutien.titre": {
+    "fr": "Accès de soutien aux données CLM d'une organisation",
+    "en": "Support access to an organization's CLM data",
+    "mg": "Fidirana fanohanana amin'ny angona CLM an'ny fikambanana"
+  },
+  "soutien.aide": {
+    "fr": "Le superadministrateur n'a aucun droit sur les données d'une organisation. Pour diagnostiquer un incident, demandez un accès motivé (8 heures au plus) : l'administration d'affaires de l'organisation l'accorde ou le refuse. Pendant l'accès, seul un diagnostic sans contenu est consultable, et chaque consultation est inscrite au journal de l'organisation.",
+    "en": "The superadministrator has no rights over an organization's data. To diagnose an incident, request a justified access (8 hours at most): the organization's business administration grants or refuses it. During the access, only a content-free diagnostic can be viewed, and each view is recorded in the organization's log.",
+    "mg": "Tsy manana zo amin'ny angon'ny fikambanana ny mpitantana ambony. Mba hamakafakana olana, mangataha fidirana misy antony (8 ora farafahabetsany) : ny fitantanana ara-barotra an'ny fikambanana no manome na mandà izany. Mandritra ny fidirana, famakafakana tsy misy votoatiny ihany no azo jerena, ary voarakitra ao amin'ny diarin'ny fikambanana ny fijerena tsirairay."
+  },
+  "soutien.organisation": {
+    "fr": "Organisation",
+    "en": "Organization",
+    "mg": "Fikambanana"
+  },
+  "soutien.motif": {
+    "fr": "Motif (billet, symptôme)",
+    "en": "Reason (ticket, symptom)",
+    "mg": "Antony (tapakila, soritr'aretina)"
+  },
+  "soutien.duree": {
+    "fr": "Durée demandée (heures)",
+    "en": "Requested duration (hours)",
+    "mg": "Faharetana angatahina (ora)"
+  },
+  "soutien.demander": {
+    "fr": "Demander l'accès de soutien",
+    "en": "Request support access",
+    "mg": "Angataho ny fidirana fanohanana"
+  },
+  "soutien.demandee": {
+    "fr": "Demande transmise à l'organisation.",
+    "en": "Request sent to the organization.",
+    "mg": "Nalefa any amin'ny fikambanana ny fangatahana."
+  },
+  "soutien.mesDemandes": {
+    "fr": "Mes demandes d'accès",
+    "en": "My access requests",
+    "mg": "Ireo fangatahako fidirana"
+  },
+  "soutien.statut": {
+    "fr": "Statut",
+    "en": "Status",
+    "mg": "Sata"
+  },
+  "soutien.expire": {
+    "fr": "Échéance",
+    "en": "Expires",
+    "mg": "Fahataperana"
+  },
+  "soutien.consultations": {
+    "fr": "Consultations",
+    "en": "Views",
+    "mg": "Fijerena"
+  },
+  "soutien.statut.DEMANDE": {
+    "fr": "En attente de l'organisation",
+    "en": "Awaiting the organization",
+    "mg": "Miandry ny fikambanana"
+  },
+  "soutien.statut.ACCORDE": {
+    "fr": "Accordé",
+    "en": "Granted",
+    "mg": "Nomena"
+  },
+  "soutien.statut.REFUSE": {
+    "fr": "Refusé",
+    "en": "Refused",
+    "mg": "Nolavina"
+  },
+  "soutien.statut.REVOQUE": {
+    "fr": "Révoqué",
+    "en": "Revoked",
+    "mg": "Nofoanana"
+  },
+  "soutien.statut.EXPIRE": {
+    "fr": "Expiré",
+    "en": "Expired",
+    "mg": "Lany daty"
+  },
+  "soutien.diagnostic": {
+    "fr": "Diagnostic d'une trousse",
+    "en": "Package diagnostic",
+    "mg": "Famakafakana fonosana"
+  },
+  "soutien.reference": {
+    "fr": "Référence de la trousse",
+    "en": "Package reference",
+    "mg": "Laharan'ny fonosana"
+  },
+  "soutien.consulter": {
+    "fr": "Consulter le diagnostic",
+    "en": "View diagnostic",
+    "mg": "Jereo ny famakafakana"
+  },
+  "soutien.diagnosticDe": {
+    "fr": "Trousse {ref} — {statut}",
+    "en": "Package {ref} — {statut}",
+    "mg": "Fonosana {ref} — {statut}"
+  },
+  "soutien.journalIntegre": {
+    "fr": "journal scellé intègre",
+    "en": "sealed log intact",
+    "mg": "diary voaisy tombo-kase tsy simba"
+  },
+  "soutien.journalRompu": {
+    "fr": "JOURNAL ALTÉRÉ",
+    "en": "LOG ALTERED",
+    "mg": "DIARY NOVAINA"
+  },
+  "soutien.etape": {
+    "fr": "Étape",
+    "en": "Step",
+    "mg": "Dingana"
+  },
+  "soutien.activee": {
+    "fr": "Activée le",
+    "en": "Activated on",
+    "mg": "Natomboka ny"
+  },
+  "soutien.evenements": {
+    "fr": "{n} événement(s) :",
+    "en": "{n} event(s):",
+    "mg": "Zava-nitranga {n} :"
+  },
+  "soutien.erreur": {
+    "fr": "Opération refusée.",
+    "en": "Operation refused.",
+    "mg": "Nolavina ny asa."
   }
 }

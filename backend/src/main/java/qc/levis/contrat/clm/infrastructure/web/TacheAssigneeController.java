@@ -14,7 +14,7 @@ import qc.levis.contrat.clm.application.dto.ClmDto;
 public class TacheAssigneeController {
 
     /** Mêmes profils que la création d'une trousse : l'auditeur et le lecteur consultent seulement. */
-    private static final String CREATION = "@modules.actif('clm') and hasAnyRole('REDACTEUR','APPRO','JURIDIQUE','DIRECTION','ADMIN','ADMIN_AFFAIRES','SUPERADMIN')";
+    private static final String CREATION = "@modules.actif('clm') and hasAnyRole('REDACTEUR','APPRO','JURIDIQUE','DIRECTION','ADMIN','ADMIN_AFFAIRES')";
 
     private final TachesAssigneesService taches;
     private final WebClm.Acteurs acteurs;

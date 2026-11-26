@@ -371,3 +371,24 @@ Le dépôt est manuel par défaut (contrôle de l'utilisateur). Pour l'**automat
 écouteur d'événement métier — par exemple, à l'**approbation finale** du document, appeler
 `PublicationService.publier(...)` vers la ou les cibles configurées du tenant. À décider avec la
 Ville (un ADR sera rédigé) : cible(s) par défaut, format, gestion des échecs et rejeu.
+
+---
+
+## 8. Module Contrats et signature : dépôt automatique des trousses terminées (Annexe 10 d'IQ, TI-01)
+
+Décision : [ADR-029](adr/ADR-029-microsoft-365-pour-le-module-de-signature.md). Le module de signature réutilise la
+**même connexion Microsoft 365** et les **mêmes adaptateurs** que la publication ci-dessus (Graph prioritaire, simulation
+de repli) : aucun second client Graph.
+
+- **Connexion** : `GET/PUT /api/parametres/integration-m365` est ouvert aux organisations qui souscrivent le module
+  `redaction` **ou** `clm` (administration technique). Tant qu'elle n'est pas activée, tout est simulé.
+- **Réglage du dépôt** (administration technique, écran *Administration CLM → Microsoft 365*,
+  `GET/PUT /api/clm/admin/integrations/m365`) : activation, bibliothèque (`SHAREPOINT` ou `ONEDRIVE`), dossier, dépôt
+  du dossier de preuve, avis Teams.
+- **Déclenchement** : à l'achèvement de la trousse (`SIGNATURE_TERMINEE`), un dépôt est inscrit par document signé, puis
+  pour le dossier de preuve (ZIP) et l'avis Teams, dans la transaction qui termine la trousse. Classement :
+  `{dossier}/{référence de la trousse}/`.
+- **Avis Teams** : court fichier texte (référence, titre, emplacements) déposé dans le dossier du canal Teams configuré.
+- **Reprise** : le planificateur du module relaie les dépôts dus (recul exponentiel, abandon après 8 essais) ; suivi et
+  relance : `GET /api/clm/admin/integrations/m365/depots`, `POST …/depots/{id}/relancer`, `POST …/relayer`.
+- **Traçabilité** : chaque dépôt réussi est consigné au journal scellé de la trousse (`DEPOT_M365`).

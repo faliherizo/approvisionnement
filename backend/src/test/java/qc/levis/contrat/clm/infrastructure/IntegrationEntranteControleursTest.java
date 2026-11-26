@@ -26,7 +26,8 @@ class IntegrationEntranteControleursTest {
     private final DemandesSignatureService demandes = mock(DemandesSignatureService.class);
     private final ModuleService modules = mock(ModuleService.class);
     private final IntegrationEntranteController api = new IntegrationEntranteController(clients, demandes, mock(DocumentClmService.class),
-            mock(PreuveService.class), modules, mock(qc.levis.contrat.clm.application.ModeleService.class));
+            mock(PreuveService.class), modules, mock(qc.levis.contrat.clm.application.ModeleService.class),
+            mock(qc.levis.contrat.clm.application.JournalSiemService.class));
     private final ClientIntegration client = ClientIntegration.creer(7L, "Workday", ClientIntegration.Systeme.WORKDAY, null, "clm-1", "e", "k",
             "admin", Instant.EPOCH);
 

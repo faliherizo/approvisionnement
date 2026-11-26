@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 078-1-clm-acces-soutien
+      author: levis
+      comment: "Annexe 10 IQ, SEC-17 (RST-44, ADR-031) : accès de soutien de l'exploitant accordé par l'organisation, limité dans le temps et journalisé."
+      changes:
+        - createTable:
+            tableName: clm_acces_soutien
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: demandeur, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: motif, type: VARCHAR(500), constraints: { nullable: false } }
+              - column: { name: duree_heures, type: INT, constraints: { nullable: false } }
+              - column: { name: statut, type: VARCHAR(10), constraints: { nullable: false } }
+              - column: { name: demande_le, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: decide_par, type: VARCHAR(150) }
+              - column: { name: decide_le, type: TIMESTAMP }
+              - column: { name: expire_le, type: TIMESTAMP }
+              - column: { name: consultations, type: INT, defaultValueNumeric: 0, constraints: { nullable: false } }
+        - createIndex:
+            tableName: clm_acces_soutien
+            indexName: ix_clm_acces_soutien_tenant
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: demande_le }

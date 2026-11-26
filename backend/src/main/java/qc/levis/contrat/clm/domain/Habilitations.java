@@ -18,7 +18,9 @@ public final class Habilitations {
 
         public boolean estAdmin() {
             // L'administration d'affaires gère les trousses ; l'administration technique n'y a pas accès (addenda 4, Q10).
-            return roles.contains("ADMIN") || roles.contains("SUPERADMIN") || roles.contains("ADMIN_AFFAIRES");
+            // Le superadministrateur de l'exploitant n'administre aucune donnée d'une organisation (Annexe 10, SEC-17 ;
+            // ADR-031) : il n'y accède que par un accès de soutien accordé, limité et journalisé.
+            return roles.contains("ADMIN") || roles.contains("ADMIN_AFFAIRES");
         }
 
         /** Auditeur / conformité : consulte tout le tenant, n'intervient sur rien. */

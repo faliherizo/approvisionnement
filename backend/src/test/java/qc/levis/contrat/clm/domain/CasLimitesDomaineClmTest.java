@@ -159,9 +159,13 @@ class CasLimitesDomaineClmTest {
     }
 
     @Test
-    void une_trousse_terminee_est_finale_et_le_superadministrateur_administre() {
+    void une_trousse_terminee_est_finale_et_le_superadministrateur_n_administre_aucune_donnee_d_organisation() {
         assertTrue(StatutTrousse.TERMINEE.estFinal());
-        assertTrue(new Habilitations.Acteur("sa@x.ca", Set.of("SUPERADMIN"), null).estAdmin());
+        // Annexe 10, SEC-17 (ADR-031) : l'exploitant n'administre pas les trousses d'une organisation.
+        assertFalse(new Habilitations.Acteur("sa@x.ca", Set.of("SUPERADMIN"), null).estAdmin());
+        assertTrue(new Habilitations.Acteur("ti@x.ca", Set.of("ADMIN"), null).estAdmin());
+        assertTrue(new Habilitations.Acteur("aff@x.ca", Set.of("ADMIN_AFFAIRES"), null).estAdmin());
+        assertFalse(new Habilitations.Acteur("tec@x.ca", Set.of("ADMIN_TECHNIQUE"), null).estAdmin());
     }
 
     @Test

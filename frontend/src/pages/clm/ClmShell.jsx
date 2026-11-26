@@ -28,6 +28,7 @@ const TEC = 'ADMIN_TECHNIQUE'
 const ADMINISTRATION = [
   ['/clm/admin/notifications', 'clm.nav.notifications', [AFF]],
   ['/clm/admin/integrations', 'clm.nav.integrations', [TEC]],
+  ['/clm/admin/microsoft-365', 'clm.nav.m365', [TEC]],
   ['/clm/admin/parametres', 'clm.nav.parametres', [AFF]],
   ['/clm/admin/listes', 'clm.nav.listes', [AFF]],
   ['/clm/admin/utilisateurs', 'clm.nav.utilisateurs', [AFF, TEC]],
@@ -36,6 +37,8 @@ const ADMINISTRATION = [
   ['/clm/admin/conservation', 'clm.nav.conservation', [AFF]],
   ['/clm/admin/departs', 'clm.nav.departs', [AFF]],
   ['/clm/admin/journal', 'clm.nav.journal', [AFF, 'AUDITEUR']],
+  ['/clm/admin/soutien', 'clm.nav.soutien', [AFF]],
+  ['/clm/admin/rapports', 'clm.nav.rapports', [AFF, 'AUDITEUR']],
   ['/clm/admin/audit', 'clm.nav.audit', [AFF, TEC]],
   ['/clm/options', 'clm.nav.options', [AFF]],
 ]
@@ -54,7 +57,8 @@ export default function ClmShell({ children }) {
   const { modules, chargement } = useModules()
   const admin = hasRole('ADMIN_AFFAIRES') || hasRole('SUPERADMIN')
   const peutInitier = usePeutInitier()
-  const administration = ADMINISTRATION.filter(([, , roles]) => hasRole('SUPERADMIN') || roles.some((r) => hasRole(r)))
+  // Le superadministrateur de l'exploitant n'administre aucune donnée d'une organisation (Annexe 10, SEC-17).
+  const administration = ADMINISTRATION.filter(([, , roles]) => roles.some((r) => hasRole(r)))
   // Une organisation qui ne souscrit que le CLM n'a pas d'autre espace vers lequel revenir.
   const autreEspace = !chargement && !espaceClmSeul(modules)
 

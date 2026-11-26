@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -155,6 +156,27 @@ public class ParcoursService {
         journal.consigner(t, "NOUVEAU_CYCLE", acteur, motif);
         notifierProprietaire(t, Evenement.REJET, "Nouveau cycle : " + motif);
         avancer(t, acteur);
+    }
+
+    /**
+     * Modification d'un champ dont l'effet est la reprise de l'étape (Annexe 10, AF-34) : les décisions de la phase en cours
+     * et des suivantes sont invalidées, celles des phases déjà franchies restent acquises.
+     */
+    void reprendreEtape(Trousse t, String acteur, String motif) {
+        OptionalInt phase = etapesDe(t).stream().filter(e -> e.getStatut() == Parcours.StatutEtape.ACTIVE)
+                .mapToInt(EtapeTrousse::getPhase).min();
+        if (!t.enTraitement() || phase.isEmpty()) {
+            return;
+        }
+        reinitialiserDepuis(t, phase.getAsInt());
+        journal.consigner(t, "REPRISE_ETAPE", acteur, motif);
+        avancer(t, acteur);
+    }
+
+    /** Les étapes en cours d'une trousse : la règle de modification d'un champ peut en dépendre (AF-34). */
+    Set<String> etapesActives(Trousse t) {
+        return etapesDe(t).stream().filter(e -> e.getStatut() == Parcours.StatutEtape.ACTIVE).map(EtapeTrousse::getCle)
+                .collect(Collectors.toSet());
     }
 
     void avancer(Trousse t, String acteur) {

@@ -54,7 +54,7 @@ class IsolationTenantIqTest {
     private static final List<String> SOCLE = List.of("/api/dossiers", "/api/documents", "/api/clauses", "/api/templates",
             "/api/gabarits", "/api/modele-document", "/api/workflows", "/api/stats", "/api/rapports/suivi", "/api/search?q=contrat",
             "/api/ia/knowledge", "/api/ia/parametres", "/api/simulateur/depots", "/api/profil/repertoires",
-            "/api/reference/TYPE_CONTRAT", "/api/admin/reference?categorie=TYPE_CONTRAT", "/api/parametres/integration-m365",
+            "/api/reference/TYPE_CONTRAT", "/api/admin/reference?categorie=TYPE_CONTRAT",
             "/api/parametres/integration-sap", "/api/reversibilite/export");
 
     /** Une lecture par autre module de la plateforme ; chacun est gardé par sa propre activation. */
@@ -65,7 +65,9 @@ class IsolationTenantIqTest {
 
     /** Fonctions transverses dont tout tenant a besoin : session, profil, modules, comptes, audit, authentification unique. */
     private static final List<String> TRANSVERSES = List.of("/api/auth/me", "/api/profil", "/api/modules", "/api/admin/users",
-            "/api/admin/users/roles", "/api/audit", "/api/parametres/integration-oidc", "/api/parametres/integration-saml");
+            "/api/admin/users/roles", "/api/audit", "/api/parametres/integration-oidc", "/api/parametres/integration-saml",
+            // Connexion Microsoft 365 partagée avec le module de signature (Annexe 10, TI-01 ; ADR-029).
+            "/api/parametres/integration-m365");
 
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper json;

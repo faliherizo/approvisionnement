@@ -121,7 +121,7 @@ public class ClientsIntegrationService {
         try {
             return ClientIntegration.Systeme.valueOf(saisi == null ? "" : saisi.strip().toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Système d'origine : SALESFORCE, WORKDAY ou AUTRE.", e);
+            throw new IllegalArgumentException("Système d'origine : SALESFORCE, WORKDAY, AUTRE ou SIEM.", e);
         }
     }
 

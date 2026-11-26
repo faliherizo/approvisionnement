@@ -79,6 +79,11 @@ Action utilisateur : j***@ville.qc.ca · PUBLIER Document#42 (tenant 1) · SHARE
   conservent pas de donnée personnelle en clair.
 - Les **consultations** (GET) ne sont pas des « actions » et ne sont pas tracées à ce titre ; le détail
   de flux relève du niveau DEBUG.
+- **Détail confidentiel** (Annexe 10 d'IQ, AF-34/SEC-15 ; ADR-030) : une modification de valeur d'une trousse
+  (`CLM_VALEUR_MODIFIEE`, ancienne et nouvelle valeur) passe par `AuditService.logConfidentiel` : le détail complet est
+  conservé au journal d'audit en base et au journal scellé de la trousse (la preuve), mais la ligne technique ne dit que
+  `… · détail au journal d'audit`. Le journal transmis au SIEM d'IQ (ADR-033) omet aussi ce détail.
+  Test : `AuditServiceConfidentielTest`.
 
 ## 4. Ce qui est journalisé, par domaine
 

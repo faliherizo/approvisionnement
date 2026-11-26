@@ -38,6 +38,19 @@ public class AuditService {
         journaliser(tenantId, utilisateur, action, entite, id, details);
     }
 
+    /**
+     * Action dont le détail porte des données d'affaires (valeurs avant/après d'un champ) : le détail est la preuve et reste
+     * dans le journal d'audit en base, lisible par qui en a le droit ; le journal technique n'en garde que l'existence
+     * (Loi 25, docs/journalisation.md).
+     */
+    public void logConfidentiel(Long tenantId, String utilisateur, String action, String entite, Long id, String details) {
+        AuditLog entree = new AuditLog(utilisateur, action, entite, id, details);
+        entree.setTenantId(tenantId);
+        repo.save(entree);
+        log.info("Action utilisateur : {} · {} {}#{} (tenant {}) · détail au journal d'audit",
+                LogSafe.courriel(utilisateur), action, entite, id, tenantId);
+    }
+
     private void journaliser(Long tenantId, String utilisateur, String action, String entite, Long id, String details) {
         AuditLog entree = new AuditLog(utilisateur, action, entite, id, details);
         entree.setTenantId(tenantId);

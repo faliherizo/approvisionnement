@@ -13,10 +13,11 @@ import qc.levis.contrat.integration.application.port.PublicationCiblePort;
 /**
  * Configuration Microsoft 365 du tenant courant (espace admin → Paramètres). L'administrateur du
  * tenant saisit et active sa propre intégration (SharePoint/OneDrive/Teams/Outlook). Le secret n'est
- * jamais renvoyé : seule sa présence est indiquée.
+ * jamais renvoyé : seule sa présence est indiquée. La même connexion sert la publication du module de rédaction et la
+ * diffusion des trousses terminées du module Contrats et signature (Annexe 10 d'IQ, TI-01 ; ADR-029).
  */
 @RestController
-@ModuleRequis("redaction")
+@ModuleRequis({"redaction", "clm"})
 @RequestMapping("/api/parametres/integration-m365")
 @PreAuthorize("hasRole('ADMIN_TECHNIQUE')")
 public class IntegrationM365Controller {

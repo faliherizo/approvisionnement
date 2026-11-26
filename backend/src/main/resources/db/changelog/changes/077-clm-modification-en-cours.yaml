@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 077-1-clm-modification-en-cours
+      author: levis
+      comment: "Annexe 10 IQ, AF-34 et SEC-15 (RST-43, ADR-030) : champs modifiables une fois le parcours lancé, étapes, rôle requis et effet sur les approbations."
+      changes:
+        - addColumn:
+            tableName: clm_modele
+            columns:
+              - column: { name: modifications_json, type: TEXT, defaultValue: "[]" }

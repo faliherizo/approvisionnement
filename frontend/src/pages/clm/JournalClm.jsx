@@ -17,6 +17,10 @@ function Utilisation() {
   const { donnees: r, erreur } = useRessource(`/clm/admin/utilisation?du=${demande.du}&au=${demande.au}`)
   const lignes = r ? [['envoyees', r.envoyees], ['renvois', r.renvois], ['terminees', r.terminees], ['rejetees', r.rejetees],
     ['annuleesApresEnvoi', r.annuleesApresEnvoi], ['annuleesAvantEnvoi', r.annuleesAvantEnvoi], ['echeancesDepassees', r.echeancesDepassees]] : []
+  const [errExport, setErrExport] = useState(null)
+  // Annexe 10, AF-37 : le relevé s'exporte en CSV et en Excel pour la validation des factures.
+  const exporter = (format) => telecharger(`/clm/admin/utilisation/export?du=${demande.du}&au=${demande.au}&format=${format}`,
+    `releve-utilisation-${demande.du}-${demande.au}.${format}`).catch(() => setErrExport(t('clm.erreur')))
   return (
     <>
       <p className="muted">{t('clm.ut.utilisationAide')}</p>
@@ -25,7 +29,11 @@ function Utilisation() {
         <label>{t('clm.su.au')}<input type="date" value={periode.au} onChange={(e) => setPeriode({ ...periode, au: e.target.value })} required /></label>
         <div className="cmp-row"><button type="submit">{t('clm.ut.calculer')}</button></div>
       </form>
-      <Message erreur={erreur} />
+      <div className="cmp-row">
+        <button type="button" className="secondary" onClick={() => exporter('csv')}>{t('clm.ut.exporterCsv')}</button>
+        <button type="button" className="secondary" onClick={() => exporter('xlsx')}>{t('clm.ut.exporterXlsx')}</button>
+      </div>
+      <Message erreur={erreur || errExport} />
       {r && (
         <dl className="clm-dl">
           {lignes.map(([k, v]) => <div key={k}><dt>{t(`clm.ut.${k}`)}</dt><dd>{v}</dd></div>)}

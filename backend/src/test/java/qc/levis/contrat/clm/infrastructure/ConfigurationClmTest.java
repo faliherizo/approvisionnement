@@ -18,6 +18,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import qc.levis.contrat.clm.application.DepotsM365Service;
 import qc.levis.contrat.clm.application.JournalClm;
 import qc.levis.contrat.clm.application.RappelService;
 import qc.levis.contrat.clm.application.RappelsExternesService;
@@ -43,12 +44,15 @@ class ConfigurationClmTest {
         SalesforceService salesforce = mock(SalesforceService.class);
         RappelsExternesService externes = mock(RappelsExternesService.class);
 
-        new ClmConfiguration.Planificateur(rappels, salesforce, externes, mock(AlertesExploitation.class)).executer();
+        DepotsM365Service depots = mock(DepotsM365Service.class);
 
-        InOrder ordre = inOrder(rappels, salesforce, externes);
+        new ClmConfiguration.Planificateur(rappels, salesforce, externes, depots, mock(AlertesExploitation.class)).executer();
+
+        InOrder ordre = inOrder(rappels, salesforce, externes, depots);
         ordre.verify(rappels).executer();
         ordre.verify(salesforce).relayer();
         ordre.verify(externes).relayer();
+        ordre.verify(depots).relayer();
     }
 
     @Test
@@ -59,10 +63,12 @@ class ConfigurationClmTest {
         when(rappels.executer()).thenThrow(new IllegalStateException("base indisponible"));
 
         RappelsExternesService externes = mock(RappelsExternesService.class);
-        new ClmConfiguration.Planificateur(rappels, salesforce, externes, alertes).executer();
+        DepotsM365Service depots = mock(DepotsM365Service.class);
+        new ClmConfiguration.Planificateur(rappels, salesforce, externes, depots, alertes).executer();
 
         verify(salesforce).relayer();
         verify(externes).relayer();
+        verify(depots).relayer();
         verify(alertes).signaler(AlertesExploitation.Code.PLANIFICATEUR_ECHEC, null, "rappels et échéances", "IllegalStateException");
     }
 

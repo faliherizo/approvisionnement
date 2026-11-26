@@ -25,20 +25,41 @@ public class JournalClm {
     }
 
     public EvenementTrousse consigner(Trousse t, String type, String acteur, String detail) {
+        EvenementTrousse e = sceller(t, type, qui(acteur), detail);
+        audit.log(t.getTenantId(), qui(acteur), "CLM_" + type, "TROUSSE", t.getId(),
+                t.getReference() + (detail == null || detail.isBlank() ? "" : " · " + detail));
+        return e;
+    }
+
+    /**
+     * Comme {@link #consigner}, pour un détail qui porte des valeurs d'affaires (avant/après d'un champ, AF-34) : il est
+     * scellé et conservé au journal d'audit, mais n'est pas recopié dans le journal technique (Loi 25).
+     */
+    public EvenementTrousse consignerConfidentiel(Trousse t, String type, String acteur, String detail) {
+        EvenementTrousse e = sceller(t, type, qui(acteur), detail);
+        audit.logConfidentiel(t.getTenantId(), qui(acteur), "CLM_" + type, "TROUSSE", t.getId(), t.getReference() + " · " + detail);
+        return e;
+    }
+
+    private EvenementTrousse sceller(Trousse t, String type, String qui, String detail) {
         var dernier = evenements.findTopByTenantIdAndTrousseIdOrderBySequenceDesc(t.getTenantId(), t.getId());
         long sequence = dernier.map(e -> e.getSequence() + 1).orElse(1L);
         String precedente = dernier.map(EvenementTrousse::getEmpreinte).orElse(ChaineScellee.ORIGINE);
-        String qui = acteur == null || acteur.isBlank() ? "systeme" : acteur;
-        EvenementTrousse e = evenements.save(new EvenementTrousse(t.getTenantId(), t.getId(), sequence, type, qui,
-                ctx.maintenant(), detail, precedente));
-        audit.log(t.getTenantId(), qui, "CLM_" + type, "TROUSSE", t.getId(),
-                t.getReference() + (detail == null || detail.isBlank() ? "" : " · " + detail));
-        return e;
+        return evenements.save(new EvenementTrousse(t.getTenantId(), t.getId(), sequence, type, qui, ctx.maintenant(), detail, precedente));
+    }
+
+    private static String qui(String acteur) {
+        return acteur == null || acteur.isBlank() ? "systeme" : acteur;
     }
 
     /** Refus d'accès (ST-02) : événement de sécurité du tenant, hors du journal scellé d'une trousse. */
     public void refus(String acteur, String ressource, String motif) {
         audit.log(acteur == null || acteur.isBlank() ? "anonyme" : acteur, "CLM_ACCES_REFUSE", "API", null, ressource + " · " + motif);
+    }
+
+    /** Accès de soutien de l'exploitant (SEC-17) : demande, décision, consultation ou refus, au journal de l'organisation. */
+    public void soutien(String acteur, Long accesId, String detail) {
+        audit.log(acteur, "CLM_ACCES_SOUTIEN", "SOUTIEN", accesId, detail);
     }
 
     /** Changement de configuration du module par l'administration de l'organisation (UI-21, UI-22). */

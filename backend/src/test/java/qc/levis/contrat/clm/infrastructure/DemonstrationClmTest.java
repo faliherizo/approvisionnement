@@ -62,7 +62,7 @@ class DemonstrationClmTest {
     }
 
     private static DemonstrationClm.DemoClm demo(Map<String, List<String>> acteurs) {
-        ClmDto.ModeleRequest modele = new ClmDto.ModeleRequest("Entente", "SUBVENTION", null, "Texte", List.of(), List.of(), List.of(), null);
+        ClmDto.ModeleRequest modele = new ClmDto.ModeleRequest("Entente", "SUBVENTION", null, "Texte", List.of(), List.of(), List.of(), null, null);
         return new DemonstrationClm.DemoClm("affaires@org", "principal@org", acteurs,
                 List.of(new DemonstrationClm.GroupeDemo("JUR", "Juridique", List.of("a@org", "b@org")),
                         new DemonstrationClm.GroupeDemo("EXISTANT", "Déjà là", List.of())),

@@ -8,6 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 import qc.levis.contrat.clm.application.ClientsIntegrationService;
 import qc.levis.contrat.clm.application.DemandesSignatureService;
 import qc.levis.contrat.clm.application.DocumentClmService;
+import qc.levis.contrat.clm.application.JournalSiemService;
 import qc.levis.contrat.clm.application.ModeleService;
 import qc.levis.contrat.clm.application.PreuveService;
 import qc.levis.contrat.clm.application.dto.ClmDto;
@@ -30,21 +31,24 @@ public class IntegrationEntranteController {
     private final PreuveService preuves;
     private final ModuleService modules;
     private final ModeleService modeles;
+    private final JournalSiemService siem;
 
     public IntegrationEntranteController(ClientsIntegrationService clients, DemandesSignatureService demandes,
-                                         DocumentClmService documents, PreuveService preuves, ModuleService modules, ModeleService modeles) {
+                                         DocumentClmService documents, PreuveService preuves, ModuleService modules, ModeleService modeles,
+                                         JournalSiemService siem) {
         this.clients = clients;
         this.demandes = demandes;
         this.documents = documents;
         this.preuves = preuves;
         this.modules = modules;
         this.modeles = modeles;
+        this.siem = siem;
     }
 
     /** Modèles publiés et leurs champs (DAO § 3.3.5) : le système externe y choisit le {@code modeleId} et les clés de valeurs. */
     @GetMapping("/v1/modeles")
     public java.util.List<ClmDto.ModeleVue> modeles(@RequestHeader(value = "Authorization", required = false) String authz) {
-        ClientIntegration c = client(authz);
+        ClientIntegration c = affaires(authz);
         return demandes.dansOrganisation(c, () -> modeles.lister(demandes.acteurCatalogue(c), "PUBLIE"));
     }
 
@@ -61,26 +65,26 @@ public class IntegrationEntranteController {
     @ResponseStatus(HttpStatus.CREATED)
     public ClmDto.TrousseExterneVue creer(@RequestHeader(value = "Authorization", required = false) String authz,
                                           @RequestBody ClmDto.DemandeTrousse demande) {
-        return demandes.creerPourClient(client(authz), demande);
+        return demandes.creerPourClient(affaires(authz), demande);
     }
 
     @GetMapping("/v1/trousses/{id}")
     public ClmDto.TrousseExterneVue trousse(@RequestHeader(value = "Authorization", required = false) String authz, @PathVariable Long id) {
-        return demandes.trousseDuClient(client(authz), id);
+        return demandes.trousseDuClient(affaires(authz), id);
     }
 
     /** Document signé (ou toute version) d'une trousse créée par ce client, pour dépôt dans le système appelant. */
     @GetMapping("/v1/trousses/{id}/documents/{documentId}/contenu")
     public ResponseEntity<byte[]> document(@RequestHeader(value = "Authorization", required = false) String authz,
                                            @PathVariable Long id, @PathVariable Long documentId) {
-        ClientIntegration c = client(authz);
+        ClientIntegration c = affaires(authz);
         DocumentTrousse d = demandes.dansOrganisation(c, () -> documents.telecharger(id, documentId, demandes.acteurDuClient(c, id)));
         return TrousseController.fichier(d.getContenu(), d.getType().mime(), d.getNom());
     }
 
     @GetMapping("/v1/trousses/{id}/preuve")
     public ResponseEntity<byte[]> preuve(@RequestHeader(value = "Authorization", required = false) String authz, @PathVariable Long id) {
-        ClientIntegration c = client(authz);
+        ClientIntegration c = affaires(authz);
         byte[] zip = demandes.dansOrganisation(c, () -> preuves.exporter(id, demandes.acteurDuClient(c, id)));
         return TrousseController.fichier(zip, "application/zip", "preuve-trousse-" + id + ".zip");
     }
@@ -88,18 +92,37 @@ public class IntegrationEntranteController {
     @PostMapping("/v1/lots")
     @ResponseStatus(HttpStatus.CREATED)
     public ClmDto.LotVue lot(@RequestHeader(value = "Authorization", required = false) String authz, @RequestBody ClmDto.DemandeLot lot) {
-        return demandes.creerLotPourClient(client(authz), lot);
+        return demandes.creerLotPourClient(affaires(authz), lot);
     }
 
     @GetMapping("/v1/lots/{id}")
     public ClmDto.LotVue lireLot(@RequestHeader(value = "Authorization", required = false) String authz, @PathVariable Long id) {
-        return demandes.lotDuClient(client(authz), id);
+        return demandes.lotDuClient(affaires(authz), id);
     }
 
     @ExceptionHandler(ClientsIntegrationService.AccesRefuse.class)
     public ResponseEntity<Map<String, String>> refuse(ClientsIntegrationService.AccesRefuse e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("WWW-Authenticate", "Bearer")
                 .body(Map.of("error", "invalid_client", "message", e.getMessage()));
+    }
+
+    /**
+     * Journal d'audit de l'organisation pour son SIEM (Annexe 10, TI-04) : événements normalisés (ASIM et CEF) postérieurs au
+     * curseur {@code apres}, par pages de {@code limite} (500 au plus). Client de type SIEM seulement.
+     */
+    @GetMapping("/v1/journal")
+    public ClmDto.FluxSiem journal(@RequestHeader(value = "Authorization", required = false) String authz,
+                                   @RequestParam(defaultValue = "0") long apres, @RequestParam(defaultValue = "100") int limite) {
+        return siem.lire(client(authz), apres, limite);
+    }
+
+    /** Un collecteur SIEM ne déclenche ni ne lit aucune trousse : séparation des usages des clients d'intégration. */
+    private ClientIntegration affaires(String authz) {
+        ClientIntegration c = client(authz);
+        if (c.lecteurJournal()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Client SIEM : lecture du journal seulement.");
+        }
+        return c;
     }
 
     /** Jeton valide d'un client actif, dont l'organisation a le module souscrit. */

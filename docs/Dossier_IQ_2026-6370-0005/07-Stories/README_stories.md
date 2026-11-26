@@ -36,3 +36,16 @@ Stories issues de l'addenda 4 (2026-11-19, détail : [impact_addenda_4.md](../02
 ✅ RST-36 acheminement selon type, unité, risque. Réalisées le 2026-11-20 (§ 3 de l'analyse) : ✅ RST-37 PDF/A-2b et PAdES-B-LTA ·
 ✅ RST-38 gabarits Word d'IQ · ✅ RST-39 comptes de secours · ✅ RST-40 tableau de bord et « Mes trousses » paginés ·
 ✅ RST-41 départ d'un employé (question P3). Validés dans les bacs à sable `infra/bacs-a-sable` (ICP, Gotenberg, veraPDF, pyHanko).
+
+Stories issues de l'Annexe 10 (fichier Excel reçu le 2026-11-25, détail et critères :
+[couverture-annexe-10.md](../02-Analyse/couverture-annexe-10.md) § 4). Réalisées le 2026-11-25 :
+✅ RST-42 rapports personnalisables et exportables (AF-37, ADR-032) · ✅ RST-43 modification contrôlée des champs en cours
+et journal avant/après (AF-34, SEC-15, ADR-030) · ✅ RST-44 accès de l'exploitant aux données d'IQ verrouillé et encadré
+(SEC-17, ADR-031) · ✅🔌 RST-45 Microsoft 365 pour le module de signature : SharePoint/OneDrive et Teams (TI-01,
+obligatoire, ADR-029 ; recette sur le locataire d'IQ en attente) · ✅🔌 RST-46 événements de sécurité pour le SIEM d'IQ
+(TI-04, ADR-033 ; connecteur Sentinel à déployer chez IQ). Restent : 🟡 RST-47 compatibilité Safari iOS, iPadOS et Windows
+éprouvée (TI-11) · 🟡 RST-48 essai de 500 utilisateurs sur l'infrastructure cible (TI-12) · 🟡 RST-49 priorisation des
+trousses (AF-46) · 🟡 RST-50 participants en consultation ou en complétion seulement (AF-48) · 🟡 RST-51 comptage des
+documents et des pages signés (AF-49) · 🟡 RST-52 découverte des droits par API (TI-21) · ⏳ RST-53 intégration
+Microsoft Purview (SEC-27) · ⏳ RST-54 clé de chiffrement dédiée à IQ (SEC-28) · ⏳ RST-55 négociation assistée avec un
+tiers (IA-05, option).

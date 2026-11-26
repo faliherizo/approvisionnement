@@ -149,3 +149,11 @@ databaseChangeLog:
       file: db/changelog/changes/074-clm-document-statut-analyse.yaml
   - include:
       file: db/changelog/changes/075-vitrine-tenant.yaml
+  - include:
+      file: db/changelog/changes/076-clm-diffusion-m365.yaml
+  - include:
+      file: db/changelog/changes/077-clm-modification-en-cours.yaml
+  - include:
+      file: db/changelog/changes/078-clm-acces-soutien.yaml
+  - include:
+      file: db/changelog/changes/079-clm-rapport.yaml

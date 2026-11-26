@@ -41,10 +41,14 @@ public class ContexteClm {
         this.horloge = horloge;
     }
 
+    /**
+     * Organisation de la requête. Sans organisation (superadministrateur de l'exploitant), refus d'accès et non conflit :
+     * l'exploitant n'a aucun droit sur les données d'une organisation hors accès de soutien (Annexe 10, SEC-17 ; ADR-031).
+     */
     public Long tenant() {
         Long t = portee.courant();
         if (t == null) {
-            throw new IllegalStateException("Opération réservée à un espace tenant.");
+            throw new org.springframework.security.access.AccessDeniedException("Opération réservée à un espace tenant.");
         }
         return t;
     }

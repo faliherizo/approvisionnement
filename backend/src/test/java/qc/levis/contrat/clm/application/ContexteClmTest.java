@@ -13,6 +13,7 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.access.AccessDeniedException;
 import qc.levis.contrat.clm.application.port.PerimetreUtilisateur;
 
 /** Contexte partagé : refus hors tenant, horloge à la milliseconde (empreintes rejouables), JSON tolérant en lecture. */
@@ -23,9 +24,10 @@ class ContexteClmTest {
 
     @Test
     void une_operation_clm_hors_espace_tenant_est_refusee() {
-        assertThrows(IllegalStateException.class, ctx::tenant);
+        // Refus d'accès (403) et non conflit : le superadministrateur n'a aucun droit sur les données (Annexe 10, SEC-17).
+        assertThrows(AccessDeniedException.class, ctx::tenant);
         assertEquals(7L, ctx.dansTenant(7L, ctx::tenant));
-        assertThrows(IllegalStateException.class, ctx::tenant, "le tenant du traitement ne survit pas au traitement");
+        assertThrows(AccessDeniedException.class, ctx::tenant, "le tenant du traitement ne survit pas au traitement");
     }
 
     @Test

@@ -120,6 +120,13 @@ function Contenu() {
     majChamp(i, 'position', { ...p, x, y })
     setInfo(t('clm.mo.deplace', { x, y }))
   }
+  // Annexe 10, AF-34 : champs modifiables une fois le parcours lancé ; sans règle, un champ est figé au lancement.
+  const regles = m.modificationsEnCours || []
+  const regleDe = (cle) => regles.find((r) => r.champ === cle)
+  const majRegle = (cle, patch) => setM({ ...m, modificationsEnCours: regleDe(cle)
+    ? regles.map((r) => (r.champ === cle ? { ...r, ...patch } : r))
+    : [...regles, { champ: cle, etapes: [], roleRequis: '', effet: 'NOUVEAU_CYCLE', ...patch }] })
+  const basculerRegle = (cle, actif) => (actif ? majRegle(cle, {}) : setM({ ...m, modificationsEnCours: regles.filter((r) => r.champ !== cle) }))
   const ajouterChamp = () => { setM({ ...m, champs: [...champs, { ...CHAMP_VIDE, cle: `champ${champs.length + 1}` }] }); setChoisi(champs.length) }
   const positionner = () => {
     if (choisi == null) { setErreur(t('clm.mo.choisirChamp')); return }
@@ -135,7 +142,8 @@ function Contenu() {
     setErreur(null)
     try {
       const corps = { nom: m.nom, categorie: m.categorie, groupes: m.groupes, corps: m.corps, champs: champs.map(nettoyerChamp),
-        clauses: m.clauses.map((c) => ({ ...c, conditions: (c.conditions || []).filter((x) => x.champ) })), parcours: versRequete(parcours), verrou: m.verrou }
+        clauses: m.clauses.map((c) => ({ ...c, conditions: (c.conditions || []).filter((x) => x.champ) })), parcours: versRequete(parcours), verrou: m.verrou,
+        modificationsEnCours: m.modificationsEnCours || [] }
       const { data } = await api.put(`/clm/modeles/${id}`, corps)
       setM(data); setParcours(depuisRequete(data.parcours)); setInfo(t('clm.mo.enregistre'))
       return true
@@ -264,6 +272,35 @@ function Contenu() {
                     ) : <button type="button" className="secondary" onClick={() => majChamp(choisi, 'position', { page: 1, x: 10, y: 80, largeur: 30, hauteur: 8 })}>{t('clm.mo.positionner')}</button>}
                   </fieldset>
                 </fieldset>
+                {c.type !== 'SIGNATURE' && (() => {
+                  const r = regleDe(c.cle)
+                  return (
+                    <fieldset className="form-fieldset" data-maquette="UI-09" data-zone="07">
+                      <legend>{t('clm.mo.enCours')}</legend>
+                      <p className="muted">{t('clm.mo.enCoursAide')}</p>
+                      <label className="check-row"><input type="checkbox" checked={!!r} onChange={(e) => basculerRegle(c.cle, e.target.checked)} />{t('clm.mo.enCoursModifiable')}</label>
+                      {r && (
+                        <div className="form-grid">
+                          <label>{t('clm.mo.enCoursEffet')}
+                            <select value={r.effet} onChange={(e) => majRegle(c.cle, { effet: e.target.value })}>
+                              {['AUCUN', 'REPRISE_ETAPE', 'NOUVEAU_CYCLE'].map((x) => <option key={x} value={x}>{t(`clm.mo.effet.${x}`)}</option>)}
+                            </select></label>
+                          <label>{t('clm.mo.enCoursRole')} <span className="muted">{t('clm.mo.enCoursRoleAide')}</span>
+                            <input value={r.roleRequis || ''} onChange={(e) => majRegle(c.cle, { roleRequis: e.target.value.trim().toUpperCase() })} /></label>
+                          <fieldset className="form-fieldset col-2">
+                            <legend>{t('clm.mo.enCoursEtapes')}</legend>
+                            {parcours.filter((e) => e.cle).length === 0 ? <p className="muted">{t('clm.mo.enCoursToutesEtapes')}</p>
+                              : parcours.filter((e) => e.cle).map((e) => (
+                                <label key={e.cle} className="check-row"><input type="checkbox" checked={(r.etapes || []).includes(e.cle)}
+                                  onChange={(ev) => majRegle(c.cle, { etapes: ev.target.checked ? [...(r.etapes || []), e.cle] : (r.etapes || []).filter((x) => x !== e.cle) })} />
+                                  {t('clm.mo.enCoursEtape', { etape: e.libelle || e.cle })}</label>
+                              ))}
+                          </fieldset>
+                        </div>
+                      )}
+                    </fieldset>
+                  )
+                })()}
                 <div className="clm-apercu" aria-label={t('clm.mo.apercuChamp')} role="group" data-maquette="UI-09" data-zone="06">
                   <p className="muted">{t('clm.mo.apercuChamp')}</p>
                   <p><strong>{c.libelle || c.cle}</strong>{c.obligatoire ? ' *' : ''} · {t(`clm.mo.type.${c.type}`)}{c.type === 'LISTE' && c.options?.length ? ` (${c.options.join(' / ')})` : ''}</p>

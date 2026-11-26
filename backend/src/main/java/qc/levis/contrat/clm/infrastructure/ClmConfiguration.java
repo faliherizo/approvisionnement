@@ -13,12 +13,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import qc.levis.contrat.clm.application.ClmProprietes;
+import qc.levis.contrat.clm.application.DepotsM365Service;
 import qc.levis.contrat.clm.application.RappelService;
 import qc.levis.contrat.clm.application.RappelsExternesService;
 import qc.levis.contrat.clm.application.SalesforceService;
 import qc.levis.contrat.clm.application.port.AlertesExploitation;
 
-/** Câblage du module CLM : propriétés, horloge et planificateur des rappels et du relais Salesforce. */
+/** Câblage du module CLM : propriétés, horloge et planificateur des rappels, du relais Salesforce et des dépôts Microsoft 365. */
 @Configuration
 @EnableConfigurationProperties(ClmProprietes.class)
 public class ClmConfiguration {
@@ -44,13 +45,15 @@ public class ClmConfiguration {
         private final RappelService rappels;
         private final SalesforceService salesforce;
         private final RappelsExternesService rappelsExternes;
+        private final DepotsM365Service depotsM365;
         private final AlertesExploitation alertes;
 
         public Planificateur(RappelService rappels, SalesforceService salesforce, RappelsExternesService rappelsExternes,
-                             AlertesExploitation alertes) {
+                             DepotsM365Service depotsM365, AlertesExploitation alertes) {
             this.rappels = rappels;
             this.salesforce = salesforce;
             this.rappelsExternes = rappelsExternes;
+            this.depotsM365 = depotsM365;
             this.alertes = alertes;
         }
 
@@ -60,6 +63,7 @@ public class ClmConfiguration {
             executer("rappels et échéances", rappels::executer);
             executer("relais Salesforce", salesforce::relayer);
             executer("rappels aux systèmes externes", rappelsExternes::relayer);
+            executer("dépôts Microsoft 365", depotsM365::relayer);
         }
 
         private void executer(String tache, Runnable travail) {

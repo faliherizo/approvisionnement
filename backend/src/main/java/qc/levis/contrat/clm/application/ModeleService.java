@@ -23,6 +23,7 @@ import qc.levis.contrat.clm.application.repository.TrousseRepository;
 import qc.levis.contrat.clm.domain.Habilitations;
 import qc.levis.contrat.clm.domain.Modele;
 import qc.levis.contrat.clm.domain.ModeleContrat;
+import qc.levis.contrat.clm.domain.ModificationEnCours;
 import qc.levis.contrat.clm.domain.Parcours;
 
 /**
@@ -32,6 +33,8 @@ import qc.levis.contrat.clm.domain.Parcours;
 @Service
 public class ModeleService {
 
+    static final TypeReference<List<ModificationEnCours.Regle>> MODIFICATIONS = new TypeReference<>() {
+    };
     static final TypeReference<List<Modele.Clause>> CLAUSES = new TypeReference<>() {
     };
 
@@ -89,6 +92,8 @@ public class ModeleService {
                 ctx.ecrire(req.champs() == null ? List.of() : req.champs()),
                 ctx.ecrire(req.clauses() == null ? List.of() : req.clauses()),
                 ctx.ecrire(req.parcours() == null ? List.of() : req.parcours())), ctx.maintenant());
+        m.definirModificationsEnCours(ctx.ecrire(req.modificationsEnCours() == null ? List.of() : req.modificationsEnCours()),
+                ctx.maintenant());
     }
 
     public ClmDto.Validation valider(Long id, Habilitations.Acteur acteur) {
@@ -106,6 +111,8 @@ public class ModeleService {
         }
         erreurs.addAll(rolesHorsListe(champs(m)));
         List<ClmDto.EtapeRequest> parcours = ctx.lire(m.getParcoursJson(), TrousseService.PARCOURS, List.of());
+        erreurs.addAll(ModificationEnCours.valider(modifications(m), cles,
+                parcours.stream().map(ClmDto.EtapeRequest::cle).collect(Collectors.toSet())));
         if (!parcours.isEmpty()) {
             try {
                 List<Parcours.DefinitionEtape> defs = TrousseService.definitions(parcours);
@@ -159,7 +166,7 @@ public class ModeleService {
     @Transactional
     public ClmDto.ModeleVue publier(Long id, Habilitations.Acteur acteur) {
         ModeleContrat m = exigerAdmin(id, acteur);
-        if (m.getProprietaire().equalsIgnoreCase(acteur.id()) && !acteur.roles().contains("SUPERADMIN")) {
+        if (m.getProprietaire().equalsIgnoreCase(acteur.id())) {
             throw new IllegalStateException("Séparation des responsabilités : l'auteur ne publie pas son propre modèle.");
         }
         for (ModeleContrat ancien : modeles.findByTenantIdAndCleModeleAndStatut(m.getTenantId(), m.getCleModele(), Modele.Statut.PUBLIE)) {
@@ -189,6 +196,7 @@ public class ModeleService {
                 source.getNom(), acteur.id(), ctx.maintenant());
         m.modifier(source.getNom(), source.getCategorie(), source.getGroupes(), source.getCorps(),
                 new ModeleContrat.Contenu(source.getChampsJson(), source.getClausesJson(), source.getParcoursJson()), ctx.maintenant());
+        m.definirModificationsEnCours(source.getModificationsJson(), ctx.maintenant());
         ModeleContrat enregistre = modeles.save(m);
         gabarits.findByModeleIdAndTenantId(source.getId(), source.getTenantId())
                 .ifPresent(g -> gabarits.save(g.pour(enregistre, ctx.maintenant())));
@@ -242,7 +250,11 @@ public class ModeleService {
                 m.getProprietaire(), m.getGroupes(), m.getCorps(), champs(m), clauses(m),
                 ctx.lire(m.getParcoursJson(), TrousseService.PARCOURS, List.of()), m.getMajLe(), m.getVerrou(),
                 trousses.countByTenantIdAndModeleId(m.getTenantId(), m.getId()),
-                gabarits.nomParModeleIdEtTenantId(m.getId(), m.getTenantId()).orElse(null));
+                gabarits.nomParModeleIdEtTenantId(m.getId(), m.getTenantId()).orElse(null), modifications(m));
+    }
+
+    List<ModificationEnCours.Regle> modifications(ModeleContrat m) {
+        return ctx.lire(m.getModificationsJson(), MODIFICATIONS, List.of());
     }
 
     private static String exigerNom(ClmDto.ModeleRequest req) {

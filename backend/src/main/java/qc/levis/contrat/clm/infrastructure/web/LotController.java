@@ -12,7 +12,7 @@ import qc.levis.contrat.clm.application.dto.ClmDto;
 /** Signature en lot initiée depuis la plateforme (addenda 1, AF-47) : mêmes profils que la création d'une trousse. */
 @RestController
 @RequestMapping("/api/clm/lots")
-@PreAuthorize("@modules.actif('clm') and hasAnyRole('REDACTEUR','APPRO','JURIDIQUE','DIRECTION','ADMIN','ADMIN_AFFAIRES','SUPERADMIN')")
+@PreAuthorize("@modules.actif('clm') and hasAnyRole('REDACTEUR','APPRO','JURIDIQUE','DIRECTION','ADMIN','ADMIN_AFFAIRES')")
 public class LotController {
 
     private final DemandesSignatureService demandes;

@@ -1,0 +1,810 @@
+{
+  "appelOffres": "Investissement Québec — AO 2026-6370-0005 (Annexe 10)",
+  "catalogue": "iq",
+  "scenarios": [
+    {
+      "id": "E2E-AX-IQ-01",
+      "titre": "TI-01 (RST-45) : l'administration technique règle le dépôt Microsoft 365 ; une trousse terminée est déposée dans SharePoint avec sa preuve, puis annoncée dans Teams",
+      "exigences": [
+        "IQ-C-69",
+        "IQ-A-07"
+      ],
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "aller": "/clm/admin/microsoft-365"
+        },
+        {
+          "voirTitre": "Microsoft 365 : SharePoint, OneDrive et Teams"
+        },
+        {
+          "voir": "Connexion Microsoft 365"
+        },
+        {
+          "cocher": "Déposer les trousses terminées dans Microsoft 365"
+        },
+        {
+          "choisir": {
+            "Bibliothèque de dépôt": "Site SharePoint de l’organisation"
+          }
+        },
+        {
+          "remplir": {
+            "Dossier de dépôt": "Contrats signés E2E"
+          }
+        },
+        {
+          "cocher": "Déposer aussi le dossier de preuve (ZIP)"
+        },
+        {
+          "cocher": "Annoncer l’achèvement dans le canal Teams"
+        },
+        {
+          "cliquer": "Enregistrer le dépôt"
+        },
+        {
+          "voir": "Dépôt Microsoft 365 enregistré."
+        },
+        {
+          "preparer": {
+            "description": "Trousse d'un document validée par le validateur : terminée, son document est verrouillé en version signée",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Dépôt M365 ${unique}",
+                  "risque": "FAIBLE"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id",
+                  "reference": "$.resume.reference"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "profil": "initiateur IQ",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "entente.pdf",
+                    "type": "application/pdf"
+                  }
+                }
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+                "profil": "initiateur IQ",
+                "corps": [
+                  {
+                    "cle": "v1",
+                    "libelle": "Validation",
+                    "phase": 1,
+                    "type": "VALIDATION",
+                    "affectations": [
+                      {
+                        "type": "UTILISATEUR",
+                        "valeur": "validateur@iq.example"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/lancer",
+                "profil": "initiateur IQ",
+                "corps": {},
+                "capturer": {
+                  "etape": "$.etapes[0].id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/etapes/${etape}/decider",
+                "profil": "validateur IQ",
+                "corps": {
+                  "decision": "APPROUVE"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/admin/microsoft-365"
+        },
+        {
+          "cliquer": "Déposer maintenant"
+        },
+        {
+          "voir": "dépôt(s) effectué(s)."
+        },
+        {
+          "voir": [
+            "${reference}",
+            "Document signé",
+            "Dossier de preuve",
+            "Avis Teams"
+          ]
+        },
+        {
+          "voir": "sim://sharepoint/Contrats signés E2E/"
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "decocher": "Déposer les trousses terminées dans Microsoft 365"
+        },
+        {
+          "cliquer": "Enregistrer le dépôt"
+        },
+        {
+          "voir": "Dépôt Microsoft 365 enregistré."
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-02",
+      "titre": "AF-34 et SEC-15 (RST-43) : le modèle déclare les champs modifiables en cours ; en traitement, un champ figé est refusé, une modification permise relance le cycle et le journal nomme le champ, l'ancienne et la nouvelle valeur",
+      "exigences": [
+        "IQ-S-05",
+        "IQ-A-18",
+        "IQ-C-49"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "cliquer": "Créer un modèle"
+        },
+        {
+          "remplir": {
+            "Nom": "AF34 E2E ${unique}",
+            "Corps du contrat": "Convention {{programme}} de {{montant}} $. {{clauses}}"
+          }
+        },
+        {
+          "cliquer": "Ajouter un champ"
+        },
+        {
+          "remplir": {
+            "Nom technique": "programme",
+            "Libellé": "Programme"
+          }
+        },
+        {
+          "cliquer": "Ajouter un champ"
+        },
+        {
+          "remplir": {
+            "Nom technique": "montant",
+            "Libellé": "Montant"
+          }
+        },
+        {
+          "voir": "Modification en cours de traitement"
+        },
+        {
+          "cocher": "Modifiable en cours de traitement"
+        },
+        {
+          "choisir": {
+            "Effet sur les approbations obtenues": "Nouveau cycle : toutes les approbations sont invalidées"
+          }
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "voir": "Brouillon enregistré."
+        },
+        {
+          "cliquer": "Soumettre à publication"
+        },
+        {
+          "voir": "soumis à publication"
+        },
+        {
+          "connecter": "administration principale IQ"
+        },
+        {
+          "aller": "/clm/modeles"
+        },
+        {
+          "dansLaLigne": {
+            "texte": "AF34 E2E ${unique}",
+            "cliquer": "Publier"
+          }
+        },
+        {
+          "voir": "« AF34 E2E ${unique} » publié."
+        },
+        {
+          "connecter": "initiateur IQ"
+        },
+        {
+          "preparer": {
+            "description": "Trousse issue du modèle, valeurs saisies en brouillon, document joint et parcours lancé (validation en cours)",
+            "etapes": [
+              {
+                "appel": "GET /api/clm/modeles?statut=PUBLIE",
+                "capturer": {
+                  "modele": "$[?nom=AF34 E2E ${unique}].id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses",
+                "corps": {
+                  "titre": "AF34 ${unique}",
+                  "modeleId": "${modele}",
+                  "risque": "FAIBLE"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id"
+                }
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${trousse}/valeurs",
+                "corps": {
+                  "valeurs": {
+                    "programme": "Essor",
+                    "montant": "50000"
+                  }
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "convention.pdf",
+                    "type": "application/pdf"
+                  }
+                }
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+                "corps": [
+                  {
+                    "cle": "v1",
+                    "libelle": "Validation",
+                    "phase": 1,
+                    "type": "VALIDATION",
+                    "affectations": [
+                      {
+                        "type": "UTILISATEUR",
+                        "valeur": "validateur@iq.example"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/lancer",
+                "corps": {}
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "cliquer": "Corriger la valeur — Programme"
+        },
+        {
+          "remplir": {
+            "Nouvelle valeur — Programme": "Autre programme"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Corriger la valeur — Programme",
+            "cliquer": "Enregistrer"
+          }
+        },
+        {
+          "voir": "« Programme » n'est pas modifiable en cours de traitement."
+        },
+        {
+          "cliquer": "Annuler"
+        },
+        {
+          "cliquer": "Corriger la valeur — Montant"
+        },
+        {
+          "remplir": {
+            "Nouvelle valeur — Montant": "60000"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Corriger la valeur — Montant",
+            "cliquer": "Enregistrer"
+          }
+        },
+        {
+          "voir": "Valeur de « Montant » enregistrée."
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Historique"
+          }
+        },
+        {
+          "voir": [
+            "Valeur modifiée (avant → après)",
+            "« Montant » (montant) : « 50000 » → « 60000 »",
+            "Nouveau cycle (modification en cours de parcours)"
+          ]
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-03",
+      "titre": "SEC-17 (RST-44) : l'administration d'affaires d'IQ accorde un accès de soutien à l'exploitant, voit sa consultation au journal de la trousse, puis le révoque ; sans accès, l'exploitant ne lit rien",
+      "exigences": [
+        "IQ-D-16",
+        "IQ-A-26"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Une trousse d'IQ, et une demande d'accès de soutien de l'exploitant, refusée tant qu'elle n'est pas accordée",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Soutien ${unique}",
+                  "risque": "FAIBLE"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id",
+                  "reference": "$.resume.reference"
+                }
+              },
+              {
+                "appel": "GET /api/superadmin/tenants",
+                "profil": "superadmin",
+                "capturer": {
+                  "iq": "$[?slug=iq].id"
+                }
+              },
+              {
+                "appel": "GET /api/clm/trousses/${trousse}",
+                "profil": "superadmin",
+                "statut": 403,
+                "note": "l'exploitant ne lit aucune trousse"
+              },
+              {
+                "appel": "POST /api/superadmin/tenants/${iq}/soutien-clm/demandes",
+                "profil": "superadmin",
+                "corps": {
+                  "motif": "Billet E2E ${unique}",
+                  "dureeHeures": 2
+                },
+                "statut": 201
+              },
+              {
+                "appel": "GET /api/superadmin/tenants/${iq}/soutien-clm/trousses/${reference}",
+                "profil": "superadmin",
+                "statut": 403,
+                "note": "demandé n'est pas accordé"
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/admin/soutien"
+        },
+        {
+          "voirTitre": "Accès de soutien de l’exploitant"
+        },
+        {
+          "voir": "Billet E2E ${unique}"
+        },
+        {
+          "cliquer": "Accorder l’accès à superadmin@plateforme.ca"
+        },
+        {
+          "voir": "Accès accordé à superadmin@plateforme.ca."
+        },
+        {
+          "preparer": {
+            "description": "Pendant l'accès accordé, l'exploitant consulte le diagnostic de la trousse, sans son contenu",
+            "etapes": [
+              {
+                "appel": "GET /api/superadmin/tenants/${iq}/soutien-clm/trousses/${reference}",
+                "profil": "superadmin",
+                "verifier": [
+                  {
+                    "chemin": "$.reference",
+                    "egalTexte": "${reference}"
+                  },
+                  {
+                    "texteAbsent": "Soutien ${unique}"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Historique"
+          }
+        },
+        {
+          "voir": [
+            "Consultation de soutien de l’exploitant",
+            "Billet E2E ${unique}"
+          ]
+        },
+        {
+          "aller": "/clm/admin/soutien"
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "cliquer": "Révoquer l’accès de superadmin@plateforme.ca"
+        },
+        {
+          "voir": "Accès de superadmin@plateforme.ca révoqué."
+        },
+        {
+          "preparer": {
+            "description": "Révoqué : l'exploitant ne lit plus rien",
+            "etapes": [
+              {
+                "appel": "GET /api/superadmin/tenants/${iq}/soutien-clm/trousses/${reference}",
+                "profil": "superadmin",
+                "statut": 403
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-04",
+      "titre": "SEC-17 (RST-44) : depuis son espace, l'exploitant demande un accès de soutien motivé et limité ; sans accord de l'organisation, le diagnostic lui est refusé",
+      "exigences": [
+        "IQ-D-16"
+      ],
+      "profil": "superadmin",
+      "etapes": [
+        {
+          "aller": "/superadmin"
+        },
+        {
+          "voir": "Accès de soutien aux données CLM d'une organisation"
+        },
+        {
+          "choisir": {
+            "Accès de soutien aux données CLM d'une organisation » Organisation": "Investissement Québec"
+          }
+        },
+        {
+          "remplir": {
+            "Motif (billet, symptôme)": "Billet UI ${unique}",
+            "Durée demandée (heures)": "1"
+          }
+        },
+        {
+          "cliquer": "Demander l'accès de soutien"
+        },
+        {
+          "voir": [
+            "Demande transmise à l'organisation.",
+            "Billet UI ${unique}",
+            "En attente de l'organisation"
+          ]
+        },
+        {
+          "remplir": {
+            "Référence de la trousse": "TR-INCONNUE"
+          }
+        },
+        {
+          "cliquer": "Consulter le diagnostic"
+        },
+        {
+          "voir": "Aucun accès de soutien accordé par l'organisation, ou accès expiré."
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-05",
+      "titre": "AF-37 (RST-42) : l'administration d'affaires crée un rapport de délais moyens, le modifie, puis l'exporte en CSV et en Excel",
+      "exigences": [
+        "IQ-C-43",
+        "IQ-A-22"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Trousse d'un document validée par le validateur : lancée puis terminée, son délai de traitement est connu",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Rapport ${unique}",
+                  "risque": "FAIBLE"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id",
+                  "reference": "$.resume.reference"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "profil": "initiateur IQ",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "entente.pdf",
+                    "type": "application/pdf"
+                  }
+                }
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+                "profil": "initiateur IQ",
+                "corps": [
+                  {
+                    "cle": "v1",
+                    "libelle": "Validation",
+                    "phase": 1,
+                    "type": "VALIDATION",
+                    "affectations": [
+                      {
+                        "type": "UTILISATEUR",
+                        "valeur": "validateur@iq.example"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/lancer",
+                "profil": "initiateur IQ",
+                "corps": {},
+                "capturer": {
+                  "etape": "$.etapes[0].id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/etapes/${etape}/decider",
+                "profil": "validateur IQ",
+                "corps": {
+                  "decision": "APPROUVE"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/admin/rapports"
+        },
+        {
+          "voirTitre": "Rapports personnalisables"
+        },
+        {
+          "cliquer": "Nouveau rapport"
+        },
+        {
+          "remplir": {
+            "Nom du rapport": "Délais E2E ${unique}",
+            "Période (jours glissants)": "30"
+          }
+        },
+        {
+          "choisir": {
+            "Type de rapport": "Délais de traitement (moyenne)"
+          }
+        },
+        {
+          "cocher": "Référence"
+        },
+        {
+          "cocher": "Lancée le"
+        },
+        {
+          "cocher": "Délai (h)"
+        },
+        {
+          "cliquer": "Enregistrer le rapport"
+        },
+        {
+          "voir": "Rapport « Délais E2E ${unique} » enregistré."
+        },
+        {
+          "voir": [
+            "${reference}",
+            "Moyenne ("
+          ]
+        },
+        {
+          "cliquer": "Modifier — Délais E2E ${unique}"
+        },
+        {
+          "cocher": "Terminée le"
+        },
+        {
+          "cliquer": "Enregistrer le rapport"
+        },
+        {
+          "voir": "Rapport « Délais E2E ${unique} » enregistré."
+        },
+        {
+          "voir": "Terminée le"
+        },
+        {
+          "telecharger": "Exporter en CSV — Délais E2E ${unique}"
+        },
+        {
+          "telecharger": "Exporter en Excel — Délais E2E ${unique}"
+        },
+        {
+          "voir": "exporté (XLSX)."
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-06",
+      "titre": "AF-37 (RST-42) : le relevé d'utilisation s'exporte en CSV et en Excel",
+      "exigences": [
+        "IQ-C-43"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "aller": "/clm/admin/journal"
+        },
+        {
+          "voir": "Exporter le relevé (CSV)"
+        },
+        {
+          "telecharger": "Exporter le relevé (CSV)"
+        },
+        {
+          "telecharger": "Exporter le relevé (Excel)"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-07",
+      "titre": "TI-04 (RST-46) : l'administration technique crée un client SIEM ; Microsoft Sentinel lit le journal d'audit par curseur (ASIM, CEF) avec son jeton, sans session, et ne peut rien d'autre",
+      "exigences": [
+        "IQ-D-19"
+      ],
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "aller": "/clm/admin/integrations"
+        },
+        {
+          "remplir": {
+            "Nouveau client d’intégration » Nom": "Sentinel E2E ${unique}"
+          }
+        },
+        {
+          "choisir": {
+            "Nouveau client d’intégration » Système": "SIEM (Microsoft Sentinel) — lecture du journal seulement"
+          }
+        },
+        {
+          "voir": "ne déclenche aucune signature"
+        },
+        {
+          "cliquer": "Créer le client"
+        },
+        {
+          "voir": "Client « Sentinel E2E ${unique} » créé."
+        },
+        {
+          "lire": {
+            "selecteur": ".clm-info-statique .clm-dl div:nth-child(1) code",
+            "variable": "clientId"
+          }
+        },
+        {
+          "lire": {
+            "selecteur": ".clm-info-statique .clm-dl div:nth-child(2) code",
+            "variable": "secret"
+          }
+        },
+        {
+          "preparer": {
+            "description": "Le SIEM obtient un jeton (client credentials) puis lit le journal page par page ; il ne crée aucune trousse",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/integration/oauth/token",
+                "anonyme": true,
+                "formulaire": {
+                  "grant_type": "client_credentials",
+                  "client_id": "${clientId}",
+                  "client_secret": "${secret}"
+                },
+                "capturer": {
+                  "jeton": "$.access_token"
+                }
+              },
+              {
+                "appel": "GET /api/clm/integration/v1/journal?apres=0&limite=50",
+                "anonyme": true,
+                "entetes": {
+                  "Authorization": "Bearer ${jeton}"
+                },
+                "capturer": {
+                  "curseur": "$.curseurSuivant"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.evenements[0].EventVendor",
+                    "egalTexte": "Vina"
+                  },
+                  {
+                    "chemin": "$.evenements[0].EventSchema",
+                    "egalTexte": "AuditEvent"
+                  },
+                  {
+                    "texte": "CEF:0|Vina|CLM|1.0|"
+                  }
+                ]
+              },
+              {
+                "appel": "GET /api/clm/integration/v1/journal?apres=${curseur}&limite=50",
+                "anonyme": true,
+                "entetes": {
+                  "Authorization": "Bearer ${jeton}"
+                }
+              },
+              {
+                "appel": "POST /api/clm/integration/v1/trousses",
+                "anonyme": true,
+                "entetes": {
+                  "Authorization": "Bearer ${jeton}"
+                },
+                "corps": {},
+                "statut": 403
+              }
+            ]
+          }
+        },
+        {
+          "cliquer": "J’ai copié les valeurs"
+        },
+        {
+          "voir": "Sentinel E2E ${unique}"
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    }
+  ]
+}

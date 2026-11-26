@@ -28,7 +28,7 @@ import qc.levis.contrat.clm.domain.Trousse;
  * porte une clé d'idempotence, et est relayé avec reprises.
  */
 @Service
-public class RappelsExternesService {
+public class RappelsExternesService implements AbonneTransition {
 
     private static final Logger log = LoggerFactory.getLogger(RappelsExternesService.class);
 

@@ -31,6 +31,7 @@ import qc.levis.contrat.clm.domain.Identite;
 import qc.levis.contrat.clm.domain.Langue;
 import qc.levis.contrat.clm.domain.Invitation;
 import qc.levis.contrat.clm.domain.Modele;
+import qc.levis.contrat.clm.domain.ModificationEnCours;
 import qc.levis.contrat.clm.domain.Suggestions;
 import qc.levis.contrat.clm.domain.ModeleContrat;
 import qc.levis.contrat.clm.domain.ParametresClm;
@@ -261,25 +262,95 @@ public class TrousseService {
         if (champs.isEmpty()) {
             throw new IllegalStateException("Aucun modèle associé : la trousse n'a pas de champ à compléter.");
         }
+        Map<String, Preremplissage.Valeur> avant = valeurs(t);
         Map<String, Object> manuelles = new LinkedHashMap<>();
-        valeurs(t).forEach((cle, v) -> {
+        avant.forEach((cle, v) -> {
             if (v.provenance() == Preremplissage.Provenance.MANUEL) {
                 manuelles.put(cle, v.valeur());
             }
         });
-        List<String> erreurs = appliquerSaisie(champs, req.valeurs() == null ? Map.of() : req.valeurs(), manuelles);
+        Map<String, Object> saisie = req.valeurs() == null ? Map.of() : req.valeurs();
+        List<String> erreurs = appliquerSaisie(champs, saisie, manuelles);
         if (!erreurs.isEmpty()) {
             throw new IllegalArgumentException(String.join(" ", erreurs));
         }
+        List<Changement> changements = changements(champs, avant, saisie);
+        ModificationEnCours.Effet effet = controlerEnCours(t, changements, acteur);
+        ClmDto.PreremplissageVue vue;
         if (t.getSource() == Trousse.Source.SALESFORCE) {
-            return preremplir(t, t.getSfDossierId(), manuelles, acteur.id());
+            vue = preremplir(t, t.getSfDossierId(), manuelles, acteur.id());
+        } else {
+            Preremplissage.Resultat r = Preremplissage.appliquer(champs, Map.of(), null, manuelles);
+            t.setValeursJson(ctx.ecrire(r.valeurs()));
+            t.toucher(ctx.maintenant());
+            trousses.save(t);
+            journal.consigner(t, "VALEURS_SAISIES", acteur.id(), r.valeurs().size() + " valeur(s), " + r.manquants().size() + " manquant(s)");
+            vue = new ClmDto.PreremplissageVue(null, null, Map.of(), null, correspondances(champs, r), r.manquants(), r.conflits());
         }
-        Preremplissage.Resultat r = Preremplissage.appliquer(champs, Map.of(), null, manuelles);
-        t.setValeursJson(ctx.ecrire(r.valeurs()));
-        t.toucher(ctx.maintenant());
-        trousses.save(t);
-        journal.consigner(t, "VALEURS_SAISIES", acteur.id(), r.valeurs().size() + " valeur(s), " + r.manquants().size() + " manquant(s)");
-        return new ClmDto.PreremplissageVue(null, null, Map.of(), null, correspondances(champs, r), r.manquants(), r.conflits());
+        journaliser(t, changements, effet, acteur);
+        String motif = "Champ modifié en cours de traitement : " + String.join(", ", changements.stream().map(Changement::libelle).toList());
+        switch (effet) {
+            case NOUVEAU_CYCLE -> parcours.nouveauCycle(t, acteur.id(), motif);
+            case REPRISE_ETAPE -> parcours.reprendreEtape(t, acteur.id(), motif);
+            case AUCUN -> { }
+        }
+        return vue;
+    }
+
+    /** Champ dont la valeur change : nommé, avec l'ancienne et la nouvelle valeur (SEC-15). */
+    record Changement(String cle, String libelle, String avant, String apres) {
+    }
+
+    private static List<Changement> changements(List<Modele.Champ> champs, Map<String, Preremplissage.Valeur> avant, Map<String, Object> saisie) {
+        List<Changement> res = new ArrayList<>();
+        for (Modele.Champ c : champs) {
+            if (!saisie.containsKey(c.cle())) {
+                continue;
+            }
+            Preremplissage.Valeur v = avant.get(c.cle());
+            String ancienne = v == null || v.valeur() == null ? "" : String.valueOf(v.valeur());
+            Object brute = saisie.get(c.cle());
+            String nouvelle = brute == null ? "" : String.valueOf(brute).trim();
+            if (!ancienne.equals(nouvelle)) {
+                res.add(new Changement(c.cle(), c.libelle(), ancienne, nouvelle));
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Une fois le parcours lancé, seuls les champs que le modèle déclare modifiables le sont, aux étapes et par le rôle
+     * prévus (Annexe 10, AF-34) ; l'effet le plus lourd des champs modifiés s'applique aux décisions déjà obtenues.
+     */
+    private ModificationEnCours.Effet controlerEnCours(Trousse t, List<Changement> changements, Habilitations.Acteur acteur) {
+        if (!t.enTraitement() || changements.isEmpty()) {
+            return ModificationEnCours.Effet.AUCUN;
+        }
+        Map<String, String> libelles = new LinkedHashMap<>();
+        changements.forEach(c -> libelles.put(c.cle(), c.libelle()));
+        ModificationEnCours.Verdict v = ModificationEnCours.autoriser(modificationsDuModele(t), libelles.keySet(), libelles,
+                parcours.etapesActives(t), acteur.roles());
+        if (!v.admis()) {
+            throw new IllegalStateException(String.join(" ", v.refus()));
+        }
+        return v.effet();
+    }
+
+    /** Un événement par champ modifié ; valeurs au journal scellé et au journal d'audit, jamais au journal technique. */
+    private void journaliser(Trousse t, List<Changement> changements, ModificationEnCours.Effet effet, Habilitations.Acteur acteur) {
+        String contexte = t.enTraitement()
+                ? " · en traitement, étape(s) " + String.join(", ", parcours.etapesActives(t).stream().sorted().toList()) + " · effet " + effet
+                : "";
+        for (Changement c : changements) {
+            journal.consignerConfidentiel(t, "VALEUR_MODIFIEE", acteur.id(),
+                    "« " + c.libelle() + " » (" + c.cle() + ") : « " + c.avant() + " » → « " + c.apres() + " »" + contexte);
+        }
+    }
+
+    List<ModificationEnCours.Regle> modificationsDuModele(Trousse t) {
+        return modeles.findByIdAndTenantId(t.getModeleId(), t.getTenantId())
+                .map(m -> ctx.lire(m.getModificationsJson(), ModeleService.MODIFICATIONS, List.<ModificationEnCours.Regle>of()))
+                .orElse(List.of());
     }
 
     private static List<String> appliquerSaisie(List<Modele.Champ> champs, Map<String, Object> saisie, Map<String, Object> manuelles) {
