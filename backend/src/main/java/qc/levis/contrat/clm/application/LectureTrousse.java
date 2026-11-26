@@ -126,13 +126,14 @@ public class LectureTrousse {
 
     public static ClmDto.DocumentVue document(DocumentTrousse d) {
         return new ClmDto.DocumentVue(d.getId(), d.getCleDocument(), d.getVersion(), d.getNom(), d.getType().name(), d.getTaille(),
-                d.getEmpreinte(), d.getStatut().name(), d.getAnalyse().name(), d.getAuteur(), d.getMotif(), d.getCreeLe());
+                d.getEmpreinte(), d.getStatut().name(), d.getAnalyse().name(), d.getAuteur(), d.getMotif(), d.getCreeLe(),
+                d.sensibilite() == null ? null : d.sensibilite().nom(), d.retention() == null ? null : d.retention().nom(), d.getPages());
     }
 
     public static ClmDto.ParticipantVue participant(Participant p) {
         return new ClmDto.ParticipantVue(p.getId(), p.getNom(), p.getCourriel(), p.getTelephone(), p.getRoleContrat(),
                 p.isExterne(), p.getNiveauIdentite().name(), p.getReponseIdentiteHash() != null, p.getLangue().name(), p.getQualite(),
-                p.getEntreprise(), p.isAutoriteRequise());
+                p.getEntreprise(), p.isAutoriteRequise(), p.getNature().name());
     }
 
     public static ClmDto.EvenementVue evenement(EvenementTrousse e) {

@@ -169,6 +169,27 @@
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : non — seulement préparée par l'API
 
+### E2E-AX-IQ-25 — SEC-28 (RST-54) : les documents d'IQ sont chiffrés par une clé dédiée à l'organisation ; l'administration technique pivote la clé sans interruption puis réenveloppe les documents, qui restent lisibles
+
+- **Profil** : administration technique IQ
+- **Exigences démontrées** : IQ-C-07, IQ-D-20
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Un document déposé par l'initiateur : la première écriture crée la clé de données de l'organisation
+2. Ouvrir l'écran `/clm/admin/chiffrement`
+3. Voir le titre « Chiffrement au repos »
+4. Voir « Clé de l’organisation », « Clé maîtresse active », « Active »
+5. Activer « Pivoter la clé »
+6. Voir « Rotation effectuée »
+7. Voir « Retirée (lecture seule) »
+8. Préparer par l'API : Après la rotation, le document chiffré par l'ancienne version reste lisible
+9. Activer « Réenvelopper les documents »
+10. Voir « Réenveloppement : »
+11. Préparer par l'API : Après le réenveloppement, le document se lit toujours en clair par l'API
+12. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
 ### E2E-IQ-30 — Isolation des données entre organisations et modules
 
 - **Profil** : initiateur IQ
@@ -2270,6 +2291,26 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
+### E2E-AX-IQ-10 — AF-46 (RST-49) : dans « Mes tâches », le validateur voit d'abord la tâche de la trousse critique et filtre ses tâches par priorité
+
+- **Profil** : validateur IQ
+- **Exigences démontrées** : IQ-C-25
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Deux trousses lancées vers le validateur, la basse d'abord, puis la critique
+2. Ouvrir l'écran `/clm/taches`
+3. Voir « Les tâches des trousses les plus prioritaires viennent en premier »
+4. Relever le texte affiché (`table.clm-table tbody tr:first-child:has-text("Critique")`) sous le nom `premiere`
+5. Choisir « Priorité de la trousse » : `Critique`
+6. Voir « Tâche critique ${unique} »
+7. Ne pas voir « Tâche basse ${unique} »
+8. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+9. Choisir « Priorité de la trousse » : `Basse`
+10. Voir « Tâche basse ${unique} »
+11. Ne pas voir « Tâche critique ${unique} »
+
 ### E2E-CB-IQ-04 — Circuit séquentiel saisi à l'écran : validation puis approbation, décisions commentées et historisées, suivi de l'état
 
 - **Profil** : initiateur IQ
@@ -3555,6 +3596,64 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
+### E2E-AX-IQ-13 — AF-48 (RST-50) : l'initiateur ajoute un participant « consulter seulement » ; au portail, celui-ci vérifie son identité, lit le document et atteste en avoir pris connaissance, sans signature ni champ ; l'attestation est consignée au journal
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-36
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (10 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Trousse au brouillon avec son document
+2. Ouvrir l'écran `/clm/trousses/${trousse}`
+3. Activer « Participants (0) » (tab)
+4. Saisir « Nom » : `Lise Gagnon` ; « Courriel » : `consulte.${unique}@agrinord.example`
+5. Choisir « Rôle dans le contrat » : `TEMOIN` ; « Nature de la participation » : `Consulter seulement` ; « Vérification d’identité » : `Question secrète`
+6. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Québec`
+7. Activer « Ajouter un signataire »
+8. Voir « Lise Gagnon », « Consulter seulement »
+9. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+10. Préparer par l'API : Étape de participation confiée au participant « consulter », trousse lancée, lien lu dans le courriel
+11. Ouvrir l'écran `/portail/${jeton}`
+12. Voir « vous êtes invité à prendre connaissance de la trousse »
+13. Saisir « Ville du siège ? » : `Québec`
+14. Activer « Vérifier mon identité »
+15. Voir le titre « 2. Lire et attester la prise de connaissance »
+16. Ne pas voir « Votre nom complet », « Informations à compléter »
+17. Activer « Lire / télécharger »
+18. Cocher « J’atteste avoir pris connaissance de chacun des documents. »
+19. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+20. Activer « Attester ma consultation »
+21. Voir « Merci, votre consultation est attestée », « Reçu de consultation »
+22. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+23. Préparer par l'API : L'attestation, et non une signature, termine l'étape et figure au journal scellé
+
+### E2E-AX-IQ-14 — AF-48 (RST-50) : dans une même trousse, un participant « compléter » soumet ses champs sans signer et un « signer » signe ; signer avec un lien « compléter » est refusé ; la preuve distingue la nature et l'action de chacun
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-36
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (5 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Modèle publié (un champ du deuxième signataire), trousse lancée avec un participant « compléter » et un « signer »
+2. Ouvrir l'écran `/portail/${jetonPaul}`
+3. Voir « vous êtes invité à compléter des informations de la trousse »
+4. Saisir « Ville du siège ? » : `Québec`
+5. Activer « Vérifier mon identité »
+6. Voir le titre « 2. Compléter vos informations »
+7. Ne pas voir « Votre nom complet »
+8. Préparer par l'API : Action hors nature : signer avec le lien d'un participant « compléter » est refusé (409)
+9. Saisir « Numéro d'entreprise » : `1170000001`
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+11. Activer « Soumettre mes informations »
+12. Voir « Merci, vos informations sont enregistrées », « Reçu de complétion »
+13. Préparer par l'API : Le participant « signer » vérifie son identité et signe au portail
+14. Ouvrir l'écran `/clm/trousses/${trousse}`
+15. Activer « Preuve » (tab)
+16. Voir « Nature : Compléter seulement · champs complétés », « Nature : Signer · signature apposée »
+17. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
 ### E2E-CB-IQ-15 — Champs d'un modèle : liste, date, case à cocher, zone de signature positionnée pour un rôle, clause conditionnelle vérifiée par l'essai
 
 - **Profil** : administration d'affaires IQ
@@ -3973,6 +4072,30 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
+### E2E-AX-IQ-08 — AF-46 (RST-49) : l'initiateur choisit la priorité critique d'une trousse à la création ; sans choix, la priorité se déduit du niveau de risque ; le détail l'affiche
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-D-07, IQ-C-41
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (4 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Prio E2E ${unique}`
+3. Choisir « Niveau de risque » : `Faible`
+4. Constater que « Priorité » propose « Selon le niveau de risque (automatique) », « Basse », « Normale », « Haute », « Critique »
+5. Choisir « Priorité » : `Critique`
+6. Voir « Une trousse haute est relancée deux fois plus souvent, une critique quatre fois. »
+7. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+8. Activer « Enregistrer le brouillon »
+9. Voir « enregistré. »
+10. Préparer par l'API : La trousse enregistrée à l'écran porte la priorité choisie ; une seconde, de risque élevé et sans priorité choisie, prend la priorité haute
+11. Ouvrir l'écran `/clm/trousses/${choisie}`
+12. Voir « Critique », « (choisie) »
+13. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+14. Ouvrir l'écran `/clm/trousses/${deduite}`
+15. Voir « Haute », « (selon le risque) »
+
 ### E2E-CB-IQ-13 — Rappels, copies et échéance réglés à la création d'une trousse, puis retrouvés au résumé
 
 - **Profil** : initiateur IQ
@@ -4092,6 +4215,30 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 3. Télécharger par « Exporter le relevé (CSV) » et obtenir un fichier non vide
 4. Télécharger par « Exporter le relevé (Excel) » et obtenir un fichier non vide
 5. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-AX-IQ-09 — AF-46 (RST-49) : l'administration d'affaires trie le suivi par priorité, la plus haute d'abord, le filtre sur une priorité et l'exporte avec la priorité
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-43, IQ-D-08
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (6 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Trois trousses : risque faible (priorité basse), priorité critique choisie, risque élevé (priorité haute), créées dans cet ordre
+2. Ouvrir l'écran `/clm/suivi`
+3. Saisir « Filtres état » Rechercher » : `${unique}`
+4. Choisir « Trier par » : `Priorité, la plus haute d’abord`
+5. Dans la section « Filtres état », activer « Rechercher »
+6. Relever le texte affiché (`table.clm-table tbody tr:first-child:has-text("Critique ${unique}")`) sous le nom `premiere`
+7. Relever le texte affiché (`table.clm-table tbody tr:nth-child(2):has-text("Haute ${unique}")`) sous le nom `deuxieme`
+8. Relever le texte affiché (`table.clm-table tbody tr:nth-child(3):has-text("Basse ${unique}")`) sous le nom `troisieme`
+9. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+10. Choisir « Priorité » : `Haute`
+11. Dans la section « Filtres état », activer « Rechercher »
+12. Voir « Haute ${unique} »
+13. Ne pas voir « Critique ${unique} », « Basse ${unique} »
+14. Télécharger par « Exporter (CSV) » et obtenir un fichier non vide
+15. Préparer par l'API : L'export du suivi porte la colonne de priorité, dans l'ordre demandé
 
 ### E2E-CB-IQ-13 — Rappels, copies et échéance réglés à la création d'une trousse, puis retrouvés au résumé
 
@@ -6645,6 +6792,27 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅🆕
 - **Démontrée à l'écran** : oui
 
+### E2E-AX-IQ-21 — SEC-27 (RST-53) : l'administration d'affaires choisit, dans le catalogue Purview du locataire, l'étiquette de sensibilité et de rétention d'un type de contrat ; le document déposé la porte et la conserve, puis la politique est retirée
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-66, IQ-D-20
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (5 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/purview`
+2. Voir le titre « Étiquettes Microsoft Purview »
+3. Choisir « Type de contrat » : `Convention d'aide financière`
+4. Choisir « Étiquette de sensibilité » : `Confidentiel`
+5. Choisir « Étiquette de rétention » : `Contrats - 7 ans (2557 jours)`
+6. Activer « Enregistrer la politique »
+7. Voir « Politique « Convention d'aide financière » enregistrée. »
+8. Voir « Confidentiel », « Contrats - 7 ans (2557 jours) »
+9. Préparer par l'API : L'initiateur dépose un document dans une trousse de ce type : il reçoit les étiquettes de la politique
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+11. Activer « Retirer — Convention d'aide financière »
+12. Voir « Politique « Convention d'aide financière » retirée. »
+
 ### E2E-ECR-IQ-07 — Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)
 
 - **Profil** : administration principale IQ
@@ -8052,6 +8220,30 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
+### E2E-AX-IQ-08 — AF-46 (RST-49) : l'initiateur choisit la priorité critique d'une trousse à la création ; sans choix, la priorité se déduit du niveau de risque ; le détail l'affiche
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-D-07, IQ-C-41
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (4 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Prio E2E ${unique}`
+3. Choisir « Niveau de risque » : `Faible`
+4. Constater que « Priorité » propose « Selon le niveau de risque (automatique) », « Basse », « Normale », « Haute », « Critique »
+5. Choisir « Priorité » : `Critique`
+6. Voir « Une trousse haute est relancée deux fois plus souvent, une critique quatre fois. »
+7. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+8. Activer « Enregistrer le brouillon »
+9. Voir « enregistré. »
+10. Préparer par l'API : La trousse enregistrée à l'écran porte la priorité choisie ; une seconde, de risque élevé et sans priorité choisie, prend la priorité haute
+11. Ouvrir l'écran `/clm/trousses/${choisie}`
+12. Voir « Critique », « (choisie) »
+13. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+14. Ouvrir l'écran `/clm/trousses/${deduite}`
+15. Voir « Haute », « (selon le risque) »
+
 ### E2E-CB-IQ-12 — Notifications configurables : l'administration désactive puis réactive l'invitation à signer par courriel
 
 - **Profil** : administration d'affaires IQ
@@ -8119,6 +8311,30 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Source** : 3.1.1
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
+
+### E2E-AX-IQ-09 — AF-46 (RST-49) : l'administration d'affaires trie le suivi par priorité, la plus haute d'abord, le filtre sur une priorité et l'exporte avec la priorité
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-43, IQ-D-08
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (6 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Trois trousses : risque faible (priorité basse), priorité critique choisie, risque élevé (priorité haute), créées dans cet ordre
+2. Ouvrir l'écran `/clm/suivi`
+3. Saisir « Filtres état » Rechercher » : `${unique}`
+4. Choisir « Trier par » : `Priorité, la plus haute d’abord`
+5. Dans la section « Filtres état », activer « Rechercher »
+6. Relever le texte affiché (`table.clm-table tbody tr:first-child:has-text("Critique ${unique}")`) sous le nom `premiere`
+7. Relever le texte affiché (`table.clm-table tbody tr:nth-child(2):has-text("Haute ${unique}")`) sous le nom `deuxieme`
+8. Relever le texte affiché (`table.clm-table tbody tr:nth-child(3):has-text("Basse ${unique}")`) sous le nom `troisieme`
+9. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+10. Choisir « Priorité » : `Haute`
+11. Dans la section « Filtres état », activer « Rechercher »
+12. Voir « Haute ${unique} »
+13. Ne pas voir « Critique ${unique} », « Basse ${unique} »
+14. Télécharger par « Exporter (CSV) » et obtenir un fichier non vide
+15. Préparer par l'API : L'export du suivi porte la colonne de priorité, dans l'ordre demandé
 
 ### E2E-CB-IQ-04 — Circuit séquentiel saisi à l'écran : validation puis approbation, décisions commentées et historisées, suivi de l'état
 
@@ -8917,7 +9133,49 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 
 - **Source** : 3.3.2
 - **Conformité déclarée** : ✅
-- **Démontrée à l'écran** : non — seulement préparée par l'API
+- **Démontrée à l'écran** : oui
+
+### E2E-AX-IQ-21 — SEC-27 (RST-53) : l'administration d'affaires choisit, dans le catalogue Purview du locataire, l'étiquette de sensibilité et de rétention d'un type de contrat ; le document déposé la porte et la conserve, puis la politique est retirée
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-66, IQ-D-20
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (5 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/purview`
+2. Voir le titre « Étiquettes Microsoft Purview »
+3. Choisir « Type de contrat » : `Convention d'aide financière`
+4. Choisir « Étiquette de sensibilité » : `Confidentiel`
+5. Choisir « Étiquette de rétention » : `Contrats - 7 ans (2557 jours)`
+6. Activer « Enregistrer la politique »
+7. Voir « Politique « Convention d'aide financière » enregistrée. »
+8. Voir « Confidentiel », « Contrats - 7 ans (2557 jours) »
+9. Préparer par l'API : L'initiateur dépose un document dans une trousse de ce type : il reçoit les étiquettes de la politique
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+11. Activer « Retirer — Convention d'aide financière »
+12. Voir « Politique « Convention d'aide financière » retirée. »
+
+### E2E-AX-IQ-25 — SEC-28 (RST-54) : les documents d'IQ sont chiffrés par une clé dédiée à l'organisation ; l'administration technique pivote la clé sans interruption puis réenveloppe les documents, qui restent lisibles
+
+- **Profil** : administration technique IQ
+- **Exigences démontrées** : IQ-C-07, IQ-D-20
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Un document déposé par l'initiateur : la première écriture crée la clé de données de l'organisation
+2. Ouvrir l'écran `/clm/admin/chiffrement`
+3. Voir le titre « Chiffrement au repos »
+4. Voir « Clé de l’organisation », « Clé maîtresse active », « Active »
+5. Activer « Pivoter la clé »
+6. Voir « Rotation effectuée »
+7. Voir « Retirée (lecture seule) »
+8. Préparer par l'API : Après la rotation, le document chiffré par l'ancienne version reste lisible
+9. Activer « Réenvelopper les documents »
+10. Voir « Réenveloppement : »
+11. Préparer par l'API : Après le réenveloppement, le document se lit toujours en clair par l'API
+12. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-30 — Isolation des données entre organisations et modules
 
@@ -10545,6 +10803,22 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
+### E2E-AX-IQ-20 — TI-21 (RST-52) : l'administration technique crée le jeton SCIM ; Saviynt provisionne un compte, puis découvre par SCIM ses rôles effectifs (roles) et ses groupes du module (entitlements), en lecture seule
+
+- **Profil** : administration technique IQ
+- **Exigences démontrées** : IQ-A-08
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/admin/sso`
+2. Voir « Provisionnement SCIM 2.0 », « Découverte des droits »
+3. Activer « Créer un jeton | Remplacer le jeton »
+4. Voir « Jeton créé. »
+5. Relever le texte affiché (`.clm-info-statique code`) sous le nom `jetonScim`
+6. Préparer par l'API : Saviynt provisionne un compte ; l'administration le place dans un groupe du module ; SCIM expose ses droits effectifs
+7. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
 ### E2E-ECR-IQ-07 — Le signataire demande son code au portail ; l'administration exporte le journal, gère la conservation (règle définie puis retirée, gel puis levée, lot exporté), l'annuaire (correspondance ajoutée puis retirée, jeton SCIM) et la connexion locale (réservée puis rouverte, un administrateur muni d'un second facteur désigné compte de secours puis retiré)
 
 - **Profil** : administration principale IQ
@@ -11065,6 +11339,23 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 22. Activer « Supprimer — Délais E2E ${unique} »
 23. Voir « supprimé »
 24. Ne pas voir « Modifier — Délais E2E ${unique} »
+
+### E2E-AX-IQ-11 — AF-49 (RST-51) : l'administration d'affaires consulte les documents et les pages signés de la période, au total, par unité et par mois, puis exporte le relevé en CSV et en Excel
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-A-22
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Trousse de l'unité Financement des entreprises, un PDF d'une page, validée puis terminée : sa version signée est comptée
+2. Ouvrir l'écran `/clm/admin/journal`
+3. Voir « Documents et pages signés », « Documents signés », « Pages signées », « Documents non paginés »
+4. Voir « Documents et pages signés par unité », « Documents et pages signés par mois »
+5. Relever le texte affiché (`table.clm-table tbody tr:has-text("Financement des entreprises")`) sous le nom `ligneUnite`
+6. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+7. Télécharger par « Exporter le relevé (CSV) » et obtenir un fichier non vide
+8. Télécharger par « Exporter le relevé (Excel) » et obtenir un fichier non vide
 
 ### E2E-IQ-18 — Conservation par type, gel légal, exportation en lot, relevé d'utilisation
 

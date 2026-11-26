@@ -842,6 +842,1289 @@
           "ecranConforme": true
         }
       ]
+    },
+    {
+      "id": "E2E-AX-IQ-20",
+      "titre": "TI-21 (RST-52) : l'administration technique crée le jeton SCIM ; Saviynt provisionne un compte, puis découvre par SCIM ses rôles effectifs (roles) et ses groupes du module (entitlements), en lecture seule",
+      "exigences": [
+        "IQ-A-08"
+      ],
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "aller": "/clm/admin/sso"
+        },
+        {
+          "voir": [
+            "Provisionnement SCIM 2.0",
+            "Découverte des droits"
+          ]
+        },
+        {
+          "cliquer": "Créer un jeton | Remplacer le jeton"
+        },
+        {
+          "voir": "Jeton créé."
+        },
+        {
+          "lire": {
+            "selecteur": ".clm-info-statique code",
+            "variable": "jetonScim"
+          }
+        },
+        {
+          "preparer": {
+            "description": "Saviynt provisionne un compte ; l'administration le place dans un groupe du module ; SCIM expose ses droits effectifs",
+            "etapes": [
+              {
+                "appel": "POST /scim/v2/Users",
+                "anonyme": true,
+                "entetes": {
+                  "Authorization": "Bearer ${jetonScim}"
+                },
+                "corps": {
+                  "userName": "droits.${unique}@iq.example",
+                  "displayName": "Droits ${unique}"
+                },
+                "statut": 201,
+                "capturer": {
+                  "uid": "$.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/admin/groupes",
+                "corps": {
+                  "code": "droits_${unique}",
+                  "libelle": "Droits E2E ${unique}"
+                },
+                "statut": 201,
+                "capturer": {
+                  "groupe": "$.id"
+                },
+                "profil": "administration d'affaires IQ"
+              },
+              {
+                "appel": "POST /api/clm/admin/groupes/${groupe}/membres",
+                "corps": {
+                  "courriel": "droits.${unique}@iq.example"
+                },
+                "profil": "administration d'affaires IQ"
+              },
+              {
+                "appel": "GET /scim/v2/Users/${uid}",
+                "anonyme": true,
+                "entetes": {
+                  "Authorization": "Bearer ${jetonScim}"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.roles[0].value",
+                    "egalTexte": "LECTEUR"
+                  },
+                  {
+                    "chemin": "$.roles[0].type",
+                    "egalTexte": "plateforme"
+                  },
+                  {
+                    "chemin": "$.entitlements[0].value",
+                    "egalTexte": "clm:DROITS_${UNIQUE}"
+                  },
+                  {
+                    "chemin": "$.entitlements[0].display",
+                    "egalTexte": "Droits E2E ${unique}"
+                  }
+                ]
+              },
+              {
+                "appel": "GET /scim/v2/Schemas/urn:ietf:params:scim:schemas:core:2.0:User",
+                "anonyme": true,
+                "entetes": {
+                  "Authorization": "Bearer ${jetonScim}"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.attributes[?name=entitlements].mutability",
+                    "egalTexte": "readOnly"
+                  },
+                  {
+                    "chemin": "$.attributes[?name=roles].mutability",
+                    "egalTexte": "readOnly"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-21",
+      "titre": "SEC-27 (RST-53) : l'administration d'affaires choisit, dans le catalogue Purview du locataire, l'étiquette de sensibilité et de rétention d'un type de contrat ; le document déposé la porte et la conserve, puis la politique est retirée",
+      "exigences": [
+        "IQ-C-66",
+        "IQ-D-20"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "aller": "/clm/admin/purview"
+        },
+        {
+          "voirTitre": "Étiquettes Microsoft Purview"
+        },
+        {
+          "choisir": {
+            "Type de contrat": "Convention d'aide financière"
+          }
+        },
+        {
+          "choisir": {
+            "Étiquette de sensibilité": "Confidentiel"
+          }
+        },
+        {
+          "choisir": {
+            "Étiquette de rétention": "Contrats - 7 ans (2557 jours)"
+          }
+        },
+        {
+          "cliquer": "Enregistrer la politique"
+        },
+        {
+          "voir": "Politique « Convention d'aide financière » enregistrée."
+        },
+        {
+          "voir": [
+            "Confidentiel",
+            "Contrats - 7 ans (2557 jours)"
+          ]
+        },
+        {
+          "preparer": {
+            "description": "L'initiateur dépose un document dans une trousse de ce type : il reçoit les étiquettes de la politique",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Purview ${unique}",
+                  "risque": "FAIBLE",
+                  "typeContrat": "SUBVENTION"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "profil": "initiateur IQ",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "purview-${unique}.pdf",
+                    "type": "application/pdf"
+                  }
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.etiquetteSensibilite",
+                    "egalTexte": "Confidentiel"
+                  },
+                  {
+                    "chemin": "$.etiquetteRetention",
+                    "egalTexte": "Contrats - 7 ans"
+                  }
+                ]
+              },
+              {
+                "appel": "GET /api/clm/trousses/${trousse}",
+                "profil": "initiateur IQ",
+                "verifier": [
+                  {
+                    "chemin": "$.documents[0].etiquetteSensibilite",
+                    "egalTexte": "Confidentiel"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "cliquer": "Retirer — Convention d'aide financière"
+        },
+        {
+          "voir": "Politique « Convention d'aide financière » retirée."
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-25",
+      "titre": "SEC-28 (RST-54) : les documents d'IQ sont chiffrés par une clé dédiée à l'organisation ; l'administration technique pivote la clé sans interruption puis réenveloppe les documents, qui restent lisibles",
+      "exigences": [
+        "IQ-C-07",
+        "IQ-D-20"
+      ],
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Un document déposé par l'initiateur : la première écriture crée la clé de données de l'organisation",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Chiffrement ${unique}",
+                  "risque": "FAIBLE"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "profil": "initiateur IQ",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "chiffre-${unique}.pdf",
+                    "type": "application/pdf"
+                  }
+                },
+                "capturer": {
+                  "document": "$.id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/admin/chiffrement"
+        },
+        {
+          "voirTitre": "Chiffrement au repos"
+        },
+        {
+          "voir": [
+            "Clé de l’organisation",
+            "Clé maîtresse active",
+            "Active"
+          ]
+        },
+        {
+          "cliquer": "Pivoter la clé"
+        },
+        {
+          "voir": "Rotation effectuée"
+        },
+        {
+          "voir": "Retirée (lecture seule)"
+        },
+        {
+          "preparer": {
+            "description": "Après la rotation, le document chiffré par l'ancienne version reste lisible",
+            "etapes": [
+              {
+                "appel": "GET /api/clm/trousses/${trousse}/documents/${document}/contenu",
+                "profil": "initiateur IQ",
+                "verifier": [
+                  {
+                    "texte": "%PDF"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "cliquer": "Réenvelopper les documents"
+        },
+        {
+          "voir": "Réenveloppement :"
+        },
+        {
+          "preparer": {
+            "description": "Après le réenveloppement, le document se lit toujours en clair par l'API",
+            "etapes": [
+              {
+                "appel": "GET /api/clm/trousses/${trousse}/documents/${document}/contenu",
+                "profil": "initiateur IQ",
+                "verifier": [
+                  {
+                    "texte": "%PDF"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-08",
+      "titre": "AF-46 (RST-49) : l'initiateur choisit la priorité critique d'une trousse à la création ; sans choix, la priorité se déduit du niveau de risque ; le détail l'affiche",
+      "exigences": [
+        "IQ-D-07",
+        "IQ-C-41"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Prio E2E ${unique}"
+          }
+        },
+        {
+          "choisir": {
+            "Niveau de risque": "Faible"
+          }
+        },
+        {
+          "options": {
+            "Priorité": {
+              "contient": [
+                "Selon le niveau de risque (automatique)",
+                "Basse",
+                "Normale",
+                "Haute",
+                "Critique"
+              ]
+            }
+          }
+        },
+        {
+          "choisir": {
+            "Priorité": "Critique"
+          }
+        },
+        {
+          "voir": "Une trousse haute est relancée deux fois plus souvent, une critique quatre fois."
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "voir": "enregistré."
+        },
+        {
+          "preparer": {
+            "description": "La trousse enregistrée à l'écran porte la priorité choisie ; une seconde, de risque élevé et sans priorité choisie, prend la priorité haute",
+            "etapes": [
+              {
+                "appel": "GET /api/clm/trousses?q=${unique}",
+                "capturer": {
+                  "choisie": "$.lignes[0].id"
+                }
+              },
+              {
+                "appel": "GET /api/clm/trousses/${choisie}",
+                "verifier": [
+                  {
+                    "chemin": "$.priorite",
+                    "egalTexte": "CRITIQUE"
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses",
+                "corps": {
+                  "titre": "Prio déduite ${unique}",
+                  "risque": "ELEVE"
+                },
+                "capturer": {
+                  "deduite": "$.resume.id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/trousses/${choisie}"
+        },
+        {
+          "voir": [
+            "Critique",
+            "(choisie)"
+          ]
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "aller": "/clm/trousses/${deduite}"
+        },
+        {
+          "voir": [
+            "Haute",
+            "(selon le risque)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-09",
+      "titre": "AF-46 (RST-49) : l'administration d'affaires trie le suivi par priorité, la plus haute d'abord, le filtre sur une priorité et l'exporte avec la priorité",
+      "exigences": [
+        "IQ-C-43",
+        "IQ-D-08"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Trois trousses : risque faible (priorité basse), priorité critique choisie, risque élevé (priorité haute), créées dans cet ordre",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Basse ${unique}",
+                  "risque": "FAIBLE"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Critique ${unique}",
+                  "risque": "MOYEN",
+                  "priorite": "CRITIQUE"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Haute ${unique}",
+                  "risque": "ELEVE"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/suivi"
+        },
+        {
+          "remplir": {
+            "Filtres état » Rechercher": "${unique}"
+          }
+        },
+        {
+          "choisir": {
+            "Trier par": "Priorité, la plus haute d’abord"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Filtres état",
+            "cliquer": "Rechercher"
+          }
+        },
+        {
+          "lire": {
+            "selecteur": "table.clm-table tbody tr:first-child:has-text(\"Critique ${unique}\")",
+            "variable": "premiere"
+          }
+        },
+        {
+          "lire": {
+            "selecteur": "table.clm-table tbody tr:nth-child(2):has-text(\"Haute ${unique}\")",
+            "variable": "deuxieme"
+          }
+        },
+        {
+          "lire": {
+            "selecteur": "table.clm-table tbody tr:nth-child(3):has-text(\"Basse ${unique}\")",
+            "variable": "troisieme"
+          }
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "choisir": {
+            "Priorité": "Haute"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Filtres état",
+            "cliquer": "Rechercher"
+          }
+        },
+        {
+          "voir": "Haute ${unique}"
+        },
+        {
+          "nePasVoir": [
+            "Critique ${unique}",
+            "Basse ${unique}"
+          ]
+        },
+        {
+          "telecharger": "Exporter (CSV)"
+        },
+        {
+          "preparer": {
+            "description": "L'export du suivi porte la colonne de priorité, dans l'ordre demandé",
+            "etapes": [
+              {
+                "appel": "GET /api/clm/suivi/export?q=${unique}&tri=priorite",
+                "verifier": [
+                  {
+                    "texte": "reference;titre;priorite;statut"
+                  },
+                  {
+                    "texte": "Critique ${unique}\";CRITIQUE;"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-10",
+      "titre": "AF-46 (RST-49) : dans « Mes tâches », le validateur voit d'abord la tâche de la trousse critique et filtre ses tâches par priorité",
+      "exigences": [
+        "IQ-C-25"
+      ],
+      "profil": "validateur IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Deux trousses lancées vers le validateur, la basse d'abord, puis la critique",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Tâche basse ${unique}",
+                  "risque": "FAIBLE"
+                },
+                "capturer": {
+                  "basse": "$.resume.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${basse}/documents",
+                "profil": "initiateur IQ",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "basse.pdf",
+                    "type": "application/pdf"
+                  }
+                }
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${basse}/parcours",
+                "profil": "initiateur IQ",
+                "corps": [
+                  {
+                    "cle": "v1",
+                    "libelle": "Validation",
+                    "phase": 1,
+                    "type": "VALIDATION",
+                    "affectations": [
+                      {
+                        "type": "UTILISATEUR",
+                        "valeur": "validateur@iq.example"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${basse}/lancer",
+                "profil": "initiateur IQ",
+                "corps": {}
+              },
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Tâche critique ${unique}",
+                  "risque": "FAIBLE",
+                  "priorite": "CRITIQUE"
+                },
+                "capturer": {
+                  "critique": "$.resume.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${critique}/documents",
+                "profil": "initiateur IQ",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "critique.pdf",
+                    "type": "application/pdf"
+                  }
+                }
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${critique}/parcours",
+                "profil": "initiateur IQ",
+                "corps": [
+                  {
+                    "cle": "v1",
+                    "libelle": "Validation",
+                    "phase": 1,
+                    "type": "VALIDATION",
+                    "affectations": [
+                      {
+                        "type": "UTILISATEUR",
+                        "valeur": "validateur@iq.example"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${critique}/lancer",
+                "profil": "initiateur IQ",
+                "corps": {}
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "voir": "Les tâches des trousses les plus prioritaires viennent en premier"
+        },
+        {
+          "lire": {
+            "selecteur": "table.clm-table tbody tr:first-child:has-text(\"Critique\")",
+            "variable": "premiere"
+          }
+        },
+        {
+          "choisir": {
+            "Priorité de la trousse": "Critique"
+          }
+        },
+        {
+          "voir": "Tâche critique ${unique}"
+        },
+        {
+          "nePasVoir": "Tâche basse ${unique}"
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "choisir": {
+            "Priorité de la trousse": "Basse"
+          }
+        },
+        {
+          "voir": "Tâche basse ${unique}"
+        },
+        {
+          "nePasVoir": "Tâche critique ${unique}"
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-11",
+      "titre": "AF-49 (RST-51) : l'administration d'affaires consulte les documents et les pages signés de la période, au total, par unité et par mois, puis exporte le relevé en CSV et en Excel",
+      "exigences": [
+        "IQ-A-22"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Trousse de l'unité Financement des entreprises, un PDF d'une page, validée puis terminée : sa version signée est comptée",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Pages ${unique}",
+                  "risque": "FAIBLE",
+                  "unite": "FINANCEMENT_ENTREPRISES"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "profil": "initiateur IQ",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "pages-${unique}.pdf",
+                    "type": "application/pdf"
+                  }
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.pages",
+                    "egal": 1
+                  }
+                ]
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+                "profil": "initiateur IQ",
+                "corps": [
+                  {
+                    "cle": "v1",
+                    "libelle": "Validation",
+                    "phase": 1,
+                    "type": "VALIDATION",
+                    "affectations": [
+                      {
+                        "type": "UTILISATEUR",
+                        "valeur": "validateur@iq.example"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/lancer",
+                "profil": "initiateur IQ",
+                "corps": {},
+                "capturer": {
+                  "etape": "$.etapes[0].id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/etapes/${etape}/decider",
+                "profil": "validateur IQ",
+                "corps": {
+                  "decision": "APPROUVE"
+                }
+              },
+              {
+                "appel": "GET /api/clm/admin/utilisation?du=${aujourdhui}&au=${demain}",
+                "verifier": [
+                  {
+                    "chemin": "$.signes.parUnite",
+                    "contient": "FINANCEMENT_ENTREPRISES"
+                  },
+                  {
+                    "chemin": "$.signes.total.pages",
+                    "different": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/admin/journal"
+        },
+        {
+          "voir": [
+            "Documents et pages signés",
+            "Documents signés",
+            "Pages signées",
+            "Documents non paginés"
+          ]
+        },
+        {
+          "voir": [
+            "Documents et pages signés par unité",
+            "Documents et pages signés par mois"
+          ]
+        },
+        {
+          "lire": {
+            "selecteur": "table.clm-table tbody tr:has-text(\"Financement des entreprises\")",
+            "variable": "ligneUnite"
+          }
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "telecharger": "Exporter le relevé (CSV)"
+        },
+        {
+          "telecharger": "Exporter le relevé (Excel)"
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-13",
+      "titre": "AF-48 (RST-50) : l'initiateur ajoute un participant « consulter seulement » ; au portail, celui-ci vérifie son identité, lit le document et atteste en avoir pris connaissance, sans signature ni champ ; l'attestation est consignée au journal",
+      "exigences": [
+        "IQ-C-36"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Trousse au brouillon avec son document",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "corps": {
+                  "titre": "Consultation seule ${unique}",
+                  "risque": "FAIBLE",
+                  "unite": "FINANCEMENT_ENTREPRISES"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "convention.pdf",
+                    "type": "application/pdf"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Participants (0)"
+          }
+        },
+        {
+          "remplir": {
+            "Nom": "Lise Gagnon",
+            "Courriel": "consulte.${unique}@agrinord.example"
+          }
+        },
+        {
+          "choisir": {
+            "Rôle dans le contrat": "TEMOIN",
+            "Nature de la participation": "Consulter seulement",
+            "Vérification d’identité": "Question secrète"
+          }
+        },
+        {
+          "remplir": {
+            "Question de vérification": "Ville du siège ?",
+            "Réponse attendue": "Québec"
+          }
+        },
+        {
+          "cliquer": "Ajouter un signataire"
+        },
+        {
+          "voir": [
+            "Lise Gagnon",
+            "Consulter seulement"
+          ]
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "preparer": {
+            "description": "Étape de participation confiée au participant « consulter », trousse lancée, lien lu dans le courriel",
+            "etapes": [
+              {
+                "appel": "GET /api/clm/trousses/${trousse}",
+                "capturer": {
+                  "lise": "$.participants[0].id"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.participants[0].nature",
+                    "egal": "CONSULTER"
+                  }
+                ]
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+                "corps": [
+                  {
+                    "cle": "p1",
+                    "libelle": "Prise de connaissance",
+                    "phase": 1,
+                    "type": "SIGNATURE",
+                    "affectations": [
+                      {
+                        "type": "PARTICIPANT",
+                        "valeur": "${lise}"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/lancer",
+                "corps": {}
+              },
+              {
+                "courriel": {
+                  "destinataire": "consulte.${unique}@agrinord.example",
+                  "motif": "/portail/([A-Za-z0-9_-]+)",
+                  "capturer": "jeton"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/portail/${jeton}"
+        },
+        {
+          "voir": "vous êtes invité à prendre connaissance de la trousse"
+        },
+        {
+          "remplir": {
+            "Ville du siège ?": "Québec"
+          }
+        },
+        {
+          "cliquer": "Vérifier mon identité"
+        },
+        {
+          "voirTitre": "2. Lire et attester la prise de connaissance"
+        },
+        {
+          "nePasVoir": [
+            "Votre nom complet",
+            "Informations à compléter"
+          ]
+        },
+        {
+          "cliquer": "Lire / télécharger"
+        },
+        {
+          "cocher": "J’atteste avoir pris connaissance de chacun des documents."
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "cliquer": "Attester ma consultation"
+        },
+        {
+          "voir": [
+            "Merci, votre consultation est attestée",
+            "Reçu de consultation"
+          ]
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "preparer": {
+            "description": "L'attestation, et non une signature, termine l'étape et figure au journal scellé",
+            "etapes": [
+              {
+                "appel": "GET /api/clm/trousses/${trousse}",
+                "verifier": [
+                  {
+                    "chemin": "$.resume.statut",
+                    "egal": "TERMINEE"
+                  }
+                ]
+              },
+              {
+                "appel": "GET /api/clm/trousses/${trousse}/historique",
+                "verifier": [
+                  {
+                    "texte": "CONSULTATION_ATTESTEE"
+                  },
+                  {
+                    "texteAbsent": "\"type\":\"SIGNATURE\""
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-14",
+      "titre": "AF-48 (RST-50) : dans une même trousse, un participant « compléter » soumet ses champs sans signer et un « signer » signe ; signer avec un lien « compléter » est refusé ; la preuve distingue la nature et l'action de chacun",
+      "exigences": [
+        "IQ-C-36"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Modèle publié (un champ du deuxième signataire), trousse lancée avec un participant « compléter » et un « signer »",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/modeles",
+                "corps": {
+                  "nom": "Entente natures ${unique}",
+                  "corps": "Entente de participation.",
+                  "champs": [
+                    {
+                      "cle": "neq",
+                      "libelle": "Numéro d'entreprise",
+                      "type": "TEXTE",
+                      "obligatoire": true,
+                      "roleDestinataire": "SIGNATAIRE_2"
+                    }
+                  ]
+                },
+                "capturer": {
+                  "modele": "$.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/modeles/${modele}/soumettre",
+                "corps": {}
+              },
+              {
+                "appel": "POST /api/clm/modeles/${modele}/publier",
+                "profil": "administration d'affaires IQ",
+                "corps": {}
+              },
+              {
+                "appel": "POST /api/clm/trousses",
+                "corps": {
+                  "titre": "Natures ${unique}",
+                  "risque": "FAIBLE",
+                  "unite": "FINANCEMENT_ENTREPRISES",
+                  "modeleId": "${modele}"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "convention.pdf",
+                    "type": "application/pdf"
+                  }
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/participants",
+                "corps": {
+                  "nom": "Paul Côté",
+                  "courriel": "complete.${unique}@agrinord.example",
+                  "roleContrat": "SIGNATAIRE_2",
+                  "externe": true,
+                  "niveauIdentite": "QUESTION",
+                  "question": "Ville du siège ?",
+                  "reponse": "Québec",
+                  "nature": "COMPLETER"
+                },
+                "capturer": {
+                  "paul": "$.id"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.nature",
+                    "egal": "COMPLETER"
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/participants",
+                "corps": {
+                  "nom": "Marie Tremblay",
+                  "courriel": "signe.${unique}@agrinord.example",
+                  "roleContrat": "SIGNATAIRE_1",
+                  "externe": true,
+                  "niveauIdentite": "QUESTION",
+                  "question": "Ville du siège ?",
+                  "reponse": "Québec"
+                },
+                "capturer": {
+                  "marie": "$.id"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.nature",
+                    "egal": "SIGNER"
+                  }
+                ]
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+                "corps": [
+                  {
+                    "cle": "p1",
+                    "libelle": "Participation",
+                    "phase": 1,
+                    "type": "SIGNATURE",
+                    "affectations": [
+                      {
+                        "type": "PARTICIPANT",
+                        "valeur": "${paul}"
+                      },
+                      {
+                        "type": "PARTICIPANT",
+                        "valeur": "${marie}"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/lancer",
+                "corps": {}
+              },
+              {
+                "courriel": {
+                  "destinataire": "complete.${unique}@agrinord.example",
+                  "motif": "/portail/([A-Za-z0-9_-]+)",
+                  "capturer": "jetonPaul"
+                }
+              },
+              {
+                "courriel": {
+                  "destinataire": "signe.${unique}@agrinord.example",
+                  "motif": "/portail/([A-Za-z0-9_-]+)",
+                  "capturer": "jetonMarie"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/portail/${jetonPaul}"
+        },
+        {
+          "voir": "vous êtes invité à compléter des informations de la trousse"
+        },
+        {
+          "remplir": {
+            "Ville du siège ?": "Québec"
+          }
+        },
+        {
+          "cliquer": "Vérifier mon identité"
+        },
+        {
+          "voirTitre": "2. Compléter vos informations"
+        },
+        {
+          "nePasVoir": "Votre nom complet"
+        },
+        {
+          "preparer": {
+            "description": "Action hors nature : signer avec le lien d'un participant « compléter » est refusé (409)",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/portail/${jetonPaul}/signer",
+                "anonyme": true,
+                "corps": {
+                  "nomComplet": "Paul Côté",
+                  "consentement": true
+                },
+                "statut": 409,
+                "verifier": [
+                  {
+                    "texte": "pas de signer"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "remplir": {
+            "Numéro d'entreprise": "1170000001"
+          }
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "cliquer": "Soumettre mes informations"
+        },
+        {
+          "voir": [
+            "Merci, vos informations sont enregistrées",
+            "Reçu de complétion"
+          ]
+        },
+        {
+          "preparer": {
+            "description": "Le participant « signer » vérifie son identité et signe au portail",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/portail/${jetonMarie}/verification/reponse",
+                "anonyme": true,
+                "corps": {
+                  "reponse": "Québec"
+                }
+              },
+              {
+                "appel": "POST /api/clm/portail/${jetonMarie}/consultation",
+                "anonyme": true,
+                "corps": {
+                  "attestation": true
+                },
+                "statut": 409
+              },
+              {
+                "appel": "POST /api/clm/portail/${jetonMarie}/signer",
+                "anonyme": true,
+                "corps": {
+                  "nomComplet": "Marie Tremblay",
+                  "consentement": true
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.action",
+                    "egal": "SIGNATURE"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Preuve"
+          }
+        },
+        {
+          "voir": [
+            "Nature : Compléter seulement · champs complétés",
+            "Nature : Signer · signature apposée"
+          ]
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
     }
   ]
 }

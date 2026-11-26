@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 083-1-clm-participant-nature
+      author: levis
+      comment: "Annexe 10 IQ, AF-48 (RST-50) : nature de participation (CONSULTER, COMPLETER, SIGNER). Les participants existants signent, comme avant."
+      changes:
+        - addColumn:
+            tableName: clm_participant
+            columns:
+              - column: { name: nature, type: VARCHAR(10), defaultValue: SIGNER, constraints: { nullable: false } }

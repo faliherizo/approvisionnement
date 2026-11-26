@@ -35,6 +35,7 @@ import qc.levis.contrat.clm.domain.ModificationEnCours;
 import qc.levis.contrat.clm.domain.Suggestions;
 import qc.levis.contrat.clm.domain.ModeleContrat;
 import qc.levis.contrat.clm.domain.ParametresClm;
+import qc.levis.contrat.clm.domain.PrioriteTrousse;
 import qc.levis.contrat.clm.domain.Parcours;
 import qc.levis.contrat.clm.domain.Participant;
 import qc.levis.contrat.clm.domain.Preremplissage;
@@ -160,6 +161,7 @@ public class TrousseService {
         if (req.echeance() != null) t.setEcheance(req.echeance());
         if (req.copies() != null) t.setCopies(vide(req.copies()));
         if (req.risque() != null && !req.risque().isBlank()) t.setRisque(Identite.Risque.valueOf(req.risque().trim().toUpperCase()));
+        prioriser(t, req.priorite());
         if (req.rappelFrequenceJours() != null) {
             if (req.rappelFrequenceJours() < 1 || req.rappelFrequenceJours() > Relances.FREQUENCE_MAX_JOURS) {
                 throw new IllegalArgumentException("Fréquence de rappel entre 1 et " + Relances.FREQUENCE_MAX_JOURS + " jours.");
@@ -171,6 +173,13 @@ public class TrousseService {
                 throw new IllegalArgumentException("Nombre de rappels entre 0 et " + Relances.RAPPELS_PLAFOND + ".");
             }
             t.setRappelsMax(req.rappelsMax());
+        }
+    }
+
+    /** Priorité (AF-46) : absente, inchangée ; vide, déduite du risque ; sinon celle choisie. */
+    private static void prioriser(Trousse t, String priorite) {
+        if (priorite != null) {
+            t.prioriser(priorite.isBlank() ? null : PrioriteTrousse.depuis(priorite));
         }
     }
 
@@ -425,6 +434,7 @@ public class TrousseService {
         }
         Participant p = new Participant(t.getTenantId(), t.getId(), nom, courriel, vide(req.telephone()), role, req.externe(), niveau);
         p.choisirLangue(langue);
+        p.choisirNature(qc.levis.contrat.clm.domain.NatureParticipation.de(req.nature()));
         p.representer(req.qualite(), req.entreprise(), Boolean.TRUE.equals(req.autoriteRequise()));
         if (niveau == Identite.Niveau.QUESTION) {
             p.definirQuestion(req.question().trim(), ChaineScellee.sha256(Identite.normaliserReponse(req.reponse())
@@ -432,7 +442,7 @@ public class TrousseService {
         }
         p = participants.save(p);
         resoudreRole(t, p);
-        journal.consigner(t, "PARTICIPANT_AJOUTE", acteur.id(), nom + " · " + role + " · " + niveau
+        journal.consigner(t, "PARTICIPANT_AJOUTE", acteur.id(), nom + " · " + role + " · " + niveau + " · " + p.getNature()
                 + (langue == Langue.FR ? "" : " · " + langue) + (t.enTraitement() ? " · ajouté en cours de parcours" : ""));
         return LectureTrousse.participant(p);
     }
@@ -749,7 +759,8 @@ public class TrousseService {
                 aCompleter, manquants, t.getRappelFrequenceJours(), t.getRappelsMax(), t.getCopies(), t.getSfRecupereLe(),
                 documents.findByTenantIdAndTrousseIdOrderByCleDocumentAscVersionDesc(t.getTenantId(), t.getId()).stream()
                         .map(LectureTrousse::document).toList(),
-                parts, lesEtapes.stream().map(e -> lecture.etape(e, maintenant)).toList(), invs, actions(t, acteur), alertes);
+                parts, lesEtapes.stream().map(e -> lecture.etape(e, maintenant)).toList(), invs, actions(t, acteur), alertes,
+                t.getPriorite().name(), t.isPrioriteChoisie());
     }
 
     /** Actions proposées par l'interface ; le serveur revérifie chacune à l'exécution. */

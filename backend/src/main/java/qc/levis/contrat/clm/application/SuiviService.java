@@ -29,6 +29,7 @@ import qc.levis.contrat.clm.domain.Habilitations;
 import qc.levis.contrat.clm.domain.Invitation;
 import qc.levis.contrat.clm.domain.MessageSortant;
 import qc.levis.contrat.clm.domain.Parcours;
+import qc.levis.contrat.clm.domain.PrioriteTrousse;
 import qc.levis.contrat.clm.domain.Relances;
 import qc.levis.contrat.clm.domain.StatutTrousse;
 import qc.levis.contrat.clm.domain.Trousse;
@@ -41,8 +42,14 @@ public class SuiviService {
     public static final String ERREUR_SALESFORCE = "ERREUR_SALESFORCE";
     public static final String SIGNATURE_EXPIREE = "SIGNATURE_EXPIREE";
 
+    /** {@code priorite} : code BASSE à CRITIQUE ; {@code tri} : « priorite » d'abord les plus prioritaires, sinon les plus récentes. */
     public record Filtre(String q, String statut, String unite, String responsable, String source, LocalDate du, LocalDate au,
-                         boolean exceptionsSeulement) {
+                         boolean exceptionsSeulement, String priorite, String tri) {
+
+        /** Ordre des lignes (AF-46) : par priorité décroissante puis récence, ou par récence seule. */
+        Sort ordre() {
+            return "priorite".equals(tri) ? Sort.by(Sort.Order.desc("prioriteRang")).and(TRI) : TRI;
+        }
     }
 
     private final TrousseRepository trousses;
@@ -88,7 +95,7 @@ public class SuiviService {
         int p = Math.max(0, page);
         Specification<Trousse> spec = specification(ctx.tenant(), f);
         if ((acteur.estAdmin() || acteur.estAuditeur()) && !f.exceptionsSeulement()) {
-            Page<Trousse> r = trousses.findAll(spec, PageRequest.of(p, n, TRI));
+            Page<Trousse> r = trousses.findAll(spec, PageRequest.of(p, n, f.ordre()));
             return new ClmDto.SuiviPage(lignes(r.getContent()), p, n, r.getTotalElements(), r.hasNext());
         }
         List<ClmDto.SuiviLigne> fenetre = parcourir(acteur, f, spec, p * n, n + 1);
@@ -101,7 +108,7 @@ public class SuiviService {
         List<ClmDto.SuiviLigne> res = new ArrayList<>();
         int[] aIgnorer = {ignorer};
         for (int k = 0; ; k++) {
-            Page<Trousse> tranche = trousses.findAll(spec, PageRequest.of(k, TRANCHE, TRI));
+            Page<Trousse> tranche = trousses.findAll(spec, PageRequest.of(k, TRANCHE, f.ordre()));
             List<Trousse> visibles = tranche.getContent().stream().filter(t -> lecture.visible(t, acteur)).toList();
             if (f.exceptionsSeulement()) {
                 retenir(lignes(visibles).stream().filter(l -> !l.exceptions().isEmpty()).toList(), aIgnorer, garder, res);
@@ -137,6 +144,9 @@ public class SuiviService {
             }
             if (!vide(f.source())) {
                 p.add(enumere(Trousse.Source.class, f.source()).map(v -> cb.equal(r.get("source"), v)).orElseGet(cb::disjunction));
+            }
+            if (!vide(f.priorite())) {
+                p.add(enumere(PrioriteTrousse.class, f.priorite()).map(v -> cb.equal(r.get("priorite"), v)).orElseGet(cb::disjunction));
             }
             if (!vide(f.unite())) {
                 p.add(cb.equal(r.get("unite"), f.unite()));
@@ -206,14 +216,15 @@ public class SuiviService {
         }
         return new ClmDto.SuiviLigne(t.getId(), t.getReference(), t.getTitre(), t.getStatut().name(), t.getSource().name(), t.getUnite(),
                 t.getProprietaire(), actives.stream().map(EtapeTrousse::getLibelle).toList(), attente, echeance, exceptions.contains(BLOCAGE),
-                dernier == null ? null : dernier.getType(), dernier == null ? null : dernier.getHorodatage(), exceptions);
+                dernier == null ? null : dernier.getType(), dernier == null ? null : dernier.getHorodatage(), exceptions,
+                t.getPriorite().name());
     }
 
     /** Export CSV (UI-18) ; les cellules commençant par un caractère de formule sont neutralisées. */
     public String exporterCsv(Habilitations.Acteur acteur, Filtre f) {
-        StringBuilder sb = new StringBuilder("reference;titre;statut;source;unite;responsable;etapes_actives;echeance;exceptions\n");
+        StringBuilder sb = new StringBuilder("reference;titre;priorite;statut;source;unite;responsable;etapes_actives;echeance;exceptions\n");
         for (ClmDto.SuiviLigne l : parcourir(acteur, f, specification(ctx.tenant(), f), 0, LIMITE_EXPORT)) {
-            sb.append(String.join(";", cellule(l.reference()), cellule(l.titre()), l.statut(), l.source(), cellule(l.unite()),
+            sb.append(String.join(";", cellule(l.reference()), cellule(l.titre()), l.priorite(), l.statut(), l.source(), cellule(l.unite()),
                     cellule(l.proprietaire()), cellule(String.join(" | ", l.etapesActives())),
                     l.echeance() == null ? "" : l.echeance().toString(), String.join(" | ", l.exceptions()))).append('\n');
         }

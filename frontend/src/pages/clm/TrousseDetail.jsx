@@ -4,7 +4,7 @@ import api from '../../api'
 import { useAuth } from '../../auth.jsx'
 import { useI18n } from '../../i18n/I18nContext'
 import { useModules } from '../../hooks/useModules.js'
-import { GardeModule, Message, Onglets, Panneau, Statut, date, dateHeure, useErreur, useListe, useRessource } from './commun.jsx'
+import { GardeModule, Message, Onglets, Panneau, Priorite, Statut, date, dateHeure, useErreur, useListe, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 import { ApercuDossier, dossierImporte } from './TrousseCreer.jsx'
 import ValeursTrousse from './ValeursTrousse.jsx'
@@ -146,6 +146,8 @@ function Contenu() {
                   <div><dt>{t('clm.champ.typeContrat')}</dt><dd>{types.libelle(r.typeContrat) || '—'}</dd></div>
                   <div><dt>{t('clm.champ.unite')}</dt><dd>{unites.libelle(r.unite) || '—'}</dd></div>
                   <div><dt>{t('clm.champ.risque')}</dt><dd>{t(`clm.risque.${d.risque}`)}</dd></div>
+                  <div><dt>{t('clm.champ.priorite')}</dt><dd><Priorite valeur={d.priorite} />{' '}
+                    <span className="muted">{d.prioriteChoisie ? t('clm.priorite.choisie') : t('clm.priorite.selonRisque')}</span></dd></div>
                   <div><dt>{t('clm.dt.rappels')}</dt><dd>{t('clm.dt.rappelsValeur', { f: d.rappelFrequenceJours, n: d.rappelsMax })}</dd></div>
                   <div><dt>{t('clm.champ.copies')}</dt><dd>{d.copies || '—'}</dd></div>
                   <div><dt>{t('clm.cr.modele')}</dt><dd>{d.modeleId ? <Link to={`/clm/modeles/${d.modeleId}`}>#{d.modeleId}</Link> : t('clm.cr.sansModele')}</dd></div>

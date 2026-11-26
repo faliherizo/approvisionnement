@@ -26,7 +26,7 @@ besoin par besoin, sans préparation par l'API.
 |---|---|---|---|
 | IQ-C-05 | Offerte en infonuagique, connectable aux SaaS | — vérification documentaire | — |
 | IQ-C-06 | Connexion aux applications « on premise » par API | **aucun** | E2E-IQ-19 ✅ |
-| IQ-C-07 | Protection et confidentialité des données | **aucun** | E2E-IQ-30 ✅ |
+| IQ-C-07 | Protection et confidentialité des données | **aucun** | E2E-AX-IQ-25 ✅, E2E-IQ-30 ✅ |
 
 ## Section 1.4.4
 
@@ -64,7 +64,7 @@ besoin par besoin, sans préparation par l'API.
 | IQ-C-22 | Approuver, rejeter, retourner pour correction | E2E-CB-IQ-04 ✅, E2E-CB-IQ-05 ✅, E2E-CB-IQ-06 ✅ | E2E-IQ-06 ✅, E2E-IQ-07 ✅ |
 | IQ-C-23 | Commentaires et historique des validations | E2E-CB-IQ-04 ✅, E2E-CB-IQ-05 ✅ | E2E-IQ-06 ✅ |
 | IQ-C-24 | Notifications et rappels configurables pour validateurs et approbateurs | E2E-CB-IQ-12 ✅, E2E-CB-IQ-13 ✅ | E2E-IQ-15 ✅ |
-| IQ-C-25 | Suivi de l'état des validations en cours | E2E-CB-IQ-04 ✅ | E2E-IQ-06 ✅, E2E-IQ-16 ✅ |
+| IQ-C-25 | Suivi de l'état des validations en cours | E2E-CB-IQ-04 ✅ | E2E-AX-IQ-10 ✅, E2E-IQ-06 ✅, E2E-IQ-16 ✅ |
 | IQ-C-26 | Signature séquentielle, parallèle, mixte | E2E-CB-IQ-09 ✅, E2E-CB-IQ-10 ✅ | E2E-IQ-12 ✅ |
 | IQ-C-27 | Groupes de signataires | E2E-ECR-IQ-03 ✅ | E2E-IQ-12 ✅ |
 | IQ-C-28 | Signature simultanée et consécutive configurable | E2E-CB-IQ-10 ✅ | E2E-IQ-12 ✅ |
@@ -75,14 +75,14 @@ besoin par besoin, sans préparation par l'API.
 | IQ-C-33 | Partage des modèles par groupe d'usagers | E2E-CB-IQ-14 ✅ | E2E-IQ-03 ✅ |
 | IQ-C-34 | Ancrage précis des champs | E2E-CB-IQ-15 ✅ | E2E-IQ-03 ✅ |
 | IQ-C-35 | Types : texte validé, liste, date, case à cocher | E2E-CB-IQ-01 ✅, E2E-CB-IQ-15 ✅ | E2E-IQ-03 ✅ |
-| IQ-C-36 | Distinguer champs de formulaire, de saisie et de signature | E2E-CB-IQ-15 ✅ | E2E-IQ-03 ✅ |
+| IQ-C-36 | Distinguer champs de formulaire, de saisie et de signature | E2E-AX-IQ-13 ✅, E2E-AX-IQ-14 ✅, E2E-CB-IQ-15 ✅ | E2E-IQ-03 ✅ |
 | IQ-C-37 | Attribution des champs à des signataires | E2E-CB-IQ-15 ✅, E2E-ECR-IQ-02 ✅, E2E-ECR-IQ-04 ✅ | E2E-IQ-03 ✅ |
 | IQ-C-38 | Règles conditionnelles d'affichage | E2E-CB-IQ-15 ✅ | E2E-IQ-03 ✅ |
 | IQ-C-39 | Saisie assistée (suggestions) | E2E-CB-IQ-22 ✅ | E2E-IQ-04 ✅ |
 | IQ-C-40 | Notifications activables et désactivables | E2E-CB-IQ-12 ✅, E2E-ECR-IQ-05 ✅ | E2E-IQ-15 ✅ |
-| IQ-C-41 | Rappels automatiques de non-réponse | E2E-CB-IQ-13 ✅ | E2E-IQ-15 ✅ |
+| IQ-C-41 | Rappels automatiques de non-réponse | E2E-AX-IQ-08 ✅, E2E-CB-IQ-13 ✅ | E2E-IQ-15 ✅ |
 | IQ-C-42 | Destinataires en copie | E2E-CB-IQ-13 ✅ | E2E-IQ-01 ✅ |
-| IQ-C-43 | Vue de suivi centralisée : étapes, attentes, exceptions | E2E-AX-IQ-05 ✅, E2E-CB-IQ-13 ✅, E2E-ECR-IQ-06 ✅ | E2E-AX-IQ-06 ✅, E2E-IQ-16 ✅ |
+| IQ-C-43 | Vue de suivi centralisée : étapes, attentes, exceptions | E2E-AX-IQ-05 ✅, E2E-AX-IQ-09 ✅, E2E-CB-IQ-13 ✅, E2E-ECR-IQ-06 ✅ | E2E-AX-IQ-06 ✅, E2E-IQ-16 ✅ |
 | IQ-C-44 | Plusieurs documents par trousse | E2E-CB-IQ-16 ✅, E2E-ECR-IQ-01 ✅ | E2E-IQ-01 ✅ |
 | IQ-C-45 | Dossiers, documents, versions, intervenants | E2E-CB-IQ-16 ✅, E2E-ECR-IQ-01 ✅, E2E-ECR-IQ-04 ✅ | E2E-IQ-01 ✅ |
 | IQ-C-46 | PDF et Word | E2E-CB-IQ-16 ✅ | E2E-IQ-01 ✅ |
@@ -130,7 +130,7 @@ besoin par besoin, sans préparation par l'API.
 
 | Exigence | Besoin | Parcours d'interface | Préparés par l'API |
 |---|---|---|---|
-| IQ-C-66 | Protection du cycle de vie, dont la destruction au moment opportun (Loi sur les archives) | E2E-ECR-IQ-07 ✅ | E2E-IQ-18 ✅ |
+| IQ-C-66 | Protection du cycle de vie, dont la destruction au moment opportun (Loi sur les archives) | E2E-AX-IQ-21 ✅, E2E-ECR-IQ-07 ✅ | E2E-IQ-18 ✅ |
 | IQ-C-67 | Accès, modèles, workflows, historiques selon rôles, groupes, unités, domaines | E2E-CB-IQ-03 ✅, E2E-CB-IQ-08 ✅, E2E-CB-IQ-14 ✅, E2E-CB-IQ-19 ✅, E2E-CB-IQ-24 ✅ | E2E-IQ-25 ✅, E2E-IQ-26 ✅ |
 
 ## Section 1.7.1

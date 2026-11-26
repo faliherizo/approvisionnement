@@ -163,4 +163,16 @@ class RappelServiceTest {
         assertFalse(lointaine.isEcheanceProcheSignalee(), "échéance dans 7 jours, préavis de 2 jours");
         verify(parcours, never()).notifierTache(any(), any(), any(), eq(ModeleMessage.Evenement.ECHEANCE));
     }
+
+    @Test
+    void une_trousse_critique_est_relancee_plus_tot_qu_une_trousse_normale() {
+        EtapeTrousse e = etape(Parcours.TypeEtape.VALIDATION, "[{\"type\":\"GROUPE\",\"valeur\":\"G\"}]", null);
+        when(etapes.findByStatut(Parcours.StatutEtape.ACTIVE)).thenReturn(List.of(e));
+        trousse.setRappelFrequenceJours(5);
+        assertEquals(0, service.executer(), "normale : 5 jours entre deux rappels, 3 jours écoulés");
+
+        trousse.prioriser(qc.levis.contrat.clm.domain.PrioriteTrousse.CRITIQUE);
+        assertEquals(1, service.executer(), "critique : 5 jours / 4 = 30 h, 3 jours écoulés");
+        verify(journal).consigner(trousse, "RAPPEL_ENVOYE", "systeme", "Étape · 1 destinataire(s)");
+    }
 }

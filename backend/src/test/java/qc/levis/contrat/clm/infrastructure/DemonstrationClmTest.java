@@ -108,7 +108,7 @@ class DemonstrationClmTest {
 
     private static DemonstrationClm.DemoClm demoTrousses(String... references) {
         List<DemonstrationClm.TrousseDemo> liste = java.util.Arrays.stream(references).map(r -> new DemonstrationClm.TrousseDemo("init@org", null,
-                new ClmDto.TrousseRequest(r, "Titre " + r, null, null, "FAIBLE", null, null, null, null, null, null), Map.of(), List.of(), true)).toList();
+                new ClmDto.TrousseRequest(r, "Titre " + r, null, null, "FAIBLE", null, null, null, null, null, null, null), Map.of(), List.of(), true)).toList();
         return new DemonstrationClm.DemoClm("affaires@org", "principal@org", Map.of("init@org", List.of("REDACTEUR")),
                 List.of(), List.of(), List.of(), liste);
     }

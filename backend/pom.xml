@@ -248,6 +248,7 @@
                                 <include>qc/levis/contrat/auth/application/AnnuaireService*</include>
                                 <include>qc/levis/contrat/auth/application/ScimService*</include>
                                 <include>qc/levis/contrat/auth/infrastructure/web/ScimController*</include>
+                                <include>qc/levis/contrat/auth/infrastructure/web/SchemaScim*</include>
                                 <include>qc/levis/contrat/auth/infrastructure/web/AnnuaireController*</include>
                                 <include>qc/levis/contrat/auth/domain/PolitiqueConnexion*</include>
                                 <include>qc/levis/contrat/auth/application/PolitiqueConnexionService*</include>

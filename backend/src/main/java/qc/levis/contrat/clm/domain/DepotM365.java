@@ -29,6 +29,7 @@ public class DepotM365 {
     /** Reprises avant abandon ; l'administration peut ensuite relancer à la main. */
     public static final int REPRISES_MAX = 8;
     private static final int ERREUR_MAX = 1000;
+    static final int ETIQUETTE_MAX = 300;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,6 +74,10 @@ public class DepotM365 {
     @Column(name = "depose_le")
     private Instant deposeLe;
 
+    /** Étiquettes Purview propagées au fichier déposé (ADR-036), ou motif de l'échec de leur apposition. */
+    @Column(length = ETIQUETTE_MAX)
+    private String etiquette;
+
     protected DepotM365() {
     }
 
@@ -91,6 +96,11 @@ public class DepotM365 {
         this.url = url;
         deposeLe = maintenant;
         derniereErreur = null;
+    }
+
+    /** Résultat de la propagation des étiquettes Purview au fichier déposé ; tronqué, jamais nul s'il est noté. */
+    public void noterEtiquette(String resultat) {
+        etiquette = resultat.substring(0, Math.min(resultat.length(), ETIQUETTE_MAX));
     }
 
     public void echouer(String erreur, Instant maintenant) {
@@ -126,4 +136,5 @@ public class DepotM365 {
     public String getUrl() { return url; }
     public Instant getCreeLe() { return creeLe; }
     public Instant getDeposeLe() { return deposeLe; }
+    public String getEtiquette() { return etiquette; }
 }

@@ -186,7 +186,7 @@ public class DemonstrationClm {
 
     private static ClmDto.TrousseRequest avecModele(ClmDto.TrousseRequest r, ModeleContrat modele) {
         return new ClmDto.TrousseRequest(r.reference(), r.titre(), r.typeContrat(), r.unite(), r.risque(), r.echeance(),
-                modele == null ? null : modele.getId(), r.sfDossierId(), r.rappelFrequenceJours(), r.rappelsMax(), r.copies());
+                modele == null ? null : modele.getId(), r.sfDossierId(), r.rappelFrequenceJours(), r.rappelsMax(), r.copies(), r.priorite());
     }
 
     private ModeleContrat modeleNomme(Long tenantId, String nom) {

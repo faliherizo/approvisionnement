@@ -122,13 +122,13 @@ class Addenda2ServicesTest {
         java.util.Map<String, Object> rep = new java.util.HashMap<>(Map.of("qualite", "Président", "entreprise", "Agri-Nord",
                 "autoriteAttestee", true, "referenceAutorite", "Résolution 2026-14"));
         ClmDto.SignatureVue s = new ClmDto.SignatureVue("Marc", "m@x", "SIGNATAIRE_1", "COURRIEL", null, null, null, null, "SIGNEE",
-                Map.of("representation", rep));
+                Map.of("representation", rep), "SIGNER", "SIGNATURE");
         assertEquals(" · pour Agri-Nord (Président) · autorité attestée, réf. Résolution 2026-14", PreuveService.representation(s));
         rep.put("referenceAutorite", " ");
         assertEquals(" · pour Agri-Nord (Président) · autorité attestée", PreuveService.representation(s));
         rep.remove("autoriteAttestee");
         assertEquals(" · pour Agri-Nord (Président)", PreuveService.representation(s));
-        assertEquals("", PreuveService.representation(new ClmDto.SignatureVue("A", "a", "R", "N", null, null, null, null, "SIGNEE", Map.of())));
-        assertEquals("", PreuveService.representation(new ClmDto.SignatureVue("A", "a", "R", "N", null, null, null, null, "SIGNEE", null)));
+        assertEquals("", PreuveService.representation(new ClmDto.SignatureVue("A", "a", "R", "N", null, null, null, null, "SIGNEE", Map.of(), "SIGNER", "SIGNATURE")));
+        assertEquals("", PreuveService.representation(new ClmDto.SignatureVue("A", "a", "R", "N", null, null, null, null, "SIGNEE", null, "SIGNER", "SIGNATURE")));
     }
 }

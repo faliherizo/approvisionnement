@@ -16,15 +16,19 @@ public final class ClmDto {
     }
 
     // --- Requêtes ---
+    /** {@code priorite} (AF-46) : BASSE, NORMALE, HAUTE ou CRITIQUE ; vide, déduite du risque ; absente, inchangée. */
     public record TrousseRequest(String reference, String titre, String typeContrat, String unite, String risque,
                                  LocalDate echeance, Long modeleId, String sfDossierId, Integer rappelFrequenceJours,
-                                 Integer rappelsMax, String copies) {
+                                 Integer rappelsMax, String copies, String priorite) {
     }
 
-    /** {@code langue} : FR (défaut) ou EN, langue des messages et du portail du participant (addenda 2, Q19). */
+    /**
+     * {@code langue} : FR (défaut) ou EN, langue des messages et du portail du participant (addenda 2, Q19).
+     * {@code nature} : CONSULTER, COMPLETER ou SIGNER (défaut), ce que le participant fait au portail (RST-50).
+     */
     public record ParticipantRequest(String nom, String courriel, String telephone, String roleContrat, boolean externe,
                                      String niveauIdentite, String question, String reponse, String langue,
-                                     String qualite, String entreprise, Boolean autoriteRequise) {
+                                     String qualite, String entreprise, Boolean autoriteRequise, String nature) {
     }
 
     public record AffectationDto(String type, String valeur) {
@@ -106,19 +110,32 @@ public final class ClmDto {
     public record RefusRequest(String motif) {
     }
 
+    /** Participant « consulter » (RST-50) : attestation explicite d'avoir pris connaissance des documents. */
+    public record ConsultationRequest(boolean attestation) {
+    }
+
+    /** Participant « compléter » (RST-50) : valeurs des champs de son rôle, soumises sans signature. */
+    public record CompletionRequest(Map<String, String> champs) {
+    }
+
     // --- Vues ---
     public record TrousseResume(Long id, String reference, String titre, String statut, String source, String sfDossierId,
                                 String unite, String proprietaire, LocalDate echeance, String typeContrat, Instant majLe,
                                 String prochaineAction, boolean enRetard) {
     }
 
+    /**
+     * {@code etiquetteSensibilite}, {@code etiquetteRetention} : étiquettes Purview conservées avec le document (ADR-036) ;
+     * {@code pages} : nombre de pages d'un PDF (AF-49), nul si non paginé.
+     */
     public record DocumentVue(Long id, String cleDocument, int version, String nom, String type, long taille, String empreinte,
-                              String statut, String analyse, String auteur, String motif, Instant creeLe) {
+                              String statut, String analyse, String auteur, String motif, Instant creeLe,
+                              String etiquetteSensibilite, String etiquetteRetention, Integer pages) {
     }
 
     public record ParticipantVue(Long id, String nom, String courriel, String telephone, String roleContrat, boolean externe,
                                  String niveauIdentite, boolean questionDefinie, String langue, String qualite, String entreprise,
-                                 boolean autoriteRequise) {
+                                 boolean autoriteRequise, String nature) {
     }
 
     public record DecisionVue(String acteur, String nature, String commentaire, Instant decideLe) {
@@ -137,7 +154,8 @@ public final class ClmDto {
                                 List<Modele.Champ> champs, List<String> manquants,
                                 int rappelFrequenceJours, int rappelsMax, String copies, Instant sfRecupereLe,
                                 List<DocumentVue> documents, List<ParticipantVue> participants, List<EtapeVue> etapes,
-                                List<InvitationVue> invitations, Set<String> actions, List<String> alertes) {
+                                List<InvitationVue> invitations, Set<String> actions, List<String> alertes, String priorite,
+                                boolean prioriteChoisie) {
     }
 
     public record EvenementVue(long sequence, String type, String acteur, Instant horodatage, String detail, String empreinte) {
@@ -145,7 +163,7 @@ public final class ClmDto {
 
     public record TacheVue(Long etapeId, Long trousseId, String reference, String titre, String type, String libelle,
                            String demandeur, Instant echeance, boolean enRetard, String statut, boolean decidee,
-                           String maDecision, boolean reassignee) {
+                           String maDecision, boolean reassignee, String priorite) {
     }
 
     public record TacheAssigneeVue(Long id, Long trousseId, String reference, String titre, String description,
@@ -179,7 +197,8 @@ public final class ClmDto {
 
     public record SuiviLigne(Long id, String reference, String titre, String statut, String source, String unite,
                              String proprietaire, List<String> etapesActives, List<String> enAttenteDe, Instant echeance,
-                             boolean enRetard, String dernierEvenement, Instant dernierEvenementLe, List<String> exceptions) {
+                             boolean enRetard, String dernierEvenement, Instant dernierEvenementLe, List<String> exceptions,
+                             String priorite) {
     }
 
     /** Page de la liste des trousses (UI-02) ; {@code total} nul quand la visibilité se vérifie trousse par trousse. */
@@ -237,14 +256,18 @@ public final class ClmDto {
     public record PortailVue(String reference, String titre, String participant, String niveau, String statut,
                              Instant expireLe, boolean verifiee, boolean consentement, String question,
                              List<DocumentPortail> documents, List<ChampPortail> champs, Recu recu, String organisation, String logo,
-                             String qualite, String entreprise, boolean autoriteRequise) {
+                             String qualite, String entreprise, boolean autoriteRequise, String nature) {
     }
 
-    public record Recu(String reference, String signataire, Instant signeeLe, String empreinteDocuments, String attestation) {
+    /** {@code action} : SIGNATURE, CONSULTATION ou COMPLETION (RST-50) ; {@code attestation} nulle hors signature. */
+    public record Recu(String reference, String signataire, Instant signeeLe, String empreinteDocuments, String attestation,
+                       String action) {
     }
 
+    /** {@code nature} du participant et {@code action} accomplie (RST-50) : la preuve distingue chaque participation. */
     public record SignatureVue(String participant, String courriel, String roleContrat, String niveau, Instant verifieeLe,
-                               Instant consentementLe, Instant signeeLe, String ip, String statut, Map<String, Object> attestation) {
+                               Instant consentementLe, Instant signeeLe, String ip, String statut, Map<String, Object> attestation,
+                               String nature, String action) {
     }
 
     public record Integrite(boolean integre, boolean journalIntegre, Long rupture, List<String> documentsAlteres,
@@ -353,8 +376,9 @@ public final class ClmDto {
                                    String modifiePar, Instant modifieLe) {
     }
 
+    /** {@code etiquette} : étiquettes Purview propagées au fichier déposé, ou motif de l'échec (ADR-036). */
     public record DepotM365Vue(Long id, Long trousseId, String reference, String nature, String statut, int tentatives, String url,
-                               String derniereErreur, Instant creeLe, Instant deposeLe, Instant prochainEssai) {
+                               String derniereErreur, Instant creeLe, Instant deposeLe, Instant prochainEssai, String etiquette) {
     }
 
     // --- Accès de soutien de l'exploitant (Annexe 10, SEC-17) ---
@@ -412,10 +436,21 @@ public final class ClmDto {
     public record RegleConservationRequest(String typeContrat, Integer dureeAns, String sortFinal) {
     }
 
-    /** Utilisation par enveloppe envoyée sur une période (addenda 3, Q39) ; {@code parMois} : « AAAA-MM » → enveloppes. */
+    /**
+     * Utilisation par enveloppe envoyée sur une période (addenda 3, Q39) ; {@code parMois} : « AAAA-MM » → enveloppes.
+     * {@code signes} : documents et pages signés (Annexe 10, AF-49), au total, par unité et par mois.
+     */
     public record UtilisationVue(java.time.LocalDate du, java.time.LocalDate au, int envoyees, int terminees, int rejetees,
                                  int annuleesApresEnvoi, int annuleesAvantEnvoi, int echeancesDepassees, int renvois,
-                                 Map<String, Integer> parMois) {
+                                 Map<String, Integer> parMois, SignesVue signes) {
+    }
+
+    /** Documents et pages signés d'une période (AF-49) ; {@code unite} vide : trousses sans unité. */
+    public record SignesVue(ComptageVue total, List<ComptageVue> parUnite, List<ComptageVue> parMois) {
+    }
+
+    /** {@code cle} : unité ou mois « AAAA-MM » ; {@code sansPagination} : documents signés dont les pages n'ont pu être comptées. */
+    public record ComptageVue(String cle, int documents, long pages, int sansPagination) {
     }
 
     /** Trousse détruite et résultat de son bordereau (addenda 3, Q48). */
@@ -432,5 +467,34 @@ public final class ClmDto {
     }
 
     public record GelRequest(String motif) {
+    }
+
+    // --- Chiffrement au repos par organisation (Annexe 10, SEC-28 ; ADR-037) ---
+
+    /** {@code nonChiffres} : anciens documents en clair, à réenvelopper ; aucune clé n'est jamais exposée. */
+    public record ChiffrementVue(String cleMaitresseActive, long nonChiffres, List<CleOrganisationVue> versions) {
+    }
+
+    public record CleOrganisationVue(int version, String statut, String cleMaitresse, Instant creeLe, Instant retireeLe,
+                                     long documents, boolean aReenvelopper) {
+    }
+
+    /** {@code restants} : documents encore à réenvelopper après ce lot ; un nouvel appel les traite. */
+    public record ReenveloppementVue(int cles, int documents, long restants) {
+    }
+
+    // --- Microsoft Purview (Annexe 10, SEC-27 ; ADR-036) ---
+
+    /** Étiquette du locataire Microsoft 365 : {@code type} SENSIBILITE ou RETENTION ; {@code jours} : durée de rétention. */
+    public record EtiquettePurviewVue(String type, String id, String nom, Integer jours) {
+    }
+
+    /** {@code typeContrat} nul : politique par défaut de l'organisation. */
+    public record PolitiquePurviewVue(Long id, String typeContrat, String sensibiliteId, String sensibilite, String retention,
+                                      Integer retentionJours, String modifiePar, Instant modifieLe) {
+    }
+
+    /** {@code sensibiliteId} : identifiant MIP ; {@code retention} : nom de l'étiquette de rétention ; l'un ou l'autre au moins. */
+    public record PolitiquePurviewRequest(String typeContrat, String sensibiliteId, String retention) {
     }
 }

@@ -49,8 +49,8 @@ class SuiviPaginationTest {
             new LecturePaginee(trousses, lecture));
     private final Habilitations.Acteur admin = new Habilitations.Acteur("admin@iq.example", Set.of("ADMIN"), Set.of());
     private final Habilitations.Acteur initiateur = new Habilitations.Acteur("i@iq.example", Set.of("REDACTEUR"), Set.of());
-    private static final SuiviService.Filtre TOUT = new SuiviService.Filtre(null, null, null, null, null, null, null, false);
-    private static final SuiviService.Filtre EXCEPTIONS = new SuiviService.Filtre(null, null, null, null, null, null, null, true);
+    private static final SuiviService.Filtre TOUT = new SuiviService.Filtre(null, null, null, null, null, null, null, false, null, null);
+    private static final SuiviService.Filtre EXCEPTIONS = new SuiviService.Filtre(null, null, null, null, null, null, null, true, null, null);
 
     private static List<Trousse> trousses(int debut, int n) {
         List<Trousse> l = new ArrayList<>();

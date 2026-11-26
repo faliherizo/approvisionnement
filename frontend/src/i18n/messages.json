@@ -10109,5 +10109,485 @@
     "fr": "Opération refusée.",
     "en": "Operation refused.",
     "mg": "Nolavina ny asa."
+  },
+  "an.scimDroits": {
+    "fr": "Découverte des droits",
+    "en": "Rights discovery",
+    "mg": "Fitadiavana ny zo"
+  },
+  "an.scimDroitsAide": {
+    "fr": "Chaque compte SCIM expose en lecture ses rôles effectifs (« roles ») et ses groupes du module de signature (« entitlements ») ; le schéma est publié sous /Schemas.",
+    "en": "Each SCIM account exposes, read-only, its effective roles (“roles”) and its signature-module groups (“entitlements”); the schema is published under /Schemas.",
+    "mg": "Ny kaonty SCIM tsirairay dia mampiseho, vakiana fotsiny, ny anjara asany (« roles ») sy ny vondrona ao amin'ny modely sonia (« entitlements ») ; ny schéma dia hita ao amin'ny /Schemas."
+  },
+  "clm.nav.chiffrement": {
+    "fr": "Chiffrement au repos",
+    "en": "Encryption at rest",
+    "mg": "Fanafenana voatahiry"
+  },
+  "clm.chiffre.titre": {
+    "fr": "Chiffrement au repos",
+    "en": "Encryption at rest",
+    "mg": "Fanafenana voatahiry"
+  },
+  "clm.chiffre.objectif": {
+    "fr": "Le contenu des documents de l’organisation est chiffré par une clé qui lui est dédiée, jamais partagée avec une autre organisation.",
+    "en": "The organization’s document content is encrypted with a key dedicated to it, never shared with another organization.",
+    "mg": "Ny votoatin'ny antontan-taratasin'ny fikambanana dia afenina amin'ny lakile natokana ho azy, tsy zaraina amin'ny fikambanana hafa mihitsy."
+  },
+  "clm.chiffre.blocCle": {
+    "fr": "Clé de l’organisation",
+    "en": "Organization key",
+    "mg": "Lakilen'ny fikambanana"
+  },
+  "clm.chiffre.aide": {
+    "fr": "Chaque document est chiffré (AES-256-GCM) par la version active de la clé ; la clé elle-même est enveloppée par la clé maîtresse du service de gestion des clés et n’est jamais affichée. Une rotation crée une nouvelle version sans interruption : les anciennes versions déchiffrent encore leurs documents jusqu’au réenveloppement.",
+    "en": "Each document is encrypted (AES-256-GCM) with the active key version; the key itself is wrapped by the key management service’s master key and is never displayed. A rotation creates a new version without interruption: older versions still decrypt their documents until rewrapping.",
+    "mg": "Ny antontan-taratasy tsirairay dia afenina (AES-256-GCM) amin'ny dikan-teny mavitrika amin'ny lakile ; ny lakile kosa dia fonosin'ny lakile lehibe ary tsy aseho mihitsy. Ny fanodinana dia mamorona dikan-teny vaovao tsy misy fiatoana."
+  },
+  "clm.chiffre.cleMaitresse": {
+    "fr": "Clé maîtresse active",
+    "en": "Active master key",
+    "mg": "Lakile lehibe mavitrika"
+  },
+  "clm.chiffre.nonChiffres": {
+    "fr": "Documents encore en clair (antérieurs)",
+    "en": "Documents still in clear (legacy)",
+    "mg": "Antontan-taratasy mbola tsy voafefy"
+  },
+  "clm.chiffre.aucuneVersion": {
+    "fr": "Aucune clé encore : la première est créée au premier document déposé.",
+    "en": "No key yet: the first one is created with the first uploaded document.",
+    "mg": "Tsy mbola misy lakile : noforonina amin'ny antontan-taratasy voalohany."
+  },
+  "clm.chiffre.version": {
+    "fr": "Version",
+    "en": "Version",
+    "mg": "Dikan-teny"
+  },
+  "clm.chiffre.documents": {
+    "fr": "Documents chiffrés",
+    "en": "Encrypted documents",
+    "mg": "Antontan-taratasy voafefy"
+  },
+  "clm.chiffre.creeLe": {
+    "fr": "Créée le",
+    "en": "Created on",
+    "mg": "Noforonina tamin'ny"
+  },
+  "clm.chiffre.enveloppe": {
+    "fr": "Enveloppée par",
+    "en": "Wrapped by",
+    "mg": "Fonosin'ny"
+  },
+  "clm.chiffre.aReenvelopper": {
+    "fr": "à réenvelopper",
+    "en": "to rewrap",
+    "mg": "hofonosina indray"
+  },
+  "clm.chiffre.statut.ACTIVE": {
+    "fr": "Active",
+    "en": "Active",
+    "mg": "Mavitrika"
+  },
+  "clm.chiffre.statut.RETIREE": {
+    "fr": "Retirée (lecture seule)",
+    "en": "Retired (read only)",
+    "mg": "Nesorina (vakiana fotsiny)"
+  },
+  "clm.chiffre.pivoter": {
+    "fr": "Pivoter la clé",
+    "en": "Rotate the key",
+    "mg": "Ovay ny lakile"
+  },
+  "clm.chiffre.reenvelopper": {
+    "fr": "Réenvelopper les documents",
+    "en": "Rewrap documents",
+    "mg": "Fonosy indray ny antontan-taratasy"
+  },
+  "clm.chiffre.confirmerRotation": {
+    "fr": "Une nouvelle version de la clé chiffrera les prochains documents ; les documents existants restent lisibles. Continuer ?",
+    "en": "A new key version will encrypt upcoming documents; existing documents remain readable. Continue?",
+    "mg": "Dikan-teny vaovao no hanafina ireo antontan-taratasy manaraka ; mbola azo vakiana ireo efa misy. Tohizana ve ?"
+  },
+  "clm.chiffre.pivotee": {
+    "fr": "Rotation effectuée : version {v} active.",
+    "en": "Rotation done: version {v} active.",
+    "mg": "Vita ny fanodinana : dikan-teny {v} mavitrika."
+  },
+  "clm.chiffre.reenveloppe": {
+    "fr": "Réenveloppement : {cles} clé(s), {docs} document(s) ; {restants} restant(s).",
+    "en": "Rewrapping: {cles} key(s), {docs} document(s); {restants} remaining.",
+    "mg": "Fonosina indray : lakile {cles}, antontan-taratasy {docs} ; {restants} sisa."
+  },
+  "clm.nav.purview": {
+    "fr": "Étiquettes Purview",
+    "en": "Purview labels",
+    "mg": "Marika Purview"
+  },
+  "clm.purview.titre": {
+    "fr": "Étiquettes Microsoft Purview",
+    "en": "Microsoft Purview labels",
+    "mg": "Marika Microsoft Purview"
+  },
+  "clm.purview.objectif": {
+    "fr": "Apposer aux documents l’étiquette de sensibilité et l’étiquette de rétention choisies par l’organisation, les conserver avec eux et les propager au dépôt SharePoint.",
+    "en": "Apply the sensitivity and retention labels chosen by the organization to documents, keep them with the documents and propagate them to the SharePoint upload.",
+    "mg": "Apetraka amin'ny antontan-taratasy ny marika fahamaroana sy fitehirizana nofidin'ny fikambanana, tehirizina miaraka aminy ary alefa any amin'ny SharePoint."
+  },
+  "clm.purview.blocPolitiques": {
+    "fr": "Politiques d’étiquetage",
+    "en": "Labeling policies",
+    "mg": "Politikan'ny famarihana"
+  },
+  "clm.purview.aide": {
+    "fr": "Les étiquettes proviennent du catalogue du locataire Microsoft 365 de l’organisation (simulé tant que la connexion Purview n’est pas raccordée). La politique d’un type de contrat remplace celle par défaut.",
+    "en": "Labels come from the organization’s Microsoft 365 tenant catalog (simulated until the Purview connection is set up). A contract-type policy overrides the default one.",
+    "mg": "Avy amin'ny katalaogin'ny Microsoft 365 an'ny fikambanana ny marika. Ny politikan'ny karazana fifanarahana no manolo ny politika mahazatra."
+  },
+  "clm.purview.aucune": {
+    "fr": "Aucune politique : les documents ne reçoivent aucune étiquette.",
+    "en": "No policy: documents receive no label.",
+    "mg": "Tsy misy politika : tsy mahazo marika ny antontan-taratasy."
+  },
+  "clm.purview.defaut": {
+    "fr": "Par défaut (tous les types)",
+    "en": "Default (all types)",
+    "mg": "Mahazatra (karazana rehetra)"
+  },
+  "clm.purview.sensibilite": {
+    "fr": "Étiquette de sensibilité",
+    "en": "Sensitivity label",
+    "mg": "Marika fahamaroana"
+  },
+  "clm.purview.retention": {
+    "fr": "Étiquette de rétention",
+    "en": "Retention label",
+    "mg": "Marika fitehirizana"
+  },
+  "clm.purview.etiquettes": {
+    "fr": "Étiquettes Purview",
+    "en": "Purview labels",
+    "mg": "Marika Purview"
+  },
+  "clm.purview.aucuneEtiquette": {
+    "fr": "— aucune —",
+    "en": "— none —",
+    "mg": "— tsy misy —"
+  },
+  "clm.purview.jours": {
+    "fr": "{n} jours",
+    "en": "{n} days",
+    "mg": "{n} andro"
+  },
+  "clm.purview.definir": {
+    "fr": "Enregistrer la politique",
+    "en": "Save the policy",
+    "mg": "Tehirizo ny politika"
+  },
+  "clm.purview.enregistree": {
+    "fr": "Politique « {type} » enregistrée.",
+    "en": "Policy “{type}” saved.",
+    "mg": "Voatahiry ny politika « {type} »."
+  },
+  "clm.purview.retiree": {
+    "fr": "Politique « {type} » retirée.",
+    "en": "Policy “{type}” removed.",
+    "mg": "Nesorina ny politika « {type} »."
+  },
+  "clm.purview.conservationAide": {
+    "fr": "La destruction d’une trousse n’intervient jamais avant la fin de la rétention de l’étiquette conservée avec ses documents.",
+    "en": "A package is never destroyed before the end of the retention of the label kept with its documents.",
+    "mg": "Tsy ravana mihitsy ny fonosana alohan'ny fiafaran'ny fitehirizana voalazan'ny marika."
+  },
+  "clm.champ.priorite": {
+    "fr": "Priorité",
+    "en": "Priority",
+    "mg": "Laharam-pahamehana"
+  },
+  "clm.priorite.BASSE": {
+    "fr": "Basse",
+    "en": "Low",
+    "mg": "Ambany"
+  },
+  "clm.priorite.NORMALE": {
+    "fr": "Normale",
+    "en": "Normal",
+    "mg": "Antonony"
+  },
+  "clm.priorite.HAUTE": {
+    "fr": "Haute",
+    "en": "High",
+    "mg": "Ambony"
+  },
+  "clm.priorite.CRITIQUE": {
+    "fr": "Critique",
+    "en": "Critical",
+    "mg": "Maika indrindra"
+  },
+  "clm.priorite.deduite": {
+    "fr": "Selon le niveau de risque (automatique)",
+    "en": "Based on the risk level (automatic)",
+    "mg": "Araka ny haavon'ny loza (ho azy)"
+  },
+  "clm.priorite.aide": {
+    "fr": "Sans choix, un risque faible donne une priorité basse, moyen une priorité normale, élevé une priorité haute. Une trousse haute est relancée deux fois plus souvent, une critique quatre fois.",
+    "en": "Without a choice, a low risk gives a low priority, a medium risk a normal one, a high risk a high one. A high-priority package is reminded twice as often, a critical one four times as often.",
+    "mg": "Raha tsy misy safidy, ny loza ambany dia manome laharana ambany, ny antonony laharana antonony, ny ambony laharana ambony. Ampahatsiahivina indroa matetika kokoa ny fonosana ambony, ary in-efatra ny maika indrindra."
+  },
+  "clm.priorite.choisie": {
+    "fr": "(choisie)",
+    "en": "(chosen)",
+    "mg": "(nofidina)"
+  },
+  "clm.priorite.selonRisque": {
+    "fr": "(selon le risque)",
+    "en": "(based on risk)",
+    "mg": "(araka ny loza)"
+  },
+  "clm.priorite.deLaTrousse": {
+    "fr": "Priorité de la trousse",
+    "en": "Package priority",
+    "mg": "Laharam-pahamehan'ny fonosana"
+  },
+  "clm.priorite.toutes": {
+    "fr": "Toutes les priorités",
+    "en": "All priorities",
+    "mg": "Laharam-pahamehana rehetra"
+  },
+  "clm.priorite.trierPar": {
+    "fr": "Trier par",
+    "en": "Sort by",
+    "mg": "Alaharo araka"
+  },
+  "clm.priorite.triRecent": {
+    "fr": "Les plus récentes d’abord",
+    "en": "Most recent first",
+    "mg": "Ny vaovao indrindra aloha"
+  },
+  "clm.priorite.triPriorite": {
+    "fr": "Priorité, la plus haute d’abord",
+    "en": "Priority, highest first",
+    "mg": "Laharam-pahamehana, ny ambony indrindra aloha"
+  },
+  "clm.doc.pages": {
+    "fr": "Pages",
+    "en": "Pages",
+    "mg": "Pejy"
+  },
+  "clm.signes.titre": {
+    "fr": "Documents et pages signés",
+    "en": "Signed documents and pages",
+    "mg": "Antontan-taratasy sy pejy voasonia"
+  },
+  "clm.signes.aide": {
+    "fr": "Versions signées des trousses terminées dans la période. Les pages d’un PDF sont comptées à son enregistrement ; un document Word n’est pas paginé.",
+    "en": "Signed versions of the packages completed in the period. A PDF’s pages are counted when it is saved; a Word document is not paginated.",
+    "mg": "Dika voasonia amin'ireo fonosana vita tao anatin'ny vanim-potoana. Isaina rehefa voatahiry ny pejin'ny PDF ; tsy isaina ny pejin'ny antontan-taratasy Word."
+  },
+  "clm.signes.documentsSignes": {
+    "fr": "Documents signés",
+    "en": "Signed documents",
+    "mg": "Antontan-taratasy voasonia"
+  },
+  "clm.signes.pagesSignees": {
+    "fr": "Pages signées",
+    "en": "Signed pages",
+    "mg": "Pejy voasonia"
+  },
+  "clm.signes.sansPagination": {
+    "fr": "Documents non paginés",
+    "en": "Documents without page count",
+    "mg": "Antontan-taratasy tsy voaisa pejy"
+  },
+  "clm.signes.parUnite": {
+    "fr": "Documents et pages signés par unité",
+    "en": "Signed documents and pages by unit",
+    "mg": "Antontan-taratasy sy pejy voasonia isaky ny sampana"
+  },
+  "clm.signes.parMois": {
+    "fr": "Documents et pages signés par mois",
+    "en": "Signed documents and pages by month",
+    "mg": "Antontan-taratasy sy pejy voasonia isam-bolana"
+  },
+  "clm.signes.cle": {
+    "fr": "Unité ou mois",
+    "en": "Unit or month",
+    "mg": "Sampana na volana"
+  },
+  "clm.signes.documents": {
+    "fr": "Documents",
+    "en": "Documents",
+    "mg": "Antontan-taratasy"
+  },
+  "clm.signes.pages": {
+    "fr": "Pages",
+    "en": "Pages",
+    "mg": "Pejy"
+  },
+  "clm.signes.sansUnite": {
+    "fr": "Sans unité",
+    "en": "No unit",
+    "mg": "Tsy misy sampana"
+  },
+  "clm.part.natureChamp": {
+    "fr": "Nature de la participation",
+    "en": "Participation type",
+    "mg": "Karazana fandraisana anjara"
+  },
+  "clm.part.natureAide": {
+    "fr": "(consulter, compléter ou signer)",
+    "en": "(view, complete or sign)",
+    "mg": "(mijery, mameno na manao sonia)"
+  },
+  "clm.part.nature.SIGNER": {
+    "fr": "Signer",
+    "en": "Sign",
+    "mg": "Manao sonia"
+  },
+  "clm.part.nature.COMPLETER": {
+    "fr": "Compléter seulement",
+    "en": "Complete only",
+    "mg": "Mameno ihany"
+  },
+  "clm.part.nature.CONSULTER": {
+    "fr": "Consulter seulement",
+    "en": "View only",
+    "mg": "Mijery ihany"
+  },
+  "clm.part.natureDe": {
+    "fr": "Nature : {nature}",
+    "en": "Type: {nature}",
+    "mg": "Karazana : {nature}"
+  },
+  "clm.part.action.SIGNATURE": {
+    "fr": "signature apposée",
+    "en": "signature applied",
+    "mg": "sonia natao"
+  },
+  "clm.part.action.CONSULTATION": {
+    "fr": "consultation attestée",
+    "en": "viewing attested",
+    "mg": "fijerena voamarina"
+  },
+  "clm.part.action.COMPLETION": {
+    "fr": "champs complétés",
+    "en": "fields completed",
+    "mg": "saha vita fenoina"
+  },
+  "clm.po.invitationNature.SIGNER": {
+    "fr": "Bonjour {nom}, vous êtes invité à signer la trousse {ref}.",
+    "en": "Hello {nom}, you are invited to sign package {ref}.",
+    "mg": "Manao ahoana {nom}, asaina hanao sonia ny fonosana {ref} ianao."
+  },
+  "clm.po.invitationNature.COMPLETER": {
+    "fr": "Bonjour {nom}, vous êtes invité à compléter des informations de la trousse {ref}, sans la signer.",
+    "en": "Hello {nom}, you are invited to complete information in package {ref}, without signing it.",
+    "mg": "Manao ahoana {nom}, asaina hameno ireo fampahalalana ao amin'ny fonosana {ref} ianao, tsy misy sonia."
+  },
+  "clm.po.invitationNature.CONSULTER": {
+    "fr": "Bonjour {nom}, vous êtes invité à prendre connaissance de la trousse {ref}, sans la signer.",
+    "en": "Hello {nom}, you are invited to review package {ref}, without signing it.",
+    "mg": "Manao ahoana {nom}, asaina handinika ny fonosana {ref} ianao, tsy misy sonia."
+  },
+  "clm.po.etapeConsulter": {
+    "fr": "2. Lire et attester la prise de connaissance",
+    "en": "2. Read and attest you reviewed",
+    "mg": "2. Vakio ary hamarino fa nojerenao"
+  },
+  "clm.po.natureConsulter": {
+    "fr": "Votre participation se limite à la consultation : aucune signature ni information ne vous est demandée.",
+    "en": "Your participation is limited to viewing: no signature or information is requested.",
+    "mg": "Fijerena ihany no anjaranao : tsy angatahina sonia na fampahalalana ianao."
+  },
+  "clm.po.attestationConsultation": {
+    "fr": "J’atteste avoir pris connaissance de chacun des documents.",
+    "en": "I attest that I have reviewed each document.",
+    "mg": "Manamarina aho fa nojereko avokoa ireo antontan-taratasy."
+  },
+  "clm.po.lireAvantAttester": {
+    "fr": "Ouvrez chaque document avant d’attester.",
+    "en": "Open each document before attesting.",
+    "mg": "Sokafy ny antontan-taratasy tsirairay alohan'ny hanamarinana."
+  },
+  "clm.po.attesterConsultation": {
+    "fr": "Attester ma consultation",
+    "en": "Attest my review",
+    "mg": "Hamarino ny fijereko"
+  },
+  "clm.po.consultationAttestee": {
+    "fr": "Consultation attestée.",
+    "en": "Review attested.",
+    "mg": "Voamarina ny fijerena."
+  },
+  "clm.po.etapeCompleter": {
+    "fr": "2. Compléter vos informations",
+    "en": "2. Complete your information",
+    "mg": "2. Fenoy ny fampahalalana anao"
+  },
+  "clm.po.natureCompleter": {
+    "fr": "Votre participation se limite à compléter les informations ci-dessous : aucune signature ne vous est demandée.",
+    "en": "Your participation is limited to completing the information below: no signature is requested.",
+    "mg": "Ny famenoana ireo fampahalalana etsy ambany ihany no anjaranao : tsy angatahina sonia ianao."
+  },
+  "clm.po.champsACompleter": {
+    "fr": "Informations à compléter",
+    "en": "Information to complete",
+    "mg": "Fampahalalana hofenoina"
+  },
+  "clm.po.aucunChampACompleter": {
+    "fr": "Aucune information à compléter.",
+    "en": "No information to complete.",
+    "mg": "Tsy misy fampahalalana hofenoina."
+  },
+  "clm.po.soumettreChamps": {
+    "fr": "Soumettre mes informations",
+    "en": "Submit my information",
+    "mg": "Alefaso ny fampahalalana"
+  },
+  "clm.po.champsSoumis": {
+    "fr": "Informations soumises.",
+    "en": "Information submitted.",
+    "mg": "Voalefa ny fampahalalana."
+  },
+  "clm.po.recuAction.SIGNATURE": {
+    "fr": "Reçu de signature",
+    "en": "Signature receipt",
+    "mg": "Rosia fanaovana sonia"
+  },
+  "clm.po.recuAction.CONSULTATION": {
+    "fr": "Reçu de consultation",
+    "en": "Review receipt",
+    "mg": "Rosia fijerena"
+  },
+  "clm.po.recuAction.COMPLETION": {
+    "fr": "Reçu de complétion",
+    "en": "Completion receipt",
+    "mg": "Rosia famenoana"
+  },
+  "clm.po.merciAction.SIGNATURE": {
+    "fr": "Merci, votre signature est enregistrée",
+    "en": "Thank you, your signature is recorded",
+    "mg": "Misaotra, voarakitra ny sonianao"
+  },
+  "clm.po.merciAction.CONSULTATION": {
+    "fr": "Merci, votre consultation est attestée",
+    "en": "Thank you, your review is attested",
+    "mg": "Misaotra, voamarina ny fijerenao"
+  },
+  "clm.po.merciAction.COMPLETION": {
+    "fr": "Merci, vos informations sont enregistrées",
+    "en": "Thank you, your information is recorded",
+    "mg": "Misaotra, voarakitra ny fampahalalana nomenao"
+  },
+  "clm.po.participant": {
+    "fr": "Participant",
+    "en": "Participant",
+    "mg": "Mpandray anjara"
+  },
+  "clm.po.accomplieLe": {
+    "fr": "Accomplie le",
+    "en": "Completed on",
+    "mg": "Vita ny"
   }
 }

@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import api from '../../api'
 import { useI18n } from '../../i18n/I18nContext'
 import { useModules } from '../../hooks/useModules.js'
-import { ChoixListe, GardeModule, Message, Statut, date, dateHeure, useErreur, useListe, useRessource } from './commun.jsx'
+import { ChoixListe, GardeModule, Message, PRIORITES, Priorite, Statut, date, dateHeure, useErreur, useListe, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 import OngletDocuments from './OngletDocuments.jsx'
 import OngletParticipants from './OngletParticipants.jsx'
@@ -14,12 +14,13 @@ const ETAPES = ['source', 'documents', 'participants', 'processus', 'recapitulat
 const RISQUES = ['FAIBLE', 'MOYEN', 'ELEVE']
 /** Rappels laissés vides : l'organisation applique ses valeurs par défaut (UI-22) tant que l'initiateur n'en fixe pas. */
 const FORM_VIDE = { source: 'MANUELLE', sfDossierId: '', modeleId: '', titre: '', reference: '', typeContrat: '', unite: '',
-  risque: 'MOYEN', echeance: '', copies: '', rappelFrequenceJours: '', rappelsMax: '' }
+  risque: 'MOYEN', priorite: '', echeance: '', copies: '', rappelFrequenceJours: '', rappelsMax: '' }
 const ACTIFS = (docs) => docs.filter((x) => !['REMPLACE', 'RETIRE'].includes(x.statut))
 const nombreOuNul = (v) => (v === '' || v === null || v === undefined ? null : Number(v))
 
 const depuisDetail = (d) => ({ source: d.resume.source, sfDossierId: d.resume.sfDossierId || '', modeleId: d.modeleId ? String(d.modeleId) : '',
   titre: d.resume.titre, reference: d.resume.reference, typeContrat: d.resume.typeContrat || '', unite: d.resume.unite || '', risque: d.risque,
+  priorite: d.prioriteChoisie ? d.priorite : '',
   echeance: d.resume.echeance || '', copies: d.copies || '', rappelFrequenceJours: d.rappelFrequenceJours, rappelsMax: d.rappelsMax })
 
 /** Champs Salesforce à résumer : ceux de la liste de l'organisation, sinon tous ceux du dossier. */
@@ -100,6 +101,13 @@ function EtapeSource({ form, setForm, modeles, dossier, onRechercher, d, import_
           </label>
           <p id="clm-risque-aide" className="muted">{publics ? t('clm.cr.identiteExigee', { externe: t(`clm.niveau.${niveau('identiteExterne')}`),
             interne: t(`clm.niveau.${niveau('identiteInterne')}`) }) : ''}</p>
+          <label>{t('clm.champ.priorite')}
+            <select value={form.priorite} onChange={maj('priorite')} aria-describedby="clm-priorite-aide">
+              <option value="">{t('clm.priorite.deduite')}</option>
+              {PRIORITES.map((p) => <option key={p} value={p}>{t(`clm.priorite.${p}`)}</option>)}
+            </select>
+          </label>
+          <p id="clm-priorite-aide" className="muted">{t('clm.priorite.aide')}</p>
           <label>{t('clm.champ.echeance')}<input type="date" value={form.echeance} onChange={maj('echeance')} /></label>
           <label className="col-2">{t('clm.champ.copies')} <span className="muted">{t('clm.cr.copiesAide')}</span><input value={form.copies} onChange={maj('copies')} /></label>
           <label>{t('clm.champ.frequence')}<input type="number" min={1} max={30} value={form.rappelFrequenceJours} onChange={maj('rappelFrequenceJours')} /></label>
@@ -141,6 +149,7 @@ function Recapitulatif({ d, form, modeles }) {
           <div><dt>{t('clm.champ.reference')}</dt><dd>{d.resume.reference}</dd></div>
           <div><dt>{t('clm.champ.unite')}</dt><dd>{unites.libelle(d.resume.unite) || '—'}</dd></div>
           <div><dt>{t('clm.champ.risque')}</dt><dd>{t(`clm.risque.${d.risque}`)}</dd></div>
+          <div><dt>{t('clm.champ.priorite')}</dt><dd><Priorite valeur={d.priorite} /></dd></div>
           <div><dt>{t('clm.champ.echeance')}</dt><dd>{date(d.resume.echeance)}</dd></div>
           <div><dt>{t('clm.cr.modele')}</dt><dd>{(modeles || []).find((m) => String(m.id) === String(form.modeleId))?.nom || t('clm.cr.sansModele')}</dd></div>
         </dl>

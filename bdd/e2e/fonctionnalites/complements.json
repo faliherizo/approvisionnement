@@ -34,6 +34,16 @@
         "/{}/signer"
       ]
     },
+    "pages/clm/Portail.jsx|`${base}/consultation`": {
+      "chemins": [
+        "/{}/consultation"
+      ]
+    },
+    "pages/clm/Portail.jsx|`${base}/completion`": {
+      "chemins": [
+        "/{}/completion"
+      ]
+    },
     "pages/clm/Portail.jsx|`${base}/refuser`": {
       "chemins": [
         "/{}/refuser"

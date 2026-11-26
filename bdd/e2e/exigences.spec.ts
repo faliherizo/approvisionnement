@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url'
 import { expect, Page, test } from '@playwright/test'
 import { cas as casConnus } from '../outils/donnees'
 import { Contexte, executer, substituer, totp } from '../outils/cas'
-import { connecterUi, ecartsEcran, preparerOrganisation } from '../outils/ui'
+import { connecterUi, ecartsEcran, interrompueParLeHarnais, naviguer, ouvrirConnexion, preparerOrganisation } from '../outils/ui'
 import { Etape, jeux } from './scenarios'
 
 /**
@@ -104,14 +104,27 @@ async function champ(page: Page, nomComplet: string) {
   return candidats[2].first()
 }
 
+/**
+ * Sur un téléphone, la navigation est repliée derrière le bouton « Menu » (aria-controls vers la <nav>) : comme la personne,
+ * on la déplie quand le lien ou le bouton visé s'y trouve, caché. Sans effet là où la navigation est affichée.
+ */
+async function deplierNavigation(page: Page, nom: string) {
+  const bascule = page.locator('button[aria-controls][aria-expanded="false"]').filter({ visible: true }).first()
+  if (!(await bascule.count())) return
+  const nav = page.locator(`nav[id="${await bascule.getAttribute('aria-controls')}"]`)
+  const cible = nav.getByRole('link', { name: nom, exact: true, includeHidden: true })
+    .or(nav.getByRole('button', { name: nom, exact: true, includeHidden: true }))
+  if (await cible.count() && !(await cible.first().isVisible())) await bascule.click()
+}
+
 const exact = (texte: string) => new RegExp(`^\\s*${texte.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`)
 
 async function jouer(page: Page, e: Etape, ctx: Contexte, outils: { playwright: any; baseURL: string; profil: string }) {
-  if ('aller' in e) return void await page.goto(e.aller)
+  if ('aller' in e) return void await naviguer(page, e.aller)
   if ('connecter' in e) {
     if (typeof e.connecter === 'string') return void await connecterUi(page, e.connecter)
     // Compte créé pendant le scénario (préparation ou écran d'administration).
-    await page.goto('about:blank'); await page.context().clearCookies(); await page.goto('/login')
+    await ouvrirConnexion(page)
     await page.getByLabel('Courriel').fill(e.connecter.email)
     await page.getByLabel('Mot de passe').fill(e.connecter.motDePasse)
     await page.getByRole('button', { name: 'Se connecter', exact: true }).click()
@@ -124,6 +137,7 @@ async function jouer(page: Page, e: Etape, ctx: Contexte, outils: { playwright: 
     return void await page.reload()
   }
   if ('cliquer' in e) {
+    await deplierNavigation(page, typeof e.cliquer === 'string' ? e.cliquer : e.cliquer.nom)
     const cible = typeof e.cliquer === 'string' ? await bouton(page, e.cliquer)
       : page.getByRole(e.cliquer.role, { name: e.cliquer.nom, exact: true }).first()
     return void await cible.click()
@@ -250,13 +264,18 @@ async function jouer(page: Page, e: Etape, ctx: Contexte, outils: { playwright: 
   throw new Error(`Étape inconnue : ${JSON.stringify(e)}`)
 }
 
-const TRACES = join(RACINE, 'test-results-e2e/appels')
+/**
+ * Traces de la campagne de référence (Chromium), relues par la couverture des écrans. Une recette WebKit (E2E_WEBKIT) range
+ * les siennes à part, par appareil : elle ne doit jamais remplacer la référence.
+ */
+const traces = (projet: string) => process.env.E2E_WEBKIT
+  ? join(RACINE, 'test-results-webkit/appels', projet) : join(RACINE, 'test-results-e2e/appels')
 
 /**
  * Écrans ouverts et appels d'API du navigateur, avec l'écran d'où chacun part. Les préparations passent par un autre
  * client HTTP et ne sont donc pas comptées : seule l'interface couvre une fonctionnalité.
  */
-function journaliser(page: Page) {
+function journaliser(page: Page, dossier: string) {
   const ecrans = new Set<string>()
   const appels: { methode: string; chemin: string; ecran: string; statut?: number }[] = []
   const chemin = (u: string) => new URL(u).pathname
@@ -300,8 +319,8 @@ function journaliser(page: Page) {
       }
     },
     ecrire(id: string, reussi: boolean) {
-      mkdirSync(TRACES, { recursive: true })
-      writeFileSync(join(TRACES, `${id}.json`), JSON.stringify({ scenario: id, reussi, ecrans: [...ecrans], appels }, null, 1))
+      mkdirSync(dossier, { recursive: true })
+      writeFileSync(join(dossier, `${id}.json`), JSON.stringify({ scenario: id, reussi, ecrans: [...ecrans], appels }, null, 1))
     },
   }
 }
@@ -327,9 +346,9 @@ for (const jeu of jeux) {
         }
         // Une erreur JavaScript non rattrapée (écran blanc) fait échouer le scénario, avec sa cause.
         const erreurs: string[] = []
-        page.on('pageerror', (err) => erreurs.push(`${err.message}\n${err.stack?.split('\n').slice(0, 4).join('\n')}`))
+        page.on('pageerror', (err) => interrompueParLeHarnais(page, err) || erreurs.push(`${err.message}\n${err.stack?.split('\n').slice(0, 4).join('\n')}`))
         // Trace des fonctionnalités exercées : écrans ouverts et appels d'API faits depuis chacun (couverture-ecrans.mjs).
-        const trace = journaliser(page)
+        const trace = journaliser(page, traces(test.info().project.name))
         // Confirmations et saisies natives (window.confirm, window.prompt) : acceptées, avec la réponse fixée par « repondre ».
         page.on('dialog', (d) => void d.accept(d.type() === 'prompt' ? (ctx.variables.reponseDialogue ?? 'Motif E2E') : undefined).catch(() => {}))
         const t0 = Date.now()

@@ -29,6 +29,7 @@ import qc.levis.contrat.auth.application.dto.ScimGroupe;
 import qc.levis.contrat.auth.application.dto.ScimGroupeVue;
 import qc.levis.contrat.auth.application.dto.ScimUtilisateur;
 import qc.levis.contrat.auth.application.dto.ScimUtilisateurVue;
+import qc.levis.contrat.commun.application.DroitModule;
 
 /**
  * Point SCIM 2.0 (RFC 7643, 7644) pour le provisionnement par Saviynt ou Microsoft Entra ID (addenda 3, Q51). Le jeton
@@ -49,6 +50,7 @@ public class ScimController {
     /** Attributs de compte retenus comme faits d'annuaire (addenda 4, Q31) : du schéma de base et de l'extension entreprise. */
     private static final List<String> ATTRIBUTS_BASE = List.of("title", "userType", "preferredLanguage");
     private static final List<String> ATTRIBUTS_ENTREPRISE = List.of("department", "division", "organization", "costCenter", "employeeNumber");
+    private static final String TYPE_ROLE = "plateforme";
     private static final Pattern MEMBRE_CIBLE = Pattern.compile("members\\[\\s*value\\s+eq\\s+\"([^\"]+)\"\\s*]", Pattern.CASE_INSENSITIVE);
 
     /** Jeton absent, inconnu ou révoqué. */
@@ -83,6 +85,25 @@ public class ScimController {
         return liste(List.of(
                 Map.of("id", "User", "name", "User", "endpoint", "/Users", "schema", SCHEMA_USER),
                 Map.of("id", "Group", "name", "Group", "endpoint", "/Groups", "schema", SCHEMA_GROUP)), 1, 2);
+    }
+
+    /**
+     * Schéma User publié (RFC 7643, § 7) : attributs que la plateforme gère, dont « roles » et « entitlements » en lecture
+     * seule (RST-52). Un outil de gouvernance des accès (Saviynt) y découvre où lire les droits effectifs.
+     */
+    @GetMapping("/Schemas")
+    public Map<String, Object> schemas(@RequestHeader(value = "Authorization", required = false) String auth) {
+        organisation(auth);
+        return liste(List.of(SchemaScimUser.schema()), 1, 1);
+    }
+
+    @GetMapping("/Schemas/{id}")
+    public Map<String, Object> schema(@RequestHeader(value = "Authorization", required = false) String auth, @PathVariable String id) {
+        organisation(auth);
+        if (!SCHEMA_USER.equals(id)) {
+            throw new NoSuchElementException("Schéma SCIM introuvable : " + id);
+        }
+        return SchemaScimUser.schema();
     }
 
     // --- Utilisateurs ---
@@ -295,8 +316,20 @@ public class ScimController {
         r.put("active", u.actif());
         r.put("emails", List.of(Map.of("value", u.userName(), "primary", true, "type", "work")));
         r.put("groups", u.groupes().stream().map(g -> Map.of("value", g)).toList());
+        r.put("roles", u.roles().stream().map(ScimController::role).toList());
+        r.put("entitlements", u.droits().stream().map(ScimController::droit).toList());
         r.put("meta", Map.of("resourceType", "User", "location", "/scim/v2/Users/" + u.id()));
         return r;
+    }
+
+    /** Rôle effectif de la plateforme (RFC 7643, § 4.1.2, « roles ») : type « plateforme ». */
+    private static Map<String, Object> role(String role) {
+        return Map.of("value", role, "display", role, "type", TYPE_ROLE, "primary", false);
+    }
+
+    /** Droit d'un module (RFC 7643, § 4.1.2, « entitlements ») : groupe du module CLM, typé par son module. */
+    private static Map<String, Object> droit(DroitModule d) {
+        return Map.of("value", d.valeur(), "display", d.libelle(), "type", d.module(), "primary", false);
     }
 
     private static Map<String, Object> groupe(ScimGroupeVue g) {

@@ -149,6 +149,14 @@ input, select, textarea {
   font: inherit; font-weight: 400; background: var(--panel); color: var(--texte);
   box-sizing: border-box; transition: border-color .15s ease, box-shadow .15s ease;
 }
+/* Safari (macOS, iOS, iPadOS) dessine une liste déroulante native à hauteur fixe (22 px) : il ignore sa marge intérieure
+   et sa hauteur minimale, ce qui la ramène sous la cible de 24 px (WCAG 2.5.8). Sans apparence native, la liste suit les
+   mêmes règles que les autres champs ; la flèche, rendue par le système jusque-là, est redessinée (contraste 5,8:1). */
+select:not([multiple]) {
+  -webkit-appearance: none; appearance: none; padding-right: 34px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2359636e' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; background-size: 12px 8px;
+}
 input:hover:not(:disabled), select:hover:not(:disabled), textarea:hover:not(:disabled) { border-color: #aab6c4; }
 input:focus, select:focus, textarea:focus {
   outline: none; border-color: var(--bleu); box-shadow: 0 0 0 3px rgba(11,74,138,.14);
@@ -396,7 +404,7 @@ th[scope="col"] { color: var(--bleu-fonce); }
 .actions { display: flex; gap: 8px; flex-shrink: 0; align-items: center; flex-wrap: wrap; }
 .gabarit-select { display: inline-flex; flex-direction: column; gap: 2px; font-size: 12px; }
 .gabarit-select__libelle { color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
-.gabarit-select select { padding: 8px 10px; border: 1px solid var(--border, #cbd5e1); border-radius: 8px; background: var(--card, #fff); color: inherit; font-size: 14px; }
+.gabarit-select select { padding: 8px 34px 8px 10px; border: 1px solid var(--border, #cbd5e1); border-radius: 8px; background-color: var(--card, #fff); color: inherit; font-size: 14px; }
 .gabarit-select select:focus-visible { outline: 2px solid var(--accent, #0B4A8A); outline-offset: 2px; }
 .check-row { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 0; font-weight: 400; min-width: 0; overflow-wrap: anywhere; }
 .actions-cell { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -615,8 +623,10 @@ img, svg, canvas { max-width: 100%; height: auto; }
 
 /* --- Sélecteur de langue --- */
 .lang-switcher { display: inline-flex; align-items: center; gap: 6px; }
-.lang-switcher select { padding: 5px 8px; font-size: 13px; border-radius: 6px; }
-.lang-switcher.compact select { background: rgba(0,0,0,.22); color: #fff; border-color: rgba(255,255,255,.45); }
+.lang-switcher select { padding: 5px 30px 5px 8px; background-position: right 9px center; font-size: 13px; border-radius: 6px; }
+.lang-switcher.compact select { background-color: rgba(0,0,0,.22);
+  /* Flèche blanche sur la barre foncée. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E"); color: #fff; border-color: rgba(255,255,255,.45); }
 .lang-switcher.compact option { color: #1c2733; }
 .login-lang { display: flex; justify-content: center; }
 

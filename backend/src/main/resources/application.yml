@@ -182,6 +182,18 @@ app:
       url: ${CLM_CONVERSION_URL:http://localhost:3000}
       soffice: ${CLM_CONVERSION_SOFFICE:soffice}
       delai-secondes: ${CLM_CONVERSION_DELAI_SECONDES:120}
+    # Chiffrement au repos par une clé dédiée à chaque organisation (Annexe 10, SEC-28 ; ADR-037). La clé maîtresse locale
+    # (32 octets en Base64) vient d'un secret de déploiement, jamais du dépôt ; vide → clé de développement, refusée si
+    # CLM_ENVIRONNEMENT=PROD. Profil « azure-kms » : la clé maîtresse reste dans Azure Key Vault (wrapkey/unwrapkey).
+    chiffrement:
+      cle-maitresse: ${CLM_CLE_MAITRESSE:}
+      cle-maitresse-id: ${CLM_CLE_MAITRESSE_ID:locale-1}
+      azure:
+        vault-url: ${CLM_KEYVAULT_URL:}
+        cle: ${CLM_KEYVAULT_CLE:}
+        tenant-id: ${CLM_KEYVAULT_TENANT_ID:}
+        client-id: ${CLM_KEYVAULT_CLIENT_ID:}
+        client-secret: ${CLM_KEYVAULT_CLIENT_SECRET:}
     planificateur:
       actif: ${CLM_PLANIFICATEUR_ACTIF:true}
       delai-ms: ${CLM_PLANIFICATEUR_DELAI_MS:60000}

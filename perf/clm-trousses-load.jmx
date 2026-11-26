@@ -48,7 +48,7 @@
       <hashTree/>
 <!-- Content-Type porte par chaque requete JSON : le depot de document est multipart. -->
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Initiateurs CLM (clm-initiateurs.csv)" enabled="true">
-        <stringProp name="filename">data/clm-initiateurs.csv</stringProp>
+        <stringProp name="filename">${__P(comptes,data/clm-initiateurs.csv)}</stringProp>
         <stringProp name="fileEncoding">UTF-8</stringProp>
         <stringProp name="variableNames">email,motDePasse</stringProp>
         <boolProp name="ignoreFirstLine">true</boolProp>
@@ -60,7 +60,7 @@
       </CSVDataSet>
       <hashTree/>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Trousses (clm-trousses.csv)" enabled="true">
-        <stringProp name="filename">data/clm-trousses.csv</stringProp>
+        <stringProp name="filename">${__P(trousses,data/clm-trousses.csv)}</stringProp>
         <stringProp name="fileEncoding">UTF-8</stringProp>
         <stringProp name="variableNames">typeContrat,signataire,courriel,telephone</stringProp>
         <boolProp name="ignoreFirstLine">true</boolProp>
@@ -84,6 +84,11 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
+<!-- Temps de reflexion entre deux gestes (profil cible : un utilisateur reel ne clique pas en continu). 0 par defaut. -->
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Temps de reflexion (pause.ms)" enabled="true">
+          <stringProp name="ConstantTimer.delay">${__P(pause.ms,0)}</stringProp>
+        </ConstantTimer>
+        <hashTree/>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="01 - Login" enabled="true">
           <boolProp name="TransactionController.parent">false</boolProp>
           <boolProp name="TransactionController.includeTimers">false</boolProp>
@@ -397,7 +402,7 @@
               <sentBytes>true</sentBytes><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">results/results.jtl</stringProp>
+          <stringProp name="filename">${__P(resultats,results)}/results.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
       </hashTree>

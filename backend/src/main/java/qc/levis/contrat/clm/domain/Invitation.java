@@ -22,7 +22,12 @@ import jakarta.persistence.Table;
         @Index(name = "ix_clm_inv_trousse", columnList = "tenant_id,trousse_id")})
 public class Invitation {
 
-    public enum Statut { ENVOYEE, VERIFIEE, SIGNEE, REFUSEE, ANNULEE, BLOQUEE, INVALIDEE }
+    /** CONSULTEE et COMPLETEE : participation accomplie d'un participant « consulter » ou « compléter » (RST-50). */
+    public enum Statut { ENVOYEE, VERIFIEE, SIGNEE, CONSULTEE, COMPLETEE, REFUSEE, ANNULEE, BLOQUEE, INVALIDEE }
+
+    /** Poste d'où la participation est donnée : adresse IP et navigateur, versés à la preuve. */
+    public record Poste(String ip, String agent) {
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,6 +74,7 @@ public class Invitation {
     @Column(name = "consentement_le")
     private Instant consentementLe;
 
+    /** Moment où la participation est accomplie : signature, consultation attestée ou complétion soumise. */
     @Column(name = "signee_le")
     private Instant signeeLe;
 
@@ -111,7 +117,7 @@ public class Invitation {
     /** Refuse toute action sur une invitation close ou expirée, avec un motif lisible par le signataire. */
     public void exigerOuverte(Instant maintenant) {
         switch (statut) {
-            case SIGNEE, REFUSEE -> throw new IllegalStateException("Lien déjà utilisé.");
+            case SIGNEE, CONSULTEE, COMPLETEE, REFUSEE -> throw new IllegalStateException("Lien déjà utilisé.");
             case ANNULEE -> throw new IllegalStateException("Document retiré : cette invitation a été annulée.");
             case BLOQUEE -> throw new IllegalStateException("Vérification échouée : trop de tentatives.");
             default -> {
@@ -164,6 +170,52 @@ public class Invitation {
         this.signeeLe = maintenant;
     }
 
+    /**
+     * Participant « consulter » (RST-50) : après vérification de l'identité, il atteste avoir pris connaissance des
+     * documents ; l'attestation tient lieu de consentement et clôt l'invitation, sans signature.
+     */
+    public void attesterConsultation(Poste poste, String attestationJson, Instant maintenant) {
+        exigerVerifiee("attester la consultation");
+        this.consentementLe = maintenant;
+        accomplir(Statut.CONSULTEE, poste, attestationJson, maintenant);
+    }
+
+    /** Participant « compléter » (RST-50) : ses valeurs sont soumises et conservées, sans signature. */
+    public void completer(String champsJson, Poste poste, String attestationJson, Instant maintenant) {
+        exigerVerifiee("soumettre vos champs");
+        this.champsJson = champsJson;
+        accomplir(Statut.COMPLETEE, poste, attestationJson, maintenant);
+    }
+
+    private void exigerVerifiee(String action) {
+        if (statut != Statut.VERIFIEE) {
+            throw new IllegalStateException("Identité à vérifier avant de " + action + ".");
+        }
+    }
+
+    private void accomplir(Statut accompli, Poste poste, String attestationJson, Instant maintenant) {
+        this.statut = accompli;
+        this.ip = poste.ip();
+        this.agent = poste.agent();
+        this.attestationJson = attestationJson;
+        this.signeeLe = maintenant;
+    }
+
+    /** Participation accomplie selon sa nature : signée, consultation attestée ou champs complétés. */
+    public boolean estAccomplie() {
+        return statut == Statut.SIGNEE || statut == Statut.CONSULTEE || statut == Statut.COMPLETEE;
+    }
+
+    /** Action accomplie, telle que la preuve la nomme ; nulle tant que la participation n'est pas accomplie. */
+    public String actionAccomplie() {
+        return switch (statut) {
+            case SIGNEE -> "SIGNATURE";
+            case CONSULTEE -> "CONSULTATION";
+            case COMPLETEE -> "COMPLETION";
+            default -> null;
+        };
+    }
+
     public void refuser(String motif, String ip, Instant maintenant) {
         this.statut = Statut.REFUSEE;
         this.motif = motif;
@@ -176,7 +228,7 @@ public class Invitation {
      * l'ancienne version ; elle reste au journal mais n'entre plus dans la preuve. Une invitation ouverte est annulée.
      */
     public void invalider() {
-        if (statut == Statut.SIGNEE) {
+        if (estAccomplie()) {
             this.statut = Statut.INVALIDEE;
         } else {
             annuler();
@@ -184,7 +236,7 @@ public class Invitation {
     }
 
     public void annuler() {
-        if (statut != Statut.SIGNEE && statut != Statut.REFUSEE) {
+        if (!estAccomplie() && statut != Statut.REFUSEE) {
             this.statut = Statut.ANNULEE;
         }
     }
@@ -206,6 +258,7 @@ public class Invitation {
     public String getNomSigne() { return nomSigne; }
     public String getIp() { return ip; }
     public String getAttestationJson() { return attestationJson; }
+    public String getChampsJson() { return champsJson; }
     public String getMotif() { return motif; }
 
     /** Destruction à l'échéance de conservation : nom saisi, adresse IP, navigateur et valeurs signées sont effacés. */

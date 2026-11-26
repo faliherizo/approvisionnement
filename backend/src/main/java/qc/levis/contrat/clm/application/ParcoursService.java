@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import qc.levis.contrat.clm.application.dto.ClmDto;
+import qc.levis.contrat.clm.application.port.ComptagePages;
 import qc.levis.contrat.clm.application.port.RenduDocuments;
 import qc.levis.contrat.clm.application.port.SourceAleatoire;
 import qc.levis.contrat.clm.application.repository.DecisionEtapeRepository;
@@ -39,6 +40,7 @@ import qc.levis.contrat.clm.domain.ModeleMessage.Evenement;
 import qc.levis.contrat.clm.domain.ParametresClm;
 import qc.levis.contrat.clm.domain.Parcours;
 import qc.levis.contrat.clm.domain.Participant;
+import qc.levis.contrat.clm.domain.PrioriteTrousse;
 import qc.levis.contrat.clm.domain.Relances;
 import qc.levis.contrat.clm.domain.StatutTrousse;
 import qc.levis.contrat.clm.domain.Trousse;
@@ -69,13 +71,15 @@ public class ParcoursService {
     private final ParametresClmService parametres;
     private final LectureTrousse lecture;
     private final ContexteClm ctx;
+    private final ComptagePages comptagePages;
 
     public ParcoursService(TrousseRepository trousses, EtapeTrousseRepository etapes, DecisionEtapeRepository decisions,
                            EvenementTrousseRepository evenements,
                            ParticipantRepository participants, InvitationRepository invitations, DocumentTrousseRepository documents,
                            ModeleContratRepository modeles, RenduDocuments rendu, MessagerieClm messagerie,
                            DiffusionStatut diffusion, JournalClm journal, SourceAleatoire alea, ParametresClmService parametres,
-                           LectureTrousse lecture, ContexteClm ctx) {
+                           LectureTrousse lecture, ContexteClm ctx, ComptagePages comptagePages) {
+        this.comptagePages = comptagePages;
         this.trousses = trousses;
         this.etapes = etapes;
         this.decisions = decisions;
@@ -484,6 +488,9 @@ public class ParcoursService {
                 d.getType(), signe, "systeme", "Version signée (source v" + d.getVersion() + " · " + d.getEmpreinte().substring(0, 12) + ")", maintenant);
         finale.setStatut(DocumentTrousse.Statut.SIGNE);
         finale.setAnalyse(DocumentTrousse.Analyse.PROPRE);
+        finale.reprendreEtiquettes(d);
+        // Comptées sur la version signée (AF-49) : une page de signatures ajoutée en fin de document compte aussi.
+        comptagePages.pages(finale.getType(), signe).ifPresent(finale::paginer);
         documents.save(finale);
     }
 
@@ -520,16 +527,32 @@ public class ParcoursService {
 
     // --- Boîte de tâches (UI-12) ---
     public List<ClmDto.TacheVue> mesTaches(Habilitations.Acteur acteur, String filtre) {
+        return mesTaches(acteur, filtre, null);
+    }
+
+    /** {@code priorite} (AF-46) : ne garde que les tâches des trousses de cette priorité ; vide, toutes. */
+    public List<ClmDto.TacheVue> mesTaches(Habilitations.Acteur acteur, String filtre, String priorite) {
+        String seule = priorite == null || priorite.isBlank() ? null : PrioriteTrousse.depuis(priorite).name();
+        List<ClmDto.TacheVue> res = "terminees".equals(filtre) ? terminees(acteur) : aTraiter(acteur, filtre);
+        return seule == null ? res : res.stream().filter(v -> seule.equals(v.priorite())).toList();
+    }
+
+    private List<ClmDto.TacheVue> terminees(Habilitations.Acteur acteur) {
         Long tenant = ctx.tenant();
         Instant maintenant = ctx.maintenant();
         List<ClmDto.TacheVue> res = new ArrayList<>();
-        if ("terminees".equals(filtre)) {
-            for (DecisionEtape d : decisions.findTop50ByTenantIdAndActeurOrderByDecideLeDesc(tenant, acteur.id())) {
-                etapes.findByIdAndTenantId(d.getEtapeId(), tenant).ifPresent(e ->
-                        res.add(tache(lecture.exiger(e.getTrousseId()), e, maintenant, true, d.getNature().name())));
-            }
-            return res;
+        for (DecisionEtape d : decisions.findTop50ByTenantIdAndActeurOrderByDecideLeDesc(tenant, acteur.id())) {
+            etapes.findByIdAndTenantId(d.getEtapeId(), tenant).ifPresent(e ->
+                    res.add(tache(lecture.exiger(e.getTrousseId()), e, maintenant, true, d.getNature().name())));
         }
+        return res;
+    }
+
+    /** Tâches à traiter : la plus prioritaire d'abord (AF-46), puis les retards, puis l'échéance la plus proche. */
+    private List<ClmDto.TacheVue> aTraiter(Habilitations.Acteur acteur, String filtre) {
+        Long tenant = ctx.tenant();
+        Instant maintenant = ctx.maintenant();
+        List<ClmDto.TacheVue> res = new ArrayList<>();
         for (EtapeTrousse e : etapes.findByTenantIdAndStatut(tenant, Parcours.StatutEtape.ACTIVE)) {
             Trousse t = lecture.exiger(e.getTrousseId());
             Map<Long, String> courriels = lecture.courriels(t);
@@ -549,7 +572,8 @@ public class ParcoursService {
                 res.add(v);
             }
         }
-        res.sort(Comparator.comparing((ClmDto.TacheVue v) -> !v.enRetard())
+        res.sort(Comparator.comparingInt((ClmDto.TacheVue v) -> -PrioriteTrousse.valueOf(v.priorite()).rang())
+                .thenComparing(v -> !v.enRetard())
                 .thenComparing(ClmDto.TacheVue::echeance, Comparator.nullsLast(Comparator.naturalOrder())));
         return res;
     }
@@ -557,7 +581,7 @@ public class ParcoursService {
     private ClmDto.TacheVue tache(Trousse t, EtapeTrousse e, Instant maintenant, boolean decidee, String maDecision) {
         return new ClmDto.TacheVue(e.getId(), t.getId(), t.getReference(), t.getTitre(), e.getType().name(), e.getLibelle(),
                 t.getProprietaire(), e.getEcheance(), e.getStatut() == Parcours.StatutEtape.ACTIVE && Relances.enRetard(e.getEcheance(), maintenant),
-                e.getStatut().name(), decidee, maDecision, reassignee(t, e));
+                e.getStatut().name(), decidee, maDecision, reassignee(t, e), t.getPriorite().name());
     }
 
     /** Une étape réassignée ou déléguée porte un événement dont le détail commence par son libellé (voir les consignations). */
@@ -580,7 +604,7 @@ public class ParcoursService {
         int destinataires = 0;
         if (e.getType() == Parcours.TypeEtape.SIGNATURE) {
             for (Invitation i : invitations.findByTenantIdAndEtapeId(t.getTenantId(), e.getId())) {
-                if (i.getStatut() == Invitation.Statut.SIGNEE || i.getStatut() == Invitation.Statut.REFUSEE || i.getStatut() == Invitation.Statut.ANNULEE) {
+                if (i.estAccomplie() || i.getStatut() == Invitation.Statut.REFUSEE || i.getStatut() == Invitation.Statut.ANNULEE) {
                     continue;
                 }
                 i.annuler();
@@ -679,8 +703,8 @@ public class ParcoursService {
                 .orElseThrow(() -> new org.springframework.security.access.AccessDeniedException("Cette signature ne vous est pas assignée."));
         for (Invitation i : invitations.findByTenantIdAndEtapeId(t.getTenantId(), e.getId())) {
             if (i.getParticipantId().equals(moi.getId())) {
-                if (i.getStatut() == Invitation.Statut.SIGNEE) {
-                    throw new IllegalStateException("Signature déjà apposée.");
+                if (i.estAccomplie()) {
+                    throw new IllegalStateException("Participation déjà accomplie.");
                 }
                 i.annuler();
                 invitations.save(i);
