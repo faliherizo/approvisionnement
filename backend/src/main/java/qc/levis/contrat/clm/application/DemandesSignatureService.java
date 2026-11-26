@@ -155,7 +155,7 @@ public class DemandesSignatureService {
     private Trousse creerUne(Habilitations.Acteur acteur, ClientIntegration client, ClmDto.DemandeTrousse d, Long lotId, boolean lancer) {
         String titre = titre(d);
         ClmDto.TrousseDetail cree = trousses.creer(new ClmDto.TrousseRequest(null, titre, null, d.unite(), d.risque(), d.echeance(),
-                d.modeleId(), d.sfDossierId(), null, null, null), acteur);
+                d.modeleId(), d.sfDossierId(), null, null, null, null), acteur);
         Long id = cree.resume().id();
         Trousse t = depot.findByIdAndTenantId(id, ctx.tenant()).orElseThrow();
         t.rattacherExterne(origine(client), client == null ? null : client.getId(), d.referenceExterne(), lotId);

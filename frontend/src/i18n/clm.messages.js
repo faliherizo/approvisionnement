@@ -395,7 +395,7 @@ const LIBELLES = {
   'clm.ta.filtre.deleguees': ['Déléguées', 'Delegated'], 'clm.ta.trousse': ['Trousse', 'Package'], 'clm.ta.typeAction': ['Type d’action', 'Action type'],
   'clm.ta.reassignee': ['Déléguée ou réassignée', 'Delegated or reassigned'], 'clm.ta.traiter': ['Traiter', 'Process'], 'clm.ta.ouvrir': ['Ouvrir', 'Open'],
   'clm.ta.voirHistorique': ['Voir l’historique', 'View history'], 'clm.ta.ouvrirTache': ['Ouvrir la tâche', 'Open task'], 'clm.ta.filtrerPar': ['Filtrer : {f}', 'Filter: {f}'], 'clm.ta.blocPriorisation': ['Priorisation par date et criticité', 'Prioritization by date and criticality'],
-  'clm.ta.priorisationAide': ['Les tâches en retard viennent en premier, puis celles dont l’échéance est la plus proche.', 'Overdue tasks come first, then those with the nearest due date.'],
+  'clm.ta.priorisationAide': ['Les tâches des trousses les plus prioritaires viennent en premier, puis celles en retard, puis celles dont l’échéance est la plus proche.', 'Tasks of the highest-priority packages come first, then overdue tasks, then those with the nearest due date.'],
   'clm.ta.nbRetard': ['{n} tâche(s) en retard', '{n} overdue task(s)'], 'clm.ta.nbBientot': ['{n} tâche(s) à échéance dans moins de 48 h', '{n} task(s) due within 48 h'],
   'clm.ta.blocDelegations': ['Délégations et réassignations', 'Delegations and reassignments'], 'clm.ta.aucuneDelegation': ['Aucune tâche déléguée ou réassignée.', 'No delegated or reassigned task.'],
   'clm.ta.traiterPrioritaire': ['Traiter la tâche prioritaire', 'Process top-priority task'], 'clm.ta.voirRetard': ['Voir les tâches en retard', 'View overdue tasks'],
@@ -428,7 +428,7 @@ const LIBELLES = {
   'clm.part.zoneAttribuee': ['Zone « {zone} » attribuée.', 'Zone “{zone}” assigned.'],
   // UI-18
   'clm.su.objectif': ['Suivre les dossiers et identifier les exceptions opérationnelles.', 'Track files and identify operational exceptions.'],
-  'clm.su.blocFiltres': ['Filtres état, unité, date, responsable, source', 'Filters: status, unit, date, owner, source'],
+  'clm.su.blocFiltres': ['Filtres état, unité, date, responsable, source, priorité', 'Filters: status, unit, date, owner, source, priority'],
   'clm.su.blocTable': ['Tableau multi-dossiers : étapes, attente, échéance, dernier événement', 'Multi-file table: steps, waiting, due date, last event'],
   'clm.su.blocExceptions': ['Vue des exceptions', 'Exceptions view'], 'clm.su.blocExport': ['Export selon autorisations', 'Export by permission'],
   'clm.su.toutesSources': ['Toutes les sources', 'All sources'], 'clm.su.ouvrir': ['Ouvrir le dossier', 'Open file'], 'clm.su.reassigner': ['Réassigner', 'Reassign'],

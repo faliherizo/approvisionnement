@@ -10299,5 +10299,75 @@
     "fr": "La destruction d’une trousse n’intervient jamais avant la fin de la rétention de l’étiquette conservée avec ses documents.",
     "en": "A package is never destroyed before the end of the retention of the label kept with its documents.",
     "mg": "Tsy ravana mihitsy ny fonosana alohan'ny fiafaran'ny fitehirizana voalazan'ny marika."
+  },
+  "clm.champ.priorite": {
+    "fr": "Priorité",
+    "en": "Priority",
+    "mg": "Laharam-pahamehana"
+  },
+  "clm.priorite.BASSE": {
+    "fr": "Basse",
+    "en": "Low",
+    "mg": "Ambany"
+  },
+  "clm.priorite.NORMALE": {
+    "fr": "Normale",
+    "en": "Normal",
+    "mg": "Antonony"
+  },
+  "clm.priorite.HAUTE": {
+    "fr": "Haute",
+    "en": "High",
+    "mg": "Ambony"
+  },
+  "clm.priorite.CRITIQUE": {
+    "fr": "Critique",
+    "en": "Critical",
+    "mg": "Maika indrindra"
+  },
+  "clm.priorite.deduite": {
+    "fr": "Selon le niveau de risque (automatique)",
+    "en": "Based on the risk level (automatic)",
+    "mg": "Araka ny haavon'ny loza (ho azy)"
+  },
+  "clm.priorite.aide": {
+    "fr": "Sans choix, un risque faible donne une priorité basse, moyen une priorité normale, élevé une priorité haute. Une trousse haute est relancée deux fois plus souvent, une critique quatre fois.",
+    "en": "Without a choice, a low risk gives a low priority, a medium risk a normal one, a high risk a high one. A high-priority package is reminded twice as often, a critical one four times as often.",
+    "mg": "Raha tsy misy safidy, ny loza ambany dia manome laharana ambany, ny antonony laharana antonony, ny ambony laharana ambony. Ampahatsiahivina indroa matetika kokoa ny fonosana ambony, ary in-efatra ny maika indrindra."
+  },
+  "clm.priorite.choisie": {
+    "fr": "(choisie)",
+    "en": "(chosen)",
+    "mg": "(nofidina)"
+  },
+  "clm.priorite.selonRisque": {
+    "fr": "(selon le risque)",
+    "en": "(based on risk)",
+    "mg": "(araka ny loza)"
+  },
+  "clm.priorite.deLaTrousse": {
+    "fr": "Priorité de la trousse",
+    "en": "Package priority",
+    "mg": "Laharam-pahamehan'ny fonosana"
+  },
+  "clm.priorite.toutes": {
+    "fr": "Toutes les priorités",
+    "en": "All priorities",
+    "mg": "Laharam-pahamehana rehetra"
+  },
+  "clm.priorite.trierPar": {
+    "fr": "Trier par",
+    "en": "Sort by",
+    "mg": "Alaharo araka"
+  },
+  "clm.priorite.triRecent": {
+    "fr": "Les plus récentes d’abord",
+    "en": "Most recent first",
+    "mg": "Ny vaovao indrindra aloha"
+  },
+  "clm.priorite.triPriorite": {
+    "fr": "Priorité, la plus haute d’abord",
+    "en": "Priority, highest first",
+    "mg": "Laharam-pahamehana, ny ambony indrindra aloha"
   }
 }

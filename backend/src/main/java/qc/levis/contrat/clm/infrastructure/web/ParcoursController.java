@@ -38,8 +38,9 @@ public class ParcoursController {
     }
 
     @GetMapping("/taches")
-    public List<ClmDto.TacheVue> taches(@RequestParam(defaultValue = "a_traiter") String filtre, Authentication auth) {
-        return parcours.mesTaches(acteurs.de(auth), filtre);
+    public List<ClmDto.TacheVue> taches(@RequestParam(defaultValue = "a_traiter") String filtre,
+                                        @RequestParam(required = false) String priorite, Authentication auth) {
+        return parcours.mesTaches(acteurs.de(auth), filtre, priorite);
     }
 
     @PostMapping("/etapes/{id}/decider")
@@ -78,7 +79,7 @@ public class ParcoursController {
                                           @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate du,
                                           @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate au,
                                           Authentication auth) {
-        return suivi.tableauBord(acteurs.de(auth), new SuiviService.Filtre(null, statut, unite, null, null, du, au, false));
+        return suivi.tableauBord(acteurs.de(auth), new SuiviService.Filtre(null, statut, unite, null, null, du, au, false, null, null));
     }
 
     /** Suivi paginé (UI-18) : {@code taille} 50 par défaut, 200 au plus. */
@@ -89,15 +90,20 @@ public class ParcoursController {
                                   @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate du,
                                   @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate au,
                                   @RequestParam(defaultValue = "false") boolean exceptions,
+                                  @RequestParam(required = false) String priorite, @RequestParam(required = false) String tri,
                                   @RequestParam(defaultValue = "0") int page,
                                   @RequestParam(defaultValue = "" + SuiviService.TAILLE_DEFAUT) int taille, Authentication auth) {
-        return suivi.page(acteurs.de(auth), new SuiviService.Filtre(q, statut, unite, responsable, source, du, au, exceptions), page, taille);
+        return suivi.page(acteurs.de(auth), new SuiviService.Filtre(q, statut, unite, responsable, source, du, au, exceptions, priorite, tri),
+                page, taille);
     }
 
     @GetMapping("/suivi/export")
     public ResponseEntity<byte[]> exporter(@RequestParam(required = false) String q, @RequestParam(required = false) String statut,
-                                           @RequestParam(defaultValue = "false") boolean exceptions, Authentication auth) {
-        String csv = suivi.exporterCsv(acteurs.de(auth), new SuiviService.Filtre(q, statut, null, null, null, null, null, exceptions));
+                                           @RequestParam(defaultValue = "false") boolean exceptions,
+                                           @RequestParam(required = false) String priorite, @RequestParam(required = false) String tri,
+                                           Authentication auth) {
+        String csv = suivi.exporterCsv(acteurs.de(auth), new SuiviService.Filtre(q, statut, null, null, null, null, null, exceptions,
+                priorite, tri));
         return TrousseController.fichier(("\uFEFF" + csv).getBytes(java.nio.charset.StandardCharsets.UTF_8), "text/csv;charset=UTF-8", "suivi-clm.csv");
     }
 }

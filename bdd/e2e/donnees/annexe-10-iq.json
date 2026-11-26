@@ -1168,6 +1168,382 @@
           "ecranConforme": true
         }
       ]
+    },
+    {
+      "id": "E2E-AX-IQ-08",
+      "titre": "AF-46 (RST-49) : l'initiateur choisit la priorité critique d'une trousse à la création ; sans choix, la priorité se déduit du niveau de risque ; le détail l'affiche",
+      "exigences": [
+        "IQ-D-07",
+        "IQ-C-41"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "aller": "/clm/trousses/nouvelle"
+        },
+        {
+          "remplir": {
+            "Titre": "Prio E2E ${unique}"
+          }
+        },
+        {
+          "choisir": {
+            "Niveau de risque": "Faible"
+          }
+        },
+        {
+          "options": {
+            "Priorité": {
+              "contient": [
+                "Selon le niveau de risque (automatique)",
+                "Basse",
+                "Normale",
+                "Haute",
+                "Critique"
+              ]
+            }
+          }
+        },
+        {
+          "choisir": {
+            "Priorité": "Critique"
+          }
+        },
+        {
+          "voir": "Une trousse haute est relancée deux fois plus souvent, une critique quatre fois."
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "cliquer": "Enregistrer le brouillon"
+        },
+        {
+          "voir": "enregistré."
+        },
+        {
+          "preparer": {
+            "description": "La trousse enregistrée à l'écran porte la priorité choisie ; une seconde, de risque élevé et sans priorité choisie, prend la priorité haute",
+            "etapes": [
+              {
+                "appel": "GET /api/clm/trousses?q=${unique}",
+                "capturer": {
+                  "choisie": "$.lignes[0].id"
+                }
+              },
+              {
+                "appel": "GET /api/clm/trousses/${choisie}",
+                "verifier": [
+                  {
+                    "chemin": "$.priorite",
+                    "egalTexte": "CRITIQUE"
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses",
+                "corps": {
+                  "titre": "Prio déduite ${unique}",
+                  "risque": "ELEVE"
+                },
+                "capturer": {
+                  "deduite": "$.resume.id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/trousses/${choisie}"
+        },
+        {
+          "voir": [
+            "Critique",
+            "(choisie)"
+          ]
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "aller": "/clm/trousses/${deduite}"
+        },
+        {
+          "voir": [
+            "Haute",
+            "(selon le risque)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-09",
+      "titre": "AF-46 (RST-49) : l'administration d'affaires trie le suivi par priorité, la plus haute d'abord, le filtre sur une priorité et l'exporte avec la priorité",
+      "exigences": [
+        "IQ-C-43",
+        "IQ-D-08"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Trois trousses : risque faible (priorité basse), priorité critique choisie, risque élevé (priorité haute), créées dans cet ordre",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Basse ${unique}",
+                  "risque": "FAIBLE"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Critique ${unique}",
+                  "risque": "MOYEN",
+                  "priorite": "CRITIQUE"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Haute ${unique}",
+                  "risque": "ELEVE"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/suivi"
+        },
+        {
+          "remplir": {
+            "Filtres état » Rechercher": "${unique}"
+          }
+        },
+        {
+          "choisir": {
+            "Trier par": "Priorité, la plus haute d’abord"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Filtres état",
+            "cliquer": "Rechercher"
+          }
+        },
+        {
+          "lire": {
+            "selecteur": "table.clm-table tbody tr:first-child:has-text(\"Critique ${unique}\")",
+            "variable": "premiere"
+          }
+        },
+        {
+          "lire": {
+            "selecteur": "table.clm-table tbody tr:nth-child(2):has-text(\"Haute ${unique}\")",
+            "variable": "deuxieme"
+          }
+        },
+        {
+          "lire": {
+            "selecteur": "table.clm-table tbody tr:nth-child(3):has-text(\"Basse ${unique}\")",
+            "variable": "troisieme"
+          }
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "choisir": {
+            "Priorité": "Haute"
+          }
+        },
+        {
+          "dansLaSection": {
+            "titre": "Filtres état",
+            "cliquer": "Rechercher"
+          }
+        },
+        {
+          "voir": "Haute ${unique}"
+        },
+        {
+          "nePasVoir": [
+            "Critique ${unique}",
+            "Basse ${unique}"
+          ]
+        },
+        {
+          "telecharger": "Exporter (CSV)"
+        },
+        {
+          "preparer": {
+            "description": "L'export du suivi porte la colonne de priorité, dans l'ordre demandé",
+            "etapes": [
+              {
+                "appel": "GET /api/clm/suivi/export?q=${unique}&tri=priorite",
+                "verifier": [
+                  {
+                    "texte": "reference;titre;priorite;statut"
+                  },
+                  {
+                    "texte": "Critique ${unique}\";CRITIQUE;"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-10",
+      "titre": "AF-46 (RST-49) : dans « Mes tâches », le validateur voit d'abord la tâche de la trousse critique et filtre ses tâches par priorité",
+      "exigences": [
+        "IQ-C-25"
+      ],
+      "profil": "validateur IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Deux trousses lancées vers le validateur, la basse d'abord, puis la critique",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Tâche basse ${unique}",
+                  "risque": "FAIBLE"
+                },
+                "capturer": {
+                  "basse": "$.resume.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${basse}/documents",
+                "profil": "initiateur IQ",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "basse.pdf",
+                    "type": "application/pdf"
+                  }
+                }
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${basse}/parcours",
+                "profil": "initiateur IQ",
+                "corps": [
+                  {
+                    "cle": "v1",
+                    "libelle": "Validation",
+                    "phase": 1,
+                    "type": "VALIDATION",
+                    "affectations": [
+                      {
+                        "type": "UTILISATEUR",
+                        "valeur": "validateur@iq.example"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${basse}/lancer",
+                "profil": "initiateur IQ",
+                "corps": {}
+              },
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Tâche critique ${unique}",
+                  "risque": "FAIBLE",
+                  "priorite": "CRITIQUE"
+                },
+                "capturer": {
+                  "critique": "$.resume.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${critique}/documents",
+                "profil": "initiateur IQ",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "critique.pdf",
+                    "type": "application/pdf"
+                  }
+                }
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${critique}/parcours",
+                "profil": "initiateur IQ",
+                "corps": [
+                  {
+                    "cle": "v1",
+                    "libelle": "Validation",
+                    "phase": 1,
+                    "type": "VALIDATION",
+                    "affectations": [
+                      {
+                        "type": "UTILISATEUR",
+                        "valeur": "validateur@iq.example"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${critique}/lancer",
+                "profil": "initiateur IQ",
+                "corps": {}
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/taches"
+        },
+        {
+          "voir": "Les tâches des trousses les plus prioritaires viennent en premier"
+        },
+        {
+          "lire": {
+            "selecteur": "table.clm-table tbody tr:first-child:has-text(\"Critique\")",
+            "variable": "premiere"
+          }
+        },
+        {
+          "choisir": {
+            "Priorité de la trousse": "Critique"
+          }
+        },
+        {
+          "voir": "Tâche critique ${unique}"
+        },
+        {
+          "nePasVoir": "Tâche basse ${unique}"
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "choisir": {
+            "Priorité de la trousse": "Basse"
+          }
+        },
+        {
+          "voir": "Tâche basse ${unique}"
+        },
+        {
+          "nePasVoir": "Tâche critique ${unique}"
+        }
+      ]
     }
   ]
 }

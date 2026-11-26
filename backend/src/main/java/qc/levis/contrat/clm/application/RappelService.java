@@ -72,8 +72,7 @@ public class RappelService {
             journal.consigner(t, "ECHEANCE_DEPASSEE", "systeme", e.getLibelle());
             parcours.notifierProprietaire(t, Evenement.RETARD, e.getLibelle());
         }
-        if (!Relances.rappelDu(e.getActiveeLe(), e.getDernierRappel(), e.getRappelsEnvoyes(), maintenant,
-                t.getRappelFrequenceJours(), t.getRappelsMax())) {
+        if (!Relances.rappelDu(e.getActiveeLe(), e.getDernierRappel(), e.getRappelsEnvoyes(), maintenant, t.cadenceRappels())) {
             return 0;
         }
         List<Parcours.Affectation> enAttente = enAttente(t, e);

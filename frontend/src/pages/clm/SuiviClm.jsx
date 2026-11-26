@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import api from '../../api'
 import { useAuth } from '../../auth.jsx'
 import { useI18n } from '../../i18n/I18nContext'
-import { ChoixListe, GardeModule, Message, Statut, dateHeure, telecharger, useErreur, useListe, useRessource } from './commun.jsx'
+import { ChoixListe, GardeModule, Message, PRIORITES, Priorite, Statut, dateHeure, telecharger, useErreur, useListe, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 
 /** Lignes par page (SuiviService.TAILLE_DEFAUT) : le serveur pagine, l'écran ne charge jamais toute l'organisation. */
@@ -11,7 +11,7 @@ const TAILLE = 50
 
 const STATUTS = ['BROUILLON', 'EN_TRAITEMENT', 'TERMINEE', 'REJETEE', 'ANNULEE']
 const EXCEPTIONS = ['BLOCAGE', 'ERREUR_SALESFORCE', 'SIGNATURE_EXPIREE']
-const VIDE = { q: '', statut: '', unite: '', responsable: '', source: '', du: '', au: '', exceptions: false }
+const VIDE = { q: '', statut: '', unite: '', responsable: '', source: '', priorite: '', tri: '', du: '', au: '', exceptions: false }
 
 /** UI-18 — Suivi centralisé : filtres, étapes et attentes, vue des exceptions, actions et export selon droits. */
 function Contenu() {
@@ -55,6 +55,8 @@ function Contenu() {
               onChange={(v) => setForm({ ...form, unite: v })} /></label>
             <label>{t('clm.col.responsable')}<input value={form.responsable} onChange={maj('responsable')} /></label>
             <label>{t('clm.col.source')}<select value={form.source} onChange={maj('source')}><option value="">{t('clm.su.toutesSources')}</option>{SOURCES.map((x) => <option key={x} value={x}>{t(`clm.source.${x}`)}</option>)}</select></label>
+            <label>{t('clm.champ.priorite')}<select value={form.priorite} onChange={maj('priorite')}><option value="">{t('clm.priorite.toutes')}</option>{PRIORITES.map((p) => <option key={p} value={p}>{t(`clm.priorite.${p}`)}</option>)}</select></label>
+            <label>{t('clm.priorite.trierPar')}<select value={form.tri} onChange={maj('tri')}><option value="">{t('clm.priorite.triRecent')}</option><option value="priorite">{t('clm.priorite.triPriorite')}</option></select></label>
             <label>{t('clm.su.du')}<input type="date" value={form.du} onChange={maj('du')} /></label>
             <label>{t('clm.su.au')}<input type="date" value={form.au} onChange={maj('au')} /></label>
             <label className="check-row"><input type="checkbox" checked={form.exceptions} onChange={maj('exceptions')} />{t('clm.su.exceptions')}</label>
@@ -69,13 +71,14 @@ function Contenu() {
             <div className="table-scroll">
               <table className="table clm-table" data-zone="03">
                 <caption className="sr-only">{t('clm.su.titre')}</caption>
-                <thead><tr><th scope="col">{t('clm.col.reference')}</th><th scope="col">{t('clm.col.statut')}</th><th scope="col">{t('clm.col.etapes')}</th>
+                <thead><tr><th scope="col">{t('clm.col.reference')}</th><th scope="col">{t('clm.champ.priorite')}</th><th scope="col">{t('clm.col.statut')}</th><th scope="col">{t('clm.col.etapes')}</th>
                   <th scope="col">{t('clm.col.attente')}</th><th scope="col">{t('clm.col.echeance')}</th><th scope="col">{t('clm.col.dernierEvenement')}</th>
                   <th scope="col">{t('clm.col.exceptions')}</th><th scope="col">{t('clm.col.actions')}</th></tr></thead>
                 <tbody>
                   {lignes.map((l) => (
                     <tr key={l.id}>
                       <td data-label={t('clm.col.reference')}>{l.reference}<br /><span className="muted">{l.titre} · {unites.libelle(l.unite) || '—'} · {l.proprietaire} · {t(`clm.source.${l.source}`)}</span></td>
+                      <td data-label={t('clm.champ.priorite')}><Priorite valeur={l.priorite} /></td>
                       <td data-label={t('clm.col.statut')}><Statut valeur={l.statut} /></td>
                       <td data-label={t('clm.col.etapes')}>{l.etapesActives.join(', ') || '—'}</td>
                       <td data-label={t('clm.col.attente')}>{l.enAttenteDe.join(', ') || '—'}</td>

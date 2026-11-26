@@ -243,3 +243,6 @@ h3.clm-bloc__titre { font-size: 16px; }
    sous la largeur de son contenu sans min-width: 0, et la liste déroulante l'entraînait hors de l'écran à 390 px. */
 .clm-ecran .cmp-row > label { flex: 1 1 14rem; min-width: 0; max-width: 100%; }
 .clm-ecran .cmp-row > label select { width: 100%; }
+/* Filtre de priorité de « Mes tâches » (AF-46) : sous les onglets, jamais plus large que l'écran à 390 px. */
+.clm-filtre-priorite { display: flex; flex-direction: column; gap: 4px; max-width: min(100%, 20rem); }
+.clm-filtre-priorite select { width: 100%; min-height: 44px; }

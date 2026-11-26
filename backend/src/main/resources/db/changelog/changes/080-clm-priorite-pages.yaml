@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: 080-1-clm-trousse-priorite
+      author: levis
+      comment: "Annexe 10 IQ, AF-46 (RST-49) : priorité de dossier choisie ou déduite du risque ; elle trie et filtre le suivi et « Mes tâches » et rapproche les rappels."
+      changes:
+        - addColumn:
+            tableName: clm_trousse
+            columns:
+              - column: { name: priorite, type: VARCHAR(10), defaultValue: NORMALE, constraints: { nullable: false } }
+              - column: { name: priorite_rang, type: INT, defaultValueNumeric: 1, constraints: { nullable: false } }
+              - column: { name: priorite_choisie, type: BOOLEAN, defaultValueBoolean: false, constraints: { nullable: false } }
+        # Trousses existantes : la priorité suit la règle de dérivation (risque faible → basse, élevé → haute).
+        - update:
+            tableName: clm_trousse
+            columns:
+              - column: { name: priorite, value: BASSE }
+              - column: { name: priorite_rang, valueNumeric: 0 }
+            where: "risque = 'FAIBLE'"
+        - update:
+            tableName: clm_trousse
+            columns:
+              - column: { name: priorite, value: HAUTE }
+              - column: { name: priorite_rang, valueNumeric: 2 }
+            where: "risque = 'ELEVE'"
+        - createIndex:
+            tableName: clm_trousse
+            indexName: ix_clm_trousse_priorite
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: priorite_rang }

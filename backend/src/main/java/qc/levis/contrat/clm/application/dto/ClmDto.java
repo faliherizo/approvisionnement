@@ -16,9 +16,10 @@ public final class ClmDto {
     }
 
     // --- Requêtes ---
+    /** {@code priorite} (AF-46) : BASSE, NORMALE, HAUTE ou CRITIQUE ; vide, déduite du risque ; absente, inchangée. */
     public record TrousseRequest(String reference, String titre, String typeContrat, String unite, String risque,
                                  LocalDate echeance, Long modeleId, String sfDossierId, Integer rappelFrequenceJours,
-                                 Integer rappelsMax, String copies) {
+                                 Integer rappelsMax, String copies, String priorite) {
     }
 
     /** {@code langue} : FR (défaut) ou EN, langue des messages et du portail du participant (addenda 2, Q19). */
@@ -139,7 +140,8 @@ public final class ClmDto {
                                 List<Modele.Champ> champs, List<String> manquants,
                                 int rappelFrequenceJours, int rappelsMax, String copies, Instant sfRecupereLe,
                                 List<DocumentVue> documents, List<ParticipantVue> participants, List<EtapeVue> etapes,
-                                List<InvitationVue> invitations, Set<String> actions, List<String> alertes) {
+                                List<InvitationVue> invitations, Set<String> actions, List<String> alertes, String priorite,
+                                boolean prioriteChoisie) {
     }
 
     public record EvenementVue(long sequence, String type, String acteur, Instant horodatage, String detail, String empreinte) {
@@ -147,7 +149,7 @@ public final class ClmDto {
 
     public record TacheVue(Long etapeId, Long trousseId, String reference, String titre, String type, String libelle,
                            String demandeur, Instant echeance, boolean enRetard, String statut, boolean decidee,
-                           String maDecision, boolean reassignee) {
+                           String maDecision, boolean reassignee, String priorite) {
     }
 
     public record TacheAssigneeVue(Long id, Long trousseId, String reference, String titre, String description,
@@ -181,7 +183,8 @@ public final class ClmDto {
 
     public record SuiviLigne(Long id, String reference, String titre, String statut, String source, String unite,
                              String proprietaire, List<String> etapesActives, List<String> enAttenteDe, Instant echeance,
-                             boolean enRetard, String dernierEvenement, Instant dernierEvenementLe, List<String> exceptions) {
+                             boolean enRetard, String dernierEvenement, Instant dernierEvenementLe, List<String> exceptions,
+                             String priorite) {
     }
 
     /** Page de la liste des trousses (UI-02) ; {@code total} nul quand la visibilité se vérifie trousse par trousse. */

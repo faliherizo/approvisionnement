@@ -35,6 +35,22 @@ export function Statut({ valeur }) {
   )
 }
 
+/** Priorités d'un dossier (AF-46), de la plus basse à la plus haute. */
+export const PRIORITES = ['BASSE', 'NORMALE', 'HAUTE', 'CRITIQUE']
+const TONS_PRIORITE = { BASSE: 'neutre', NORMALE: 'info', HAUTE: 'attente', CRITIQUE: 'ko' }
+const ICONES_PRIORITE = { BASSE: '↓', NORMALE: '•', HAUTE: '↑', CRITIQUE: '‼' }
+
+/** Priorité d'une trousse : libellé et icône, jamais la couleur seule. */
+export function Priorite({ valeur }) {
+  const { t } = useI18n()
+  if (!valeur) return null
+  return (
+    <span className={`clm-statut clm-statut--${TONS_PRIORITE[valeur]}`}>
+      <span aria-hidden="true">{ICONES_PRIORITE[valeur]}</span> {t(`clm.priorite.${valeur}`)}
+    </span>
+  )
+}
+
 /** Message d'erreur annoncé (role=alert) ou d'état (role=status). */
 export function Message({ erreur, info, onReessayer }) {
   const { t } = useI18n()

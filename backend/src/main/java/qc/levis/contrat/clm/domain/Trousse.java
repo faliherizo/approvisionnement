@@ -92,6 +92,18 @@ public class Trousse {
     @Column(nullable = false, length = 10)
     private Identite.Risque risque = Identite.Risque.MOYEN;
 
+    /** Priorité du dossier (AF-46, migration 080) : choisie, ou déduite du risque tant qu'aucune ne l'est. */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    private PrioriteTrousse priorite = PrioriteTrousse.NORMALE;
+
+    /** Rang de la priorité, conservé pour trier le suivi en base (le nom ne suit pas l'ordre). */
+    @Column(name = "priorite_rang", nullable = false)
+    private int prioriteRang = PrioriteTrousse.NORMALE.rang();
+
+    @Column(name = "priorite_choisie", nullable = false)
+    private boolean prioriteChoisie;
+
     @Column(nullable = false, length = 150)
     private String proprietaire;
 
@@ -262,7 +274,32 @@ public class Trousse {
     public void setSfRecupereLe(Instant sfRecupereLe) { this.sfRecupereLe = sfRecupereLe; }
     public StatutTrousse getStatut() { return statut; }
     public Identite.Risque getRisque() { return risque; }
-    public void setRisque(Identite.Risque risque) { this.risque = risque; }
+    /** Le risque change : une priorité qui n'a pas été choisie le suit. */
+    public void setRisque(Identite.Risque risque) {
+        this.risque = risque;
+        if (!prioriteChoisie) {
+            fixerPriorite(PrioriteTrousse.deduite(risque));
+        }
+    }
+
+    /** Priorité choisie par l'initiateur ; nulle, la trousse revient à la priorité déduite de son risque (AF-46). */
+    public void prioriser(PrioriteTrousse choisie) {
+        this.prioriteChoisie = choisie != null;
+        fixerPriorite(choisie != null ? choisie : PrioriteTrousse.deduite(risque));
+    }
+
+    private void fixerPriorite(PrioriteTrousse p) {
+        this.priorite = p;
+        this.prioriteRang = p.rang();
+    }
+
+    public PrioriteTrousse getPriorite() { return priorite; }
+    public boolean isPrioriteChoisie() { return prioriteChoisie; }
+
+    /** Rappels de la trousse, rapprochés selon sa priorité. */
+    public Relances.Cadence cadenceRappels() {
+        return new Relances.Cadence(rappelFrequenceJours, rappelsMax, priorite);
+    }
     /**
      * Départ ou changement de responsable (P3) : une trousse ouverte change de propriétaire ; une trousse close garde le
      * sien, qui fait partie de sa preuve. Retourne l'ancien propriétaire, pour la trace.

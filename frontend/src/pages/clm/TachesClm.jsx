@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import api from '../../api'
 import { useI18n } from '../../i18n/I18nContext'
-import { GardeModule, Message, Statut, Visionneuse, dateHeure, useErreur, useRessource } from './commun.jsx'
+import { GardeModule, Message, PRIORITES, Priorite, Statut, Visionneuse, dateHeure, useErreur, useRessource } from './commun.jsx'
 import { Bloc, Blocs, EcranClm } from './gabarit.jsx'
 import TachesAssignees from './TachesAssignees.jsx'
 
@@ -177,12 +177,15 @@ function Contenu() {
   const { t } = useI18n()
   const [params, setParams] = useSearchParams()
   const filtre = FILTRES.includes(params.get('filtre')) ? params.get('filtre') : 'a_traiter'
+  // Priorité de la trousse (AF-46) : filtre conservé dans l'adresse, comme l'onglet.
+  const priorite = PRIORITES.includes(params.get('priorite')) ? params.get('priorite') : ''
   const [info, setInfo] = useState('')
-  const { donnees, erreur, chargement, recharger } = useRessource(`/clm/taches?filtre=${filtre}`)
+  const { donnees, erreur, chargement, recharger } = useRessource(`/clm/taches?${new URLSearchParams(priorite ? { filtre, priorite } : { filtre })}`)
   const taches = donnees || []
   const choisie = taches.find((x) => String(x.etapeId) === params.get('etape'))
-  const ouvrir = (x) => setParams({ filtre, etape: String(x.etapeId) })
-  const retour = () => setParams({ filtre })
+  const aller = (p) => setParams(priorite ? { priorite, ...p } : p)
+  const ouvrir = (x) => aller({ filtre, etape: String(x.etapeId) })
+  const retour = () => aller({ filtre })
 
   if (choisie) {
     return <Decision tache={choisie} onRetour={retour} onDecide={(msg) => { setInfo(msg); retour(); recharger() }} />
@@ -196,7 +199,7 @@ function Contenu() {
       actions={(
         <>
           <button type="button" disabled={taches.length === 0 || filtre === 'terminees'} onClick={() => ouvrir(taches[0])}>{t('clm.ta.traiterPrioritaire')}</button>
-          <button type="button" className="secondary" onClick={() => setParams({ filtre: 'en_retard' })}>{t('clm.ta.voirRetard')}</button>
+          <button type="button" className="secondary" onClick={() => aller({ filtre: 'en_retard' })}>{t('clm.ta.voirRetard')}</button>
         </>
       )}>
       <Message erreur={erreur} info={chargement ? t('clm.chargement') : info} onReessayer={recharger} />
@@ -204,22 +207,29 @@ function Contenu() {
         <Bloc zone="01" titre={t('clm.ta.filtres')} large>
           <div className="clm-onglets" role="group" aria-label={t('clm.ta.filtres')}>
             {FILTRES.map((f) => (
-              <button key={f} type="button" aria-pressed={filtre === f} className={filtre === f ? 'is-actif' : ''} onClick={() => setParams({ filtre: f })}
+              <button key={f} type="button" aria-pressed={filtre === f} className={filtre === f ? 'is-actif' : ''} onClick={() => aller({ filtre: f })}
                 aria-label={t('clm.ta.filtrerPar', { f: t(`clm.ta.filtre.${f}`) })}>{t(`clm.ta.filtre.${f}`)}</button>
             ))}
           </div>
+          <label className="clm-filtre-priorite">{t('clm.priorite.deLaTrousse')}
+            <select value={priorite} onChange={(e) => setParams(e.target.value ? { filtre, priorite: e.target.value } : { filtre })}>
+              <option value="">{t('clm.priorite.toutes')}</option>
+              {PRIORITES.map((p) => <option key={p} value={p}>{t(`clm.priorite.${p}`)}</option>)}
+            </select>
+          </label>
         </Bloc>
         <Bloc zone="02" titre={t(`clm.ta.filtre.${filtre}`)} large>
           {donnees && taches.length === 0 ? <p className="muted">{t('clm.ta.aucune')}</p> : (
             <div className="table-scroll">
               <table className="table clm-table">
                 <caption className="sr-only">{t(`clm.ta.filtre.${filtre}`)}</caption>
-                <thead><tr><th scope="col">{t('clm.ta.trousse')}</th><th scope="col">{t('clm.ta.typeAction')}</th><th scope="col">{t('clm.col.demandeur')}</th>
+                <thead><tr><th scope="col">{t('clm.ta.trousse')}</th><th scope="col">{t('clm.champ.priorite')}</th><th scope="col">{t('clm.ta.typeAction')}</th><th scope="col">{t('clm.col.demandeur')}</th>
                   <th scope="col">{t('clm.col.echeance')}</th><th scope="col">{t('clm.col.statut')}</th><th scope="col">{t('clm.col.actions')}</th></tr></thead>
                 <tbody>
                   {taches.map((x) => (
                     <tr key={`${x.etapeId}-${x.maDecision || ''}`}>
                       <td data-label={t('clm.ta.trousse')}>{x.reference} — {x.titre}</td>
+                      <td data-label={t('clm.champ.priorite')}><Priorite valeur={x.priorite} /></td>
                       <td data-label={t('clm.ta.typeAction')}>{t(`clm.type.${x.type}`)} · {x.libelle}
                         {x.reassignee && <><br /><span className="clm-statut clm-statut--attente"><span aria-hidden="true">⇄</span> {t('clm.ta.reassignee')}</span></>}</td>
                       <td data-label={t('clm.col.demandeur')}>{x.demandeur}</td>

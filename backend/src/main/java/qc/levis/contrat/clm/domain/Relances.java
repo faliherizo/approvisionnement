@@ -29,11 +29,25 @@ public final class Relances {
     /** Un rappel est dû quand la fréquence est écoulée depuis l'activation ou le dernier rappel, dans la limite permise. */
     public static boolean rappelDu(Instant activeeLe, Instant dernierRappel, int rappelsEnvoyes, Instant maintenant,
                                    int frequenceJours, int rappelsMax) {
-        if (activeeLe == null || frequenceJours < 1 || rappelsEnvoyes >= rappelsMax) {
+        return rappelDu(activeeLe, dernierRappel, rappelsEnvoyes, maintenant,
+                new Cadence(frequenceJours, rappelsMax, PrioriteTrousse.NORMALE));
+    }
+
+    /** Même règle, l'intervalle étant rapproché selon la priorité de la trousse (AF-46). */
+    public static boolean rappelDu(Instant activeeLe, Instant dernierRappel, int rappelsEnvoyes, Instant maintenant, Cadence cadence) {
+        if (activeeLe == null || cadence.frequenceJours() < 1 || rappelsEnvoyes >= cadence.rappelsMax()) {
             return false;
         }
         Instant reference = dernierRappel == null ? activeeLe : dernierRappel;
-        return !maintenant.isBefore(reference.plus(Duration.ofDays(frequenceJours)));
+        return !maintenant.isBefore(reference.plus(cadence.intervalle()));
+    }
+
+    /** Rappels d'une trousse : fréquence de l'organisation ou de l'initiateur, plafond, et priorité qui l'accélère. */
+    public record Cadence(int frequenceJours, int rappelsMax, PrioriteTrousse priorite) {
+
+        public Duration intervalle() {
+            return priorite.intervalleRappel(frequenceJours);
+        }
     }
 
     public static boolean enRetard(Instant echeance, Instant maintenant) {
