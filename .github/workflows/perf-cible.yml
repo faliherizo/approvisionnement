@@ -9,8 +9,9 @@
 #                exécute au moins 3 (backend.replicas) : l'essai fait porter les 500 utilisateurs par UNE seule réplique.
 #   PostgreSQL : version 16 de la cible (infra/terraform/azure/variables.tf postgres_version, document 01 de la
 #                réponse) ; la cible est un GP_Standard_D4s_v3 (4 vCores, 16 Gio). L'exécuteur standard (4 vCPU, 16 Go)
-#                ne peut pas l'héberger à côté du serveur et de JMeter : la base est bornée à 1 vCPU et 4 Gio, soit le
-#                quart de la cible — l'essai est donc plus sévère que la cible pour la base comme pour le serveur.
+#                ne peut pas l'héberger à côté du serveur et de JMeter : la base est bornée à 1,5 vCPU et 4 Gio (38 % des
+#                vCores et 25 % de la mémoire de la cible) — l'essai est plus sévère que la cible pour la base comme pour
+#                le serveur. Reste environ 0,5 vCPU pour JMeter et Docker (charge de l'hôte relevée dans le résumé).
 # Les mots de passe et clés de la pile sont générés à chaque exécution et masqués ; rien n'est versionné.
 name: Performance — profil cible TI-12 (500 utilisateurs)
 
@@ -48,7 +49,7 @@ env:
   POSTGRES_IMAGE: "postgres:16"
   SERVEUR_CPUS: "2"
   SERVEUR_MEMOIRE: "2g"
-  BASE_CPUS: "1"
+  BASE_CPUS: "1.5"
   BASE_MEMOIRE: "4g"
   UTILISATEURS: ${{ inputs.utilisateurs || '500' }}
   MONTEE: ${{ inputs.montee || '300' }}
