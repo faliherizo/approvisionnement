@@ -120,7 +120,9 @@
     « infrastructure » du workflow `releve.yml` ;
   - essai de relève mesuré (`releve.yml`) : perte totale du site primaire, reprise sur un site neuf, contrôles des
     têtes de chaîne du journal scellé, des empreintes, du déchiffrement par la clé de l'organisation, du parcours
-    principal ; RTO et RPO mesurés, porte bloquante sur les niveaux annoncés et les objectifs ;
+    principal ; RTO et RPO mesurés, porte bloquante sur les niveaux annoncés et les objectifs. Premier run vert
+    (26 novembre 2026, exécution 45909089280) : réplique RTO 20 s / RPO 0 s ; sauvegarde RTO 21 s / RPO 36 s
+    (temps technique, hors opérations de plateforme Azure) ;
   - tests de l'outil de mesure (`infra/dr/essai/test_rapport_releve.py`).
 - **Reste à faire** : premier exercice sur l'abonnement Azure d'IQ avant la mise en production (`bascule-azure.sh
   exercice`, puis bascule et retour planifiés en fenêtre de maintenance) ; essai de charge de la région de relève
