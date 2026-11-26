@@ -10109,5 +10109,15 @@
     "fr": "Opération refusée.",
     "en": "Operation refused.",
     "mg": "Nolavina ny asa."
+  },
+  "an.scimDroits": {
+    "fr": "Découverte des droits",
+    "en": "Rights discovery",
+    "mg": "Fitadiavana ny zo"
+  },
+  "an.scimDroitsAide": {
+    "fr": "Chaque compte SCIM expose en lecture ses rôles effectifs (« roles ») et ses groupes du module de signature (« entitlements ») ; le schéma est publié sous /Schemas.",
+    "en": "Each SCIM account exposes, read-only, its effective roles (“roles”) and its signature-module groups (“entitlements”); the schema is published under /Schemas.",
+    "mg": "Ny kaonty SCIM tsirairay dia mampiseho, vakiana fotsiny, ny anjara asany (« roles ») sy ny vondrona ao amin'ny modely sonia (« entitlements ») ; ny schéma dia hita ao amin'ny /Schemas."
   }
 }

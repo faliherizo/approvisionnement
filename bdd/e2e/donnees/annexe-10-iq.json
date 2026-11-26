@@ -842,6 +842,121 @@
           "ecranConforme": true
         }
       ]
+    },
+    {
+      "id": "E2E-AX-IQ-20",
+      "titre": "TI-21 (RST-52) : l'administration technique crée le jeton SCIM ; Saviynt provisionne un compte, puis découvre par SCIM ses rôles effectifs (roles) et ses groupes du module (entitlements), en lecture seule",
+      "exigences": [
+        "IQ-A-08"
+      ],
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "aller": "/clm/admin/utilisateurs"
+        },
+        {
+          "voir": [
+            "Provisionnement SCIM 2.0",
+            "Découverte des droits"
+          ]
+        },
+        {
+          "cliquer": "Créer un jeton | Remplacer le jeton"
+        },
+        {
+          "voir": "Jeton créé."
+        },
+        {
+          "lire": {
+            "selecteur": ".clm-info-statique code",
+            "variable": "jetonScim"
+          }
+        },
+        {
+          "preparer": {
+            "description": "Saviynt provisionne un compte ; l'administration le place dans un groupe du module ; SCIM expose ses droits effectifs",
+            "etapes": [
+              {
+                "appel": "POST /scim/v2/Users",
+                "anonyme": true,
+                "entetes": {
+                  "Authorization": "Bearer ${jetonScim}"
+                },
+                "corps": {
+                  "userName": "droits.${unique}@iq.example",
+                  "displayName": "Droits ${unique}"
+                },
+                "statut": 201,
+                "capturer": {
+                  "uid": "$.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/admin/groupes",
+                "corps": {
+                  "code": "droits_${unique}",
+                  "libelle": "Droits E2E ${unique}"
+                },
+                "statut": 201,
+                "capturer": {
+                  "groupe": "$.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/admin/groupes/${groupe}/membres",
+                "corps": {
+                  "courriel": "droits.${unique}@iq.example"
+                }
+              },
+              {
+                "appel": "GET /scim/v2/Users/${uid}",
+                "anonyme": true,
+                "entetes": {
+                  "Authorization": "Bearer ${jetonScim}"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.roles[0].value",
+                    "egalTexte": "LECTEUR"
+                  },
+                  {
+                    "chemin": "$.roles[0].type",
+                    "egalTexte": "plateforme"
+                  },
+                  {
+                    "chemin": "$.entitlements[0].value",
+                    "egalTexte": "clm:DROITS_${UNIQUE}"
+                  },
+                  {
+                    "chemin": "$.entitlements[0].display",
+                    "egalTexte": "Droits E2E ${unique}"
+                  }
+                ]
+              },
+              {
+                "appel": "GET /scim/v2/Schemas/urn:ietf:params:scim:schemas:core:2.0:User",
+                "anonyme": true,
+                "entetes": {
+                  "Authorization": "Bearer ${jetonScim}"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.attributes[?name=entitlements].mutability",
+                    "egalTexte": "readOnly"
+                  },
+                  {
+                    "chemin": "$.attributes[?name=roles].mutability",
+                    "egalTexte": "readOnly"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
     }
   ]
 }

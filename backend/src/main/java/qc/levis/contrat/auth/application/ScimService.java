@@ -34,6 +34,8 @@ import qc.levis.contrat.auth.domain.GroupeScim;
 import qc.levis.contrat.auth.domain.JetonScim;
 import qc.levis.contrat.auth.domain.MembreGroupeScim;
 import qc.levis.contrat.auth.domain.User;
+import qc.levis.contrat.commun.application.DroitModule;
+import qc.levis.contrat.commun.application.DroitsModule;
 import qc.levis.contrat.commun.domain.Enums;
 
 /**
@@ -62,11 +64,14 @@ public class ScimService {
     private final AuditService audit;
     private final Clock horloge;
     private final SecureRandom alea = new SecureRandom();
+    private final List<DroitsModule> modules;
 
     public ScimService(UserRepository users, GroupeScimRepository groupes, MembreGroupeScimRepository membres, JetonScimRepository jetons,
                        AnnuaireService annuaire, PasswordEncoder encoder, AuditService audit, Clock horloge,
-                       qc.levis.contrat.auth.application.repository.AppartenanceAnnuaireRepository appartenances) {
+                       qc.levis.contrat.auth.application.repository.AppartenanceAnnuaireRepository appartenances,
+                       List<DroitsModule> modules) {
         this.appartenances = appartenances;
+        this.modules = List.copyOf(modules);
         this.users = users;
         this.groupes = groupes;
         this.membres = membres;
@@ -299,7 +304,17 @@ public class ScimService {
 
     private ScimUtilisateurVue vue(User u) {
         List<String> ids = membres.findByTenantIdAndUtilisateurId(u.getTenantId(), u.getId()).stream().map(MembreGroupeScim::getGroupeId).toList();
-        return new ScimUtilisateurVue(String.valueOf(u.getId()), u.getEmail(), u.getNom(), u.isActif(), ids);
+        return new ScimUtilisateurVue(String.valueOf(u.getId()), u.getEmail(), u.getNom(), u.isActif(), ids, rolesEffectifs(u), droits(u));
+    }
+
+    /** Rôles effectifs de la plateforme (RST-52), triés pour une lecture stable par l'outil de gouvernance des accès. */
+    private static List<String> rolesEffectifs(User u) {
+        return u.getRoles().stream().map(Enum::name).sorted().toList();
+    }
+
+    /** Droits accordés par les modules (groupes du module CLM…) : en lecture seule, jamais modifiés par SCIM. */
+    private List<DroitModule> droits(User u) {
+        return modules.stream().flatMap(m -> m.droits(u.getTenantId(), u.getEmail()).stream()).toList();
     }
 
     private ScimGroupeVue vue(GroupeScim g) {
