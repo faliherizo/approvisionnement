@@ -6,7 +6,8 @@
 **Résultat : 500 utilisateurs actifs simultanément pendant un palier de 599 s, 149 196 requêtes, 0,011 % d'erreur,
 P95 de 31 ms au suivi et de 7 à 13 ms aux autres requêtes. Porte SLO respectée.** Exécution de référence :
 <https://github.com/faliherizo/approvisionnement/actions/runs/45896141636> (commit `71224cf`, 2026-11-26), rapport HTML
-JMeter et relevés dans l'artefact `perf-cible-45896141636`.
+JMeter et relevés dans l'artefact `perf-cible-45896141636`. Confirmé par un second run vert sur le même code
+(<https://github.com/faliherizo/approvisionnement/actions/runs/45898471476>, § 3.1).
 
 L'essai a eu lieu sur une pile de production conteneurisée, aux ressources bornées comme la cible (voir § 2), dans un
 exécuteur GitHub Actions. Ce n'est pas l'infrastructure Azure d'IQ : la recette sur cette infrastructure reste à refaire
@@ -96,9 +97,20 @@ Les connexions ont lieu pendant la montée (une par utilisateur) : 500 connexion
 0,99 Gio au plus sur 2 Gio, aucun arrêt (OOM) ; base 46 % en moyenne, 84 % au P95 (sur 150 %), 0,56 Gio. Le serveur
 garde de la marge, la base nettement : la réplique unique encaisse les 500 utilisateurs, la cible en aligne trois.
 
-**Erreurs restantes** : 20 refus 400 au dépôt de document (0,07 % des dépôts), sans lien avec la charge (répartis sur
-tout l'essai, réponses en quelques millisecondes). Leur cause se lit dans `echecs.xml` (corps des réponses en échec),
-ajouté au plan après ce run.
+**Erreurs restantes** : 20 refus 400 au dépôt de document (0,07 % des dépôts), répartis sur tout l'essai, réponses en
+quelques millisecondes. Le run de confirmation, qui consigne le corps des réponses en échec (`echecs.xml`), en donne la
+cause : « Requête de fichier invalide : envoyez le fichier en multipart/form-data » — le corps multipart reçu ne se lit
+pas (`MultipartException`). L'origine, client JMeter ou serveur, reste à établir (journal du gestionnaire en `DEBUG`) ;
+elle n'affecte pas la porte (0,1 %).
+
+### 3.1 Run de confirmation (45898471476)
+
+Même code, même profil, autre exécuteur : palier de 599 s à 500 utilisateurs actifs, 144 383 requêtes, 241 req/s,
+0,017 % d'erreur (25 refus 400 au dépôt, même cause) ; porte SLO : lecture P95 308 ms / P99 654 ms, écriture P95
+258 ms / P99 617 ms, maximum 2,5 s ; **SLO respectés**. Les temps sont plus élevés que le run de référence parce que
+l'exécuteur l'était aussi : charge moyenne de l'hôte 6,5 (P95 12,6) pour 4 vCPU, contre 2,0 (P95 3,9). Le serveur
+(108 % d'UC en moyenne, 1,1 Gio) et la base (63 %) n'étaient pas saturés : l'écart vient de l'hôte partagé, où JMeter
+tourne aussi. C'est la principale limite de cet environnement.
 
 Intensité : 249 requêtes par seconde au palier, soit un geste toutes les 2 s par utilisateur. C'est bien au-delà de
 l'usage attendu d'IQ (55 000 à 65 000 documents par an, addenda 2, Q4) : la mesure porte sur la tenue à 500 utilisateurs
