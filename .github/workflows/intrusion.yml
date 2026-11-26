@@ -65,7 +65,9 @@ jobs:
           SECURITE_API_URL=http://localhost:8100 ./lancer.sh
       - name: Synthèse
         if: always()
-        run: sed -n '1,/^## 2\./p' docs/securite/rapport-tests-intrusion.md >> "$GITHUB_STEP_SUMMARY" || true
+        run: |
+          sed -n '1,/^## 2\./p' docs/securite/rapport-tests-intrusion.md >> "$GITHUB_STEP_SUMMARY" || true
+          cp "$RUNNER_TEMP/serveur.log" securite/resultats/ 2>/dev/null || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:

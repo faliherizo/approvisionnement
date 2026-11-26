@@ -22,8 +22,10 @@ echo "== 2. OWASP ZAP (API, authentifié, balayage ACTIF)"
 # Cible : le serveur de l'exécuteur ou du poste (SECURITE_API_URL). Jamais un hôte public sans autorisation écrite : le
 # balayage actif envoie des charges d'attaque (voir .github/workflows/intrusion.yml, cible « environnement »).
 # zap-api-scan.py importe l'OpenAPI, explore chaque opération, puis exécute les règles PASSIVES et ACTIVES (injection SQL,
-# XSS, inclusion de fichiers, injection de commandes, SSRF, XXE…). Session : cookie de l'administrateur de l'organisation
-# d'essai intrusion-a (créée par les tests ci-dessus), posé sur chaque requête par le module « replacer ».
+# XSS, inclusion de fichiers, injection de commandes, SSRF, XXE…). Session : jeton de l'administrateur de l'organisation
+# d'essai intrusion-a (créée par les tests ci-dessus), posé sur CHAQUE requête en en-tête « Authorization: Bearer »
+# (variables ZAP_AUTH_HEADER_* des balayages empaquetés). Pas en cookie : l'import de l'OpenAPI appelle aussi
+# /api/auth/logout, qui révoque le jeton du cookie (SEC-10) ; le balayage aurait alors continué sans session.
 # Exclusions, motivées : chacune mettrait fin à la session du balayage, que ZAP ne sait pas rouvrir seul ; leur
 # résistance aux attaques est éprouvée par les tests ciblés (INT-02, INT-05, INT-06, INT-08, RoutesSecurisees…) :
 #  - /api/auth/logout et /api/auth/mfa/ : révocation du jeton (SEC-10), second facteur du compte de balayage ;
@@ -41,7 +43,8 @@ if [[ -z "$JETON" ]]; then
   echo "ZAP : connexion du compte de balayage impossible ; un balayage sans session ne vaut rien." | tee "$R/zap.log"
   statut=1
 else
-  docker run --rm --add-host=host.docker.internal:host-gateway -v "$R:/zap/wrk:rw" zaproxy/zap-stable:2.16.1 zap-api-scan.py -t "$API_DOCKER/v3/api-docs" -f openapi \
+  docker run --rm --add-host=host.docker.internal:host-gateway -v "$R:/zap/wrk:rw" \
+    -e ZAP_AUTH_HEADER=Authorization -e ZAP_AUTH_HEADER_VALUE="Bearer $JETON" zaproxy/zap-stable:2.16.1 zap-api-scan.py -t "$API_DOCKER/v3/api-docs" -f openapi \
     -J zap.json -r zap.html -I -z "-config scanner.maxScanDurationInMins=25 \
     -config globalexcludeurl.url_list.url(0).regex=.*/api/auth/logout.* -config globalexcludeurl.url_list.url(0).enabled=true \
     -config globalexcludeurl.url_list.url(0).description=deconnexion \
@@ -50,13 +53,11 @@ else
     -config globalexcludeurl.url_list.url(2).regex=.*/api/admin/(session|connexion-locale).* -config globalexcludeurl.url_list.url(2).enabled=true \
     -config globalexcludeurl.url_list.url(2).description=politiques-de-session \
     -config globalexcludeurl.url_list.url(3).regex=.*/api/admin/users/.+ -config globalexcludeurl.url_list.url(3).enabled=true \
-    -config globalexcludeurl.url_list.url(3).description=compte-du-balayage \
-    -config replacer.full_list(0).description=session -config replacer.full_list(0).enabled=true \
-    -config replacer.full_list(0).matchtype=REQ_HEADER -config replacer.full_list(0).matchstr=Cookie \
-    -config replacer.full_list(0).regex=false -config replacer.full_list(0).replacement=ACCESS_TOKEN=$JETON" > "$R/zap.log" 2>&1 || true
+    -config globalexcludeurl.url_list.url(3).description=compte-du-balayage" > "$R/zap.log" 2>&1 || true
   # La session doit avoir tenu tout le balayage : sinon les règles actives n'auraient vu que des 401.
-  moi=$(curl -s -o /dev/null -w '%{http_code}' "$API/api/auth/me" -H "Cookie: ACCESS_TOKEN=$JETON")
+  moi=$(curl -s -o /dev/null -w '%{http_code}' "$API/api/auth/me" -H "Authorization: Bearer $JETON")
   echo "SESSION-APRES-BALAYAGE: $moi" >> "$R/zap.log"
+  echo "JETON-APRES-BALAYAGE (liste des clauses) : $(curl -s -o /dev/null -w '%{http_code}' "$API/api/clauses" -H "Authorization: Bearer $JETON")" >> "$R/zap.log"
   [[ "$moi" == "200" ]] || { echo "ZAP : la session du balayage n'a pas tenu jusqu'au bout ($moi)."; statut=1; }
 fi
 
