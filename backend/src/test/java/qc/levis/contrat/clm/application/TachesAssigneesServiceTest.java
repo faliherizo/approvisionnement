@@ -143,7 +143,8 @@ class TachesAssigneesServiceTest {
 
     @Test
     void creer_hors_espace_tenant_est_refuse() {
-        assertThrows(IllegalStateException.class, () -> service.creer(CREATEUR, demande(null, "julie@iq.ca", null, null)));
+        // Refus d'accès hors organisation (Annexe 10, SEC-17 ; ADR-031).
+        assertThrows(org.springframework.security.access.AccessDeniedException.class, () -> service.creer(CREATEUR, demande(null, "julie@iq.ca", null, null)));
     }
 
     @Test

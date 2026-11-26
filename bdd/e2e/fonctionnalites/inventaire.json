@@ -1396,7 +1396,7 @@
           "type": "lister",
           "fonction": "valider",
           "sources": [
-            "pages/clm/ModeleEditeur.jsx:151"
+            "pages/clm/ModeleEditeur.jsx:159"
           ]
         },
         {
@@ -1457,7 +1457,7 @@
           "type": "ajouter",
           "fonction": "previsualiser",
           "sources": [
-            "pages/clm/ModeleEditeur.jsx:159"
+            "pages/clm/ModeleEditeur.jsx:167"
           ]
         },
         {
@@ -1477,7 +1477,7 @@
           "type": "soumettre",
           "fonction": "soumettre",
           "sources": [
-            "pages/clm/ModeleEditeur.jsx:164"
+            "pages/clm/ModeleEditeur.jsx:172"
           ]
         },
         {
@@ -1487,7 +1487,7 @@
           "type": "modifier",
           "fonction": "enregistrer",
           "sources": [
-            "pages/clm/ModeleEditeur.jsx:139"
+            "pages/clm/ModeleEditeur.jsx:147"
           ]
         }
       ]
@@ -1585,7 +1585,7 @@
           "type": "supprimer",
           "fonction": "retablir",
           "sources": [
-            "pages/clm/AdminClm.jsx:303"
+            "pages/clm/AdminClm.jsx:304"
           ]
         },
         {
@@ -1605,7 +1605,7 @@
           "type": "lister",
           "fonction": "Integrations",
           "sources": [
-            "pages/clm/AdminClm.jsx:281"
+            "pages/clm/AdminClm.jsx:282"
           ]
         },
         {
@@ -1615,7 +1615,7 @@
           "type": "lister",
           "fonction": "Integrations",
           "sources": [
-            "pages/clm/AdminClm.jsx:282"
+            "pages/clm/AdminClm.jsx:283"
           ]
         },
         {
@@ -1665,7 +1665,7 @@
           "type": "relancer",
           "fonction": "relancer",
           "sources": [
-            "pages/clm/AdminClm.jsx:297"
+            "pages/clm/AdminClm.jsx:298"
           ]
         },
         {
@@ -1675,7 +1675,7 @@
           "type": "ajouter",
           "fonction": "gestionnaire en ligne (onClick)",
           "sources": [
-            "pages/clm/AdminClm.jsx:311"
+            "pages/clm/AdminClm.jsx:312"
           ]
         },
         {
@@ -1685,7 +1685,7 @@
           "type": "ajouter",
           "fonction": "gestionnaire en ligne (onClick)",
           "sources": [
-            "pages/clm/AdminClm.jsx:310"
+            "pages/clm/AdminClm.jsx:311"
           ]
         },
         {
@@ -1705,7 +1705,281 @@
           "type": "modifier",
           "fonction": "enregistrer",
           "sources": [
-            "pages/clm/AdminClm.jsx:299"
+            "pages/clm/AdminClm.jsx:300"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/admin/microsoft-365",
+      "espace": "clm",
+      "composant": "Microsoft365Clm",
+      "fichiers": [
+        "pages/clm/Microsoft365Clm.jsx",
+        "components/IntegrationM365Manager.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /clm/admin/integrations/m365",
+          "methode": "GET",
+          "chemin": "/clm/admin/integrations/m365",
+          "type": "lister",
+          "fonction": "Microsoft365",
+          "sources": [
+            "pages/clm/Microsoft365Clm.jsx:43"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/integrations/m365/depots",
+          "methode": "GET",
+          "chemin": "/clm/admin/integrations/m365/depots",
+          "type": "lister",
+          "fonction": "Microsoft365",
+          "sources": [
+            "pages/clm/Microsoft365Clm.jsx:44"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /parametres/integration-m365",
+          "methode": "GET",
+          "chemin": "/parametres/integration-m365",
+          "type": "lister",
+          "fonction": "IntegrationM365Manager",
+          "sources": [
+            "components/IntegrationM365Manager.jsx:25"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/integrations/m365/depots/{}/relancer",
+          "methode": "POST",
+          "chemin": "/clm/admin/integrations/m365/depots/{}/relancer",
+          "type": "relancer",
+          "fonction": "relancer",
+          "sources": [
+            "pages/clm/Microsoft365Clm.jsx:54"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/integrations/m365/relayer",
+          "methode": "POST",
+          "chemin": "/clm/admin/integrations/m365/relayer",
+          "type": "ajouter",
+          "fonction": "relayer",
+          "sources": [
+            "pages/clm/Microsoft365Clm.jsx:53"
+          ]
+        },
+        {
+          "id": "POST /parametres/integration-m365/test",
+          "methode": "POST",
+          "chemin": "/parametres/integration-m365/test",
+          "type": "ajouter",
+          "fonction": "testerConnexion",
+          "sources": [
+            "components/IntegrationM365Manager.jsx:47"
+          ]
+        },
+        {
+          "id": "PUT /clm/admin/integrations/m365",
+          "methode": "PUT",
+          "chemin": "/clm/admin/integrations/m365",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/clm/Microsoft365Clm.jsx:52"
+          ]
+        },
+        {
+          "id": "PUT /parametres/integration-m365",
+          "methode": "PUT",
+          "chemin": "/parametres/integration-m365",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "components/IntegrationM365Manager.jsx:36"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/admin/soutien",
+      "espace": "clm",
+      "composant": "SoutienClm",
+      "fichiers": [
+        "pages/clm/SoutienClm.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /clm/admin/soutien",
+          "methode": "GET",
+          "chemin": "/clm/admin/soutien",
+          "type": "lister",
+          "fonction": "Soutien",
+          "sources": [
+            "pages/clm/SoutienClm.jsx:14"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/soutien/{}/{}",
+          "methode": "POST",
+          "chemin": "/clm/admin/soutien/{}/{}",
+          "type": "ajouter",
+          "fonction": "decider",
+          "sources": [
+            "pages/clm/SoutienClm.jsx:20"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/admin/rapports",
+      "espace": "clm",
+      "composant": "RapportsClm",
+      "fichiers": [
+        "pages/clm/RapportsClm.jsx",
+        "auth.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /clm/admin/rapports/{}",
+          "methode": "DELETE",
+          "chemin": "/clm/admin/rapports/{}",
+          "type": "supprimer",
+          "fonction": "supprimer",
+          "sources": [
+            "pages/clm/RapportsClm.jsx:84"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/rapports",
+          "methode": "GET",
+          "chemin": "/clm/admin/rapports",
+          "type": "lister",
+          "fonction": "Rapports",
+          "sources": [
+            "pages/clm/RapportsClm.jsx:62"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/rapports/{}/export",
+          "methode": "GET",
+          "chemin": "/clm/admin/rapports/{}/export",
+          "type": "télécharger",
+          "fonction": "exporter",
+          "sources": [
+            "pages/clm/RapportsClm.jsx:87"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/rapports/{}/resultat",
+          "methode": "GET",
+          "chemin": "/clm/admin/rapports/{}/resultat",
+          "type": "lister",
+          "fonction": "executer",
+          "sources": [
+            "pages/clm/RapportsClm.jsx:80"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/rapports/types",
+          "methode": "GET",
+          "chemin": "/clm/admin/rapports/types",
+          "type": "lister",
+          "fonction": "Rapports",
+          "sources": [
+            "pages/clm/RapportsClm.jsx:61"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/commun.jsx:149"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_TYPE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/CLM_TYPE_CONTRAT",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/RapportsClm.jsx:16"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_UNITE",
+          "methode": "GET",
+          "chemin": "/reference/CLM_UNITE",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/RapportsClm.jsx:15"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/rapports",
+          "methode": "POST",
+          "chemin": "/clm/admin/rapports",
+          "type": "ajouter",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/clm/RapportsClm.jsx:75"
+          ]
+        },
+        {
+          "id": "PUT /clm/admin/rapports/{}",
+          "methode": "PUT",
+          "chemin": "/clm/admin/rapports/{}",
+          "type": "modifier",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/clm/RapportsClm.jsx:75"
           ]
         }
       ]
@@ -1729,7 +2003,7 @@
           "type": "supprimer",
           "fonction": "retablir",
           "sources": [
-            "pages/clm/AdminClm.jsx:524"
+            "pages/clm/AdminClm.jsx:526"
           ]
         },
         {
@@ -1739,7 +2013,7 @@
           "type": "lister",
           "fonction": "Parametres",
           "sources": [
-            "pages/clm/AdminClm.jsx:502"
+            "pages/clm/AdminClm.jsx:504"
           ]
         },
         {
@@ -1759,7 +2033,7 @@
           "type": "modifier",
           "fonction": "enregistrer",
           "sources": [
-            "pages/clm/AdminClm.jsx:523"
+            "pages/clm/AdminClm.jsx:525"
           ]
         }
       ]
@@ -2074,7 +2348,7 @@
           "type": "lister",
           "fonction": "Contenu",
           "sources": [
-            "pages/clm/JournalClm.jsx:50"
+            "pages/clm/JournalClm.jsx:58"
           ]
         },
         {
@@ -2084,7 +2358,7 @@
           "type": "télécharger",
           "fonction": "exporter",
           "sources": [
-            "pages/clm/JournalClm.jsx:55"
+            "pages/clm/JournalClm.jsx:63"
           ]
         },
         {
@@ -2095,6 +2369,16 @@
           "fonction": "Utilisation",
           "sources": [
             "pages/clm/JournalClm.jsx:17"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/utilisation/export",
+          "methode": "GET",
+          "chemin": "/clm/admin/utilisation/export",
+          "type": "télécharger",
+          "fonction": "exporter",
+          "sources": [
+            "pages/clm/JournalClm.jsx:22"
           ]
         },
         {
@@ -4949,6 +5233,7 @@
         "components/ModuleManager.jsx",
         "components/BanqueHeuresManager.jsx",
         "components/ReleveBanque.jsx",
+        "components/SoutienClmManager.jsx",
         "components/EditeurVitrine.jsx"
       ],
       "operations": [
@@ -5045,7 +5330,7 @@
           "type": "lister",
           "fonction": "charger",
           "sources": [
-            "pages/Superadmin.jsx:26",
+            "pages/Superadmin.jsx:27",
             "components/ModeleDocumentManager.jsx:29",
             "components/TarifTenantManager.jsx:29",
             "components/ModuleManager.jsx:20"
@@ -5080,6 +5365,26 @@
           "fonction": "charger",
           "sources": [
             "components/ModuleManager.jsx:24"
+          ]
+        },
+        {
+          "id": "GET /superadmin/tenants/{}/soutien-clm/demandes",
+          "methode": "GET",
+          "chemin": "/superadmin/tenants/{}/soutien-clm/demandes",
+          "type": "lister",
+          "fonction": "recharger",
+          "sources": [
+            "components/SoutienClmManager.jsx:23"
+          ]
+        },
+        {
+          "id": "GET /superadmin/tenants/{}/soutien-clm/trousses/{}",
+          "methode": "GET",
+          "chemin": "/superadmin/tenants/{}/soutien-clm/trousses/{}",
+          "type": "consulter",
+          "fonction": "consulter",
+          "sources": [
+            "components/SoutienClmManager.jsx:38"
           ]
         },
         {
@@ -5144,7 +5449,7 @@
           "type": "ajouter",
           "fonction": "creerTenant",
           "sources": [
-            "pages/Superadmin.jsx:34"
+            "pages/Superadmin.jsx:35"
           ]
         },
         {
@@ -5154,7 +5459,7 @@
           "type": "ajouter",
           "fonction": "creerAdmin",
           "sources": [
-            "pages/Superadmin.jsx:41"
+            "pages/Superadmin.jsx:42"
           ]
         },
         {
@@ -5175,6 +5480,16 @@
           "fonction": "gestionnaire en ligne (onSubmit)",
           "sources": [
             "components/BanqueHeuresManager.jsx:67"
+          ]
+        },
+        {
+          "id": "POST /superadmin/tenants/{}/soutien-clm/demandes",
+          "methode": "POST",
+          "chemin": "/superadmin/tenants/{}/soutien-clm/demandes",
+          "type": "ajouter",
+          "fonction": "demander",
+          "sources": [
+            "components/SoutienClmManager.jsx:31"
           ]
         },
         {
@@ -5233,8 +5548,8 @@
           "type": "modifier",
           "fonction": "basculerActif",
           "sources": [
-            "pages/Superadmin.jsx:48",
-            "pages/Superadmin.jsx:53"
+            "pages/Superadmin.jsx:49",
+            "pages/Superadmin.jsx:54"
           ]
         },
         {
@@ -5264,7 +5579,7 @@
           "type": "modifier",
           "fonction": "enregistrerTheme",
           "sources": [
-            "pages/Superadmin.jsx:81"
+            "pages/Superadmin.jsx:82"
           ]
         },
         {

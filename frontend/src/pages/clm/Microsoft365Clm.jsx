@@ -68,7 +68,7 @@ function Microsoft365() {
             </>
           )}
         </Bloc>
-        <Bloc zone="02" titre={t('clm.m365.blocConnexion')}>
+        <Bloc zone="02" titre={t('clm.m365.blocConnexion')} large>
           <p className="muted">{t('clm.m365.connexionAide')}</p>
           <IntegrationM365Manager />
         </Bloc>

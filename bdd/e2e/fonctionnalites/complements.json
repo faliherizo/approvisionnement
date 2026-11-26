@@ -127,6 +127,21 @@
         "/clm/trousses/{}/documents/{}/contenu",
         "/clm/trousses/{}/documents/{}/apercu"
       ]
+    },
+    "components/SoutienClmManager.jsx|`${base(tid)}/demandes`": {
+      "chemins": [
+        "/superadmin/tenants/{}/soutien-clm/demandes"
+      ]
+    },
+    "components/SoutienClmManager.jsx|`${base(tenant)}/demandes`": {
+      "chemins": [
+        "/superadmin/tenants/{}/soutien-clm/demandes"
+      ]
+    },
+    "components/SoutienClmManager.jsx|`${base(tenant)}/trousses/${encodeURIComponent(reference.trim())}`": {
+      "chemins": [
+        "/superadmin/tenants/{}/soutien-clm/trousses/{}"
+      ]
     }
   },
   "exclusions": {
