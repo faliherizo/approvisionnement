@@ -65,7 +65,8 @@ export default function OngletPreuve({ trousseId, resume, admin, onHistorique })
                 <tbody>
                   {p.signatures.map((s, k) => (
                     <tr key={k}>
-                      <td data-label={t('clm.pr.signataire')}>{s.participant} <span className="muted">{s.courriel} · {s.roleContrat}</span><br /><Statut valeur={s.statut} /></td>
+                      <td data-label={t('clm.pr.signataire')}>{s.participant} <span className="muted">{s.courriel} · {s.roleContrat}</span><br /><Statut valeur={s.statut} />
+                        {s.nature && <><br /><span className="muted">{t('clm.part.natureDe', { nature: t(`clm.part.nature.${s.nature}`) })}{s.action ? ` · ${t(`clm.part.action.${s.action}`)}` : ''}</span></>}</td>
                       <td data-label={t('clm.part.niveau')}>{t(`clm.niveau.${s.niveau}`)}</td>
                       <td data-label={t('clm.pr.verifiee')}>{dateHeure(s.verifieeLe)}</td>
                       <td data-label={t('clm.pr.consentement')}>{dateHeure(s.consentementLe)}</td>

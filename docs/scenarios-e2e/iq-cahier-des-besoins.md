@@ -75,7 +75,7 @@ besoin par besoin, sans préparation par l'API.
 | IQ-C-33 | Partage des modèles par groupe d'usagers | E2E-CB-IQ-14 ✅ | E2E-IQ-03 ✅ |
 | IQ-C-34 | Ancrage précis des champs | E2E-CB-IQ-15 ✅ | E2E-IQ-03 ✅ |
 | IQ-C-35 | Types : texte validé, liste, date, case à cocher | E2E-CB-IQ-01 ✅, E2E-CB-IQ-15 ✅ | E2E-IQ-03 ✅ |
-| IQ-C-36 | Distinguer champs de formulaire, de saisie et de signature | E2E-CB-IQ-15 ✅ | E2E-IQ-03 ✅ |
+| IQ-C-36 | Distinguer champs de formulaire, de saisie et de signature | E2E-AX-IQ-13 ✅, E2E-AX-IQ-14 ✅, E2E-CB-IQ-15 ✅ | E2E-IQ-03 ✅ |
 | IQ-C-37 | Attribution des champs à des signataires | E2E-CB-IQ-15 ✅, E2E-ECR-IQ-02 ✅, E2E-ECR-IQ-04 ✅ | E2E-IQ-03 ✅ |
 | IQ-C-38 | Règles conditionnelles d'affichage | E2E-CB-IQ-15 ✅ | E2E-IQ-03 ✅ |
 | IQ-C-39 | Saisie assistée (suggestions) | E2E-CB-IQ-22 ✅ | E2E-IQ-04 ✅ |

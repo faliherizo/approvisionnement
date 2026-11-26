@@ -14,6 +14,7 @@ const STATUTS = {
   TERMINE: ['Terminé', 'Completed'], TERMINE_AVEC_ECHECS: ['Terminé avec échecs', 'Completed with failures'],
   CREEE: ['Créée', 'Created'], LANCEE: ['Lancée', 'Launched'], INVALIDEE: ['Invalidée (nouveau cycle)', 'Invalidated (new cycle)'],
   DEPOSE: ['Déposé', 'Uploaded', 'Voapetraka'],
+  CONSULTEE: ['Consultation attestée', 'Review attested', 'Voamarina ny fijerena'], COMPLETEE: ['Informations complétées', 'Information completed', 'Vita fenoina'],
 }
 
 const EVENEMENTS = {
@@ -52,6 +53,8 @@ const EVENEMENTS = {
   CONSULTATION_SOUTIEN: ['Consultation de soutien de l’exploitant', 'Operator support view', 'Fijerena fanohanana an’ny mpitantana'],
   REPRISE_ETAPE: ['Étape reprise (champ modifié en cours)', 'Step restarted (field changed in progress)', 'Dingana naverina (saha novaina teo am-pandehanana)'],
   DEPOT_M365: ['Déposé dans Microsoft 365', 'Uploaded to Microsoft 365', 'Voapetraka ao amin’ny Microsoft 365'],
+  CONSULTATION_ATTESTEE: ['Consultation attestée (sans signature)', 'Review attested (no signature)', 'Fijerena voamarina (tsy misy sonia)'],
+  COMPLETION: ['Informations complétées (sans signature)', 'Information completed (no signature)', 'Fampahalalana vita fenoina (tsy misy sonia)'],
 }
 
 const LIBELLES = {

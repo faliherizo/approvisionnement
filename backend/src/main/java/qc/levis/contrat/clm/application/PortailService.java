@@ -23,13 +23,15 @@ import qc.levis.contrat.clm.domain.Identite;
 import qc.levis.contrat.clm.domain.Invitation;
 import qc.levis.contrat.clm.domain.Modele;
 import qc.levis.contrat.clm.domain.ModeleMessage.Evenement;
+import qc.levis.contrat.clm.domain.NatureParticipation;
 import qc.levis.contrat.clm.domain.Participant;
 import qc.levis.contrat.clm.domain.StatutTrousse;
 import qc.levis.contrat.clm.domain.Trousse;
 
 /**
  * Portail du signataire (ST-09, RST-17, RST-19, UI-16), accessible sans compte par un jeton à usage unique.
- * Ordre imposé : vérification d'identité, lecture, consentement explicite, signature horodatée, reçu.
+ * Ordre imposé : vérification d'identité, lecture, consentement explicite, signature horodatée, reçu. Selon sa nature
+ * (RST-50), un participant signe, atteste sa consultation ou soumet ses champs ; toute autre action lui est refusée.
  */
 @Service
 public class PortailService {
@@ -167,6 +169,7 @@ public class PortailService {
             Invitation inv = s.invitation();
             Instant maintenant = ctx.maintenant();
             exigerVerifiee(s);
+            s.participant().exigerAction(NatureParticipation.SIGNER);
             if (req == null || !req.consentement()) {
                 throw new IllegalArgumentException("Consentement explicite requis avant de signer.");
             }
@@ -189,8 +192,52 @@ public class PortailService {
                     + " · " + empreinte.substring(0, 16) + " · " + att.identifiant());
             EtapeTrousse e = parcours.exigerEtape(inv.getEtapeId());
             parcours.enregistrerSignature(s.trousse(), e, s.participant(), true, null);
-            return new ClmDto.Recu(s.trousse().getReference(), nom, maintenant, empreinte, att.identifiant());
+            return new ClmDto.Recu(s.trousse().getReference(), nom, maintenant, empreinte, att.identifiant(), "SIGNATURE");
         });
+    }
+
+    /** Participant « consulter » (RST-50) : il atteste avoir pris connaissance des documents, sans signer ni remplir. */
+    @Transactional
+    public ClmDto.Recu attesterConsultation(String jeton, ClmDto.ConsultationRequest req, String ip, String agent) {
+        return dansLeTenant(jeton, s -> {
+            exigerVerifiee(s);
+            s.participant().exigerAction(NatureParticipation.CONSULTER);
+            if (req == null || !req.attestation()) {
+                throw new IllegalArgumentException("Attestez avoir pris connaissance des documents.");
+            }
+            String empreinte = empreinteDocuments(s.trousse());
+            s.invitation().attesterConsultation(poste(ip, agent), accuse("CONSULTATION", empreinte), ctx.maintenant());
+            return accomplir(s, "CONSULTATION_ATTESTEE", "Prise de connaissance attestée · " + empreinte.substring(0, 16));
+        });
+    }
+
+    /** Participant « compléter » (RST-50) : ses champs sont validés et soumis, sans consentement à signer ni signature. */
+    @Transactional
+    public ClmDto.Recu completer(String jeton, ClmDto.CompletionRequest req, String ip, String agent) {
+        return dansLeTenant(jeton, s -> {
+            exigerVerifiee(s);
+            s.participant().exigerAction(NatureParticipation.COMPLETER);
+            Map<String, String> champs = validerChamps(s, req == null || req.champs() == null ? Map.of() : req.champs());
+            String empreinte = empreinteDocuments(s.trousse());
+            s.invitation().completer(ctx.ecrire(champs), poste(ip, agent), accuse("COMPLETION", empreinte), ctx.maintenant());
+            return accomplir(s, "COMPLETION", champs.size() + " champ(s) soumis · " + empreinte.substring(0, 16));
+        });
+    }
+
+    /** La participation accomplie compte, comme une signature, pour le quorum de l'étape qui l'a sollicitée. */
+    private ClmDto.Recu accomplir(Session s, String evenement, String detail) {
+        Invitation inv = invitations.save(s.invitation());
+        journal.consigner(s.trousse(), evenement, s.participant().getCourriel(), detail);
+        parcours.enregistrerSignature(s.trousse(), parcours.exigerEtape(inv.getEtapeId()), s.participant(), true, null);
+        return recu(s);
+    }
+
+    private static Invitation.Poste poste(String ip, String agent) {
+        return new Invitation.Poste(tronquer(ip, 64), tronquer(agent, 300));
+    }
+
+    private String accuse(String action, String empreinte) {
+        return ctx.ecrire(Map.of("action", action, "empreinteDocuments", empreinte));
     }
 
     @Transactional
@@ -290,26 +337,32 @@ public class PortailService {
 
     private ClmDto.PortailVue vue(Session s) {
         Invitation inv = s.invitation();
-        boolean verifiee = inv.getStatut() == Invitation.Statut.VERIFIEE || inv.getStatut() == Invitation.Statut.SIGNEE;
+        Participant p = s.participant();
+        boolean verifiee = inv.getStatut() == Invitation.Statut.VERIFIEE || inv.estAccomplie();
         List<ClmDto.DocumentPortail> docs = inv.getStatut() == Invitation.Statut.VERIFIEE
                 ? documentsASigner(s.trousse()).stream().map(d -> new ClmDto.DocumentPortail(d.getId(), d.getNom(), d.getType().name(),
                 d.getTaille(), d.getEmpreinte())).toList()
                 : List.of();
-        List<ClmDto.ChampPortail> champs = verifiee ? champsAssignes(s).stream().map(c -> new ClmDto.ChampPortail(c.cle(), c.libelle(),
-                c.type().name(), c.obligatoire(), c.options(), c.position())).toList() : List.of();
-        ClmDto.Recu recu = null;
-        if (inv.getStatut() == Invitation.Statut.SIGNEE) {
-            Map<String, Object> att = ctx.lireObjet(inv.getAttestationJson());
-            recu = new ClmDto.Recu(s.trousse().getReference(), inv.getNomSigne(), inv.getSigneeLe(),
-                    String.valueOf(att.get("empreinteDocuments")), String.valueOf(att.get("identifiant")));
-        }
-        String question = inv.getNiveau() == Identite.Niveau.QUESTION ? s.participant().getQuestionIdentite() : null;
-        String statut = inv.estExpiree(ctx.maintenant()) && inv.getStatut() != Invitation.Statut.SIGNEE ? "EXPIREE" : inv.getStatut().name();
+        List<ClmDto.ChampPortail> champs = verifiee && p.getNature().remplitDesChamps() ? champsAssignes(s).stream()
+                .map(c -> new ClmDto.ChampPortail(c.cle(), c.libelle(), c.type().name(), c.obligatoire(), c.options(), c.position())).toList()
+                : List.of();
+        String question = inv.getNiveau() == Identite.Niveau.QUESTION ? p.getQuestionIdentite() : null;
+        String statut = inv.estExpiree(ctx.maintenant()) && !inv.estAccomplie() ? "EXPIREE" : inv.getStatut().name();
         IdentiteOrganisation.Organisation organisation = identite.de(s.trousse().getTenantId());
-        return new ClmDto.PortailVue(s.trousse().getReference(), s.trousse().getTitre(), s.participant().getNom(), inv.getNiveau().name(),
-                statut, inv.getExpireLe(), verifiee, inv.getConsentementLe() != null, question, docs, champs, recu,
-                organisation.nom(), organisation.logo(), s.participant().getQualite(), s.participant().getEntreprise(),
-                s.participant().isAutoriteRequise());
+        return new ClmDto.PortailVue(s.trousse().getReference(), s.trousse().getTitre(), p.getNom(), inv.getNiveau().name(),
+                statut, inv.getExpireLe(), verifiee, inv.getConsentementLe() != null, question, docs, champs,
+                inv.estAccomplie() ? recu(s) : null, organisation.nom(), organisation.logo(), p.getQualite(), p.getEntreprise(),
+                p.isAutoriteRequise(), p.getNature().name());
+    }
+
+    /** Reçu d'une participation accomplie : seule une signature porte une attestation du fournisseur de signature. */
+    private ClmDto.Recu recu(Session s) {
+        Invitation inv = s.invitation();
+        Map<String, Object> att = ctx.lireObjet(inv.getAttestationJson());
+        boolean signee = inv.getStatut() == Invitation.Statut.SIGNEE;
+        return new ClmDto.Recu(s.trousse().getReference(), signee ? inv.getNomSigne() : s.participant().getNom(), inv.getSigneeLe(),
+                String.valueOf(att.get("empreinteDocuments")), signee ? String.valueOf(att.get("identifiant")) : null,
+                inv.actionAccomplie());
     }
 
     private static String hash(String s) {

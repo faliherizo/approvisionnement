@@ -133,7 +133,7 @@ public class LectureTrousse {
     public static ClmDto.ParticipantVue participant(Participant p) {
         return new ClmDto.ParticipantVue(p.getId(), p.getNom(), p.getCourriel(), p.getTelephone(), p.getRoleContrat(),
                 p.isExterne(), p.getNiveauIdentite().name(), p.getReponseIdentiteHash() != null, p.getLangue().name(), p.getQualite(),
-                p.getEntreprise(), p.isAutoriteRequise());
+                p.getEntreprise(), p.isAutoriteRequise(), p.getNature().name());
     }
 
     public static ClmDto.EvenementVue evenement(EvenementTrousse e) {

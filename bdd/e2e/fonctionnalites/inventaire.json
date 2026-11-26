@@ -9,7 +9,8 @@
         "pages/clm/Portail.jsx",
         "i18n/I18nContext.jsx",
         "components/LangSwitcher.jsx",
-        "pages/clm/commun.jsx"
+        "pages/clm/commun.jsx",
+        "pages/clm/PortailParticipation.jsx"
       ],
       "operations": [
         {
@@ -19,7 +20,7 @@
           "type": "consulter",
           "fonction": "charger",
           "sources": [
-            "pages/clm/Portail.jsx:42"
+            "pages/clm/Portail.jsx:44"
           ]
         },
         {
@@ -29,7 +30,27 @@
           "type": "consulter",
           "fonction": "ouvrir",
           "sources": [
-            "pages/clm/Portail.jsx:61"
+            "pages/clm/Portail.jsx:63"
+          ]
+        },
+        {
+          "id": "POST /clm/portail/{}/completion",
+          "methode": "POST",
+          "chemin": "/clm/portail/{}/completion",
+          "type": "ajouter",
+          "fonction": "completer",
+          "sources": [
+            "pages/clm/Portail.jsx:81"
+          ]
+        },
+        {
+          "id": "POST /clm/portail/{}/consultation",
+          "methode": "POST",
+          "chemin": "/clm/portail/{}/consultation",
+          "type": "ajouter",
+          "fonction": "attester",
+          "sources": [
+            "pages/clm/Portail.jsx:77"
           ]
         },
         {
@@ -39,7 +60,7 @@
           "type": "refuser",
           "fonction": "refuser",
           "sources": [
-            "pages/clm/Portail.jsx:76"
+            "pages/clm/Portail.jsx:86"
           ]
         },
         {
@@ -49,7 +70,7 @@
           "type": "signer",
           "fonction": "signer",
           "sources": [
-            "pages/clm/Portail.jsx:71"
+            "pages/clm/Portail.jsx:73"
           ]
         },
         {
@@ -59,7 +80,7 @@
           "type": "ajouter",
           "fonction": "demarrer",
           "sources": [
-            "pages/clm/Portail.jsx:52"
+            "pages/clm/Portail.jsx:54"
           ]
         },
         {
@@ -69,7 +90,7 @@
           "type": "ajouter",
           "fonction": "verifier",
           "sources": [
-            "pages/clm/Portail.jsx:57"
+            "pages/clm/Portail.jsx:59"
           ]
         }
       ]
@@ -227,7 +248,7 @@
           "type": "supprimer",
           "fonction": "retirer",
           "sources": [
-            "pages/clm/OngletParticipants.jsx:52"
+            "pages/clm/OngletParticipants.jsx:54"
           ]
         },
         {
@@ -247,7 +268,7 @@
           "type": "consulter",
           "fonction": "OngletParticipants",
           "sources": [
-            "pages/clm/OngletParticipants.jsx:27"
+            "pages/clm/OngletParticipants.jsx:29"
           ]
         },
         {
@@ -258,7 +279,7 @@
           "fonction": "Contenu",
           "sources": [
             "pages/clm/TrousseCreer.jsx:207",
-            "pages/clm/OngletParticipants.jsx:21"
+            "pages/clm/OngletParticipants.jsx:23"
           ]
         },
         {
@@ -381,7 +402,7 @@
           "fonction": "useListe",
           "sources": [
             "pages/clm/TrousseCreer.jsx:135",
-            "pages/clm/OngletParticipants.jsx:20",
+            "pages/clm/OngletParticipants.jsx:22",
             "pages/clm/OngletParcours.jsx:102"
           ]
         },
@@ -495,7 +516,7 @@
           "type": "ajouter",
           "fonction": "ajouter",
           "sources": [
-            "pages/clm/OngletParticipants.jsx:43"
+            "pages/clm/OngletParticipants.jsx:45"
           ]
         },
         {
@@ -545,7 +566,7 @@
           "type": "modifier",
           "fonction": "attribuer",
           "sources": [
-            "pages/clm/OngletParticipants.jsx:57"
+            "pages/clm/OngletParticipants.jsx:59"
           ]
         },
         {
@@ -596,7 +617,7 @@
           "type": "supprimer",
           "fonction": "retirer",
           "sources": [
-            "pages/clm/OngletParticipants.jsx:52"
+            "pages/clm/OngletParticipants.jsx:54"
           ]
         },
         {
@@ -606,7 +627,7 @@
           "type": "consulter",
           "fonction": "OngletParticipants",
           "sources": [
-            "pages/clm/OngletParticipants.jsx:27"
+            "pages/clm/OngletParticipants.jsx:29"
           ]
         },
         {
@@ -616,7 +637,7 @@
           "type": "lister",
           "fonction": "OngletParticipants",
           "sources": [
-            "pages/clm/OngletParticipants.jsx:21"
+            "pages/clm/OngletParticipants.jsx:23"
           ]
         },
         {
@@ -757,7 +778,7 @@
           "type": "lister",
           "fonction": "useListe",
           "sources": [
-            "pages/clm/OngletParticipants.jsx:20",
+            "pages/clm/OngletParticipants.jsx:22",
             "pages/clm/OngletParcours.jsx:102"
           ]
         },
@@ -870,7 +891,7 @@
           "type": "ajouter",
           "fonction": "ajouter",
           "sources": [
-            "pages/clm/OngletParticipants.jsx:43"
+            "pages/clm/OngletParticipants.jsx:45"
           ]
         },
         {
@@ -910,7 +931,7 @@
           "type": "modifier",
           "fonction": "attribuer",
           "sources": [
-            "pages/clm/OngletParticipants.jsx:57"
+            "pages/clm/OngletParticipants.jsx:59"
           ]
         },
         {

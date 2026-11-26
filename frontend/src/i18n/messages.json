@@ -10429,5 +10429,165 @@
     "fr": "Sans unité",
     "en": "No unit",
     "mg": "Tsy misy sampana"
+  },
+  "clm.part.natureChamp": {
+    "fr": "Nature de la participation",
+    "en": "Participation type",
+    "mg": "Karazana fandraisana anjara"
+  },
+  "clm.part.natureAide": {
+    "fr": "(consulter, compléter ou signer)",
+    "en": "(view, complete or sign)",
+    "mg": "(mijery, mameno na manao sonia)"
+  },
+  "clm.part.nature.SIGNER": {
+    "fr": "Signer",
+    "en": "Sign",
+    "mg": "Manao sonia"
+  },
+  "clm.part.nature.COMPLETER": {
+    "fr": "Compléter seulement",
+    "en": "Complete only",
+    "mg": "Mameno ihany"
+  },
+  "clm.part.nature.CONSULTER": {
+    "fr": "Consulter seulement",
+    "en": "View only",
+    "mg": "Mijery ihany"
+  },
+  "clm.part.natureDe": {
+    "fr": "Nature : {nature}",
+    "en": "Type: {nature}",
+    "mg": "Karazana : {nature}"
+  },
+  "clm.part.action.SIGNATURE": {
+    "fr": "signature apposée",
+    "en": "signature applied",
+    "mg": "sonia natao"
+  },
+  "clm.part.action.CONSULTATION": {
+    "fr": "consultation attestée",
+    "en": "viewing attested",
+    "mg": "fijerena voamarina"
+  },
+  "clm.part.action.COMPLETION": {
+    "fr": "champs complétés",
+    "en": "fields completed",
+    "mg": "saha vita fenoina"
+  },
+  "clm.po.invitationNature.SIGNER": {
+    "fr": "Bonjour {nom}, vous êtes invité à signer la trousse {ref}.",
+    "en": "Hello {nom}, you are invited to sign package {ref}.",
+    "mg": "Manao ahoana {nom}, asaina hanao sonia ny fonosana {ref} ianao."
+  },
+  "clm.po.invitationNature.COMPLETER": {
+    "fr": "Bonjour {nom}, vous êtes invité à compléter des informations de la trousse {ref}, sans la signer.",
+    "en": "Hello {nom}, you are invited to complete information in package {ref}, without signing it.",
+    "mg": "Manao ahoana {nom}, asaina hameno ireo fampahalalana ao amin'ny fonosana {ref} ianao, tsy misy sonia."
+  },
+  "clm.po.invitationNature.CONSULTER": {
+    "fr": "Bonjour {nom}, vous êtes invité à prendre connaissance de la trousse {ref}, sans la signer.",
+    "en": "Hello {nom}, you are invited to review package {ref}, without signing it.",
+    "mg": "Manao ahoana {nom}, asaina handinika ny fonosana {ref} ianao, tsy misy sonia."
+  },
+  "clm.po.etapeConsulter": {
+    "fr": "2. Lire et attester la prise de connaissance",
+    "en": "2. Read and attest you reviewed",
+    "mg": "2. Vakio ary hamarino fa nojerenao"
+  },
+  "clm.po.natureConsulter": {
+    "fr": "Votre participation se limite à la consultation : aucune signature ni information ne vous est demandée.",
+    "en": "Your participation is limited to viewing: no signature or information is requested.",
+    "mg": "Fijerena ihany no anjaranao : tsy angatahina sonia na fampahalalana ianao."
+  },
+  "clm.po.attestationConsultation": {
+    "fr": "J’atteste avoir pris connaissance de chacun des documents.",
+    "en": "I attest that I have reviewed each document.",
+    "mg": "Manamarina aho fa nojereko avokoa ireo antontan-taratasy."
+  },
+  "clm.po.lireAvantAttester": {
+    "fr": "Ouvrez chaque document avant d’attester.",
+    "en": "Open each document before attesting.",
+    "mg": "Sokafy ny antontan-taratasy tsirairay alohan'ny hanamarinana."
+  },
+  "clm.po.attesterConsultation": {
+    "fr": "Attester ma consultation",
+    "en": "Attest my review",
+    "mg": "Hamarino ny fijereko"
+  },
+  "clm.po.consultationAttestee": {
+    "fr": "Consultation attestée.",
+    "en": "Review attested.",
+    "mg": "Voamarina ny fijerena."
+  },
+  "clm.po.etapeCompleter": {
+    "fr": "2. Compléter vos informations",
+    "en": "2. Complete your information",
+    "mg": "2. Fenoy ny fampahalalana anao"
+  },
+  "clm.po.natureCompleter": {
+    "fr": "Votre participation se limite à compléter les informations ci-dessous : aucune signature ne vous est demandée.",
+    "en": "Your participation is limited to completing the information below: no signature is requested.",
+    "mg": "Ny famenoana ireo fampahalalana etsy ambany ihany no anjaranao : tsy angatahina sonia ianao."
+  },
+  "clm.po.champsACompleter": {
+    "fr": "Informations à compléter",
+    "en": "Information to complete",
+    "mg": "Fampahalalana hofenoina"
+  },
+  "clm.po.aucunChampACompleter": {
+    "fr": "Aucune information à compléter.",
+    "en": "No information to complete.",
+    "mg": "Tsy misy fampahalalana hofenoina."
+  },
+  "clm.po.soumettreChamps": {
+    "fr": "Soumettre mes informations",
+    "en": "Submit my information",
+    "mg": "Alefaso ny fampahalalana"
+  },
+  "clm.po.champsSoumis": {
+    "fr": "Informations soumises.",
+    "en": "Information submitted.",
+    "mg": "Voalefa ny fampahalalana."
+  },
+  "clm.po.recuAction.SIGNATURE": {
+    "fr": "Reçu de signature",
+    "en": "Signature receipt",
+    "mg": "Rosia fanaovana sonia"
+  },
+  "clm.po.recuAction.CONSULTATION": {
+    "fr": "Reçu de consultation",
+    "en": "Review receipt",
+    "mg": "Rosia fijerena"
+  },
+  "clm.po.recuAction.COMPLETION": {
+    "fr": "Reçu de complétion",
+    "en": "Completion receipt",
+    "mg": "Rosia famenoana"
+  },
+  "clm.po.merciAction.SIGNATURE": {
+    "fr": "Merci, votre signature est enregistrée",
+    "en": "Thank you, your signature is recorded",
+    "mg": "Misaotra, voarakitra ny sonianao"
+  },
+  "clm.po.merciAction.CONSULTATION": {
+    "fr": "Merci, votre consultation est attestée",
+    "en": "Thank you, your review is attested",
+    "mg": "Misaotra, voamarina ny fijerenao"
+  },
+  "clm.po.merciAction.COMPLETION": {
+    "fr": "Merci, vos informations sont enregistrées",
+    "en": "Thank you, your information is recorded",
+    "mg": "Misaotra, voarakitra ny fampahalalana nomenao"
+  },
+  "clm.po.participant": {
+    "fr": "Participant",
+    "en": "Participant",
+    "mg": "Mpandray anjara"
+  },
+  "clm.po.accomplieLe": {
+    "fr": "Accomplie le",
+    "en": "Completed on",
+    "mg": "Vita ny"
   }
 }

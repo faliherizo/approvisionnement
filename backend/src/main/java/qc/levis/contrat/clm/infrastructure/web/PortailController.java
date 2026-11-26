@@ -47,6 +47,19 @@ public class PortailController {
         return portail.signer(jeton, req, http.getRemoteAddr(), http.getHeader("User-Agent"));
     }
 
+    /** Participant « consulter » (RST-50) : attestation de prise de connaissance, sans signature. */
+    @PostMapping("/consultation")
+    public ClmDto.Recu attesterConsultation(@PathVariable String jeton, @RequestBody ClmDto.ConsultationRequest req,
+                                            HttpServletRequest http) {
+        return portail.attesterConsultation(jeton, req, http.getRemoteAddr(), http.getHeader("User-Agent"));
+    }
+
+    /** Participant « compléter » (RST-50) : champs de son rôle soumis, sans signature. */
+    @PostMapping("/completion")
+    public ClmDto.Recu completer(@PathVariable String jeton, @RequestBody ClmDto.CompletionRequest req, HttpServletRequest http) {
+        return portail.completer(jeton, req, http.getRemoteAddr(), http.getHeader("User-Agent"));
+    }
+
     @PostMapping("/refuser")
     public ClmDto.PortailVue refuser(@PathVariable String jeton, @RequestBody ClmDto.RefusRequest req, HttpServletRequest http) {
         return portail.refuser(jeton, req, http.getRemoteAddr());

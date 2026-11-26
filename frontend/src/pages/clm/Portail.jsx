@@ -3,7 +3,8 @@ import { useParams, useSearchParams } from 'react-router-dom'
 import axios from 'axios'
 import { useI18n } from '../../i18n/I18nContext'
 import LangSwitcher from '../../components/LangSwitcher.jsx'
-import { Statut, dateHeure, taille } from './commun.jsx'
+import { Statut, dateHeure } from './commun.jsx'
+import { ChampsPortail, DocumentsPortail, FormulaireCompletion, FormulaireConsultation, RecuPortail } from './PortailParticipation.jsx'
 
 // Client sans redirection de session : le portail est public et ne dépend d'aucun compte.
 const portail = axios.create({ baseURL: '/api/clm/portail' })
@@ -11,6 +12,7 @@ const portail = axios.create({ baseURL: '/api/clm/portail' })
 /**
  * UI-16 — Portail du signataire externe (RST-17, RST-19) : invitation, vérification d'identité, lecture,
  * consentement explicite, champs attribués, signature et reçu. Conçu d'abord pour mobile (cibles de 44 px).
+ * Selon sa nature (AF-48, RST-50), le participant signe, atteste sa consultation ou soumet ses champs.
  */
 export default function Portail() {
   const { jeton } = useParams()
@@ -71,6 +73,14 @@ export default function Portail() {
     const r = await appel(() => portail.post(`${base}/signer`, { nomComplet: nom, consentement, champs, autoriteAttestee: autorite, referenceAutorite }), t('clm.po.signee'))
     if (r) setRecu(r.data)
   }
+  const attester = async () => {
+    const r = await appel(() => portail.post(`${base}/consultation`, { attestation: true }), t('clm.po.consultationAttestee'))
+    if (r) setRecu(r.data)
+  }
+  const completer = async (valeurs) => {
+    const r = await appel(() => portail.post(`${base}/completion`, { champs: valeurs }), t('clm.po.champsSoumis'))
+    if (r) setRecu(r.data)
+  }
   const refuser = async (e) => {
     e.preventDefault()
     const r = await appel(() => portail.post(`${base}/refuser`, { motif }), t('clm.po.refusEnregistre'))
@@ -79,6 +89,8 @@ export default function Portail() {
 
   const ferme = vue && ['REFUSEE', 'ANNULEE', 'BLOQUEE', 'EXPIREE'].includes(vue.statut)
   const tousLus = vue && vue.documents.every((d) => lus[d.id])
+  const nature = vue?.nature || 'SIGNER'
+  const actif = vue && !recu && !ferme && vue.verifiee
 
   return (
     <div className="clm-portail" data-maquette="UI-16">
@@ -100,24 +112,12 @@ export default function Portail() {
         {vue && (
           <>
             <section className="panel" data-zone="01">
-              <h1 ref={titre} tabIndex={-1}>{recu ? t('clm.po.merci') : vue.titre}</h1>
-              <p>{t('clm.po.invitation', { nom: vue.participant, ref: vue.reference })}</p>
+              <h1 ref={titre} tabIndex={-1}>{recu ? t(`clm.po.merciAction.${recu.action || 'SIGNATURE'}`) : vue.titre}</h1>
+              <p>{t(`clm.po.invitationNature.${nature}`, { nom: vue.participant, ref: vue.reference })}</p>
               <p className="clm-meta"><Statut valeur={vue.statut} /> <span>{t('clm.po.expire', { d: dateHeure(vue.expireLe) })}</span></p>
             </section>
 
-            {recu && (
-              <section className="panel" aria-labelledby="clm-recu" data-zone="06">
-                <h2 id="clm-recu">{t('clm.po.recu')}</h2>
-                <dl className="clm-dl">
-                  <div><dt>{t('clm.col.reference')}</dt><dd>{recu.reference}</dd></div>
-                  <div><dt>{t('clm.pr.signataire')}</dt><dd>{recu.signataire}</dd></div>
-                  <div><dt>{t('clm.pr.signee')}</dt><dd>{dateHeure(recu.signeeLe)}</dd></div>
-                  <div><dt>{t('clm.col.empreinte')}</dt><dd><code className="clm-casse">{recu.empreinteDocuments}</code></dd></div>
-                  <div><dt>{t('clm.pr.attestation')}</dt><dd><code>{recu.attestation}</code></dd></div>
-                </dl>
-                <button type="button" className="secondary" onClick={() => window.print()}>{t('clm.po.imprimer')}</button>
-              </section>
-            )}
+            {recu && <RecuPortail recu={recu} />}
 
             {!recu && ferme && <section className="panel"><p>{t(`clm.po.ferme.${vue.statut}`)}</p></section>}
 
@@ -138,33 +138,14 @@ export default function Portail() {
               </section>
             )}
 
-            {!recu && !ferme && vue.verifiee && (
+            {actif && nature === 'CONSULTER' && <FormulaireConsultation vue={vue} lus={lus} onOuvrir={ouvrir} onAttester={attester} occupe={occupe} />}
+            {actif && nature === 'COMPLETER' && <FormulaireCompletion vue={vue} lus={lus} onOuvrir={ouvrir} onSoumettre={completer} occupe={occupe} />}
+
+            {actif && nature === 'SIGNER' && (
               <form className="panel form" onSubmit={signer} aria-labelledby="clm-signer">
                 <h2 id="clm-signer">{t('clm.po.etape2')}</h2>
-                <ul className="clm-liste" data-zone="03" aria-label={t('clm.po.documents')}>
-                  {vue.documents.map((d) => (
-                    <li key={d.id} className="clm-portail__doc">
-                      <span>{d.nom} <span className="muted">({d.type} · {taille(d.taille)})</span> {lus[d.id] && <span role="img" aria-label={t('clm.po.consulte')}>✔</span>}</span>
-                      <button type="button" className="secondary" onClick={() => ouvrir(d)}>{t('clm.po.lire')}</button>
-                    </li>
-                  ))}
-                </ul>
-                <fieldset className="form-fieldset" data-zone="05">
-                  <legend>{t('clm.po.champs')}</legend>
-                  {vue.champs.length === 0 && <p className="muted">{t('clm.po.aucunChamp')}</p>}
-                  {vue.champs.map((c) => (
-                    <label key={c.cle}>{c.libelle}{c.obligatoire && <span aria-hidden="true"> *</span>}
-                      {c.type === 'LISTE' ? (
-                        <select value={champs[c.cle] || ''} onChange={(e) => setChamps({ ...champs, [c.cle]: e.target.value })} required={c.obligatoire}>
-                          <option value="">—</option>{c.options.map((o) => <option key={o} value={o}>{o}</option>)}
-                        </select>
-                      ) : (
-                        <input type={c.type === 'DATE' ? 'date' : 'text'} value={champs[c.cle] || ''} required={c.obligatoire} aria-required={c.obligatoire}
-                          onChange={(e) => setChamps({ ...champs, [c.cle]: e.target.value })} />
-                      )}
-                    </label>
-                  ))}
-                </fieldset>
+                <DocumentsPortail documents={vue.documents} lus={lus} onOuvrir={ouvrir} />
+                <ChampsPortail champs={vue.champs} valeurs={champs} onChange={setChamps} legende={t('clm.po.champs')} aucun={t('clm.po.aucunChamp')} />
                 <div className="form" data-zone="04">
                   {vue.entreprise && <p>{t('clm.po.representation', { entreprise: vue.entreprise, qualite: vue.qualite || '—' })}</p>}
                   {vue.autoriteRequise && (
