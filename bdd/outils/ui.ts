@@ -121,9 +121,16 @@ export async function ecartsEcran(page: Page): Promise<string[]> {
           desalignes.push(`${a.l.textContent?.trim().slice(0, 25)} / ${b.l.textContent?.trim().slice(0, 25)}`)
         }
       }
-      return { deborde: document.documentElement.scrollWidth > window.innerWidth + 1, petits, chevauchements, desalignes }
+      const deborde = document.documentElement.scrollWidth > window.innerWidth + 1
+      // Les éléments qui dépassent le bord droit, les plus profonds d'abord : le rapport nomme le coupable.
+      const fautifs = deborde ? [...document.querySelectorAll<HTMLElement>('body *')]
+        .filter((e) => e.getClientRects().length && e.getBoundingClientRect().right > window.innerWidth + 1
+          && ![...e.children].some((c) => c.getBoundingClientRect().right > window.innerWidth + 1))
+        .slice(0, 3).map((e) => `${e.tagName.toLowerCase()}${e.className && typeof e.className === 'string' ? '.' + e.className.trim().split(/\s+/).join('.') : ''}`
+          + ` (${Math.round(e.getBoundingClientRect().right)} px) « ${(e.textContent ?? '').trim().slice(0, 40)} »`) : []
+      return { deborde, fautifs, petits, chevauchements, desalignes }
     }, COUCHES)
-    if (bilan.deborde) ecarts.push(`${largeur} px : débordement horizontal`)
+    if (bilan.deborde) ecarts.push(`${largeur} px : débordement horizontal${bilan.fautifs.length ? ' — ' + bilan.fautifs.join(' ; ') : ''}`)
     if (bilan.petits.length) ecarts.push(`${largeur} px : cibles < 24 px ${JSON.stringify(bilan.petits)}`)
     if (bilan.chevauchements.length) ecarts.push(`${largeur} px : éléments superposés ${JSON.stringify(bilan.chevauchements)}`)
     if (bilan.desalignes.length) ecarts.push(`${largeur} px : champs désalignés ${JSON.stringify(bilan.desalignes)}`)

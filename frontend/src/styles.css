@@ -697,6 +697,9 @@ a.btn-lien:hover, a.btn-lien:focus-visible { background: #e0e7f1; text-decoratio
 
 /* Éditeur de vitrine (superadministrateur) et chargement de la vitrine d'une organisation. */
 .vitrine-admin-liste { list-style: decimal; padding-left: 1.4rem; display: flex; flex-direction: column; gap: 12px; }
+/* Polices plus larges (exécuteurs Linux) : un libellé, un chemin de média ou un message ne poussent jamais la page au-delà de 390 px. */
+.vitrine-admin-liste li, .vitrine-admin-liste .form-grid > label { min-width: 0; }
+section[aria-labelledby=titre-editeur-vitrine] :is(label, p, legend, option) { overflow-wrap: anywhere; }
 .vitrine-admin-apercu { width: 100%; max-width: 640px; border-radius: 8px; background: #000; }
 .vitrine-chargement { padding: 2rem 1rem; text-align: center; }
 
