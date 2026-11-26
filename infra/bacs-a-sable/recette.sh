@@ -36,7 +36,7 @@ docker exec iq-bac-ia sh -c 'printf "FROM smollm2:135m\nPARAMETER num_thread 4\n
 JAR=$(ls "$RACINE"/backend/target/contrat-backend-*.jar | grep -v original | head -1)
 # Le serveur tourne sur une copie : un « mvn verify » pendant la recette réécrit target/ sans casser le serveur en marche.
 cp "$JAR" "$R/serveur.jar"; JAR="$R/serveur.jar"
-SERVER_PORT=8100 CLM_PORTAIL_URL=http://localhost:5175/portail APP_MEDIA_REPERTOIRE="$RACINE/bdd/medias" APP_CORS_ALLOWED_ORIGINS="http://localhost:*,http://*.e2e.localhost:*" \
+APP_PARE_FEU_MAX_PAR_MINUTE=3000 SERVER_PORT=8100 CLM_PORTAIL_URL=http://localhost:5175/portail APP_MEDIA_REPERTOIRE="$RACINE/bdd/medias" APP_CORS_ALLOWED_ORIGINS="http://localhost:*,http://*.e2e.localhost:*" \
   CLM_CACHET_MAGASIN="$B/icp/etat/cachet.p12" CLM_CACHET_MOT_DE_PASSE="$(cat "$B/icp/etat/mot-de-passe.txt")" \
   CLM_CACHET_TSA_URL=http://localhost:18090/tsa CLM_CONVERSION_MODE=service CLM_CONVERSION_URL=http://localhost:18030 \
   CLM_SIGNATURE_FOURNISSEUR=cachet NOTIFICATION_COURRIEL_MODE=smtp MAIL_HOST=localhost MAIL_PORT=11025 \

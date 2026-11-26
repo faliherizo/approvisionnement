@@ -5,7 +5,7 @@ Les tests sont automatisés dans [`securite/tests/`](../../securite/tests/) et s
 [`securite/lancer.sh`](../../securite/lancer.sh). Les résultats de la dernière campagne sont dans
 [`rapport-tests-intrusion.md`](rapport-tests-intrusion.md).
 
-Référentiel : OWASP Top 10 2021 et OWASP API Security Top 10 2023. Chaque scénario prend la position d'un attaquant
+Référentiels : OWASP Top 10 2021, OWASP API Security Top 10 2023, OWASP WSTG v4.2 et ASVS 4.0.3 niveau 2 (correspondance : [`referentiels.json`](../../securite/donnees/referentiels.json), reproduite au rapport). Chaque scénario prend la position d'un attaquant
 réaliste : une personne sans compte, un employé au rôle le plus faible, ou l'administrateur d'une autre organisation
 cliente de la même plateforme.
 
@@ -16,6 +16,23 @@ l'inventaire complet des opérations dans la spécification OpenAPI que publie l
 opération ajoutée demain est donc éprouvée dès la campagne suivante. Le seul fichier tenu à la main est la liste des
 opérations publiques par conception, [`surface-publique.json`](../../securite/donnees/surface-publique.json). Chaque
 entrée y porte sa raison d'être publique et le mécanisme qui la protège.
+
+## Aucune route n'échappe : inventaire réel, règle explicite, matrice dérivée
+
+L'OpenAPI pourrait omettre une route (contrôleur masqué, méthode non documentée) : la suite d'intrusion ne la verrait
+pas. La construction du serveur ferme cette porte par `RoutesSecuriseesIntegrationTest` et
+`PareFeuSurfacePubliqueIntegrationTest` (`backend/src/test/java/qc/levis/contrat/securite/`), qui partent de la liste
+RÉELLE des routes servies par Spring MVC (`RequestMappingHandlerMapping`) :
+
+| N° | Ce qui est vérifié, pour chaque route | Échec si |
+|---|---|---|
+| RTE-01 | la route figure dans l'OpenAPI, et chaque opération de l'OpenAPI est servie | une route non documentée, ou une opération fantôme |
+| RTE-02 | la route déclare sa méthode HTTP et une règle d'accès explicite : publique motivée (`surface-publique.json`), `@PreAuthorize` restrictif, ou ouverte à tout rôle avec un contrôle fin motivé et testé dans le service (`authentification-seule.json`) | une route sans règle (le « refus par défaut » de `anyRequest().authenticated()` ne suffit pas), un motif sans route ou sans raison |
+| RTE-03 | sans session : 401 pour toute route non publique ; refus pour toute route publique à jeton appelée sans jeton | une autre réponse |
+| RTE-04 | la matrice rôle × opération, DÉRIVÉE des annotations par le moteur d'autorisation de l'application, est identique à la matrice revue (`matrice-roles.json`) ; administration de la plateforme réservée au superadministrateur ; aucune modification permise au LECTEUR ou à l'AUDITEUR sans motif | une autorisation modifiée sans revue, ou un invariant violé |
+| RTE-05 | chaque rôle refusé par la matrice reçoit 403 sur l'opération, avant toute lecture de la requête (SEC-32) | une autre réponse (400, 415, 2xx…) |
+| RTE-06 | chaque méthode HTTP non prévue sur un chemin existant répond 405 | une autre réponse |
+| RTE-07 | chaque opération publique répond 429 au-delà du seuil par client ; un X-Forwarded-For forgé ne contourne pas la limite (SEC-33) | une opération publique sans limite |
 
 ## Méthode du canari (étanchéité entre organisations)
 
@@ -62,12 +79,15 @@ procède ainsi :
 | INT-09-a | A04 | rédacteur | téléverser un fichier de 60 Mo | une réponse autre que 413 |
 | INT-09-b | A03, A04 | rédacteur | téléverser un faux document Word (script, nom `../../evil.docx`) | une réponse 2xx ou une erreur 500 |
 | INT-10 | A10 (SSRF) | administrateur | faire interroger par le serveur les métadonnées infonuagiques (169.254.169.254), le serveur lui-même, `file://` | la requête sortante est émise |
+| INT-11-a | A01 | une personne de chaque rôle (10 rôles) | appeler chaque opération que la matrice dérivée lui refuse, sur le serveur réel | une réponse autre que 403 |
+| INT-11-b | A07 | anonyme muni d'un jeton forgé | appeler chaque route publique à jeton (portails, signature, intégration, SCIM, MCP, API publique) avec un jeton inventé ou `alg: none` | une réponse 2xx, 3xx ou 5xx |
+| INT-11-c | A04 | anonyme | dépasser le seuil de la limitation de débit en changeant de X-Forwarded-For à chaque requête | aucune réponse 429 |
 
 ## Outils externes
 
 | Outil | Ce qu'il apporte | Échec si |
 |---|---|---|
-| OWASP ZAP 2.16 (`zap-api-scan`) | balayage passif et actif de toute l'API, à partir de l'OpenAPI, avec une session : injections, en-têtes, divulgations, erreurs | une alerte de risque élevé non corrigée, ou non acceptée avec justification dans [`acceptations.json`](../../securite/donnees/acceptations.json) |
+| OWASP ZAP 2.16 (`zap-api-scan`) | balayage passif et ACTIF de toute l'API, à partir de l'OpenAPI, avec une session vérifiée encore valide à la fin : injections, en-têtes, divulgations, erreurs | une alerte de risque élevé non corrigée, ou non acceptée avec justification dans [`acceptations.json`](../../securite/donnees/acceptations.json) |
 | Trivy 0.58 | vulnérabilités connues (CVE) des dépendances Maven et npm, secrets oubliés dans le dépôt, configuration des Dockerfile, du Terraform et du Kubernetes | une vulnérabilité haute ou critique, un secret ou un défaut de configuration grave non traité |
 | `npm audit` | vulnérabilités des dépendances de production du frontend | consigné au rapport |
 

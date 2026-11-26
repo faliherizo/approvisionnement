@@ -1,0 +1,20 @@
+{
+  "description": "Correspondance de chaque famille d'essais avec l'OWASP Web Security Testing Guide v4.2 (identifiants WSTG) et l'OWASP Application Security Verification Standard 4.0.3, niveau 2 (identifiants ASVS). Le rapport la reproduit.",
+  "familles": [
+    { "essai": "RoutesSecuriseesIntegrationTest", "objet": "Inventaire réel des routes (Spring MVC) = OpenAPI ; règle d'accès explicite ; 401 sans session ; matrice rôle × opération dérivée et éprouvée (403) ; méthodes non prévues (405)", "wstg": ["WSTG-INFO-06", "WSTG-ATHZ-02", "WSTG-ATHZ-03", "WSTG-CONF-06"], "asvs": ["V1.4.4", "V4.1.1", "V4.1.3", "V4.1.5", "V13.2.1", "V14.5.1"] },
+    { "essai": "PareFeuSurfacePubliqueIntegrationTest", "objet": "Limitation de débit de chaque opération publique ; X-Forwarded-For forgé", "wstg": ["WSTG-BUSL-05", "WSTG-BUSL-07"], "asvs": ["V2.2.1", "V11.1.4"] },
+    { "essai": "INT-01", "objet": "Accès anonyme à chaque opération ; surface publique sans fuite", "wstg": ["WSTG-ATHN-04", "WSTG-ATHZ-02", "WSTG-ERRH-01"], "asvs": ["V4.1.1", "V4.1.5", "V7.4.1"] },
+    { "essai": "INT-02", "objet": "Moindre privilège (lecteur, administrateur d'organisation)", "wstg": ["WSTG-ATHZ-03"], "asvs": ["V4.1.2", "V4.1.3"] },
+    { "essai": "INT-03", "objet": "Étanchéité entre organisations (canaris, IDOR en lecture et écriture)", "wstg": ["WSTG-ATHZ-04"], "asvs": ["V4.2.1"] },
+    { "essai": "INT-04", "objet": "Étanchéité entre personnes d'une organisation (IDOR horizontal)", "wstg": ["WSTG-ATHZ-04"], "asvs": ["V4.2.1"] },
+    { "essai": "INT-05", "objet": "Force brute, énumération, jetons falsifiés / sans signature / expirés / rejoués, cookie, politique de mot de passe", "wstg": ["WSTG-ATHN-03", "WSTG-ATHN-07", "WSTG-IDNT-04", "WSTG-SESS-02", "WSTG-SESS-06", "WSTG-SESS-09"], "asvs": ["V2.1.1", "V2.2.1", "V3.3.1", "V3.4.1", "V3.4.2", "V3.4.3", "V3.5.3"] },
+    { "essai": "INT-06", "objet": "Injection SQL, XSS stockée, traversée de chemins", "wstg": ["WSTG-INPV-05", "WSTG-INPV-02", "WSTG-ATHZ-01"], "asvs": ["V5.3.3", "V5.3.4", "V12.3.1"] },
+    { "essai": "INT-07", "objet": "En-têtes de sécurité, CORS, CSRF, erreurs, méthodes, interfaces d'administration, profil de production", "wstg": ["WSTG-CONF-05", "WSTG-CONF-06", "WSTG-CONF-07", "WSTG-CLNT-07", "WSTG-CLNT-09", "WSTG-SESS-05", "WSTG-ERRH-01"], "asvs": ["V4.2.2", "V7.4.1", "V14.3.2", "V14.4.3", "V14.4.4", "V14.4.5", "V14.4.6", "V14.4.7", "V14.5.3"] },
+    { "essai": "INT-08", "objet": "Secrets dans les réponses, numéro de carte refusé, affectation de masse", "wstg": ["WSTG-INFO-05", "WSTG-ATHZ-03"], "asvs": ["V2.4.1", "V5.1.2"] },
+    { "essai": "INT-09", "objet": "Téléversements : taille, type, nom de fichier (antivirus : ADR-027, bacs à sable ClamAV)", "wstg": ["WSTG-BUSL-08", "WSTG-BUSL-09"], "asvs": ["V12.1.1", "V12.2.1"] },
+    { "essai": "INT-10", "objet": "SSRF : adresses internes, métadonnées infonuagiques, schémas non HTTP", "wstg": ["WSTG-INPV-19"], "asvs": ["V12.6.1"] },
+    { "essai": "INT-11", "objet": "Matrice des rôles sur le serveur réel ; routes à jeton avec jeton forgé ; limitation de débit", "wstg": ["WSTG-ATHZ-02", "WSTG-ATHZ-03", "WSTG-ATHN-04", "WSTG-BUSL-05"], "asvs": ["V4.1.1", "V4.1.3", "V11.1.4"] },
+    { "essai": "OWASP ZAP (actif, authentifié)", "objet": "Règles passives et actives sur chaque opération de l'OpenAPI", "wstg": ["WSTG-INPV-01", "WSTG-INPV-02", "WSTG-INPV-05", "WSTG-INPV-11", "WSTG-INPV-12", "WSTG-INPV-07"], "asvs": ["V5.2.x", "V5.3.x", "V14.4.x"] },
+    { "essai": "Trivy, npm audit, gitleaks, SBOM CycloneDX", "objet": "Composants vulnérables, secrets, configuration (Dockerfile, Terraform, Kubernetes)", "wstg": ["WSTG-CONF-01", "WSTG-CONF-02"], "asvs": ["V14.2.1", "V14.1.x", "V2.10.4"] }
+  ]
+}

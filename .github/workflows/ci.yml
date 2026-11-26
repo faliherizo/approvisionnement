@@ -8,7 +8,7 @@ name: CI
 
 on:
   push:
-    branches: [develop, main]
+    branches: [develop, main, "securite/**"]
   pull_request:
   workflow_dispatch:
 

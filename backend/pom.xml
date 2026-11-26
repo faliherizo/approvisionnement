@@ -264,6 +264,37 @@
                             </rules>
                         </configuration>
                     </execution>
+                    <!-- Porte des corrections de la campagne d'intrusion (SEC-32, SEC-33) : classes nommées une à une. La logique
+                         pure (AdresseClient, domaine) exige 100 % des lignes et des branches. -->
+                    <execution>
+                        <id>check-securite</id>
+                        <goals><goal>check</goal></goals>
+                        <configuration>
+                            <includes>
+                                <include>qc/levis/contrat/securite/domain/AdresseClient*</include>
+                                <include>qc/levis/contrat/securite/infrastructure/PareFeuFilter*</include>
+                                <include>qc/levis/contrat/securite/infrastructure/web/AutorisationAnticipee*</include>
+                                <include>qc/levis/contrat/securite/infrastructure/web/ConfigurationAutorisationAnticipee*</include>
+                                <include>qc/levis/contrat/securite/application/LimiteurDebit*</include>
+                            </includes>
+                            <rules>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <limits>
+                                        <limit><counter>LINE</counter><value>COVEREDRATIO</value><minimum>0.96</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>qc.levis.contrat.securite.domain.AdresseClient</include></includes>
+                                    <limits>
+                                        <limit><counter>LINE</counter><value>COVEREDRATIO</value><minimum>1.00</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>1.00</minimum></limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

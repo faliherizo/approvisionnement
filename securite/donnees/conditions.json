@@ -1,9 +1,11 @@
 {
   "conditions": [
     "Le niveau de sécurité attesté suppose le déploiement de production prévu : HTTPS de bout en bout (répartiteur Azure Front Door ou ingress), profil « prod », secrets fournis par le coffre (Key Vault, Secrets Manager) et jamais par les valeurs par défaut — le serveur refuse d'ailleurs de démarrer sans eux.",
-    "Le frein à la force brute est par courriel. Une attaque par bourrage d'identifiants répartie sur de nombreux comptes se contient au niveau du répartiteur (pare-feu applicatif et limitation de débit par adresse IP), recommandé en production.",
+    "Le frein à la force brute est double : par courriel (10 échecs en 15 minutes) et, sur toute la surface sans session, par client (300 requêtes par minute et par famille de routes, SEC-33). Derrière un NAT d'entreprise, tous les usagers partagent une adresse : le seuil se règle (APP_PARE_FEU_MAX_PAR_MINUTE). Un bourrage d'identifiants réparti sur de nombreuses adresses se contient au répartiteur (pare-feu applicatif), recommandé en production.",
+    "La limitation de débit identifie le client par la dernière adresse publique de X-Forwarded-For, ajoutée par le frontal : elle suppose que le serveur n'est joignable QUE par le frontal et le répartiteur (réseau privé), comme dans les déploiements fournis (Docker, Kubernetes, Container Apps).",
     "La garde anti-SSRF résout le nom avant l'appel : une attaque par rebond DNS (changement de résolution entre le contrôle et la connexion) reste théoriquement possible ; elle ne vise que des fonctions réservées aux administrateurs, et l'hébergement doit bloquer en sortie l'accès aux métadonnées infonuagiques (pratique standard).",
-    "L'étanchéité des modules CLM (Investissement Québec), exclusifs des autres modules, est éprouvée par IsolationTenantIqTest (deux organisations CLM) plutôt que par le balayage canari.",
-    "Un test d'intrusion manuel par un tiers indépendant, avant la mise en production, complète cette campagne automatisée : elle ne remplace pas le regard d'un auditeur sur la logique métier."
+    "L'étanchéité des modules CLM (Investissement Québec), exclusifs des autres modules, est éprouvée par IsolationTenantIqTest (deux organisations CLM) et par la matrice des rôles (RoutesSecuriseesIntegrationTest, INT-11) plutôt que par le balayage canari.",
+    "Le balayage actif de ZAP est limité à 25 minutes et partage la limitation de débit des routes publiques : il complète les tests ciblés, il ne les remplace pas.",
+    "Ce rapport est celui d'un test INTERNE et outillé, exécuté par l'équipe qui développe la plateforme. Un test d'intrusion par une firme indépendante, avant la mise en production puis chaque année (cahier des charges : cahier-des-charges-pentest-independant.md), complète cette campagne : il apporte le regard d'un auditeur sur la logique métier et les chaînes d'attaque, qu'aucun outil ne remplace."
   ]
 }

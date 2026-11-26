@@ -107,13 +107,14 @@ jobs:
           # Profil prod : Liquibase, PostgreSQL, contrôles de démarrage (ExigencesProduction). Deux écarts, déclarés dans
           # le rapport : HTTP en clair (TLS terminé par l'entrée de la cible, hors du pod) et organisation de démonstration
           # IQ amorcée (APP_TENANTS_DEMO) pour disposer de l'organisation, de son paramétrage CLM et d'un administrateur.
+          # Les 500 utilisateurs virtuels partagent une adresse : la limitation de débit par client (SEC-33) est relevée.
           docker run -d --name contrat-backend --network perf -p 127.0.0.1:8080:8080 \
             --cpus "$SERVEUR_CPUS" --memory "$SERVEUR_MEMOIRE" --memory-swap "$SERVEUR_MEMOIRE" \
             -e SPRING_PROFILES_ACTIVE=prod \
             -e DB_URL=jdbc:postgresql://contrat-db:5432/contrat -e DB_USER=contrat -e DB_PASSWORD \
             -e JWT_SECRET -e APP_CRYPTO_KEY -e APP_CRYPTO_SALT -e CLM_PREUVE_CLE \
             -e COOKIE_SECURE=false -e APP_HTTP_LOCAL_AUTORISE=true -e APP_TENANTS_DEMO=true \
-            -e LOG_APP_LEVEL=INFO \
+            -e LOG_APP_LEVEL=INFO -e APP_PARE_FEU_MAX_PAR_MINUTE=100000000 \
             -e JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=70 -XX:+ExitOnOutOfMemoryError" \
             contrat/backend:perf
           for i in $(seq 1 90); do curl -fs http://localhost:8080/api/health >/dev/null && break; sleep 2; done

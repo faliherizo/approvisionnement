@@ -35,6 +35,9 @@ docker run --rm -v "$B/icp/etat:/etat" alpine:3.20 chown -R 10001:10001 /etat
 for u in http://localhost:18093/sante http://localhost:18030/health http://localhost:18092/api/info http://localhost:18025/api/v1/info; do attendre "$u"; done
 
 echo "== Serveur branché sur les bacs à sable"
+# BDD, e2e par écran et intrusion jouent des milliers d'appels publics depuis une seule adresse : le seuil de la
+# limitation de débit par client (SEC-33, 300/min en exploitation) est relevé ; INT-11 l'éprouve à ce seuil.
+export APP_PARE_FEU_MAX_PAR_MINUTE=3000
 export SERVER_PORT=8100 CLM_PORTAIL_URL=http://localhost:5175/portail APP_MEDIA_REPERTOIRE="$RACINE/bdd/medias" APP_CORS_ALLOWED_ORIGINS="http://localhost:*,http://*.e2e.localhost:*"
 # Médiathèque d'essai (aide) quand aucune vidéo n'a été tournée sur l'exécuteur : le menu d'aide a de quoi s'afficher.
 [[ -f "$RACINE/bdd/medias/aide/index.json" ]] || { mkdir -p "$RACINE/bdd/medias"; cp -R "$RACINE/bdd/donnees/medias-essai/." "$RACINE/bdd/medias/"; }

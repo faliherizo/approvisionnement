@@ -23,6 +23,9 @@ spring:
   # Borne de transport ; chaque module applique la sienne (document : 10 Mo, clm : app.clm.documents.taille-max-octets).
   servlet:
     multipart:
+      # Fichiers lus à la demande du contrôleur, donc après la décision d'autorisation (SEC-32) : un rôle non autorisé
+      # ne fait pas recevoir de téléversement au serveur.
+      resolve-lazily: true
       max-file-size: 30MB
       max-request-size: 32MB
   # Profil par défaut : H2 en mémoire (dév + tests e2e Playwright).
@@ -135,6 +138,12 @@ app:
       # Frein à la force brute : au-delà de N échecs pour un même courriel dans la fenêtre, la connexion est suspendue.
       echecs-max: ${APP_CONNEXION_ECHECS_MAX:10}
       fenetre-minutes: ${APP_CONNEXION_FENETRE_MINUTES:15}
+    pare-feu:
+      # Limitation de débit par adresse du client et par famille, sur toute la surface sans session (SEC-33). Chaque
+      # route publique (securite/donnees/surface-publique.json) appartient à une famille : RoutesSecuriseesIntegrationTest
+      # le vérifie. Relever le seuil pour une intégration en lot volumineuse plutôt que retirer sa famille.
+      max-par-minute: ${APP_PARE_FEU_MAX_PAR_MINUTE:300}
+      familles: /api/auth/login,/api/auth/logout,/api/auth/config,/api/auth/oidc/,/api/auth/saml/,/api/signature/,/api/clm/portail/,/api/clm/integration/,/scim/v2/,/api/tenants,/api/vitrines/,/api/media/,/api/health,/api/public/
   crypto:
     # Clé et sel (hex) de chiffrement des secrets stockés en base (ex. secret client M365 par tenant).
     # OBLIGATOIRE en production : fournir via variables d'environnement, jamais en dur.

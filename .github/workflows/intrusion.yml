@@ -6,10 +6,16 @@
 #   cible « environnement »     : un environnement GitHub déployé (APP_URL, SUPERADMIN_EMAIL, SUPERADMIN_PASSWORD). La
 #                                 suite CRÉE des organisations « intrusion-* » et des comptes, et ZAP mène un balayage
 #                                 actif : il faut cocher « autorisation » — on n'attaque pas un serveur sans accord écrit.
-# Hebdomadaire sur la pile éphémère ; réutilisable (workflow_call) ; lançable à la main.
+# Hebdomadaire sur la pile éphémère ; réutilisable (workflow_call) ; lançable à la main ; à chaque poussée d'une branche
+# securite/** (campagne de test d'intrusion), toujours contre la pile éphémère.
+# Porte bloquante : un test d'intrusion en échec, une alerte ZAP de risque élevé non acceptée, un balayage ZAP absent ou
+# sans session, une vulnérabilité Trivy haute ou critique non acceptée. Rapports (ZAP HTML/JSON, Trivy, Playwright,
+# rapport Markdown) publiés en artefact.
 name: Tests d'intrusion
 
 on:
+  push:
+    branches: ["securite/**"]
   workflow_dispatch:
     inputs:
       cible:
@@ -36,7 +42,7 @@ permissions:
 jobs:
   ephemere:
     name: Intrusion — pile éphémère
-    if: inputs.cible != 'environnement'
+    if: github.event_name != 'workflow_dispatch' || inputs.cible != 'environnement'
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
@@ -57,13 +63,22 @@ jobs:
           npm ci && npx playwright install --with-deps chromium
           # ZAP tourne en conteneur : il joint le serveur de l'hôte par la passerelle Docker.
           SECURITE_API_URL=http://localhost:8100 ./lancer.sh
+      - name: Synthèse
+        if: always()
+        run: sed -n '1,/^## 2\./p' docs/securite/rapport-tests-intrusion.md >> "$GITHUB_STEP_SUMMARY" || true
       - uses: actions/upload-artifact@v4
         if: always()
-        with: { name: intrusion-ephemere, path: "securite/resultats\ndocs/securite/rapport-tests-intrusion.md", if-no-files-found: ignore }
+        with:
+          name: intrusion-ephemere
+          if-no-files-found: ignore
+          path: |
+            securite/resultats
+            securite/playwright-report
+            docs/securite/rapport-tests-intrusion.md
 
   environnement:
     name: Intrusion — environnement déployé
-    if: inputs.cible == 'environnement'
+    if: github.event_name == 'workflow_dispatch' && inputs.cible == 'environnement'
     runs-on: ubuntu-latest
     timeout-minutes: 75
     environment: ${{ inputs.environnement }}

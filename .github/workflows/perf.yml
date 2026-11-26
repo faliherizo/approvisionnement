@@ -59,7 +59,9 @@ jobs:
       - name: Serveur éphémère
         run: |
           (cd backend && mvn -B -q -DskipTests package)
-          SERVER_PORT=8080 nohup java -jar backend/target/contrat-backend-0.1.0.jar > "$RUNNER_TEMP/serveur.log" 2>&1 &
+          # Tous les utilisateurs virtuels partent de la même adresse : la limitation de débit par client (SEC-33), qui
+          # protège la surface publique, est relevée pour la seule campagne de charge.
+          APP_PARE_FEU_MAX_PAR_MINUTE=100000000 SERVER_PORT=8080 nohup java -jar backend/target/contrat-backend-0.1.0.jar > "$RUNNER_TEMP/serveur.log" 2>&1 &
           for i in $(seq 1 90); do curl -fs http://localhost:8080/api/health >/dev/null && break; sleep 2; done
           sleep 20   # amorçage des comptes de démonstration
       - name: Campagne et verdict SLO
