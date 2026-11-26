@@ -11,10 +11,10 @@ déclarée à la main. Une fonctionnalité est couverte quand un scénario e2e l
 
 | Mesure | Valeur |
 |---|---|
-| Écrans | 71, dont **71 ouverts** par au moins un scénario |
-| Fonctionnalités (écran × opération) | 560 |
-| Couvertes par un scénario | **554** |
-| Sans objet (exclusion nominative et motivée) | 6 |
+| Écrans | 74, dont **74 ouverts** par au moins un scénario |
+| Fonctionnalités (écran × opération) | 587 |
+| Couvertes par un scénario | **580** |
+| Sans objet (exclusion nominative et motivée) | 7 |
 | **Taux** | **100.0 %** |
 
 Les scénarios, leurs étapes et leurs données : [README.md](README.md) et `bdd/e2e/donnees/*.json`. Les exclusions et
@@ -36,15 +36,15 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 ## `/clm` — ClmTableauBord
 
-- **Ouvert par** : E2E-AIDE-01, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+57)
+- **Ouvert par** : E2E-AIDE-01, E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-05, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+60)
 - **Fichiers** : `pages/clm/ClmTableauBord.jsx`, `auth.jsx`, `i18n/I18nContext.jsx`, `pages/clm/commun.jsx`, `hooks/useModules.js`, `pages/clm/gabarit.jsx`
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
-| `Contenu` | lister | `GET /clm/tableau-de-bord` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+58) |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+61) |
-| `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+58) |
+| `Contenu` | lister | `GET /clm/tableau-de-bord` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-05, E2E-CB-IQ-01 (+61) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-05, E2E-CB-IQ-01 (+64) |
+| `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-05, E2E-CB-IQ-01 (+61) |
 
 ## `/clm/trousses` — Trousses
 
@@ -55,8 +55,8 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 |---|---|---|---|
 | `exporter` | télécharger | `GET /clm/suivi/export` | ✅ E2E-ECR-IQ-06 |
 | `Contenu` | lister | `GET /clm/trousses` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-09 (+10) |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+61) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-05, E2E-CB-IQ-01 (+64) |
 | `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-09 (+10) |
 
 ## `/clm/trousses/nouvelle` — TrousseCreer
@@ -77,13 +77,13 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `texteSeul` | lister | `GET /clm/trousses/{}/documents/{}/apercu` | ✅ E2E-CB-IQ-16 |
 | `charger` | télécharger | `GET /clm/trousses/{}/documents/{}/contenu` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+7) |
 | `texteSeul` | lister | `GET /clm/trousses/{}/documents/{}/texte` | ✅ E2E-ECR-IQ-02 |
-| `libelle` | consulter | `GET /clm/trousses/{}/suggestions/{}` | ✅ E2E-CB-IQ-22, E2E-ECR-IQ-02 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+61) |
+| `libelle` | consulter | `GET /clm/trousses/{}/suggestions/{}` | ✅ E2E-AX-IQ-02, E2E-CB-IQ-22, E2E-ECR-IQ-02 |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-05, E2E-CB-IQ-01 (+64) |
 | `useListe` | lister | `GET /reference/CLM_CHAMP_SALESFORCE` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+15) |
 | `useListe` | lister | `GET /reference/CLM_CLAUSE_ATTENDUE` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+12) |
-| `useListe` | lister | `GET /reference/CLM_ROLE_CONTRAT` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+21) |
-| `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+31) |
+| `useListe` | lister | `GET /reference/CLM_ROLE_CONTRAT` | ✅ E2E-AX-IQ-02, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03 (+22) |
+| `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-CB-IQ-04, E2E-CB-IQ-05 (+33) |
 | `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+15) |
 | `reviser` | ajouter | `POST /clm/analyses/{}/revision` | ✅ E2E-ECR-IQ-06 |
 | `enregistrer` | ajouter | `POST /clm/trousses` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+15) |
@@ -99,11 +99,11 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `enregistrer` | modifier | `PUT /clm/trousses/{}` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+11) |
 | `enregistrer` | modifier | `PUT /clm/trousses/{}/parcours` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+6) |
 | `attribuer` | modifier | `PUT /clm/trousses/{}/participants/{}/role` | ✅ E2E-CB-IQ-17, E2E-ECR-IQ-02 |
-| `enregistrer` | modifier | `PUT /clm/trousses/{}/valeurs` | ✅ E2E-CB-IQ-22, E2E-ECR-IQ-02 |
+| `enregistrer` | modifier | `PUT /clm/trousses/{}/valeurs` | ✅ E2E-AX-IQ-02, E2E-CB-IQ-22, E2E-ECR-IQ-02 |
 
 ## `/clm/trousses/:id` — TrousseDetail
 
-- **Ouvert par** : E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07, E2E-CB-IQ-08, E2E-CB-IQ-09, E2E-CB-IQ-10, E2E-CB-IQ-11 (+23)
+- **Ouvert par** : E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07, E2E-CB-IQ-08, E2E-CB-IQ-09 (+25)
 - **Fichiers** : `pages/clm/TrousseDetail.jsx`, `auth.jsx`, `i18n/I18nContext.jsx`, `hooks/useModules.js`, `pages/clm/commun.jsx`, `pages/clm/gabarit.jsx`, `pages/clm/TrousseCreer.jsx`, `pages/clm/ValeursTrousse.jsx`, `pages/clm/OngletDocuments.jsx`, `pages/clm/OngletParticipants.jsx`, `pages/clm/OngletParcours.jsx`, `pages/clm/OngletPreuve.jsx`
 
 | Fonctionnalité | Type | Opération | Couverte par |
@@ -112,22 +112,22 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `retirer` | supprimer | `DELETE /clm/trousses/{}/participants/{}` | ✅ E2E-ECR-IQ-01 |
 | `OngletParticipants` | consulter | `GET /clm/modeles/{}` | ✅ E2E-CB-IQ-17, E2E-ECR-IQ-02 |
 | `OngletParticipants` | lister | `GET /clm/parametres` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+16) |
-| `setOnglet` | consulter | `GET /clm/trousses/{}` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+27) |
+| `setOnglet` | consulter | `GET /clm/trousses/{}` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-CB-IQ-04, E2E-CB-IQ-05 (+29) |
 | `OngletDocuments` | lister | `GET /clm/trousses/{}/analyses` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+12) |
 | `texteSeul` | lister | `GET /clm/trousses/{}/documents/{}/apercu` | ✅ E2E-CB-IQ-16 |
 | `charger` | télécharger | `GET /clm/trousses/{}/documents/{}/contenu` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+7) |
 | `texteSeul` | lister | `GET /clm/trousses/{}/documents/{}/texte` | ✅ E2E-ECR-IQ-02 |
-| `setOnglet` | lister | `GET /clm/trousses/{}/historique` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-06, E2E-CB-IQ-16, E2E-CB-IQ-17 (+9) |
+| `setOnglet` | lister | `GET /clm/trousses/{}/historique` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-CB-IQ-04, E2E-CB-IQ-06 (+11) |
 | `OngletPreuve` | télécharger | `GET /clm/trousses/{}/preuve` | ✅ E2E-CB-IQ-18, E2E-ECR-IQ-01, E2E-ECR-IQ-06, E2E-IQ-11 (+2) |
 | `charger` | télécharger | `GET /clm/trousses/{}/preuve/{}` | ✅ E2E-CB-IQ-18, E2E-ECR-IQ-06 |
-| `libelle` | consulter | `GET /clm/trousses/{}/suggestions/{}` | ✅ E2E-CB-IQ-22, E2E-ECR-IQ-02 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+61) |
+| `libelle` | consulter | `GET /clm/trousses/{}/suggestions/{}` | ✅ E2E-AX-IQ-02, E2E-CB-IQ-22, E2E-ECR-IQ-02 |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-05, E2E-CB-IQ-01 (+64) |
 | `useListe` | lister | `GET /reference/CLM_CHAMP_SALESFORCE` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+15) |
 | `useListe` | lister | `GET /reference/CLM_CLAUSE_ATTENDUE` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+12) |
-| `useListe` | lister | `GET /reference/CLM_ROLE_CONTRAT` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+21) |
-| `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+31) |
-| `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+27) |
+| `useListe` | lister | `GET /reference/CLM_ROLE_CONTRAT` | ✅ E2E-AX-IQ-02, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03 (+22) |
+| `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-CB-IQ-04, E2E-CB-IQ-05 (+33) |
+| `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-CB-IQ-04, E2E-CB-IQ-05 (+29) |
 | `reviser` | ajouter | `POST /clm/analyses/{}/revision` | ✅ E2E-ECR-IQ-06 |
 | `relancerEtape` | relancer | `POST /clm/etapes/{}/relancer` | ✅ E2E-ECR-IQ-06 |
 | `action` | ajouter | `POST /clm/trousses/{}/{}` | ✅ E2E-CB-IQ-11, E2E-ECR-IQ-06 |
@@ -141,7 +141,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `reassigner` | modifier | `PUT /clm/etapes/{}/affectations` | ✅ E2E-CB-IQ-07, E2E-CB-IQ-11, E2E-ECR-IQ-06 |
 | `enregistrer` | modifier | `PUT /clm/trousses/{}/parcours` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+6) |
 | `attribuer` | modifier | `PUT /clm/trousses/{}/participants/{}/role` | ✅ E2E-CB-IQ-17, E2E-ECR-IQ-02 |
-| `enregistrer` | modifier | `PUT /clm/trousses/{}/valeurs` | ✅ E2E-CB-IQ-22, E2E-ECR-IQ-02 |
+| `enregistrer` | modifier | `PUT /clm/trousses/{}/valeurs` | ✅ E2E-AX-IQ-02, E2E-CB-IQ-22, E2E-ECR-IQ-02 |
 
 ## `/clm/lots` — Lots
 
@@ -152,7 +152,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 |---|---|---|---|
 | `EcranLots` | lister | `GET /clm/lots` | ✅ E2E-CB-IQ-01, E2E-ECR-IQ-06, E2E-IQ-22 |
 | `NouveauLot` | lister | `GET /clm/modeles` | ✅ E2E-CB-IQ-01, E2E-ECR-IQ-06, E2E-IQ-22 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `envoyer` | ajouter | `POST /clm/lots` | ✅ E2E-CB-IQ-01, E2E-ECR-IQ-06 |
 | `approuver` | approuver | `POST /clm/lots/{}/approuver` | ✅ E2E-ECR-IQ-06 |
 
@@ -172,8 +172,8 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `texteSeul` | télécharger | `GET /clm/trousses/{}/documents/{}/contenu` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+7) |
 | `texteSeul` | lister | `GET /clm/trousses/{}/documents/{}/texte` | ✅ E2E-ECR-IQ-02 |
 | `Decision` | lister | `GET /clm/trousses/{}/historique` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+7) |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+61) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-05, E2E-CB-IQ-01 (+64) |
 | `useListe` | lister | `GET /reference/CLM_PRIORITE_TACHE` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+11) |
 | `commenter` | ajouter | `POST /clm/etapes/{}/commentaires` | ✅ E2E-ECR-IQ-02 |
 | `decider` | ajouter | `POST /clm/etapes/{}/decider` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06, E2E-CB-IQ-07 (+2) |
@@ -192,45 +192,45 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 |---|---|---|---|
 | `Contenu` | lister | `GET /clm/suivi` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-17, E2E-ECR-IQ-06, E2E-IQ-16 |
 | `exporter` | télécharger | `GET /clm/suivi/export` | ✅ E2E-ECR-IQ-06 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+61) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-05, E2E-CB-IQ-01 (+64) |
 | `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-CB-IQ-04, E2E-CB-IQ-17, E2E-ECR-IQ-06, E2E-IQ-16 |
 | `relancerIntegration` | relancer | `POST /clm/admin/integrations/salesforce/trousses/{}/relancer` | ➖ n'apparaît qu'après l'échec réel d'un envoi vers un système externe (Salesforce, adresse de rappel d'un client) — couvert par ClmIntegrationTest (relance d'une trousse en erreur Salesforce) |
 
 ## `/clm/modeles` — Modeles
 
-- **Ouvert par** : E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-14, E2E-CB-IQ-15, E2E-CB-IQ-17, E2E-CB-IQ-22, E2E-CB-IQ-23 (+3)
+- **Ouvert par** : E2E-AX-IQ-02, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-14, E2E-CB-IQ-15, E2E-CB-IQ-17, E2E-CB-IQ-22 (+4)
 - **Fichiers** : `pages/clm/Modeles.jsx`, `i18n/I18nContext.jsx`, `auth.jsx`, `pages/clm/commun.jsx`, `hooks/useModules.js`, `pages/clm/gabarit.jsx`
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
-| `Contenu` | lister | `GET /clm/modeles` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-14 (+7) |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+61) |
-| `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-14 (+7) |
-| `creer` | ajouter | `POST /clm/modeles` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-14 (+6) |
-| `transition` | ajouter | `POST /clm/modeles/{}/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-03, E2E-CB-IQ-14, E2E-CB-IQ-17 (+3) |
+| `Contenu` | lister | `GET /clm/modeles` | ✅ E2E-AX-IQ-02, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03 (+8) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-05, E2E-CB-IQ-01 (+64) |
+| `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-AX-IQ-02, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03 (+8) |
+| `creer` | ajouter | `POST /clm/modeles` | ✅ E2E-AX-IQ-02, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03 (+7) |
+| `transition` | ajouter | `POST /clm/modeles/{}/{}` | ✅ E2E-AX-IQ-02, E2E-CB-IQ-01, E2E-CB-IQ-03, E2E-CB-IQ-14 (+4) |
 
 ## `/clm/modeles/:id` — ModeleEditeur
 
-- **Ouvert par** : E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-14, E2E-CB-IQ-15, E2E-CB-IQ-17, E2E-CB-IQ-22, E2E-CB-IQ-23 (+2)
+- **Ouvert par** : E2E-AX-IQ-02, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-14, E2E-CB-IQ-15, E2E-CB-IQ-17, E2E-CB-IQ-22 (+3)
 - **Fichiers** : `pages/clm/ModeleEditeur.jsx`, `i18n/I18nContext.jsx`, `pages/clm/commun.jsx`, `hooks/useModules.js`, `pages/clm/gabarit.jsx`, `pages/clm/OngletParcours.jsx`
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
 | `retirer` | supprimer | `DELETE /clm/modeles/{}/gabarit-word` | ✅ E2E-ECR-IQ-04 |
-| `charger` | consulter | `GET /clm/modeles/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-14 (+6) |
+| `charger` | consulter | `GET /clm/modeles/{}` | ✅ E2E-AX-IQ-02, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03 (+7) |
 | `charger` | lister | `GET /clm/modeles/{}/gabarit-word` | ✅ E2E-ECR-IQ-04 |
 | `valider` | lister | `GET /clm/modeles/{}/validation` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-15, E2E-CB-IQ-17 (+1) |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+61) |
-| `useListe` | lister | `GET /reference/CLM_CHAMP_SALESFORCE` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-14 (+6) |
-| `useListe` | lister | `GET /reference/CLM_ROLE_CONTRAT` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+21) |
-| `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-14 (+6) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-05, E2E-CB-IQ-01 (+64) |
+| `useListe` | lister | `GET /reference/CLM_CHAMP_SALESFORCE` | ✅ E2E-AX-IQ-02, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03 (+7) |
+| `useListe` | lister | `GET /reference/CLM_ROLE_CONTRAT` | ✅ E2E-AX-IQ-02, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03 (+22) |
+| `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-AX-IQ-02, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03 (+7) |
 | `previsualiser` | ajouter | `POST /clm/modeles/{}/apercu` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-15, E2E-ECR-IQ-04 |
 | `deposer` | ajouter | `POST /clm/modeles/{}/gabarit-word` | ✅ E2E-ECR-IQ-04 |
-| `soumettre` | soumettre | `POST /clm/modeles/{}/soumettre` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-03, E2E-CB-IQ-14, E2E-CB-IQ-17 (+3) |
-| `enregistrer` | modifier | `PUT /clm/modeles/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-14 (+5) |
+| `soumettre` | soumettre | `POST /clm/modeles/{}/soumettre` | ✅ E2E-AX-IQ-02, E2E-CB-IQ-01, E2E-CB-IQ-03, E2E-CB-IQ-14 (+4) |
+| `enregistrer` | modifier | `PUT /clm/modeles/{}` | ✅ E2E-AX-IQ-02, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03 (+6) |
 
 ## `/clm/admin` — AccueilAdminClm
 
@@ -247,30 +247,77 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 |---|---|---|---|
 | `Notifications` | lister | `GET /clm/admin/messages` | ✅ E2E-AIDE-01, E2E-CB-IQ-08, E2E-CB-IQ-12, E2E-ECR-IQ-05 (+2) |
 | `Notifications` | lister | `GET /clm/admin/parametres` | ✅ E2E-AIDE-01, E2E-CB-IQ-08, E2E-CB-IQ-12, E2E-ECR-IQ-05 (+2) |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `tester` | ajouter | `POST /clm/admin/messages/{}/test` | ✅ E2E-ECR-IQ-05 |
 | `enregistrer` | modifier | `PUT /clm/admin/messages` | ✅ E2E-CB-IQ-12, E2E-ECR-IQ-05 |
 
 ## `/clm/admin/integrations` — IntegrationsClm
 
-- **Ouvert par** : E2E-CB-IQ-17, E2E-CB-IQ-21, E2E-ECR-IQ-05, E2E-IQ-19, E2E-IQ-23, E2E-IQ-24
+- **Ouvert par** : E2E-AX-IQ-07, E2E-CB-IQ-17, E2E-CB-IQ-21, E2E-ECR-IQ-05, E2E-IQ-19, E2E-IQ-23, E2E-IQ-24
 - **Fichiers** : `pages/clm/AdminClm.jsx`, `i18n/I18nContext.jsx`, `pages/clm/commun.jsx`, `hooks/useModules.js`, `pages/clm/gabarit.jsx`
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
 | `retablir` | supprimer | `DELETE /clm/admin/integrations/salesforce/configuration` | ✅ E2E-ECR-IQ-05 |
-| `ClientsIntegration` | lister | `GET /clm/admin/clients-integration` | ✅ E2E-CB-IQ-17, E2E-CB-IQ-21, E2E-ECR-IQ-05, E2E-IQ-19 (+2) |
-| `Integrations` | lister | `GET /clm/admin/integrations/salesforce` | ✅ E2E-CB-IQ-17, E2E-CB-IQ-21, E2E-ECR-IQ-05, E2E-IQ-19 (+2) |
+| `ClientsIntegration` | lister | `GET /clm/admin/clients-integration` | ✅ E2E-AX-IQ-07, E2E-CB-IQ-17, E2E-CB-IQ-21, E2E-ECR-IQ-05 (+3) |
+| `Integrations` | lister | `GET /clm/admin/integrations/salesforce` | ✅ E2E-AX-IQ-07, E2E-CB-IQ-17, E2E-CB-IQ-21, E2E-ECR-IQ-05 (+3) |
 | `Integrations` | lister | `GET /clm/admin/parametres` | ✅ E2E-CB-IQ-17, E2E-CB-IQ-21, E2E-ECR-IQ-05 |
-| `ClientsIntegration` | lister | `GET /clm/admin/rappels` | ✅ E2E-CB-IQ-17, E2E-CB-IQ-21, E2E-ECR-IQ-05, E2E-IQ-19 (+2) |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
-| `creer` | ajouter | `POST /clm/admin/clients-integration` | ✅ E2E-ECR-IQ-05 |
+| `ClientsIntegration` | lister | `GET /clm/admin/rappels` | ✅ E2E-AX-IQ-07, E2E-CB-IQ-17, E2E-CB-IQ-21, E2E-ECR-IQ-05 (+3) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `creer` | ajouter | `POST /clm/admin/clients-integration` | ✅ E2E-AX-IQ-07, E2E-ECR-IQ-05 |
 | `revoquer` | ajouter | `POST /clm/admin/clients-integration/{}/revoquer` | ✅ E2E-ECR-IQ-05 |
 | `relancer` | relancer | `POST /clm/admin/integrations/salesforce/evenements/{}/relancer` | ➖ n'apparaît qu'après l'échec réel d'un envoi vers un système externe (Salesforce, adresse de rappel d'un client) — couvert par ClmIntegrationTest et EntitesClmTest.message_sortant_reprises_puis_echec_et_relance |
 | `gestionnaire en ligne (onClick)` | ajouter | `POST /clm/admin/integrations/salesforce/relayer` | ✅ E2E-CB-IQ-17, E2E-ECR-IQ-05 |
 | `gestionnaire en ligne (onClick)` | ajouter | `POST /clm/admin/integrations/salesforce/tester` | ✅ E2E-ECR-IQ-05 |
 | `relancer` | relancer | `POST /clm/admin/rappels/{}/relancer` | ➖ n'apparaît qu'après l'échec réel d'un envoi vers un système externe (Salesforce, adresse de rappel d'un client) — couvert par IntegrationEntranteServicesTest.l_administrateur_consulte_et_relance_les_rappels et IntegrationEntranteControleursTest.l_administration_relance_un_rappel |
 | `enregistrer` | modifier | `PUT /clm/admin/integrations/salesforce/configuration` | ✅ E2E-ECR-IQ-05 |
+
+## `/clm/admin/microsoft-365` — Microsoft365Clm
+
+- **Ouvert par** : E2E-AX-IQ-01
+- **Fichiers** : `pages/clm/Microsoft365Clm.jsx`, `components/IntegrationM365Manager.jsx`, `i18n/I18nContext.jsx`, `pages/clm/commun.jsx`, `hooks/useModules.js`, `pages/clm/gabarit.jsx`
+
+| Fonctionnalité | Type | Opération | Couverte par |
+|---|---|---|---|
+| `Microsoft365` | lister | `GET /clm/admin/integrations/m365` | ✅ E2E-AX-IQ-01 |
+| `Microsoft365` | lister | `GET /clm/admin/integrations/m365/depots` | ✅ E2E-AX-IQ-01 |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `IntegrationM365Manager` | lister | `GET /parametres/integration-m365` | ✅ E2E-AX-IQ-01, E2E-ECR-LEV-14, E2E-TR-04 |
+| `relancer` | relancer | `POST /clm/admin/integrations/m365/depots/{}/relancer` | ➖ un dépôt en échec suppose un Microsoft Graph réel injoignable, qu'une campagne e2e n'appelle pas — couvert par AnnexeDixIntegrationTest.un_depot_en_panne_reprend_et_se_relance_apres_reparation |
+| `relayer` | ajouter | `POST /clm/admin/integrations/m365/relayer` | ✅ E2E-AX-IQ-01 |
+| `testerConnexion` | ajouter | `POST /parametres/integration-m365/test` | ✅ E2E-ECR-LEV-14 |
+| `enregistrer` | modifier | `PUT /clm/admin/integrations/m365` | ✅ E2E-AX-IQ-01 |
+| `enregistrer` | modifier | `PUT /parametres/integration-m365` | ✅ E2E-ECR-LEV-14 |
+
+## `/clm/admin/soutien` — SoutienClm
+
+- **Ouvert par** : E2E-AX-IQ-03
+- **Fichiers** : `pages/clm/SoutienClm.jsx`, `i18n/I18nContext.jsx`, `pages/clm/commun.jsx`, `hooks/useModules.js`, `pages/clm/gabarit.jsx`
+
+| Fonctionnalité | Type | Opération | Couverte par |
+|---|---|---|---|
+| `Soutien` | lister | `GET /clm/admin/soutien` | ✅ E2E-AX-IQ-03 |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `decider` | ajouter | `POST /clm/admin/soutien/{}/{}` | ✅ E2E-AX-IQ-03 |
+
+## `/clm/admin/rapports` — RapportsClm
+
+- **Ouvert par** : E2E-AX-IQ-05
+- **Fichiers** : `pages/clm/RapportsClm.jsx`, `auth.jsx`, `i18n/I18nContext.jsx`, `pages/clm/commun.jsx`, `hooks/useModules.js`, `pages/clm/gabarit.jsx`
+
+| Fonctionnalité | Type | Opération | Couverte par |
+|---|---|---|---|
+| `supprimer` | supprimer | `DELETE /clm/admin/rapports/{}` | ✅ E2E-AX-IQ-05 |
+| `Rapports` | lister | `GET /clm/admin/rapports` | ✅ E2E-AX-IQ-05 |
+| `exporter` | télécharger | `GET /clm/admin/rapports/{}/export` | ✅ E2E-AX-IQ-05 |
+| `executer` | lister | `GET /clm/admin/rapports/{}/resultat` | ✅ E2E-AX-IQ-05 |
+| `Rapports` | lister | `GET /clm/admin/rapports/types` | ✅ E2E-AX-IQ-05 |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-05, E2E-CB-IQ-01 (+64) |
+| `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-AX-IQ-05 |
+| `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-AX-IQ-05 |
+| `enregistrer` | ajouter | `POST /clm/admin/rapports` | ✅ E2E-AX-IQ-05 |
+| `enregistrer` | modifier | `PUT /clm/admin/rapports/{}` | ✅ E2E-AX-IQ-05 |
 
 ## `/clm/admin/parametres` — ParametresClm
 
@@ -281,7 +328,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 |---|---|---|---|
 | `retablir` | supprimer | `DELETE /clm/admin/parametres` | ✅ E2E-CB-IQ-23, E2E-ECR-IQ-05 |
 | `Parametres` | lister | `GET /clm/admin/parametres` | ✅ E2E-CB-IQ-23, E2E-ECR-IQ-05, E2E-IQ-14 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `enregistrer` | modifier | `PUT /clm/admin/parametres` | ✅ E2E-CB-IQ-23, E2E-ECR-IQ-05 |
 
 ## `/clm/admin/listes` — ListesClm
@@ -292,9 +339,9 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
 | `supprimer` | supprimer | `DELETE /admin/reference/{} ou /superadmin/reference/{}` | ✅ E2E-ECR-LEV-14 |
-| `charger` | lister | `GET /admin/reference ou /superadmin/reference` | ✅ E2E-CB-IQ-23, E2E-CB-IQ-24, E2E-ECR-IQ-05, E2E-ECR-LEV-14 (+3) |
-| `ReferenceManager` | lister | `GET /admin/reference/categories ou /superadmin/reference/categories` | ✅ E2E-CB-IQ-23, E2E-CB-IQ-24, E2E-ECR-IQ-05, E2E-ECR-LEV-14 (+3) |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /admin/reference ou /superadmin/reference` | ✅ E2E-AX-IQ-03, E2E-AX-IQ-04, E2E-CB-IQ-23, E2E-CB-IQ-24 (+5) |
+| `ReferenceManager` | lister | `GET /admin/reference/categories ou /superadmin/reference/categories` | ✅ E2E-AX-IQ-03, E2E-AX-IQ-04, E2E-CB-IQ-23, E2E-CB-IQ-24 (+5) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `enregistrer` | ajouter | `POST /admin/reference ou /superadmin/reference` | ✅ E2E-CB-IQ-23, E2E-CB-IQ-24, E2E-ECR-LEV-14 |
 | `enregistrer` | modifier | `PUT /admin/reference/{} ou /superadmin/reference/{}` | ✅ E2E-CB-IQ-24, E2E-ECR-LEV-14 |
 
@@ -308,7 +355,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `supprimer` | supprimer | `DELETE /admin/users/{}` | ✅ E2E-ECR-LEV-01 |
 | `modifier` | lister | `GET /admin/users` | ✅ E2E-ECR-LEV-01, E2E-IQ-25, E2E-IQ-26, E2E-TR-03 |
 | `charger` | lister | `GET /admin/users/roles` | ✅ E2E-ECR-LEV-01, E2E-IQ-25, E2E-IQ-26, E2E-TR-03 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `enregistrer` | ajouter | `POST /admin/users` | ✅ E2E-ECR-LEV-01 |
 | `modifier` | modifier | `PUT /admin/users/{}` | ✅ E2E-ECR-LEV-01 |
 
@@ -323,8 +370,8 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `gestionnaire en ligne (onClick)` | supprimer | `DELETE /clm/admin/groupes/{}/membres/{}` | ✅ E2E-ECR-IQ-05 |
 | `Groupes` | lister | `GET /clm/groupes` | ✅ E2E-CB-IQ-08, E2E-CB-IQ-14, E2E-ECR-IQ-05 |
 | `Groupes` | lister | `GET /clm/membres` | ✅ E2E-CB-IQ-08, E2E-CB-IQ-14, E2E-ECR-IQ-05 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+61) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-05, E2E-CB-IQ-01 (+64) |
 | `useListe` | lister | `GET /reference/CLM_UNITE` | ✅ E2E-CB-IQ-08, E2E-CB-IQ-14, E2E-ECR-IQ-05 |
 | `creer` | ajouter | `POST /clm/admin/groupes` | ✅ E2E-CB-IQ-08, E2E-CB-IQ-14, E2E-ECR-IQ-05 |
 | `choisirUnite` | ajouter | `POST /clm/admin/groupes/{}/membres` | ✅ E2E-CB-IQ-08, E2E-CB-IQ-14, E2E-ECR-IQ-05 |
@@ -332,15 +379,16 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 ## `/clm/admin/journal` — JournalClm
 
-- **Ouvert par** : E2E-CB-IQ-18, E2E-ECR-IQ-05, E2E-ECR-IQ-07, E2E-IQ-17, E2E-IQ-25
+- **Ouvert par** : E2E-AX-IQ-06, E2E-CB-IQ-18, E2E-ECR-IQ-05, E2E-ECR-IQ-07, E2E-IQ-17, E2E-IQ-25
 - **Fichiers** : `pages/clm/JournalClm.jsx`, `i18n/I18nContext.jsx`, `pages/clm/commun.jsx`, `hooks/useModules.js`, `pages/clm/gabarit.jsx`
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
-| `Contenu` | lister | `GET /clm/admin/journal` | ✅ E2E-CB-IQ-18, E2E-ECR-IQ-05, E2E-ECR-IQ-07, E2E-IQ-17 (+1) |
+| `Contenu` | lister | `GET /clm/admin/journal` | ✅ E2E-AX-IQ-06, E2E-CB-IQ-18, E2E-ECR-IQ-05, E2E-ECR-IQ-07 (+2) |
 | `exporter` | télécharger | `GET /clm/admin/journal/export` | ✅ E2E-CB-IQ-18, E2E-ECR-IQ-07 |
-| `Utilisation` | lister | `GET /clm/admin/utilisation` | ✅ E2E-CB-IQ-18, E2E-ECR-IQ-05, E2E-ECR-IQ-07, E2E-IQ-17 (+1) |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `Utilisation` | lister | `GET /clm/admin/utilisation` | ✅ E2E-AX-IQ-06, E2E-CB-IQ-18, E2E-ECR-IQ-05, E2E-ECR-IQ-07 (+2) |
+| `exporter` | télécharger | `GET /clm/admin/utilisation/export` | ✅ E2E-AX-IQ-06 |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 
 ## `/clm/admin/conservation` — ConservationClm
 
@@ -356,8 +404,8 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `EcranConservation` | lister | `GET /clm/admin/conservation/regles` | ✅ E2E-ECR-IQ-07, E2E-IQ-18 |
 | `EcranConservation` | lister | `GET /clm/admin/conservation/trousses` | ✅ E2E-ECR-IQ-07, E2E-IQ-18 |
 | `certificat` | lister | `GET /clm/admin/conservation/trousses/{}/certificat-destruction` | ➖ n'existe qu'après une destruction (l'échéance de conservation (au moins un an après la clôture) ne s'atteint pas en e2e sans fausser l'horloge du serveur) — couvert par CertificatDestructionServiceTest et ClmIntegrationTest.relance_commentaire_delegation_certificat_et_journal |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+61) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-05, E2E-CB-IQ-01 (+64) |
 | `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-ECR-IQ-07, E2E-IQ-18 |
 | `detruire` | ajouter | `POST /clm/admin/conservation/trousses/{}/detruire` | ➖ l'échéance de conservation (au moins un an après la clôture) ne s'atteint pas en e2e sans fausser l'horloge du serveur — couvert par ConservationServiceTest.echue_selon_la_regle_du_type_puis_detruite_avec_un_bordereau_sans_contenu |
 | `geler` | ajouter | `POST /clm/admin/conservation/trousses/{}/gel` | ✅ E2E-ECR-IQ-07 |
@@ -373,7 +421,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 |---|---|---|---|
 | `consulter` | lister | `GET /clm/admin/departs` | ✅ E2E-ECR-IQ-05 |
 | `EcranDepart` | lister | `GET /clm/membres` | ✅ E2E-ECR-IQ-05 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `transferer` | ajouter | `POST /clm/admin/departs` | ✅ E2E-ECR-IQ-05 |
 
 ## `/clm/options` — OptionsClm
@@ -384,8 +432,8 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
 | `Contenu` | lister | `GET /clm/analyses` | ✅ E2E-ECR-IQ-05 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
-| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04 (+61) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `useListe` | consulter | `GET /reference/{}` | ✅ E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-05, E2E-CB-IQ-01 (+64) |
 | `useListe` | lister | `GET /reference/CLM_TYPE_CONTRAT` | ✅ E2E-ECR-IQ-05 |
 
 ## `/clm/profil` — Profil
@@ -396,7 +444,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
 | `retirer` | supprimer | `DELETE /profil/repertoires/{}` | ✅ E2E-ECR-LEV-09 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `Profil` | lister | `GET /profil` | ✅ E2E-ECR-IQ-05, E2E-ECR-LEV-09 |
 | `charger` | lister | `GET /profil/repertoires` | ✅ E2E-ECR-LEV-09 |
 | `ajouter` | ajouter | `POST /profil/repertoires` | ✅ E2E-ECR-LEV-09 |
@@ -427,7 +475,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `AnnuaireManager` | lister | `GET /admin/annuaire/scim` | ✅ E2E-ECR-IQ-07, E2E-IQ-27, E2E-IQ-28, E2E-IQ-29 |
 | `ConnexionLocaleManager` | lister | `GET /admin/connexion-locale` | ✅ E2E-ECR-IQ-07, E2E-IQ-27, E2E-IQ-28, E2E-IQ-29 |
 | `PolitiqueSessionManager` | lister | `GET /admin/session` | ✅ E2E-ECR-IQ-07, E2E-IQ-27, E2E-IQ-28, E2E-IQ-29 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `IntegrationOidcManager` | lister | `GET /parametres/integration-oidc` | ✅ E2E-ECR-IQ-07, E2E-ECR-LEV-14, E2E-IQ-27, E2E-IQ-28 (+2) |
 | `IntegrationSamlManager` | lister | `GET /parametres/integration-saml` | ✅ E2E-ECR-IQ-07, E2E-ECR-LEV-14, E2E-IQ-27, E2E-IQ-28 (+2) |
 | `ajouter` | ajouter | `POST /admin/annuaire/correspondances` | ✅ E2E-ECR-IQ-07 |
@@ -462,12 +510,12 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 ## `/login` — Login
 
-- **Ouvert par** : E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06 (+126)
+- **Ouvert par** : E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-04, E2E-AX-IQ-05, E2E-AX-IQ-06 (+133)
 - **Fichiers** : `pages/Login.jsx`, `auth.jsx`, `i18n/I18nContext.jsx`, `components/LangSwitcher.jsx`
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
-| `Login` | lister | `GET /auth/config` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `Login` | lister | `GET /auth/config` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `Login` | lister | `GET /tenants/{}/public` | ✅ E2E-ECR-LEV-01, E2E-ECR-LEV-02, E2E-ECR-LEV-03, E2E-ECR-LEV-04 (+17) |
 
 ## `/signature/:jeton` — SignaturePublique
@@ -482,17 +530,17 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 ## `/` — RacineRoute
 
-- **Ouvert par** : E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02, E2E-CB-IQ-03, E2E-CB-IQ-04, E2E-CB-IQ-05, E2E-CB-IQ-06 (+126)
+- **Ouvert par** : E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02, E2E-AX-IQ-03, E2E-AX-IQ-04, E2E-AX-IQ-05, E2E-AX-IQ-06 (+133)
 - **Fichiers** : `App.jsx`, `auth.jsx`, `hooks/useModules.js`, `pages/Dashboard.jsx`, `components/RichText.jsx`, `i18n/I18nContext.jsx`, `hooks/useReference.js`
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
-| `charger` | lister | `GET /documents` | ✅ E2E-AIDE-02, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+56) |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
-| `useReference` | consulter | `GET /reference/{}` | ✅ E2E-AIDE-02, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+56) |
-| `useReference` | lister | `GET /reference/MODE_SOLLICITATION` | ✅ E2E-AIDE-02, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+56) |
-| `useReference` | lister | `GET /reference/TYPE_CONTRAT` | ✅ E2E-AIDE-02, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+56) |
-| `charger` | lister | `GET /templates` | ✅ E2E-AIDE-02, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+56) |
+| `charger` | lister | `GET /documents` | ✅ E2E-AIDE-02, E2E-AX-IQ-03, E2E-CHU-02, E2E-CHU-03 (+57) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `useReference` | consulter | `GET /reference/{}` | ✅ E2E-AIDE-02, E2E-AX-IQ-03, E2E-CHU-02, E2E-CHU-03 (+57) |
+| `useReference` | lister | `GET /reference/MODE_SOLLICITATION` | ✅ E2E-AIDE-02, E2E-AX-IQ-03, E2E-CHU-02, E2E-CHU-03 (+57) |
+| `useReference` | lister | `GET /reference/TYPE_CONTRAT` | ✅ E2E-AIDE-02, E2E-AX-IQ-03, E2E-CHU-02, E2E-CHU-03 (+57) |
+| `charger` | lister | `GET /templates` | ✅ E2E-AIDE-02, E2E-AX-IQ-03, E2E-CHU-02, E2E-CHU-03 (+57) |
 | `creer` | ajouter | `POST /documents` | ✅ E2E-ECR-LEV-08 |
 | `instancier` | ajouter | `POST /templates/{}/instancier` | ✅ E2E-ECR-LEV-08 |
 
@@ -507,7 +555,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `charger` | consulter | `GET /clauses/{}` | ✅ E2E-ECR-LEV-02, E2E-ECR-LEV-16, E2E-LEV-01 |
 | `ClauseHistorique` | lister | `GET /clauses/{}/versions` | ✅ E2E-ECR-LEV-02, E2E-LEV-01 |
 | `charger` | lister | `GET /clauses/recherche` | ✅ E2E-ECR-LEV-02, E2E-ECR-LEV-16, E2E-LEV-01 |
-| `useReference` | consulter | `GET /reference/{}` | ✅ E2E-AIDE-02, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+56) |
+| `useReference` | consulter | `GET /reference/{}` | ✅ E2E-AIDE-02, E2E-AX-IQ-03, E2E-CHU-02, E2E-CHU-03 (+57) |
 | `useReference` | lister | `GET /reference/CATEGORIE_CLAUSE` | ✅ E2E-ECR-LEV-02, E2E-ECR-LEV-16, E2E-LEV-01 |
 | `useReference` | lister | `GET /reference/MODE_SOLLICITATION` | ✅ E2E-ECR-LEV-02, E2E-ECR-LEV-16, E2E-LEV-01 |
 | `useReference` | lister | `GET /reference/TYPE_CONTRAT` | ✅ E2E-ECR-LEV-02, E2E-ECR-LEV-16, E2E-LEV-01 |
@@ -529,7 +577,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `charger` | lister | `GET /dossiers` | ✅ E2E-ECR-LEV-05, E2E-TR-08 |
 | `ouvrir` | lister | `GET /dossiers/{}/documents` | ✅ E2E-ECR-LEV-05, E2E-TR-08 |
 | `ouvrir` | lister | `GET /dossiers/{}/rapport` | ✅ E2E-ECR-LEV-05, E2E-TR-08 |
-| `useReference` | consulter | `GET /reference/{}` | ✅ E2E-AIDE-02, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+56) |
+| `useReference` | consulter | `GET /reference/{}` | ✅ E2E-AIDE-02, E2E-AX-IQ-03, E2E-CHU-02, E2E-CHU-03 (+57) |
 | `useReference` | lister | `GET /reference/MODE_SOLLICITATION` | ✅ E2E-ECR-LEV-05, E2E-TR-08 |
 | `soumettre` | ajouter | `POST /dossiers` | ✅ E2E-ECR-LEV-05, E2E-TR-08 |
 | `rattacher` | ajouter | `POST /dossiers/{}/documents/{}` | ✅ E2E-ECR-LEV-05 |
@@ -545,7 +593,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
 | `Assistant` | lister | `GET /dossiers` | ✅ E2E-LEV-03, E2E-LEV-04 |
-| `useReference` | consulter | `GET /reference/{}` | ✅ E2E-AIDE-02, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+56) |
+| `useReference` | consulter | `GET /reference/{}` | ✅ E2E-AIDE-02, E2E-AX-IQ-03, E2E-CHU-02, E2E-CHU-03 (+57) |
 | `useReference` | lister | `GET /reference/TYPE_CONTRAT` | ✅ E2E-LEV-03, E2E-LEV-04 |
 | `analyser` | ajouter | `POST /assistant/analyser` | ✅ E2E-LEV-03, E2E-LEV-04 |
 | `generer` | generer | `POST /assistant/generer` | ✅ E2E-LEV-03, E2E-LEV-04 |
@@ -558,7 +606,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
 | `supprimer` | supprimer | `DELETE /workflows/{}` | ✅ E2E-ECR-LEV-04, E2E-LEV-05, E2E-TR-10 |
-| `useReference` | consulter | `GET /reference/{}` | ✅ E2E-AIDE-02, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+56) |
+| `useReference` | consulter | `GET /reference/{}` | ✅ E2E-AIDE-02, E2E-AX-IQ-03, E2E-CHU-02, E2E-CHU-03 (+57) |
 | `useReference` | lister | `GET /reference/TYPE_CONTRAT` | ✅ E2E-ECR-LEV-04, E2E-LEV-05, E2E-TR-10 |
 | `charger` | lister | `GET /workflows` | ✅ E2E-ECR-LEV-04, E2E-LEV-05, E2E-TR-10 |
 | `soumettre` | ajouter | `POST /workflows` | ✅ E2E-ECR-LEV-04, E2E-LEV-05, E2E-TR-10 |
@@ -613,7 +661,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `recharger` | lister | `GET /documents/{}/versions` | ✅ E2E-ECR-LEV-08, E2E-ECR-LEV-13, E2E-ECR-LEV-16, E2E-LEV-03 (+5) |
 | `enregistrerChangement` | lister | `GET /gabarits` | ✅ E2E-ECR-LEV-08, E2E-ECR-LEV-13, E2E-ECR-LEV-16, E2E-LEV-03 (+5) |
 | `chargerRepertoires` | lister | `GET /profil/repertoires` | ✅ E2E-ECR-LEV-08, E2E-ECR-LEV-13, E2E-ECR-LEV-16, E2E-LEV-03 (+5) |
-| `useReference` | consulter | `GET /reference/{}` | ✅ E2E-AIDE-02, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+56) |
+| `useReference` | consulter | `GET /reference/{}` | ✅ E2E-AIDE-02, E2E-AX-IQ-03, E2E-CHU-02, E2E-CHU-03 (+57) |
 | `useReference` | lister | `GET /reference/TYPE_OBLIGATION` | ✅ E2E-ECR-LEV-08, E2E-ECR-LEV-13, E2E-ECR-LEV-16, E2E-LEV-03 (+5) |
 | `comparer` | lister | `GET /versions/comparer` | ✅ E2E-ECR-LEV-13 |
 | `enregistrerChangement` | ajouter | `POST /addendas/{}/changements` | ✅ E2E-ECR-LEV-13 |
@@ -647,7 +695,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 |---|---|---|---|
 | `supprimer` | supprimer | `DELETE /clauses/{}` | ✅ E2E-ECR-LEV-03 |
 | `supprimer` | supprimer | `DELETE /documents/{}` | ✅ E2E-ECR-LEV-03 |
-| `useReference` | consulter | `GET /reference/{}` | ✅ E2E-AIDE-02, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+56) |
+| `useReference` | consulter | `GET /reference/{}` | ✅ E2E-AIDE-02, E2E-AX-IQ-03, E2E-CHU-02, E2E-CHU-03 (+57) |
 | `useReference` | lister | `GET /reference/TYPE_CONTRAT` | ✅ E2E-ECR-LEV-03, E2E-LEV-02 |
 | `rechercher` | lister | `GET /search` | ✅ E2E-ECR-LEV-03, E2E-LEV-02 |
 | `Search` | lister | `GET /search/thematiques` | ✅ E2E-ECR-LEV-03, E2E-LEV-02 |
@@ -762,7 +810,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
 | `confirmerSuppression` | supprimer | `DELETE /gabarits/{}` | ✅ E2E-ECR-LEV-07 |
-| `charger` | lister | `GET /gabarits` | ✅ E2E-ECR-LEV-07, E2E-ECR-LEV-15, E2E-VIT-01 |
+| `charger` | lister | `GET /gabarits` | ✅ E2E-AX-IQ-03, E2E-AX-IQ-04, E2E-ECR-LEV-07, E2E-ECR-LEV-15 (+1) |
 | `enregistrer` | ajouter | `POST /gabarits` | ✅ E2E-ECR-LEV-07 |
 | `cloner` | ajouter | `POST /gabarits/{}/cloner` | ✅ E2E-ECR-LEV-07 |
 | `enregistrer` | modifier | `PUT /gabarits/{}` | ✅ E2E-ECR-LEV-07 |
@@ -776,7 +824,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 |---|---|---|---|
 | `confirmerSuppression` | supprimer | `DELETE /templates/{}` | ✅ E2E-ECR-LEV-06 |
 | `charger` | lister | `GET /gabarits` | ✅ E2E-ECR-LEV-06 |
-| `useReference` | consulter | `GET /reference/{}` | ✅ E2E-AIDE-02, E2E-CHU-02, E2E-CHU-03, E2E-CHU-04 (+56) |
+| `useReference` | consulter | `GET /reference/{}` | ✅ E2E-AIDE-02, E2E-AX-IQ-03, E2E-CHU-02, E2E-CHU-03 (+57) |
 | `useReference` | lister | `GET /reference/MODE_SOLLICITATION` | ✅ E2E-ECR-LEV-06 |
 | `useReference` | lister | `GET /reference/TYPE_CONTRAT` | ✅ E2E-ECR-LEV-06 |
 | `charger` | lister | `GET /templates` | ✅ E2E-ECR-LEV-06 |
@@ -791,15 +839,15 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
 | `supprimer` | supprimer | `DELETE /admin/reference/{} ou /superadmin/reference/{}` | ✅ E2E-ECR-LEV-14 |
-| `charger` | lister | `GET /admin/reference ou /superadmin/reference` | ✅ E2E-CB-IQ-23, E2E-CB-IQ-24, E2E-ECR-IQ-05, E2E-ECR-LEV-14 (+3) |
-| `ReferenceManager` | lister | `GET /admin/reference/categories ou /superadmin/reference/categories` | ✅ E2E-CB-IQ-23, E2E-CB-IQ-24, E2E-ECR-IQ-05, E2E-ECR-LEV-14 (+3) |
-| `baseUrl` | lister | `GET /modele-document ou /superadmin/tenants/{}/modele-document` | ✅ E2E-ECR-LEV-14, E2E-ECR-LEV-15, E2E-TR-04, E2E-VIT-01 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
-| `IntegrationM365Manager` | lister | `GET /parametres/integration-m365` | ✅ E2E-ECR-LEV-14, E2E-TR-04 |
+| `charger` | lister | `GET /admin/reference ou /superadmin/reference` | ✅ E2E-AX-IQ-03, E2E-AX-IQ-04, E2E-CB-IQ-23, E2E-CB-IQ-24 (+5) |
+| `ReferenceManager` | lister | `GET /admin/reference/categories ou /superadmin/reference/categories` | ✅ E2E-AX-IQ-03, E2E-AX-IQ-04, E2E-CB-IQ-23, E2E-CB-IQ-24 (+5) |
+| `baseUrl` | lister | `GET /modele-document ou /superadmin/tenants/{}/modele-document` | ✅ E2E-AX-IQ-03, E2E-AX-IQ-04, E2E-ECR-LEV-14, E2E-ECR-LEV-15 (+2) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
+| `IntegrationM365Manager` | lister | `GET /parametres/integration-m365` | ✅ E2E-AX-IQ-01, E2E-ECR-LEV-14, E2E-TR-04 |
 | `IntegrationOidcManager` | lister | `GET /parametres/integration-oidc` | ✅ E2E-ECR-IQ-07, E2E-ECR-LEV-14, E2E-IQ-27, E2E-IQ-28 (+2) |
 | `IntegrationSamlManager` | lister | `GET /parametres/integration-saml` | ✅ E2E-ECR-IQ-07, E2E-ECR-LEV-14, E2E-IQ-27, E2E-IQ-28 (+2) |
 | `IntegrationSapManager` | lister | `GET /parametres/integration-sap` | ✅ E2E-ECR-LEV-14, E2E-TR-04 |
-| `baseUrl` | lister | `GET /superadmin/tenants` | ✅ E2E-ECR-LEV-15, E2E-VIT-01 |
+| `baseUrl` | lister | `GET /superadmin/tenants` | ✅ E2E-AX-IQ-03, E2E-AX-IQ-04, E2E-ECR-LEV-15, E2E-VIT-01 |
 | `enregistrer` | ajouter | `POST /admin/reference ou /superadmin/reference` | ✅ E2E-CB-IQ-23, E2E-CB-IQ-24, E2E-ECR-LEV-14 |
 | `testerConnexion` | ajouter | `POST /parametres/integration-m365/test` | ✅ E2E-ECR-LEV-14 |
 | `testerDecouverte` | ajouter | `POST /parametres/integration-oidc/test` | ✅ E2E-ECR-LEV-14 |
@@ -833,7 +881,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
 | `retirer` | supprimer | `DELETE /profil/repertoires/{}` | ✅ E2E-ECR-LEV-09 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `Profil` | lister | `GET /profil` | ✅ E2E-ECR-IQ-05, E2E-ECR-LEV-09 |
 | `charger` | lister | `GET /profil/repertoires` | ✅ E2E-ECR-LEV-09 |
 | `ajouter` | ajouter | `POST /profil/repertoires` | ✅ E2E-ECR-LEV-09 |
@@ -847,22 +895,24 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 ## `/superadmin` — Superadmin
 
-- **Ouvert par** : E2E-ECR-LEV-12, E2E-ECR-LEV-15, E2E-VIT-01
-- **Fichiers** : `pages/Superadmin.jsx`, `auth.jsx`, `components/ReferenceManager.jsx`, `i18n/I18nContext.jsx`, `components/ModeleDocumentManager.jsx`, `components/TarifTenantManager.jsx`, `components/GabaritManager.jsx`, `components/Modal.jsx`, `components/Toast.jsx`, `components/ModuleManager.jsx`, `components/BanqueHeuresManager.jsx`, `components/ReleveBanque.jsx`, `components/EditeurVitrine.jsx`
+- **Ouvert par** : E2E-AX-IQ-03, E2E-AX-IQ-04, E2E-ECR-LEV-12, E2E-ECR-LEV-15, E2E-VIT-01
+- **Fichiers** : `pages/Superadmin.jsx`, `auth.jsx`, `components/ReferenceManager.jsx`, `i18n/I18nContext.jsx`, `components/ModeleDocumentManager.jsx`, `components/TarifTenantManager.jsx`, `components/GabaritManager.jsx`, `components/Modal.jsx`, `components/Toast.jsx`, `components/ModuleManager.jsx`, `components/BanqueHeuresManager.jsx`, `components/ReleveBanque.jsx`, `components/SoutienClmManager.jsx`, `components/EditeurVitrine.jsx`
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
 | `supprimer` | supprimer | `DELETE /admin/reference/{} ou /superadmin/reference/{}` | ✅ E2E-ECR-LEV-14 |
 | `confirmerSuppression` | supprimer | `DELETE /gabarits/{}` | ✅ E2E-ECR-LEV-07 |
-| `charger` | lister | `GET /admin/reference ou /superadmin/reference` | ✅ E2E-CB-IQ-23, E2E-CB-IQ-24, E2E-ECR-IQ-05, E2E-ECR-LEV-14 (+3) |
-| `ReferenceManager` | lister | `GET /admin/reference/categories ou /superadmin/reference/categories` | ✅ E2E-CB-IQ-23, E2E-CB-IQ-24, E2E-ECR-IQ-05, E2E-ECR-LEV-14 (+3) |
-| `charger` | lister | `GET /gabarits` | ✅ E2E-ECR-LEV-07, E2E-ECR-LEV-15, E2E-VIT-01 |
-| `baseUrl` | lister | `GET /modele-document ou /superadmin/tenants/{}/modele-document` | ✅ E2E-ECR-LEV-14, E2E-ECR-LEV-15, E2E-TR-04, E2E-VIT-01 |
-| `chargerMediatheque` | lister | `GET /superadmin/mediatheque` | ✅ E2E-ECR-LEV-15, E2E-VIT-01 |
-| `charger` | lister | `GET /superadmin/tenants` | ✅ E2E-ECR-LEV-15, E2E-VIT-01 |
+| `charger` | lister | `GET /admin/reference ou /superadmin/reference` | ✅ E2E-AX-IQ-03, E2E-AX-IQ-04, E2E-CB-IQ-23, E2E-CB-IQ-24 (+5) |
+| `ReferenceManager` | lister | `GET /admin/reference/categories ou /superadmin/reference/categories` | ✅ E2E-AX-IQ-03, E2E-AX-IQ-04, E2E-CB-IQ-23, E2E-CB-IQ-24 (+5) |
+| `charger` | lister | `GET /gabarits` | ✅ E2E-AX-IQ-03, E2E-AX-IQ-04, E2E-ECR-LEV-07, E2E-ECR-LEV-15 (+1) |
+| `baseUrl` | lister | `GET /modele-document ou /superadmin/tenants/{}/modele-document` | ✅ E2E-AX-IQ-03, E2E-AX-IQ-04, E2E-ECR-LEV-14, E2E-ECR-LEV-15 (+2) |
+| `chargerMediatheque` | lister | `GET /superadmin/mediatheque` | ✅ E2E-AX-IQ-03, E2E-AX-IQ-04, E2E-ECR-LEV-15, E2E-VIT-01 |
+| `charger` | lister | `GET /superadmin/tenants` | ✅ E2E-AX-IQ-03, E2E-AX-IQ-04, E2E-ECR-LEV-15, E2E-VIT-01 |
 | `choisirTenant` | lister | `GET /superadmin/tenants/{}/banques-heures` | ✅ E2E-ECR-LEV-15 |
 | `gestionnaire en ligne (onClick)` | consulter | `GET /superadmin/tenants/{}/banques-heures/{}` | ✅ E2E-ECR-LEV-15 |
 | `charger` | lister | `GET /superadmin/tenants/{}/modules` | ✅ E2E-ECR-LEV-15 |
+| `recharger` | lister | `GET /superadmin/tenants/{}/soutien-clm/demandes` | ✅ E2E-AX-IQ-03, E2E-AX-IQ-04 |
+| `consulter` | consulter | `GET /superadmin/tenants/{}/soutien-clm/trousses/{}` | ✅ E2E-AX-IQ-03 |
 | `TarifTenantManager` | lister | `GET /superadmin/tenants/{}/tarif` | ✅ E2E-ECR-LEV-15 |
 | `chargerMediatheque` | lister | `GET /superadmin/tenants/{}/vitrine` | ✅ E2E-VIT-01 |
 | `enregistrer` | ajouter | `POST /admin/reference ou /superadmin/reference` | ✅ E2E-CB-IQ-23, E2E-CB-IQ-24, E2E-ECR-LEV-14 |
@@ -872,6 +922,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `creerAdmin` | ajouter | `POST /superadmin/tenants/{}/admin` | ✅ E2E-ECR-LEV-15 |
 | `gestionnaire en ligne (onSubmit)` | ajouter | `POST /superadmin/tenants/{}/banques-heures` | ✅ E2E-ECR-LEV-15 |
 | `gestionnaire en ligne (onSubmit)` | ajouter | `POST /superadmin/tenants/{}/banques-heures/{}/mouvements` | ✅ E2E-ECR-LEV-15 |
+| `demander` | ajouter | `POST /superadmin/tenants/{}/soutien-clm/demandes` | ✅ E2E-AX-IQ-04 |
 | `televerser` | ajouter | `POST /superadmin/tenants/{}/vitrine/video` | ✅ E2E-VIT-01 |
 | `enregistrer` | modifier | `PUT /admin/reference/{} ou /superadmin/reference/{}` | ✅ E2E-CB-IQ-24, E2E-ECR-LEV-14 |
 | `enregistrer` | modifier | `PUT /gabarits/{}` | ✅ E2E-ECR-LEV-07 |
@@ -894,7 +945,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `charger` | lister | `GET /formulaires/{}/historique` | ✅ E2E-CHU-01, E2E-ECR-CHU-01 |
 | `charger` | lister | `GET /formulaires/{}/version` | ✅ E2E-CHU-01, E2E-ECR-CHU-01, E2E-ECR-CHU-03 |
 | `charger` | lister | `GET /formulaires/{}/workflow` | ✅ E2E-ECR-CHU-03 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `charger` | lister | `GET /reference/DOMAINE` | ✅ E2E-CHU-01, E2E-CHU-18, E2E-CHU-19, E2E-CHU-21 (+2) |
 | `charger` | lister | `GET /reference/TYPE_CHAMP` | ✅ E2E-CHU-01, E2E-ECR-CHU-01, E2E-ECR-CHU-03 |
 | `creer` | ajouter | `POST /formulaires` | ✅ E2E-CHU-01 |
@@ -914,7 +965,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `FormulaireRemplir` | lister | `GET /formulaires/{}/places` | ✅ E2E-CHU-02, E2E-CHU-03, E2E-CHU-04, E2E-ECR-CHU-02 (+1) |
 | `FormulaireRemplir` | consulter | `GET /formulaires/{}/saisies/{}` | ✅ E2E-CHU-02, E2E-CHU-03, E2E-CHU-04, E2E-ECR-CHU-02 (+1) |
 | `FormulaireRemplir` | lister | `GET /formulaires/{}/saisies/structure` | ✅ E2E-CHU-02, E2E-CHU-03, E2E-CHU-04, E2E-ECR-CHU-02 (+1) |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `DefiAntiRobot` | lister | `GET /saisie/captcha` | ✅ E2E-CHU-04 |
 | `changer` | modifier | `PATCH /formulaires/{}/saisies/{}` | ✅ E2E-CHU-03, E2E-CHU-04, E2E-ECR-CHU-02, E2E-ECR-CHU-03 |
 | `changer` | ajouter | `POST /formulaires/{}/regles/evaluer` | ✅ E2E-CHU-03, E2E-CHU-04, E2E-ECR-CHU-02, E2E-ECR-CHU-03 |
@@ -937,7 +988,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `ouvrir` | télécharger | `GET /formulaires/{}/saisies/{}/document.pdf` | ✅ E2E-ECR-CHU-02 |
 | `charger` | lister | `GET /formulaires/{}/saisies/{}/documents` | ✅ E2E-CHU-06, E2E-ECR-CHU-02 |
 | `RapportPdfFiches` | lister | `GET /formulaires/{}/saisies/structure` | ✅ E2E-CHU-05, E2E-CHU-06, E2E-CHU-08, E2E-CHU-10 (+2) |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `charger` | lister | `GET /rapport/criteres` | ✅ E2E-CHU-05, E2E-CHU-06, E2E-CHU-08, E2E-CHU-10 (+2) |
 | `exporter` | télécharger | `GET /rapport/formulaires/{}/export.xlsx` | ✅ E2E-CHU-05 |
 | `produire` | télécharger | `GET /rapport/formulaires/{}/rapport.pdf` | ✅ E2E-CHU-10 |
@@ -957,7 +1008,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 |---|---|---|---|
 | `ouvrir` | télécharger | `GET /formulaires/{}/saisies/{}/document.pdf` | ✅ E2E-ECR-CHU-02 |
 | `charger` | lister | `GET /mes-demandes` | ✅ E2E-CHU-22, E2E-ECR-CHU-02 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `annuler` | annuler | `POST /formulaires/{}/saisies/{}/annuler` | ✅ E2E-ECR-CHU-02 |
 
 ## `/nouvelle-demande` — Catalogue
@@ -968,7 +1019,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
 | `charger` | lister | `GET /catalogue` | ✅ E2E-ECR-CHU-02 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `charger` | lister | `GET /reference/DOMAINE` | ✅ E2E-ECR-CHU-02 |
 
 ## `/taches` — Taches
@@ -978,7 +1029,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `charger` | lister | `GET /taches/mine` | ✅ E2E-ECR-CHU-03 |
 | `decider` | ajouter | `POST /taches/{}/decisions` | ✅ E2E-ECR-CHU-03 |
 
@@ -990,7 +1041,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
 | `charger` | lister | `GET /applications` | ✅ E2E-CHU-15, E2E-ECR-CHU-06 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `charger` | lister | `GET /reference/DOMAINE` | ✅ E2E-CHU-15, E2E-ECR-CHU-06 |
 | `soumettre` | ajouter | `POST /applications` | ✅ E2E-ECR-CHU-06 |
 | `soumettre` | modifier | `PUT /applications/{}` | ✅ E2E-ECR-CHU-06 |
@@ -1003,7 +1054,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `Paie` | lister | `GET /paie/frequences` | ✅ E2E-ECR-CHU-05 |
 | `calculer` | ajouter | `POST /paie/apercu` | ✅ E2E-ECR-CHU-05 |
 
@@ -1014,7 +1065,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `calculer` | ajouter | `POST /paie/impot/apercu` | ✅ E2E-ECR-CHU-05 |
 
 ## `/declarations` — Declarations
@@ -1024,7 +1075,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `appeler` | ajouter | `POST /paie/declarations/fin-annee` | ✅ E2E-ECR-CHU-05 |
 | `appeler` | ajouter | `POST /paie/declarations/retenues` | ✅ E2E-ECR-CHU-05 |
 | `appeler` | ajouter | `POST /paie/declarations/taxes` | ✅ E2E-ECR-CHU-05 |
@@ -1036,7 +1087,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `charger` | lister | `GET /rh/employes` | ✅ E2E-ECR-CHU-04 |
 | `soumettre` | ajouter | `POST /rh/employes` | ✅ E2E-ECR-CHU-04 |
 | `soumettre` | modifier | `PUT /rh/employes/{}` | ✅ E2E-ECR-CHU-04 |
@@ -1049,7 +1100,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `charger` | consulter | `GET /rh/employes/{}` | ✅ E2E-ECR-CHU-04 |
 | `calculerPaie` | ajouter | `POST /paie/apercu` | ✅ E2E-ECR-CHU-04 |
 
@@ -1063,7 +1114,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `charger` | lister | `GET /approbations/demandes` | ✅ E2E-ECR-CHU-06 |
 | `charger` | lister | `GET /approbations/mes-etapes` | ✅ E2E-ECR-CHU-06 |
 | `charger` | lister | `GET /approbations/regles` | ✅ E2E-ECR-CHU-06 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `creerDemande` | ajouter | `POST /approbations/demandes` | ✅ E2E-ECR-CHU-06 |
 | `decider` | ajouter | `POST /approbations/etapes/{}/decider` | ✅ E2E-ECR-CHU-06 |
 | `creerRegle` | ajouter | `POST /approbations/regles` | ✅ E2E-ECR-CHU-06 |
@@ -1075,7 +1126,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `charger` | lister | `GET /rh/feuilles-temps/a-approuver` | ✅ E2E-ECR-CHU-04 |
 | `charger` | lister | `GET /rh/feuilles-temps/mine` | ✅ E2E-ECR-CHU-04 |
 | `enregistrer` | ajouter | `POST /rh/feuilles-temps` | ✅ E2E-ECR-CHU-04 |
@@ -1090,7 +1141,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
 | `supprimer` | supprimer | `DELETE /rh/taches/{}` | ✅ E2E-ECR-CHU-04 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `charger` | lister | `GET /rh/employes` | ✅ E2E-ECR-CHU-04 |
 | `charger` | lister | `GET /rh/projets` | ✅ E2E-ECR-CHU-04 |
 | `charger` | lister | `GET /rh/taches` | ✅ E2E-ECR-CHU-04 |
@@ -1106,7 +1157,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `charger` | lister | `GET /notification/journal` | ✅ E2E-CHU-07, E2E-ECR-CHU-06 |
 | `charger` | lister | `GET /notification/modeles` | ✅ E2E-CHU-07, E2E-ECR-CHU-06 |
 | `charger` | lister | `GET /notification/regles` | ✅ E2E-CHU-07, E2E-ECR-CHU-06 |
@@ -1121,7 +1172,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | Fonctionnalité | Type | Opération | Couverte par |
 |---|---|---|---|
 | `supprimerPermission` | supprimer | `DELETE /securite/permissions/{}` | ✅ E2E-ECR-CHU-06 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `charger` | lister | `GET /securite/groupes` | ✅ E2E-CHU-16, E2E-ECR-CHU-06 |
 | `charger` | lister | `GET /securite/permissions` | ✅ E2E-CHU-16, E2E-ECR-CHU-06 |
 | `ajouterGroupe` | ajouter | `POST /securite/groupes` | ✅ E2E-CHU-16, E2E-ECR-CHU-06 |
@@ -1138,7 +1189,7 @@ les adresses calculées : `bdd/e2e/fonctionnalites/complements.json`.
 | `charger` | lister | `GET /formulaires` | ✅ E2E-CHU-13, E2E-CHU-14, E2E-ECR-CHU-06 |
 | `charger` | lister | `GET /interop/clients` | ✅ E2E-CHU-13, E2E-CHU-14, E2E-ECR-CHU-06 |
 | `charger` | lister | `GET /interop/echanges` | ✅ E2E-CHU-13, E2E-CHU-14, E2E-ECR-CHU-06 |
-| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-CB-IQ-01, E2E-CB-IQ-02 (+130) |
+| `charger` | lister | `GET /modules` | ✅ E2E-AIDE-01, E2E-AIDE-02, E2E-AX-IQ-01, E2E-AX-IQ-02 (+137) |
 | `creer` | ajouter | `POST /interop/clients` | ✅ E2E-CHU-13 |
 | `declarer` | ajouter | `POST /interop/echanges` | ✅ E2E-ECR-CHU-06 |
 | `desactiver` | ajouter | `POST /interop/echanges/{}/desactivation` | ✅ E2E-ECR-CHU-06 |

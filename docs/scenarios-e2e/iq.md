@@ -4051,7 +4051,7 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-C-43, IQ-A-22
 - **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
-- **Nature** : parcours d'interface (12 gestes)
+- **Nature** : parcours d'interface (13 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Trousse d'un document validée par le validateur : lancée puis terminée, son délai de traitement est connu
@@ -4075,6 +4075,9 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 19. Télécharger par « Exporter en Excel — Délais E2E ${unique} » et obtenir un fichier non vide
 20. Voir « exporté (XLSX). »
 21. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+22. Activer « Supprimer — Délais E2E ${unique} »
+23. Voir « supprimé »
+24. Ne pas voir « Modifier — Délais E2E ${unique} »
 
 ### E2E-AX-IQ-06 — AF-37 (RST-42) : le relevé d'utilisation s'exporte en CSV et en Excel
 
@@ -8602,7 +8605,7 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-D-16, IQ-A-26
 - **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
-- **Nature** : parcours d'interface (3 gestes)
+- **Nature** : parcours d'interface (6 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Une trousse d'IQ, et une demande d'accès de soutien de l'exploitant, refusée tant qu'elle n'est pas accordée
@@ -8611,15 +8614,23 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 4. Voir « Billet E2E ${unique} »
 5. Activer « Accorder l’accès à superadmin@plateforme.ca »
 6. Voir « Accès accordé à superadmin@plateforme.ca. »
-7. Préparer par l'API : Pendant l'accès accordé, l'exploitant consulte le diagnostic de la trousse, sans son contenu
-8. Ouvrir l'écran `/clm/trousses/${trousse}`
-9. Activer « Historique » (tab)
-10. Voir « Consultation de soutien de l’exploitant », « Billet E2E ${unique} »
-11. Ouvrir l'écran `/clm/admin/soutien`
-12. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
-13. Activer « Révoquer l’accès de superadmin@plateforme.ca »
-14. Voir « Accès de superadmin@plateforme.ca révoqué. »
-15. Préparer par l'API : Révoqué : l'exploitant ne lit plus rien
+7. Se connecter en tant que superadmin
+8. Ouvrir l'écran `/superadmin`
+9. Choisir « Accès de soutien aux données CLM d'une organisation » Organisation » : `Investissement Québec`
+10. Saisir « Référence de la trousse » : `${reference}`
+11. Activer « Consulter le diagnostic »
+12. Voir « ${reference} »
+13. Ne pas voir « Soutien ${unique} »
+14. Se connecter en tant que administration d'affaires IQ
+15. Préparer par l'API : Pendant l'accès accordé, l'exploitant consulte le diagnostic de la trousse, sans son contenu
+16. Ouvrir l'écran `/clm/trousses/${trousse}`
+17. Activer « Historique » (tab)
+18. Voir « Consultation de soutien de l’exploitant », « Billet E2E ${unique} »
+19. Ouvrir l'écran `/clm/admin/soutien`
+20. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+21. Activer « Révoquer l’accès de superadmin@plateforme.ca »
+22. Voir « Accès de superadmin@plateforme.ca révoqué. »
+23. Préparer par l'API : Révoqué : l'exploitant ne lit plus rien
 
 ### E2E-AX-IQ-04 — SEC-17 (RST-44) : depuis son espace, l'exploitant demande un accès de soutien motivé et limité ; sans accord de l'organisation, le diagnostic lui est refusé
 
@@ -11027,7 +11038,7 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-C-43, IQ-A-22
 - **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
-- **Nature** : parcours d'interface (12 gestes)
+- **Nature** : parcours d'interface (13 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Trousse d'un document validée par le validateur : lancée puis terminée, son délai de traitement est connu
@@ -11051,6 +11062,9 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 19. Télécharger par « Exporter en Excel — Délais E2E ${unique} » et obtenir un fichier non vide
 20. Voir « exporté (XLSX). »
 21. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+22. Activer « Supprimer — Délais E2E ${unique} »
+23. Voir « supprimé »
+24. Ne pas voir « Modifier — Délais E2E ${unique} »
 
 ### E2E-IQ-18 — Conservation par type, gel légal, exportation en lot, relevé d'utilisation
 
@@ -11155,7 +11169,7 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Profil** : administration d'affaires IQ
 - **Exigences démontrées** : IQ-D-16, IQ-A-26
 - **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
-- **Nature** : parcours d'interface (3 gestes)
+- **Nature** : parcours d'interface (6 gestes)
 - **Dernier résultat** : ✅ réussi
 
 1. Préparer par l'API : Une trousse d'IQ, et une demande d'accès de soutien de l'exploitant, refusée tant qu'elle n'est pas accordée
@@ -11164,15 +11178,23 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 4. Voir « Billet E2E ${unique} »
 5. Activer « Accorder l’accès à superadmin@plateforme.ca »
 6. Voir « Accès accordé à superadmin@plateforme.ca. »
-7. Préparer par l'API : Pendant l'accès accordé, l'exploitant consulte le diagnostic de la trousse, sans son contenu
-8. Ouvrir l'écran `/clm/trousses/${trousse}`
-9. Activer « Historique » (tab)
-10. Voir « Consultation de soutien de l’exploitant », « Billet E2E ${unique} »
-11. Ouvrir l'écran `/clm/admin/soutien`
-12. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
-13. Activer « Révoquer l’accès de superadmin@plateforme.ca »
-14. Voir « Accès de superadmin@plateforme.ca révoqué. »
-15. Préparer par l'API : Révoqué : l'exploitant ne lit plus rien
+7. Se connecter en tant que superadmin
+8. Ouvrir l'écran `/superadmin`
+9. Choisir « Accès de soutien aux données CLM d'une organisation » Organisation » : `Investissement Québec`
+10. Saisir « Référence de la trousse » : `${reference}`
+11. Activer « Consulter le diagnostic »
+12. Voir « ${reference} »
+13. Ne pas voir « Soutien ${unique} »
+14. Se connecter en tant que administration d'affaires IQ
+15. Préparer par l'API : Pendant l'accès accordé, l'exploitant consulte le diagnostic de la trousse, sans son contenu
+16. Ouvrir l'écran `/clm/trousses/${trousse}`
+17. Activer « Historique » (tab)
+18. Voir « Consultation de soutien de l’exploitant », « Billet E2E ${unique} »
+19. Ouvrir l'écran `/clm/admin/soutien`
+20. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+21. Activer « Révoquer l’accès de superadmin@plateforme.ca »
+22. Voir « Accès de superadmin@plateforme.ca révoqué. »
+23. Préparer par l'API : Révoqué : l'exploitant ne lit plus rien
 
 ### E2E-CB-IQ-19 — Séparation des rôles : l'auditeur consulte une trousse sans pouvoir agir, l'administration technique n'accède pas aux trousses
 

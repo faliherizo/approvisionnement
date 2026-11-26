@@ -417,6 +417,34 @@
           "voir": "Accès accordé à superadmin@plateforme.ca."
         },
         {
+          "connecter": "superadmin"
+        },
+        {
+          "aller": "/superadmin"
+        },
+        {
+          "choisir": {
+            "Accès de soutien aux données CLM d'une organisation » Organisation": "Investissement Québec"
+          }
+        },
+        {
+          "remplir": {
+            "Référence de la trousse": "${reference}"
+          }
+        },
+        {
+          "cliquer": "Consulter le diagnostic"
+        },
+        {
+          "voir": "${reference}"
+        },
+        {
+          "nePasVoir": "Soutien ${unique}"
+        },
+        {
+          "connecter": "administration d'affaires IQ"
+        },
+        {
           "preparer": {
             "description": "Pendant l'accès accordé, l'exploitant consulte le diagnostic de la trousse, sans son contenu",
             "etapes": [
@@ -667,6 +695,15 @@
         },
         {
           "ecranConforme": true
+        },
+        {
+          "cliquer": "Supprimer — Délais E2E ${unique}"
+        },
+        {
+          "voir": "supprimé"
+        },
+        {
+          "nePasVoir": "Modifier — Délais E2E ${unique}"
         }
       ]
     },
