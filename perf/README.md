@@ -13,6 +13,7 @@ définis dans [SLI-SLO-SLA.md](SLI-SLO-SLA.md).
 | `clm-trousses-load.jmx` | Plan CLM (IQ, addenda 2 Q4) : login → trousse → document → signataire → parcours → lancement → détail → suivi |
 | `data/clm-initiateurs.csv`, `data/clm-trousses.csv`, `data/convention.pdf` | Données du plan CLM (comptes, trousses, document déposé) |
 | `run.sh` | Exécute en mode non-graphique, produit le rapport HTML et gate sur les SLO |
+| `profils/cible.env` | Profil « cible » : 500 utilisateurs sur l'infrastructure cible (voir « Profil cible ») |
 | `SLI-SLO-SLA.md` | Indicateurs, objectifs internes et engagement contractuel |
 
 Les **données de test sont dans des fichiers `.csv`** (lues par les *CSV Data Set Config* du plan),
@@ -88,6 +89,70 @@ Constats successifs de l'essai :
 Le tableau de bord (UI-01) et la liste « Mes trousses » (UI-02) ont reçu le même traitement (RST-40, `LecturePaginee`) :
 page tirée de la base avec total pour l'administration et l'audit, tranches de 200 sinon, décomptes groupés. L'essai est à refaire sur l'infrastructure cible (PostgreSQL,
 Azure Canada) : c'est là que la mesure engage la soumission, et IQ peut en exiger une autre avant l'acceptation finale.
+
+## Profil cible — 500 utilisateurs concurrents sur l'infrastructure cible (TI-12 d'IQ, RST-48)
+
+**Statut : plan prêt, essai sur l'infrastructure cible non réalisé.** Le résultat ci-dessus (Q38) vient d'un poste de
+développement ; il ne vaut pas mesure sur l'infrastructure cible.
+
+`PROFIL=cible ./run.sh` lit [`profils/cible.env`](profils/cible.env) : plan `clm-trousses-load.jmx`, **500 fils**, montée
+de 300 s, 3 boucles, pause de 2 s entre deux gestes, HTTPS sur 443, comptes dans `data/cible/comptes.csv`, résultats dans
+`results-cible/`. Toute variable d'environnement l'emporte sur le profil. Propriétés JMeter transmises (`-J`) :
+
+| Propriété | Variable de `run.sh` | Profil cible | Rôle |
+|---|---|---|---|
+| `BASE_HOST` | `BASE_HOST` | **obligatoire, sans défaut** | hôte de l'infrastructure cible |
+| `BASE_PORT`, `BASE_PROTOCOL` | idem | 443, https | point d'entrée (passerelle, répartiteur) |
+| `threads`, `rampup`, `loops` | `THREADS`, `RAMPUP`, `LOOPS` | 500, 300 s, 3 | utilisateurs simultanés, montée, cycles par utilisateur |
+| `pause.ms` | `PAUSE_MS` | 2000 | temps de réflexion entre deux requêtes (0 hors profil) |
+| `comptes` | `COMPTES` | `data/cible/comptes.csv` | comptes d'essai (`email,motDePasse`), un par utilisateur virtuel |
+| `trousses` | `TROUSSES` | `data/clm-trousses.csv` | jeux de trousses |
+| `resultats` | `RESULTATS` | `results-cible` | dossier des résultats (JTL, rapport HTML, synthèse) |
+| `sla.read.ms`, `sla.write.ms` | — (`-J` dans le plan) | 3000, 5000 | plafonds durs du SLA par requête |
+
+**Garde-fou.** `run.sh` refuse tout hôte autre que `localhost` tant que `CIBLE_AUTORISEE` ne reprend pas exactement cet
+hôte (sortie 3, aucune requête émise). Aucune charge n'est lancée contre la production ni contre un environnement
+partagé sans l'accord écrit de son exploitant.
+
+**Préalables.**
+
+1. Environnement cible réservé à l'essai (région retenue, RST-18), dans la configuration de production : PostgreSQL géré,
+   nombre d'instances, pool (`DB_POOL_MAX`), passerelle et pare-feu applicatif. Aucun autre usage pendant la fenêtre.
+2. Accord écrit de l'exploitant et d'IQ (date, fenêtre, adresses sources à autoriser au pare-feu et au limiteur de débit).
+3. Comptes d'essai : 500 comptes à connexion locale dans une organisation d'essai (la connexion d'IQ passe par Entra ID,
+   que JMeter ne rejoue pas), rôle d'initiateur CLM, listés dans `data/cible/comptes.csv` (fichier ignoré par Git,
+   détruit après l'essai). Les comptes et l'organisation d'essai sont supprimés à la fin.
+4. Préchargement de la volumétrie (1 000 trousses ou davantage, comme l'essai Q38) par une première passe à faible
+   charge : `PROFIL=cible THREADS=50 LOOPS=20 PAUSE_MS=0 ./run.sh`.
+5. Supervision ouverte pendant l'essai (UC et mémoire des instances, connexions à la base, erreurs 5xx) pour expliquer
+   tout écart.
+
+**Exécution.**
+
+```bash
+cd perf
+export BASE_HOST=<hôte de l'infrastructure cible> CIBLE_AUTORISEE=<le même hôte>
+PROFIL=cible ./run.sh                       # 500 utilisateurs, porte SLO, synthèse
+```
+
+**Critères (SLO, [SLI-SLO-SLA.md](SLI-SLO-SLA.md) § 2).** Taux d'erreur < 0,1 % ; lecture P95 ≤ 800 ms et P99 ≤ 1 500 ms ;
+écriture P95 ≤ 1 500 ms et P99 ≤ 2 500 ms ; aucune requête au-delà des plafonds du SLA (3 000 ms en lecture, 5 000 ms en
+écriture). `run.sh` sort en erreur si un objectif est dépassé.
+
+**Rapport.** `run.sh` écrit `results-cible/synthese.md` (paramètres réellement utilisés, P95/P99, erreurs, verdict) et le
+rapport HTML `results-cible/rapport/`. Les déposer dans
+`docs/Dossier_IQ_2026-6370-0005/` (dossier de la soumission ou de la démonstration), sous un dossier daté
+`essai-charge-cible-AAAA-MM-JJ/`, avec la description de l'infrastructure éprouvée et les relevés de supervision.
+
+**Validation du plan à faible charge (2026-11-26, poste de développement, base H2).** Profil cible, backend local :
+
+```bash
+PROFIL=cible BASE_HOST=localhost BASE_PORT=8210 BASE_PROTOCOL=http THREADS=10 RAMPUP=10 LOOPS=2 PAUSE_MS=200 ./run.sh
+```
+
+10 utilisateurs, 320 échantillons, 0 erreur ; lecture P95 697 ms, P99 903 ms ; écriture P95 243 ms, P99 309 ms : SLO
+respectés. Hôte distant sans `CIBLE_AUTORISEE` : refusé (sortie 3) ; profil cible sans `BASE_HOST` : refusé (sortie 2).
+Cette validation éprouve le plan et ses paramètres, pas la tenue en charge de l'infrastructure cible.
 
 ## Surcharge des seuils
 
