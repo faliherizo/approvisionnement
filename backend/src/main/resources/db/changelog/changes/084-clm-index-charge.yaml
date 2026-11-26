@@ -21,7 +21,7 @@ databaseChangeLog:
         - sql:
             sql: >-
               CREATE INDEX ix_clm_part_courriel_min ON clm_participant (lower(courriel));
-              CREATE INDEX ix_clm_trousse_proprio_min ON clm_trousse (tenant_id, lower(proprietaire));
+              CREATE INDEX ix_clm_trousse_proprio_min ON clm_trousse (lower(proprietaire));
       rollback:
         - sql:
             sql: DROP INDEX ix_clm_part_courriel_min; DROP INDEX ix_clm_trousse_proprio_min;

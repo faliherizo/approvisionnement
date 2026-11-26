@@ -59,6 +59,9 @@ class PerimetreVisibleIntegrationTest {
         etape(trousse("ROLE", AUTRE), Parcours.TypeAffecte.ROLE, "JURIDIQUE");
         trousse("ETRANGERE", AUTRE).setUnite("AFFAIRES_JURIDIQUES");
         etape(trousse("AUTRE_GROUPE", AUTRE), Parcours.TypeAffecte.GROUPE, "FINANCEMENT_PME");
+        // Groupe et rôle se comparent à l'identique (Habilitations.correspond) : la casse compte.
+        etape(trousse("GROUPE_AUTRE_CASSE", AUTRE), Parcours.TypeAffecte.GROUPE, "financement");
+        etape(trousse("NOMINATIVE_CASSE", AUTRE), Parcours.TypeAffecte.UTILISATEUR, MOI.toUpperCase());
         etape(trousse("AUTRE_PERSONNE", AUTRE), Parcours.TypeAffecte.UTILISATEUR, "lea.martin@iq.example.org");
         participant(trousse("AUTRE_PARTICIPANT", AUTRE), "x" + MOI);
     }
@@ -68,7 +71,7 @@ class PerimetreVisibleIntegrationTest {
         Set<String> retenues = trousses.findAll(duTenant().and(PerimetreVisible.candidates(acteur))).stream()
                 .map(Trousse::getTitre).collect(Collectors.toSet());
 
-        assertEquals(Set.of("PROPRIETE", "UNITE", "PARTICIPANT", "NOMINATIVE", "GROUPE", "ROLE"), retenues);
+        assertEquals(Set.of("PROPRIETE", "UNITE", "PARTICIPANT", "NOMINATIVE", "NOMINATIVE_CASSE", "GROUPE", "ROLE"), retenues);
     }
 
     @Test
@@ -89,7 +92,7 @@ class PerimetreVisibleIntegrationTest {
         Set<String> retenues = trousses.findAll(duTenant().and(PerimetreVisible.candidates(seul))).stream()
                 .map(Trousse::getTitre).collect(Collectors.toSet());
 
-        assertEquals(9, retenues.size(), "toutes les trousses du jeu sauf celle de " + MOI);
+        assertEquals(11, retenues.size(), "toutes les trousses du jeu sauf celle de " + MOI);
         assertFalse(retenues.contains("PROPRIETE"));
     }
 

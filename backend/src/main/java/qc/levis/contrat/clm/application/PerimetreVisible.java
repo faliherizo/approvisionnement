@@ -13,6 +13,7 @@ import java.util.Locale;
 import org.springframework.data.jpa.domain.Specification;
 import qc.levis.contrat.clm.domain.EtapeTrousse;
 import qc.levis.contrat.clm.domain.Habilitations;
+import qc.levis.contrat.clm.domain.Parcours;
 import qc.levis.contrat.clm.domain.Participant;
 import qc.levis.contrat.clm.domain.Trousse;
 
@@ -38,15 +39,22 @@ public final class PerimetreVisible {
         return (r, q, cb) -> {
             String id = acteur.id().toLowerCase(Locale.ROOT);
             List<Predicate> ou = new ArrayList<>();
-            ou.add(cb.equal(cb.lower(r.get("proprietaire")), id));
+            // Sous-requêtes non corrélées : la base les évalue une fois (par index pour le propriétaire et le participant)
+            // puis consulte leur résultat par hachage, sans calcul par trousse.
+            ou.add(r.get("id").in(possedees(q, cb, id)));
             if (!acteur.groupes().isEmpty()) {
                 ou.add(r.get("unite").in(acteur.groupes()));
             }
-            // Sous-requêtes non corrélées : la base les évalue une fois et les consulte par hachage, ligne après ligne.
             ou.add(r.get("id").in(participantes(q, cb, id)));
             ou.add(r.get("id").in(affectees(q, cb, acteur)));
             return cb.or(ou.toArray(Predicate[]::new));
         };
+    }
+
+    private static Subquery<Long> possedees(CriteriaQuery<?> q, CriteriaBuilder cb, String id) {
+        Subquery<Long> sq = q.subquery(Long.class);
+        Root<Trousse> t = sq.from(Trousse.class);
+        return sq.select(t.get("id")).where(cb.equal(cb.lower(t.get("proprietaire")), id));
     }
 
     private static Subquery<Long> participantes(CriteriaQuery<?> q, CriteriaBuilder cb, String id) {
@@ -58,20 +66,24 @@ public final class PerimetreVisible {
     private static Subquery<Long> affectees(CriteriaQuery<?> q, CriteriaBuilder cb, Habilitations.Acteur acteur) {
         Subquery<Long> sq = q.subquery(Long.class);
         Root<EtapeTrousse> e = sq.from(EtapeTrousse.class);
-        Expression<String> json = cb.lower(e.get("affectationsJson"));
+        Expression<String> json = e.get("affectationsJson");
         List<Predicate> cite = new ArrayList<>();
-        cite.add(cb.like(json, motif(acteur.id()), ECHAPPEMENT));
+        // Nominative : sans égard à la casse, comme Habilitations.correspond. Le premier critère, sans calcul, réserve la
+        // mise en minuscules aux seules étapes qui portent une affectation nominative.
+        cite.add(cb.and(cb.like(json, motif(Parcours.TypeAffecte.UTILISATEUR.name()), ECHAPPEMENT),
+                cb.like(cb.lower(json), motif(acteur.id().toLowerCase(Locale.ROOT)), ECHAPPEMENT)));
+        // Groupe et rôle : à l'identique, comme Habilitations.correspond.
         acteur.groupes().forEach(g -> cite.add(cb.like(json, motif(g), ECHAPPEMENT)));
         acteur.roles().forEach(role -> cite.add(cb.like(json, motif(role), ECHAPPEMENT)));
         return sq.select(e.get("trousseId")).where(cb.or(cite.toArray(Predicate[]::new)));
     }
 
     /**
-     * Valeur telle que l'écrit la sérialisation JSON des affectations (guillemets, échappements), en minuscules, avec les
-     * caractères spéciaux de LIKE neutralisés : {@code "valeur"} n'importe où dans le texte.
+     * Valeur telle que l'écrit la sérialisation JSON des affectations (guillemets, échappements), avec les caractères
+     * spéciaux de LIKE neutralisés : {@code "valeur"} n'importe où dans le texte.
      */
     static String motif(String valeur) {
-        String json = new String(JsonStringEncoder.getInstance().quoteAsString(valeur.toLowerCase(Locale.ROOT)));
+        String json = new String(JsonStringEncoder.getInstance().quoteAsString(valeur));
         String litteral = json.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
         return "%\"" + litteral + "\"%";
     }
