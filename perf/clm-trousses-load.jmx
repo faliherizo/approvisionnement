@@ -79,8 +79,8 @@
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">${__P(threads,20)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(rampup,60)}</stringProp>
-        <boolProp name="ThreadGroup.scheduler">false</boolProp>
-        <stringProp name="ThreadGroup.duration"></stringProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">${__P(duree,0)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
@@ -89,6 +89,14 @@
           <stringProp name="ConstantTimer.delay">${__P(pause.ms,0)}</stringProp>
         </ConstantTimer>
         <hashTree/>
+<!-- Connexion : a chaque boucle par defaut ; une seule fois par utilisateur virtuel si connexion.chaque.boucle=false
+     (profil cible : un utilisateur ouvre une session puis enchaine ses gestes, comme un employe connecte). -->
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="Connexion (premiere boucle ou chaque boucle)" enabled="true">
+          <stringProp name="IfController.condition">${__groovy(vars.getIteration() == 1 || props.get('connexion.chaque.boucle') != 'false')}</stringProp>
+          <boolProp name="IfController.evaluateAll">false</boolProp>
+          <boolProp name="IfController.useExpression">true</boolProp>
+        </IfController>
+        <hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="01 - Login" enabled="true">
           <boolProp name="TransactionController.parent">false</boolProp>
           <boolProp name="TransactionController.includeTimers">false</boolProp>
@@ -127,6 +135,7 @@
               <hashTree/>
               
             </hashTree>
+        </hashTree>
         </hashTree>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="02 - Creer trousse" enabled="true">
           <boolProp name="TransactionController.parent">false</boolProp>
