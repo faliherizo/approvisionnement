@@ -243,6 +243,27 @@ npm run e2e            # inventaire, scénarios, documentation, couverture des �
 npm run e2e:ecrans     # porte : tous les écrans ouverts, toutes les fonctionnalités couvertes
 ```
 
+**Recette Safari — iPhone, iPad, Safari de bureau (TI-11 d'IQ, RST-47).** Chromium reste le seul projet de `npm run e2e`.
+`E2E_WEBKIT=1` le remplace par trois projets sous le moteur WebKit de Playwright : `webkit-iphone` (iPhone 13, 390 px,
+tactile), `webkit-ipad` (iPad 7e génération, 810 px, tactile) et `webkit-bureau` (Safari de bureau, 1280 px). Ils jouent
+les parcours d'IQ (E2E-CB-IQ-*, E2E-AX-IQ-*, création d'une trousse E2E-ECR-IQ-01, portail du signataire E2E-ECR-IQ-03),
+contrôle d'écran compris. Leurs résultats et traces vont dans `test-results-webkit/` (traces par appareil) : la campagne
+de référence et la couverture des écrans n'en dépendent pas. `outils/recette-webkit.mjs` en tire
+[`docs/scenarios-e2e/recette-webkit.md`](../docs/scenarios-e2e/recette-webkit.md) — réussis et échoués par appareil,
+cause de chaque échec — suivi du gabarit de la recette manuelle sur appareils réels (iPhone, iPad, Edge et Chrome sous
+Windows 10 et 11), à remplir par la personne qui l'exécute.
+
+```bash
+npx playwright install webkit                              # une fois
+npm run e2e:webkit                                          # parcours d'IQ sur les trois appareils, puis le rapport
+npm run e2e:webkit -- --project webkit-ipad                 # un seul appareil
+E2E_WEBKIT=1 npx playwright test -c playwright.e2e.config.ts --grep "E2E-IQ-"   # d'autres scénarios sous WebKit
+```
+
+Sous WebKit, une requête interrompue par une navigation du harnais (changement d'utilisateur, `aller`) remonte comme une
+erreur de la page (« due to access control checks », « Network Error ») ; Chromium détruit la page avant. Le moteur
+écarte ces seules erreurs, et seulement pendant la navigation du harnais (`interrompueParLeHarnais`, `outils/ui.ts`).
+
 ## 9. Défauts révélés par ces scénarios et corrigés dans la plateforme
 
 | Défaut | Correction |
@@ -266,6 +287,8 @@ npm run e2e:ecrans     # porte : tous les écrans ouverts, toutes les fonctionna
 | Génération IA sans borne : sur processeur, une réponse dépassait le délai et bloquait la file d'Ollama | `num_predict` borné (`app.ai.ollama.longueur-max`, 512 par défaut) |
 | Copie dans le presse-papier refusée par le navigateur : erreur non traitée, aucun retour | réussite et échec annoncés par un message |
 | Accessibilité : champs sans nom (feuille de temps, versions à comparer), boutons « × » sans nom, zones de texte enrichi nommées « Zone de texte enrichi », pavé de signature sans nom | `aria-label` tirés des libellés visibles, en trois langues |
+| Safari (WebKit) : listes déroulantes dessinées à 22 px, sous la cible de 24 px, hauteur et marge ignorées | `select` sans apparence native, flèche redessinée (`styles.css`) |
+| iPhone, iPad (WebKit) : « Rétablir les paramètres de la plateforme » sans effet, le toucher qui retirait le focus du premier champ n'activait pas le bouton | le focus va au formulaire ouvert, plus à son premier champ (`FormulaireParametres`) |
 
 Les failles de sécurité relevées par les tests d'intrusion sont décrites dans
 [`docs/securite/rapport-tests-intrusion.md`](../docs/securite/rapport-tests-intrusion.md).

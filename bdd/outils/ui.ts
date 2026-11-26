@@ -16,14 +16,40 @@ export const LARGEURS = [390, 768, 1280, 1680]
 /** Couches qui recouvrent le contenu par conception, au premier plan et momentanément. */
 const COUCHES = '.dropdown__panel, .toast-zone, [role=dialog], [role=menu], [role=listbox]'
 
+/**
+ * Pages que le harnais est en train de quitter. WebKit signale chaque requête interrompue par ce départ comme une erreur
+ * de la page (« cannot load … due to access control checks », puis « Network Error » non rattrapée) ; Chromium détruit
+ * la page avant. Ces erreurs naissent du geste du harnais, pas de l'application : le relevé des erreurs les écarte.
+ */
+const pagesQuittees = new WeakSet<Page>()
+const REQUETE_INTERROMPUE = /due to access control checks|Network Error/
+
+/** Erreur de la page née d'une requête interrompue par une navigation du harnais : elle ne dit rien de l'application. */
+export const interrompueParLeHarnais = (page: Page, err: Error) => pagesQuittees.has(page) && REQUETE_INTERROMPUE.test(err.message)
+
+/** Navigation du harnais : les requêtes que la page en cours avait lancées sont interrompues sans faute de sa part. */
+export async function naviguer(page: Page, adresse: string) {
+  pagesQuittees.add(page)
+  try {
+    await page.goto(adresse)
+  } finally {
+    pagesQuittees.delete(page)
+  }
+}
+
+/** Quitte la page en cours, sans session, et ouvre l'écran de connexion. */
+export async function ouvrirConnexion(page: Page) {
+  await naviguer(page, 'about:blank')
+  await page.context().clearCookies()
+  await page.goto('/login')
+}
+
 export async function connecterUi(page: Page, profil: string) {
   const compte = comptes[profil]
   if (!compte) throw new Error(`Profil inconnu : « ${profil} »`)
   // Quitter d'abord la page en cours : privée de session, elle renverrait d'elle-même vers /login (expiration),
   // en concurrence avec la navigation de cette étape.
-  await page.goto('about:blank')
-  await page.context().clearCookies()
-  await page.goto('/login')
+  await ouvrirConnexion(page)
   await page.getByLabel('Courriel').fill(compte.email)
   await page.getByLabel('Mot de passe').fill(compte.motDePasse)
   await page.getByRole('button', { name: 'Se connecter', exact: true }).click()

@@ -6,3 +6,5 @@ playwright-report-e2e/
 test-results-e2e/
 playwright-report-deploiement/
 test-results-deploiement/
+playwright-report-webkit/
+test-results-webkit/
