@@ -107,8 +107,9 @@ public class SuiviService {
     private List<ClmDto.SuiviLigne> parcourir(Habilitations.Acteur acteur, Filtre f, Specification<Trousse> spec, int ignorer, int garder) {
         List<ClmDto.SuiviLigne> res = new ArrayList<>();
         int[] aIgnorer = {ignorer};
+        Specification<Trousse> candidates = LecturePaginee.voitTout(acteur) ? spec : spec.and(PerimetreVisible.candidates(acteur));
         for (int k = 0; ; k++) {
-            Page<Trousse> tranche = trousses.findAll(spec, PageRequest.of(k, TRANCHE, f.ordre()));
+            Page<Trousse> tranche = trousses.findAll(candidates, PageRequest.of(k, TRANCHE, f.ordre()));
             List<Trousse> visibles = tranche.getContent().stream().filter(t -> lecture.visible(t, acteur)).toList();
             if (f.exceptionsSeulement()) {
                 retenir(lignes(visibles).stream().filter(l -> !l.exceptions().isEmpty()).toList(), aIgnorer, garder, res);

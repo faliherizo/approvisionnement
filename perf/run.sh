@@ -28,6 +28,9 @@ LOOPS="${LOOPS:-5}"
 DUREE="${DUREE:-0}"
 # false : une connexion par utilisateur virtuel (première boucle) au lieu d'une connexion à chaque boucle.
 CONNEXION_CHAQUE_BOUCLE="${CONNEXION_CHAQUE_BOUCLE:-true}"
+# Le plan borne toujours sa durée (planificateur JMeter) : une durée nulle y arrêterait les fils aussitôt. Sans durée
+# demandée, une borne d'un jour laisse les LOOPS boucles décider seules de la fin.
+DUREE_PLAN="$DUREE"; [ "$DUREE" -gt 0 ] || DUREE_PLAN=86400
 BASE_HOST="${BASE_HOST:-localhost}"
 BASE_PORT="${BASE_PORT:-8080}"
 BASE_PROTOCOL="${BASE_PROTOCOL:-http}"
@@ -60,7 +63,7 @@ echo "▶ JMeter [${PLAN}] — ${THREADS} threads, montée ${RAMPUP}s, ${LOOPS} 
 jmeter -n -t "$PLAN" \
   -l "$RESULTATS"/results.jtl \
   -e -o "$RESULTATS"/rapport \
-  -Jthreads="$THREADS" -Jrampup="$RAMPUP" -Jloops="$LOOPS" -Jduree="$DUREE" \
+  -Jthreads="$THREADS" -Jrampup="$RAMPUP" -Jloops="$LOOPS" -Jduree="$DUREE_PLAN" \
   -Jconnexion.chaque.boucle="$CONNEXION_CHAQUE_BOUCLE" \
   -JBASE_HOST="$BASE_HOST" -JBASE_PORT="$BASE_PORT" -JBASE_PROTOCOL="$BASE_PROTOCOL" \
   -Jresultats="$RESULTATS" -Jpause.ms="$PAUSE_MS" -Jcomptes="$COMPTES" -Jtrousses="$TROUSSES" \

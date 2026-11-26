@@ -147,7 +147,7 @@
               <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&quot;titre&quot;:&quot;Convention ${__threadNum}-${__time(,)}&quot;,&quot;risque&quot;:&quot;FAIBLE&quot;,&quot;typeContrat&quot;:&quot;${typeContrat}&quot;}</stringProp>
+                  <stringProp name="Argument.value">{&quot;titre&quot;:&quot;Convention ${__threadNum} ${__RandomString(10,abcdefghijklmnopqrstuvwxyz,)}&quot;,&quot;risque&quot;:&quot;FAIBLE&quot;,&quot;typeContrat&quot;:&quot;${typeContrat}&quot;}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp></collectionProp></elementProp>
               <stringProp name="HTTPSampler.path">/api/clm/trousses</stringProp>
