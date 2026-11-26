@@ -80,10 +80,13 @@ comptes() {
 # --- Jeu de données --------------------------------------------------------------------------------------------------
 
 document() {  # document <jar> <trousse> <fichier> [clé] : téléverse, vérifie l'empreinte rendue, inscrit au manifeste
-  local jar=$1 trousse=$2 fichier=$3 cle=${4:-} url reponse id empreinte attendue
+  local jar=$1 trousse=$2 fichier=$3 cle=${4:-} url motif="" reponse id empreinte attendue
   url="$URL_PRIMAIRE/api/clm/trousses/$trousse/documents"
-  [ -n "$cle" ] && url="$url/$cle/versions"
-  reponse=$(televerser "$jar" "$url" "$fichier") || echec "téléversement refusé ($fichier)"
+  if [ -n "$cle" ]; then
+    url="$url/$cle/versions"
+    motif="Révision de la convention (essai de relève)"
+  fi
+  reponse=$(televerser "$jar" "$url" "$fichier" "$motif") || echec "téléversement refusé ($fichier) : $reponse"
   id=$(champ id <<<"$reponse")
   empreinte=$(champ empreinte <<<"$reponse")
   attendue=$(sha256 "$fichier")

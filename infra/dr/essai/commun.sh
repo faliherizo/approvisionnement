@@ -45,10 +45,12 @@ api() {
   esac
 }
 
-# Téléversement multipart d'un fichier dans une trousse.
+# Téléversement multipart d'un fichier dans une trousse : televerser <jar> <url> <fichier> [motif d'une nouvelle version].
 televerser() {
-  local jar=$1 url=$2 fichier=$3
-  curl -sS -f -b "$jar" -F "fichier=@$fichier;type=application/pdf" "$url"
+  local jar=$1 url=$2 fichier=$3 motif=${4:-}
+  local champs=(-F "fichier=@$fichier;type=application/pdf")
+  [ -n "$motif" ] && champs+=(--form-string "motif=$motif")
+  curl -sS --fail-with-body -b "$jar" "${champs[@]}" "$url"
 }
 
 connexion() {

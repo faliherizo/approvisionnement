@@ -3,6 +3,35 @@
 Reprise **inter-région** de la solution, en complément de la HA multi-zone (qui, elle, soutient le
 **SLA 99,99 %** au sein d'une région). Cibles : **RPO ≤ 15 min, RTO ≤ 4 h**.
 
+## Production de l'AO IQ (SEC-11) : posture intégrée — ADR-039
+
+La production Azure de l'AO IQ porte sa posture de relève **dans la pile principale** `infra/terraform/azure`
+(`dr.tf` et variables `dr_*`), et non plus dans les piles séparées ci-dessous :
+
+| Élément | Régime nominal | À la bascule |
+|---|---|---|
+| PostgreSQL | Réplique de lecture en Canada Est + sauvegardes géo-redondantes 35 jours | Promotion (permutation forcée) ; point d'écriture virtuel inchangé |
+| Documents et exports | RA-GZRS, versionnage, suppression réversible, restauration à un instant donné | Bascule du compte (lecture secondaire possible avant) |
+| Images | Registre Premium géo-répliqué en Canada Est | Tirées localement |
+| Secrets et clés | Coffre de relève : `db-url`, `db-password`, `clm-cle-maitresse` (ADR-037) ; clés HSM par `scripts/sauvegarder-cles-azure.sh` | Lus dans le coffre de relève |
+| Calcul | AKS « pilot light » (1 nœud système, pool applicatif à 0) | Plan de contrôle Standard, pool agrandi, même chart Helm |
+| Entrée | Front Door : origine de relève en priorité 2, sonde `/api/health` | Bascule par la sonde ; origine primaire désactivée |
+
+```bash
+# Exercice annuel (ne touche pas la production) ; bascule réelle ; retour planifié
+ORIGINE_SECOURS=ingress-ce.contrat.vinaitsolution.com scripts/bascule-azure.sh exercice
+ORIGINE_SECOURS=ingress-ce.contrat.vinaitsolution.com scripts/bascule-azure.sh bascule
+scripts/bascule-azure.sh retour
+```
+
+**Essai de relève mesuré** : `.github/workflows/releve.yml` (déclenché par `workflow_dispatch` ou une poussée sur
+`releve/**`) monte la pile de production conteneurisée, charge un jeu de données, détruit le site primaire, reprend
+sur un site neuf (scénarios `replique` et `sauvegarde`), vérifie la preuve et le déchiffrement, et mesure RTO et RPO
+avec une porte bloquante. Scripts : [`essai/`](essai/). Plan de relève et résultats : document 20 de la réponse à l'AO.
+
+Les piles `azure/replication` et `azure/failover` ci-dessous restent une variante (relève sur Container Apps) et la
+référence de la reprise AWS.
+
 > Procédure, définitions et budget de temps : [`docs/trois-riviere/PLAN-REPRISE-SINISTRE-RPO-RTO.md`](../../docs/trois-riviere/PLAN-REPRISE-SINISTRE-RPO-RTO.md).
 
 ```
