@@ -1168,6 +1168,463 @@
           "ecranConforme": true
         }
       ]
+    },
+    {
+      "id": "E2E-AX-IQ-13",
+      "titre": "AF-48 (RST-50) : l'initiateur ajoute un participant « consulter seulement » ; au portail, celui-ci vérifie son identité, lit le document et atteste en avoir pris connaissance, sans signature ni champ ; l'attestation est consignée au journal",
+      "exigences": [
+        "IQ-C-36"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Trousse au brouillon avec son document",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "corps": {
+                  "titre": "Consultation seule ${unique}",
+                  "risque": "FAIBLE",
+                  "unite": "FINANCEMENT_ENTREPRISES"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "convention.pdf",
+                    "type": "application/pdf"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Participants (0)"
+          }
+        },
+        {
+          "remplir": {
+            "Nom": "Lise Gagnon",
+            "Courriel": "consulte.${unique}@agrinord.example"
+          }
+        },
+        {
+          "choisir": {
+            "Rôle dans le contrat": "TEMOIN",
+            "Nature de la participation": "Consulter seulement",
+            "Vérification d’identité": "Question secrète"
+          }
+        },
+        {
+          "remplir": {
+            "Question de vérification": "Ville du siège ?",
+            "Réponse attendue": "Québec"
+          }
+        },
+        {
+          "cliquer": "Ajouter un signataire"
+        },
+        {
+          "voir": [
+            "Lise Gagnon",
+            "Consulter seulement"
+          ]
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "preparer": {
+            "description": "Étape de participation confiée au participant « consulter », trousse lancée, lien lu dans le courriel",
+            "etapes": [
+              {
+                "appel": "GET /api/clm/trousses/${trousse}",
+                "capturer": {
+                  "lise": "$.participants[0].id"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.participants[0].nature",
+                    "egal": "CONSULTER"
+                  }
+                ]
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+                "corps": [
+                  {
+                    "cle": "p1",
+                    "libelle": "Prise de connaissance",
+                    "phase": 1,
+                    "type": "SIGNATURE",
+                    "affectations": [
+                      {
+                        "type": "PARTICIPANT",
+                        "valeur": "${lise}"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/lancer",
+                "corps": {}
+              },
+              {
+                "courriel": {
+                  "destinataire": "consulte.${unique}@agrinord.example",
+                  "motif": "/portail/([A-Za-z0-9_-]+)",
+                  "capturer": "jeton"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/portail/${jeton}"
+        },
+        {
+          "voir": "vous êtes invité à prendre connaissance de la trousse"
+        },
+        {
+          "remplir": {
+            "Ville du siège ?": "Québec"
+          }
+        },
+        {
+          "cliquer": "Vérifier mon identité"
+        },
+        {
+          "voirTitre": "2. Lire et attester la prise de connaissance"
+        },
+        {
+          "nePasVoir": [
+            "Votre nom complet",
+            "Informations à compléter"
+          ]
+        },
+        {
+          "cliquer": "Lire / télécharger"
+        },
+        {
+          "cocher": "J’atteste avoir pris connaissance de chacun des documents."
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "cliquer": "Attester ma consultation"
+        },
+        {
+          "voir": [
+            "Merci, votre consultation est attestée",
+            "Reçu de consultation"
+          ]
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "preparer": {
+            "description": "L'attestation, et non une signature, termine l'étape et figure au journal scellé",
+            "etapes": [
+              {
+                "appel": "GET /api/clm/trousses/${trousse}",
+                "verifier": [
+                  {
+                    "chemin": "$.resume.statut",
+                    "egal": "TERMINEE"
+                  }
+                ]
+              },
+              {
+                "appel": "GET /api/clm/trousses/${trousse}/historique",
+                "verifier": [
+                  {
+                    "texte": "CONSULTATION_ATTESTEE"
+                  },
+                  {
+                    "texteAbsent": "\"type\":\"SIGNATURE\""
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-14",
+      "titre": "AF-48 (RST-50) : dans une même trousse, un participant « compléter » soumet ses champs sans signer et un « signer » signe ; signer avec un lien « compléter » est refusé ; la preuve distingue la nature et l'action de chacun",
+      "exigences": [
+        "IQ-C-36"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Modèle publié (un champ du deuxième signataire), trousse lancée avec un participant « compléter » et un « signer »",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/modeles",
+                "corps": {
+                  "nom": "Entente natures ${unique}",
+                  "corps": "Entente de participation.",
+                  "champs": [
+                    {
+                      "cle": "neq",
+                      "libelle": "Numéro d'entreprise",
+                      "type": "TEXTE",
+                      "obligatoire": true,
+                      "roleDestinataire": "SIGNATAIRE_2"
+                    }
+                  ]
+                },
+                "capturer": {
+                  "modele": "$.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/modeles/${modele}/soumettre",
+                "corps": {}
+              },
+              {
+                "appel": "POST /api/clm/modeles/${modele}/publier",
+                "profil": "administration d'affaires IQ",
+                "corps": {}
+              },
+              {
+                "appel": "POST /api/clm/trousses",
+                "corps": {
+                  "titre": "Natures ${unique}",
+                  "risque": "FAIBLE",
+                  "unite": "FINANCEMENT_ENTREPRISES",
+                  "modeleId": "${modele}"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "convention.pdf",
+                    "type": "application/pdf"
+                  }
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/participants",
+                "corps": {
+                  "nom": "Paul Côté",
+                  "courriel": "complete.${unique}@agrinord.example",
+                  "roleContrat": "SIGNATAIRE_2",
+                  "externe": true,
+                  "niveauIdentite": "QUESTION",
+                  "question": "Ville du siège ?",
+                  "reponse": "Québec",
+                  "nature": "COMPLETER"
+                },
+                "capturer": {
+                  "paul": "$.id"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.nature",
+                    "egal": "COMPLETER"
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/participants",
+                "corps": {
+                  "nom": "Marie Tremblay",
+                  "courriel": "signe.${unique}@agrinord.example",
+                  "roleContrat": "SIGNATAIRE_1",
+                  "externe": true,
+                  "niveauIdentite": "QUESTION",
+                  "question": "Ville du siège ?",
+                  "reponse": "Québec"
+                },
+                "capturer": {
+                  "marie": "$.id"
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.nature",
+                    "egal": "SIGNER"
+                  }
+                ]
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+                "corps": [
+                  {
+                    "cle": "p1",
+                    "libelle": "Participation",
+                    "phase": 1,
+                    "type": "SIGNATURE",
+                    "affectations": [
+                      {
+                        "type": "PARTICIPANT",
+                        "valeur": "${paul}"
+                      },
+                      {
+                        "type": "PARTICIPANT",
+                        "valeur": "${marie}"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/lancer",
+                "corps": {}
+              },
+              {
+                "courriel": {
+                  "destinataire": "complete.${unique}@agrinord.example",
+                  "motif": "/portail/([A-Za-z0-9_-]+)",
+                  "capturer": "jetonPaul"
+                }
+              },
+              {
+                "courriel": {
+                  "destinataire": "signe.${unique}@agrinord.example",
+                  "motif": "/portail/([A-Za-z0-9_-]+)",
+                  "capturer": "jetonMarie"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/portail/${jetonPaul}"
+        },
+        {
+          "voir": "vous êtes invité à compléter des informations de la trousse"
+        },
+        {
+          "remplir": {
+            "Ville du siège ?": "Québec"
+          }
+        },
+        {
+          "cliquer": "Vérifier mon identité"
+        },
+        {
+          "voirTitre": "2. Compléter vos informations"
+        },
+        {
+          "nePasVoir": "Votre nom complet"
+        },
+        {
+          "preparer": {
+            "description": "Action hors nature : signer avec le lien d'un participant « compléter » est refusé (409)",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/portail/${jetonPaul}/signer",
+                "anonyme": true,
+                "corps": {
+                  "nomComplet": "Paul Côté",
+                  "consentement": true
+                },
+                "statut": 409,
+                "verifier": [
+                  {
+                    "texte": "pas de signer"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "remplir": {
+            "Numéro d'entreprise": "1170000001"
+          }
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "cliquer": "Soumettre mes informations"
+        },
+        {
+          "voir": [
+            "Merci, vos informations sont enregistrées",
+            "Reçu de complétion"
+          ]
+        },
+        {
+          "preparer": {
+            "description": "Le participant « signer » vérifie son identité et signe au portail",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/portail/${jetonMarie}/verification/reponse",
+                "anonyme": true,
+                "corps": {
+                  "reponse": "Québec"
+                }
+              },
+              {
+                "appel": "POST /api/clm/portail/${jetonMarie}/consultation",
+                "anonyme": true,
+                "corps": {
+                  "attestation": true
+                },
+                "statut": 409
+              },
+              {
+                "appel": "POST /api/clm/portail/${jetonMarie}/signer",
+                "anonyme": true,
+                "corps": {
+                  "nomComplet": "Marie Tremblay",
+                  "consentement": true
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.action",
+                    "egal": "SIGNATURE"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Preuve"
+          }
+        },
+        {
+          "voir": [
+            "Nature : Compléter seulement · champs complétés",
+            "Nature : Signer · signature apposée"
+          ]
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
     }
   ]
 }

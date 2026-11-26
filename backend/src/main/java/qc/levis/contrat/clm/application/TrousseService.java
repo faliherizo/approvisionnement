@@ -425,6 +425,7 @@ public class TrousseService {
         }
         Participant p = new Participant(t.getTenantId(), t.getId(), nom, courriel, vide(req.telephone()), role, req.externe(), niveau);
         p.choisirLangue(langue);
+        p.choisirNature(qc.levis.contrat.clm.domain.NatureParticipation.de(req.nature()));
         p.representer(req.qualite(), req.entreprise(), Boolean.TRUE.equals(req.autoriteRequise()));
         if (niveau == Identite.Niveau.QUESTION) {
             p.definirQuestion(req.question().trim(), ChaineScellee.sha256(Identite.normaliserReponse(req.reponse())
@@ -432,7 +433,7 @@ public class TrousseService {
         }
         p = participants.save(p);
         resoudreRole(t, p);
-        journal.consigner(t, "PARTICIPANT_AJOUTE", acteur.id(), nom + " · " + role + " · " + niveau
+        journal.consigner(t, "PARTICIPANT_AJOUTE", acteur.id(), nom + " · " + role + " · " + niveau + " · " + p.getNature()
                 + (langue == Langue.FR ? "" : " · " + langue) + (t.enTraitement() ? " · ajouté en cours de parcours" : ""));
         return LectureTrousse.participant(p);
     }

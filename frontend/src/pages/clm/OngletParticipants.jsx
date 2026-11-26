@@ -6,7 +6,9 @@ import { BarreActions, Bloc, Blocs } from './gabarit.jsx'
 import { libelleAffectation, modeParcours } from './OngletParcours.jsx'
 
 const NIVEAUX = ['', 'COURRIEL', 'CODE_SMS', 'QUESTION', 'FORTE']
-const VIDE = { nom: '', courriel: '', telephone: '', roleContrat: '', externe: true, niveauIdentite: '', question: '', reponse: '', langue: 'FR', qualite: '', entreprise: '', autoriteRequise: false }
+// AF-48 (RST-50) : ce que le participant fait au portail ; SIGNER par défaut.
+const NATURES = ['SIGNER', 'COMPLETER', 'CONSULTER']
+const VIDE = { nom: '', courriel: '', telephone: '', roleContrat: '', externe: true, niveauIdentite: '', question: '', reponse: '', langue: 'FR', qualite: '', entreprise: '', autoriteRequise: false, nature: 'SIGNER' }
 
 /** Premier rôle de la liste de l'organisation qu'aucun participant ne tient encore. */
 const roleLibre = (roles, participants) => roles.valeurs.map((r) => r.code).find((c) => !participants.some((p) => p.roleContrat === c)) || ''
@@ -93,7 +95,7 @@ export default function OngletParticipants({ trousse, peutGerer, onChange, onOrd
                     return (
                       <tr key={p.id}>
                         <td data-label={t('clm.col.nom')}>{p.nom} <span className="muted">#{p.id} · {p.externe ? t('clm.part.externe') : t('clm.part.interne')}{p.langue === 'EN' ? ` · ${t('clm.part.langue.EN')}` : ''}{p.entreprise ? ` · ${t('clm.part.pour', { entreprise: p.entreprise, qualite: p.qualite || '—' })}` : ''}</span></td>
-                        <td data-label={t('clm.part.role')}>{roles.libelle(p.roleContrat)}</td>
+                        <td data-label={t('clm.part.role')}>{roles.libelle(p.roleContrat)}<br /><span className="muted">{t(`clm.part.nature.${p.nature || 'SIGNER'}`)}</span></td>
                         <td data-label={t('clm.part.coordonnees')}>{p.courriel}{p.telephone ? <><br />{p.telephone}</> : null}</td>
                         <td data-label={t('clm.part.invitation')}>{inv ? <><Statut valeur={inv.statut} /><br /><span className="muted">{inv.signeeLe ? dateHeure(inv.signeeLe) : t('clm.part.expire', { d: dateHeure(inv.expireLe) })}</span></> : '—'}</td>
                         {peutGerer && <td data-label={t('clm.col.actions')}><button type="button" className="lien danger" aria-label={`${t('clm.retirer')} — ${p.nom}`} onClick={() => retirer(p)}>{t('clm.retirer')}</button></td>}
@@ -113,6 +115,11 @@ export default function OngletParticipants({ trousse, peutGerer, onChange, onOrd
                 <label>{t('clm.part.telephone')} <span className="muted">{t('clm.part.telephoneAide')}</span><input type="tel" value={form.telephone} onChange={maj('telephone')} autoComplete="tel" /></label>
                 <label>{t('clm.part.role')} <span className="muted">{t('clm.part.roleAide')}</span>
                   <ChoixListe liste={roles} value={form.roleContrat} onChange={(v) => setForm({ ...form, roleContrat: v })} required aria-required="true" /></label>
+                <label>{t('clm.part.natureChamp')} <span className="muted">{t('clm.part.natureAide')}</span>
+                  <select value={form.nature} onChange={maj('nature')}>
+                    {NATURES.map((n) => <option key={n} value={n}>{t(`clm.part.nature.${n}`)}</option>)}
+                  </select>
+                </label>
                 <label className="check-row"><input type="checkbox" checked={form.externe} onChange={maj('externe')} />{t('clm.part.externe')}</label>
                 <label>{t('clm.part.qualite')} <span className="muted">{t('clm.part.qualiteAide')}</span><input value={form.qualite} onChange={maj('qualite')} maxLength={150} /></label>
                 <label>{t('clm.part.entreprise')}<input value={form.entreprise} onChange={maj('entreprise')} maxLength={200} /></label>

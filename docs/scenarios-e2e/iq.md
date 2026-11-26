@@ -3576,6 +3576,64 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
+### E2E-AX-IQ-13 — AF-48 (RST-50) : l'initiateur ajoute un participant « consulter seulement » ; au portail, celui-ci vérifie son identité, lit le document et atteste en avoir pris connaissance, sans signature ni champ ; l'attestation est consignée au journal
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-36
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (10 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Trousse au brouillon avec son document
+2. Ouvrir l'écran `/clm/trousses/${trousse}`
+3. Activer « Participants (0) » (tab)
+4. Saisir « Nom » : `Lise Gagnon` ; « Courriel » : `consulte.${unique}@agrinord.example`
+5. Choisir « Rôle dans le contrat » : `TEMOIN` ; « Nature de la participation » : `Consulter seulement` ; « Vérification d’identité » : `Question secrète`
+6. Saisir « Question de vérification » : `Ville du siège ?` ; « Réponse attendue » : `Québec`
+7. Activer « Ajouter un signataire »
+8. Voir « Lise Gagnon », « Consulter seulement »
+9. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+10. Préparer par l'API : Étape de participation confiée au participant « consulter », trousse lancée, lien lu dans le courriel
+11. Ouvrir l'écran `/portail/${jeton}`
+12. Voir « vous êtes invité à prendre connaissance de la trousse »
+13. Saisir « Ville du siège ? » : `Québec`
+14. Activer « Vérifier mon identité »
+15. Voir le titre « 2. Lire et attester la prise de connaissance »
+16. Ne pas voir « Votre nom complet », « Informations à compléter »
+17. Activer « Lire / télécharger »
+18. Cocher « J’atteste avoir pris connaissance de chacun des documents. »
+19. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+20. Activer « Attester ma consultation »
+21. Voir « Merci, votre consultation est attestée », « Reçu de consultation »
+22. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+23. Préparer par l'API : L'attestation, et non une signature, termine l'étape et figure au journal scellé
+
+### E2E-AX-IQ-14 — AF-48 (RST-50) : dans une même trousse, un participant « compléter » soumet ses champs sans signer et un « signer » signe ; signer avec un lien « compléter » est refusé ; la preuve distingue la nature et l'action de chacun
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-36
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (5 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Modèle publié (un champ du deuxième signataire), trousse lancée avec un participant « compléter » et un « signer »
+2. Ouvrir l'écran `/portail/${jetonPaul}`
+3. Voir « vous êtes invité à compléter des informations de la trousse »
+4. Saisir « Ville du siège ? » : `Québec`
+5. Activer « Vérifier mon identité »
+6. Voir le titre « 2. Compléter vos informations »
+7. Ne pas voir « Votre nom complet »
+8. Préparer par l'API : Action hors nature : signer avec le lien d'un participant « compléter » est refusé (409)
+9. Saisir « Numéro d'entreprise » : `1170000001`
+10. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+11. Activer « Soumettre mes informations »
+12. Voir « Merci, vos informations sont enregistrées », « Reçu de complétion »
+13. Préparer par l'API : Le participant « signer » vérifie son identité et signe au portail
+14. Ouvrir l'écran `/clm/trousses/${trousse}`
+15. Activer « Preuve » (tab)
+16. Voir « Nature : Compléter seulement · champs complétés », « Nature : Signer · signature apposée »
+17. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
 ### E2E-CB-IQ-15 — Champs d'un modèle : liste, date, case à cocher, zone de signature positionnée pour un rôle, clause conditionnelle vérifiée par l'essai
 
 - **Profil** : administration d'affaires IQ

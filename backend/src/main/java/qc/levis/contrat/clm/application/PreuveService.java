@@ -137,7 +137,8 @@ public class PreuveService {
                 continue;
             }
             res.add(new ClmDto.SignatureVue(p.getNom(), p.getCourriel(), p.getRoleContrat(), inv.getNiveau().name(), inv.getVerifieeLe(),
-                    inv.getConsentementLe(), inv.getSigneeLe(), inv.getIp(), inv.getStatut().name(), ctx.lireObjet(inv.getAttestationJson())));
+                    inv.getConsentementLe(), inv.getSigneeLe(), inv.getIp(), inv.getStatut().name(), ctx.lireObjet(inv.getAttestationJson()),
+                    p.getNature().name(), inv.actionAccomplie()));
         }
         return res;
     }
@@ -218,12 +219,13 @@ public class PreuveService {
                 .append(t.getSfDossierId() == null ? "" : " " + t.getSfDossierId()).append("\n\nDocuments\n");
         d.documentsFinaux().forEach(doc -> sb.append("- ").append(doc.nom()).append(" v").append(doc.version()).append(" (")
                 .append(doc.statut()).append(") SHA-256 ").append(doc.empreinte()).append('\n'));
-        sb.append("\nSignataires\n");
+        sb.append("\nParticipants\n");
         for (ClmDto.SignatureVue s : d.signatures()) {
             sb.append("- ").append(s.participant()).append(" <").append(s.courriel()).append("> · ").append(s.roleContrat())
                     .append(" · identité ").append(s.niveau()).append(" vérifiée ").append(s.verifieeLe())
                     .append(" · consentement ").append(s.consentementLe()).append(" · signé ").append(s.signeeLe())
-                    .append(" · ").append(s.statut());
+                    .append(" · ").append(s.statut()).append(" · nature ").append(s.nature())
+                    .append(s.action() == null ? "" : " · action " + s.action());
             Object attestation = s.attestation() == null ? null : s.attestation().get("identifiant");
             sb.append(attestation == null ? "" : " · attestation " + attestation).append(representation(s)).append('\n');
         }

@@ -581,7 +581,7 @@ public class ParcoursService {
         int destinataires = 0;
         if (e.getType() == Parcours.TypeEtape.SIGNATURE) {
             for (Invitation i : invitations.findByTenantIdAndEtapeId(t.getTenantId(), e.getId())) {
-                if (i.getStatut() == Invitation.Statut.SIGNEE || i.getStatut() == Invitation.Statut.REFUSEE || i.getStatut() == Invitation.Statut.ANNULEE) {
+                if (i.estAccomplie() || i.getStatut() == Invitation.Statut.REFUSEE || i.getStatut() == Invitation.Statut.ANNULEE) {
                     continue;
                 }
                 i.annuler();
@@ -680,8 +680,8 @@ public class ParcoursService {
                 .orElseThrow(() -> new org.springframework.security.access.AccessDeniedException("Cette signature ne vous est pas assignée."));
         for (Invitation i : invitations.findByTenantIdAndEtapeId(t.getTenantId(), e.getId())) {
             if (i.getParticipantId().equals(moi.getId())) {
-                if (i.getStatut() == Invitation.Statut.SIGNEE) {
-                    throw new IllegalStateException("Signature déjà apposée.");
+                if (i.estAccomplie()) {
+                    throw new IllegalStateException("Participation déjà accomplie.");
                 }
                 i.annuler();
                 invitations.save(i);

@@ -67,6 +67,11 @@ public class Participant {
     @Column(name = "autorite_requise", nullable = false)
     private boolean autoriteRequise;
 
+    /** Ce que le participant fait au portail (AF-48, RST-50) ; SIGNER pour les participants antérieurs. */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "nature", nullable = false, length = 10)
+    private NatureParticipation nature = NatureParticipation.SIGNER;
+
     protected Participant() {
     }
 
@@ -116,6 +121,16 @@ public class Participant {
         this.langue = langue == null ? Langue.FR : langue;
     }
 
+    /** Nature de la participation ; nulle : SIGNER, la seule nature connue avant RST-50. */
+    public void choisirNature(NatureParticipation nature) {
+        this.nature = nature == null ? NatureParticipation.SIGNER : nature;
+    }
+
+    /** Refuse au portail toute action qui n'est pas celle de la nature du participant. */
+    public void exigerAction(NatureParticipation action) {
+        nature.exiger(action);
+    }
+
     public void definirQuestion(String question, String reponseHash) {
         this.questionIdentite = question;
         this.reponseIdentiteHash = reponseHash;
@@ -143,6 +158,7 @@ public class Participant {
     public String getQualite() { return qualite; }
     public String getEntreprise() { return entreprise; }
     public boolean isAutoriteRequise() { return autoriteRequise; }
+    public NatureParticipation getNature() { return nature; }
 
     /** Destruction à l'échéance de conservation : les coordonnées du participant sont effacées. */
     public void anonymiser() {

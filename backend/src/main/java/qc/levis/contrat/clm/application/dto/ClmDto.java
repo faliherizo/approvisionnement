@@ -21,10 +21,13 @@ public final class ClmDto {
                                  Integer rappelsMax, String copies) {
     }
 
-    /** {@code langue} : FR (défaut) ou EN, langue des messages et du portail du participant (addenda 2, Q19). */
+    /**
+     * {@code langue} : FR (défaut) ou EN, langue des messages et du portail du participant (addenda 2, Q19).
+     * {@code nature} : CONSULTER, COMPLETER ou SIGNER (défaut), ce que le participant fait au portail (RST-50).
+     */
     public record ParticipantRequest(String nom, String courriel, String telephone, String roleContrat, boolean externe,
                                      String niveauIdentite, String question, String reponse, String langue,
-                                     String qualite, String entreprise, Boolean autoriteRequise) {
+                                     String qualite, String entreprise, Boolean autoriteRequise, String nature) {
     }
 
     public record AffectationDto(String type, String valeur) {
@@ -106,6 +109,14 @@ public final class ClmDto {
     public record RefusRequest(String motif) {
     }
 
+    /** Participant « consulter » (RST-50) : attestation explicite d'avoir pris connaissance des documents. */
+    public record ConsultationRequest(boolean attestation) {
+    }
+
+    /** Participant « compléter » (RST-50) : valeurs des champs de son rôle, soumises sans signature. */
+    public record CompletionRequest(Map<String, String> champs) {
+    }
+
     // --- Vues ---
     public record TrousseResume(Long id, String reference, String titre, String statut, String source, String sfDossierId,
                                 String unite, String proprietaire, LocalDate echeance, String typeContrat, Instant majLe,
@@ -120,7 +131,7 @@ public final class ClmDto {
 
     public record ParticipantVue(Long id, String nom, String courriel, String telephone, String roleContrat, boolean externe,
                                  String niveauIdentite, boolean questionDefinie, String langue, String qualite, String entreprise,
-                                 boolean autoriteRequise) {
+                                 boolean autoriteRequise, String nature) {
     }
 
     public record DecisionVue(String acteur, String nature, String commentaire, Instant decideLe) {
@@ -239,14 +250,18 @@ public final class ClmDto {
     public record PortailVue(String reference, String titre, String participant, String niveau, String statut,
                              Instant expireLe, boolean verifiee, boolean consentement, String question,
                              List<DocumentPortail> documents, List<ChampPortail> champs, Recu recu, String organisation, String logo,
-                             String qualite, String entreprise, boolean autoriteRequise) {
+                             String qualite, String entreprise, boolean autoriteRequise, String nature) {
     }
 
-    public record Recu(String reference, String signataire, Instant signeeLe, String empreinteDocuments, String attestation) {
+    /** {@code action} : SIGNATURE, CONSULTATION ou COMPLETION (RST-50) ; {@code attestation} nulle hors signature. */
+    public record Recu(String reference, String signataire, Instant signeeLe, String empreinteDocuments, String attestation,
+                       String action) {
     }
 
+    /** {@code nature} du participant et {@code action} accomplie (RST-50) : la preuve distingue chaque participation. */
     public record SignatureVue(String participant, String courriel, String roleContrat, String niveau, Instant verifieeLe,
-                               Instant consentementLe, Instant signeeLe, String ip, String statut, Map<String, Object> attestation) {
+                               Instant consentementLe, Instant signeeLe, String ip, String statut, Map<String, Object> attestation,
+                               String nature, String action) {
     }
 
     public record Integrite(boolean integre, boolean journalIntegre, Long rupture, List<String> documentsAlteres,
