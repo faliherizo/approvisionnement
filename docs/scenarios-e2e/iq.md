@@ -124,7 +124,78 @@
 
 - **Source** : 1.3
 - **Conformité déclarée** : ✅
-- **Démontrée à l'écran** : non — seulement préparée par l'API
+- **Démontrée à l'écran** : oui
+
+### E2E-AX-IQ-30 — IA-05 (RST-55) : l'initiateur ouvre une négociation sur les clauses normatives du modèle ; au portail externe, la contrepartie propose une modification de clause ; l'IA encadrée (ou les règles, en repli) suggère sans décider ; l'initiateur contre-propose, compare les versions ; la contrepartie accepte la version 2 ; la clôture verse la version négociée au contrat de la trousse
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-04, IQ-S-10b
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (14 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Modèle publié dont la bibliothèque porte trois clauses normatives, et trousse au brouillon sur ce modèle
+2. Ouvrir l'écran `/clm/trousses/${trousse}`
+3. Activer « Négociation » (tab)
+4. Voir le titre « Ouvrir une négociation avec un tiers »
+5. Saisir « Contrepartie (nom) » : `Agrinord inc.` ; « Courriel de la contrepartie » : `nego.${unique}@agrinord.example` ; « Entreprise représentée » : `Agrinord inc.`
+6. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+7. Activer « Ouvrir la négociation »
+8. Voir « Négociation ouverte », « Négociation avec Agrinord inc. », « Clauses de la version 1 », « Modalités de paiement »
+9. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+10. Préparer par l'API : Lien de négociation lu dans le courriel reçu par la contrepartie
+11. Ouvrir l'écran `/portail/negociation/${jeton}`
+12. Voir « vous invite à négocier les clauses », « Version courante (v1) »
+13. Activer « Proposer une modification — Modalités de paiement »
+14. Saisir « Texte souhaité — Modalités de paiement » : `Le paiement est fait dans les 60 jours suivant la réception de la facture.` ; « Commentaire — Modalités de paiement » : `Trésorerie saisonnière`
+15. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+16. Activer « Envoyer mes propositions (1) »
+17. Voir « Vos propositions ont été transmises », « Vos propositions sont à l’étude »
+18. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+19. Ouvrir l'écran `/clm/trousses/${trousse}?onglet=negociation`
+20. Voir le titre « Propositions du tour 1 »
+21. Voir « Trésorerie saisonnière », « Le paiement est fait dans les 60 jours »
+22. Activer « Obtenir une suggestion »
+23. Voir « Suggestions obtenues », « Aide à la décision seulement »
+24. Choisir « Décision — Modalités de paiement » : `Contre-proposer`
+25. Saisir « Contre-proposition — Modalités de paiement » : `Le paiement est fait dans les 45 jours suivant la réception de la facture.` ; « Motif — Modalités de paiement » : `Compromis sur le délai`
+26. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+27. Activer « Enregistrer les décisions du tour »
+28. Voir « Décisions enregistrées », « Clauses de la version 2 », « 45 jours »
+29. Activer « Comparer »
+30. Voir « Écarts de v1 à v2 », « modifiée », « inchangée »
+31. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+32. Ouvrir l'écran `/portail/negociation/${jeton}`
+33. Voir « Réponses de l’organisation », « Contre-proposition : Le paiement est fait dans les 45 jours », « Motif : Compromis sur le délai »
+34. Activer « Comparer »
+35. Voir « Écarts de v1 à v2 »
+36. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+37. Activer « Accepter la version courante »
+38. Voir « Vous avez accepté la version courante », « Entente atteinte »
+39. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+40. Ouvrir l'écran `/clm/trousses/${trousse}?onglet=negociation`
+41. Voir « Entente atteinte : clôturez »
+42. Activer « Clôturer et verser au contrat »
+43. Voir « Négociation close », « Négociations terminées »
+44. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+45. Préparer par l'API : La version négociée devient le contrat de la trousse ; chaque action est au journal scellé
+
+### E2E-AX-IQ-31 — IA-05 (RST-55) : une négociation en cours bloque le lancement de la trousse ; l'initiateur l'annule avec un motif, elle passe aux négociations terminées et une nouvelle peut être ouverte
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-04
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Modèle publié dont la bibliothèque porte trois clauses normatives, et trousse au brouillon sur ce modèle
+2. Préparer par l'API : Négociation ouverte ; le lancement de la trousse est refusé tant qu'elle reste ouverte
+3. Ouvrir l'écran `/clm/trousses/${trousse}?onglet=negociation`
+4. Voir « Négociation avec Boréal ltée », « La contrepartie peut proposer des modifications »
+5. Répondre « Contrepartie retirée du projet » à la prochaine saisie demandée par le navigateur
+6. Activer « Annuler la négociation »
+7. Voir « Négociation annulée », « Négociations terminées », « Contrepartie retirée du projet », « Ouvrir une négociation avec un tiers »
+8. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
 
 ### E2E-IQ-32 — Analyse d'un document par l'IA encadrée, depuis l'accueil
 
@@ -10534,7 +10605,61 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 
 - **Source** : 7.3 sc. 10
 - **Conformité déclarée** : ✅
-- **Démontrée à l'écran** : non — seulement préparée par l'API
+- **Démontrée à l'écran** : oui
+
+### E2E-AX-IQ-30 — IA-05 (RST-55) : l'initiateur ouvre une négociation sur les clauses normatives du modèle ; au portail externe, la contrepartie propose une modification de clause ; l'IA encadrée (ou les règles, en repli) suggère sans décider ; l'initiateur contre-propose, compare les versions ; la contrepartie accepte la version 2 ; la clôture verse la version négociée au contrat de la trousse
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-C-04, IQ-S-10b
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (14 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Modèle publié dont la bibliothèque porte trois clauses normatives, et trousse au brouillon sur ce modèle
+2. Ouvrir l'écran `/clm/trousses/${trousse}`
+3. Activer « Négociation » (tab)
+4. Voir le titre « Ouvrir une négociation avec un tiers »
+5. Saisir « Contrepartie (nom) » : `Agrinord inc.` ; « Courriel de la contrepartie » : `nego.${unique}@agrinord.example` ; « Entreprise représentée » : `Agrinord inc.`
+6. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+7. Activer « Ouvrir la négociation »
+8. Voir « Négociation ouverte », « Négociation avec Agrinord inc. », « Clauses de la version 1 », « Modalités de paiement »
+9. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+10. Préparer par l'API : Lien de négociation lu dans le courriel reçu par la contrepartie
+11. Ouvrir l'écran `/portail/negociation/${jeton}`
+12. Voir « vous invite à négocier les clauses », « Version courante (v1) »
+13. Activer « Proposer une modification — Modalités de paiement »
+14. Saisir « Texte souhaité — Modalités de paiement » : `Le paiement est fait dans les 60 jours suivant la réception de la facture.` ; « Commentaire — Modalités de paiement » : `Trésorerie saisonnière`
+15. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+16. Activer « Envoyer mes propositions (1) »
+17. Voir « Vos propositions ont été transmises », « Vos propositions sont à l’étude »
+18. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+19. Ouvrir l'écran `/clm/trousses/${trousse}?onglet=negociation`
+20. Voir le titre « Propositions du tour 1 »
+21. Voir « Trésorerie saisonnière », « Le paiement est fait dans les 60 jours »
+22. Activer « Obtenir une suggestion »
+23. Voir « Suggestions obtenues », « Aide à la décision seulement »
+24. Choisir « Décision — Modalités de paiement » : `Contre-proposer`
+25. Saisir « Contre-proposition — Modalités de paiement » : `Le paiement est fait dans les 45 jours suivant la réception de la facture.` ; « Motif — Modalités de paiement » : `Compromis sur le délai`
+26. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+27. Activer « Enregistrer les décisions du tour »
+28. Voir « Décisions enregistrées », « Clauses de la version 2 », « 45 jours »
+29. Activer « Comparer »
+30. Voir « Écarts de v1 à v2 », « modifiée », « inchangée »
+31. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+32. Ouvrir l'écran `/portail/negociation/${jeton}`
+33. Voir « Réponses de l’organisation », « Contre-proposition : Le paiement est fait dans les 45 jours », « Motif : Compromis sur le délai »
+34. Activer « Comparer »
+35. Voir « Écarts de v1 à v2 »
+36. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+37. Activer « Accepter la version courante »
+38. Voir « Vous avez accepté la version courante », « Entente atteinte »
+39. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+40. Ouvrir l'écran `/clm/trousses/${trousse}?onglet=negociation`
+41. Voir « Entente atteinte : clôturez »
+42. Activer « Clôturer et verser au contrat »
+43. Voir « Négociation close », « Négociations terminées »
+44. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+45. Préparer par l'API : La version négociée devient le contrat de la trousse ; chaque action est au journal scellé
 
 ### E2E-IQ-32 — Analyse d'un document par l'IA encadrée, depuis l'accueil
 

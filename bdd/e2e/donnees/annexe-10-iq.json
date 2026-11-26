@@ -2132,6 +2132,415 @@
           "ecranConforme": true
         }
       ]
+    },
+    {
+      "id": "E2E-AX-IQ-30",
+      "titre": "IA-05 (RST-55) : l'initiateur ouvre une négociation sur les clauses normatives du modèle ; au portail externe, la contrepartie propose une modification de clause ; l'IA encadrée (ou les règles, en repli) suggère sans décider ; l'initiateur contre-propose, compare les versions ; la contrepartie accepte la version 2 ; la clôture verse la version négociée au contrat de la trousse",
+      "exigences": [
+        "IQ-C-04",
+        "IQ-S-10b"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Modèle publié dont la bibliothèque porte trois clauses normatives, et trousse au brouillon sur ce modèle",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/modeles",
+                "corps": {
+                  "nom": "Bail négociable ${unique}",
+                  "corps": "Bail entre Investissement Québec et la contrepartie.\n{{clauses}}",
+                  "champs": [],
+                  "clauses": [
+                    {
+                      "cle": "paiement",
+                      "titre": "Modalités de paiement",
+                      "texte": "Le paiement est fait dans les 30 jours suivant la réception de la facture."
+                    },
+                    {
+                      "cle": "duree",
+                      "titre": "Durée",
+                      "texte": "Le contrat dure 12 mois à compter de sa signature."
+                    },
+                    {
+                      "cle": "confidentialite",
+                      "titre": "Confidentialité",
+                      "texte": "Les parties gardent confidentielles les informations échangées."
+                    }
+                  ]
+                },
+                "capturer": {
+                  "modele": "$.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/modeles/${modele}/soumettre",
+                "corps": {}
+              },
+              {
+                "appel": "POST /api/clm/modeles/${modele}/publier",
+                "profil": "administration d'affaires IQ",
+                "corps": {}
+              },
+              {
+                "appel": "POST /api/clm/trousses",
+                "corps": {
+                  "titre": "Bail de machinerie ${unique}",
+                  "risque": "FAIBLE",
+                  "unite": "FINANCEMENT_ENTREPRISES",
+                  "modeleId": "${modele}"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/trousses/${trousse}"
+        },
+        {
+          "cliquer": {
+            "role": "tab",
+            "nom": "Négociation"
+          }
+        },
+        {
+          "voirTitre": "Ouvrir une négociation avec un tiers"
+        },
+        {
+          "remplir": {
+            "Contrepartie (nom)": "Agrinord inc.",
+            "Courriel de la contrepartie": "nego.${unique}@agrinord.example",
+            "Entreprise représentée": "Agrinord inc."
+          }
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "cliquer": "Ouvrir la négociation"
+        },
+        {
+          "voir": [
+            "Négociation ouverte",
+            "Négociation avec Agrinord inc.",
+            "Clauses de la version 1",
+            "Modalités de paiement"
+          ]
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "preparer": {
+            "description": "Lien de négociation lu dans le courriel reçu par la contrepartie",
+            "etapes": [
+              {
+                "courriel": {
+                  "destinataire": "nego.${unique}@agrinord.example",
+                  "motif": "/portail/negociation/([A-Za-z0-9_-]+)",
+                  "capturer": "jeton"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/portail/negociation/${jeton}"
+        },
+        {
+          "voir": [
+            "vous invite à négocier les clauses",
+            "Version courante (v1)"
+          ]
+        },
+        {
+          "cliquer": "Proposer une modification — Modalités de paiement"
+        },
+        {
+          "remplir": {
+            "Texte souhaité — Modalités de paiement": "Le paiement est fait dans les 60 jours suivant la réception de la facture.",
+            "Commentaire — Modalités de paiement": "Trésorerie saisonnière"
+          }
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "cliquer": "Envoyer mes propositions (1)"
+        },
+        {
+          "voir": [
+            "Vos propositions ont été transmises",
+            "Vos propositions sont à l’étude"
+          ]
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "aller": "/clm/trousses/${trousse}?onglet=negociation"
+        },
+        {
+          "voirTitre": "Propositions du tour 1"
+        },
+        {
+          "voir": [
+            "Trésorerie saisonnière",
+            "Le paiement est fait dans les 60 jours"
+          ]
+        },
+        {
+          "cliquer": "Obtenir une suggestion"
+        },
+        {
+          "voir": [
+            "Suggestions obtenues",
+            "Aide à la décision seulement"
+          ]
+        },
+        {
+          "choisir": {
+            "Décision — Modalités de paiement": "Contre-proposer"
+          }
+        },
+        {
+          "remplir": {
+            "Contre-proposition — Modalités de paiement": "Le paiement est fait dans les 45 jours suivant la réception de la facture.",
+            "Motif — Modalités de paiement": "Compromis sur le délai"
+          }
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "cliquer": "Enregistrer les décisions du tour"
+        },
+        {
+          "voir": [
+            "Décisions enregistrées",
+            "Clauses de la version 2",
+            "45 jours"
+          ]
+        },
+        {
+          "cliquer": "Comparer"
+        },
+        {
+          "voir": [
+            "Écarts de v1 à v2",
+            "modifiée",
+            "inchangée"
+          ]
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "aller": "/portail/negociation/${jeton}"
+        },
+        {
+          "voir": [
+            "Réponses de l’organisation",
+            "Contre-proposition : Le paiement est fait dans les 45 jours",
+            "Motif : Compromis sur le délai"
+          ]
+        },
+        {
+          "cliquer": "Comparer"
+        },
+        {
+          "voir": "Écarts de v1 à v2"
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "cliquer": "Accepter la version courante"
+        },
+        {
+          "voir": [
+            "Vous avez accepté la version courante",
+            "Entente atteinte"
+          ]
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "aller": "/clm/trousses/${trousse}?onglet=negociation"
+        },
+        {
+          "voir": "Entente atteinte : clôturez"
+        },
+        {
+          "cliquer": "Clôturer et verser au contrat"
+        },
+        {
+          "voir": [
+            "Négociation close",
+            "Négociations terminées"
+          ]
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "preparer": {
+            "description": "La version négociée devient le contrat de la trousse ; chaque action est au journal scellé",
+            "etapes": [
+              {
+                "appel": "GET /api/clm/trousses/${trousse}",
+                "verifier": [
+                  {
+                    "texte": "-negocie.pdf"
+                  }
+                ]
+              },
+              {
+                "appel": "GET /api/clm/trousses/${trousse}/historique",
+                "verifier": [
+                  {
+                    "texte": "NEGOCIATION_PROPOSITION"
+                  },
+                  {
+                    "texte": "NEGOCIATION_SUGGESTION"
+                  },
+                  {
+                    "texte": "NEGOCIATION_DECISION"
+                  },
+                  {
+                    "texte": "NEGOCIATION_ACCEPTEE"
+                  },
+                  {
+                    "texte": "NEGOCIATION_CLOSE"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-31",
+      "titre": "IA-05 (RST-55) : une négociation en cours bloque le lancement de la trousse ; l'initiateur l'annule avec un motif, elle passe aux négociations terminées et une nouvelle peut être ouverte",
+      "exigences": [
+        "IQ-C-04"
+      ],
+      "profil": "initiateur IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Modèle publié dont la bibliothèque porte trois clauses normatives, et trousse au brouillon sur ce modèle",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/modeles",
+                "corps": {
+                  "nom": "Bail négociable ${unique}",
+                  "corps": "Bail entre Investissement Québec et la contrepartie.\n{{clauses}}",
+                  "champs": [],
+                  "clauses": [
+                    {
+                      "cle": "paiement",
+                      "titre": "Modalités de paiement",
+                      "texte": "Le paiement est fait dans les 30 jours suivant la réception de la facture."
+                    },
+                    {
+                      "cle": "duree",
+                      "titre": "Durée",
+                      "texte": "Le contrat dure 12 mois à compter de sa signature."
+                    },
+                    {
+                      "cle": "confidentialite",
+                      "titre": "Confidentialité",
+                      "texte": "Les parties gardent confidentielles les informations échangées."
+                    }
+                  ]
+                },
+                "capturer": {
+                  "modele": "$.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/modeles/${modele}/soumettre",
+                "corps": {}
+              },
+              {
+                "appel": "POST /api/clm/modeles/${modele}/publier",
+                "profil": "administration d'affaires IQ",
+                "corps": {}
+              },
+              {
+                "appel": "POST /api/clm/trousses",
+                "corps": {
+                  "titre": "Bail annulé ${unique}",
+                  "risque": "FAIBLE",
+                  "unite": "FINANCEMENT_ENTREPRISES",
+                  "modeleId": "${modele}"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "preparer": {
+            "description": "Négociation ouverte ; le lancement de la trousse est refusé tant qu'elle reste ouverte",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/negociations",
+                "corps": {
+                  "nom": "Boréal ltée",
+                  "courriel": "annule.${unique}@boreal.example",
+                  "langue": "FR"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/lancer",
+                "corps": {},
+                "statut": 400,
+                "verifier": [
+                  {
+                    "texte": "Négociation en cours"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/trousses/${trousse}?onglet=negociation"
+        },
+        {
+          "voir": [
+            "Négociation avec Boréal ltée",
+            "La contrepartie peut proposer des modifications"
+          ]
+        },
+        {
+          "repondre": "Contrepartie retirée du projet"
+        },
+        {
+          "cliquer": "Annuler la négociation"
+        },
+        {
+          "voir": [
+            "Négociation annulée",
+            "Négociations terminées",
+            "Contrepartie retirée du projet",
+            "Ouvrir une négociation avec un tiers"
+          ]
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
     }
   ]
 }

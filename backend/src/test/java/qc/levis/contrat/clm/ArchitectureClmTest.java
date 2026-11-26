@@ -41,6 +41,8 @@ class ArchitectureClmTest {
     private static final Map<String, String> HORS_TENANT = Map.ofEntries(
             Map.entry("InvitationRepository.findByJetonHash",
                     "le jeton est la capacité du portail public ; le tenant se lit ensuite sur l'invitation trouvée"),
+            Map.entry("NegociationRepository.findByJetonHash",
+                    "le jeton est la capacité de la contrepartie au portail (RST-55) ; le tenant se lit ensuite sur la négociation trouvée"),
             Map.entry("MessageSortantRepository.existsByCleIdempotence", "la clé d'idempotence contient déjà le tenant"),
             Map.entry("MessageSortantRepository.findTop50ByStatutAndProchainEssaiLessThanEqualOrderByProchainEssaiAsc",
                     "relais planifié tous tenants ; chaque message est ensuite publié dans son propre tenant"),
@@ -108,6 +110,8 @@ class ArchitectureClmTest {
     void chaque_api_hors_portail_public_exige_une_autorisation_serveur() {
         classes().that().resideInAPackage(INFRASTRUCTURE).and().areAnnotatedWith(RestController.class)
                 .and().doNotHaveSimpleName("PortailController")
+                // Portail de négociation (RST-55) : même capacité par jeton ; l'option est vérifiée pour le tenant de la négociation.
+                .and().doNotHaveSimpleName("PortailNegociationController")
                 // API d'intégration : jeton client credentials vérifié par le contrôleur, module contrôlé pour le tenant du client.
                 .and().doNotHaveSimpleName("IntegrationEntranteController")
                 // Connecteur MCP (ADR-023) : même jeton client credentials, vérifié par le contrôleur.

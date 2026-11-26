@@ -165,3 +165,5 @@ databaseChangeLog:
       file: db/changelog/changes/082-clm-purview.yaml
   - include:
       file: db/changelog/changes/083-clm-nature-participation.yaml
+  - include:
+      file: db/changelog/changes/084-clm-negociation.yaml

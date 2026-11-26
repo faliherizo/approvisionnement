@@ -59,6 +59,7 @@ class ArchitectureModulesTest {
             entry("AnnuaireController", "correspondances d'annuaire et jeton SCIM : comptes et rôles du tenant"),
             entry("ScimController", "provisionnement SCIM 2.0 : le tenant n'est connu qu'après le jeton porteur, propre au tenant"),
             entry("PortailController", "portail public du signataire : le tenant n'est connu qu'à la lecture du jeton d'invitation"),
+            entry("PortailNegociationController", "portail public de la contrepartie (RST-55) : le tenant n'est connu qu'à la lecture du jeton ; le contrôleur vérifie alors l'option clm_negociation"),
             entry("DroitsVieePriveeController", "droits Loi 25 de toute personne : obligation légale de toute organisation, quels que soient ses modules"),
             entry("BanqueHeuresController", "banque d'heures de services professionnels : contrat de service avec le fournisseur, hors modules"),
             entry("SuperadminBanqueHeuresController", "console superadmin, hors tenant"),

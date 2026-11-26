@@ -4,7 +4,7 @@
  */
 
 /** Modules dont les écrans vivent dans l'espace CLM (sécurité avancée : groupes et unités de UI-20). */
-const MODULES_ESPACE_CLM = new Set(['clm', 'clm_ia', 'securite_avancee'])
+const MODULES_ESPACE_CLM = new Set(['clm', 'clm_ia', 'clm_negociation', 'securite_avancee'])
 
 export function espaceClmSeul(modules) {
   const actifs = modules.filter((m) => m.actif).map((m) => m.code)

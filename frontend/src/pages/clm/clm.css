@@ -248,3 +248,11 @@ h3.clm-bloc__titre { font-size: 16px; }
 /* Filtre de priorité de « Mes tâches » (AF-46) : sous les onglets, jamais plus large que l'écran à 390 px. */
 .clm-filtre-priorite { display: flex; flex-direction: column; gap: 4px; max-width: min(100%, 20rem); }
 .clm-filtre-priorite select { width: 100%; min-height: 44px; }
+
+/* RST-55 — Négociation : écarts lisibles sans la couleur (balises ins/del, soulignement, biffure, libellé masqué). */
+.clm-diff__texte { white-space: pre-wrap; overflow-wrap: anywhere; margin: 4px 0 8px; }
+.clm-diff__ajout { background: #d9f5e3; color: #145c33; text-decoration: underline; text-underline-offset: 2px; }
+.clm-diff__retrait { background: #fde8ea; color: #9a0b22; text-decoration: line-through; }
+.clm-clauses { margin: 0; padding-left: 22px; }
+.clm-clauses > li { margin: 0 0 12px; min-width: 0; }
+.clm-suggestion { background: #f3f6fb; border-left: 4px solid var(--bleu); }

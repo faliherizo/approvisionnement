@@ -50,11 +50,13 @@ public class PreuveService {
     private final ContexteClm ctx;
     private final AlertesExploitation alertes;
     private final CachetElectronique cachet;
+    private final List<PieceDePreuve> pieces;
 
     public PreuveService(DocumentTrousseRepository documents, InvitationRepository invitations, ParticipantRepository participants,
                          EvenementTrousseRepository evenements, FournisseurSignature fournisseur, Scelleur scelleur,
                          RenduDocuments rendu, LectureTrousse lecture, JournalClm journal, ContexteClm ctx, AlertesExploitation alertes,
-                         CachetElectronique cachet) {
+                         CachetElectronique cachet, List<PieceDePreuve> pieces) {
+        this.pieces = List.copyOf(pieces);
         this.documents = documents;
         this.invitations = invitations;
         this.participants = participants;
@@ -184,6 +186,7 @@ public class PreuveService {
                 "cachet", Map.of("titulaire", cachet.titulaire(), "normes", "CAdES (RFC 5652) · " + cachet.niveauPades() + " · PDF/A-2b · RFC 3161 si configuré",
                         "demonstration", cachet.demonstration()))));
         fichiers.put("journal.json", json(dossier.evenements()));
+        pieces.forEach(p -> fichiers.putAll(p.pieces(t)));
         fichiers.put("LISEZMOI.txt", lisezMoi(t).getBytes(StandardCharsets.UTF_8));
         Map<String, String> manifeste = new LinkedHashMap<>();
         fichiers.forEach((nom, contenu) -> manifeste.put(nom, ChaineScellee.sha256(contenu)));

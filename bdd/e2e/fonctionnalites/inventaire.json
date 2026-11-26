@@ -2,6 +2,60 @@
   "genere": "node outils/inventaire-ecrans.mjs — ne pas éditer",
   "ecrans": [
     {
+      "route": "/portail/negociation/:jeton",
+      "espace": "clm",
+      "composant": "PortailNegociation",
+      "fichiers": [
+        "pages/clm/PortailNegociation.jsx",
+        "i18n/I18nContext.jsx",
+        "components/LangSwitcher.jsx",
+        "pages/clm/commun.jsx",
+        "pages/clm/NegociationCommun.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /clm/portail/negociation/{}",
+          "methode": "GET",
+          "chemin": "/clm/portail/negociation/{}",
+          "type": "consulter",
+          "fonction": "message",
+          "sources": [
+            "pages/clm/PortailNegociation.jsx:31"
+          ]
+        },
+        {
+          "id": "GET /clm/portail/negociation/{}/comparaison",
+          "methode": "GET",
+          "chemin": "/clm/portail/negociation/{}/comparaison",
+          "type": "lister",
+          "fonction": "comparer",
+          "sources": [
+            "pages/clm/PortailNegociation.jsx:50"
+          ]
+        },
+        {
+          "id": "POST /clm/portail/negociation/{}/acceptation",
+          "methode": "POST",
+          "chemin": "/clm/portail/negociation/{}/acceptation",
+          "type": "ajouter",
+          "fonction": "accepter",
+          "sources": [
+            "pages/clm/PortailNegociation.jsx:46"
+          ]
+        },
+        {
+          "id": "POST /clm/portail/negociation/{}/propositions",
+          "methode": "POST",
+          "chemin": "/clm/portail/negociation/{}/propositions",
+          "type": "ajouter",
+          "fonction": "envoyer",
+          "sources": [
+            "pages/clm/PortailNegociation.jsx:38"
+          ]
+        }
+      ]
+    },
+    {
       "route": "/portail/:jeton",
       "espace": "clm",
       "composant": "Portail",
@@ -597,7 +651,9 @@
         "pages/clm/OngletDocuments.jsx",
         "pages/clm/OngletParticipants.jsx",
         "pages/clm/OngletParcours.jsx",
-        "pages/clm/OngletPreuve.jsx"
+        "pages/clm/OngletPreuve.jsx",
+        "pages/clm/OngletNegociation.jsx",
+        "pages/clm/NegociationCommun.jsx"
       ],
       "operations": [
         {
@@ -631,6 +687,16 @@
           ]
         },
         {
+          "id": "GET /clm/negociations/{}/comparaison",
+          "methode": "GET",
+          "chemin": "/clm/negociations/{}/comparaison",
+          "type": "lister",
+          "fonction": "comparer",
+          "sources": [
+            "pages/clm/OngletNegociation.jsx:83"
+          ]
+        },
+        {
           "id": "GET /clm/parametres",
           "methode": "GET",
           "chemin": "/clm/parametres",
@@ -647,7 +713,7 @@
           "type": "consulter",
           "fonction": "setOnglet",
           "sources": [
-            "pages/clm/TrousseDetail.jsx:32"
+            "pages/clm/TrousseDetail.jsx:33"
           ]
         },
         {
@@ -698,7 +764,17 @@
           "type": "lister",
           "fonction": "setOnglet",
           "sources": [
-            "pages/clm/TrousseDetail.jsx:33"
+            "pages/clm/TrousseDetail.jsx:34"
+          ]
+        },
+        {
+          "id": "GET /clm/trousses/{}/negociations",
+          "methode": "GET",
+          "chemin": "/clm/trousses/{}/negociations",
+          "type": "lister",
+          "fonction": "OngletNegociation",
+          "sources": [
+            "pages/clm/OngletNegociation.jsx:18"
           ]
         },
         {
@@ -789,7 +865,7 @@
           "type": "lister",
           "fonction": "useListe",
           "sources": [
-            "pages/clm/TrousseDetail.jsx:34",
+            "pages/clm/TrousseDetail.jsx:35",
             "pages/clm/OngletDocuments.jsx:25"
           ]
         },
@@ -800,7 +876,7 @@
           "type": "lister",
           "fonction": "useListe",
           "sources": [
-            "pages/clm/TrousseDetail.jsx:35"
+            "pages/clm/TrousseDetail.jsx:36"
           ]
         },
         {
@@ -820,7 +896,47 @@
           "type": "relancer",
           "fonction": "relancerEtape",
           "sources": [
-            "pages/clm/TrousseDetail.jsx:52"
+            "pages/clm/TrousseDetail.jsx:53"
+          ]
+        },
+        {
+          "id": "POST /clm/negociations/{}/annulation",
+          "methode": "POST",
+          "chemin": "/clm/negociations/{}/annulation",
+          "type": "ajouter",
+          "fonction": "annuler",
+          "sources": [
+            "pages/clm/OngletNegociation.jsx:89"
+          ]
+        },
+        {
+          "id": "POST /clm/negociations/{}/cloture",
+          "methode": "POST",
+          "chemin": "/clm/negociations/{}/cloture",
+          "type": "ajouter",
+          "fonction": "clore",
+          "sources": [
+            "pages/clm/OngletNegociation.jsx:86"
+          ]
+        },
+        {
+          "id": "POST /clm/negociations/{}/decisions",
+          "methode": "POST",
+          "chemin": "/clm/negociations/{}/decisions",
+          "type": "ajouter",
+          "fonction": "enregistrer",
+          "sources": [
+            "pages/clm/OngletNegociation.jsx:141"
+          ]
+        },
+        {
+          "id": "POST /clm/negociations/{}/suggestions",
+          "methode": "POST",
+          "chemin": "/clm/negociations/{}/suggestions",
+          "type": "ajouter",
+          "fonction": "suggerer",
+          "sources": [
+            "pages/clm/OngletNegociation.jsx:84"
           ]
         },
         {
@@ -830,7 +946,7 @@
           "type": "ajouter",
           "fonction": "action",
           "sources": [
-            "pages/clm/TrousseDetail.jsx:41"
+            "pages/clm/TrousseDetail.jsx:42"
           ]
         },
         {
@@ -872,6 +988,16 @@
           "sources": [
             "pages/clm/OngletDocuments.jsx:87",
             "pages/clm/OngletDocuments.jsx:88"
+          ]
+        },
+        {
+          "id": "POST /clm/trousses/{}/negociations",
+          "methode": "POST",
+          "chemin": "/clm/trousses/{}/negociations",
+          "type": "ajouter",
+          "fonction": "ouvrir",
+          "sources": [
+            "pages/clm/OngletNegociation.jsx:56"
           ]
         },
         {

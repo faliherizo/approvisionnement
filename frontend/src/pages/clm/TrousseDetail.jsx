@@ -12,8 +12,9 @@ import OngletDocuments from './OngletDocuments.jsx'
 import OngletParticipants from './OngletParticipants.jsx'
 import OngletParcours, { libelleAffectation } from './OngletParcours.jsx'
 import OngletPreuve from './OngletPreuve.jsx'
+import OngletNegociation from './OngletNegociation.jsx'
 
-const ONGLETS = ['resume', 'documents', 'participants', 'parcours', 'historique', 'preuve']
+const ONGLETS = ['resume', 'documents', 'participants', 'parcours', 'negociation', 'historique', 'preuve']
 
 /** UI-04 — Détail d'une trousse : bandeau, chronologie, alertes, onglets et actions permises selon état et rôle. */
 function Contenu() {
@@ -68,6 +69,8 @@ function Contenu() {
     { id: 'documents', libelle: t('clm.dt.documents', { n: d.documents.filter((x) => !['REMPLACE', 'RETIRE'].includes(x.statut)).length }) },
     { id: 'participants', libelle: t('clm.dt.participants', { n: d.participants.length }) },
     { id: 'parcours', libelle: t('clm.dt.parcours') },
+    // RST-55 : option souscrite à part (« clm_negociation »).
+    ...(moduleActif('clm_negociation') ? [{ id: 'negociation', libelle: t('clm.dt.negociation') }] : []),
     { id: 'historique', libelle: t('clm.dt.historique') },
     { id: 'preuve', libelle: t('clm.dt.preuve') },
   ]
@@ -167,6 +170,9 @@ function Contenu() {
           </Panneau>
           <Panneau id="parcours" actif={onglet}>
             <OngletParcours trousse={d} peutDefinir={peut('PARCOURS')} peutReassigner={peut('REASSIGNER') || peut('PARCOURS')} onChange={recharger} />
+          </Panneau>
+          <Panneau id="negociation" actif={onglet}>
+            <OngletNegociation trousseId={r.id} peutOuvrir={peut('MODIFIER')} onChange={recharger} />
           </Panneau>
           <Panneau id="historique" actif={onglet}>
             <Message erreur={historique.erreur} onReessayer={historique.recharger} />

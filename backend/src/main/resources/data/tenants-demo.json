@@ -4,7 +4,7 @@
     "titre": "Investissement Québec",
     "sousTitre": "Contrats et signature électronique — AO 2026-6370-0005",
     "motDePasse": "Passw0rd!",
-    "modules": { "clm": true, "clm_ia": true, "redaction": false },
+    "modules": { "clm": true, "clm_ia": true, "clm_negociation": true, "redaction": false },
     "listes": {
       "CLM_UNITE": [
         { "code": "FINANCEMENT_ENTREPRISES", "libelle": "Financement des entreprises" },

@@ -71,12 +71,14 @@ public class TrousseService {
     private final ContexteClm ctx;
     private final NumerotationReferences numerotation;
     private final LecturePaginee pagination;
+    private final List<ConditionLancement> conditionsLancement;
 
     public TrousseService(TrousseRepository trousses, ParticipantRepository participants, EtapeTrousseRepository etapes,
                           DocumentTrousseRepository documents, InvitationRepository invitations, EvenementTrousseRepository evenements,
                           ModeleContratRepository modeles, ParcoursService parcours, SalesforceService salesforce, DiffusionStatut diffusion, JournalClm journal,
                           LectureTrousse lecture, ParametresClmService parametres, ListesClm listes, ContexteClm ctx,
-                          NumerotationReferences numerotation, LecturePaginee pagination) {
+                          NumerotationReferences numerotation, LecturePaginee pagination, List<ConditionLancement> conditionsLancement) {
+        this.conditionsLancement = List.copyOf(conditionsLancement);
         this.numerotation = numerotation;
         this.pagination = pagination;
         this.trousses = trousses;
@@ -600,6 +602,7 @@ public class TrousseService {
         if (courants.isEmpty()) {
             erreurs.add("Ajoutez au moins un document.");
         }
+        conditionsLancement.forEach(c -> c.empechement(t).ifPresent(erreurs::add));
         if (courants.stream().anyMatch(d -> d.getAnalyse() != DocumentTrousse.Analyse.PROPRE)) {
             erreurs.add("Analyse antivirus en attente ou en échec sur un document.");
         }

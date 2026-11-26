@@ -39,6 +39,7 @@ public class ModuleSeeder implements CommandLineRunner {
         seed("paie", "Paie & retenues Revenu Québec (RRQ, AE, RQAP, impôt)", "RH", 80, null);
         seed("clm", "Contrats & signature électronique (trousses, preuve, Salesforce)", "CLM", 90, null);
         seed("clm_ia", "Option CLM/IA (analyse de contrats, tarifée à part)", "CLM", 95, "clm");
+        seed("clm_negociation", "Option CLM — négociation assistée avec un tiers (tarifée à part)", "CLM", 96, "clm");
     }
 
     private void seed(String code, String nom, String famille, int ordre, String requiert) {

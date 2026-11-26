@@ -6,6 +6,7 @@
     { "motif": "^GET /api/auth/config$", "raison": "Options de connexion (SSO actif ou non).", "protection": "Aucune donnée personnelle." },
     { "motif": "^(GET|POST) /api/auth/(oidc|saml)/", "raison": "Flux d'authentification unique OIDC et SAML.", "protection": "PKCE, état et nonce (OIDC), signature des assertions (SAML)." },
     { "motif": "^(GET|POST) /api/signature/", "raison": "Signature externe par lien.", "protection": "Jeton à usage limité, imprévisible, expirant." },
+    { "motif": "^(GET|POST) /api/clm/portail/negociation/", "raison": "Portail de la contrepartie externe pour la négociation clause par clause (IQ, IA-05, RST-55, ADR-038).", "protection": "Jeton aléatoire du lien (empreinte seule conservée), expirant, inopérant une fois la négociation close ou annulée ; option clm_negociation exigée pour l'organisation du jeton ; ni suggestion interne ni identité des décideurs exposées." },
     { "motif": "^(GET|POST|PUT) /api/clm/portail/", "raison": "Portail du signataire externe (IQ).", "protection": "Jeton d'invitation et vérification d'identité (code)." },
     { "motif": "^(GET|POST) /api/clm/integration/mcp$", "raison": "Connecteur MCP d'un assistant d'IA (IQ-A-09, ADR-023).", "protection": "Jeton client credentials d'un client d'intégration ; outils en lecture seule bornés à ce client ; origine étrangère refusée." },
     { "motif": " /api/clm/integration/", "raison": "API d'intégration entrante (Workday, Salesforce).", "protection": "Jeton OAuth client credentials vérifié par le contrôleur." },

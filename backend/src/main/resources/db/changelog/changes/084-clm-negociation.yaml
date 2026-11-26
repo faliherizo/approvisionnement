@@ -1,0 +1,87 @@
+databaseChangeLog:
+  - changeSet:
+      id: 084-1-clm-negociation
+      author: levis
+      comment: "Annexe 10 IQ, IA-05 (RST-55, ADR-038) : cycle de négociation d'une trousse avec une contrepartie externe ; seule l'empreinte du jeton du lien est conservée."
+      changes:
+        - createTable:
+            tableName: clm_negociation
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: trousse_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: contrepartie_nom, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: contrepartie_courriel, type: VARCHAR(254), constraints: { nullable: false } }
+              - column: { name: contrepartie_entreprise, type: VARCHAR(200) }
+              - column: { name: langue, type: VARCHAR(2), constraints: { nullable: false } }
+              - column: { name: jeton_hash, type: VARCHAR(64), constraints: { nullable: false, unique: true, uniqueConstraintName: uk_clm_nego_jeton } }
+              - column: { name: expire_le, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: etat, type: VARCHAR(22), constraints: { nullable: false } }
+              - column: { name: version_courante, type: INT, constraints: { nullable: false } }
+              - column: { name: tour, type: INT, constraints: { nullable: false } }
+              - column: { name: ouverte_par, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: ouverte_le, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: terminee_par, type: VARCHAR(150) }
+              - column: { name: terminee_le, type: TIMESTAMP }
+              - column: { name: motif_fin, type: VARCHAR(1000) }
+              - column: { name: verrou, type: BIGINT, defaultValueNumeric: 0, constraints: { nullable: false } }
+        - createIndex:
+            tableName: clm_negociation
+            indexName: ix_clm_nego_trousse
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: trousse_id }
+  - changeSet:
+      id: 084-2-clm-negociation-version
+      author: levis
+      comment: "Versions numérotées d'une négociation : clauses figées et leur empreinte SHA-256, aussi scellée au journal de la trousse."
+      changes:
+        - createTable:
+            tableName: clm_negociation_version
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: negociation_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: numero, type: INT, constraints: { nullable: false } }
+              - column: { name: clauses_json, type: VARCHAR(200000), constraints: { nullable: false } }
+              - column: { name: empreinte, type: VARCHAR(64), constraints: { nullable: false } }
+              - column: { name: auteur, type: VARCHAR(150), constraints: { nullable: false } }
+              - column: { name: motif, type: VARCHAR(500), constraints: { nullable: false } }
+              - column: { name: cree_le, type: TIMESTAMP, constraints: { nullable: false } }
+        - addUniqueConstraint:
+            tableName: clm_negociation_version
+            columnNames: negociation_id, numero
+            constraintName: uk_clm_nego_version
+  - changeSet:
+      id: 084-3-clm-negociation-proposition
+      author: levis
+      comment: "Propositions de la contrepartie clause par clause, décision humaine (acceptée, refusée, contre-proposée) et suggestion de l'IA ou des règles, jamais appliquée d'office."
+      changes:
+        - createTable:
+            tableName: clm_negociation_proposition
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: tenant_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: negociation_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: tour, type: INT, constraints: { nullable: false } }
+              - column: { name: cle_clause, type: VARCHAR(80), constraints: { nullable: false } }
+              - column: { name: titre_clause, type: VARCHAR(250), constraints: { nullable: false } }
+              - column: { name: texte_base, type: VARCHAR(20000), constraints: { nullable: false } }
+              - column: { name: texte_propose, type: VARCHAR(20000), constraints: { nullable: false } }
+              - column: { name: commentaire, type: VARCHAR(2000) }
+              - column: { name: proposee_le, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: decision, type: VARCHAR(16), constraints: { nullable: false } }
+              - column: { name: texte_contre, type: VARCHAR(20000) }
+              - column: { name: justification, type: VARCHAR(2000) }
+              - column: { name: decide_par, type: VARCHAR(150) }
+              - column: { name: decide_le, type: TIMESTAMP }
+              - column: { name: suggestion_position, type: VARCHAR(16) }
+              - column: { name: suggestion_resume, type: VARCHAR(4000) }
+              - column: { name: suggestion_source, type: VARCHAR(120) }
+              - column: { name: suggeree_le, type: TIMESTAMP }
+        - createIndex:
+            tableName: clm_negociation_proposition
+            indexName: ix_clm_nego_prop
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: negociation_id }

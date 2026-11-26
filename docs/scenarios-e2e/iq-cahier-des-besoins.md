@@ -8,7 +8,7 @@ gestes). **Préparé par l'API** : la situation est mise en place par l'API et l
 un tel scénario ne détecte pas un défaut de l'écran. Les scénarios `E2E-CB-IQ-*` (`cahier-iq.json`) sont écrits
 besoin par besoin, sans préparation par l'API.
 
-**Couverture** : 62 / 66 exigences fonctionnelles du cahier démontrées par un parcours d'interface ;
+**Couverture** : 63 / 66 exigences fonctionnelles du cahier démontrées par un parcours d'interface ;
 4 exigences à vérification documentaire.
 
 ## Section 1.3
@@ -18,7 +18,7 @@ besoin par besoin, sans préparation par l'API.
 | IQ-C-01 | Gérer le cycle de validation, d'approbation et de signature, orchestration comprise | E2E-CB-IQ-04 ✅ | E2E-IQ-06 ✅ |
 | IQ-C-02 | Contexte multi-juridictionnel, solution conforme, modulaire, évolutive | — vérification documentaire | — |
 | IQ-C-03 | Service de signature appelable, distinct de l'orchestration (couplage lâche) | **aucun** | E2E-IQ-11 ✅, E2E-IQ-19 ✅ |
-| IQ-C-04 | Capacités avancées du cycle de vie des contrats | **aucun** | E2E-IQ-32 ✅ |
+| IQ-C-04 | Capacités avancées du cycle de vie des contrats | E2E-AX-IQ-30 ✅ | E2E-AX-IQ-31 ✅, E2E-IQ-32 ✅ |
 
 ## Section 1.4.3
 

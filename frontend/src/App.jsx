@@ -76,6 +76,7 @@ import OptionsClm from './pages/clm/OptionsClm.jsx'
 import UtilisateursClm, { GroupesClm, SsoClm } from './pages/clm/UtilisateursClm.jsx'
 import ClmShell from './pages/clm/ClmShell.jsx'
 import Portail from './pages/clm/Portail.jsx'
+import PortailNegociation from './pages/clm/PortailNegociation.jsx'
 import { usePeutInitier } from './pages/clm/commun.jsx'
 
 function ProtectedRoute({ children }) {
@@ -257,7 +258,12 @@ export default function App() {
   const location = useLocation()
   // Portail du signataire : parcours autonome, sans le gabarit de l'application interne.
   if (location.pathname.startsWith('/portail/')) {
-    return <Routes><Route path="/portail/:jeton" element={<Portail />} /></Routes>
+    return (
+      <Routes>
+        <Route path="/portail/negociation/:jeton" element={<PortailNegociation />} />
+        <Route path="/portail/:jeton" element={<Portail />} />
+      </Routes>
+    )
   }
   // Module CLM : gabarit des maquettes UI-01 à UI-24 (bandeau, recherche globale, navigation latérale).
   if (location.pathname === '/clm' || location.pathname.startsWith('/clm/')) {

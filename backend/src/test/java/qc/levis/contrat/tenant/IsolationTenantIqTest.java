@@ -90,7 +90,7 @@ class IsolationTenantIqTest {
     }
 
     @Test
-    void chaque_profil_iq_n_a_que_le_module_clm_et_son_option() throws Exception {
+    void chaque_profil_iq_n_a_que_le_module_clm_et_ses_options() throws Exception {
         for (String[] compte : PROFILS.values()) {
             Set<String> actifs = new HashSet<>();
             for (JsonNode m : lire("/api/modules", login(compte[0]))) {
@@ -98,7 +98,7 @@ class IsolationTenantIqTest {
                     actifs.add(m.get("code").asText());
                 }
             }
-            assertEquals(Set.of("clm", "clm_ia"), actifs, compte[0]);
+            assertEquals(Set.of("clm", "clm_ia", "clm_negociation"), actifs, compte[0]);
         }
     }
 

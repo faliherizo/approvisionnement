@@ -222,6 +222,22 @@ public class DocumentClmService {
         return vue;
     }
 
+    /**
+     * RST-55 : à la clôture d'une négociation, le texte négocié devient une nouvelle version du contrat de la trousse ; le
+     * parcours de validation et de signature porte dès lors sur cette version.
+     */
+    @Transactional
+    public ClmDto.DocumentVue deposerVersionNegociee(Trousse t, String texte, String motif, String auteur) {
+        t.exigerModifiable();
+        List<DocumentTrousse> precedentes = documents.findByTenantIdAndTrousseIdAndCleDocumentOrderByVersionDesc(t.getTenantId(), t.getId(), CLE_GENERE);
+        precedentes.stream().filter(DocumentTrousse::estCourant).forEach(p -> {
+            p.setStatut(DocumentTrousse.Statut.REMPLACE);
+            documents.save(p);
+        });
+        int version = precedentes.isEmpty() ? 1 : precedentes.get(0).getVersion() + 1;
+        return enregistrer(t, CLE_GENERE, version, t.getReference() + "-negocie.pdf", rendu.genererPdf(t.getTitre(), texte), auteur, motif);
+    }
+
     /** Document produit et précision portée au motif de version (gabarit Word, rendu simplifié). */
     private record Production(byte[] contenu, String precision) {
     }
