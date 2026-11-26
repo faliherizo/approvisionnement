@@ -484,6 +484,7 @@ public class ParcoursService {
                 d.getType(), signe, "systeme", "Version signée (source v" + d.getVersion() + " · " + d.getEmpreinte().substring(0, 12) + ")", maintenant);
         finale.setStatut(DocumentTrousse.Statut.SIGNE);
         finale.setAnalyse(DocumentTrousse.Analyse.PROPRE);
+        finale.reprendreEtiquettes(d);
         documents.save(finale);
     }
 

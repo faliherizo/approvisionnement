@@ -392,3 +392,20 @@ de repli) : aucun second client Graph.
 - **Reprise** : le planificateur du module relaie les dépôts dus (recul exponentiel, abandon après 8 essais) ; suivi et
   relance : `GET /api/clm/admin/integrations/m365/depots`, `POST …/depots/{id}/relancer`, `POST …/relayer`.
 - **Traçabilité** : chaque dépôt réussi est consigné au journal scellé de la trousse (`DEPOT_M365`).
+
+## 9. Module Contrats et signature : étiquettes Microsoft Purview (Annexe 10 d'IQ, SEC-27)
+
+Décision : `docs/adr/ADR-036-etiquettes-microsoft-purview.md`.
+
+- **Écran** : Contrats et signature → Administration → Étiquettes Purview (`/clm/admin/purview`), administration
+  d'affaires ou technique. On choisit, dans le catalogue du locataire, l'étiquette de sensibilité et l'étiquette de
+  rétention par défaut, et au besoin par type de contrat.
+- **Effet** : chaque document déposé ou produit reçoit les étiquettes de la politique applicable et les garde (onglet
+  Documents → métadonnées) ; la version signée reprend celles de sa source ; après le dépôt SharePoint/OneDrive (§ 8),
+  les étiquettes sont apposées au fichier déposé (colonne « Emplacement » du suivi des dépôts, journal `ETIQUETTE_PURVIEW`).
+  La destruction d'une trousse n'intervient jamais avant la fin de la rétention de l'étiquette.
+- **Simulé par défaut** : catalogue représentatif et apposition consignée, sans appel externe.
+- **Réel** : profil `purview` (cumulable : `--spring.profiles.active=prod,m365,purview`). Il emploie la connexion
+  Microsoft 365 de l'organisation (même application Entra ID), avec les permissions d'application
+  `InformationProtectionPolicy.Read.All`, `RecordsManagement.Read.All`, `Files.ReadWrite.All` et `Sites.ReadWrite.All`
+  (consentement administrateur). `assignSensitivityLabel` est une API Graph facturée à l'usage.

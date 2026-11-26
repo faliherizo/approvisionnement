@@ -852,7 +852,7 @@
       "profil": "administration technique IQ",
       "etapes": [
         {
-          "aller": "/clm/admin/utilisateurs"
+          "aller": "/clm/admin/sso"
         },
         {
           "voir": [
@@ -900,13 +900,15 @@
                 "statut": 201,
                 "capturer": {
                   "groupe": "$.id"
-                }
+                },
+                "profil": "administration d'affaires IQ"
               },
               {
                 "appel": "POST /api/clm/admin/groupes/${groupe}/membres",
                 "corps": {
                   "courriel": "droits.${unique}@iq.example"
-                }
+                },
+                "profil": "administration d'affaires IQ"
               },
               {
                 "appel": "GET /scim/v2/Users/${uid}",
@@ -947,6 +949,215 @@
                   {
                     "chemin": "$.attributes[?name=roles].mutability",
                     "egalTexte": "readOnly"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "ecranConforme": true
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-21",
+      "titre": "SEC-27 (RST-53) : l'administration d'affaires choisit, dans le catalogue Purview du locataire, l'étiquette de sensibilité et de rétention d'un type de contrat ; le document déposé la porte et la conserve, puis la politique est retirée",
+      "exigences": [
+        "IQ-C-66",
+        "IQ-D-20"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "aller": "/clm/admin/purview"
+        },
+        {
+          "voirTitre": "Étiquettes Microsoft Purview"
+        },
+        {
+          "choisir": {
+            "Type de contrat": "Convention d'aide financière"
+          }
+        },
+        {
+          "choisir": {
+            "Étiquette de sensibilité": "Confidentiel"
+          }
+        },
+        {
+          "choisir": {
+            "Étiquette de rétention": "Contrats - 7 ans (2557 jours)"
+          }
+        },
+        {
+          "cliquer": "Enregistrer la politique"
+        },
+        {
+          "voir": "Politique « Convention d'aide financière » enregistrée."
+        },
+        {
+          "voir": [
+            "Confidentiel",
+            "Contrats - 7 ans (2557 jours)"
+          ]
+        },
+        {
+          "preparer": {
+            "description": "L'initiateur dépose un document dans une trousse de ce type : il reçoit les étiquettes de la politique",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Purview ${unique}",
+                  "risque": "FAIBLE",
+                  "typeContrat": "SUBVENTION"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "profil": "initiateur IQ",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "purview-${unique}.pdf",
+                    "type": "application/pdf"
+                  }
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.etiquetteSensibilite",
+                    "egalTexte": "Confidentiel"
+                  },
+                  {
+                    "chemin": "$.etiquetteRetention",
+                    "egalTexte": "Contrats - 7 ans"
+                  }
+                ]
+              },
+              {
+                "appel": "GET /api/clm/trousses/${trousse}",
+                "profil": "initiateur IQ",
+                "verifier": [
+                  {
+                    "chemin": "$.documents[0].etiquetteSensibilite",
+                    "egalTexte": "Confidentiel"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "cliquer": "Retirer — Convention d'aide financière"
+        },
+        {
+          "voir": "Politique « Convention d'aide financière » retirée."
+        }
+      ]
+    },
+    {
+      "id": "E2E-AX-IQ-25",
+      "titre": "SEC-28 (RST-54) : les documents d'IQ sont chiffrés par une clé dédiée à l'organisation ; l'administration technique pivote la clé sans interruption puis réenveloppe les documents, qui restent lisibles",
+      "exigences": [
+        "IQ-C-07",
+        "IQ-D-20"
+      ],
+      "profil": "administration technique IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Un document déposé par l'initiateur : la première écriture crée la clé de données de l'organisation",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Chiffrement ${unique}",
+                  "risque": "FAIBLE"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "profil": "initiateur IQ",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "chiffre-${unique}.pdf",
+                    "type": "application/pdf"
+                  }
+                },
+                "capturer": {
+                  "document": "$.id"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/admin/chiffrement"
+        },
+        {
+          "voirTitre": "Chiffrement au repos"
+        },
+        {
+          "voir": [
+            "Clé de l’organisation",
+            "Clé maîtresse active",
+            "Active"
+          ]
+        },
+        {
+          "cliquer": "Pivoter la clé"
+        },
+        {
+          "voir": "Rotation effectuée"
+        },
+        {
+          "voir": "Retirée (lecture seule)"
+        },
+        {
+          "preparer": {
+            "description": "Après la rotation, le document chiffré par l'ancienne version reste lisible",
+            "etapes": [
+              {
+                "appel": "GET /api/clm/trousses/${trousse}/documents/${document}/contenu",
+                "profil": "initiateur IQ",
+                "verifier": [
+                  {
+                    "texte": "%PDF"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "cliquer": "Réenvelopper les documents"
+        },
+        {
+          "voir": "Réenveloppement :"
+        },
+        {
+          "preparer": {
+            "description": "Après le réenveloppement, le document se lit toujours en clair par l'API",
+            "etapes": [
+              {
+                "appel": "GET /api/clm/trousses/${trousse}/documents/${document}/contenu",
+                "profil": "initiateur IQ",
+                "verifier": [
+                  {
+                    "texte": "%PDF"
                   }
                 ]
               }

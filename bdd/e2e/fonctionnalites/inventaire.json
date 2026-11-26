@@ -414,7 +414,7 @@
           "type": "ajouter",
           "fonction": "reviser",
           "sources": [
-            "pages/clm/OngletDocuments.jsx:242"
+            "pages/clm/OngletDocuments.jsx:245"
           ]
         },
         {
@@ -789,7 +789,7 @@
           "type": "ajouter",
           "fonction": "reviser",
           "sources": [
-            "pages/clm/OngletDocuments.jsx:242"
+            "pages/clm/OngletDocuments.jsx:245"
           ]
         },
         {
@@ -1811,6 +1811,144 @@
           "fonction": "enregistrer",
           "sources": [
             "components/IntegrationM365Manager.jsx:36"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/admin/chiffrement",
+      "espace": "clm",
+      "composant": "ChiffrementClm",
+      "fichiers": [
+        "pages/clm/ChiffrementClm.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "GET /clm/admin/chiffrement",
+          "methode": "GET",
+          "chemin": "/clm/admin/chiffrement",
+          "type": "lister",
+          "fonction": "Chiffrement",
+          "sources": [
+            "pages/clm/ChiffrementClm.jsx:14"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/chiffrement/pivoter",
+          "methode": "POST",
+          "chemin": "/clm/admin/chiffrement/pivoter",
+          "type": "ajouter",
+          "fonction": "pivoter",
+          "sources": [
+            "pages/clm/ChiffrementClm.jsx:24"
+          ]
+        },
+        {
+          "id": "POST /clm/admin/chiffrement/reenvelopper",
+          "methode": "POST",
+          "chemin": "/clm/admin/chiffrement/reenvelopper",
+          "type": "ajouter",
+          "fonction": "reenvelopper",
+          "sources": [
+            "pages/clm/ChiffrementClm.jsx:26"
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/clm/admin/purview",
+      "espace": "clm",
+      "composant": "PurviewClm",
+      "fichiers": [
+        "pages/clm/PurviewClm.jsx",
+        "i18n/I18nContext.jsx",
+        "pages/clm/commun.jsx",
+        "hooks/useModules.js",
+        "pages/clm/gabarit.jsx"
+      ],
+      "operations": [
+        {
+          "id": "DELETE /clm/admin/purview/politiques/{}",
+          "methode": "DELETE",
+          "chemin": "/clm/admin/purview/politiques/{}",
+          "type": "supprimer",
+          "fonction": "retirer",
+          "sources": [
+            "pages/clm/PurviewClm.jsx:37"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/purview/catalogue",
+          "methode": "GET",
+          "chemin": "/clm/admin/purview/catalogue",
+          "type": "lister",
+          "fonction": "Purview",
+          "sources": [
+            "pages/clm/PurviewClm.jsx:18"
+          ]
+        },
+        {
+          "id": "GET /clm/admin/purview/politiques",
+          "methode": "GET",
+          "chemin": "/clm/admin/purview/politiques",
+          "type": "lister",
+          "fonction": "Purview",
+          "sources": [
+            "pages/clm/PurviewClm.jsx:19"
+          ]
+        },
+        {
+          "id": "GET /modules",
+          "methode": "GET",
+          "chemin": "/modules",
+          "type": "lister",
+          "fonction": "charger",
+          "sources": [
+            "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/commun.jsx:149"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_TYPE_CONTRAT",
+          "methode": "GET",
+          "chemin": "/reference/CLM_TYPE_CONTRAT",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/PurviewClm.jsx:17"
+          ]
+        },
+        {
+          "id": "PUT /clm/admin/purview/politiques",
+          "methode": "PUT",
+          "chemin": "/clm/admin/purview/politiques",
+          "type": "modifier",
+          "fonction": "definir",
+          "sources": [
+            "pages/clm/PurviewClm.jsx:35"
           ]
         }
       ]

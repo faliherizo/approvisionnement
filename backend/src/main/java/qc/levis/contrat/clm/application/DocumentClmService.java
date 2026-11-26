@@ -52,11 +52,14 @@ public class DocumentClmService {
     private final GabaritWordRepository gabarits;
     private final ConversionPdf conversion;
 
+    private final EtiquetagePurviewService purview;
+
     public DocumentClmService(DocumentTrousseRepository documents, ModeleContratRepository modeles, AnalyseAntivirus antivirus,
                               RenduDocuments rendu, SourceAleatoire alea, TrousseService trousses, LectureTrousse lecture,
                               JournalClm journal, ParametresClmService parametres, ParcoursService parcours, ContexteClm ctx,
-                              GabaritWordRepository gabarits, ConversionPdf conversion) {
+                              GabaritWordRepository gabarits, ConversionPdf conversion, EtiquetagePurviewService purview) {
         this.documents = documents;
+        this.purview = purview;
         this.gabarits = gabarits;
         this.conversion = conversion;
         this.modeles = modeles;
@@ -104,6 +107,7 @@ public class DocumentClmService {
         DocumentTrousse d = new DocumentTrousse(t.getTenantId(), t.getId(), cle, version, FormatDocument.nomSur(nomFichier), type,
                 contenu, auteur, motif, ctx.maintenant());
         d.setAnalyse(antivirus.estSain(contenu) ? DocumentTrousse.Analyse.PROPRE : DocumentTrousse.Analyse.INFECTE);
+        purview.etiqueter(t, d);
         if (t.enTraitement()) {
             // En cours de parcours, le document part aussitôt aux intervenants : un fichier non sain est refusé d'emblée.
             if (d.getAnalyse() != DocumentTrousse.Analyse.PROPRE) {

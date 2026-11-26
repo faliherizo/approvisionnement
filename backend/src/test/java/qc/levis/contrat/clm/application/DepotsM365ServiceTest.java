@@ -50,7 +50,8 @@ class DepotsM365ServiceTest {
     private final PorteeTenantMemoire portee = new PorteeTenantMemoire();
     private final ContexteClm ctx = new ContexteClm(mock(PerimetreUtilisateur.class), portee, new ObjectMapper(),
             Clock.fixed(T0, ZoneOffset.UTC));
-    private final DepotsM365Service service = new DepotsM365Service(configurations, depots, documents, trousses, preuves, port, journal, ctx);
+    private final DepotsM365Service service = new DepotsM365Service(configurations, depots, documents, trousses, preuves, port, journal, ctx,
+            mock(EtiquetagePurviewService.class));
 
     private void configurer(boolean actif, boolean preuve, boolean avis) {
         DiffusionM365 c = new DiffusionM365(TENANT);

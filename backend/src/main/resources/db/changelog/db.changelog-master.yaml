@@ -157,3 +157,7 @@ databaseChangeLog:
       file: db/changelog/changes/078-clm-acces-soutien.yaml
   - include:
       file: db/changelog/changes/079-clm-rapport.yaml
+  - include:
+      file: db/changelog/changes/081-clm-cle-organisation.yaml
+  - include:
+      file: db/changelog/changes/082-clm-purview.yaml

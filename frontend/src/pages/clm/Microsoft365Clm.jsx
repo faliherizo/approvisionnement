@@ -88,7 +88,8 @@ function Microsoft365() {
                       <td data-label={t('clm.m365.nature')}>{t(`clm.m365.nature.${d.nature}`)}</td>
                       <td data-label={t('clm.col.statut')}><Statut valeur={d.statut} /></td>
                       <td data-label={t('clm.col.tentatives')}>{d.tentatives}</td>
-                      <td data-label={t('clm.m365.emplacement')} className="clm-casse">{d.url || d.derniereErreur || '—'}</td>
+                      <td data-label={t('clm.m365.emplacement')} className="clm-casse">{d.url || d.derniereErreur || '—'}
+                        {d.etiquette && <><br /><span className="muted">{t('clm.purview.etiquettes')} : {d.etiquette}</span></>}</td>
                       <td data-label={t('clm.col.actions')}>
                         {d.statut !== 'DEPOSE' && (
                           <button type="button" className="lien" aria-label={t('clm.m365.relancerDepot', { ref: d.reference, nature: t(`clm.m365.nature.${d.nature}`) })}
