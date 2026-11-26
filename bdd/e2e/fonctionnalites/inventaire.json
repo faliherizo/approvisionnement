@@ -414,7 +414,7 @@
           "type": "ajouter",
           "fonction": "reviser",
           "sources": [
-            "pages/clm/OngletDocuments.jsx:245"
+            "pages/clm/OngletDocuments.jsx:246"
           ]
         },
         {
@@ -789,7 +789,7 @@
           "type": "ajouter",
           "fonction": "reviser",
           "sources": [
-            "pages/clm/OngletDocuments.jsx:245"
+            "pages/clm/OngletDocuments.jsx:246"
           ]
         },
         {
@@ -2486,7 +2486,7 @@
           "type": "lister",
           "fonction": "Contenu",
           "sources": [
-            "pages/clm/JournalClm.jsx:58"
+            "pages/clm/JournalClm.jsx:97"
           ]
         },
         {
@@ -2496,7 +2496,7 @@
           "type": "télécharger",
           "fonction": "exporter",
           "sources": [
-            "pages/clm/JournalClm.jsx:63"
+            "pages/clm/JournalClm.jsx:102"
           ]
         },
         {
@@ -2527,6 +2527,26 @@
           "fonction": "charger",
           "sources": [
             "hooks/useModules.js:14"
+          ]
+        },
+        {
+          "id": "GET /reference/{}",
+          "methode": "GET",
+          "chemin": "/reference/{}",
+          "type": "consulter",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/commun.jsx:165"
+          ]
+        },
+        {
+          "id": "GET /reference/CLM_UNITE",
+          "methode": "GET",
+          "chemin": "/reference/CLM_UNITE",
+          "type": "lister",
+          "fonction": "useListe",
+          "sources": [
+            "pages/clm/JournalClm.jsx:51"
           ]
         }
       ]

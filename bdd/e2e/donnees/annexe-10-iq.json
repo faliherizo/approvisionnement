@@ -1544,6 +1544,130 @@
           "nePasVoir": "Tâche critique ${unique}"
         }
       ]
+    },
+    {
+      "id": "E2E-AX-IQ-11",
+      "titre": "AF-49 (RST-51) : l'administration d'affaires consulte les documents et les pages signés de la période, au total, par unité et par mois, puis exporte le relevé en CSV et en Excel",
+      "exigences": [
+        "IQ-A-22"
+      ],
+      "profil": "administration d'affaires IQ",
+      "etapes": [
+        {
+          "preparer": {
+            "description": "Trousse de l'unité Financement des entreprises, un PDF d'une page, validée puis terminée : sa version signée est comptée",
+            "etapes": [
+              {
+                "appel": "POST /api/clm/trousses",
+                "profil": "initiateur IQ",
+                "corps": {
+                  "titre": "Pages ${unique}",
+                  "risque": "FAIBLE",
+                  "unite": "FINANCEMENT_ENTREPRISES"
+                },
+                "capturer": {
+                  "trousse": "$.resume.id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/documents",
+                "profil": "initiateur IQ",
+                "multipart": {
+                  "fichier": {
+                    "fichier": "pdf",
+                    "nom": "pages-${unique}.pdf",
+                    "type": "application/pdf"
+                  }
+                },
+                "verifier": [
+                  {
+                    "chemin": "$.pages",
+                    "egal": 1
+                  }
+                ]
+              },
+              {
+                "appel": "PUT /api/clm/trousses/${trousse}/parcours",
+                "profil": "initiateur IQ",
+                "corps": [
+                  {
+                    "cle": "v1",
+                    "libelle": "Validation",
+                    "phase": 1,
+                    "type": "VALIDATION",
+                    "affectations": [
+                      {
+                        "type": "UTILISATEUR",
+                        "valeur": "validateur@iq.example"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "appel": "POST /api/clm/trousses/${trousse}/lancer",
+                "profil": "initiateur IQ",
+                "corps": {},
+                "capturer": {
+                  "etape": "$.etapes[0].id"
+                }
+              },
+              {
+                "appel": "POST /api/clm/etapes/${etape}/decider",
+                "profil": "validateur IQ",
+                "corps": {
+                  "decision": "APPROUVE"
+                }
+              },
+              {
+                "appel": "GET /api/clm/admin/utilisation?du=${aujourdhui}&au=${demain}",
+                "verifier": [
+                  {
+                    "chemin": "$.signes.parUnite",
+                    "contient": "FINANCEMENT_ENTREPRISES"
+                  },
+                  {
+                    "chemin": "$.signes.total.pages",
+                    "different": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "aller": "/clm/admin/journal"
+        },
+        {
+          "voir": [
+            "Documents et pages signés",
+            "Documents signés",
+            "Pages signées",
+            "Documents non paginés"
+          ]
+        },
+        {
+          "voir": [
+            "Documents et pages signés par unité",
+            "Documents et pages signés par mois"
+          ]
+        },
+        {
+          "lire": {
+            "selecteur": "table.clm-table tbody tr:has-text(\"Financement des entreprises\")",
+            "variable": "ligneUnite"
+          }
+        },
+        {
+          "ecranConforme": true
+        },
+        {
+          "telecharger": "Exporter le relevé (CSV)"
+        },
+        {
+          "telecharger": "Exporter le relevé (Excel)"
+        }
+      ]
     }
   ]
 }

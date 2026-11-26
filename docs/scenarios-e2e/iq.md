@@ -2291,6 +2291,26 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
+### E2E-AX-IQ-10 — AF-46 (RST-49) : dans « Mes tâches », le validateur voit d'abord la tâche de la trousse critique et filtre ses tâches par priorité
+
+- **Profil** : validateur IQ
+- **Exigences démontrées** : IQ-C-25
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Deux trousses lancées vers le validateur, la basse d'abord, puis la critique
+2. Ouvrir l'écran `/clm/taches`
+3. Voir « Les tâches des trousses les plus prioritaires viennent en premier »
+4. Relever le texte affiché (`table.clm-table tbody tr:first-child:has-text("Critique")`) sous le nom `premiere`
+5. Choisir « Priorité de la trousse » : `Critique`
+6. Voir « Tâche critique ${unique} »
+7. Ne pas voir « Tâche basse ${unique} »
+8. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+9. Choisir « Priorité de la trousse » : `Basse`
+10. Voir « Tâche basse ${unique} »
+11. Ne pas voir « Tâche critique ${unique} »
+
 ### E2E-CB-IQ-04 — Circuit séquentiel saisi à l'écran : validation puis approbation, décisions commentées et historisées, suivi de l'état
 
 - **Profil** : initiateur IQ
@@ -3994,6 +4014,30 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
+### E2E-AX-IQ-08 — AF-46 (RST-49) : l'initiateur choisit la priorité critique d'une trousse à la création ; sans choix, la priorité se déduit du niveau de risque ; le détail l'affiche
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-D-07, IQ-C-41
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (4 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Prio E2E ${unique}`
+3. Choisir « Niveau de risque » : `Faible`
+4. Constater que « Priorité » propose « Selon le niveau de risque (automatique) », « Basse », « Normale », « Haute », « Critique »
+5. Choisir « Priorité » : `Critique`
+6. Voir « Une trousse haute est relancée deux fois plus souvent, une critique quatre fois. »
+7. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+8. Activer « Enregistrer le brouillon »
+9. Voir « enregistré. »
+10. Préparer par l'API : La trousse enregistrée à l'écran porte la priorité choisie ; une seconde, de risque élevé et sans priorité choisie, prend la priorité haute
+11. Ouvrir l'écran `/clm/trousses/${choisie}`
+12. Voir « Critique », « (choisie) »
+13. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+14. Ouvrir l'écran `/clm/trousses/${deduite}`
+15. Voir « Haute », « (selon le risque) »
+
 ### E2E-CB-IQ-13 — Rappels, copies et échéance réglés à la création d'une trousse, puis retrouvés au résumé
 
 - **Profil** : initiateur IQ
@@ -4113,6 +4157,30 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 3. Télécharger par « Exporter le relevé (CSV) » et obtenir un fichier non vide
 4. Télécharger par « Exporter le relevé (Excel) » et obtenir un fichier non vide
 5. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+
+### E2E-AX-IQ-09 — AF-46 (RST-49) : l'administration d'affaires trie le suivi par priorité, la plus haute d'abord, le filtre sur une priorité et l'exporte avec la priorité
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-43, IQ-D-08
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (6 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Trois trousses : risque faible (priorité basse), priorité critique choisie, risque élevé (priorité haute), créées dans cet ordre
+2. Ouvrir l'écran `/clm/suivi`
+3. Saisir « Filtres état » Rechercher » : `${unique}`
+4. Choisir « Trier par » : `Priorité, la plus haute d’abord`
+5. Dans la section « Filtres état », activer « Rechercher »
+6. Relever le texte affiché (`table.clm-table tbody tr:first-child:has-text("Critique ${unique}")`) sous le nom `premiere`
+7. Relever le texte affiché (`table.clm-table tbody tr:nth-child(2):has-text("Haute ${unique}")`) sous le nom `deuxieme`
+8. Relever le texte affiché (`table.clm-table tbody tr:nth-child(3):has-text("Basse ${unique}")`) sous le nom `troisieme`
+9. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+10. Choisir « Priorité » : `Haute`
+11. Dans la section « Filtres état », activer « Rechercher »
+12. Voir « Haute ${unique} »
+13. Ne pas voir « Critique ${unique} », « Basse ${unique} »
+14. Télécharger par « Exporter (CSV) » et obtenir un fichier non vide
+15. Préparer par l'API : L'export du suivi porte la colonne de priorité, dans l'ordre demandé
 
 ### E2E-CB-IQ-13 — Rappels, copies et échéance réglés à la création d'une trousse, puis retrouvés au résumé
 
@@ -8094,6 +8162,30 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
 
+### E2E-AX-IQ-08 — AF-46 (RST-49) : l'initiateur choisit la priorité critique d'une trousse à la création ; sans choix, la priorité se déduit du niveau de risque ; le détail l'affiche
+
+- **Profil** : initiateur IQ
+- **Exigences démontrées** : IQ-D-07, IQ-C-41
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (4 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Ouvrir l'écran `/clm/trousses/nouvelle`
+2. Saisir « Titre » : `Prio E2E ${unique}`
+3. Choisir « Niveau de risque » : `Faible`
+4. Constater que « Priorité » propose « Selon le niveau de risque (automatique) », « Basse », « Normale », « Haute », « Critique »
+5. Choisir « Priorité » : `Critique`
+6. Voir « Une trousse haute est relancée deux fois plus souvent, une critique quatre fois. »
+7. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+8. Activer « Enregistrer le brouillon »
+9. Voir « enregistré. »
+10. Préparer par l'API : La trousse enregistrée à l'écran porte la priorité choisie ; une seconde, de risque élevé et sans priorité choisie, prend la priorité haute
+11. Ouvrir l'écran `/clm/trousses/${choisie}`
+12. Voir « Critique », « (choisie) »
+13. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+14. Ouvrir l'écran `/clm/trousses/${deduite}`
+15. Voir « Haute », « (selon le risque) »
+
 ### E2E-CB-IQ-12 — Notifications configurables : l'administration désactive puis réactive l'invitation à signer par courriel
 
 - **Profil** : administration d'affaires IQ
@@ -8161,6 +8253,30 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 - **Source** : 3.1.1
 - **Conformité déclarée** : ✅
 - **Démontrée à l'écran** : oui
+
+### E2E-AX-IQ-09 — AF-46 (RST-49) : l'administration d'affaires trie le suivi par priorité, la plus haute d'abord, le filtre sur une priorité et l'exporte avec la priorité
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-C-43, IQ-D-08
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : parcours d'interface (6 gestes)
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Trois trousses : risque faible (priorité basse), priorité critique choisie, risque élevé (priorité haute), créées dans cet ordre
+2. Ouvrir l'écran `/clm/suivi`
+3. Saisir « Filtres état » Rechercher » : `${unique}`
+4. Choisir « Trier par » : `Priorité, la plus haute d’abord`
+5. Dans la section « Filtres état », activer « Rechercher »
+6. Relever le texte affiché (`table.clm-table tbody tr:first-child:has-text("Critique ${unique}")`) sous le nom `premiere`
+7. Relever le texte affiché (`table.clm-table tbody tr:nth-child(2):has-text("Haute ${unique}")`) sous le nom `deuxieme`
+8. Relever le texte affiché (`table.clm-table tbody tr:nth-child(3):has-text("Basse ${unique}")`) sous le nom `troisieme`
+9. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+10. Choisir « Priorité » : `Haute`
+11. Dans la section « Filtres état », activer « Rechercher »
+12. Voir « Haute ${unique} »
+13. Ne pas voir « Critique ${unique} », « Basse ${unique} »
+14. Télécharger par « Exporter (CSV) » et obtenir un fichier non vide
+15. Préparer par l'API : L'export du suivi porte la colonne de priorité, dans l'ordre demandé
 
 ### E2E-CB-IQ-04 — Circuit séquentiel saisi à l'écran : validation puis approbation, décisions commentées et historisées, suivi de l'état
 
@@ -11165,6 +11281,23 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 22. Activer « Supprimer — Délais E2E ${unique} »
 23. Voir « supprimé »
 24. Ne pas voir « Modifier — Délais E2E ${unique} »
+
+### E2E-AX-IQ-11 — AF-49 (RST-51) : l'administration d'affaires consulte les documents et les pages signés de la période, au total, par unité et par mois, puis exporte le relevé en CSV et en Excel
+
+- **Profil** : administration d'affaires IQ
+- **Exigences démontrées** : IQ-A-22
+- **Données** : `bdd/e2e/donnees/annexe-10-iq.json`
+- **Nature** : préparé par l'API, écran constaté
+- **Dernier résultat** : ✅ réussi
+
+1. Préparer par l'API : Trousse de l'unité Financement des entreprises, un PDF d'une page, validée puis terminée : sa version signée est comptée
+2. Ouvrir l'écran `/clm/admin/journal`
+3. Voir « Documents et pages signés », « Documents signés », « Pages signées », « Documents non paginés »
+4. Voir « Documents et pages signés par unité », « Documents et pages signés par mois »
+5. Relever le texte affiché (`table.clm-table tbody tr:has-text("Financement des entreprises")`) sous le nom `ligneUnite`
+6. Contrôler l'écran : WCAG 2.2 AA (axe-core), cibles ≥ 24 px, sans débordement ni superposition, à 390, 768, 1280 et 1680 px
+7. Télécharger par « Exporter le relevé (CSV) » et obtenir un fichier non vide
+8. Télécharger par « Exporter le relevé (Excel) » et obtenir un fichier non vide
 
 ### E2E-IQ-18 — Conservation par type, gel légal, exportation en lot, relevé d'utilisation
 

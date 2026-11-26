@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import qc.levis.contrat.clm.application.dto.ClmDto;
 import qc.levis.contrat.clm.application.port.AnalyseAntivirus;
+import qc.levis.contrat.clm.application.port.ComptagePages;
 import qc.levis.contrat.clm.application.port.ConversionPdf;
 import qc.levis.contrat.clm.application.port.RenduDocuments;
 import qc.levis.contrat.clm.application.port.SourceAleatoire;
@@ -53,12 +54,15 @@ public class DocumentClmService {
     private final ConversionPdf conversion;
 
     private final EtiquetagePurviewService purview;
+    private final ComptagePages comptagePages;
 
     public DocumentClmService(DocumentTrousseRepository documents, ModeleContratRepository modeles, AnalyseAntivirus antivirus,
                               RenduDocuments rendu, SourceAleatoire alea, TrousseService trousses, LectureTrousse lecture,
                               JournalClm journal, ParametresClmService parametres, ParcoursService parcours, ContexteClm ctx,
-                              GabaritWordRepository gabarits, ConversionPdf conversion, EtiquetagePurviewService purview) {
+                              GabaritWordRepository gabarits, ConversionPdf conversion, EtiquetagePurviewService purview,
+                              ComptagePages comptagePages) {
         this.documents = documents;
+        this.comptagePages = comptagePages;
         this.purview = purview;
         this.gabarits = gabarits;
         this.conversion = conversion;
@@ -107,6 +111,7 @@ public class DocumentClmService {
         DocumentTrousse d = new DocumentTrousse(t.getTenantId(), t.getId(), cle, version, FormatDocument.nomSur(nomFichier), type,
                 contenu, auteur, motif, ctx.maintenant());
         d.setAnalyse(antivirus.estSain(contenu) ? DocumentTrousse.Analyse.PROPRE : DocumentTrousse.Analyse.INFECTE);
+        comptagePages.pages(type, contenu).ifPresent(d::paginer);
         purview.etiqueter(t, d);
         if (t.enTraitement()) {
             // En cours de parcours, le document part aussitôt aux intervenants : un fichier non sain est refusé d'emblée.

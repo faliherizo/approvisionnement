@@ -113,10 +113,13 @@ public final class ClmDto {
                                 String prochaineAction, boolean enRetard) {
     }
 
-    /** {@code etiquetteSensibilite}, {@code etiquetteRetention} : étiquettes Purview conservées avec le document (ADR-036). */
+    /**
+     * {@code etiquetteSensibilite}, {@code etiquetteRetention} : étiquettes Purview conservées avec le document (ADR-036) ;
+     * {@code pages} : nombre de pages d'un PDF (AF-49), nul si non paginé.
+     */
     public record DocumentVue(Long id, String cleDocument, int version, String nom, String type, long taille, String empreinte,
                               String statut, String analyse, String auteur, String motif, Instant creeLe,
-                              String etiquetteSensibilite, String etiquetteRetention) {
+                              String etiquetteSensibilite, String etiquetteRetention, Integer pages) {
     }
 
     public record ParticipantVue(Long id, String nom, String courriel, String telephone, String roleContrat, boolean externe,
@@ -418,10 +421,21 @@ public final class ClmDto {
     public record RegleConservationRequest(String typeContrat, Integer dureeAns, String sortFinal) {
     }
 
-    /** Utilisation par enveloppe envoyée sur une période (addenda 3, Q39) ; {@code parMois} : « AAAA-MM » → enveloppes. */
+    /**
+     * Utilisation par enveloppe envoyée sur une période (addenda 3, Q39) ; {@code parMois} : « AAAA-MM » → enveloppes.
+     * {@code signes} : documents et pages signés (Annexe 10, AF-49), au total, par unité et par mois.
+     */
     public record UtilisationVue(java.time.LocalDate du, java.time.LocalDate au, int envoyees, int terminees, int rejetees,
                                  int annuleesApresEnvoi, int annuleesAvantEnvoi, int echeancesDepassees, int renvois,
-                                 Map<String, Integer> parMois) {
+                                 Map<String, Integer> parMois, SignesVue signes) {
+    }
+
+    /** Documents et pages signés d'une période (AF-49) ; {@code unite} vide : trousses sans unité. */
+    public record SignesVue(ComptageVue total, List<ComptageVue> parUnite, List<ComptageVue> parMois) {
+    }
+
+    /** {@code cle} : unité ou mois « AAAA-MM » ; {@code sansPagination} : documents signés dont les pages n'ont pu être comptées. */
+    public record ComptageVue(String cle, int documents, long pages, int sansPagination) {
     }
 
     /** Trousse détruite et résultat de son bordereau (addenda 3, Q48). */

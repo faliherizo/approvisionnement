@@ -127,7 +127,7 @@ public class LectureTrousse {
     public static ClmDto.DocumentVue document(DocumentTrousse d) {
         return new ClmDto.DocumentVue(d.getId(), d.getCleDocument(), d.getVersion(), d.getNom(), d.getType().name(), d.getTaille(),
                 d.getEmpreinte(), d.getStatut().name(), d.getAnalyse().name(), d.getAuteur(), d.getMotif(), d.getCreeLe(),
-                d.sensibilite() == null ? null : d.sensibilite().nom(), d.retention() == null ? null : d.retention().nom());
+                d.sensibilite() == null ? null : d.sensibilite().nom(), d.retention() == null ? null : d.retention().nom(), d.getPages());
     }
 
     public static ClmDto.ParticipantVue participant(Participant p) {

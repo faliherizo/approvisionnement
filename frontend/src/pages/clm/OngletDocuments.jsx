@@ -159,6 +159,7 @@ export default function OngletDocuments({ trousse, peutGerer, peutGenerer, iaAct
               <div><dt>{t('clm.doc.cle')}</dt><dd>{doc.cleDocument}</dd></div>
               <div><dt>{t('clm.col.empreinte')}</dt><dd><code title={doc.empreinte}>{doc.empreinte.slice(0, 16)}…</code></dd></div>
               <div><dt>{t('clm.doc.classement')}</dt><dd>{categorie(doc) || '—'}</dd></div>
+              <div><dt>{t('clm.doc.pages')}</dt><dd>{doc.pages ?? '—'}</dd></div>
               <div><dt>{t('clm.purview.sensibilite')}</dt><dd>{doc.etiquetteSensibilite || '—'}</dd></div>
               <div><dt>{t('clm.purview.retention')}</dt><dd>{doc.etiquetteRetention || '—'}</dd></div>
             </dl>

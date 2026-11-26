@@ -93,6 +93,10 @@ public class DocumentTrousse {
     @Column(name = "etiquette_retention_jours")
     private Integer etiquetteRetentionJours;
 
+    /** Nombre de pages d'un PDF (Annexe 10, AF-49, migration 080), compté à l'enregistrement ; nul si non paginable. */
+    @Column(name = "nb_pages")
+    private Integer pages;
+
     /** Contenu en clair, en mémoire seulement : déchiffré au chargement, jamais écrit en base. */
     @Transient
     private byte[] clair;
@@ -151,6 +155,16 @@ public class DocumentTrousse {
     public byte[] getStockage() { return contenu; }
 
     public Integer getCleVersion() { return cleVersion; }
+
+    /** Nombre de pages compté sur le contenu enregistré (AF-49) ; un document a au moins une page. */
+    public void paginer(int nombre) {
+        if (nombre < 1) {
+            throw new IllegalArgumentException("Nombre de pages invalide : " + nombre + ".");
+        }
+        this.pages = nombre;
+    }
+
+    public Integer getPages() { return pages; }
 
     /**
      * Chiffrement au repos (ADR-037) : la forme stockée devient l'enveloppe ; le clair reste en mémoire pour la suite de la

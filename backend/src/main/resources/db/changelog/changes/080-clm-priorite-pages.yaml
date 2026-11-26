@@ -29,3 +29,12 @@ databaseChangeLog:
             columns:
               - column: { name: tenant_id }
               - column: { name: priorite_rang }
+  - changeSet:
+      id: 080-2-clm-document-pages
+      author: levis
+      comment: "Annexe 10 IQ, AF-49 (RST-51) : nombre de pages d'un PDF compté à l'enregistrement, pour le relevé des documents et des pages signés."
+      changes:
+        - addColumn:
+            tableName: clm_document
+            columns:
+              - column: { name: nb_pages, type: INT }

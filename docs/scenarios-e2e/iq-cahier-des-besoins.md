@@ -64,7 +64,7 @@ besoin par besoin, sans préparation par l'API.
 | IQ-C-22 | Approuver, rejeter, retourner pour correction | E2E-CB-IQ-04 ✅, E2E-CB-IQ-05 ✅, E2E-CB-IQ-06 ✅ | E2E-IQ-06 ✅, E2E-IQ-07 ✅ |
 | IQ-C-23 | Commentaires et historique des validations | E2E-CB-IQ-04 ✅, E2E-CB-IQ-05 ✅ | E2E-IQ-06 ✅ |
 | IQ-C-24 | Notifications et rappels configurables pour validateurs et approbateurs | E2E-CB-IQ-12 ✅, E2E-CB-IQ-13 ✅ | E2E-IQ-15 ✅ |
-| IQ-C-25 | Suivi de l'état des validations en cours | E2E-CB-IQ-04 ✅ | E2E-IQ-06 ✅, E2E-IQ-16 ✅ |
+| IQ-C-25 | Suivi de l'état des validations en cours | E2E-CB-IQ-04 ✅ | E2E-AX-IQ-10 ✅, E2E-IQ-06 ✅, E2E-IQ-16 ✅ |
 | IQ-C-26 | Signature séquentielle, parallèle, mixte | E2E-CB-IQ-09 ✅, E2E-CB-IQ-10 ✅ | E2E-IQ-12 ✅ |
 | IQ-C-27 | Groupes de signataires | E2E-ECR-IQ-03 ✅ | E2E-IQ-12 ✅ |
 | IQ-C-28 | Signature simultanée et consécutive configurable | E2E-CB-IQ-10 ✅ | E2E-IQ-12 ✅ |
@@ -80,9 +80,9 @@ besoin par besoin, sans préparation par l'API.
 | IQ-C-38 | Règles conditionnelles d'affichage | E2E-CB-IQ-15 ✅ | E2E-IQ-03 ✅ |
 | IQ-C-39 | Saisie assistée (suggestions) | E2E-CB-IQ-22 ✅ | E2E-IQ-04 ✅ |
 | IQ-C-40 | Notifications activables et désactivables | E2E-CB-IQ-12 ✅, E2E-ECR-IQ-05 ✅ | E2E-IQ-15 ✅ |
-| IQ-C-41 | Rappels automatiques de non-réponse | E2E-CB-IQ-13 ✅ | E2E-IQ-15 ✅ |
+| IQ-C-41 | Rappels automatiques de non-réponse | E2E-AX-IQ-08 ✅, E2E-CB-IQ-13 ✅ | E2E-IQ-15 ✅ |
 | IQ-C-42 | Destinataires en copie | E2E-CB-IQ-13 ✅ | E2E-IQ-01 ✅ |
-| IQ-C-43 | Vue de suivi centralisée : étapes, attentes, exceptions | E2E-AX-IQ-05 ✅, E2E-CB-IQ-13 ✅, E2E-ECR-IQ-06 ✅ | E2E-AX-IQ-06 ✅, E2E-IQ-16 ✅ |
+| IQ-C-43 | Vue de suivi centralisée : étapes, attentes, exceptions | E2E-AX-IQ-05 ✅, E2E-AX-IQ-09 ✅, E2E-CB-IQ-13 ✅, E2E-ECR-IQ-06 ✅ | E2E-AX-IQ-06 ✅, E2E-IQ-16 ✅ |
 | IQ-C-44 | Plusieurs documents par trousse | E2E-CB-IQ-16 ✅, E2E-ECR-IQ-01 ✅ | E2E-IQ-01 ✅ |
 | IQ-C-45 | Dossiers, documents, versions, intervenants | E2E-CB-IQ-16 ✅, E2E-ECR-IQ-01 ✅, E2E-ECR-IQ-04 ✅ | E2E-IQ-01 ✅ |
 | IQ-C-46 | PDF et Word | E2E-CB-IQ-16 ✅ | E2E-IQ-01 ✅ |

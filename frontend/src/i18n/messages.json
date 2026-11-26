@@ -10369,5 +10369,65 @@
     "fr": "Priorité, la plus haute d’abord",
     "en": "Priority, highest first",
     "mg": "Laharam-pahamehana, ny ambony indrindra aloha"
+  },
+  "clm.doc.pages": {
+    "fr": "Pages",
+    "en": "Pages",
+    "mg": "Pejy"
+  },
+  "clm.signes.titre": {
+    "fr": "Documents et pages signés",
+    "en": "Signed documents and pages",
+    "mg": "Antontan-taratasy sy pejy voasonia"
+  },
+  "clm.signes.aide": {
+    "fr": "Versions signées des trousses terminées dans la période. Les pages d’un PDF sont comptées à son enregistrement ; un document Word n’est pas paginé.",
+    "en": "Signed versions of the packages completed in the period. A PDF’s pages are counted when it is saved; a Word document is not paginated.",
+    "mg": "Dika voasonia amin'ireo fonosana vita tao anatin'ny vanim-potoana. Isaina rehefa voatahiry ny pejin'ny PDF ; tsy isaina ny pejin'ny antontan-taratasy Word."
+  },
+  "clm.signes.documentsSignes": {
+    "fr": "Documents signés",
+    "en": "Signed documents",
+    "mg": "Antontan-taratasy voasonia"
+  },
+  "clm.signes.pagesSignees": {
+    "fr": "Pages signées",
+    "en": "Signed pages",
+    "mg": "Pejy voasonia"
+  },
+  "clm.signes.sansPagination": {
+    "fr": "Documents non paginés",
+    "en": "Documents without page count",
+    "mg": "Antontan-taratasy tsy voaisa pejy"
+  },
+  "clm.signes.parUnite": {
+    "fr": "Documents et pages signés par unité",
+    "en": "Signed documents and pages by unit",
+    "mg": "Antontan-taratasy sy pejy voasonia isaky ny sampana"
+  },
+  "clm.signes.parMois": {
+    "fr": "Documents et pages signés par mois",
+    "en": "Signed documents and pages by month",
+    "mg": "Antontan-taratasy sy pejy voasonia isam-bolana"
+  },
+  "clm.signes.cle": {
+    "fr": "Unité ou mois",
+    "en": "Unit or month",
+    "mg": "Sampana na volana"
+  },
+  "clm.signes.documents": {
+    "fr": "Documents",
+    "en": "Documents",
+    "mg": "Antontan-taratasy"
+  },
+  "clm.signes.pages": {
+    "fr": "Pages",
+    "en": "Pages",
+    "mg": "Pejy"
+  },
+  "clm.signes.sansUnite": {
+    "fr": "Sans unité",
+    "en": "No unit",
+    "mg": "Tsy misy sampana"
   }
 }

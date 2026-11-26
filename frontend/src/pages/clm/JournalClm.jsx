@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useI18n } from '../../i18n/I18nContext'
 import { TYPES_EVENEMENTS } from '../../i18n/clm.messages.js'
-import { GardeModule, Message, dateHeure, telecharger, useErreur, useRessource } from './commun.jsx'
+import { GardeModule, Message, dateHeure, telecharger, useErreur, useListe, useRessource } from './commun.jsx'
 import { BarreActions, Bloc, Blocs, EcranClm } from './gabarit.jsx'
 
 const VIDE = { du: '', au: '', acteur: '', action: '', trousse: '', texte: '' }
@@ -40,7 +40,46 @@ function Utilisation() {
           {Object.entries(r.parMois).map(([mois, n]) => <div key={mois}><dt>{t('clm.ut.mois', { mois })}</dt><dd>{n}</dd></div>)}
         </dl>
       )}
+      {r?.signes && <Signes signes={r.signes} />}
     </>
+  )
+}
+
+/** Documents et pages signés de la période (Annexe 10, AF-49) : total, par unité et par mois. */
+function Signes({ signes }) {
+  const { t } = useI18n()
+  const unites = useListe('CLM_UNITE')
+  const tableau = (titre, entete, lignes, libelle) => (
+    <div className="table-scroll">
+      <table className="table clm-table">
+        <caption>{titre}</caption>
+        <thead><tr><th scope="col">{entete}</th><th scope="col">{t('clm.signes.documents')}</th>
+          <th scope="col">{t('clm.signes.pages')}</th><th scope="col">{t('clm.signes.sansPagination')}</th></tr></thead>
+        <tbody>
+          {lignes.length === 0 ? <tr><td colSpan={4}>{t('clm.aucun')}</td></tr> : lignes.map((l) => (
+            <tr key={l.cle}>
+              <th scope="row" data-label={entete}>{libelle(l.cle)}</th>
+              <td data-label={t('clm.signes.documents')}>{l.documents}</td>
+              <td data-label={t('clm.signes.pages')}>{l.pages}</td>
+              <td data-label={t('clm.signes.sansPagination')}>{l.sansPagination}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+  return (
+    <section aria-labelledby="clm-signes-titre">
+      <h3 id="clm-signes-titre">{t('clm.signes.titre')}</h3>
+      <p className="muted">{t('clm.signes.aide')}</p>
+      <dl className="clm-dl">
+        <div><dt>{t('clm.signes.documentsSignes')}</dt><dd>{signes.total.documents}</dd></div>
+        <div><dt>{t('clm.signes.pagesSignees')}</dt><dd>{signes.total.pages}</dd></div>
+        <div><dt>{t('clm.signes.sansPagination')}</dt><dd>{signes.total.sansPagination}</dd></div>
+      </dl>
+      {tableau(t('clm.signes.parUnite'), t('clm.rap.col.unite'), signes.parUnite, (c) => (c ? unites.libelle(c) || c : t('clm.signes.sansUnite')))}
+      {tableau(t('clm.signes.parMois'), t('clm.rap.col.mois'), signes.parMois, (c) => c)}
+    </section>
   )
 }
 

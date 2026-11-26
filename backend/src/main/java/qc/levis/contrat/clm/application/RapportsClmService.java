@@ -285,7 +285,24 @@ public class RapportsClmService {
         valeurs.put("Échéances dépassées", Integer.toString(u.echeancesDepassees()));
         valeurs.put("Renvois", Integer.toString(u.renvois()));
         u.parMois().forEach((mois, n) -> valeurs.put("Envoyées en " + mois, Integer.toString(n)));
+        signes(u.signes(), valeurs);
         return valeurs.entrySet().stream().map(e -> Map.of("indicateur", e.getKey(), "valeur", e.getValue())).toList();
+    }
+
+    /** Documents et pages signés (Annexe 10, AF-49) : total, puis par unité et par mois. */
+    private static void signes(ClmDto.SignesVue s, Map<String, String> valeurs) {
+        valeurs.put("Documents signés", Integer.toString(s.total().documents()));
+        valeurs.put("Pages signées", Long.toString(s.total().pages()));
+        valeurs.put("Documents signés sans pagination", Integer.toString(s.total().sansPagination()));
+        s.parUnite().forEach(c -> {
+            String unite = c.cle().isEmpty() ? "sans unité" : c.cle();
+            valeurs.put("Documents signés — unité " + unite, Integer.toString(c.documents()));
+            valeurs.put("Pages signées — unité " + unite, Long.toString(c.pages()));
+        });
+        s.parMois().forEach(c -> {
+            valeurs.put("Documents signés en " + c.cle(), Integer.toString(c.documents()));
+            valeurs.put("Pages signées en " + c.cle(), Long.toString(c.pages()));
+        });
     }
 
     private List<Map<String, String>> volumetrie(RapportClm.Definition d, LocalDate du, LocalDate au) {

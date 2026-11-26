@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import qc.levis.contrat.clm.application.dto.ClmDto;
+import qc.levis.contrat.clm.application.port.ComptagePages;
 import qc.levis.contrat.clm.application.port.RenduDocuments;
 import qc.levis.contrat.clm.application.port.SourceAleatoire;
 import qc.levis.contrat.clm.application.repository.DecisionEtapeRepository;
@@ -70,13 +71,15 @@ public class ParcoursService {
     private final ParametresClmService parametres;
     private final LectureTrousse lecture;
     private final ContexteClm ctx;
+    private final ComptagePages comptagePages;
 
     public ParcoursService(TrousseRepository trousses, EtapeTrousseRepository etapes, DecisionEtapeRepository decisions,
                            EvenementTrousseRepository evenements,
                            ParticipantRepository participants, InvitationRepository invitations, DocumentTrousseRepository documents,
                            ModeleContratRepository modeles, RenduDocuments rendu, MessagerieClm messagerie,
                            DiffusionStatut diffusion, JournalClm journal, SourceAleatoire alea, ParametresClmService parametres,
-                           LectureTrousse lecture, ContexteClm ctx) {
+                           LectureTrousse lecture, ContexteClm ctx, ComptagePages comptagePages) {
+        this.comptagePages = comptagePages;
         this.trousses = trousses;
         this.etapes = etapes;
         this.decisions = decisions;
@@ -486,6 +489,8 @@ public class ParcoursService {
         finale.setStatut(DocumentTrousse.Statut.SIGNE);
         finale.setAnalyse(DocumentTrousse.Analyse.PROPRE);
         finale.reprendreEtiquettes(d);
+        // Comptées sur la version signée (AF-49) : une page de signatures ajoutée en fin de document compte aussi.
+        comptagePages.pages(finale.getType(), signe).ifPresent(finale::paginer);
         documents.save(finale);
     }
 
