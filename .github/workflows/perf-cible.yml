@@ -1,0 +1,216 @@
+# TI-12 (IQ, AO 2026-6370-0005) — 500 utilisateurs concurrents sur une pile de production conteneurisée, bornée comme
+# la cible. Preuve reproductible : chaque exécution construit les images, monte la pile, amorce les données, charge,
+# applique la porte SLO de perf/run.sh et publie le rapport. Rapport d'essai : docs/performance/essai-500-utilisateurs.md.
+#
+# Tout se joue DANS l'exécuteur (localhost) : aucune charge vers OVH, Azure ni aucun hôte public.
+#
+# Dimensionnement (sources versionnées) :
+#   serveur    : un pod de infra/k8s/chart/values.yaml (backend.resources.limits : cpu "2", memory "2Gi"). La cible en
+#                exécute au moins 3 (backend.replicas) : l'essai fait porter les 500 utilisateurs par UNE seule réplique.
+#   PostgreSQL : version 16 de la cible (infra/terraform/azure/variables.tf postgres_version, document 01 de la
+#                réponse) ; la cible est un GP_Standard_D4s_v3 (4 vCores, 16 Gio). L'exécuteur standard (4 vCPU, 16 Go)
+#                ne peut pas l'héberger à côté du serveur et de JMeter : la base est bornée à 1,5 vCPU et 4 Gio (38 % des
+#                vCores et 25 % de la mémoire de la cible) — l'essai est plus sévère que la cible pour la base comme pour
+#                le serveur. Reste environ 0,5 vCPU pour JMeter et Docker (charge de l'hôte relevée dans le résumé).
+# Les mots de passe et clés de la pile sont générés à chaque exécution et masqués ; rien n'est versionné.
+name: Performance — profil cible TI-12 (500 utilisateurs)
+
+on:
+  workflow_dispatch:
+    inputs:
+      utilisateurs:
+        description: "Utilisateurs virtuels simultanés"
+        type: string
+        default: "500"
+      montee:
+        description: "Montée progressive (s)"
+        type: string
+        default: "300"
+      duree:
+        description: "Durée totale, montée comprise (s)"
+        type: string
+        default: "900"
+      pause_ms:
+        description: "Temps de réflexion entre deux gestes (ms)"
+        type: string
+        default: "2000"
+  push:
+    branches: ["perf/**"]
+
+concurrency:
+  group: perf-cible-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  JMETER_VERSION: "5.6.3"
+  POSTGRES_IMAGE: "postgres:16"
+  SERVEUR_CPUS: "2"
+  SERVEUR_MEMOIRE: "2g"
+  BASE_CPUS: "1.5"
+  BASE_MEMOIRE: "4g"
+  UTILISATEURS: ${{ inputs.utilisateurs || '500' }}
+  MONTEE: ${{ inputs.montee || '300' }}
+  DUREE_ESSAI: ${{ inputs.duree || '900' }}
+  PAUSE: ${{ inputs.pause_ms || '2000' }}
+  RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+jobs:
+  essai:
+    name: 500 utilisateurs — pile bornée comme la cible
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17" }
+      - name: JMeter
+        run: |
+          curl -fsSL "https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${JMETER_VERSION}.tgz" | tar xz -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/apache-jmeter-${JMETER_VERSION}/bin" >> "$GITHUB_PATH"
+
+      # Même Dockerfile et même cache que le déploiement (deployer-contrat.yml) : l'image éprouvée est celle qu'on livre.
+      - uses: docker/setup-buildx-action@v3
+      - name: Image de production du serveur
+        uses: docker/build-push-action@v6
+        with:
+          context: backend
+          load: true
+          tags: contrat/backend:perf
+          cache-from: type=gha,scope=contrat-backend
+
+      - name: Secrets éphémères de la pile
+        run: |
+          gen() { openssl rand -hex "$1"; }
+          declare -A S=(
+            [DB_PASSWORD]="$(gen 24)" [JWT_SECRET]="$(gen 48)" [APP_CRYPTO_KEY]="$(gen 24)"
+            [APP_CRYPTO_SALT]="$(gen 8)" [CLM_PREUVE_CLE]="$(gen 32)"
+            # Politique de mot de passe : minuscules, majuscules, chiffres et caractère spécial.
+            [MOT_DE_PASSE_ESSAI]="Ess-$(gen 12)-Ai9"
+          )
+          for k in "${!S[@]}"; do echo "::add-mask::${S[$k]}"; echo "$k=${S[$k]}" >> "$GITHUB_ENV"; done
+
+      - name: Démarrer la pile (PostgreSQL 16 + serveur, ressources bornées)
+        run: |
+          docker network create perf
+          export POSTGRES_PASSWORD="$DB_PASSWORD"
+          docker run -d --name contrat-db --network perf \
+            --cpus "$BASE_CPUS" --memory "$BASE_MEMOIRE" --memory-swap "$BASE_MEMOIRE" --shm-size 512m \
+            -e POSTGRES_DB=contrat -e POSTGRES_USER=contrat -e POSTGRES_PASSWORD \
+            "$POSTGRES_IMAGE" \
+            -c max_connections=200 -c shared_buffers=1GB -c effective_cache_size=3GB \
+            -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=top
+          for i in $(seq 1 60); do docker exec contrat-db pg_isready -U contrat -d contrat >/dev/null 2>&1 && break; sleep 2; done
+          docker exec contrat-db psql -U contrat -d contrat -qc 'CREATE EXTENSION IF NOT EXISTS pg_stat_statements'
+          # Profil prod : Liquibase, PostgreSQL, contrôles de démarrage (ExigencesProduction). Deux écarts, déclarés dans
+          # le rapport : HTTP en clair (TLS terminé par l'entrée de la cible, hors du pod) et organisation de démonstration
+          # IQ amorcée (APP_TENANTS_DEMO) pour disposer de l'organisation, de son paramétrage CLM et d'un administrateur.
+          docker run -d --name contrat-backend --network perf -p 127.0.0.1:8080:8080 \
+            --cpus "$SERVEUR_CPUS" --memory "$SERVEUR_MEMOIRE" --memory-swap "$SERVEUR_MEMOIRE" \
+            -e SPRING_PROFILES_ACTIVE=prod \
+            -e DB_URL=jdbc:postgresql://contrat-db:5432/contrat -e DB_USER=contrat -e DB_PASSWORD \
+            -e JWT_SECRET -e APP_CRYPTO_KEY -e APP_CRYPTO_SALT -e CLM_PREUVE_CLE \
+            -e COOKIE_SECURE=false -e APP_HTTP_LOCAL_AUTORISE=true -e APP_TENANTS_DEMO=true \
+            -e LOG_APP_LEVEL=INFO \
+            -e JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=70 -XX:+ExitOnOutOfMemoryError" \
+            contrat/backend:perf
+          for i in $(seq 1 90); do curl -fs http://localhost:8080/api/health >/dev/null && break; sleep 2; done
+          curl -fsS http://localhost:8080/api/health
+
+      - name: Comptes d'essai (un par utilisateur virtuel)
+        env:
+          ADMIN_EMAIL: admin.ti@iq.example
+        run: |
+          # Administrateur de l'organisation de démonstration IQ : mot de passe publié avec la démonstration.
+          ADMIN_MOT_DE_PASSE=$(python3 -c 'import json; print(next(t["motDePasse"] for t in json.load(open("backend/src/main/resources/data/tenants-demo.json")) if t["slug"] == "iq"))')
+          export ADMIN_MOT_DE_PASSE MOT_DE_PASSE="$MOT_DE_PASSE_ESSAI" NOMBRE="$UTILISATEURS"
+          # L'amorçage des organisations de démonstration suit la santé de quelques secondes.
+          # Seul un refus de connexion (code 1) se réessaie : une création refusée arrête l'essai.
+          for i in $(seq 1 30); do
+            rc=0; perf/outils/amorcer-comptes.sh || rc=$?
+            [ "$rc" -eq 1 ] || exit "$rc"
+            sleep 5
+          done
+          exit 1
+
+      - name: Préchargement de la volumétrie (1 000 trousses, non bloquant)
+        working-directory: perf
+        env:
+          PROFIL: cible
+          BASE_HOST: localhost
+          BASE_PORT: "8080"
+          BASE_PROTOCOL: http
+          THREADS: "50"
+          RAMPUP: "10"
+          LOOPS: "20"
+          DUREE: "0"
+          PAUSE_MS: "0"
+          RESULTATS: results-prechargement
+        run: |
+          ./run.sh || echo "::warning::Préchargement — porte SLO dépassée (rafale sans temps de réflexion), voir results-prechargement."
+
+      - name: Essai — ${{ env.UTILISATEURS }} utilisateurs, montée ${{ env.MONTEE }} s, palier jusqu'à ${{ env.DUREE_ESSAI }} s
+        id: essai
+        working-directory: perf
+        env:
+          PROFIL: cible
+          BASE_HOST: localhost
+          BASE_PORT: "8080"
+          BASE_PROTOCOL: http
+          RESULTATS: results-cible
+          HEAP: "-Xms1g -Xmx2g"
+        run: |
+          INTERVALLE=5 outils/releve-conteneurs.sh "$RUNNER_TEMP/conteneurs.csv" contrat-backend contrat-db &
+          echo $! > "$RUNNER_TEMP/releve.pid"
+          THREADS="$UTILISATEURS" RAMPUP="$MONTEE" DUREE="$DUREE_ESSAI" PAUSE_MS="$PAUSE" ./run.sh
+
+      - name: Résumé (débit, P50/P95/P99, erreurs, UC et mémoire)
+        if: always() && steps.essai.outcome != 'skipped'
+        run: |
+          kill "$(cat "$RUNNER_TEMP/releve.pid")" 2>/dev/null || true
+          cp "$RUNNER_TEMP/conteneurs.csv" perf/results-cible/ 2>/dev/null || true
+          cat > "$RUNNER_TEMP/environnement.md" <<FIN
+          ## Environnement
+
+          | Élément | Valeur |
+          |---|---|
+          | Exécuteur | GitHub Actions \`ubuntu-24.04\`, $(nproc) vCPU, $(free -g | awk '/Mem/ {print $2}') Go |
+          | Serveur | image de production \`backend/Dockerfile\` (profil prod), 1 réplique bornée à ${SERVEUR_CPUS} vCPU / ${SERVEUR_MEMOIRE} (pod de \`infra/k8s/chart/values.yaml\`) |
+          | Base | \`${POSTGRES_IMAGE}\` bornée à ${BASE_CPUS} vCPU / ${BASE_MEMOIRE} (cible : GP_Standard_D4s_v3, 4 vCores / 16 Gio) |
+          | Charge | JMeter ${JMETER_VERSION}, ${UTILISATEURS} utilisateurs, montée ${MONTEE} s, durée ${DUREE_ESSAI} s, pause ${PAUSE} ms, une connexion par utilisateur |
+          | Version | \`${GITHUB_SHA::12}\` |
+          FIN
+          sed -i 's/^          //' "$RUNNER_TEMP/environnement.md"
+          python3 perf/outils/synthese-essai.py perf/results-cible --utilisateurs "$UTILISATEURS" \
+            --releve perf/results-cible/conteneurs.csv --environnement "$RUNNER_TEMP/environnement.md" --run "$RUN_URL" \
+            > /dev/null
+          cat perf/results-cible/resume.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Diagnostic (requêtes SQL les plus coûteuses, journal du serveur)
+        if: always()
+        run: |
+          mkdir -p perf/results-cible
+          docker exec contrat-db psql -U contrat -d contrat -P pager=off -c \
+            "SELECT calls, round(total_exec_time) AS total_ms, round(mean_exec_time::numeric, 2) AS moyenne_ms, rows, left(regexp_replace(query, '\s+', ' ', 'g'), 220) AS requete
+             FROM pg_stat_statements ORDER BY total_exec_time DESC LIMIT 25" > perf/results-cible/pg-requetes.txt 2>&1 || true
+          docker exec contrat-db psql -U contrat -d contrat -P pager=off -c \
+            "SELECT relname, n_live_tup, seq_scan, seq_tup_read, idx_scan FROM pg_stat_user_tables ORDER BY seq_tup_read DESC LIMIT 15" \
+            >> perf/results-cible/pg-requetes.txt 2>&1 || true
+          docker logs contrat-backend > perf/results-cible/serveur.log 2>&1 || true
+          docker inspect contrat-backend contrat-db --format '{{.Name}} NanoCpus={{.HostConfig.NanoCpus}} Memory={{.HostConfig.Memory}} OOMKilled={{.State.OOMKilled}} Restarts={{.RestartCount}}' \
+            > perf/results-cible/conteneurs-limites.txt || true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: perf-cible-${{ github.run_id }}
+          path: |
+            perf/results-cible
+            perf/results-prechargement/synthese.md
+          if-no-files-found: ignore
+
+      - name: Arrêt de la pile
+        if: always()
+        run: docker rm -f contrat-backend contrat-db >/dev/null 2>&1 || true

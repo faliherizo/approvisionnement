@@ -15,7 +15,7 @@ import qc.levis.contrat.clm.domain.Trousse;
 /**
  * Lecture des trousses à la volumétrie d'IQ (65 000 par an ; addenda 3, Q38) : jamais toute l'organisation en mémoire.
  * Qui voit tout (administration d'affaires, audit) reçoit une page tirée de la base, avec le total. Pour les autres, la
- * visibilité dépend des affectations et se vérifie par tranches, sans total.
+ * base présélectionne les candidates ({@link PerimetreVisible}) et la visibilité exacte se vérifie par tranches, sans total.
  */
 @Component
 public class LecturePaginee {
@@ -67,8 +67,9 @@ public class LecturePaginee {
     private void parcourir(Habilitations.Acteur acteur, Specification<Trousse> spec, Consumer<List<Trousse>> tranche,
                            java.util.function.BooleanSupplier assez) {
         boolean tout = voitTout(acteur);
+        Specification<Trousse> retenues = tout ? spec : spec.and(PerimetreVisible.candidates(acteur));
         for (int k = 0; ; k++) {
-            Page<Trousse> lot = trousses.findAll(spec, PageRequest.of(k, TRANCHE, TRI));
+            Page<Trousse> lot = trousses.findAll(retenues, PageRequest.of(k, TRANCHE, TRI));
             tranche.accept(tout ? lot.getContent() : lot.getContent().stream().filter(t -> lecture.visible(t, acteur)).toList());
             if (assez.getAsBoolean() || !lot.hasNext()) {
                 return;

@@ -33,6 +33,9 @@ spec:
             - { name: CLM_CONVERSION_URL, value: "http://conversion:3000" }
             - { name: CLM_SIGNATURE_FOURNISSEUR, value: cachet }
             - { name: NOTIFICATION_COURRIEL_MODE, value: smtp }
+            # Sans ce réglage, la JVM borne son tas au quart de la limite du pod (512 Mio sur 2 Gio) ; réglage éprouvé par
+            # l'essai TI-12 de 500 utilisateurs (docs/performance/essai-500-utilisateurs.md) et par le déploiement OVH.
+            - { name: JAVA_TOOL_OPTIONS, value: "-XX:MaxRAMPercentage=70 -XX:+ExitOnOutOfMemoryError" }
           readinessProbe:
             httpGet: { path: /actuator/health/readiness, port: {{ .Values.backend.port }} }
             initialDelaySeconds: 20

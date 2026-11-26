@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 085-1-clm-invitation-etape
+      author: levis
+      comment: "TI-12 (essai de 500 utilisateurs) : les invitations d'une étape se cherchaient par lecture complète de la table à chaque lancement."
+      changes:
+        - createIndex:
+            tableName: clm_invitation
+            indexName: ix_clm_inv_etape
+            columns:
+              - column: { name: tenant_id }
+              - column: { name: etape_id }
+  # Index d'expression (PostgreSQL) : la présélection des trousses visibles (PerimetreVisible) compare courriel et
+  # propriétaire sans égard à la casse ; sans eux, chaque page du suivi relisait toute la table des participants.
+  - changeSet:
+      id: 085-2-clm-index-casse
+      author: levis
+      dbms: postgresql
+      comment: "TI-12 : trousses d'une personne (propriétaire, participant) retrouvées sans égard à la casse, par index."
+      changes:
+        - sql:
+            sql: >-
+              CREATE INDEX ix_clm_part_courriel_min ON clm_participant (lower(courriel));
+              CREATE INDEX ix_clm_trousse_proprio_min ON clm_trousse (lower(proprietaire));
+      rollback:
+        - sql:
+            sql: DROP INDEX ix_clm_part_courriel_min; DROP INDEX ix_clm_trousse_proprio_min;

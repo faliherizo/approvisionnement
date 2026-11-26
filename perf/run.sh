@@ -24,6 +24,13 @@ PLAN="${PLAN:-contrat-dossiers-load.jmx}"
 THREADS="${THREADS:-20}"
 RAMPUP="${RAMPUP:-60}"
 LOOPS="${LOOPS:-5}"
+# Durée totale en secondes (montée comprise) ; 0 : les fils s'arrêtent à la fin de leurs LOOPS boucles (-1 : sans fin).
+DUREE="${DUREE:-0}"
+# false : une connexion par utilisateur virtuel (première boucle) au lieu d'une connexion à chaque boucle.
+CONNEXION_CHAQUE_BOUCLE="${CONNEXION_CHAQUE_BOUCLE:-true}"
+# Le plan borne toujours sa durée (planificateur JMeter) : une durée nulle y arrêterait les fils aussitôt. Sans durée
+# demandée, une borne d'un jour laisse les LOOPS boucles décider seules de la fin.
+DUREE_PLAN="$DUREE"; [ "$DUREE" -gt 0 ] || DUREE_PLAN=86400
 BASE_HOST="${BASE_HOST:-localhost}"
 BASE_PORT="${BASE_PORT:-8080}"
 BASE_PROTOCOL="${BASE_PROTOCOL:-http}"
@@ -52,11 +59,12 @@ SLO_ERROR_PCT="${SLO_ERROR_PCT:-0.1}"
 rm -rf "$RESULTATS"
 mkdir -p "$RESULTATS"
 
-echo "▶ JMeter [${PLAN}] — ${THREADS} threads, montée ${RAMPUP}s, ${LOOPS} boucles → ${BASE_PROTOCOL}://${BASE_HOST}:${BASE_PORT}"
+echo "▶ JMeter [${PLAN}] — ${THREADS} threads, montée ${RAMPUP}s, ${LOOPS} boucles, durée ${DUREE}s → ${BASE_PROTOCOL}://${BASE_HOST}:${BASE_PORT}"
 jmeter -n -t "$PLAN" \
   -l "$RESULTATS"/results.jtl \
   -e -o "$RESULTATS"/rapport \
-  -Jthreads="$THREADS" -Jrampup="$RAMPUP" -Jloops="$LOOPS" \
+  -Jthreads="$THREADS" -Jrampup="$RAMPUP" -Jloops="$LOOPS" -Jduree="$DUREE_PLAN" \
+  -Jconnexion.chaque.boucle="$CONNEXION_CHAQUE_BOUCLE" \
   -JBASE_HOST="$BASE_HOST" -JBASE_PORT="$BASE_PORT" -JBASE_PROTOCOL="$BASE_PROTOCOL" \
   -Jresultats="$RESULTATS" -Jpause.ms="$PAUSE_MS" -Jcomptes="$COMPTES" -Jtrousses="$TROUSSES" \
   -j "$RESULTATS"/jmeter.log
@@ -64,21 +72,28 @@ jmeter -n -t "$PLAN" \
 echo ""
 echo "▶ Validation des SLO (nearest-rank sur ${RESULTATS}/results.jtl)"
 
-# 1) Éclate le JTL en latences par catégorie + compte total/erreurs (awk portable : sans asort).
-awk -F',' -v R="$RESULTATS" '
-  BEGIN { total = 0; errors = 0 }
-  NR == 1 { for (i = 1; i <= NF; i++) col[$i] = i; next }
-  {
-    total++
-    if ($col["success"] == "false") errors++
-    e = $col["elapsed"] + 0; lbl = $col["label"]
-    # Lecture = GET, ou POST idempotent de consultation (login, analyse assistant, recherche).
-    if (lbl ~ /^GET /) print e > (R "/read.txt")
-    else if (lbl ~ /(login|analyser|search)$/) print e > (R "/read.txt")
-    else if (lbl ~ /^(POST|PUT|DELETE) /) print e > (R "/write.txt")
-  }
-  END { print total, errors > (R "/counts.txt") }
-' "$RESULTATS"/results.jtl
+# 1) Éclate le JTL en latences par catégorie + compte total/erreurs. Lecteur CSV véritable : un message d'échec contient
+#    des virgules et des sauts de ligne entre guillemets ; un découpage naïf sur la virgule décalait les colonnes et
+#    comptait un échec comme un succès, ce qui rendait la porte aveugle aux erreurs.
+python3 - "$RESULTATS" <<'PY'
+import csv, re, sys
+r = sys.argv[1]
+total = erreurs = 0
+with open(f"{r}/results.jtl", newline="", encoding="utf-8") as jtl, \
+     open(f"{r}/read.txt", "w") as lecture, open(f"{r}/write.txt", "w") as ecriture:
+    for ligne in csv.DictReader(jtl):
+        total += 1
+        if ligne["success"] == "false":
+            erreurs += 1
+        lbl, e = ligne["label"], ligne["elapsed"]
+        # Lecture = GET, ou POST idempotent de consultation (login, analyse assistant, recherche).
+        if lbl.startswith("GET ") or re.search(r"(login|analyser|search)$", lbl):
+            print(e, file=lecture)
+        elif re.match(r"(POST|PUT|DELETE) ", lbl):
+            print(e, file=ecriture)
+with open(f"{r}/counts.txt", "w") as c:
+    print(total, erreurs, file=c)
+PY
 
 # 2) Percentile par rang le plus proche via tri numérique.
 pct() {  # $1 = fichier de latences, $2 = percentile
@@ -117,7 +132,8 @@ cat > "$RESULTATS"/synthese.md <<FIN
 | Date (UTC) | $(date -u +%Y-%m-%dT%H:%M:%SZ) |
 | Profil | ${PROFIL:-défaut} |
 | Cible | ${BASE_PROTOCOL}://${BASE_HOST}:${BASE_PORT} |
-| Utilisateurs simultanés | ${THREADS} (montée ${RAMPUP} s, ${LOOPS} boucles, pause ${PAUSE_MS} ms) |
+| Utilisateurs simultanés | ${THREADS} (montée ${RAMPUP} s, ${LOOPS} boucles, durée ${DUREE} s, pause ${PAUSE_MS} ms) |
+| Connexion à chaque boucle | ${CONNEXION_CHAQUE_BOUCLE} |
 | Échantillons / erreurs | ${TOTAL} / ${ERRORS} (${ERRPCT} %, SLO < ${SLO_ERROR_PCT} %) |
 | Lecture P95 / P99 | ${R95} ms / ${R99} ms (SLO ${SLO_READ_P95} / ${SLO_READ_P99} ms) |
 | Écriture P95 / P99 | ${W95} ms / ${W99} ms (SLO ${SLO_WRITE_P95} / ${SLO_WRITE_P99} ms) |
