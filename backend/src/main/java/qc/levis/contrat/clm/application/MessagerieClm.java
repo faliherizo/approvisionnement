@@ -29,8 +29,8 @@ public class MessagerieClm {
     private static final Map<Evenement, String[]> DEFAUTS_EN = new EnumMap<>(Evenement.class);
 
     static {
-        DEFAUTS.put(Evenement.INVITATION, new String[]{"Document à signer : {{titre}}",
-                "Bonjour {{destinataire}},\nVous êtes invité à signer « {{titre}} » ({{reference}}).\nLien sécurisé : {{lien}}\nCe lien expire le {{echeance}}."});
+        DEFAUTS.put(Evenement.INVITATION, new String[]{"{{objet}} : {{titre}}",
+                "Bonjour {{destinataire}},\nVous êtes invité à {{action}} « {{titre}} » ({{reference}}).\nLien sécurisé : {{lien}}\nCe lien expire le {{echeance}}."});
         DEFAUTS.put(Evenement.TACHE, new String[]{"Action requise : {{etape}} — {{reference}}",
                 "Une action vous est assignée sur la trousse « {{titre}} » ({{reference}}) : {{etape}}. Échéance : {{echeance}}."});
         DEFAUTS.put(Evenement.RAPPEL, new String[]{"Rappel : {{etape}} — {{reference}}",
@@ -45,8 +45,8 @@ public class MessagerieClm {
                 "Toutes les signatures de « {{titre}} » ({{reference}}) sont recueillies. Le dossier de preuve est disponible."});
         DEFAUTS.put(Evenement.CODE, new String[]{"Code de vérification",
                 "Votre code de vérification pour {{reference}} : {{code}}. Il expire dans 10 minutes."});
-        DEFAUTS_EN.put(Evenement.INVITATION, new String[]{"Document to sign: {{titre}}",
-                "Hello {{destinataire}},\nYou are invited to sign \"{{titre}}\" ({{reference}}).\nSecure link: {{lien}}\nThis link expires on {{echeance}}."});
+        DEFAUTS_EN.put(Evenement.INVITATION, new String[]{"{{objet}}: {{titre}}",
+                "Hello {{destinataire}},\nYou are invited to {{action}} \"{{titre}}\" ({{reference}}).\nSecure link: {{lien}}\nThis link expires on {{echeance}}."});
         DEFAUTS_EN.put(Evenement.RAPPEL, new String[]{"Reminder: {{etape}} — {{reference}}",
                 "Reminder: the \"{{etape}}\" step of package {{reference}} is still awaiting your response. Due date: {{echeance}}."});
         DEFAUTS_EN.put(Evenement.ECHEANCE, new String[]{"Due date approaching: {{etape}} — {{reference}}",
@@ -154,7 +154,7 @@ public class MessagerieClm {
         }
         Map<String, Object> exemple = Map.of("reference", "TR-EXEMPLE", "titre", "Contrat d'exemple", "etape", "Approbation",
                 "destinataire", destinataire, "lien", "https://exemple/portail", "echeance", "2026-12-31", "code", "123456",
-                "motif", "exemple");
+                "motif", "exemple", "objet", "Document à signer", "action", "signer");
         return envoyer(ctx.tenant(), Evenement.valueOf(evenement), canal, destinataire, exemple, List.of());
     }
 

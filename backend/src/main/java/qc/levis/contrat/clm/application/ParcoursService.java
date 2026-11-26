@@ -251,6 +251,7 @@ public class ParcoursService {
         vars.put("destinataire", p.getNom());
         vars.put("lien", lienPortail(reglages, jeton, p.getLangue()));
         vars.put("echeance", expire.toString().substring(0, 10));
+        FormulationInvitation.ajouter(vars, p.getNature(), p.getLangue());
         messagerie.envoyer(t.getTenantId(), Evenement.INVITATION, "COURRIEL", p.getCourriel(), vars, List.of(), p.getLangue());
         journal.consigner(t, "INVITATION_ENVOYEE", "systeme", p.getNom() + " · " + p.getNiveauIdentite());
         return jeton;

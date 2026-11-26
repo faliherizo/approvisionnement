@@ -2004,6 +2004,13 @@
               },
               {
                 "courriel": {
+                  "destinataire": "complete.${unique}@agrinord.example",
+                  "motif": "Vous êtes invité à (compléter vos informations) dans",
+                  "capturer": "invitationPaul"
+                }
+              },
+              {
+                "courriel": {
                   "destinataire": "signe.${unique}@agrinord.example",
                   "motif": "/portail/([A-Za-z0-9_-]+)",
                   "capturer": "jetonMarie"

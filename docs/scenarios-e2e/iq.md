@@ -1529,7 +1529,7 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 53. Constater que « Rôle dans le contrat » propose « Mandataire ${unique} »
 54. Ouvrir l'écran `/clm/taches`
 55. Activer « Nouvelle tâche »
-56. Constater que « Priorité » propose « Critique ${unique} »
+56. Constater que « Nouvelle tâche » Priorité » propose « Critique ${unique} »
 57. Se connecter en tant que administration d'affaires IQ
 58. Ouvrir l'écran `/clm/modeles`
 59. Activer « Créer un modèle »
@@ -7061,7 +7061,7 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 53. Constater que « Rôle dans le contrat » propose « Mandataire ${unique} »
 54. Ouvrir l'écran `/clm/taches`
 55. Activer « Nouvelle tâche »
-56. Constater que « Priorité » propose « Critique ${unique} »
+56. Constater que « Nouvelle tâche » Priorité » propose « Critique ${unique} »
 57. Se connecter en tant que administration d'affaires IQ
 58. Ouvrir l'écran `/clm/modeles`
 59. Activer « Créer un modèle »
@@ -8014,7 +8014,7 @@ DEM-2026-0002;Marc Gagnon;marc.gagnon@exemple.ca;`
 53. Constater que « Rôle dans le contrat » propose « Mandataire ${unique} »
 54. Ouvrir l'écran `/clm/taches`
 55. Activer « Nouvelle tâche »
-56. Constater que « Priorité » propose « Critique ${unique} »
+56. Constater que « Nouvelle tâche » Priorité » propose « Critique ${unique} »
 57. Se connecter en tant que administration d'affaires IQ
 58. Ouvrir l'écran `/clm/modeles`
 59. Activer « Créer un modèle »

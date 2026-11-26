@@ -149,11 +149,25 @@ export async function ecartsEcran(page: Page): Promise<string[]> {
       }
       const deborde = document.documentElement.scrollWidth > window.innerWidth + 1
       // Les éléments qui dépassent le bord droit, les plus profonds d'abord : le rapport nomme le coupable.
-      const fautifs = deborde ? [...document.querySelectorAll<HTMLElement>('body *')]
+      const nommer = (e: Element, droite: number, texte: string) => `${e.tagName.toLowerCase()}${e.className && typeof e.className === 'string'
+        ? '.' + e.className.trim().split(/\s+/).join('.') : ''} (${Math.round(droite)} px) « ${texte.trim().slice(0, 40)} »`
+      const elements = deborde ? [...document.querySelectorAll<HTMLElement>('body *')]
         .filter((e) => e.getClientRects().length && e.getBoundingClientRect().right > window.innerWidth + 1
           && ![...e.children].some((c) => c.getBoundingClientRect().right > window.innerWidth + 1))
-        .slice(0, 3).map((e) => `${e.tagName.toLowerCase()}${e.className && typeof e.className === 'string' ? '.' + e.className.trim().split(/\s+/).join('.') : ''}`
-          + ` (${Math.round(e.getBoundingClientRect().right)} px) « ${(e.textContent ?? '').trim().slice(0, 40)} »`) : []
+        .slice(0, 3).map((e) => nommer(e, e.getBoundingClientRect().right, e.textContent ?? '')) : []
+      // Un mot sans coupure (courriel, empreinte) sort de sa boîte alors que la boîte tient dans l'écran : seul le
+      // nœud de texte dépasse. On nomme alors son élément parent et le texte fautif.
+      const textes: string[] = []
+      if (deborde && elements.length === 0) {
+        const parcours = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
+        for (let n = parcours.nextNode(); n && textes.length < 3; n = parcours.nextNode()) {
+          const plage = document.createRange()
+          plage.selectNodeContents(n)
+          const droite = plage.getBoundingClientRect().right
+          if (droite > window.innerWidth + 1 && n.parentElement) textes.push(nommer(n.parentElement, droite, n.textContent ?? ''))
+        }
+      }
+      const fautifs = [...elements, ...textes]
       return { deborde, fautifs, petits, chevauchements, desalignes }
     }, COUCHES)
     if (bilan.deborde) ecarts.push(`${largeur} px : débordement horizontal${bilan.fautifs.length ? ' — ' + bilan.fautifs.join(' ; ') : ''}`)

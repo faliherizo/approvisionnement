@@ -55,7 +55,8 @@ class Addenda2ServicesTest {
     void un_signataire_anglophone_recoit_l_invitation_en_anglais() {
         when(notificateur.envoyer(any(), any(), any(), any())).thenReturn("ENVOYE");
         assertEquals("ENVOYE", messagerie.envoyer(IQ, ModeleMessage.Evenement.INVITATION, "COURRIEL", "alice@exemple.ca",
-                Map.of("titre", "Convention", "reference", "TR-1", "lien", "https://p/x?lang=en", "echeance", "2026-12-01"), List.of(), Langue.EN));
+                Map.of("titre", "Convention", "reference", "TR-1", "lien", "https://p/x?lang=en", "echeance", "2026-12-01",
+                        "objet", "Document to sign", "action", "sign"), List.of(), Langue.EN));
         assertEquals("Document to sign: Convention", sujetEnvoye());
     }
 
