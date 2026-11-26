@@ -63,5 +63,6 @@ resource "azurerm_key_vault_secret" "clm_cle_maitresse_id" {
   name         = "clm-cle-maitresse-id"
   key_vault_id = azurerm_key_vault.this.id
   value        = var.clm_cle_maitresse_id
+  content_type = "text/plain"
   depends_on   = [azurerm_role_assignment.kv_admin]
 }

@@ -130,6 +130,7 @@ resource "azurerm_key_vault_secret" "releve" {
   name         = each.key
   key_vault_id = azurerm_key_vault.dr.id
   value        = local.secrets_releve[each.key]
+  content_type = "text/plain"
   depends_on   = [azurerm_role_assignment.kv_dr_admin]
 }
 
