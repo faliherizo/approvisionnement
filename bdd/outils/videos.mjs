@@ -8,6 +8,9 @@
  *   node outils/videos.mjs monter                  voix posée sur sa chronologie, MP4 + VTT dans medias/aide/, index
  *   node outils/videos.mjs assembler <organisation>     vidéo de présentation de l'organisation (medias/vitrines/<org>/)
  *   node outils/videos.mjs miseEnRoute <organisation>   vidéo « Mise en route de l'organisation » (medias/aide/)
+ *   node outils/videos.mjs importer <mp4> <org> <id> <titre>   vidéo tournée ailleurs (ex. démo VinaSign, avec son .vtt
+ *                                                  voisin) ajoutée à l'aide de l'organisation ; l'ordre par id la place
+ *                                                  dans la présentation (VINASIGN-… vient après les tutoriels E2E-…)
  *   node outils/videos.mjs publier                 envoi de medias/ vers la médiathèque du serveur (rsync)
  *
  * medias/ reproduit l'arborescence de la médiathèque servie par /api/media/ ; il n'est pas versionné.
@@ -231,16 +234,46 @@ async function miseEnRoute(organisation) {
   writeFileSync(indexF, JSON.stringify(index, null, 1))
 }
 
+/**
+ * Une vidéo tournée hors de ce dépôt (la démonstration de VinaSign, filmée par ses propres e2e) rejoint l'aide de
+ * l'organisation : copiée avec ses sous-titres, indexée comme un tutoriel, donc reprise par `assembler`.
+ */
+function importer(source, organisation, id, titre) {
+  if (!source || !ORGANISATIONS[organisation] || !id || !titre) throw new Error('usage : importer <mp4> <org> <id> <titre>')
+  const nom = id.toLowerCase()
+  const AIDE = join(MEDIAS, 'aide')
+  mkdirSync(AIDE, { recursive: true })
+  execFileSync('cp', [source, join(AIDE, `${nom}.mp4`)])
+  const vttSource = source.replace(/\.mp4$/, '.vtt')
+  const cues = readFileSync(vttSource, 'utf8')
+  writeFileSync(join(AIDE, `${nom}.vtt`), cues)
+  const etapes = cues.split('\n\n').slice(1).map((c) => c.split('\n').slice(1).join(' ').trim()).filter(Boolean)
+  const indexF = join(AIDE, 'index.json')
+  const index = lireJson(indexF).filter((x) => x.id !== id)
+  const assemblages = index.filter((x) => x.assemblage)
+  const tutoriels = index.filter((x) => !x.assemblage)
+  tutoriels.push({ id, titre, exigences: [], profil: 'signataire', organisation, espace: 'clm', routes: [], miseEnRoute: null,
+    etapes, duree: Math.round(duree(join(AIDE, `${nom}.mp4`))), video: `aide/${nom}.mp4`, sousTitres: `aide/${nom}.vtt`, externe: true })
+  writeFileSync(indexF, JSON.stringify([...tutoriels.sort((a, b) => a.id.localeCompare(b.id)), ...assemblages], null, 1))
+  console.log(`✓ ${id} importée dans l'aide de ${organisation}`)
+}
+
 function publier() {
   const hote = process.env.MEDIA_HOTE || 'deploy@51.222.86.37'
   const cible = process.env.MEDIA_CIBLE || '~/projets/VINA-DOC/approvisionnement/deploy/ovh/donnees/media/'
-  execFileSync('rsync', ['-av', '--exclude', '.voix', `${MEDIAS}/`, `${hote}:${cible}`], { stdio: 'inherit' })
-  // Le serveur Java (utilisateur 10001) écrit dans la médiathèque (vidéos téléversées) : elle lui revient.
-  execFileSync('ssh', [hote, `docker run --rm -v ${cible.replace(/^~/, '$HOME')}:/d alpine chown -R 10001:10001 /d`], { stdio: 'inherit' })
+  // Le serveur Java (utilisateur 10001) écrit dans la médiathèque (vidéos téléversées) : elle lui revient après l'envoi.
+  // L'utilisateur de déploiement la reprend le temps de l'envoi, sans quoi rsync ne peut plus rien y écrire.
+  const proprietaire = (uid) => execFileSync('ssh', [hote, `docker run --rm -v ${cible.replace(/^~/, '$HOME')}:/d alpine chown -R ${uid} /d`], { stdio: 'inherit' })
+  proprietaire('$(id -u):$(id -g)')
+  try {
+    execFileSync('rsync', ['-av', '--exclude', '.voix', `${MEDIAS}/`, `${hote}:${cible}`], { stdio: 'inherit' })
+  } finally {
+    proprietaire('10001:10001')
+  }
 }
 
-const [commande, arg, arg2] = process.argv.slice(2)
+const [commande, arg, arg2, arg3, arg4] = process.argv.slice(2)
 const commandes = { voix: () => voix(arg), tourner: () => tourner(arg, arg2), monter, assembler: () => presentation(arg),
-  miseEnRoute: () => miseEnRoute(arg), publier }
+  miseEnRoute: () => miseEnRoute(arg), importer: () => importer(arg, arg2, arg3, arg4), publier }
 if (!commandes[commande]) { console.error(readFileSync(fileURLToPath(import.meta.url), 'utf8').split('*/')[0]); process.exit(2) }
 await commandes[commande]()
