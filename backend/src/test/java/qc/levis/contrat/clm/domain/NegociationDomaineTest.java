@@ -151,6 +151,23 @@ class NegociationDomaineTest {
     }
 
     @Test
+    void le_seuil_d_ecart_mineur_est_inclusif_et_le_resume_donne_le_pourcentage() {
+        ClauseNegociee vingt = new ClauseNegociee("c", "Vingt mots", "a b c d e f g h i j k l m n o p q r s t");
+        RecommandationNegociation.Recommandation seuil = RecommandationNegociation.recommander(vingt, "a b c d e f g h i j k l m n o p q x y z", Map.of());
+        assertEquals(0.85, seuil.similarite());
+        assertEquals(PositionNegociation.ACCEPTER, seuil.position(), "85 % de mots communs : écart mineur");
+        assertTrue(seuil.resume().contains(" 85 % de similarité"), seuil.resume());
+    }
+
+    @Test
+    void au_plafond_exact_de_mots_la_comparaison_reste_mot_a_mot() {
+        String plafond = "mot ".repeat(DiffTexte.MAX_MOTS - 1) + "fin";
+        List<DiffTexte.Segment> s = DiffTexte.comparer(plafond, plafond.replace("fin", "terme"));
+        assertEquals(DiffTexte.Nature.EGAL, s.get(0).nature(), "mot à mot : le début commun est reconnu");
+        assertEquals(3, s.size());
+    }
+
+    @Test
     void la_normalisation_ignore_casse_et_accents() {
         assertEquals("penalite", RecommandationNegociation.normaliser("Pénalité"));
         assertEquals("", RecommandationNegociation.normaliser(null));
@@ -366,5 +383,6 @@ class NegociationDomaineTest {
         q.decider(arbitrage(PropositionNegociation.Decision.REFUSEE, null, "non"), T0);
         assertFalse(TourNegociation.toutAccepte(List.of(p, q)));
         assertEquals(List.of(PAIEMENT), TourNegociation.appliquer(List.of(PAIEMENT), List.of(p, q)), "la dernière décision sur une clause prévaut");
+        assertEquals(List.of(PAIEMENT.avecTexte("45 jours")), TourNegociation.appliquer(List.of(PAIEMENT), List.of(q, p)));
     }
 }

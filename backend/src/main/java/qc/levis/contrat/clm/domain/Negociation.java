@@ -130,7 +130,6 @@ public class Negociation {
         if (nombre <= 0) {
             throw new IllegalArgumentException("Proposez au moins une modification, ou acceptez la version courante.");
         }
-        exigerEtat(EtatNegociation.ATTENTE_CONTREPARTIE);
         etat = etat.vers(EtatNegociation.ATTENTE_INTERNE);
     }
 
