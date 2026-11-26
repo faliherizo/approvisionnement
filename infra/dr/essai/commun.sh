@@ -2,7 +2,7 @@
 # Fonctions communes de l'essai de relève (SEC-11). Sourcé par releve.sh ; aucun secret n'est écrit sur disque hors
 # des volumes éphémères de l'exécuteur.
 
-: "${RESULTATS:?RESULTATS (dossier des résultats de l'essai) est obligatoire}"
+: "${RESULTATS:?RESULTATS, dossier des résultats, est obligatoire}"
 : "${TEMOIN:=$RESULTATS/temoin}"
 : "${POSTGRES_IMAGE:=postgres:16}"
 : "${IMAGE_SERVEUR:=contrat/backend:releve}"

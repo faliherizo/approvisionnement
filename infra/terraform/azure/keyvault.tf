@@ -29,7 +29,7 @@ resource "azurerm_role_assignment" "kv_admin" {
 resource "azurerm_key_vault_secret" "db_url" {
   name         = "db-url"
   key_vault_id = azurerm_key_vault.this.id
-  value        = "jdbc:postgresql://${azurerm_postgresql_flexible_server.this.fqdn}:5432/${var.db_name}"
+  value        = "jdbc:postgresql://${local.postgres_hote_ecriture}:5432/${var.db_name}"
   depends_on   = [azurerm_role_assignment.kv_admin]
 }
 
@@ -37,5 +37,31 @@ resource "azurerm_key_vault_secret" "db_password" {
   name         = "db-password"
   key_vault_id = azurerm_key_vault.this.id
   value        = random_password.db.result
+  depends_on   = [azurerm_role_assignment.kv_admin]
+}
+
+# Clé maîtresse du chiffrement par organisation (ADR-037, CLM_CLE_MAITRESSE) : elle enveloppe les clés de données de
+# chaque organisation. Sa perte rendrait illisibles tous les documents, sauvegardes comprises : elle est protégée contre
+# la destruction et copiée dans le coffre de la région de relève (dr.tf), pour survivre à la perte de la région primaire.
+resource "random_bytes" "clm_cle_maitresse" {
+  length = 32
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "azurerm_key_vault_secret" "clm_cle_maitresse" {
+  name         = "clm-cle-maitresse"
+  key_vault_id = azurerm_key_vault.this.id
+  value        = random_bytes.clm_cle_maitresse.base64
+  content_type = "application/octet-stream;base64"
+  depends_on   = [azurerm_role_assignment.kv_admin]
+}
+
+resource "azurerm_key_vault_secret" "clm_cle_maitresse_id" {
+  name         = "clm-cle-maitresse-id"
+  key_vault_id = azurerm_key_vault.this.id
+  value        = var.clm_cle_maitresse_id
   depends_on   = [azurerm_role_assignment.kv_admin]
 }
