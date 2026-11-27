@@ -339,7 +339,12 @@ for (const jeu of jeux) {
       test(`${s.id} — ${s.titre} ${s.exigences.map((x) => '@' + x).join(' ')}`, async ({ page, playwright, baseURL }) => {
         // Tournage : un suffixe court, lisible à l'écran et dans la narration ; base neuve à chaque tournage.
         const unique = VIDEO ? 'v' + (Date.now() % 46_656).toString(36) : Date.now().toString(36) + Math.random().toString(36).slice(2, 6)
-        const jour = (n: number) => new Date(Date.now() + n * 86_400_000).toISOString().slice(0, 10)
+        // Le serveur lit les périodes dans le fuseau de l'organisation (CLM_FUSEAU, America/Toronto) : la date du jour doit
+        // être celle de ce fuseau, pas la date UTC, sinon une campagne lancée entre 20 h et minuit (heure de l'Est)
+        // interroge le lendemain et ne trouve rien.
+        const fuseau = process.env.E2E_FUSEAU ?? 'America/Toronto'
+        const jour = (n: number) => new Intl.DateTimeFormat('en-CA', { timeZone: fuseau, year: 'numeric', month: '2-digit', day: '2-digit' })
+          .format(new Date(Date.now() + n * 86_400_000))
         const ctx: Contexte = {
           variables: { unique, UNIQUE: unique.toUpperCase(), aujourdhui: jour(0), demain: jour(1), dansUnMois: jour(30) },
           ecarts: [],
