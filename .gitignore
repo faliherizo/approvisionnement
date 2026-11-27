@@ -53,3 +53,11 @@ gitnexus-export.zip
 # Vidéos générées (bdd/outils/videos.mjs), publiées dans la médiathèque du serveur : jamais versionnées.
 bdd/medias/
 bdd/test-results-e2e/videos*/
+
+# Réponse commerciale à l'AO IQ 2026-6370-0005 (prix, bordereau, documents de soumission) : versionnée dans un dépôt
+# privé distinct, jamais dans ce dépôt public.
+docs/Dossier_IQ_2026-6370-0005/13-Reponse-AO/
+docs/Dossier_IQ_2026-6370-0005/outils/
+docs/Dossier_IQ_2026-6370-0005/Tarification_finale_*
+docs/Dossier_IQ_2026-6370-0005/Annexe 2 - Bordereau*
+docs/Dossier_IQ_2026-6370-0005/2026-6370-0005 Annexe 10*
